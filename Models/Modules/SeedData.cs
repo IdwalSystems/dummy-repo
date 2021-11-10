@@ -1,0 +1,177 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using MSNK.Data;
+using System;
+using System.Linq;
+
+namespace MSNK.Models.Modules
+{
+    public static class SeedData
+    {
+        public static void Initialize(IServiceProvider serviceProvider)
+        {
+            using (var context = new ApplicationDbContext(
+                serviceProvider.GetRequiredService<
+                    DbContextOptions<ApplicationDbContext>>()))
+            {
+                // Look for any movies.
+                if (context.KW.Any())
+                {
+                    //return;   // DB has been seeded
+                }
+                else
+                {
+                    context.KW.AddRange(
+                        new KW
+                        {
+                            Kod = "100",
+                            Perihal = "MAJLIS SUKAN NEGERI KEDAH"
+                        }
+                    );
+                }
+
+                if (context.CaraBayar.Any())
+                {
+                    //return;
+                }
+                else
+                {
+                    context.CaraBayar.AddRange(
+                        new CaraBayar
+                        {
+                            Kod = "TN",
+                            Perihal = "TUNAI"
+                        },
+                        new CaraBayar
+                        {
+                            Kod = "CK",
+                            Perihal = "CEK"
+                        },
+                        new CaraBayar
+                        {
+                            Kod = "MK",
+                            Perihal = "MAKLUMAN KREDIT"
+                        },
+                        new CaraBayar
+                        {
+                            Kod = "EF",
+                            Perihal = "EFT"
+                        },
+                        new CaraBayar
+                        {
+                            Kod = "FP",
+                            Perihal = "FPX"
+                        }
+                    );
+                }
+
+                if (context.Modul.Any())
+                {
+                    //return;
+                }
+                else
+                {
+                    context.Modul.AddRange(
+                        new Modul
+                        {
+                            FuncId = "SY001",
+                            FuncName = "SY001 Pengurusan Pengguna"
+                        },
+                        new Modul
+                        {
+                            FuncId = "SY001A",
+                            FuncName = "SY001 Pengurusan Pengguna – Capaian"
+                        },
+                        new Modul
+                        {
+                            FuncId = "SY001C",
+                            FuncName = "SY001 Pengurusan Pengguna - Tambah"
+                        },
+                        new Modul
+                        {
+                            FuncId = "SY001D",
+                            FuncName = "SY001 Pengurusan Pengguna - Hapus"
+                        },
+                        new Modul
+                        {
+                            FuncId = "SY001E",
+                            FuncName = "SY001 Pengurusan Pengguna - Ubah"
+                        },
+                        new Modul
+                        {
+                            FuncId = "SY001R",
+                            FuncName = "SY001 Pengurusan Pengguna - Reset Katalauan"
+                        },
+                        new Modul
+                        {
+                            FuncId = "PR001",
+                            FuncName = "PR001 Penerimaan"
+                        },
+                        new Modul
+                        {
+                            FuncId = "PR001C",
+                            FuncName = "PR001 Penerimaan - Tambah"
+                        },
+                        new Modul
+                        {
+                            FuncId = "PR001D",
+                            FuncName = "PR001 Penerimaan - Hapus"
+                        },
+                        new Modul
+                        {
+                            FuncId = "PR001E",
+                            FuncName = "PR001 Penerimaan - Ubah"
+                        },
+                        new Modul
+                        {
+                            FuncId = "PR001P",
+                            FuncName = "PR001 Penerimaan - Cetak"
+                        },
+                        new Modul
+                        {
+                            FuncId = "PR001T",
+                            FuncName = "PR001 Penerimaan - Posting"
+                        },
+                        new Modul
+                        {
+                            FuncId = "PR001UT",
+                            FuncName = "PR001 Penerimaan – UnPosting"
+                        },
+                        new Modul
+                        {
+                            FuncId = "PR001B",
+                            FuncName = "PR001 Penerimaan – Batal"
+                        }
+                    );
+                }
+
+                if (context.Bank.Any())
+                {
+                    //return;   // DB has been seeded
+                }
+                else
+                {
+                    context.Bank.AddRange(
+                        new Bank
+                        {
+                            Kod = "BIMB",
+                            Nama = "BANK ISLAM MALAYSIA BERHAD"
+                        },
+                        new Bank
+                        {
+                            Kod = "BMMB",
+                            Nama = "BANK MUAMALAT MALAYSIA BERHAD"
+                        },
+                        new Bank
+                        {
+                            Kod = "MBB",
+                            Nama = "MALAYAN BANKING BERHAD"
+                        }
+                    );
+                }
+
+                context.SaveChanges();
+            }
+        }
+    }
+}

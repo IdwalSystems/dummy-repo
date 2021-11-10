@@ -1,8 +1,0 @@
-add model
-setup scallfolding
-	dotnet-aspnet-codegenerator controller -name BankController -m Bank -dc MSNKDBContext --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
-migration
-	dotnet ef migrations add addBank
-update db
-	dotnet ef database update
-update seed
