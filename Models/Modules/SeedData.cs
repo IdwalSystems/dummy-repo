@@ -170,6 +170,31 @@ namespace MSNK.Models.Modules
                     );
                 }
 
+                if (context.Negeri.Any())
+                {
+                    //return;   // DB has been seeded
+                }
+                else
+                {
+                    context.Negeri.AddRange(
+                        new Negeri
+                        {
+                            Kod = "08",
+                            Perihal = "PERAK"
+                        },
+                        new Negeri
+                        {
+                            Kod="05",
+                            Perihal="NEGERI SEMBILAN"
+                        },
+                        new Negeri
+                        {
+                            Kod="10",
+                            Perihal="SELANGOR"
+                        }
+                    );
+                }
+
                 context.SaveChanges();
             }
         }
