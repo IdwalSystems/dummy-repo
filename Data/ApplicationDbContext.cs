@@ -22,5 +22,6 @@ namespace MSNK.Data
         public DbSet<Modul> Modul { get; set; }
 
         public DbSet<Bank> Bank { get; set; }
+        public DbSet<Negeri> Negeri { get; set; }
     }
 }
