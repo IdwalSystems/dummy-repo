@@ -1,0 +1,75 @@
+﻿@model MSNK.Models.Modules.AkCarta
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>AkCarta</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="KWId" class="control-label"></label>
+                <select asp-for="KWId" class="form-control" asp-items="ViewBag.KWId"></select>
+                <span asp-validation-for="KWId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JenisId" class="control-label"></label>
+                <select asp-for="JenisId" class="form-control" asp-items="ViewBag.JenisId"></select>
+                <span asp-validation-for="JenisId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ParasId" class="control-label"></label>
+                <select asp-for="ParasId" class="form-control" asp-items="ViewBag.ParasId"></select>
+                <span asp-validation-for="ParasId" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="id" />
+            <div class="form-group">
+                <label asp-for="Kod" class="control-label"></label>
+                <input asp-for="Kod" class="form-control" />
+                <span asp-validation-for="Kod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nama" class="control-label"></label>
+                <input asp-for="Nama" class="form-control" />
+                <span asp-validation-for="Nama" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DebitKredit" class="control-label"></label>
+                <input asp-for="DebitKredit" class="form-control" />
+                <span asp-validation-for="DebitKredit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UmumDetail" class="control-label"></label>
+                <input asp-for="UmumDetail" class="form-control" />
+                <span asp-validation-for="UmumDetail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Catatan1" class="control-label"></label>
+                <input asp-for="Catatan1" class="form-control" />
+                <span asp-validation-for="Catatan1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Catatan2" class="control-label"></label>
+                <input asp-for="Catatan2" class="form-control" />
+                <span asp-validation-for="Catatan2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

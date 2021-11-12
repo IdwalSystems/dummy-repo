@@ -1,0 +1,84 @@
+﻿@model IEnumerable<MSNK.Models.Modules.AkCarta>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.KW)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Kod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nama)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jenis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Paras)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DebitKredit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UmumDetail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Catatan1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Catatan2)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.KW.Kod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Kod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nama)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Jenis.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Paras.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DebitKredit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UmumDetail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Catatan1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Catatan2)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

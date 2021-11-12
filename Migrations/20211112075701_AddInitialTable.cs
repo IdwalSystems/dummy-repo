@@ -77,6 +77,20 @@ namespace MSNK.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Jenis",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Kod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nama = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Jenis", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "KW",
                 columns: table => new
                 {
@@ -116,6 +130,19 @@ namespace MSNK.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Negeri", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Paras",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Kod = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Paras", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -259,10 +286,10 @@ namespace MSNK.Migrations
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     KWId = table.Column<int>(type: "int", nullable: false),
+                    JenisId = table.Column<int>(type: "int", nullable: false),
+                    ParasId = table.Column<int>(type: "int", nullable: false),
                     Kod = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Nama = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Jenis = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Paras = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DebitKredit = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UmumDetail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Catatan1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -272,9 +299,21 @@ namespace MSNK.Migrations
                 {
                     table.PrimaryKey("PK_AkCarta", x => x.id);
                     table.ForeignKey(
+                        name: "FK_AkCarta_Jenis_JenisId",
+                        column: x => x.JenisId,
+                        principalTable: "Jenis",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_AkCarta_KW_KWId",
                         column: x => x.KWId,
                         principalTable: "KW",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AkCarta_Paras_ParasId",
+                        column: x => x.ParasId,
+                        principalTable: "Paras",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -290,9 +329,19 @@ namespace MSNK.Migrations
                 column: "KWId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AkCarta_JenisId",
+                table: "AkCarta",
+                column: "JenisId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AkCarta_KWId",
                 table: "AkCarta",
                 column: "KWId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AkCarta_ParasId",
+                table: "AkCarta",
+                column: "ParasId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -370,7 +419,13 @@ namespace MSNK.Migrations
                 name: "Bank");
 
             migrationBuilder.DropTable(
+                name: "Jenis");
+
+            migrationBuilder.DropTable(
                 name: "KW");
+
+            migrationBuilder.DropTable(
+                name: "Paras");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
