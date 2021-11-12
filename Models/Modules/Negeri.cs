@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MSNK.Models.Modules
@@ -12,5 +13,8 @@ namespace MSNK.Models.Modules
         [Required]
         [MaxLength(100)]
         public string Perihal { get; set; }
+
+        public ICollection<AkTerima> AkTerima { get; set; }
+        public ICollection<Pembekal> Pembekal { get; set; }
     }
 }

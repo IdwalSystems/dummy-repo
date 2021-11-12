@@ -18,5 +18,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkCarta> AkCarta { get; set; }
         public ICollection<AkTerima> AkTerima { get; set; }
         public ICollection<AkAkaun> AkAkaun { get; set; }
+        public ICollection<PO> PO { get; set; }
+        public ICollection<PO2> PO2 { get; set; }
     }
 }

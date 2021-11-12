@@ -15,5 +15,6 @@ namespace MSNK.Models.Modules
         public string Nama { get; set; }
         public ICollection<AkBank> AkBank { get; set; }
         public ICollection<AkTerima2> AkTerima2 { get; set; }
+        public ICollection<Pembekal> Pembekal { get; set; }
     }
 }

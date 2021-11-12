@@ -44,6 +44,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkTerima1> AkTerima1 { get; set; }
         public ICollection<AkTerima2> AkTerima2 { get; set; }
         public AkBank AkBank { get; set; }
+        public Negeri Negeri { get; set; }
 
     }
 }
