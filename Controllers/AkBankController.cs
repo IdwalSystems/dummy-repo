@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
@@ -81,14 +82,23 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind()] AkBank akBank)
+        public async Task<IActionResult> Create(AkBankViewModel akBank, int KWId, int BankId)
         {
+            AkBank akB = new AkBank();
             if (ModelState.IsValid)
             {
-                await _akBankRepo.Insert(akBank);
-                await _akBankRepo.Save();
+                if (akBank != null && KWId != 0 && BankId != 0)
+                {
+                    akB.BankId = BankId;
+                    akB.KWId = KWId;
+                    akB.Kod = akBank.Kod;
+                    akB.NoAkaun = akBank.NoAkaun;
+                    await _akBankRepo.Insert(akB);
+                    await _akBankRepo.Save();
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
+                
             }
             
             return View(akBank);
@@ -107,6 +117,10 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
+
+            PopulateBankList();
+            PopulateKWList();
+
             return View(akBank);
         }
 
@@ -115,18 +129,24 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind()] AkBank akBank)
+        public async Task<IActionResult> Edit(int id, AkBank akBank, int KWId, int BankId)
         {
             if (id != akBank.Id)
             {
                 return NotFound();
             }
 
+            AkBank akB = new AkBank();
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _akBankRepo.Update(akBank);
+                    akB.BankId = BankId;
+                    akB.KWId = KWId;
+                    akB.Kod = akBank.Kod;
+                    akB.NoAkaun = akBank.NoAkaun;
+                    await _akBankRepo.Update(akB);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
