@@ -15,17 +15,35 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="KWId" class="control-label"></label>
-                <select asp-for="KWId" class="form-control" asp-items="ViewBag.KWId"></select>
+                <select class="form-control" asp-for="KWId">
+                    <option value="" hidden>-- Pilih Kumpulan Wang --</option>
+                    @foreach (var s in ViewBag.KW)
+                    {
+                        <option value="@s.Id">@s.Perihal </option>
+                    }
+                </select>
                 <span asp-validation-for="KWId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="JenisId" class="control-label"></label>
-                <select asp-for="JenisId" class="form-control" asp-items="ViewBag.JenisId"></select>
+                <select class="form-control" asp-for="JenisId">
+                    <option value="" hidden>-- Pilih Jenis --</option>
+                    @foreach (var s in ViewBag.Jenis)
+                    {
+                        <option value="@s.Id">@s.Kod </option>
+                    }
+                </select>
                 <span asp-validation-for="JenisId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ParasId" class="control-label"></label>
-                <select asp-for="ParasId" class="form-control" asp-items="ViewBag.ParasId"></select>
+                <select class="form-control" asp-for="ParasId">
+                    <option value="" hidden>-- Pilih Paras --</option>
+                    @foreach (var s in ViewBag.Paras)
+                    {
+                        <option value="@s.Id">@s.Kod </option>
+                    }
+                </select>
                 <span asp-validation-for="ParasId" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="id" />
