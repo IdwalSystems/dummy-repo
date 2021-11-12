@@ -1,27 +1,30 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MSNK.Models.Modules
+namespace MSNK.Models.Modules.ViewModel
 {
-    public class AkCarta
+    public class AkCartaViewModel
     {
+        [Required]
         public int KWId { get; set; }
-
-        public int id { get; set; }
+        [Required]
         public string Kod { get; set; }
+        [Required]
         public string Nama { get; set; }
-        public Jenis Jenis { get; set; }
-        public Paras Paras { get; set; }
+        [Required]
+        public string Jenis { get; set; }
+        [Required]
+        public string Paras { get; set; }
+        [Required]
         public string DebitKredit { get; set; }
+        [Required]
         public string UmumDetail { get; set; }
         public string Catatan1 { get; set; }
         public string Catatan2 { get; set; }
 
-        public KW KW { get; set; }
-        public ICollection<AkTerima1>AkTerima1 { get; set; }
-        public ICollection<AkBank> AkBank { get; set; }
-        public ICollection<AkAkaun> AkAkaun { get; set; }
     }
 }

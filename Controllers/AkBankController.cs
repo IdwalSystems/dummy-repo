@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +13,10 @@ using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
+    [Authorize]
     public class AkBankController : Controller
     {
+        
         private readonly ApplicationDbContext _context;
         private readonly IRepository<KW, int> _kwRepo;
         private readonly IRepository<Bank, int> _bankRepo;
@@ -100,7 +103,9 @@ namespace MSNK.Controllers
                 }
                 
             }
-            
+
+            PopulateKWList();
+            PopulateBankList();
             return View(akBank);
         }
 
@@ -161,6 +166,9 @@ namespace MSNK.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            PopulateKWList();
+            PopulateBankList();
+
             return View(akBank);
         }
 

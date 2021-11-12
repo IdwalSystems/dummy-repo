@@ -25,6 +25,8 @@ namespace MSNK.Data
         public DbSet<Negeri> Negeri { get; set; }
         public DbSet<AkBank> AkBank { get; set; }
         public DbSet<AkCarta> AkCarta { get; set; }
+        public DbSet<Jenis> Jenis { get; set; }
+        public DbSet<Paras> Paras { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

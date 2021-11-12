@@ -193,8 +193,76 @@ namespace MSNK.Models.Modules
                     );
                 }
 
+            if (context.Jenis.Any())
+            {
+                //return;   // DB has been seeded
+            }
+            else
+            {
+                context.Jenis.AddRange(
+                    new Jenis
+                    {
+                        Kod = "L",
+                        Nama = "Liabiliti"
+                    },
 
-                context.SaveChanges();
+                    new Jenis
+                    {
+                        Kod = "E",
+                        Nama = "Ekuiti"
+                    },
+                    
+                    new Jenis
+                    {
+                        Kod = "B",
+                        Nama = "BELANJA"
+                    },
+                    new Jenis
+                    {
+                        Kod = "A",
+                        Nama = "ASET"
+                    },
+                    new Jenis
+                    {
+                        Kod = "H",
+                        Nama = "Hasil"
+                    }
+
+                );
+            }
+
+            if (context.Jenis.Any())
+            {
+                //return;   // DB has been seeded
+            }
+            else
+            {
+                context.Paras.AddRange(
+                    new Paras
+                    {
+                        Kod = "1"
+                    },
+
+                    new Paras
+                    {
+                        Kod = "2",
+                    },
+
+                    new Paras
+                    {
+                        Kod = "3"
+                    },
+                    new Paras
+                    {
+                        Kod = "4"
+                    }
+
+                );
+            }
+
+
+
+            context.SaveChanges();
             
             //Data with foreign key
 
@@ -210,8 +278,8 @@ namespace MSNK.Models.Modules
                             KWId = 1,
                             Kod = "H11102",
                             Nama = "Hasil Dokumen Sebutharga",
-                            Jenis = "H",
-                            Paras = "4",
+                            JenisId = 5,
+                            ParasId = 4,
                             DebitKredit = "K",
                             UmumDetail = "D",
                             Catatan1 = "",

@@ -65,8 +65,8 @@ namespace MSNK.Migrations
                     b.Property<string>("DebitKredit")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Jenis")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("JenisId")
+                        .HasColumnType("int");
 
                     b.Property<int>("KWId")
                         .HasColumnType("int");
@@ -77,15 +77,19 @@ namespace MSNK.Migrations
                     b.Property<string>("Nama")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Paras")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ParasId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UmumDetail")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
+                    b.HasIndex("JenisId");
+
                     b.HasIndex("KWId");
+
+                    b.HasIndex("ParasId");
 
                     b.ToTable("AkCarta");
                 });
@@ -132,6 +136,24 @@ namespace MSNK.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CaraBayar");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.Jenis", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Kod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nama")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Jenis");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.KW", b =>
@@ -198,6 +220,21 @@ namespace MSNK.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Negeri");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.Paras", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Kod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Paras");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -434,13 +471,29 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkCarta", b =>
                 {
+                    b.HasOne("MSNK.Models.Modules.Jenis", "Jenis")
+                        .WithMany("AkCarta")
+                        .HasForeignKey("JenisId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MSNK.Models.Modules.KW", "KW")
                         .WithMany("AkCarta")
                         .HasForeignKey("KWId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MSNK.Models.Modules.Paras", "Paras")
+                        .WithMany("AkCarta")
+                        .HasForeignKey("ParasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Jenis");
+
                     b.Navigation("KW");
+
+                    b.Navigation("Paras");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -499,10 +552,20 @@ namespace MSNK.Migrations
                     b.Navigation("AkBank");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.Jenis", b =>
+                {
+                    b.Navigation("AkCarta");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.KW", b =>
                 {
                     b.Navigation("AkBank");
 
+                    b.Navigation("AkCarta");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.Paras", b =>
+                {
                     b.Navigation("AkCarta");
                 });
 #pragma warning restore 612, 618
