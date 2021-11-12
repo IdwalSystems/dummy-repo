@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MSNK.Data;
 using MSNK.Models.Modules;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,8 @@ namespace MSNK
                 var services = scope.ServiceProvider;
                 try
                 {
-                    SeedData.Initialize(services);
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    SeedData.Initialize(context);
                 }
                 catch (Exception ex)
                 {

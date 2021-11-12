@@ -7,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSNK.Data;
+using MSNK.Models.Modules;
+using MSNK.Models.Modules.EFRepository;
+using MSNK.Models.Modules.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +43,11 @@ namespace MSNK
             {
                 opt.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Home/Accessdenied");
             });
+
+            services.AddTransient<IRepository<AkBank, int>, AkBankRepository>();
+            services.AddTransient<IRepository<KW, int>, KWRepository>();
+            services.AddTransient<IRepository<Bank, int>, BankRepository>();
+
             services.AddControllersWithViews();
         }
 

@@ -8,14 +8,12 @@ namespace MSNK.Models.Modules
 {
     public static class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static void Initialize(ApplicationDbContext context)
         {
-            using (var context = new ApplicationDbContext(
-                serviceProvider.GetRequiredService<
-                    DbContextOptions<ApplicationDbContext>>()))
-            {
-                // Look for any movies.
-                if (context.KW.Any())
+            context.Database.EnsureCreated();
+
+            // Look for any movies.
+            if (context.KW.Any())
                 {
                     //return;   // DB has been seeded
                 }
@@ -195,8 +193,52 @@ namespace MSNK.Models.Modules
                     );
                 }
 
+
                 context.SaveChanges();
-            }
+            
+            //Data with foreign key
+
+                if (context.AkCarta.Any())
+                {
+                    //return;   // DB has been seeded
+                }
+                else
+                {
+                    context.AkCarta.AddRange(
+                        new AkCarta
+                        {
+                            KWId = 1,
+                            Kod = "H11102",
+                            Nama = "Hasil Dokumen Sebutharga",
+                            Jenis = "H",
+                            Paras = "4",
+                            DebitKredit = "K",
+                            UmumDetail = "D",
+                            Catatan1 = "",
+                            Catatan2 = ""
+                        }
+                    );
+                }
+
+                if (context.AkBank.Any())
+                {
+                    //return;   // DB has been seeded
+                }
+                else
+                {
+                    context.AkBank.AddRange(
+                        new AkBank
+                        {
+                            KWId = 1,
+                            BankId = 1,
+                            Kod = "001",
+                            NoAkaun = "1200210005702"
+                        }
+                    );
+                }
+
+            context.SaveChanges();
+
         }
     }
 }

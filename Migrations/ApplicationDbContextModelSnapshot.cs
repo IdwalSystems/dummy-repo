@@ -19,6 +19,77 @@ namespace MSNK.Migrations
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("MSNK.Models.Modules.AkBank", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BankId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("KWId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Kod")
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
+
+                    b.Property<string>("NoAkaun")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BankId");
+
+                    b.HasIndex("KWId");
+
+                    b.ToTable("AkBank");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkCarta", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Catatan1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Catatan2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DebitKredit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Jenis")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("KWId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Kod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nama")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Paras")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UmumDetail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("KWId");
+
+                    b.ToTable("AkCarta");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.Bank", b =>
                 {
                     b.Property<int>("Id")
@@ -105,6 +176,28 @@ namespace MSNK.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Modul");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.Negeri", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Kod")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
+
+                    b.Property<string>("Perihal")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Negeri");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -320,6 +413,36 @@ namespace MSNK.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.AkBank", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.Bank", "Bank")
+                        .WithMany("AkBank")
+                        .HasForeignKey("BankId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.KW", "KW")
+                        .WithMany("AkBank")
+                        .HasForeignKey("KWId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bank");
+
+                    b.Navigation("KW");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkCarta", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.KW", "KW")
+                        .WithMany("AkCarta")
+                        .HasForeignKey("KWId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KW");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -369,6 +492,18 @@ namespace MSNK.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.Bank", b =>
+                {
+                    b.Navigation("AkBank");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.KW", b =>
+                {
+                    b.Navigation("AkBank");
+
+                    b.Navigation("AkCarta");
                 });
 #pragma warning restore 612, 618
         }
