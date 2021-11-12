@@ -42,6 +42,13 @@ namespace MSNK.Controllers
             }
 
             var akCarta = await _akCartaRepo.GetById((int)id);
+            var kw = await _kwRepo.GetById(akCarta.KWId);
+            akCarta.KW = kw;
+            var jenis = _context.Jenis.FirstOrDefault(b => b.Id == akCarta.JenisId);
+            akCarta.Jenis = jenis;
+            var paras = _context.Paras.FirstOrDefault(b => b.Id == akCarta.ParasId);
+            akCarta.Paras = paras;
+
             if (akCarta == null)
             {
                 return NotFound();
@@ -52,13 +59,13 @@ namespace MSNK.Controllers
 
         private void PopulateList()
         {
-            List<KW> kwList = _context.KW.ToList();
+            List<KW> kwList = _context.KW.OrderBy(b => b.Kod).ToList();
             ViewBag.Kw = kwList;
 
-            List<Jenis> jenisList = _context.Jenis.ToList();
+            List<Jenis> jenisList = _context.Jenis.OrderBy(b => b.Kod).ToList();
             ViewBag.Jenis = jenisList;
 
-            List<Paras> parasList = _context.Paras.ToList();
+            List<Paras> parasList = _context.Paras.OrderBy(b => b.Kod).ToList();
             ViewBag.Paras = parasList;
         }
 
@@ -86,6 +93,7 @@ namespace MSNK.Controllers
                     akC.JenisId = JenisId;
                     akC.Nama = akCarta.Nama;
                     akC.ParasId = ParasId;
+                    akC.DebitKredit = akCarta.DebitKredit;
                     akC.UmumDetail = akCarta.UmumDetail;
                     akC.Catatan1 = akCarta.Catatan1;
                     akC.Catatan2 = akCarta.Catatan2;
@@ -109,12 +117,19 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
+            PopulateList();
             var akCarta = await _akCartaRepo.GetById((int)id);
+            var kw = await _kwRepo.GetById(akCarta.KWId);
+            akCarta.KW = kw;
+            var jenis = _context.Jenis.FirstOrDefault(b => b.Id == akCarta.JenisId);
+            akCarta.Jenis = jenis;
+            var paras = _context.Paras.FirstOrDefault(b => b.Id == akCarta.ParasId);
+            akCarta.Paras = paras;
             if (akCarta == null)
             {
                 return NotFound();
             }
-            PopulateList();
+            
             return View(akCarta);
         }
 
@@ -143,6 +158,7 @@ namespace MSNK.Controllers
                     akC.Nama = akCarta.Nama;
                     akC.ParasId = ParasId;
                     akC.UmumDetail = akCarta.UmumDetail;
+                    akC.DebitKredit = akCarta.DebitKredit;
                     akC.Catatan1 = akCarta.Catatan1;
                     akC.Catatan2 = akCarta.Catatan2;
                     await _akCartaRepo.Update(akCarta);
