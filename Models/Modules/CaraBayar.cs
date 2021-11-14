@@ -13,6 +13,8 @@ namespace MSNK.Models.Modules
         [Required]
         [MaxLength(100)]
         public string Perihal { get; set; }
+
+        //relationship
         public ICollection<AkTerima2> akTerima2 { get; set; }
     }
 }

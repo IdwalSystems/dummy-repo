@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules.IRepository;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
+    [Authorize]
     public class KWRepository : IRepository<KW, int>
     {
         private readonly ApplicationDbContext context;
