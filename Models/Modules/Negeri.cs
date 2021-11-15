@@ -16,6 +16,6 @@ namespace MSNK.Models.Modules
 
         //Relationship
         public ICollection<AkTerima> AkTerima { get; set; }
-        //public ICollection<Pembekal> Pembekal { get; set; }
+        public ICollection<Pembekal> Pembekal { get; set; }
     }
 }

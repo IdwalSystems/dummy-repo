@@ -9,7 +9,7 @@ namespace MSNK.Models.Modules
     public class PO1
     {
         public int Id { get; set; }
-        public int NoPO { get; set; }
+        public int POId { get; set; }
         public int Indek { get; set; }
         [MaxLength(3)]
         public string Bil { get; set; }
@@ -23,6 +23,7 @@ namespace MSNK.Models.Modules
         public decimal Harga { get; set; }
         public decimal Amaun { get; set; }
 
+        //Relationship
         public PO PO { get; set; }
     }
 }

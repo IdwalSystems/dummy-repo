@@ -25,17 +25,18 @@ namespace MSNK.Models.Modules
         public string Poskod { get; set; }
         [MaxLength(100)]
         public string Bandar { get; set; }
-        public int KodNegeri { get; set; }
+        public int NegeriId { get; set; }
         [MaxLength(30)]
         public string Telefon1 { get; set; }
         [MaxLength(100)]
         public string Email { get; set; }
         [MaxLength(50)]
         public string AkaunBank { get; set; }
-        public int KodBank { get; set; }
+        public int AkBankId { get; set; }
 
+        //Relationship
         public Negeri Negeri { get; set; }
-        public Bank Bank { get; set; }
+        public AkBank AkBank { get; set; }
         public ICollection<PO> PO { get; set; }
 
     }

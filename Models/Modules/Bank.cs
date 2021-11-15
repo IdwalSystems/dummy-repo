@@ -8,7 +8,7 @@ namespace MSNK.Models.Modules
     {
         public int Id { get; set; }
         [Required]
-        [MaxLength(4)]
+        [MaxLength(12)]
         public string Kod { get; set; }
         [Required]
         [MaxLength(100)]

@@ -33,6 +33,6 @@ namespace MSNK.Models.Modules
         public ICollection<AkBank> AkBank { get; set; }
         public virtual ICollection<AkAkaun> AkAkaun1 { get; set; }
         public virtual ICollection<AkAkaun> AkAkaun2 { get; set; }
-        //public ICollection<PO2> PO2 { get; set; }
+        public ICollection<PO2> PO2 { get; set; }
     }
 }

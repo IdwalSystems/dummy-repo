@@ -13,11 +13,11 @@ namespace MSNK.Models.Modules
         public string NoPO { get; set; }
         public DateTime Tarikh { get; set; }
         public DateTime TarikhPosting { get; set; }
-        public int KodPembekal { get; set; }
+        public int PembekalId { get; set; }
         public decimal Jumlah { get; set; }
         [MaxLength(1)]
         public string Posting { get; set; }
-        public int KodKW { get; set; }
+        public int KWId { get; set; }
         [MaxLength(4)]
         public string Tahun { get; set; }
         [MaxLength(1)]

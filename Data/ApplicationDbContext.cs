@@ -31,6 +31,10 @@ namespace MSNK.Data
         public DbSet<AkTerima> AkTerima { get; set; }
         public DbSet<AkTerima1> AkTerima1 { get; set; }
         public DbSet<AkTerima2> AkTerima2 { get; set; }
+        public DbSet<Pembekal> Pembekal { get; set; }
+        public DbSet<PO> PO { get; set; }
+        public DbSet<PO1> PO1 { get; set; }
+        public DbSet<PO2> PO2 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
