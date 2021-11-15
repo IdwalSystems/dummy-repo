@@ -20,7 +20,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="KWId" class="control-label"></label>
-                <select asp-for="KWId" class ="form-control" asp-items="ViewBag.KWId"></select>
+                <select class="form-control" asp-for="KWId">
+                    <option value="" hidden>-- Pilih Kumpulan Wang --</option>
+                    @foreach (var s in ViewBag.KW)
+                    {
+                        <option value="@s.Id">@s.Perihal </option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="NoRujukan" class="control-label"></label>
@@ -39,7 +45,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="AkBankId" class="control-label"></label>
-                <select asp-for="AkBankId" class ="form-control" asp-items="ViewBag.AkBankId"></select>
+                <select class="form-control" asp-for="AkBankId">
+                    <option value="" hidden>-- Pilih Bank --</option>
+                    @foreach (var s in ViewBag.AkBank)
+                    {
+                        <option value="@s.Id">@s.Kod - @s.Bank.Nama</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="FlCetak" class="control-label"></label>
@@ -98,7 +110,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="NegeriId" class="control-label"></label>
-                <select asp-for="NegeriId" class ="form-control" asp-items="ViewBag.NegeriId"></select>
+                <select class="form-control" asp-for="NegeriId">
+                    <option value="" hidden>-- Pilih Negeri --</option>
+                    @foreach (var s in ViewBag.Negeri)
+                    {
+                        <option value="@s.Id">@s.Perihal </option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="Tel" class="control-label"></label>
@@ -135,6 +153,34 @@
                 <input asp-for="TarKemaskini" class="form-control" />
                 <span asp-validation-for="TarKemaskini" class="text-danger"></span>
             </div>
+            <h3>Objek</h3>
+            <table id="tblCustomers" class="table" cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th style="width:150px">Kod</th>
+                        <th style="width:150px">Amaun</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><input type="button" value="Remove" onclick="Remove(this)" /></td>
+                        </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><input type="text" id="txtName" /></td>
+                        <td><input type="text" id="txtCountry" /></td>
+                        <td><input type="button" id="btnAdd" value="Add" /></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <br />
+            <input type="button" id="btnSave" value="Save All" />
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -149,3 +195,77 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        console.log("ready!");
+    });
+    $("body").on("click", "#btnAdd", function () {
+        //Reference the Name and Country TextBoxes.
+        var txtName = $("#txtName");
+        var txtCountry = $("#txtCountry");
+
+        //Get the reference of the Table's TBODY element.
+        var tBody = $("#tblCustomers > TBODY")[0];
+
+        //Add Row.
+        var row = tBody.insertRow(-1);
+
+        //Add Name cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtName.val());
+
+        //Add Country cell.
+        cell = $(row.insertCell(-1));
+        cell.html(txtCountry.val());
+
+        //Add Button cell.
+        cell = $(row.insertCell(-1));
+        var btnRemove = $("<input />");
+        btnRemove.attr("type", "button");
+        btnRemove.attr("onclick", "Remove(this);");
+        btnRemove.val("Remove");
+        cell.append(btnRemove);
+
+        //Clear the TextBoxes.
+        txtName.val("");
+        txtCountry.val("");
+    });
+
+    function Remove(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var name = $("TD", row).eq(0).html();
+        if (confirm("Do you want to delete: " + name)) {
+            //Get the reference of the Table.
+            var table = $("#tblCustomers")[0];
+
+            //Delete the Table row using it's Index.
+            table.deleteRow(row[0].rowIndex);
+        }
+    };
+
+    $("body").on("click", "#btnSave", function () {
+        //Loop through the Table rows and build a JSON array.
+        var customers = new Array();
+        $("#tblCustomers TBODY TR").each(function () {
+            var row = $(this);
+            var customer = {};
+            customer.Name = row.find("TD").eq(0).html();
+            customer.Country = row.find("TD").eq(1).html();
+            customers.push(customer);
+        });
+
+        //Send the JSON array to Controller using AJAX.
+        $.ajax({
+            type: "POST",
+            url: "/Home/InsertCustomers",
+            data: JSON.stringify(customers),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+                alert(r + " record(s) inserted.");
+            }
+        });
+    });
+</script>

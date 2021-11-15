@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211115023855_AddInitialTables")]
+    [Migration("20211115044645_AddInitialTables")]
     partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,7 +97,7 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkCarta", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -134,7 +134,7 @@ namespace MSNK.Migrations
                         .HasMaxLength(1)
                         .HasColumnType("nvarchar(1)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("JenisId");
 
@@ -257,10 +257,7 @@ namespace MSNK.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AkAkaunId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AkCartaid")
+                    b.Property<int>("AkCartaId")
                         .HasColumnType("int");
 
                     b.Property<int>("AkTerimaId")
@@ -271,9 +268,7 @@ namespace MSNK.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AkAkaunId");
-
-                    b.HasIndex("AkCartaid");
+                    b.HasIndex("AkCartaId");
 
                     b.HasIndex("AkTerimaId");
 
@@ -984,15 +979,11 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkTerima1", b =>
                 {
-                    b.HasOne("MSNK.Models.Modules.AkAkaun", "AkAkaun")
-                        .WithMany()
-                        .HasForeignKey("AkAkaunId")
+                    b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
+                        .WithMany("AkTerima1")
+                        .HasForeignKey("AkCartaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("MSNK.Models.Modules.AkCarta", null)
-                        .WithMany("AkTerima1")
-                        .HasForeignKey("AkCartaid");
 
                     b.HasOne("MSNK.Models.Modules.AkTerima", "AkTerima")
                         .WithMany("AkTerima1")
@@ -1000,7 +991,7 @@ namespace MSNK.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("AkAkaun");
+                    b.Navigation("AkCarta");
 
                     b.Navigation("AkTerima");
                 });

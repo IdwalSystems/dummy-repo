@@ -10,7 +10,7 @@ namespace MSNK.Models.Modules
     {
         public int KWId { get; set; }
 
-        public int id { get; set; }
+        public int Id { get; set; }
         [MaxLength(6)]
         public string Kod { get; set; }
         [MaxLength(100)]

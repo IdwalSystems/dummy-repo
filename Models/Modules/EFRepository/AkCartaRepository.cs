@@ -15,7 +15,7 @@ namespace MSNK.Models.Modules.EFRepository
         public AkCartaRepository(ApplicationDbContext context) => this.context = context;
         public async Task Delete(int id)
         {
-            var akCarta = await context.AkCarta.FirstOrDefaultAsync(b => b.id == id);
+            var akCarta = await context.AkCarta.FirstOrDefaultAsync(b => b.Id == id);
             if(akCarta != null)
             {
                 context.Remove(akCarta);

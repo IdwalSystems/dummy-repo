@@ -47,8 +47,12 @@ namespace MSNK
             services.AddTransient<IRepository<AkBank, int>, AkBankRepository>();
             services.AddTransient<IRepository<KW, int>, KWRepository>();
             services.AddTransient<IRepository<Bank, int>, BankRepository>();
+            services.AddTransient<IRepository<Negeri, int>, NegeriRepository>();
             services.AddTransient<IRepository<AkCarta, int>, AkCartaRepository>();
             services.AddTransient<IRepository<AkAkaun, int>, AkAkaunRepository>();
+            services.AddTransient<IRepository<AkTerima, int>, AkTerimaRepository>();
+            services.AddTransient<IRepository<AkTerima1, int>, AkTerima1Repository>();
+            services.AddTransient<IRepository<AkTerima2, int>, AkTerima2Repository>();
             services.AddControllersWithViews();
         }
 

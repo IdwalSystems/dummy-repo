@@ -8,38 +8,34 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class AkBankRepository : IRepository<AkBank, int>
+    public class NegeriRepository : IRepository<Negeri, int>
     {
         public readonly ApplicationDbContext context;
 
-        public AkBankRepository(ApplicationDbContext context) => this.context = context;
-
+        public NegeriRepository(ApplicationDbContext context) => this.context = context;
         public async Task Delete(int id)
         {
-            var model = await context.AkBank.FirstOrDefaultAsync(b => b.Id == id);
-            if(model != null)
+            var model = await context.Negeri.FirstOrDefaultAsync(b => b.Id == id);
+            if (model != null)
             {
                 context.Remove(model);
             }
+        }
+
+        public async Task<IEnumerable<Negeri>> GetAll()
+        {
+            return await context.Negeri.ToListAsync();
+        }
+
+        public async Task<Negeri> GetById(int id)
+        {
+            return await context.Negeri.FindAsync(id);
 
         }
 
-        public async Task<IEnumerable<AkBank>> GetAll()
+        public async Task<Negeri> Insert(Negeri entity)
         {
-            
-            return await context.AkBank.Include(b => b.KW).Include(b => b.Bank).ToListAsync();
-            
-            
-        }
-
-        public async Task<AkBank> GetById(int id)
-        {
-            return await context.AkBank.FindAsync(id);
-        }
-
-        public async Task<AkBank> Insert(AkBank entity)
-        {
-            await context.AkBank.AddAsync(entity);
+            await context.Negeri.AddAsync(entity);
             return entity;
         }
 
@@ -48,7 +44,7 @@ namespace MSNK.Models.Modules.EFRepository
             await context.SaveChangesAsync();
         }
 
-        public async Task Update(AkBank entity)
+        public async Task Update(Negeri entity)
         {
             context.Update(entity);
             await context.SaveChangesAsync();

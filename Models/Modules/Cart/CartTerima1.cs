@@ -11,12 +11,12 @@ namespace MSNK.Models.Modules.Cart
         private List<AkTerima1> collection1 = new List<AkTerima1>();
 
         public virtual void AddItem(
-            int akTerimaId, int akAkaunId,
+            int akTerimaId, int akCartaId,
             decimal amaun
             )
         {
             AkTerima1 line = collection1
-            .Where(p => p.AkAkaun.Id == akAkaunId)
+            .Where(p => p.AkCarta.Id == akCartaId)
             .FirstOrDefault();
 
             if (line == null)
@@ -24,7 +24,7 @@ namespace MSNK.Models.Modules.Cart
                 collection1.Add(new AkTerima1
                 {
                     AkTerimaId = akTerimaId,
-                    AkAkaunId = akAkaunId,
+                    AkCartaId = akCartaId,
                     Amaun = amaun
                 });
             }

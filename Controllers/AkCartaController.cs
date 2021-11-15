@@ -144,7 +144,7 @@ namespace MSNK.Controllers
         public async Task<IActionResult> Edit(int id, AkCarta akCarta, int KWId, int JenisId, int ParasId)
         {
 
-            if (id != akCarta.id)
+            if (id != akCarta.Id)
             {
                 return NotFound();
             }
@@ -168,7 +168,7 @@ namespace MSNK.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AkCartaExists(akCarta.id))
+                    if (!AkCartaExists(akCarta.Id))
                     {
                         return NotFound();
                     }
@@ -194,7 +194,7 @@ namespace MSNK.Controllers
 
             var akCarta = await _context.AkCarta
                 .Include(a => a.KW)
-                .FirstOrDefaultAsync(m => m.id == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (akCarta == null)
             {
                 return NotFound();
@@ -216,7 +216,7 @@ namespace MSNK.Controllers
 
         private bool AkCartaExists(int id)
         {
-            return _context.AkCarta.Any(e => e.id == id);
+            return _context.AkCarta.Any(e => e.Id == id);
         }
     }
 }

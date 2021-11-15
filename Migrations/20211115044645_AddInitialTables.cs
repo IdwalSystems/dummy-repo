@@ -255,7 +255,7 @@ namespace MSNK.Migrations
                 name: "AkCarta",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     KWId = table.Column<int>(type: "int", nullable: false),
                     Kod = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
@@ -269,7 +269,7 @@ namespace MSNK.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AkCarta", x => x.id);
+                    table.PrimaryKey("PK_AkCarta", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AkCarta_Jenis_JenisId",
                         column: x => x.JenisId,
@@ -311,13 +311,13 @@ namespace MSNK.Migrations
                         name: "FK_AkAkaun_AkCarta_AkCartaId1",
                         column: x => x.AkCartaId1,
                         principalTable: "AkCarta",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AkAkaun_AkCarta_AkCartaId2",
                         column: x => x.AkCartaId2,
                         principalTable: "AkCarta",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AkAkaun_KW_KWId",
@@ -346,7 +346,7 @@ namespace MSNK.Migrations
                         name: "FK_AkBank_AkCarta_AkCartaId",
                         column: x => x.AkCartaId,
                         principalTable: "AkCarta",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AkBank_Bank_BankId",
@@ -468,25 +468,18 @@ namespace MSNK.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AkTerimaId = table.Column<int>(type: "int", nullable: false),
-                    AkAkaunId = table.Column<int>(type: "int", nullable: false),
-                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    AkCartaid = table.Column<int>(type: "int", nullable: true)
+                    AkCartaId = table.Column<int>(type: "int", nullable: false),
+                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AkTerima1", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AkTerima1_AkAkaun_AkAkaunId",
-                        column: x => x.AkAkaunId,
-                        principalTable: "AkAkaun",
+                        name: "FK_AkTerima1_AkCarta_AkCartaId",
+                        column: x => x.AkCartaId,
+                        principalTable: "AkCarta",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AkTerima1_AkCarta_AkCartaid",
-                        column: x => x.AkCartaid,
-                        principalTable: "AkCarta",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AkTerima1_AkTerima_AkTerimaId",
                         column: x => x.AkTerimaId,
@@ -606,7 +599,7 @@ namespace MSNK.Migrations
                         name: "FK_PO2_AkCarta_AkCartaId",
                         column: x => x.AkCartaId,
                         principalTable: "AkCarta",
-                        principalColumn: "id",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PO2_KW_KWId",
@@ -688,14 +681,9 @@ namespace MSNK.Migrations
                 column: "NegeriId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AkTerima1_AkAkaunId",
+                name: "IX_AkTerima1_AkCartaId",
                 table: "AkTerima1",
-                column: "AkAkaunId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AkTerima1_AkCartaid",
-                table: "AkTerima1",
-                column: "AkCartaid");
+                column: "AkCartaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkTerima1_AkTerimaId",
