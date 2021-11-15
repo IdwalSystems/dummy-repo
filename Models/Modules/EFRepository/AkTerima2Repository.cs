@@ -26,7 +26,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkTerima2
                 .Include(b => b.AkTerima)
-                .Include(b => b.CaraBayar)
+                .Include(b => b.JCaraBayar)
                 .ToListAsync();
         }
 

@@ -14,7 +14,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.KW)
+                @Html.DisplayNameFor(model => model.JKW)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Kod)
@@ -23,10 +23,10 @@
                 @Html.DisplayNameFor(model => model.Nama)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Jenis)
+                @Html.DisplayNameFor(model => model.JJenis)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Paras)
+                @Html.DisplayNameFor(model => model.JParas)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DebitKredit)
@@ -47,7 +47,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.KW.Kod)
+                @Html.DisplayFor(modelItem => item.JKW.Kod)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Kod)
@@ -56,10 +56,10 @@
                 @Html.DisplayFor(modelItem => item.Nama)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Jenis.Id)
+                @Html.DisplayFor(modelItem => item.JJenis.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Paras.Id)
+                @Html.DisplayFor(modelItem => item.JParas.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DebitKredit)

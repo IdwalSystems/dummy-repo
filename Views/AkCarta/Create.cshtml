@@ -14,8 +14,8 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="KWId" class="control-label"></label>
-                <select class="form-control" asp-for="KWId">
+                <label asp-for="JKWId" class="control-label"></label>
+                <select class="form-control" asp-for="JKWId">
                     <option value="" hidden>-- Pilih Kumpulan Wang --</option>
                     @foreach (var s in ViewBag.KW)
                     {
@@ -24,8 +24,8 @@
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="JenisId" class="control-label"></label>
-                <select class="form-control" asp-for="JenisId">
+                <label asp-for="JJenisId" class="control-label"></label>
+                <select class="form-control" asp-for="JJenisId">
                     <option value="" hidden >-- Pilih Jenis --</option>
                     @foreach (var s in ViewBag.Jenis)
                     {
@@ -34,8 +34,8 @@
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="ParasId" class="control-label"></label>
-                <select class="form-control" asp-for="ParasId">
+                <label asp-for="JParasId" class="control-label"></label>
+                <select class="form-control" asp-for="JParasId">
                     <option value="" hidden >-- Pilih Paras --</option>
                     @foreach (var s in ViewBag.Paras)
                     {

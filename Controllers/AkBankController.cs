@@ -18,13 +18,13 @@ namespace MSNK.Controllers
     {
         
         private readonly ApplicationDbContext _context;
-        private readonly IRepository<KW, int> _kwRepo;
-        private readonly IRepository<Bank, int> _bankRepo;
+        private readonly IRepository<JKW, int> _kwRepo;
+        private readonly IRepository<JBank, int> _bankRepo;
         private readonly IRepository<AkBank, int> _akBankRepo;
 
         public AkBankController(ApplicationDbContext context,
-                                IRepository<KW, int> kwRepository,
-                                IRepository<Bank, int> bankRepository,
+                                IRepository<JKW, int> kwRepository,
+                                IRepository<JBank, int> bankRepository,
                                 IRepository<AkBank, int> akBankRepository)
         {
             _context = context;
@@ -61,14 +61,14 @@ namespace MSNK.Controllers
         
         private void PopulateBankList()
         {
-            List<Bank> bankList = _context.Bank.ToList();
-            bankList.Insert(0, new Bank { Id = 0, Nama = "-- Pilih Bank --" });
+            List<JBank> bankList = _context.JBank.ToList();
+            bankList.Insert(0, new JBank { Id = 0, Nama = "-- Pilih Bank --" });
             ViewBag.Bank = bankList;
         }
         private void PopulateKWList()
         {
-            List<KW> kwList = _context.KW.ToList();
-            kwList.Insert(0, new KW { Id = 0, Perihal = "-- Pilih Kumpulan Wang --" });
+            List<JKW> kwList = _context.JKW.ToList();
+            kwList.Insert(0, new JKW { Id = 0, Perihal = "-- Pilih Kumpulan Wang --" });
             ViewBag.Kw = kwList;
         }
         // GET: AkBank/Create
@@ -93,7 +93,7 @@ namespace MSNK.Controllers
                 if (akBank != null && KWId != 0 && BankId != 0)
                 {
                     akB.BankId = BankId;
-                    akB.KWId = KWId;
+                    akB.JKWId = KWId;
                     akB.Kod = akBank.Kod;
                     akB.NoAkaun = akBank.NoAkaun;
                     await _akBankRepo.Insert(akB);
@@ -148,7 +148,7 @@ namespace MSNK.Controllers
                 try
                 {
                     akB.BankId = BankId;
-                    akB.KWId = KWId;
+                    akB.JKWId = KWId;
                     akB.Kod = akBank.Kod;
                     akB.NoAkaun = akBank.NoAkaun;
                     await _akBankRepo.Update(akB);

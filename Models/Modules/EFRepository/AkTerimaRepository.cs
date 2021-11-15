@@ -25,9 +25,9 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<AkTerima>> GetAll()
         {
             return await context.AkTerima
-                .Include(b => b.KW)
+                .Include(b => b.JKW)
                 .Include(b => b.AkBank)
-                .Include(b => b.Negeri)
+                .Include(b => b.JNegeri)
                 .Include(b => b.AkTerima1)
                 .Include(b => b.AkTerima2)
                 .ToListAsync();

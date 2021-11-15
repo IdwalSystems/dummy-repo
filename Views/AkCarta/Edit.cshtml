@@ -14,37 +14,37 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="KWId" class="control-label"></label>
-                <select class="form-control" asp-for="KWId">
+                <label asp-for="JKWId" class="control-label"></label>
+                <select class="form-control" asp-for="JKWId">
                     <option value="" hidden>-- Pilih Kumpulan Wang --</option>
                     @foreach (var s in ViewBag.KW)
                     {
                         <option value="@s.Id">@s.Perihal </option>
                     }
                 </select>
-                <span asp-validation-for="KWId" class="text-danger"></span>
+                <span asp-validation-for="JKWId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="JenisId" class="control-label"></label>
-                <select class="form-control" asp-for="JenisId">
+                <label asp-for="JJenisId" class="control-label"></label>
+                <select class="form-control" asp-for="JJenisId">
                     <option value="" hidden>-- Pilih Jenis --</option>
                     @foreach (var s in ViewBag.Jenis)
                     {
                         <option value="@s.Id">@s.Kod </option>
                     }
                 </select>
-                <span asp-validation-for="JenisId" class="text-danger"></span>
+                <span asp-validation-for="JJenisId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ParasId" class="control-label"></label>
-                <select class="form-control" asp-for="ParasId">
+                <label asp-for="JParasId" class="control-label"></label>
+                <select class="form-control" asp-for="JParasId">
                     <option value="" hidden>-- Pilih Paras --</option>
                     @foreach (var s in ViewBag.Paras)
                     {
                         <option value="@s.Id">@s.Kod </option>
                     }
                 </select>
-                <span asp-validation-for="ParasId" class="text-danger"></span>
+                <span asp-validation-for="JParasId" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">

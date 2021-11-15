@@ -17,14 +17,14 @@ namespace MSNK.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IRepository<AkAkaun, int> _akAkaunRepo;
-        private readonly IRepository<KW, int> _kwRepo;
+        private readonly IRepository<JKW, int> _kwRepo;
         private readonly IRepository<AkCarta, int> _akCarta1Repo;
         private readonly IRepository<AkCarta, int> _akCarta2Repo;
 
         public AkAkaunController(
             ApplicationDbContext context,
             IRepository<AkAkaun, int> akAkaunRepository,
-            IRepository<KW, int> kwRepository,
+            IRepository<JKW, int> kwRepository,
             IRepository<AkCarta, int> akCarta1Repository,
             IRepository<AkCarta, int> akCarta2Repository)
         {
@@ -51,8 +51,8 @@ namespace MSNK.Controllers
             }
 
             var akAkaun = await _akAkaunRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akAkaun.KWId);
-            akAkaun.KW = kw;
+            var kw = await _kwRepo.GetById(akAkaun.JKWId);
+            akAkaun.JKW = kw;
             var akCarta1 = await _akCarta1Repo.GetById(akAkaun.AkCartaId1);
             akAkaun.AkCarta1 = akCarta1;
             var akCarta2 = await _akCarta2Repo.GetById(akAkaun.AkCartaId2);
@@ -68,7 +68,7 @@ namespace MSNK.Controllers
 
         private void PopulateList()
         {
-            List<KW> kwList = _context.KW.OrderBy(b => b.Kod).ToList();
+            List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.Kw = kwList;
 
             List<AkCarta> akCarta1List = _context.AkCarta.OrderBy(b => b.Kod).ToList();
@@ -96,7 +96,7 @@ namespace MSNK.Controllers
             {
                 if (akAkaun != null && KWId != 0 && AkCartaId1 != 0 && AkCartaId2 != 0)
                 {
-                    m.KWId = KWId;
+                    m.JKWId = KWId;
                     m.AkCartaId1 = AkCartaId1;
                     m.AkCartaId2 = AkCartaId2;
                     m.Tarikh = akAkaun.Tarikh;
@@ -124,8 +124,8 @@ namespace MSNK.Controllers
 
             PopulateList();
             var akAkaun = await _akAkaunRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akAkaun.KWId);
-            akAkaun.KW = kw;
+            var kw = await _kwRepo.GetById(akAkaun.JKWId);
+            akAkaun.JKW = kw;
             var akCarta1 = await _akCarta1Repo.GetById(akAkaun.AkCartaId1);
             akAkaun.AkCarta1 = akCarta1;
             var akCarta2 = await _akCarta2Repo.GetById(akAkaun.AkCartaId2);
@@ -157,7 +157,7 @@ namespace MSNK.Controllers
             {
                 try
                 {
-                    m.KWId = KWId;
+                    m.JKWId = KWId;
                     m.AkCartaId1 = AkCartaId1;
                     m.AkCartaId2 = AkCartaId2;
                     m.Tarikh = akAkaun.Tarikh;
@@ -194,7 +194,7 @@ namespace MSNK.Controllers
             var akAkaun = await _context.AkAkaun
                 .Include(a => a.AkCarta1)
                 .Include(a => a.AkCarta2)
-                .Include(a => a.KW)
+                .Include(a => a.JKW)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (akAkaun == null)
             {

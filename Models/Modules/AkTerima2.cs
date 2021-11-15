@@ -8,13 +8,15 @@ namespace MSNK.Models.Modules
     {
         public int Id { get; set; }
         public int AkTerimaId { get; set; }
-        public int CaraBayarId { get; set; }
+        public int JCaraBayarId { get; set; }
         public decimal Amaun { get; set; }
         [MaxLength(10)]
         public string NoCek { get; set; }
         [MaxLength(1)]
         public string JenisCek { get; set; }
+        [MaxLength(4)]
         public string KodBankCek { get; set; }
+        [MaxLength(100)]
         public string TempatCek { get; set; }
         [MaxLength(30)]
         public string NoSlip { get; set; }
@@ -23,7 +25,7 @@ namespace MSNK.Models.Modules
         
 
         //Relationship
-        public CaraBayar CaraBayar { get; set; }
+        public JCaraBayar JCaraBayar { get; set; }
         public AkTerima AkTerima { get; set; }
     }
 }

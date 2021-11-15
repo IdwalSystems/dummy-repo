@@ -45,9 +45,9 @@ namespace MSNK
             });
 
             services.AddTransient<IRepository<AkBank, int>, AkBankRepository>();
-            services.AddTransient<IRepository<KW, int>, KWRepository>();
-            services.AddTransient<IRepository<Bank, int>, BankRepository>();
-            services.AddTransient<IRepository<Negeri, int>, NegeriRepository>();
+            services.AddTransient<IRepository<JKW, int>, JKWRepository>();
+            services.AddTransient<IRepository<JBank, int>, JBankRepository>();
+            services.AddTransient<IRepository<JNegeri, int>, JNegeriRepository>();
             services.AddTransient<IRepository<AkCarta, int>, AkCartaRepository>();
             services.AddTransient<IRepository<AkAkaun, int>, AkAkaunRepository>();
             services.AddTransient<IRepository<AkTerima, int>, AkTerimaRepository>();

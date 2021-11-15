@@ -16,8 +16,8 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IRepository<AkTerima, int> _akTerimaRepo;
         private readonly IRepository<AkBank, int> _akBankRepo;
-        private readonly IRepository<KW, int> _kwRepo;
-        private readonly IRepository<Negeri, int> _negeriRepo;
+        private readonly IRepository<JKW, int> _kwRepo;
+        private readonly IRepository<JNegeri, int> _negeriRepo;
         private readonly IRepository<AkTerima1, int> _akTerima1Repo;
         private readonly IRepository<AkTerima2, int> _akTerima2Repo;
 
@@ -27,8 +27,8 @@ namespace MSNK.Controllers
             IRepository<AkTerima1, int> akTerima1Repository,
             IRepository<AkTerima2, int> akTerima2Repository,
             IRepository<AkBank, int> akBankRepository,
-            IRepository<KW, int> kwRepository,
-            IRepository<Negeri, int> negeriRepository
+            IRepository<JKW, int> kwRepository,
+            IRepository<JNegeri, int> negeriRepository
             )
         {
             _context = context;
@@ -56,10 +56,10 @@ namespace MSNK.Controllers
             }
 
             var akTerima = await _akTerimaRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akTerima.KWId);
-            akTerima.KW = kw;
-            var negeri = await _negeriRepo.GetById(akTerima.NegeriId);
-            akTerima.Negeri = negeri;
+            var kw = await _kwRepo.GetById(akTerima.JKWId);
+            akTerima.JKW = kw;
+            var negeri = await _negeriRepo.GetById(akTerima.JNegeriId);
+            akTerima.JNegeri = negeri;
             var akBank = await _akBankRepo.GetById(akTerima.AkBankId);
             akTerima.AkBank = akBank;
             if (akTerima == null)
@@ -72,13 +72,13 @@ namespace MSNK.Controllers
 
         private void PopulateList()
         {
-            List<KW> kwList = _context.KW.OrderBy(b => b.Kod).ToList();
+            List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.Kw = kwList;
 
-            List<Negeri> negeriList = _context.Negeri.OrderBy(b => b.Kod).ToList();
+            List<JNegeri> negeriList = _context.JNegeri.OrderBy(b => b.Kod).ToList();
             ViewBag.Negeri = negeriList;
 
-            List<AkBank> akBankList = _context.AkBank.Include(b=> b.Bank).OrderBy(b => b.Kod).ToList();
+            List<AkBank> akBankList = _context.AkBank.Include(b=> b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
 
         }
@@ -105,8 +105,8 @@ namespace MSNK.Controllers
                 if (akTerima != null && NegeriId != 0 && KWId != 0 && NegeriId != 0 && AkTerima1Id != 0 && AkTerima2Id != 0)
                 {
 
-                    m.KWId = KWId;
-                    m.NegeriId = NegeriId;
+                    m.JKWId = KWId;
+                    m.JNegeriId = NegeriId;
                     m.AkBankId = AkBankId;
                     m.NoRujukan = akTerima.NoRujukan;
                     m.Tarikh = akTerima.Tarikh;
@@ -140,8 +140,8 @@ namespace MSNK.Controllers
                 return NotFound();
             }
             ViewData["AkBankId"] = new SelectList(_context.AkBank, "Id", "Id", akTerima.AkBankId);
-            ViewData["KWId"] = new SelectList(_context.KW, "Id", "Kod", akTerima.KWId);
-            ViewData["NegeriId"] = new SelectList(_context.Negeri, "Id", "Kod", akTerima.NegeriId);
+            ViewData["KWId"] = new SelectList(_context.JKW, "Id", "Kod", akTerima.JKWId);
+            ViewData["NegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", akTerima.JNegeriId);
             return View(akTerima);
         }
 
@@ -178,8 +178,8 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AkBankId"] = new SelectList(_context.AkBank, "Id", "Id", akTerima.AkBankId);
-            ViewData["KWId"] = new SelectList(_context.KW, "Id", "Kod", akTerima.KWId);
-            ViewData["NegeriId"] = new SelectList(_context.Negeri, "Id", "Kod", akTerima.NegeriId);
+            ViewData["KWId"] = new SelectList(_context.JKW, "Id", "Kod", akTerima.JKWId);
+            ViewData["NegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", akTerima.JNegeriId);
             return View(akTerima);
         }
 
@@ -193,8 +193,8 @@ namespace MSNK.Controllers
 
             var akTerima = await _context.AkTerima
                 .Include(a => a.AkBank)
-                .Include(a => a.KW)
-                .Include(a => a.Negeri)
+                .Include(a => a.JKW)
+                .Include(a => a.JNegeri)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (akTerima == null)
             {

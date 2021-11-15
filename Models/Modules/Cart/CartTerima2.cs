@@ -26,7 +26,7 @@ namespace MSNK.Models.Modules.Cart
                 collection2.Add(new AkTerima2
                 {
                     AkTerimaId = akTerimaId,
-                    CaraBayarId = caraBayarId,
+                    JCaraBayarId = caraBayarId,
                     Amaun = amaun,
                     NoCek = noCek,
                     JenisCek = jenisCek,

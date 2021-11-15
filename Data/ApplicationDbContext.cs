@@ -15,42 +15,42 @@ namespace MSNK.Data
         public DbSet<ApplicationUser> applicationUsers { get; set; }
 
         //module
-        public DbSet<KW> KW { get; set; }
+        public DbSet<JKW> JKW { get; set; }
 
-        public DbSet<CaraBayar> CaraBayar { get; set; }
+        public DbSet<JCaraBayar> JCaraBayar { get; set; }
 
-        public DbSet<Modul> Modul { get; set; }
+        public DbSet<SiModul> SiModul { get; set; }
 
-        public DbSet<Bank> Bank { get; set; }
-        public DbSet<Negeri> Negeri { get; set; }
+        public DbSet<JBank> JBank { get; set; }
+        public DbSet<JNegeri> JNegeri { get; set; }
         public DbSet<AkBank> AkBank { get; set; }
         public DbSet<AkCarta> AkCarta { get; set; }
-        public DbSet<Jenis> Jenis { get; set; }
-        public DbSet<Paras> Paras { get; set; }
+        public DbSet<JJenis> JJenis { get; set; }
+        public DbSet<JParas> JParas { get; set; }
         public DbSet<AkAkaun> AkAkaun { get; set; }
         public DbSet<AkTerima> AkTerima { get; set; }
         public DbSet<AkTerima1> AkTerima1 { get; set; }
         public DbSet<AkTerima2> AkTerima2 { get; set; }
-        public DbSet<Pembekal> Pembekal { get; set; }
-        public DbSet<PO> PO { get; set; }
-        public DbSet<PO1> PO1 { get; set; }
-        public DbSet<PO2> PO2 { get; set; }
+        public DbSet<AkPembekal> AkPembekal { get; set; }
+        public DbSet<AkPO> AkPO { get; set; }
+        public DbSet<AkPO1> AkPO1 { get; set; }
+        public DbSet<AkPO2> AkPO2 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<AkBank>()
-                .HasOne(e => e.Bank)
+                .HasOne(e => e.JBank)
                 .WithMany(c => c.AkBank)
                 ;
 
             modelBuilder.Entity<AkBank>()
-                .HasOne(e => e.KW)
+                .HasOne(e => e.JKW)
                 .WithMany(c => c.AkBank)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AkCarta>()
-                .HasOne(e => e.KW)
+                .HasOne(e => e.JKW)
                 .WithMany(c => c.AkCarta);
 
             modelBuilder.Entity<AkAkaun>()
@@ -82,37 +82,37 @@ namespace MSNK.Data
                     .IsRequired();
 
             modelBuilder.Entity<AkTerima>()
-                    .HasOne(m => m.KW)
+                    .HasOne(m => m.JKW)
                     .WithMany(t => t.AkTerima)
-                    .HasForeignKey(m => m.KWId)
+                    .HasForeignKey(m => m.JKWId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
             modelBuilder.Entity<AkTerima>()
-                    .HasOne(m => m.Negeri)
+                    .HasOne(m => m.JNegeri)
                     .WithMany(t => t.AkTerima)
-                    .HasForeignKey(m => m.NegeriId)
+                    .HasForeignKey(m => m.JNegeriId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
-            modelBuilder.Entity<PO>()
-                    .HasOne(m => m.Pembekal)
-                    .WithMany(t => t.PO)
-                    .HasForeignKey(m => m.PembekalId)
+            modelBuilder.Entity<AkPO>()
+                    .HasOne(m => m.AkPembekal)
+                    .WithMany(t => t.AkPO)
+                    .HasForeignKey(m => m.AkPembekalId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
-            modelBuilder.Entity<PO2>()
-                    .HasOne(m => m.KW)
-                    .WithMany(t => t.PO2)
-                    .HasForeignKey(m => m.KWId)
+            modelBuilder.Entity<AkPO2>()
+                    .HasOne(m => m.JKW)
+                    .WithMany(t => t.AkPO2)
+                    .HasForeignKey(m => m.JKWId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
-            modelBuilder.Entity<PO2>()
-                    .HasOne(m => m.PO)
-                    .WithMany(t => t.PO2)
-                    .HasForeignKey(m => m.POId)
+            modelBuilder.Entity<AkPO2>()
+                    .HasOne(m => m.AkPO)
+                    .WithMany(t => t.AkPO2)
+                    .HasForeignKey(m => m.AkPOId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 

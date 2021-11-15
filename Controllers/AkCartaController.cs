@@ -17,11 +17,11 @@ namespace MSNK.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
-        private readonly IRepository<KW, int> _kwRepo;
+        private readonly IRepository<JKW, int> _kwRepo;
 
         public AkCartaController(
             ApplicationDbContext context,
-            IRepository<KW, int> kwRepository,
+            IRepository<JKW, int> kwRepository,
             IRepository<AkCarta, int> akCartaRepository)
         {
             _context = context;
@@ -45,12 +45,12 @@ namespace MSNK.Controllers
             }
 
             var akCarta = await _akCartaRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akCarta.KWId);
-            akCarta.KW = kw;
-            var jenis = _context.Jenis.FirstOrDefault(b => b.Id == akCarta.JenisId);
-            akCarta.Jenis = jenis;
-            var paras = _context.Paras.FirstOrDefault(b => b.Id == akCarta.ParasId);
-            akCarta.Paras = paras;
+            var kw = await _kwRepo.GetById(akCarta.JKWId);
+            akCarta.JKW = kw;
+            var jenis = _context.JJenis.FirstOrDefault(b => b.Id == akCarta.JJenisId);
+            akCarta.JJenis = jenis;
+            var paras = _context.JParas.FirstOrDefault(b => b.Id == akCarta.JParasId);
+            akCarta.JParas = paras;
 
             if (akCarta == null)
             {
@@ -62,13 +62,13 @@ namespace MSNK.Controllers
 
         private void PopulateList()
         {
-            List<KW> kwList = _context.KW.OrderBy(b => b.Kod).ToList();
+            List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.Kw = kwList;
 
-            List<Jenis> jenisList = _context.Jenis.OrderBy(b => b.Kod).ToList();
+            List<JJenis> jenisList = _context.JJenis.OrderBy(b => b.Kod).ToList();
             ViewBag.Jenis = jenisList;
 
-            List<Paras> parasList = _context.Paras.OrderBy(b => b.Kod).ToList();
+            List<JParas> parasList = _context.JParas.OrderBy(b => b.Kod).ToList();
             ViewBag.Paras = parasList;
         }
 
@@ -91,11 +91,11 @@ namespace MSNK.Controllers
             {
                 if (akCarta != null && KWId != 0)
                 {
-                    akC.KWId = KWId;
+                    akC.JKWId = KWId;
                     akC.Kod = akCarta.Kod;
-                    akC.JenisId = JenisId;
+                    akC.JJenisId = JenisId;
                     akC.Nama = akCarta.Nama;
-                    akC.ParasId = ParasId;
+                    akC.JParasId = ParasId;
                     akC.DebitKredit = akCarta.DebitKredit;
                     akC.UmumDetail = akCarta.UmumDetail;
                     akC.Catatan1 = akCarta.Catatan1;
@@ -122,12 +122,12 @@ namespace MSNK.Controllers
 
             PopulateList();
             var akCarta = await _akCartaRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akCarta.KWId);
-            akCarta.KW = kw;
-            var jenis = _context.Jenis.FirstOrDefault(b => b.Id == akCarta.JenisId);
-            akCarta.Jenis = jenis;
-            var paras = _context.Paras.FirstOrDefault(b => b.Id == akCarta.ParasId);
-            akCarta.Paras = paras;
+            var kw = await _kwRepo.GetById(akCarta.JKWId);
+            akCarta.JKW = kw;
+            var jenis = _context.JJenis.FirstOrDefault(b => b.Id == akCarta.JJenisId);
+            akCarta.JJenis = jenis;
+            var paras = _context.JParas.FirstOrDefault(b => b.Id == akCarta.JParasId);
+            akCarta.JParas = paras;
             if (akCarta == null)
             {
                 return NotFound();
@@ -155,11 +155,11 @@ namespace MSNK.Controllers
             {
                 try
                 {
-                    akC.KWId = KWId;
+                    akC.JKWId = KWId;
                     akC.Kod = akCarta.Kod;
-                    akC.JenisId = JenisId;
+                    akC.JJenisId = JenisId;
                     akC.Nama = akCarta.Nama;
-                    akC.ParasId = ParasId;
+                    akC.JParasId = ParasId;
                     akC.UmumDetail = akCarta.UmumDetail;
                     akC.DebitKredit = akCarta.DebitKredit;
                     akC.Catatan1 = akCarta.Catatan1;
@@ -193,7 +193,7 @@ namespace MSNK.Controllers
             }
 
             var akCarta = await _context.AkCarta
-                .Include(a => a.KW)
+                .Include(a => a.JKW)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (akCarta == null)
             {

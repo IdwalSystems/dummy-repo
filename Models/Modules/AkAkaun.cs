@@ -10,7 +10,7 @@ namespace MSNK.Models.Modules
 {
     public class AkAkaun
     {
-        public int KWId { get; set; }
+        public int JKWId { get; set; }
         public int AkCartaId1 { get; set; }
         public DateTime Tarikh { get; set; }
         public int AkCartaId2 { get; set; }
@@ -23,7 +23,7 @@ namespace MSNK.Models.Modules
         public decimal Kredit { get; set; }
 
         //Relationship
-        public KW KW { get; set; }
+        public JKW JKW { get; set; }
         public virtual AkCarta AkCarta1 { get; set; }
         public virtual AkCarta AkCarta2 { get; set; }
         public ICollection<AkTerima> AkTerima { get; set; } 
