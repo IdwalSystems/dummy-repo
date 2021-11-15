@@ -29,7 +29,7 @@ namespace MSNK.Models.Modules
         [MaxLength(30)]
         public string Telefon1 { get; set; }
         [MaxLength(100)]
-        public string Email { get; set; }
+        public string Emel { get; set; }
         [MaxLength(50)]
         public string AkaunBank { get; set; }
         public int AkBankId { get; set; }

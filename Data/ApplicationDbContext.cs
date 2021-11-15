@@ -95,6 +95,27 @@ namespace MSNK.Data
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
+            modelBuilder.Entity<PO>()
+                    .HasOne(m => m.Pembekal)
+                    .WithMany(t => t.PO)
+                    .HasForeignKey(m => m.PembekalId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+            modelBuilder.Entity<PO2>()
+                    .HasOne(m => m.KW)
+                    .WithMany(t => t.PO2)
+                    .HasForeignKey(m => m.KWId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+            modelBuilder.Entity<PO2>()
+                    .HasOne(m => m.PO)
+                    .WithMany(t => t.PO2)
+                    .HasForeignKey(m => m.POId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
         }
     }
     
