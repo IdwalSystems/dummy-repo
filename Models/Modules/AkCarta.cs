@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,13 +11,19 @@ namespace MSNK.Models.Modules
         public int KWId { get; set; }
 
         public int id { get; set; }
+        [MaxLength(6)]
         public string Kod { get; set; }
+        [MaxLength(100)]
         public string Nama { get; set; }
         public int KodJenis { get; set; }
         public int KodParas { get; set; }
+        [MaxLength(1)]
         public string DebitKredit { get; set; }
+        [MaxLength(1)]
         public string UmumDetail { get; set; }
+        [MaxLength(100)]
         public string Catatan1 { get; set; }
+        [MaxLength(100)]
         public string Catatan2 { get; set; }
 
         public KW KW { get; set; }

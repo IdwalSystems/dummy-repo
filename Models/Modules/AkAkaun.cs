@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace MSNK.Models.Modules
         public DateTime Tarikh { get; set; }
         public int KodObjek2 { get; set; }
         public int Id { get; set; }
+        [MaxLength(40)]
         public string NoRujukan { get; set; }
         public decimal Debit { get; set; }
         public decimal Kredit { get; set; }

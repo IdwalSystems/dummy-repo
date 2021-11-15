@@ -11,7 +11,7 @@ namespace MSNK.Models.Modules
         public int BankId { get; set; }
         public int AkCartaId { get; set; }
         public int Id { get; set; }
-        [MaxLength(100)]
+        [MaxLength(20)]
         public string NoAkaun { get; set; }
 
         public KW KW { get; set; }
