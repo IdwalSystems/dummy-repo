@@ -18,14 +18,21 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <partial name="_JadualPartialNavbar" />
-                        <partial name="_LejarPartialNavbar" />
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        
+                        @if (User.Identity.IsAuthenticated)
+                        {
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <partial name="_JadualPartialNavbar" />
+                                <partial name="_LejarPartialNavbar" />
+                                <partial name="_TerimaanPartialNavbar" />
+                            }
+                            else
+                            {
+                                <partial name="_TerimaanPartialNavbar" />
+                            }
+                        }
                     </ul>
                     <partial name="_LoginPartialNavbar" />
                 </div>

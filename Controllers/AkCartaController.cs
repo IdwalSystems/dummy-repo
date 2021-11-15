@@ -19,7 +19,10 @@ namespace MSNK.Controllers
         private readonly IRepository<AkCarta, int> _akCartaRepo;
         private readonly IRepository<KW, int> _kwRepo;
 
-        public AkCartaController(ApplicationDbContext context, IRepository<KW, int> kwRepository, IRepository<AkCarta, int> akCartaRepository)
+        public AkCartaController(
+            ApplicationDbContext context,
+            IRepository<KW, int> kwRepository,
+            IRepository<AkCarta, int> akCartaRepository)
         {
             _context = context;
             _kwRepo = kwRepository;
@@ -174,6 +177,7 @@ namespace MSNK.Controllers
                         throw;
                     }
                 }
+                PopulateList();
                 return RedirectToAction(nameof(Index));
             }
 

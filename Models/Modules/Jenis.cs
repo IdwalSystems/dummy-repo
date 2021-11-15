@@ -10,6 +10,8 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         public string Kod { get; set; }
         public string Nama { get; set; }
+
+        //Relationship
         public ICollection<AkCarta> AkCarta { get; set; }
     }
 }

@@ -14,7 +14,8 @@ namespace MSNK.Models.Modules
         [MaxLength(100)]
         public string Perihal { get; set; }
 
+        //Relationship
         public ICollection<AkTerima> AkTerima { get; set; }
-        public ICollection<Pembekal> Pembekal { get; set; }
+        //public ICollection<Pembekal> Pembekal { get; set; }
     }
 }

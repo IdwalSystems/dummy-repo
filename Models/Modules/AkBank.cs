@@ -11,13 +11,15 @@ namespace MSNK.Models.Modules
         public int BankId { get; set; }
         public int AkCartaId { get; set; }
         public int Id { get; set; }
-        [MaxLength(20)]
+        public string Kod { get; set; }
+        [MaxLength(100)]
         public string NoAkaun { get; set; }
 
+        //Relationship
         public KW KW { get; set; }
         public Bank Bank { get; set; }
         public AkCarta AkCarta { get; set; }
-        public ICollection<AkTerima> akTerima { get; set; }
+        public ICollection<AkTerima> AkTerima { get; set; }
 
     }
 }

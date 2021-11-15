@@ -48,7 +48,7 @@ namespace MSNK
             services.AddTransient<IRepository<KW, int>, KWRepository>();
             services.AddTransient<IRepository<Bank, int>, BankRepository>();
             services.AddTransient<IRepository<AkCarta, int>, AkCartaRepository>();
-
+            services.AddTransient<IRepository<AkAkaun, int>, AkAkaunRepository>();
             services.AddControllersWithViews();
         }
 

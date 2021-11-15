@@ -266,39 +266,49 @@ namespace MSNK.Models.Modules
             
             //Data with foreign key
 
-                if (context.AkCarta.Any())
-                {
-                    //return;   // DB has been seeded
-                }
-                else
-                {
-                    context.AkCarta.AddRange(
-                        new AkCarta
-                        {
-                            KWId = 1,
-                            Kod = "H11102",
-                            Nama = "Hasil Dokumen Sebutharga",
-                            KodJenis = 5,
-                            KodParas = 4,
-                            DebitKredit = "K",
-                            UmumDetail = "D",
-                            Catatan1 = "",
-                            Catatan2 = ""
-                        }
-                    );
-                }
+            if (context.AkCarta.Any())
+            {
+                //return;   // DB has been seeded
+            }
+            else
+            {
+                var kw = context.KW.Where(b => b.Kod == "100").FirstOrDefault();
+                var jenis = context.Jenis.Where(b => b.Kod == "H").FirstOrDefault();
+                var paras = context.Paras.Where(b => b.Kod == "4").FirstOrDefault();
+                context.AkCarta.AddRange(
+                    new AkCarta
+                    {
+                        KWId = kw.Id,
+                        Kod = "H11102",
+                        Nama = "Hasil Dokumen Sebutharga",
+                        JenisId = jenis.Id,
+                        ParasId = paras.Id,
+                        DebitKredit = "K",
+                        UmumDetail = "D",
+                        Catatan1 = "",
+                        Catatan2 = ""
+                    }
+                );
+            }
 
-                if (context.AkBank.Any())
-                {
-                    //return;   // DB has been seeded
-                }
-                else
-                {
-                    context.AkBank.AddRange(
+            context.SaveChanges();
+
+            if (context.AkBank.Any())
+            {
+                //return;   // DB has been seeded
+            }
+            else
+            {
+                var kw = context.KW.Where(b => b.Kod == "100").FirstOrDefault();
+                var bank = context.Bank.Where(b => b.Kod == "BIMB").FirstOrDefault();
+                var carta = context.AkCarta.Where(b => b.Kod == "H11102");
+
+                context.AkBank.AddRange(
                         new AkBank
                         {
-                            KWId = 1,
+                            KWId = kw.Id,
                             BankId = 1,
+                            AkCartaId = 1,
                             Kod = "001",
                             NoAkaun = "1200210005702"
                         }

@@ -32,6 +32,7 @@ namespace MSNK.Controllers
 
         public IActionResult AccessDenied()
         {
+            //test
             return View();
         }
 
