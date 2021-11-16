@@ -8,7 +8,7 @@ namespace MSNK.Models.Modules
     public class AkBank
     {
         public int JKWId { get; set; }
-        public int BankId { get; set; }
+        public int JBankId { get; set; }
         public int AkCartaId { get; set; }
         public int Id { get; set; }
         [MaxLength(6)]
