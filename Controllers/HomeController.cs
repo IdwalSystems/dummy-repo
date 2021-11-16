@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 using MSNK.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace MSNK.Controllers
 {
@@ -21,6 +21,7 @@ namespace MSNK.Controllers
 
         public IActionResult Index()
         {
+
             return View();
         }
 

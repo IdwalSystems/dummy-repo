@@ -63,13 +63,13 @@ namespace MSNK.Controllers
         {
             List<JBank> bankList = _context.JBank.ToList();
             bankList.Insert(0, new JBank { Id = 0, Nama = "-- Pilih Bank --" });
-            ViewBag.Bank = bankList;
+            ViewBag.JBank = bankList;
         }
         private void PopulateKWList()
         {
             List<JKW> kwList = _context.JKW.ToList();
             kwList.Insert(0, new JKW { Id = 0, Perihal = "-- Pilih Kumpulan Wang --" });
-            ViewBag.Kw = kwList;
+            ViewBag.JKW = kwList;
         }
         // GET: AkBank/Create
         public IActionResult Create()
@@ -92,7 +92,7 @@ namespace MSNK.Controllers
             {
                 if (akBank != null && KWId != 0 && BankId != 0)
                 {
-                    akB.BankId = BankId;
+                    akB.JBankId = BankId;
                     akB.JKWId = KWId;
                     akB.Kod = akBank.Kod;
                     akB.NoAkaun = akBank.NoAkaun;
@@ -147,7 +147,7 @@ namespace MSNK.Controllers
             {
                 try
                 {
-                    akB.BankId = BankId;
+                    akB.JBankId = BankId;
                     akB.JKWId = KWId;
                     akB.Kod = akBank.Kod;
                     akB.NoAkaun = akBank.NoAkaun;
