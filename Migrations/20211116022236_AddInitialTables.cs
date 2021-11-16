@@ -334,11 +334,10 @@ namespace MSNK.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     JKWId = table.Column<int>(type: "int", nullable: false),
-                    BankId = table.Column<int>(type: "int", nullable: false),
+                    JBankId = table.Column<int>(type: "int", nullable: false),
                     AkCartaId = table.Column<int>(type: "int", nullable: false),
                     Kod = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
-                    NoAkaun = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    JBankId = table.Column<int>(type: "int", nullable: true)
+                    NoAkaun = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -354,7 +353,7 @@ namespace MSNK.Migrations
                         column: x => x.JBankId,
                         principalTable: "JBank",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AkBank_JKW_JKWId",
                         column: x => x.JKWId,

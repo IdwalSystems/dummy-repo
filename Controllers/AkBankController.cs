@@ -92,7 +92,7 @@ namespace MSNK.Controllers
             {
                 if (akBank != null && KWId != 0 && BankId != 0)
                 {
-                    akB.BankId = BankId;
+                    akB.JBankId = BankId;
                     akB.JKWId = KWId;
                     akB.Kod = akBank.Kod;
                     akB.NoAkaun = akBank.NoAkaun;
@@ -147,7 +147,7 @@ namespace MSNK.Controllers
             {
                 try
                 {
-                    akB.BankId = BankId;
+                    akB.JBankId = BankId;
                     akB.JKWId = KWId;
                     akB.Kod = akBank.Kod;
                     akB.NoAkaun = akBank.NoAkaun;

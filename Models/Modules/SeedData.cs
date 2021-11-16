@@ -492,7 +492,7 @@ namespace MSNK.Models.Modules
                     new AkBank
                     {
                         JKWId = kw.Id,
-                        BankId = 1,
+                        JBankId = 1,
                         AkCartaId = 1,
                         Kod = "001",
                         NoAkaun = "1200210005702"

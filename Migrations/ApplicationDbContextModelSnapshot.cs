@@ -69,10 +69,7 @@ namespace MSNK.Migrations
                     b.Property<int>("AkCartaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BankId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("JBankId")
+                    b.Property<int>("JBankId")
                         .HasColumnType("int");
 
                     b.Property<int>("JKWId")
@@ -915,7 +912,9 @@ namespace MSNK.Migrations
 
                     b.HasOne("MSNK.Models.Modules.JBank", "JBank")
                         .WithMany("AkBank")
-                        .HasForeignKey("JBankId");
+                        .HasForeignKey("JBankId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MSNK.Models.Modules.JKW", "JKW")
                         .WithMany("AkBank")

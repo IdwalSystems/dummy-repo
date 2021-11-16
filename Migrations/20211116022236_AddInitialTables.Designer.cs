@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211116015846_AddInitialTables")]
+    [Migration("20211116022236_AddInitialTables")]
     partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,10 +71,7 @@ namespace MSNK.Migrations
                     b.Property<int>("AkCartaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BankId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("JBankId")
+                    b.Property<int>("JBankId")
                         .HasColumnType("int");
 
                     b.Property<int>("JKWId")
@@ -917,7 +914,9 @@ namespace MSNK.Migrations
 
                     b.HasOne("MSNK.Models.Modules.JBank", "JBank")
                         .WithMany("AkBank")
-                        .HasForeignKey("JBankId");
+                        .HasForeignKey("JBankId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MSNK.Models.Modules.JKW", "JKW")
                         .WithMany("AkBank")
