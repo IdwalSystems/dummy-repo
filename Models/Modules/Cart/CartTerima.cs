@@ -11,26 +11,28 @@ namespace MSNK.Models.Modules.Cart
         private List<AkTerima1> collection1 = new List<AkTerima1>();
 
         public virtual void AddItem1(
+            int akTerimaId,
             decimal amaun,
-            AkCarta akCarta
+            int akCartaId
             )
         {
             AkTerima1 line = collection1
-            .Where(p => p.AkCarta.Id == akCarta.Id)
+            .Where(p => p.AkCartaId == akCartaId)
             .FirstOrDefault();
 
             if (line == null)
             {
                 collection1.Add(new AkTerima1
                 {
+                    AkTerimaId = akTerimaId,
                     Amaun = amaun,
-                    AkCarta = akCarta
+                    AkCartaId = akCartaId
                 });
             }
         }
 
         public virtual void RemoveItem1(int id) =>
-            collection1.RemoveAll(l => l.Id == id);
+            collection1.RemoveAll(l => l.AkCartaId == id);
 
 
         public virtual void Clear1() => collection1.Clear();
@@ -42,7 +44,8 @@ namespace MSNK.Models.Modules.Cart
         private List<AkTerima2> collection2 = new List<AkTerima2>();
 
         public virtual void AddItem2(
-            JCaraBayar jCaraBayar,
+            int akTerimaId,
+            int jCaraBayarId,
             decimal amaun, string noCek,
             string jenisCek, string kodBankCek,
             string tempatCek, string noSlip,
@@ -50,14 +53,15 @@ namespace MSNK.Models.Modules.Cart
             )
         {
             AkTerima2 line = collection2
-            .Where(p => p.JCaraBayar == jCaraBayar)
+            .Where(p => p.JCaraBayarId == jCaraBayarId)
             .FirstOrDefault();
 
             if (line == null)
             {
                 collection2.Add(new AkTerima2
                 {
-                    JCaraBayar = jCaraBayar,
+                    AkTerimaId = akTerimaId,
+                    JCaraBayarId = jCaraBayarId,
                     Amaun = amaun,
                     NoCek = noCek,
                     JenisCek = jenisCek,
@@ -70,7 +74,7 @@ namespace MSNK.Models.Modules.Cart
         }
 
         public virtual void RemoveItem2(int id) =>
-            collection2.RemoveAll(l => l.Id == id);
+            collection2.RemoveAll(l => l.JCaraBayarId == id);
 
 
         public virtual void Clear2() => collection2.Clear();

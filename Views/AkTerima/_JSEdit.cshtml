@@ -1,0 +1,311 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $('.editable-txt').dblclick(function () {
+            newInput(this);
+        });
+    });
+
+    function closeInput(elm) {
+        var value = $(elm).find('input').val();
+        $(elm).empty().text(value);
+
+        $(elm).bind("dblclick", function () {
+            newInput(elm);
+        });
+    }
+
+    function newInput(elm) {
+        $(elm).unbind('dblclick');
+
+        var value = $(elm).text();
+        $(elm).empty();
+
+        $("<input>")
+            .attr('type', 'text')
+            .attr('class', 'form-control')
+            .val(value)
+            .blur(function () {
+                closeInput(elm);
+            })
+            .appendTo($(elm))
+            .focus();
+    }
+
+    //add tbl objek
+    $("body").on("click", "#btnAdd1", function () {
+        //Reference the Name and Country TextBoxes.
+        var txtKodAkaun = $("#txtKodAkaun");
+        GetCarta(txtKodAkaun.val());
+    });
+
+    function GetCarta(id) {
+        var Objek = {
+            Id: id
+        }
+        if (id != "") {
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/AkTerima/GetCarta",
+                data: Objek,
+                dataType: "json",
+                success: function (r) {
+                    //Reference the TextBoxes.
+                    var txtAkTerima = $("#txtAkTerima1"); 
+                    var txtKodAkaun = $("#txtKodAkaun");
+                    var txtAmaunObjek = $("#txtAmaunObjek");
+                    var txtJumlah = $("#jumlahObjek");
+
+                    //Sum value to Total text field
+                    var sum = 0;
+                    sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
+                    txtJumlah.val(sum);
+
+                    //Get the reference of the Table's TBODY element.
+                    var tBody = $("#tblObjek > TBODY")[0];
+                    //Add Row.
+                    var row = tBody.insertRow(-1);
+
+                    //Add Id cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.id);
+                    cell.prop("hidden", !this.checked);
+
+                    //Add akCartaId cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.id);
+                    cell.prop("hidden", !this.checked);
+
+                    //Add kod cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.kod);
+
+                    //Add amaun cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtAmaunObjek.val());
+                    cell.attr("class", "editable-txt");
+
+                    //Add Button cell.
+                    cell = $(row.insertCell(-1));
+                    var btnRemove1 = $("<input />");
+                    btnRemove1.attr("class", "btn btn-danger btn-table-mini");
+                    btnRemove1.attr("type", "button");
+                    btnRemove1.attr("onclick", "Remove1(this);");
+                    btnRemove1.val("-");
+                    cell.append(btnRemove1);
+
+                    var AkTerima1 = {
+                        AkTerimaId: txtAkTerima.val(),
+                        AkCartaId: txtKodAkaun.val(),
+                        Amaun: txtAmaunObjek.val()
+                    }
+
+                    if (noRujukan != null) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/AkTerima/SaveAkTerima1",
+                            data: AkTerima1,
+                            dataType: "json",
+                            success: function (r) {
+                                //Clear the TextBoxes.
+                                txtKodAkaun.val("");
+                                txtAmaunObjek.val("");
+                            }
+                        });
+                    }
+
+                }
+            });
+        }
+
+    }
+    //add tbl objek end
+    //add tbl Urusniaga
+    $("body").on("click", "#btnAdd2", function () {
+        //Reference the Name and Country TextBoxes.
+        var ddlCaraBayar = $("#ddlCaraBayar");
+        GetCaraBayar(ddlCaraBayar.val());
+    });
+
+    function GetCaraBayar(id) {
+        var JCaraBayar = {
+            Id: id
+        }
+        if (id != "") {
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/AkTerima/GetCaraBayar",
+                data: JCaraBayar,
+                dataType: "json",
+                success: function (r) {
+                    //Reference the TextBoxes.
+                    var txtAkTerima = $("#txtAkTerima2");
+                    var ddlCaraBayar = $("#ddlCaraBayar");
+                    var txtAmaunUrusniaga = $("#txtAmaunUrusniaga");
+                    var txtNoCek = $("#txtNoCek");
+                    var txtJenisCek = $("#txtJenisCek");
+                    var txtKodBankCek = $("#txtKodBankCek");
+                    var txtTempatCek = $("#txtTempatCek");
+                    var txtNoSlip = $("#txtNoSlip");
+                    var txtTarSlip = $("#txtTarSlip");
+
+                    //Get the reference of the Table's TBODY element.
+                    var tBody = $("#tblUrusniaga > TBODY")[0];
+                    //Add Row.
+                    var row = tBody.insertRow(-1);
+
+                    //Add caraBayarId cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.id);
+                    cell.prop("hidden", !this.checked);
+
+                    //Add caraBayar cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.kod);
+
+                    //Add Amaun cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtAmaunUrusniaga.val());
+
+                    //Add NoCek cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtNoCek.val());
+
+                    //Add JenisCek cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtJenisCek.val());
+
+                    //Add KodBankCek cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtKodBankCek.val());
+
+                    //Add TempatCek cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtTempatCek.val());
+
+                    //Add NoSlip cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtNoSlip.val());
+
+                    //Add TarSlip cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtTarSlip.val());
+
+
+
+                    //Add Button cell.
+                    cell = $(row.insertCell(-1));
+                    var btnRemove2 = $("<input />");
+                    btnRemove2.attr("class", "btn btn-danger btn-table-mini");
+                    btnRemove2.attr("type", "button");
+                    btnRemove2.attr("onclick", "Remove2(this);");
+                    btnRemove2.val("-");
+                    cell.append(btnRemove2);
+
+                    var AkTerima2 = {
+                        AkTerimaId: txtAkTerima.val(),
+                        JCaraBayarId: ddlCaraBayar.val(),
+                        Amaun: txtAmaunUrusniaga.val(),
+                        NoCek: txtNoCek.val(),
+                        JenisCek: txtJenisCek.val(),
+                        KodBankCek: txtKodBankCek.val(),
+                        TempatCek: txtTempatCek.val(),
+                        NoSlip: txtNoSlip.val(),
+                        TarSlip: txtTarSlip.val()
+                    }
+                    if (noRujukan != null) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/AkTerima/SaveAkTerima2",
+                            data: AkTerima2,
+                            dataType: "json",
+                            success: function (r) {
+                                //Clear the TextBoxes.
+                                ddlCaraBayar.val("");
+                                txtAmaunUrusniaga.val("");
+                                txtNoCek.val("");
+                                txtJenisCek.val("");
+                                txtKodBankCek.val("");
+                                txtTempatCek.val("");
+                                txtNoSlip.val("");
+                                txtTarSlip.val("");
+                            }
+                        });
+                    }
+
+                }
+            });
+        }
+
+    }
+    //add tbl urusniaga end
+
+    //remove tbl objek
+    function Remove1(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var name = $("TD", row).eq(0).html();
+        var amaun = $("TD", row).eq(2).html();
+        var txtJumlah = $("#jumlahObjek");
+        if (confirm("Hapus kod Akaun : " + name + " ?")) {
+            //Get the reference of the Table.
+            var table = $("#tblObjek")[0];
+
+            //Sum value to Total text field
+            var sum = 0;
+            sum = parseFloat(amaun) - parseFloat(txtJumlah.val());
+            txtJumlah.val(sum);
+
+            var AkTerima1 = {
+                AkCartaId: name,
+            }
+            if (name != null) {
+                $.ajax({
+                    type: "POST",
+                    url: "/AkTerima/RemoveAkTerima1",
+                    data: AkTerima1,
+                    dataType: "json",
+                    success: function (r) {
+                        //Delete the Table row using it's Index.
+                        table.deleteRow(row[0].rowIndex);
+                    }
+                });
+            }
+
+        }
+    };
+    //remove tbl objek end
+
+    //remove tb urusniaga
+    function Remove2(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var name = $("TD", row).eq(0).html();
+        if (confirm("Hapus : " + name + " ?")) {
+            //Get the reference of the Table.
+            var table = $("#tblUrusniaga")[0];
+
+            var AkTerima2 = {
+                JCaraBayarId: name,
+            }
+            if (name != null) {
+                $.ajax({
+                    type: "POST",
+                    url: "/AkTerima/RemoveAkTerima2",
+                    data: AkTerima2,
+                    dataType: "json",
+                    success: function (r) {
+                        //Delete the Table row using it's Index.
+                        table.deleteRow(row[0].rowIndex);
+                    }
+                });
+            }
+        }
+    };
+    //remove tbl urusniaga end
+
+    $("body").on("click", "#btnSave", function () {
+        //insert validation form here
+    });
+</script>

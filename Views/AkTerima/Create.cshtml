@@ -4,243 +4,8 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<script type="text/javascript">
 
-    $(".datepicker").datepicker({
-        format: 'dd/mm/yyyy',
-        autoclose: true
-    });
-
-    //add tbl objek
-    $("body").on("click", "#btnAdd1", function () {
-        //Reference the Name and Country TextBoxes.
-        var txtKodAkaun = $("#txtKodAkaun");
-        GetCarta(txtKodAkaun.val());
-    });
-
-    function GetCarta(id) {
-        var Objek = {
-            Id: id
-        }
-        if (id != "") {
-            //Send the JSON array to Controller using AJAX.
-            $.ajax({
-                type: "POST",
-                url: "/AkTerima/GetCarta",
-                data: Objek,
-                dataType: "json",
-                success: function (r) {
-                    //Reference the TextBoxes.
-                    var txtKodAkaun = $("#txtKodAkaun");
-                    var txtAmaunObjek = $("#txtAmaunObjek");
-
-                    //Get the reference of the Table's TBODY element.
-                    var tBody = $("#tblObjek > TBODY")[0];
-                    //Add Row.
-                    var row = tBody.insertRow(-1);
-
-                    //Add akCartaId cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
-
-                    //Add kod cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.kod);
-
-                    //Add amaun cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtAmaunObjek.val());
-
-                    //Add Button cell.
-                    cell = $(row.insertCell(-1));
-                    var btnRemove1 = $("<input />");
-                    btnRemove1.attr("class", "btn btn-danger btn-block");
-                    btnRemove1.attr("type", "button");
-                    btnRemove1.attr("onclick", "Remove1(this);");
-                    btnRemove1.val("-");
-                    cell.append(btnRemove1);
-
-                    var AkCarta = {
-                        Id: txtKodAkaun.val()
-                    }
-                    var AkTerima1 = {
-                        AkCartaId: txtKodAkaun.val(),
-                        Amaun: txtAmaunObjek.val(),
-                        AkCarta: AkCarta
-                    }
-
-                    if (noRujukan != null) {
-                        $.ajax({
-                            type: "POST",
-                            url: "/AkTerima/SaveAkTerima1",
-                            data: AkTerima1,
-                            dataType: "json",
-                            success: function (r) {
-                                //Clear the TextBoxes.
-                                txtKodAkaun.val("");
-                                txtAmaunObjek.val("");
-                            }
-                        });
-                    }
-
-                }
-            });
-        }
-
-    }
-    //add tbl objek end
-    //add tbl Urusniaga
-    $("body").on("click", "#btnAdd2", function () {
-        //Reference the Name and Country TextBoxes.
-        var txtCaraBayar = $("#txtCaraBayar");
-        GetCaraBayar(txtCaraBayar.val());
-    });
-
-    function GetCaraBayar(id) {
-        var JCaraBayar = {
-            Id: id
-        }
-        if (id != "") {
-            //Send the JSON array to Controller using AJAX.
-            $.ajax({
-                type: "POST",
-                url: "/AkTerima/GetCaraBayar",
-                data: JCaraBayar,
-                dataType: "json",
-                success: function (r) {
-                    //Reference the TextBoxes.
-                    var txtCaraBayar = $("#txtCaraBayar");
-                    var txtAmaunUrusniaga = $("#txtAmaunUrusniaga");
-                    var txtNoCek = $("#txtNoCek");
-                    var txtJenisCek = $("#txtJenisCek");
-                    var txtKodBankCek = $("#txtKodBankCek");
-                    var txtTempatCek = $("#txtTempatCek");
-                    var txtNoSlip = $("#txtNoSlip");
-                    var txtTarSlip = $("#txtTarSlip");
-
-                    //Get the reference of the Table's TBODY element.
-                    var tBody = $("#tblUrusniaga > TBODY")[0];
-                    //Add Row.
-                    var row = tBody.insertRow(-1);
-
-                    //Add caraBayarId cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
-
-                    //Add caraBayar cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.kod);
-
-                    //Add Amaun cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtAmaunUrusniaga.val());
-
-                    //Add NoCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtNoCek.val());
-
-                    //Add JenisCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtJenisCek.val());
-
-                    //Add KodBankCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtKodBankCek.val());
-
-                    //Add TempatCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtTempatCek.val());
-
-                    //Add NoSlip cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtNoSlip.val());
-
-                    //Add TarSlip cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtTarSlip.val());
-
-
-
-                    //Add Button cell.
-                    cell = $(row.insertCell(-1));
-                    var btnRemove2 = $("<input />");
-                    btnRemove2.attr("class", "btn btn-danger btn-block");
-                    btnRemove2.attr("type", "button");
-                    btnRemove2.attr("onclick", "Remove2(this);");
-                    btnRemove2.val("-");
-                    cell.append(btnRemove2);
-
-                    var AkTerima2 = {
-                        JCaraBayar: JCaraBayar,
-                        Amaun: txtAmaunUrusniaga.val(),
-                        NoCek: txtNoCek.val(),
-                        JenisCek: txtJenisCek.val(),
-                        KodBankCek: txtKodBankCek.val(),
-                        TempatCek: txtTempatCek.val(),
-                        NoSlip: txtNoSlip.val(),
-                        TarSlip: txtTarSlip.val()
-                    }
-                    if (noRujukan != null) {
-                        $.ajax({
-                            type: "POST",
-                            url: "/AkTerima/SaveAkTerima2",
-                            data: AkTerima2,
-                            dataType: "json",
-                            success: function (r) {
-                                //Clear the TextBoxes.
-                                txtCaraBayar.val("");
-                                txtAmaunUrusniaga.val("");
-                                txtNoCek.val("");
-                                txtJenisCek.val("");
-                                txtKodBankCek.val("");
-                                txtTempatCek.val("");
-                                txtNoSlip.val("");
-                                txtTarSlip.val("");
-                            }
-                        });
-                    }
-
-                }
-            });
-        }
-
-    }
-    //add tbl urusniaga end
-    //remove tbl objek
-    function Remove1(button) {
-        //Determine the reference of the Row using the Button.
-        var row = $(button).closest("TR");
-        var name = $("TD", row).eq(0).html();
-        if (confirm("Hapus kod Akaun : " + name + " ?")) {
-            //Get the reference of the Table.
-            var table = $("#tblObjek")[0];
-
-            //Delete the Table row using it's Index.
-            table.deleteRow(row[0].rowIndex);
-        }
-    };
-    //remove tbl objek end
-    //remove tb urusniaga
-    function Remove2(button) {
-        //Determine the reference of the Row using the Button.
-        var row = $(button).closest("TR");
-        var name = $("TD", row).eq(0).html();
-        if (confirm("Hapus : " + name + " ?")) {
-            //Get the reference of the Table.
-            var table = $("#tblUrusniaga")[0];
-
-            //Delete the Table row using it's Index.
-            table.deleteRow(row[0].rowIndex);
-        }
-    };
-    //remove tbl urusniaga end
-    $("body").on("click", "#btnSave", function () {
-        //insert validation form here
-    });
-</script>
-
+<partial name="_JSCreate"/>
 
 <h1>Create</h1>
 
@@ -267,17 +32,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="NoRujukan" class="control-label"></label>
-                <input id="noRujukan" asp-for="NoRujukan" class="form-control" />
+                <input id="noRujukan" asp-for="NoRujukan" class="form-control"/>
                 <span asp-validation-for="NoRujukan" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Tarikh" class="control-label"></label>
-                <input asp-for="Tarikh" class="form-control" />
+                <input asp-for="Tarikh" class="form-control" value="@DateTime.UtcNow.ToString("s")"/>
                 <span asp-validation-for="Tarikh" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Jumlah" class="control-label"></label>
-                <input asp-for="Jumlah" class="form-control" />
+                <input asp-for="Jumlah" class="form-control" id="jumlahObjek" value="0" readonly/>
                 <span asp-validation-for="Jumlah" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -290,19 +55,19 @@
                     }
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="FlCetak" class="control-label"></label>
-                <input asp-for="FlCetak" class="form-control" />
+                <input asp-for="FlCetak" class="form-control" value="0" />
                 <span asp-validation-for="FlCetak" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="FlPosting" class="control-label"></label>
-                <input asp-for="FlPosting" class="form-control" />
+            <div class="form-group" hidden>
+                <label asp-for="FlPosting" class="control-label" ></label>
+                <input asp-for="FlPosting" class="form-control" value="0"/>
                 <span asp-validation-for="FlPosting" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="FlBatal" class="control-label"></label>
-                <input asp-for="FlBatal" class="form-control" />
+                <input asp-for="FlBatal" class="form-control" value="0" />
                 <span asp-validation-for="FlBatal" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -370,26 +135,27 @@
                 <input asp-for="Sebab" class="form-control" />
                 <span asp-validation-for="Sebab" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
+                <input asp-for="UserId" class="form-control"/>
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TarMasuk" class="control-label"></label>
-                <input asp-for="TarMasuk" class="form-control" />
+                <input asp-for="TarMasuk" class="form-control" value="@DateTime.UtcNow.ToString("s")" disabled/>
                 <span asp-validation-for="TarMasuk" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="UserIdKemaskini" class="control-label"></label>
                 <input asp-for="UserIdKemaskini" class="form-control" />
                 <span asp-validation-for="UserIdKemaskini" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TarKemaskini" class="control-label"></label>
-                <input asp-for="TarKemaskini" class="form-control" />
+                <label asp-for="TarKemaskini" class="control-label" ></label>
+                <input asp-for="TarKemaskini" class="form-control" value="@DateTime.UtcNow.ToString("s")" disabled/>
                 <span asp-validation-for="TarKemaskini" class="text-danger"></span>
             </div>
+            @*table Objek*@
             <h3>Objek</h3>
             <table id="tblObjek" class="table" cellpadding="0" cellspacing="0">
                 <thead>
@@ -414,11 +180,13 @@
                             </select>
                         </td>
                         <td style="width:50%"><input class="form-control" type="number" id="txtAmaunObjek" step="0.01"></td>
-                        <td><input class="btn btn-success btn-block" type="button" id="btnAdd1" value="+" /></td>
+                        <td><input class="btn btn-success btn-table-mini" type="button" id="btnAdd1" value="+" /></td>
                     </tr>
                 </tfoot>
             </table>
+            @*table Objek end*@
             <br />
+            @*table urusniaga*@
             <h3>Urusniaga</h3>
             <table id="tblUrusniaga" class="table" cellpadding="0" cellspacing="0">
                 <thead>
@@ -440,7 +208,7 @@
                     <tr>
                         <td id="caraBayarId" hidden></td>
                         <td>
-                            <select class="form-control" id="txtCaraBayar">
+                            <select class="form-control" id="ddlCaraBayar">
                                 <option value="" hidden>-- Pilih Cara Bayar --</option>
                                 @foreach (var s in ViewBag.JCaraBayar)
                                 {
@@ -455,10 +223,11 @@
                         <td><input class="form-control" type="text" id="txtTempatCek"></td>
                         <td><input class="form-control" type="text" id="txtNoSlip"></td>
                         <td><input class="form-control datepicker" type="text" id="txtTarSlip"></td>
-                        <td><input class="btn btn-success btn-block" type="button" id="btnAdd2" value="+" /></td>
+                        <td><input class="btn btn-success btn-table-mini" type="button" id="btnAdd2" value="+" /></td>
                     </tr>
                 </tfoot>
             </table>
+            @*table urusniaga end*@
             <br />
 
             <div class="form-group">
