@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ namespace MSNK.Models.Modules
         [MaxLength(20)]
         public string NoRujukan { get; set; }
         public DateTime Tarikh { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Jumlah { get; set; }
         public int AkBankId { get; set; }
         public int FlCetak { get; set; }
