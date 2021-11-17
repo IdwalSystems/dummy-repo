@@ -337,9 +337,9 @@ namespace MSNK.Models.Modules
                 var kw = context.JKW.Where(b => b.Kod == "100").FirstOrDefault();
                 var jenisH = context.JJenis.Where(b => b.Kod == "H").FirstOrDefault();
                 var jenisA = context.JJenis.Where(b => b.Kod == "A").FirstOrDefault();
-                var paras1 = context.JParas.Where(b => b.Kod == "4").FirstOrDefault();
-                var paras2 = context.JParas.Where(b => b.Kod == "4").FirstOrDefault();
-                var paras3 = context.JParas.Where(b => b.Kod == "4").FirstOrDefault();
+                var paras1 = context.JParas.Where(b => b.Kod == "1").FirstOrDefault();
+                var paras2 = context.JParas.Where(b => b.Kod == "2").FirstOrDefault();
+                var paras3 = context.JParas.Where(b => b.Kod == "3").FirstOrDefault();
                 var paras4 = context.JParas.Where(b => b.Kod == "4").FirstOrDefault();
                 context.AkCarta.AddRange( 
                     new AkCarta

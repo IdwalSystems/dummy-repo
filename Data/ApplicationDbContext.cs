@@ -67,19 +67,19 @@ namespace MSNK.Data
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
-            modelBuilder.Entity<AkTerima1>()
-                    .HasOne(m => m.AkTerima)
-                    .WithMany(t => t.AkTerima1)
-                    .HasForeignKey(m => m.AkTerimaId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .IsRequired();
+            //modelBuilder.Entity<AkTerima1>()
+            //        .HasOne(m => m.AkTerima)
+            //        .WithMany(t => t.AkTerima1)
+            //        .HasForeignKey(m => m.AkTerimaId)
+            //        .OnDelete(DeleteBehavior.Restrict)
+            //        .IsRequired();
 
-            modelBuilder.Entity<AkTerima2>()
-                    .HasOne(m => m.AkTerima)
-                    .WithMany(t => t.AkTerima2)
-                    .HasForeignKey(m => m.AkTerimaId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .IsRequired();
+            //modelBuilder.Entity<AkTerima2>()
+            //        .HasOne(m => m.AkTerima)
+            //        .WithMany(t => t.AkTerima2)
+            //        .HasForeignKey(m => m.AkTerimaId)
+            //        .OnDelete(DeleteBehavior.Restrict)
+            //        .IsRequired();
 
             modelBuilder.Entity<AkTerima>()
                     .HasOne(m => m.JKW)
@@ -92,6 +92,13 @@ namespace MSNK.Data
                     .HasOne(m => m.JNegeri)
                     .WithMany(t => t.AkTerima)
                     .HasForeignKey(m => m.JNegeriId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+            modelBuilder.Entity<AkTerima>()
+                    .HasOne(m => m.AkBank)
+                    .WithMany(t => t.AkTerima)
+                    .HasForeignKey(m => m.AkBankId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 

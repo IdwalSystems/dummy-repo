@@ -28,6 +28,6 @@ namespace MSNK.Models.Modules
 
         //Relationship
         public JCaraBayar JCaraBayar { get; set; }
-        public AkTerima AkTerima { get; set; }
+        //public AkTerima AkTerima { get; set; }
     }
 }

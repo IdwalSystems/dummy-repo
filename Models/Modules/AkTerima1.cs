@@ -17,6 +17,6 @@ namespace MSNK.Models.Modules
         
         //Relationship
         public AkCarta AkCarta { get; set; }
-        public AkTerima AkTerima { get; set; }
+        //public AkTerima AkTerima { get; set; }
     }
 }

@@ -63,13 +63,13 @@ namespace MSNK.Controllers
         {
             List<JBank> bankList = _context.JBank.ToList();
             bankList.Insert(0, new JBank { Id = 0, Nama = "-- Pilih Bank --" });
-            ViewBag.Bank = bankList;
+            ViewBag.JBank = bankList;
         }
         private void PopulateKWList()
         {
             List<JKW> kwList = _context.JKW.ToList();
             kwList.Insert(0, new JKW { Id = 0, Perihal = "-- Pilih Kumpulan Wang --" });
-            ViewBag.Kw = kwList;
+            ViewBag.JKW = kwList;
         }
         // GET: AkBank/Create
         public IActionResult Create()
