@@ -60,7 +60,7 @@ namespace MSNK
             services.AddTransient<IRepository<AkTerima, int>, AkTerimaRepository>();
             services.AddTransient<IRepository<AkTerima1, int>, AkTerima1Repository>();
             services.AddTransient<IRepository<AkTerima2, int>, AkTerima2Repository>();
-            //test
+
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

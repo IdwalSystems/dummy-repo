@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,7 +11,6 @@ namespace MSNK.Models.Modules
         public int AkPOId { get; set; }
         public int JKWId { get; set; }
         public int AkCartaId { get; set; }
-        [Column(TypeName = "decimal(18,2)")]
         public decimal Amaun { get; set; }
 
         //Relationship
