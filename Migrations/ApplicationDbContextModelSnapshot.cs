@@ -274,9 +274,6 @@ namespace MSNK.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AkBankId")
-                        .HasColumnType("int");
-
                     b.Property<string>("AkaunBank")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -300,6 +297,9 @@ namespace MSNK.Migrations
                     b.Property<string>("Emel")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("JBankId")
+                        .HasColumnType("int");
 
                     b.Property<int>("JNegeriId")
                         .HasColumnType("int");
@@ -326,7 +326,7 @@ namespace MSNK.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AkBankId");
+                    b.HasIndex("JBankId");
 
                     b.HasIndex("JNegeriId");
 
@@ -1015,9 +1015,9 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPembekal", b =>
                 {
-                    b.HasOne("MSNK.Models.Modules.AkBank", "AkBank")
+                    b.HasOne("MSNK.Models.Modules.JBank", "JBank")
                         .WithMany("AkPembekal")
-                        .HasForeignKey("AkBankId")
+                        .HasForeignKey("JBankId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1027,7 +1027,7 @@ namespace MSNK.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AkBank");
+                    b.Navigation("JBank");
 
                     b.Navigation("JNegeri");
                 });
@@ -1159,8 +1159,6 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkBank", b =>
                 {
-                    b.Navigation("AkPembekal");
-
                     b.Navigation("AkTerima");
                 });
 
@@ -1199,6 +1197,8 @@ namespace MSNK.Migrations
             modelBuilder.Entity("MSNK.Models.Modules.JBank", b =>
                 {
                     b.Navigation("AkBank");
+
+                    b.Navigation("AkPembekal");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.JCaraBayar", b =>

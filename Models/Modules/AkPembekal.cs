@@ -32,11 +32,11 @@ namespace MSNK.Models.Modules
         public string Emel { get; set; }
         [MaxLength(50)]
         public string AkaunBank { get; set; }
-        public int AkBankId { get; set; }
+        public int JBankId { get; set; }
 
         //Relationship
         public JNegeri JNegeri { get; set; }
-        public AkBank AkBank { get; set; }
+        public JBank JBank { get; set; }
         public ICollection<AkPO> AkPO { get; set; }
 
     }

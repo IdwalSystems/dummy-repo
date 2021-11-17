@@ -507,7 +507,7 @@ namespace MSNK.Models.Modules
             else
             {
                 var negeri = context.JNegeri.Where(b => b.Kod == "10").FirstOrDefault();
-                var akbank = context.AkBank.Where(b => b.Kod == "001").FirstOrDefault();
+                var jbank = context.JBank.Where(b => b.Kod == "BIMB").FirstOrDefault();
 
                 context.AkPembekal.AddRange(
                     new AkPembekal
@@ -524,7 +524,7 @@ namespace MSNK.Models.Modules
                         Telefon1 = "+601133272978",
                         Emel = "idwal.com.my",
                         AkaunBank = "",
-                        AkBankId = akbank.Id
+                        JBankId = jbank.Id
                     }
                 );
             }

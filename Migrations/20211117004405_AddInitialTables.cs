@@ -252,6 +252,43 @@ namespace MSNK.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AkPembekal",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    KodSykt = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NamaSykt = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    NoPendaftaran = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Alamat1 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Alamat2 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Alamat3 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Poskod = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
+                    Bandar = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    JNegeriId = table.Column<int>(type: "int", nullable: false),
+                    Telefon1 = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    Emel = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    AkaunBank = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    JBankId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AkPembekal", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AkPembekal_JBank_JBankId",
+                        column: x => x.JBankId,
+                        principalTable: "JBank",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AkPembekal_JNegeri_JNegeriId",
+                        column: x => x.JNegeriId,
+                        principalTable: "JNegeri",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AkCarta",
                 columns: table => new
                 {
@@ -286,6 +323,39 @@ namespace MSNK.Migrations
                         name: "FK_AkCarta_JParas_JParasId",
                         column: x => x.JParasId,
                         principalTable: "JParas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AkPO",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NoPO = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Tarikh = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TarikhPosting = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AkPembekalId = table.Column<int>(type: "int", nullable: false),
+                    Jumlah = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Posting = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true),
+                    JKWId = table.Column<int>(type: "int", nullable: false),
+                    Tahun = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true),
+                    Batal = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AkPO", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AkPO_AkPembekal_AkPembekalId",
+                        column: x => x.AkPembekalId,
+                        principalTable: "AkPembekal",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AkPO_JKW_JKWId",
+                        column: x => x.JKWId,
+                        principalTable: "JKW",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -363,40 +433,64 @@ namespace MSNK.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AkPembekal",
+                name: "AkPO1",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    KodSykt = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    NamaSykt = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    NoPendaftaran = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Alamat1 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Alamat2 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Alamat3 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Poskod = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
-                    Bandar = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    JNegeriId = table.Column<int>(type: "int", nullable: false),
-                    Telefon1 = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    Emel = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    AkaunBank = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    AkBankId = table.Column<int>(type: "int", nullable: false)
+                    AkPOId = table.Column<int>(type: "int", nullable: false),
+                    Indek = table.Column<int>(type: "int", nullable: false),
+                    Bil = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    NoStok = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Perihal = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Kuantiti = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Unit = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Harga = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AkPembekal", x => x.Id);
+                    table.PrimaryKey("PK_AkPO1", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AkPembekal_AkBank_AkBankId",
-                        column: x => x.AkBankId,
-                        principalTable: "AkBank",
+                        name: "FK_AkPO1_AkPO_AkPOId",
+                        column: x => x.AkPOId,
+                        principalTable: "AkPO",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AkPO2",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AkPOId = table.Column<int>(type: "int", nullable: false),
+                    JKWId = table.Column<int>(type: "int", nullable: false),
+                    AkCartaId = table.Column<int>(type: "int", nullable: false),
+                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AkPO2", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AkPO2_AkCarta_AkCartaId",
+                        column: x => x.AkCartaId,
+                        principalTable: "AkCarta",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AkPembekal_JNegeri_JNegeriId",
-                        column: x => x.JNegeriId,
-                        principalTable: "JNegeri",
+                        name: "FK_AkPO2_AkPO_AkPOId",
+                        column: x => x.AkPOId,
+                        principalTable: "AkPO",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AkPO2_JKW_JKWId",
+                        column: x => x.JKWId,
+                        principalTable: "JKW",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -462,39 +556,6 @@ namespace MSNK.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AkPO",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NoPO = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Tarikh = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TarikhPosting = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AkPembekalId = table.Column<int>(type: "int", nullable: false),
-                    Jumlah = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Posting = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true),
-                    JKWId = table.Column<int>(type: "int", nullable: false),
-                    Tahun = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true),
-                    Batal = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AkPO", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AkPO_AkPembekal_AkPembekalId",
-                        column: x => x.AkPembekalId,
-                        principalTable: "AkPembekal",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AkPO_JKW_JKWId",
-                        column: x => x.JKWId,
-                        principalTable: "JKW",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AkTerima1",
                 columns: table => new
                 {
@@ -554,67 +615,6 @@ namespace MSNK.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "AkPO1",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AkPOId = table.Column<int>(type: "int", nullable: false),
-                    Indek = table.Column<int>(type: "int", nullable: false),
-                    Bil = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
-                    NoStok = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Perihal = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Kuantiti = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Unit = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Harga = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AkPO1", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AkPO1_AkPO_AkPOId",
-                        column: x => x.AkPOId,
-                        principalTable: "AkPO",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AkPO2",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AkPOId = table.Column<int>(type: "int", nullable: false),
-                    JKWId = table.Column<int>(type: "int", nullable: false),
-                    AkCartaId = table.Column<int>(type: "int", nullable: false),
-                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AkPO2", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AkPO2_AkCarta_AkCartaId",
-                        column: x => x.AkCartaId,
-                        principalTable: "AkCarta",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AkPO2_AkPO_AkPOId",
-                        column: x => x.AkPOId,
-                        principalTable: "AkPO",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AkPO2_JKW_JKWId",
-                        column: x => x.JKWId,
-                        principalTable: "JKW",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AkAkaun_AkCartaId1",
                 table: "AkAkaun",
@@ -661,9 +661,9 @@ namespace MSNK.Migrations
                 column: "JParasId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AkPembekal_AkBankId",
+                name: "IX_AkPembekal_JBankId",
                 table: "AkPembekal",
-                column: "AkBankId");
+                column: "JBankId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkPembekal_JNegeriId",

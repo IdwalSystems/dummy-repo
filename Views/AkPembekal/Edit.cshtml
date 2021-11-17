@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Edit</h1>
@@ -55,7 +56,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="JNegeriId" class="control-label"></label>
-                <select asp-for="JNegeriId" class="form-control" asp-items="ViewBag.JNegeriId"></select>
+                <select class="form-control" asp-for="JNegeriId">
+                    <option value="" hidden>-- Pilih Negeri --</option>
+                    @foreach (var s in ViewBag.JNegeri)
+                    {
+                        <option value="@s.Id">@s.Perihal </option>
+                    }
+                </select>
                 <span asp-validation-for="JNegeriId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -74,9 +81,15 @@
                 <span asp-validation-for="AkaunBank" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AkBankId" class="control-label"></label>
-                <select asp-for="AkBankId" class="form-control" asp-items="ViewBag.AkBankId"></select>
-                <span asp-validation-for="AkBankId" class="text-danger"></span>
+                <label asp-for="JBankId" class="control-label"></label>
+                <select class="form-control" asp-for="JBankId">
+                    <option value="" hidden>-- Pilih Bank --</option>
+                    @foreach (var s in ViewBag.jbank)
+                    {
+                        <option value="@s.Id">@s.Kod - @s.Nama </option>
+                    }
+                </select>
+                <span asp-validation-for="JBankId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

@@ -53,6 +53,7 @@ namespace MSNK
             services.AddTransient<IRepository<AkTerima, int>, AkTerimaRepository>();
             services.AddTransient<IRepository<AkTerima1, int>, AkTerima1Repository>();
             services.AddTransient<IRepository<AkTerima2, int>, AkTerima2Repository>();
+            services.AddTransient<IRepository<AkPembekal, int>, AkPembekalRepository>();
             services.AddControllersWithViews();
         }
 

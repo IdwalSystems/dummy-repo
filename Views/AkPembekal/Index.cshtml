@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Index</h1>
@@ -49,7 +50,7 @@
                 @Html.DisplayNameFor(model => model.JNegeri)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AkBank)
+                @Html.DisplayNameFor(model => model.JBank)
             </th>
             <th></th>
         </tr>
@@ -91,10 +92,10 @@
                 @Html.DisplayFor(modelItem => item.AkaunBank)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.JNegeri.Kod)
+                @Html.DisplayFor(modelItem => item.JNegeri.Perihal)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AkBank.Id)
+                @Html.DisplayFor(modelItem => item.JBank.Nama)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
