@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,7 +14,6 @@ namespace MSNK.Models.Modules
         public DateTime Tarikh { get; set; }
         public DateTime TarikhPosting { get; set; }
         public int AkPembekalId { get; set; }
-        [Column(TypeName = "decimal(18,2)")]
         public decimal Jumlah { get; set; }
         [MaxLength(1)]
         public string Posting { get; set; }

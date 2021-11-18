@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSNK.Data;
+using MSNK.Models.Administration;
 using MSNK.Models.Modules;
+using MSNK.Models.Modules.Cart;
+using MSNK.Models.Modules.Cart.Session;
 using MSNK.Models.Modules.EFRepository;
 using MSNK.Models.Modules.IRepository;
 using System;
@@ -29,6 +33,9 @@ namespace MSNK
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession();
+            services.AddMemoryCache();
+            
             services.AddDbContext<ApplicationDbContext>(options=>options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
             services.Configure<IdentityOptions>(opt =>
@@ -41,7 +48,7 @@ namespace MSNK
             );
             services.ConfigureApplicationCookie(opt =>
             {
-                opt.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Home/Accessdenied");
+                opt.AccessDeniedPath = new PathString("/Home/Accessdenied");
             });
 
             services.AddTransient<IRepository<AkBank, int>, AkBankRepository>();
@@ -54,7 +61,13 @@ namespace MSNK
             services.AddTransient<IRepository<AkTerima1, int>, AkTerima1Repository>();
             services.AddTransient<IRepository<AkTerima2, int>, AkTerima2Repository>();
             services.AddTransient<IRepository<AkPembekal, int>, AkPembekalRepository>();
+
+            services.AddScoped(ss => SessionCartTerima.GetCart(ss));
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddControllersWithViews();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,6 +90,7 @@ namespace MSNK
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

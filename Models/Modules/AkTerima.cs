@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,11 +16,13 @@ namespace MSNK.Models.Modules
         [MaxLength(20)]
         public string NoRujukan { get; set; }
         public DateTime Tarikh { get; set; }
-        [Column(TypeName = "decimal(18,2)")]
         public decimal Jumlah { get; set; }
         public int AkBankId { get; set; }
+        [DefaultValue("0")]
         public int FlCetak { get; set; }
+        [DefaultValue("0")]
         public int FlPosting { get; set; }
+        [DefaultValue("0")]
         public int FlBatal { get; set; }
         [MaxLength(20)]
         public string KodPembayar { get; set; }
@@ -48,10 +49,10 @@ namespace MSNK.Models.Modules
         public string Sebab { get; set; }
         [MaxLength(15)]
         public string UserId { get; set; }
-        public DateTime TarMasuk { get; set; }
+        public DateTime TarMasuk { get; set; } = DateTime.Now;
         [MaxLength(15)]
         public string UserIdKemaskini { get; set; }
-        public DateTime TarKemaskini { get; set; }
+        public DateTime TarKemaskini { get; set; } = DateTime.Now;
         
         //Relationship
         public JKW JKW { get; set; }
