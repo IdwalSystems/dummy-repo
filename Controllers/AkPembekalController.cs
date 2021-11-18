@@ -20,7 +20,7 @@ namespace MSNK.Controllers
 
         public AkPembekalController(
             ApplicationDbContext context,
-            IRepository<AkPembekal,int> AkPembekalRepository,
+            IRepository<AkPembekal, int> AkPembekalRepository,
             IRepository<JBank, int> JBankRepository,
             IRepository<JNegeri, int> JNegeriRepository)
         {
@@ -33,18 +33,65 @@ namespace MSNK.Controllers
         private void PopulateList()
         {
             List<JBank> JBankList = _context.JBank.OrderBy(b => b.Kod).ToList();
-            ViewBag.jbank = JBankList;
-
             List<JNegeri> jnegeriList = _context.JNegeri.OrderBy(b => b.Kod).ToList();
+
+            ViewBag.jbank = JBankList;
             ViewBag.jnegeri = jnegeriList;
         }
 
-        // GET: AkPembekal
-        public async Task<IActionResult> Index()
+        private string GetKodSykt(string namasykt)
         {
-            //var applicationDbContext = _context.AkPembekal.Include(a => a.AkBank).Include(a => a.JNegeri);
-            //return View(await applicationDbContext.ToListAsync());
+            var akpembekal = _akpembekalRepo.GetAll()
+                .Result
+                .Where(s => s.KodSykt.Contains(namasykt.Substring(0, 1)))
+                .OrderByDescending(s => s.Id).FirstOrDefault();
+
+            int intkodsykt = 0;
+            if (akpembekal != null)
+            {
+                if (int.TryParse(akpembekal.KodSykt.Substring(1), out intkodsykt))
+                {
+                    intkodsykt += 1;
+                }
+            }
+            else
+            {
+                intkodsykt = 1;
+            }
+
+            string newkodsykt = namasykt.Substring(0, 1) + intkodsykt.ToString("D5");
+            ViewBag.kodsykt = newkodsykt;
+            return newkodsykt;
+        }
+
+        // GET: AkPembekal
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        {
+            ViewBag.NamaSyktSortParm = String.IsNullOrEmpty(sortOrder) ? "nama_desc" : "";
+            ViewBag.KodSyktSortParm = sortOrder == "kod" ? "kod_desc" : "kod";
+
             var akpembekal = await _akpembekalRepo.GetAll();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                akpembekal = akpembekal.Where(s => s.KodSykt.Contains(searchString) || s.NamaSykt.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "nama_desc":
+                    akpembekal = akpembekal.OrderByDescending(s => s.NamaSykt);
+                    break;
+                case "kod":
+                    akpembekal = akpembekal.OrderBy(s => s.KodSykt);
+                    break;
+                case "kod_desc":
+                    akpembekal = akpembekal.OrderByDescending(s => s.KodSykt);
+                    break;
+                default:
+                    akpembekal = akpembekal.OrderBy(s => s.NamaSykt);
+                    break;
+            }
             return View(akpembekal);
         }
 
@@ -100,14 +147,14 @@ namespace MSNK.Controllers
             //ViewData["JBankId"] = new SelectList(_context.JBank, "Id", "Id", akPembekal.JBankId);
             //ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", akPembekal.JNegeriId);
             //return View(akPembekal);
-            AkPembekal akP = new ();
+            AkPembekal akP = new();
             if (ModelState.IsValid)
             {
                 if (akPembekal != null)
                 {
                     akP.JBankId = jBankId;
                     akP.JNegeriId = jNegeriId;
-                    akP.KodSykt = akPembekal.KodSykt;
+                    akP.KodSykt = GetKodSykt(akPembekal.NamaSykt);
                     akP.NamaSykt = akPembekal.NamaSykt;
                     akP.NoPendaftaran = akPembekal.NoPendaftaran;
                     akP.Poskod = akPembekal.Poskod;
@@ -127,7 +174,7 @@ namespace MSNK.Controllers
 
             PopulateList();
 
-            return View(akPembekal);
+            return View(akP);
         }
 
         // GET: AkPembekal/Edit/5
@@ -166,7 +213,7 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            AkPembekal akP = new();
+            //AkPembekal akP = new();
 
             if (ModelState.IsValid)
             {
@@ -175,20 +222,20 @@ namespace MSNK.Controllers
                     //_context.Update(akPembekal);
                     //await _context.SaveChangesAsync();
 
-                    akP.JBankId = jBankId;
-                    akP.JNegeriId = jNegeriId;
-                    akP.KodSykt = akPembekal.KodSykt;
-                    akP.NamaSykt = akPembekal.NamaSykt;
-                    akP.NoPendaftaran = akPembekal.NoPendaftaran;
-                    akP.Poskod = akPembekal.Poskod;
-                    akP.Telefon1 = akPembekal.Telefon1;
-                    akP.AkaunBank = akPembekal.AkaunBank;
-                    akP.Alamat1 = akPembekal.Alamat1;
-                    akP.Alamat2 = akPembekal.Alamat2;
-                    akP.Alamat3 = akPembekal.Alamat3;
-                    akP.Bandar = akPembekal.Bandar;
-                    akP.Emel = akPembekal.Emel;
-                    await _akpembekalRepo.Update(akP);
+                    //akP.JBankId = jBankId;
+                    //akP.JNegeriId = jNegeriId;
+                    //akP.KodSykt = akPembekal.KodSykt;
+                    //akP.NamaSykt = akPembekal.NamaSykt;
+                    //akP.NoPendaftaran = akPembekal.NoPendaftaran;
+                    //akP.Poskod = akPembekal.Poskod;
+                    //akP.Telefon1 = akPembekal.Telefon1;
+                    //akP.AkaunBank = akPembekal.AkaunBank;
+                    //akP.Alamat1 = akPembekal.Alamat1;
+                    //akP.Alamat2 = akPembekal.Alamat2;
+                    //akP.Alamat3 = akPembekal.Alamat3;
+                    //akP.Bandar = akPembekal.Bandar;
+                    //akP.Emel = akPembekal.Emel;
+                    await _akpembekalRepo.Update(akPembekal);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -243,6 +290,15 @@ namespace MSNK.Controllers
         private bool AkPembekalExists(int id)
         {
             return _context.AkPembekal.Any(e => e.Id == id);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _context.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

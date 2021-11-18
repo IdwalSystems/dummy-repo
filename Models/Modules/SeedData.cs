@@ -512,7 +512,7 @@ namespace MSNK.Models.Modules
                 context.AkPembekal.AddRange(
                     new AkPembekal
                     {
-                        KodSykt = "IDWAL",
+                        KodSykt = "I00001",
                         NamaSykt = "IDWAL SYSTEMS SDN BHD",
                         NoPendaftaran = "187842-T",
                         Alamat1 = "LOT 605G, KOMPLEKS DIAMOND, BANGI BUSINESS PARK, ",

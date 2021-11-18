@@ -10,14 +10,24 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+@Html.Label((string)ViewBag.kodsykt)
+
+@using (Html.BeginForm())
+{
+    <p>
+        Carian : @Html.TextBox("SearchString")
+        <input type="submit" value="Cari" />
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.KodSykt)
+                @Html.ActionLink("Kod Sykt", "Index", new { sortOrder = ViewBag.KodSyktSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NamaSykt)
+                @Html.ActionLink("Nama Syarikat", "Index", new { sortOrder = ViewBag.NamaSyktSortParm })
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.NoPendaftaran)
@@ -56,53 +66,54 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.KodSykt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NamaSykt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoPendaftaran)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alamat1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alamat2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alamat3)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Poskod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bandar)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefon1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Emel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AkaunBank)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JNegeri.Perihal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JBank.Nama)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.KodSykt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NamaSykt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoPendaftaran)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Alamat1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Alamat2)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Alamat3)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Poskod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Bandar)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telefon1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Emel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AkaunBank)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JNegeri.Perihal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JBank.Nama)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
