@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211117004405_AddInitialTables")]
+    [Migration("20211122032826_AddInitialTables")]
     partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1043,7 +1043,7 @@ namespace MSNK.Migrations
                     b.HasOne("MSNK.Models.Modules.AkBank", "AkBank")
                         .WithMany("AkTerima")
                         .HasForeignKey("AkBankId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MSNK.Models.Modules.JKW", "JKW")
@@ -1073,23 +1073,21 @@ namespace MSNK.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MSNK.Models.Modules.AkTerima", "AkTerima")
+                    b.HasOne("MSNK.Models.Modules.AkTerima", null)
                         .WithMany("AkTerima1")
                         .HasForeignKey("AkTerimaId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AkCarta");
-
-                    b.Navigation("AkTerima");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkTerima2", b =>
                 {
-                    b.HasOne("MSNK.Models.Modules.AkTerima", "AkTerima")
+                    b.HasOne("MSNK.Models.Modules.AkTerima", null)
                         .WithMany("AkTerima2")
                         .HasForeignKey("AkTerimaId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MSNK.Models.Modules.JCaraBayar", "JCaraBayar")
@@ -1097,8 +1095,6 @@ namespace MSNK.Migrations
                         .HasForeignKey("JCaraBayarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AkTerima");
 
                     b.Navigation("JCaraBayar");
                 });

@@ -540,7 +540,7 @@ namespace MSNK.Migrations
                         column: x => x.AkBankId,
                         principalTable: "AkBank",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AkTerima_JKW_JKWId",
                         column: x => x.JKWId,
@@ -579,7 +579,7 @@ namespace MSNK.Migrations
                         column: x => x.AkTerimaId,
                         principalTable: "AkTerima",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -606,7 +606,7 @@ namespace MSNK.Migrations
                         column: x => x.AkTerimaId,
                         principalTable: "AkTerima",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AkTerima2_JCaraBayar_JCaraBayarId",
                         column: x => x.JCaraBayarId,
