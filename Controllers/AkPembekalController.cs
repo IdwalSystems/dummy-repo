@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Models;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
 
@@ -60,21 +61,59 @@ namespace MSNK.Controllers
             }
 
             string newkodsykt = namasykt.Substring(0, 1) + intkodsykt.ToString("D5");
-            ViewBag.kodsykt = newkodsykt;
             return newkodsykt;
         }
 
-        // GET: AkPembekal
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        [HttpPost]
+        public JsonResult StrCalculate(string data)
         {
-            ViewBag.NamaSyktSortParm = String.IsNullOrEmpty(sortOrder) ? "nama_desc" : "";
-            ViewBag.KodSyktSortParm = sortOrder == "kod" ? "kod_desc" : "kod";
+            try
+            {
+                var result = "";
+
+                if (data == null || data == "")
+                {
+                    result = "";
+                }
+                else
+                {
+                    result = GetKodSykt(data.ToUpper());
+                }
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+
+        // GET: AkPembekal
+        public async Task<IActionResult> Index(
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NamaSyktSortParm"] = String.IsNullOrEmpty(sortOrder) ? "nama_desc" : "";
+            ViewData["KodSyktSortParm"] = sortOrder == "kod" ? "kod_desc" : "kod";
+            ViewData["CurrentFilter"] = searchString;
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
 
             var akpembekal = await _akpembekalRepo.GetAll();
+            //var akpembekal = await _context.AkPembekal.AsNoTracking().ToListAsync();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                akpembekal = akpembekal.Where(s => s.KodSykt.Contains(searchString) || s.NamaSykt.Contains(searchString));
+                akpembekal = akpembekal.Where(s => s.KodSykt.ToUpper().Contains(searchString.ToUpper()) || s.NamaSykt.ToUpper().Contains(searchString.ToUpper()));
             }
 
             switch (sortOrder)
@@ -92,7 +131,10 @@ namespace MSNK.Controllers
                     akpembekal = akpembekal.OrderBy(s => s.NamaSykt);
                     break;
             }
-            return View(akpembekal);
+
+            int pageSize = 5;
+            return View(await PaginatedList<AkPembekal>.CreateAsync(akpembekal, pageNumber ?? 1, pageSize));
+            //return View(akpembekal);
         }
 
         // GET: AkPembekal/Details/5
@@ -102,11 +144,6 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
-
-            //var akPembekal = await _context.AkPembekal
-            //    .Include(a => a.JBank)
-            //    .Include(a => a.JNegeri)
-            //    .FirstOrDefaultAsync(m => m.Id == id);
 
             var akPembekal = await _akpembekalRepo.GetById((int)id);
             var bank = await _jbankRepo.GetById(akPembekal.JBankId);
@@ -132,8 +169,6 @@ namespace MSNK.Controllers
         }
 
         // POST: AkPembekal/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkPembekal akPembekal, int jNegeriId, int jBankId)
@@ -202,8 +237,6 @@ namespace MSNK.Controllers
         }
 
         // POST: AkPembekal/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkPembekal akPembekal, int jNegeriId, int jBankId)
