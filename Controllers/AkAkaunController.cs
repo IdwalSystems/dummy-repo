@@ -89,14 +89,14 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkAkaun akAkaun,int KWId, int AkCartaId1, int AkCartaId2)
+        public async Task<IActionResult> Create(AkAkaun akAkaun,int JKWId, int AkCartaId1, int AkCartaId2)
         {
             AkAkaun m = new AkAkaun();
             if (ModelState.IsValid)
             {
-                if (akAkaun != null && KWId != 0 && AkCartaId1 != 0 && AkCartaId2 != 0)
+                if (akAkaun != null && JKWId != 0 && AkCartaId1 != 0 && AkCartaId2 != 0)
                 {
-                    m.JKWId = KWId;
+                    m.JKWId = JKWId;
                     m.AkCartaId1 = AkCartaId1;
                     m.AkCartaId2 = AkCartaId2;
                     m.Tarikh = akAkaun.Tarikh;
