@@ -512,7 +512,7 @@ namespace MSNK.Models.Modules
                 context.AkPembekal.AddRange(
                     new AkPembekal
                     {
-                        KodSykt = "I00001",
+                        KodSykt = "I0001",
                         NamaSykt = "IDWAL SYSTEMS SDN BHD",
                         NoPendaftaran = "187842-T",
                         Alamat1 = "LOT 605G, KOMPLEKS DIAMOND, BANGI BUSINESS PARK, ",
@@ -530,6 +530,25 @@ namespace MSNK.Models.Modules
             }
             context.SaveChanges();
 
+            if (context.AkAkaun.Any()) { }
+            else
+            {
+                var kw = context.JKW.Where(b => b.Kod == "100").FirstOrDefault();
+                var carta1 = context.AkCarta.Where(b => b.Kod == "A11108").FirstOrDefault();
+
+                context.AkAkaun.AddRange(
+                    new AkAkaun
+                    {
+                        JKWId = kw.Id,
+                        AkCartaId1 = carta1.Id,
+                        Tarikh = DateTime.Parse("2021-01-01 00:19:32.000"),
+                        AkCartaId2 = context.AkCarta.Where(b=> b.Kod == "").FirstOrDefault(),
+                        NoRujukan = "RR/IB1002021000001",
+                        Debit = 820,
+                        Kredit = 0
+                    }
+                );
+            }
         }
     }
 }

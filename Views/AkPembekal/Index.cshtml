@@ -20,6 +20,14 @@
     //});
 </script>
 
+<style>
+    th:last-child, td:last-child {
+        position: sticky;
+        right: 0px;
+        background-color: white;
+    }
+</style>
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -36,7 +44,7 @@
 </form>
 
 <div class="table-responsive">
-    <table class="table hover nowrap text-nowrap" width="100%">
+    <table class="table table-hover text-nowrap hover nowrap " width="100%">
         <thead>
             <tr>
                 <th>

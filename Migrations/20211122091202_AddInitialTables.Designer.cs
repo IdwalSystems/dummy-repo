@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211122032826_AddInitialTables")]
+    [Migration("20211122091202_AddInitialTables")]
     partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -277,8 +277,8 @@ namespace MSNK.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AkaunBank")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Alamat1")
                         .HasMaxLength(100)
@@ -307,16 +307,16 @@ namespace MSNK.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("KodSykt")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
 
                     b.Property<string>("NamaSykt")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NoPendaftaran")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Poskod")
                         .HasMaxLength(5)

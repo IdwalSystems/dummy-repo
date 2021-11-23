@@ -60,7 +60,7 @@ namespace MSNK.Controllers
                 intkodsykt = 1;
             }
 
-            string newkodsykt = namasykt.Substring(0, 1) + intkodsykt.ToString("D5");
+            string newkodsykt = namasykt.Substring(0, 1) + intkodsykt.ToString("D4");
             return newkodsykt;
         }
 
@@ -88,11 +88,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPembekal
-        public async Task<IActionResult> Index(
-            string sortOrder,
-            string currentFilter,
-            string searchString,
-            int? pageNumber)
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NamaSyktSortParm"] = String.IsNullOrEmpty(sortOrder) ? "nama_desc" : "";
@@ -109,7 +105,6 @@ namespace MSNK.Controllers
             }
 
             var akpembekal = await _akpembekalRepo.GetAll();
-            //var akpembekal = await _context.AkPembekal.AsNoTracking().ToListAsync();
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -134,7 +129,6 @@ namespace MSNK.Controllers
 
             int pageSize = 5;
             return View(await PaginatedList<AkPembekal>.CreateAsync(akpembekal, pageNumber ?? 1, pageSize));
-            //return View(akpembekal);
         }
 
         // GET: AkPembekal/Details/5

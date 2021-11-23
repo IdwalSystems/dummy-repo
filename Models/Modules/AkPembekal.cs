@@ -9,11 +9,11 @@ namespace MSNK.Models.Modules
     public class AkPembekal
     {
         public int Id { get; set; }
-        [MaxLength(50)]
-        public string KodSykt { get; set; }
+        [MaxLength(5)]
+        public string KodSykt { get; set; }//A0000
         [MaxLength(100)]
         public string NamaSykt { get; set; }
-        [MaxLength(50)]
+        [MaxLength(20)]
         public string NoPendaftaran { get; set; }
         [MaxLength(100)]
         public string Alamat1 { get; set; }
@@ -22,7 +22,7 @@ namespace MSNK.Models.Modules
         [MaxLength(100)]
         public string Alamat3 { get; set; }
         [MaxLength(5)]
-        public string Poskod { get; set; }
+        public string Poskod { get; set; }//nvarchar
         [MaxLength(100)]
         public string Bandar { get; set; }
         public int JNegeriId { get; set; }
@@ -30,7 +30,7 @@ namespace MSNK.Models.Modules
         public string Telefon1 { get; set; }
         [MaxLength(100)]
         public string Emel { get; set; }
-        [MaxLength(50)]
+        [MaxLength(20)]
         public string AkaunBank { get; set; }
         public int JBankId { get; set; }
 

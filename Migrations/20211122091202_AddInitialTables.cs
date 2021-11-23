@@ -257,9 +257,9 @@ namespace MSNK.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    KodSykt = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    KodSykt = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
                     NamaSykt = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    NoPendaftaran = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    NoPendaftaran = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Alamat1 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Alamat2 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Alamat3 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -268,7 +268,7 @@ namespace MSNK.Migrations
                     JNegeriId = table.Column<int>(type: "int", nullable: false),
                     Telefon1 = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     Emel = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    AkaunBank = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    AkaunBank = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     JBankId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
