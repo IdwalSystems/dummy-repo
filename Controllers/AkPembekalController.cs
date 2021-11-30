@@ -70,7 +70,6 @@ namespace MSNK.Controllers
             try
             {
                 var result = "";
-
                 if (data == null || data == "")
                 {
                     result = "";
@@ -88,12 +87,47 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPembekal
-        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
+        public async Task<IActionResult> Index(
+            string sortOrder, 
+            string currentFilter, 
+            string searchString, 
+            string searchColumn,
+            int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NamaSyktSortParm"] = String.IsNullOrEmpty(sortOrder) ? "nama_desc" : "";
             ViewData["KodSyktSortParm"] = sortOrder == "kod" ? "kod_desc" : "kod";
             ViewData["CurrentFilter"] = searchString;
+
+            List<SelectListItem> test = new List<SelectListItem>();
+            test.Add(new SelectListItem() { Text = "Nama Syarikat", Value = "" });
+            test.Add(new SelectListItem() { Text = "No Pendaftaran", Value = "1" });
+            test.Add(new SelectListItem() { Text = "Bandar", Value = "2" });
+            test.Add(new SelectListItem() { Text = "Negeri", Value = "3" });
+
+            if (!String.IsNullOrEmpty(searchColumn))
+            {
+                if (searchColumn == "1")
+                {
+                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "1");
+                }
+                else if (searchColumn == "2")
+                {
+                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "2");
+                }
+                else if (searchColumn == "3")
+                {
+                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "3");
+                }
+                else
+                {
+                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "");
+                }
+            }
+            else
+            {
+                ViewBag.searchColumn = new SelectList(test, "Value", "Text", "");
+            }
 
             if (searchString != null)
             {
@@ -108,7 +142,26 @@ namespace MSNK.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                akpembekal = akpembekal.Where(s => s.KodSykt.ToUpper().Contains(searchString.ToUpper()) || s.NamaSykt.ToUpper().Contains(searchString.ToUpper()));
+                if (searchColumn == "1")
+                {
+                    akpembekal = akpembekal.Where(s => s.KodSykt.ToUpper().Contains(searchString.ToUpper()));
+                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "1");
+                }
+                else if (searchColumn == "2")
+                {
+                    akpembekal = akpembekal.Where(s => s.Bandar.ToUpper().Contains(searchString.ToUpper()));
+                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "2");
+                }
+                else if (searchColumn == "3")
+                {
+                    akpembekal = akpembekal.Where(s => s.JNegeri.Perihal.ToUpper().Contains(searchString.ToUpper()));
+                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "3");
+                }
+                else
+                {
+                    akpembekal = akpembekal.Where(s => s.NamaSykt.ToUpper().Contains(searchString.ToUpper()));
+                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "");
+                }
             }
 
             switch (sortOrder)

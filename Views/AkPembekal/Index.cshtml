@@ -1,5 +1,4 @@
 ﻿@*@model IEnumerable<MSNK.Models.Modules.AkPembekal>*@
-@*@model PaginatedList<ContosoUniversity.Models.Student>*@
 @model PaginatedList<MSNK.Models.Modules.AkPembekal>
 
 @{
@@ -31,20 +30,28 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-@*@Html.Label((string)ViewBag.kodsykt)*@
+@*@Html.Label((string)ViewData["SearchColumn"])*@
 
+<label class="form-control-plaintext" for="searchselect">Carian : </label>
 <form asp-action="Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Carian : <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Cari" /> |
-            <a asp-action="Index">Batal Carian</a>
-        </p>
+    <div class="form-actions no-color mb-3">
+        <div class="form-row">
+            <div class="col-sm mb-3">
+                <select class="form-control" name="searchColumn" id="searchselect" asp-items="@ViewBag.searchColumn"></select>
+            </div>
+            <div class="col-sm mb-3">
+                <input class="form-control" type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
+            </div>
+            <div class="col-sm mb-3">
+                <input type="submit" value="Cari" class="btn btn-outline-primary" /> |
+                <a asp-action="Index" class="btn btn-link">Batal Carian</a>
+            </div>
+        </div>
     </div>
 </form>
 
 <div class="table-responsive">
-    <table class="table table-hover text-nowrap hover nowrap " width="100%">
+    <table class="table table-hover text-nowrap table-sm hover nowrap " width="100%">
         <thead>
             <tr>
                 <th>
@@ -88,7 +95,7 @@
                 <th>
                     Bank
                 </th>
-                <th></th>
+                <th class="optionCol"></th>
             </tr>
         </thead>
         <tbody>
@@ -134,7 +141,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.JBank.Nama)
                     </td>
-                    <td>
+                    <td class="optionCol">
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                         <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>

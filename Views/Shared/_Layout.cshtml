@@ -17,14 +17,14 @@
 <body>
     <partial name="_CustomCSSRenderer" />
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-lg navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MSNK</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
 
                         @if (User.Identity.IsAuthenticated)
@@ -36,8 +36,8 @@
                                 <partial name="_DaftarPartialNavbar" />
                                 <partial name="_LejarPartialNavbar" />
                                 <partial name="_TerimaanPartialNavbar" />
-                                <partial name="_TanggunganPartialNavbar"/>
-                                <partial name="_BaucerPartialNavbar"/>
+                                <partial name="_TanggunganPartialNavbar" />
+                                <partial name="_BaucerPartialNavbar" />
                             }
                             else
                             {
