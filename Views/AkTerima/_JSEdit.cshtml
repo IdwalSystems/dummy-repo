@@ -1,4 +1,12 @@
 ﻿<script type="text/javascript">
+    function showDate(d) {
+        var s = new Date(d);
+        var month = s.getMonth() + 1;
+        var day = s.getDate();
+        var year = s.getFullYear();
+
+        return (day < 10 ? '0' + day : day) + "/" + (month < 10 ? '0' + month : month) + "/" + year;
+    }
 
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
@@ -50,22 +58,17 @@
                     cell.attr("class", "editable-txt");
                     cell.attr("id", "td1Amaun_" + r.record.Id);
 
-                    //Add Button cell.
+                    //Add Edit Button cell.
                     cell = $(row.insertCell(-1));
 
                     var btnUpdate1 = $("<button class='btn btn-primary btn-table-mini' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
                     cell.append(btnUpdate1);
 
-                    //Add Button cell.
+                    //Add Remove Button cell.
                     cell = $(row.insertCell(-1));
                     
                     var btnRemove1 = $("<button class='btn btn-danger btn-table-mini' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                     cell.append(btnRemove1);
-                    //btnRemove1.attr("class", "btn btn-danger btn-table-mini");
-                    //btnRemove1.attr("type", "button");
-                    //btnRemove1.attr("onclick", "Remove1(this);");
-                    //cell.append(btnRemove1);
-                    
 
                     var AkTerima1 = {
                         AkTerimaId: txtAkTerima.val(),
@@ -97,8 +100,8 @@
     //add tbl Urusniaga
     $("body").on("click", "#btnAdd2", function () {
         //Reference the Name and Country TextBoxes.
-        var ddlCaraBayar = $("#ddlCaraBayar");
-        GetCaraBayar(ddlCaraBayar.val());
+        var txtCaraBayar = $("#txtCaraBayar");
+        GetCaraBayar(txtCaraBayar.val());
     });
 
     function GetCaraBayar(id) {
@@ -115,8 +118,8 @@
                 success: function (r) {
                     //Reference the TextBoxes.
                     var txtAkTerima = $("#txtAkTerima2");
-                    var ddlCaraBayar = $("#ddlCaraBayar");
-                    var txtAmaunUrusniaga = $("#txtAmaunUrusniaga");
+                    var txtCaraBayar = $("#txtCaraBayar");
+                    var amaun = $("#txtAmaunUrusniaga");
                     var txtNoCek = $("#txtNoCek");
                     var txtJenisCek = $("#txtJenisCek");
                     var txtKodBankCek = $("#txtKodBankCek");
@@ -140,7 +143,7 @@
 
                     //Add Amaun cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtAmaunUrusniaga.val());
+                    cell.html(amaun.val());
 
                     //Add NoCek cell.
                     var cell = $(row.insertCell(-1));
@@ -166,21 +169,22 @@
                     var cell = $(row.insertCell(-1));
                     cell.html(txtTarSlip.val());
 
-
-
-                    //Add Button cell.
+                    //Add Edit Button cell.
                     cell = $(row.insertCell(-1));
-                    var btnRemove2 = $("<input />");
-                    btnRemove2.attr("class", "btn btn-danger btn-table-mini");
-                    btnRemove2.attr("type", "button");
-                    btnRemove2.attr("onclick", "Remove2(this);");
-                    btnRemove2.val("-");
+
+                    var btnUpdate2 = $("<button class='btn btn-primary btn-table-mini' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
+                    cell.append(btnUpdate2);
+
+                    //Add Remove Button cell.
+                    cell = $(row.insertCell(-1));
+
+                    var btnRemove2 = $("<button class='btn btn-danger btn-table-mini' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
                     cell.append(btnRemove2);
 
                     var AkTerima2 = {
                         AkTerimaId: txtAkTerima.val(),
-                        JCaraBayarId: ddlCaraBayar.val(),
-                        Amaun: txtAmaunUrusniaga.val(),
+                        JCaraBayarId: txtCaraBayar.val(),
+                        Amaun: amaun.val(),
                         NoCek: txtNoCek.val(),
                         JenisCek: txtJenisCek.val(),
                         KodBankCek: txtKodBankCek.val(),
@@ -191,13 +195,13 @@
                     if (noRujukan != null) {
                         $.ajax({
                             type: "POST",
-                            url: "/AkTerima/SaveAkTerima2",
+                            url: "/AkTerima/InsertUpdateAkTerima2",
                             data: AkTerima2,
                             dataType: "json",
                             success: function (r) {
                                 //Clear the TextBoxes.
-                                ddlCaraBayar.val("");
-                                txtAmaunUrusniaga.val("");
+                                txtCaraBayar.val("");
+                                amaun.val("");
                                 txtNoCek.val("");
                                 txtJenisCek.val("");
                                 txtKodBankCek.val("");
@@ -229,7 +233,7 @@
 
             //Sum value to Total text field
             var sum = 0;
-            sum = parseFloat(amaun) - parseFloat(txtJumlah.val());
+            sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
             txtJumlah.val(sum);
 
             var AkTerima1 = {
@@ -253,10 +257,11 @@
     };
     //remove tbl objek end
 
-    //remove tb urusniaga
+    //remove tbl urusniaga
     function Remove2(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
+        var akTerimaId = $('#Id').val();
         var name = $("TD", row).eq(0).html();
         if (confirm("Hapus : " + name + " ?")) {
             //Get the reference of the Table.
@@ -264,11 +269,12 @@
 
             var AkTerima2 = {
                 JCaraBayarId: name,
+                AkTerimaId: akTerimaId
             }
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkTerima/RemoveAkTerima2",
+                    url: "/AkTerima/RemoveUpdateAkTerima2",
                     data: AkTerima2,
                     dataType: "json",
                     success: function (r) {
@@ -287,6 +293,7 @@
         var row = $(button).closest("TR");
         var akTerimaId = $('#Id').val();
         var akCartaId = $("TD", row).eq(0).html();
+        
 
         var AkTerima1 = {
             AkTerimaId: akTerimaId,
@@ -300,18 +307,21 @@
                 dataType: "json",
                 success: function (r) {
                     //Delete the Table row using it's Index.
-                    $("#moId").val(r.record.id);
+                    $("#moId1").val(r.record.id);
                     $("#moKodAkaun").val(r.record.akCartaId);
-                    $("#moAmaun").val(r.record.amaun);
+                    $("#moAmaun1").val(r.record.amaun);
+
+
                 }
             });
         }
     };
 
     function modalUpdate1() {
-        var id = $("#moId").val();
-        var amaun = $("#moAmaun").val();
+        var id = $("#moId1").val();
+        var amaun = $("#moAmaun1").val();
         var akTerimaId = $("#Id").val();
+        var jumlah = $("#jumlahObjek");
 
         var AkTerima1 = {
             Id: id,
@@ -335,27 +345,131 @@
 
                         //refresh updated table objek
                         $("table tbody#tbodyObjek").empty();
-                        var jumlah1 = 0;
+                        var sum = 0;
                         if (r.data.akTerima1.length > 0) {
                             for (var i = 0; i < r.data.akTerima1.length; i++) {
                                 var item1 = r.data.akTerima1[i];
-                                var str = "<tr><td>" + item1.akCarta.kod +
+                                var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
+                                    "</td><td>" + item1.akCarta.kod +
                                     "</td><td>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" +
-                                    "<button class='btn btn-primary btn-table-mini' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "<button class='btn btn-primary btn-table-mini' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalUrusniaga' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
-                                    "<button class='btn btn-danger btn-table-mini' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "<button class='btn btn-danger btn-table-mini' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
                                 $("table tbody#tbodyObjek").append(str);
-                                jumlah1 += item1.amaun;
+                                sum += item1.amaun;
                             }
                         }
+
+                        jumlah.val(sum);
                     }
                 });
             }
         }); 
     };
     //update tbl objek end
+
+    //update tbl urusniaga
+    function Update2(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var akTerimaId = $('#Id').val();
+        var jCaraBayarId = $("TD", row).eq(0).html();
+
+        var AkTerima2 = {
+            AkTerimaId: akTerimaId,
+            JCaraBayarId: jCaraBayarId
+        }
+        if (name != null) {
+            $.ajax({
+                type: "POST",
+                url: "/AkTerima/UpdateAkTerima2",
+                data: AkTerima2,
+                dataType: "json",
+                success: function (r) {
+                    //Delete the Table row using it's Index.
+                    $("#moId2").val(r.record.id);
+                    $("#moCaraBayar").val(r.record.jCaraBayarId);
+                    $("#moAmaun2").val(r.record.amaun);
+                    $("#moNoCek").val(r.record.noCek);
+                    $("#moJenisCek").val(r.record.jenisCek);
+                    $("#moKodBankCek").val(r.record.kodBankCek);
+                    $("#moTempatCek").val(r.record.tempatCek);
+                    $("#moNoSlip").val(r.record.noSlip);
+                    $("#moTarSlip").val(r.record.tarSlip);
+                }
+            });
+        }
+    };
+
+    function modalUpdate2() {
+        var id = $("#moId2").val();
+        var amaun = $("#moAmaun2").val();
+        var noCek = $("#moNoCek").val();
+        var jenisCek = $("#moJenisCek").val();
+        var kodBankCek = $("#moKodBankCek").val();
+        var tempatCek = $("#moTempatCek").val();
+        var noSlip = $("#moNoSlip").val();
+        var tarSlip = $("#moTarSlip").val();
+        var akTerimaId = $("#Id").val();
+
+        var AkTerima2 = {
+            Id: id,
+            AkTerimaId: akTerimaId,
+            Amaun: amaun,
+            NoCek: noCek,
+            JenisCek: jenisCek,
+            KodBankCek: kodBankCek,
+            TempatCek: tempatCek,
+            NoSlip: noSlip,
+            TarSlip: tarSlip
+        }
+        $.ajax({
+            type: "POST",
+            url: "/AkTerima/SaveUpdateAkTerima2",
+            data: AkTerima2,
+            dataType: "json",
+            success: function (r) {
+                //insert notification here
+
+                $.ajax({
+                    type: "POST",
+                    url: "/AkTerima/GetCart2",
+                    data: AkTerima2,
+                    dataType: "json",
+                    success: function (r) {
+
+                        //refresh updated table objek
+                        $("table tbody#tbodyUrusniaga").empty();
+                        var jumlah2 = 0;
+                        if (r.data.akTerima2.length > 0) {
+                            for (var i = 0; i < r.data.akTerima2.length; i++) {
+                                var item1 = r.data.akTerima2[i];
+                                var str = "<tr><td id='jCaraBayarId' hidden>" + item1.jCaraBayarId +
+                                    "</td><td>" + item1.jCaraBayar.kod +
+                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td>" + item1.noCek +
+                                    "</td><td>" + item1.jenisCek +
+                                    "</td><td>" + item1.kodBankCek +
+                                    "</td><td>" + item1.tempatCek +
+                                    "</td><td>" + item1.noSlip +
+                                    "</td><td>" + showDate(item1.tarSlip) +
+                                    "</td><td>" +
+                                    "<button class='btn btn-primary btn-table-mini' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalUrusniaga' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "</td><td>" +
+                                    "<button class='btn btn-danger btn-table-mini' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "</td><tr>";
+                                $("table tbody#tbodyUrusniaga").append(str);
+                                jumlah2 += item1.amaun;
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    };
+    //update tbl urusniaga end
 
     $("body").on("click", "#btnSave", function () {
         //insert validation form here

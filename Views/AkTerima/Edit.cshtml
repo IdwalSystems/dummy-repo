@@ -222,31 +222,41 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tbodyUrusniaga">
                     @foreach (var item in ViewBag.AkTerima2)
                     {
-                        <tr>
-                            @*<td id="@item.Id"hidden>@item.AkTerimaId</td>*@
-                            <td id="jCaraBayarId" hidden></td>
-                            <td>@item.JCaraBayar.Kod</td>
-                            <td class="editable-txt">@item.Amaun</td>
-                            <td class="editable-txt">@item.NoCek</td>
-                            <td class="editable-txt">@item.JenisCek</td>
-                            <td class="editable-txt">@item.KodBankCek</td>
-                            <td class="editable-txt">@item.TempatCek</td>
-                            <td class="editable-txt">@item.NoSlip</td>
-                            <td>@item.TarSlip</td>
-                            <td><input class="btn btn-danger btn-table-mini" type="button" id="btnRemove2" value="-" onclick="Remove2(this)" /></td>
-                        </tr>
+                    <tr>
+                        @*<td id="@item.Id"hidden>@item.AkTerimaId</td>*@
+                        <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
+                        <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
+                        <td>@item.JCaraBayar.Kod</td>
+                        <td class="editable-txt">@item.Amaun</td>
+                        <td class="editable-txt">@item.NoCek</td>
+                        <td class="editable-txt">@item.JenisCek</td>
+                        <td class="editable-txt">@item.KodBankCek</td>
+                        <td class="editable-txt">@item.TempatCek</td>
+                        <td class="editable-txt">@item.NoSlip</td>
+                        <td>@item.TarSlip</td>
+                        <td>
+                            <button class="btn btn-primary btn-table-mini" type="button" id="btnUpdate2" data-toggle="modal" data-target="#modalUrusniaga" onclick="Update2(this)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-table-mini" type="button" id="btnRemove2" onclick="Remove2(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
 
                     }
                 </tbody>
                 <tfoot>
                     <tr>
                         <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
-                        <td id="caraBayarId" hidden></td>
+                        <td id="jCaraBayarId" hidden></td>
                         <td>
-                            <select class="form-control" id="ddlCaraBayar">
+                            <select class="form-control" id="txtCaraBayar">
                                 <option value="" hidden>-- Pilih Cara Bayar --</option>
                                 @foreach (var s in ViewBag.JCaraBayar)
                                 {
@@ -255,20 +265,20 @@
                             </select>
                         </td>
                         <td><input class="form-control" type="number" id="txtAmaunUrusniaga" step="0.01"></td>
-                        <td><input class="form-control" type="text" id="txtNoCek"></td>
-                        <td><input class="form-control" type="text" id="txtJenisCek"></td>
-                        <td><input class="form-control" type="text" id="txtKodBankCek"></td>
+                        <td><input class="form-control" type="text" id="txtNoCek" maxlength="10"></td>
+                        <td><input class="form-control" type="text" id="txtJenisCek" maxlength="1"></td>
+                        <td><input class="form-control" type="text" id="txtKodBankCek" maxlength="4"></td>
                         <td><input class="form-control" type="text" id="txtTempatCek"></td>
-                        <td><input class="form-control" type="text" id="txtNoSlip"></td>
-                        <td><input class="form-control datepicker" type="text" id="txtTarSlip"></td>
-                        <td><input class="btn btn-success btn-table-mini" type="button" id="btnAdd2" value="+" /></td>
+                        <td><input class="form-control" type="text" id="txtNoSlip" maxlength="30"></td>
+                        <td><input class="form-control" type="datetime-local" id="txtTarSlip"></td>
+                        <td><button class="btn btn-success btn-table-mini" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
                     </tr>
                 </tfoot>
             </table>
             @*table urusniaga end*@
             <br />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Simpan" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -277,7 +287,6 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
 
 
 <!-- Modal Objek -->
@@ -292,7 +301,7 @@
             </div>
             <div class="modal-body">
                 <form>
-                    <input id="moId" hidden/>
+                    <input id="moId1" hidden />
                     <div class="form-group">
                         <label class="col-form-label">Kod Akaun</label>
                         <select class="form-control" id="moKodAkaun" disabled>
@@ -305,7 +314,7 @@
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Amaun</label>
-                        <input type="number" class="form-control" id="moAmaun">
+                        <input type="number" class="form-control" id="moAmaun1">
                     </div>
                 </form>
             </div>
@@ -315,6 +324,68 @@
         </div>
     </div>
 </div>
+<!-- Modal Objek End -->
+
+<!-- Modal Urusniaga -->
+<div class="modal fade bd-example-modal-lg" id="modalUrusniaga" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Urusniaga</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input id="moId2" hidden />
+                    <div class="form-group">
+                        <label class="col-form-label">Cara Bayar</label>
+                        <select class="form-control" id="moCaraBayar" disabled>
+                            <option value="" hidden>-- Pilih Cara Bayar --</option>
+                            @foreach (var s in ViewBag.JCaraBayar)
+                            {
+                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Amaun</label>
+                        <input type="number" class="form-control" id="moAmaun2">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">No Cek</label>
+                        <input type="text" class="form-control" id="moNoCek">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Jenis Cek</label>
+                        <input type="text" class="form-control" id="moJenisCek">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Kod Bank Cek</label>
+                        <input type="text" class="form-control" id="moKodBankCek">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Tempat Cek</label>
+                        <input type="text" class="form-control" id="moTempatCek">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">No Slip</label>
+                        <input type="text" class="form-control" id="moNoSlip">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Tarikh Slip</label>
+                        <input type="datetime-local" class="form-control" id="moTarSlip">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate2()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Urusniaga End -->
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
