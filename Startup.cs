@@ -58,7 +58,7 @@ namespace MSNK
             services.AddTransient<IRepository<AkCarta, int>, AkCartaRepository>();
             services.AddTransient<IRepository<AkAkaun, int>, AkAkaunRepository>();
             services.AddTransient<IRepository<AkTerima, int>, AkTerimaRepository>();
-            services.AddTransient<IRepository<AkTerima1, int>, AkTerima1Repository>();
+            services.AddTransient<AkTerima1IRepository<AkTerima1, int>, AkTerima1Repository>();
             services.AddTransient<IRepository<AkTerima2, int>, AkTerima2Repository>();
             services.AddTransient<IRepository<AkPembekal, int>, AkPembekalRepository>();
 
@@ -66,7 +66,10 @@ namespace MSNK
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
         }
 

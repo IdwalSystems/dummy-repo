@@ -24,7 +24,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkBank, int> _akBankRepo;
         private readonly IRepository<JKW, int> _kwRepo;
         private readonly IRepository<JNegeri, int> _negeriRepo;
-        private readonly IRepository<AkTerima1, int> _akTerima1Repo;
+        private readonly AkTerima1IRepository<AkTerima1, int> _akTerima1Repo;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
         private readonly IRepository<AkTerima2, int> _akTerima2Repo;
         private CartTerima _cart;
@@ -33,7 +33,7 @@ namespace MSNK.Controllers
             ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
             IRepository<AkTerima, int> akTerimaRepository,
-            IRepository<AkTerima1, int> akTerima1Repository,
+            AkTerima1IRepository<AkTerima1, int> akTerima1Repository,
             IRepository<AkTerima2, int> akTerima2Repository,
             IRepository<AkBank, int> akBankRepository,
             IRepository<JKW, int> kwRepository,
@@ -169,8 +169,6 @@ namespace MSNK.Controllers
         public async Task<IActionResult> Create(AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId)
         {
             AkTerima m = new AkTerima();
-            AkTerima1 t1 = new AkTerima1();
-            AkTerima2 t2 = new AkTerima2();
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15); ;
 
             if (ModelState.IsValid)
@@ -453,5 +451,127 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
+
+        public async Task<JsonResult> UpdateAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+                AkTerima1 data = await _akTerima1Repo.GetBy2Id(akTerima1.AkTerimaId, akTerima1.AkCartaId);
+
+                return Json(new { result = "OK" , record = data});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> InsertUpdateAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+                if (akTerima1 != null || akTerima1.Amaun != 0)
+                {
+                    var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akTerima1.AkCartaId);
+                    akTerima1.AkCarta = akCarta;
+                    await _akTerima1Repo.Insert(akTerima1);
+                    await _context.SaveChangesAsync();
+
+                }
+
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> RemoveUpdateAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+                if (akTerima1 != null)
+                {
+                    var akT1 = await _context.AkTerima1.FirstOrDefaultAsync(x=> x.AkCartaId == akTerima1.AkCartaId && x.AkTerimaId == akTerima1.AkTerimaId);
+                    _context.AkTerima1.Remove(akT1);
+                    await _context.SaveChangesAsync();
+
+                }
+
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> SaveUpdateAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+                _cart.Clear1();
+
+                AkTerima1 akT1 = await _akTerima1Repo.GetById(akTerima1.Id);
+                akT1.Amaun = akTerima1.Amaun;
+                _context.AkTerima1.Update(akT1);
+                await _context.SaveChangesAsync();
+
+                return Json(new { result = "OK"});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public JsonResult GetCart1(AkTerima1 akTerima1)
+        {
+            try
+            {
+                AkTerima data = _context.AkTerima.Include(x => x.AkTerima1).ThenInclude(x=>x.AkCarta).FirstOrDefault(x => x.Id == akTerima1.AkTerimaId);
+
+                List<AkTerima1> akT1 = data.AkTerima1.ToList();
+
+                foreach (AkTerima1 item in akT1)
+                {
+                    _cart.AddItem1(item.AkTerimaId, item.Amaun, item.AkCartaId);
+                }
+
+                return Json(new { result = "OK", data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public JsonResult GetAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+                List<AkTerima1> akT1 = _context.AkTerima1
+                    .Include(x => x.AkCarta)
+                    .Where(x => x.AkTerimaId == akTerima1.AkTerimaId)
+                    .ToList();
+
+                return Json(new { result = "OK", record = akT1 });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
     }
 }

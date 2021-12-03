@@ -1,35 +1,4 @@
 ﻿<script type="text/javascript">
-    $(function () {
-        $('.editable-txt').dblclick(function () {
-            newInput(this);
-        });
-    });
-
-    function closeInput(elm) {
-        var value = $(elm).find('input').val();
-        $(elm).empty().text(value);
-
-        $(elm).bind("dblclick", function () {
-            newInput(elm);
-        });
-    }
-
-    function newInput(elm) {
-        $(elm).unbind('dblclick');
-
-        var value = $(elm).text();
-        $(elm).empty();
-
-        $("<input>")
-            .attr('type', 'text')
-            .attr('class', 'form-control')
-            .val(value)
-            .blur(function () {
-                closeInput(elm);
-            })
-            .appendTo($(elm))
-            .focus();
-    }
 
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
@@ -51,7 +20,7 @@
                 dataType: "json",
                 success: function (r) {
                     //Reference the TextBoxes.
-                    var txtAkTerima = $("#txtAkTerima1"); 
+                    var txtAkTerima = $("#txtAkTerima1");
                     var txtKodAkaun = $("#txtKodAkaun");
                     var txtAmaunObjek = $("#txtAmaunObjek");
                     var txtJumlah = $("#jumlahObjek");
@@ -66,11 +35,6 @@
                     //Add Row.
                     var row = tBody.insertRow(-1);
 
-                    //Add Id cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
-
                     //Add akCartaId cell.
                     var cell = $(row.insertCell(-1));
                     cell.html(r.record.id);
@@ -84,15 +48,24 @@
                     var cell = $(row.insertCell(-1));
                     cell.html(txtAmaunObjek.val());
                     cell.attr("class", "editable-txt");
+                    cell.attr("id", "td1Amaun_" + r.record.Id);
 
                     //Add Button cell.
                     cell = $(row.insertCell(-1));
-                    var btnRemove1 = $("<input />");
-                    btnRemove1.attr("class", "btn btn-danger btn-table-mini");
-                    btnRemove1.attr("type", "button");
-                    btnRemove1.attr("onclick", "Remove1(this);");
-                    btnRemove1.val("-");
+
+                    var btnUpdate1 = $("<button class='btn btn-primary btn-table-mini' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                    cell.append(btnUpdate1);
+
+                    //Add Button cell.
+                    cell = $(row.insertCell(-1));
+                    
+                    var btnRemove1 = $("<button class='btn btn-danger btn-table-mini' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                     cell.append(btnRemove1);
+                    //btnRemove1.attr("class", "btn btn-danger btn-table-mini");
+                    //btnRemove1.attr("type", "button");
+                    //btnRemove1.attr("onclick", "Remove1(this);");
+                    //cell.append(btnRemove1);
+                    
 
                     var AkTerima1 = {
                         AkTerimaId: txtAkTerima.val(),
@@ -103,7 +76,7 @@
                     if (noRujukan != null) {
                         $.ajax({
                             type: "POST",
-                            url: "/AkTerima/SaveAkTerima1",
+                            url: "/AkTerima/InsertUpdateAkTerima1",
                             data: AkTerima1,
                             dataType: "json",
                             success: function (r) {
@@ -120,6 +93,7 @@
 
     }
     //add tbl objek end
+
     //add tbl Urusniaga
     $("body").on("click", "#btnAdd2", function () {
         //Reference the Name and Country TextBoxes.
@@ -245,10 +219,11 @@
     function Remove1(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var name = $("TD", row).eq(0).html();
+        var akTerimaId = $('#Id').val();
+        var akCartaId = $("TD", row).eq(0).html();
         var amaun = $("TD", row).eq(2).html();
         var txtJumlah = $("#jumlahObjek");
-        if (confirm("Hapus kod Akaun : " + name + " ?")) {
+        if (confirm("Hapus kod Akaun : " + akCartaId + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblObjek")[0];
 
@@ -258,12 +233,13 @@
             txtJumlah.val(sum);
 
             var AkTerima1 = {
-                AkCartaId: name,
+                AkTerimaId: akTerimaId,
+                AkCartaId: akCartaId
             }
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkTerima/RemoveAkTerima1",
+                    url: "/AkTerima/RemoveUpdateAkTerima1",
                     data: AkTerima1,
                     dataType: "json",
                     success: function (r) {
@@ -304,6 +280,82 @@
         }
     };
     //remove tbl urusniaga end
+
+    //update tbl objek
+    function Update1(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var akTerimaId = $('#Id').val();
+        var akCartaId = $("TD", row).eq(0).html();
+
+        var AkTerima1 = {
+            AkTerimaId: akTerimaId,
+            AkCartaId: akCartaId
+        }
+        if (name != null) {
+            $.ajax({
+                type: "POST",
+                url: "/AkTerima/UpdateAkTerima1",
+                data: AkTerima1,
+                dataType: "json",
+                success: function (r) {
+                    //Delete the Table row using it's Index.
+                    $("#moId").val(r.record.id);
+                    $("#moKodAkaun").val(r.record.akCartaId);
+                    $("#moAmaun").val(r.record.amaun);
+                }
+            });
+        }
+    };
+
+    function modalUpdate1() {
+        var id = $("#moId").val();
+        var amaun = $("#moAmaun").val();
+        var akTerimaId = $("#Id").val();
+
+        var AkTerima1 = {
+            Id: id,
+            AkTerimaId: akTerimaId,
+            Amaun: amaun
+        }
+        $.ajax({
+            type: "POST",
+            url: "/AkTerima/SaveUpdateAkTerima1",
+            data: AkTerima1,
+            dataType: "json",
+            success: function (r) {
+                //insert notification here
+ 
+                $.ajax({
+                    type: "POST",
+                    url: "/AkTerima/GetCart1",
+                    data: AkTerima1,
+                    dataType: "json",
+                    success: function (r) {
+
+                        //refresh updated table objek
+                        $("table tbody#tbodyObjek").empty();
+                        var jumlah1 = 0;
+                        if (r.data.akTerima1.length > 0) {
+                            for (var i = 0; i < r.data.akTerima1.length; i++) {
+                                var item1 = r.data.akTerima1[i];
+                                var str = "<tr><td>" + item1.akCarta.kod +
+                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td>" +
+                                    "<button class='btn btn-primary btn-table-mini' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "</td><td>" +
+                                    "<button class='btn btn-danger btn-table-mini' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "</td><tr>";
+                                $("table tbody#tbodyObjek").append(str);
+                                jumlah1 += item1.amaun;
+                            }
+                        }
+                    }
+                });
+            }
+        }); 
+    };
+    //update tbl objek end
 
     $("body").on("click", "#btnSave", function () {
         //insert validation form here

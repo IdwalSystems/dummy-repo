@@ -12,6 +12,7 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         [MaxLength(4)]
         public string Tahun { get; set; }
+        [DisplayName("Jenis Kumpulan Wang")]
         public int JKWId { get; set; }
         [MaxLength(20)]
         public string NoRujukan { get; set; }

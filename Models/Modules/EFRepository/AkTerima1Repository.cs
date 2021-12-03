@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class AkTerima1Repository : IRepository<AkTerima1, int>
+    public class AkTerima1Repository : AkTerima1IRepository<AkTerima1, int>
     {
         public readonly ApplicationDbContext context;
 
@@ -22,16 +22,23 @@ namespace MSNK.Models.Modules.EFRepository
             }
         }
 
-        public async Task<IEnumerable<AkTerima1>> GetAll()
+        public async Task<IEnumerable<AkTerima1>> GetAll(int akTerimaId)
         {
             return await context.AkTerima1.Include(b=> b.AkCarta)
-                .ToListAsync();
+                .Where(x=> x.AkTerimaId == akTerimaId)
+                .ToArrayAsync();
+        }
+
+        public async Task<AkTerima1> GetBy2Id(int akTerimaId, int akCartaId)
+        {
+            return await context.AkTerima1.FirstOrDefaultAsync(x=> x.AkTerimaId == akTerimaId && x.AkCartaId == akCartaId);
         }
 
         public async Task<AkTerima1> GetById(int id)
         {
             return await context.AkTerima1.FindAsync(id);
         }
+
 
         public async Task<AkTerima1> Insert(AkTerima1 entity)
         {
@@ -46,7 +53,9 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task Update(AkTerima1 entity)
         {
-            context.Update(entity);
+
+            AkTerima1 data = context.AkTerima1.FirstOrDefault(x => x.Id == entity.Id);
+            data.Amaun = entity.Amaun;
             await context.SaveChangesAsync();
         }
     }
