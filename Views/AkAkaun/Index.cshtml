@@ -5,68 +5,159 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<script>
+    $(document).ready(function () {
+        var sum = 0
+        $('tr').each(function () {
+            $(this).find('.debit').each(function () {
+                var debit = $(this).text();
+                if (!isNaN(debit) && debit.length !== 0) {
+                    sum += parseFloat(debit);
+                }
+            });
+            $(this).find('.kredit').each(function () {
+                var kredit = $(this).text();
+                if (!isNaN(kredit) && kredit.length !== 0) {
+                    sum -= parseFloat(kredit);
+                }
+            });
+            $('.total', this).html(sum.toFixed(2));
+        });
+    });
+</script>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Tarikh)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NoRujukan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Debit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Kredit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.JKW)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AkCarta1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AkCarta2)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tarikh)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoRujukan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Debit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Kredit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JKW.Kod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AkCarta1.Kod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AkCarta2.Kod)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+
+<style>
+    .debit, .kredit, .total, .thdebit, .thkredit, .thtotal {
+        text-align: right;
+    }
+
+    .bil, .thbil {
+        text-align: center;
+    }
+</style>
+@*@Html.Label((string)ViewData["searchFrom"])*@
+
+<partial name="_ToTopButton" />
+
+<h1>Index</h1>
+<label class="form-control-plaintext" for="searchselect">Carian : </label>
+<form asp-action="Index" method="get" class="needs-validation" novalidate>
+    <div class="form-actions no-color mb-3">
+        <div class="form-row">
+            <div class="col-md">
+                <div class="input-group mb-3">
+                    <select class="custom-select" name="searchKW" asp-items="@ViewBag.Kw" required></select>
+                    <label class="invalid-feedback">Kumpulan Wang Diperlukan.</label>
+                </div>
+                <div class="input-group mb-3">
+                    <select class="custom-select" name="searchCarta" asp-items="@ViewBag.AkCarta1" required></select>
+                    <label class="invalid-feedback">Carta Diperlukan.</label>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Daripada</span>
+                    </div>
+                    <input class="form-control" type="datetime-local" name="searchFrom" value="@ViewData["searchFrom"]" required />
+                    <label class="invalid-feedback">Tarikh Diperlukan.</label>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">Sehingga</span>
+                    </div>
+                    <input class="form-control" type="datetime-local" name="searchUntil" value="@ViewData["searchUntil"]" required />
+                    <label class="invalid-feedback">Tarikh Diperlukan.</label>
+                </div>
+            </div>
+        </div>
+        <input type="submit" value="Cari" class="btn btn-outline-primary" /> |
+        <a asp-action="Index" class="btn btn-link">Batal Carian</a>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-hover table-sm text-nowrap">
+        <thead>
+            <tr>
+                <th class="thbil">
+                    Bil
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tarikh)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AkCarta2)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AkCarta2.Nama)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NoRujukan)
+                </th>
+                <th class="thdebit">
+                    @Html.DisplayNameFor(model => model.Debit)
+                </th>
+                <th class="thkredit">
+                    @Html.DisplayNameFor(model => model.Kredit)
+                </th>
+                <th class="thtotal">
+                    Baki RM
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int rowNo = 0; }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="bil">
+                        @(rowNo += 1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tarikh)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AkCarta2.Kod)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AkCarta2.Nama)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoRujukan)
+                    </td>
+                    <td class="debit">
+                        @Html.DisplayFor(modelItem => item.Debit)
+                    </td>
+                    <td class="kredit">
+                        @Html.DisplayFor(modelItem => item.Kredit)
+                    </td>
+                    <td class="total">
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@*@Model.Count()*@

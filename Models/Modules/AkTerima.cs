@@ -12,6 +12,7 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         [MaxLength(4)]
         public string Tahun { get; set; }
+        [DisplayName("Jenis Kumpulan Wang")]
         public int JKWId { get; set; }
         [MaxLength(20)]
         public string NoRujukan { get; set; }
@@ -49,7 +50,7 @@ namespace MSNK.Models.Modules
         public string Sebab { get; set; }
         [MaxLength(15)]
         public string UserId { get; set; }
-        public DateTime TarMasuk { get; set; } = DateTime.Now;
+        public DateTime TarMasuk { get; set; }
         [MaxLength(15)]
         public string UserIdKemaskini { get; set; }
         public DateTime TarKemaskini { get; set; } = DateTime.Now;

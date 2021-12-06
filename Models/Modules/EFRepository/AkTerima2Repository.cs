@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class AkTerima2Repository : IRepository<AkTerima2, int>
+    public class AkTerima2Repository : AkTerima2IRepository<AkTerima2, int>
     {
         public readonly ApplicationDbContext context;
 
@@ -22,11 +22,17 @@ namespace MSNK.Models.Modules.EFRepository
             }
         }
 
-        public async Task<IEnumerable<AkTerima2>> GetAll()
+        public async Task<IEnumerable<AkTerima2>> GetAll(int akTerimaId)
         {
             return await context.AkTerima2
                 .Include(b => b.JCaraBayar)
+                .Where(x=> x.AkTerimaId == akTerimaId)
                 .ToListAsync();
+        }
+
+        public async Task<AkTerima2> GetBy2Id(int akTerimaId, int jCaraBayarId)
+        {
+            return await context.AkTerima2.FirstOrDefaultAsync(x => x.AkTerimaId == akTerimaId && x.JCaraBayarId == jCaraBayarId);
         }
 
         public async Task<AkTerima2> GetById(int id)

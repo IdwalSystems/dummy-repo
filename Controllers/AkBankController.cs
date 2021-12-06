@@ -85,15 +85,15 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkBankViewModel akBank, int KWId, int BankId)
+        public async Task<IActionResult> Create(AkBankViewModel akBank, int JKWId, int JBankId)
         {
             AkBank akB = new AkBank();
             if (ModelState.IsValid)
             {
-                if (akBank != null && KWId != 0 && BankId != 0)
+                if (akBank != null && JKWId != 0 && JBankId != 0)
                 {
-                    akB.JBankId = BankId;
-                    akB.JKWId = KWId;
+                    akB.JBankId = JBankId;
+                    akB.JKWId = JKWId;
                     akB.Kod = akBank.Kod;
                     akB.NoAkaun = akBank.NoAkaun;
                     await _akBankRepo.Insert(akB);

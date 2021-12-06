@@ -36,188 +36,77 @@ namespace MSNK.Controllers
         }
 
         // GET: AkAkaun
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string searchKW,
+            string searchCarta,
+            string searchFrom,
+            string searchUntil)
         {
+            ViewData["searchFrom"] = searchFrom;
+            ViewData["searchUntil"] = searchUntil;
+
+            PopulateList(!String.IsNullOrEmpty(searchKW) ? searchKW : "", !String.IsNullOrEmpty(searchCarta) ? searchCarta : "");
+
             var akAkaun = await _akAkaunRepo.GetAll();
+
+            if (!String.IsNullOrEmpty(searchKW))
+            {
+                akAkaun = akAkaun.Where(q => q.JKW.Kod == searchKW);
+            }
+
+            if (!String.IsNullOrEmpty(searchCarta))
+            {
+                akAkaun = akAkaun.Where(q => q.AkCarta1.Kod == searchCarta);
+            }
+
+            if (!String.IsNullOrEmpty(searchFrom))
+            {
+                akAkaun = akAkaun.Where(q => q.Tarikh > Convert.ToDateTime(searchFrom));
+            }
+
+            if (!String.IsNullOrEmpty(searchUntil))
+            {
+                akAkaun = akAkaun.Where(q => q.Tarikh < Convert.ToDateTime(searchUntil));
+            }
+
+            akAkaun = akAkaun.OrderBy(q => q.NoRujukan);
+
             return View(akAkaun);
         }
 
-        // GET: AkAkaun/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var akAkaun = await _akAkaunRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akAkaun.JKWId);
-            akAkaun.JKW = kw;
-            var akCarta1 = await _akCarta1Repo.GetById(akAkaun.AkCartaId1);
-            akAkaun.AkCarta1 = akCarta1;
-            var akCarta2 = await _akCarta2Repo.GetById(akAkaun.AkCartaId2);
-            akAkaun.AkCarta2 = akCarta2;
-
-            if (akAkaun == null)
-            {
-                return NotFound();
-            }
-
-            return View(akAkaun);
-        }
-
-        private void PopulateList()
+        private void PopulateList(string searchedKw, string searchedCarta)
         {
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
-            ViewBag.Kw = kwList;
-
-            List<AkCarta> akCarta1List = _context.AkCarta.OrderBy(b => b.Kod).ToList();
-            ViewBag.AkCarta1 = akCarta1List;
-
-            List<AkCarta> akCarta2List = _context.AkCarta.OrderBy(b => b.Kod).ToList();
-            ViewBag.AkCarta2 = akCarta2List;
-        }
-        // GET: AkAkaun/Create
-        public IActionResult Create()
-        {
-            PopulateList();
-            return View();
-        }
-
-        // POST: AkAkaun/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkAkaun akAkaun,int JKWId, int AkCartaId1, int AkCartaId2)
-        {
-            AkAkaun m = new AkAkaun();
-            if (ModelState.IsValid)
+            List<SelectListItem> kwSelect = new();
+            kwSelect.Add(new SelectListItem() { Text = "-- Pilih Kumpulan Wang --", Value = "" });
+            foreach (var q in kwList)
             {
-                if (akAkaun != null && JKWId != 0 && AkCartaId1 != 0 && AkCartaId2 != 0)
-                {
-                    m.JKWId = JKWId;
-                    m.AkCartaId1 = AkCartaId1;
-                    m.AkCartaId2 = AkCartaId2;
-                    m.Tarikh = akAkaun.Tarikh;
-                    m.NoRujukan = akAkaun.NoRujukan;
-                    m.Debit = akAkaun.Debit;
-                    m.Kredit = akAkaun.Kredit;
-                    await _akAkaunRepo.Insert(m);
-                    await _akAkaunRepo.Save();
-
-                    return RedirectToAction(nameof(Index));
-                }
+                kwSelect.Add(new SelectListItem() { Text = q.Kod + " - " + q.Perihal, Value = q.Kod });
+            }
+            if (!String.IsNullOrEmpty(searchedKw))
+            {
+                ViewBag.Kw = new SelectList(kwSelect, "Value", "Text", searchedKw);
+            }
+            else
+            {
+                ViewBag.Kw = new SelectList(kwSelect, "Value", "Text", "");
             }
 
-            PopulateList();
-            return View(akAkaun);
-        }
-
-        // GET: AkAkaun/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+            List<AkCarta> Carta1List = _context.AkCarta.OrderBy(b => b.Kod).ToList();
+            List<SelectListItem> carta1Select = new();
+            carta1Select.Add(new SelectListItem() { Text = "-- Pilih Carta --", Value = "" });
+            foreach (var q in Carta1List)
             {
-                return NotFound();
+                carta1Select.Add(new SelectListItem() { Text = q.Kod + " - " + q.Nama, Value = q.Kod });
             }
-
-            PopulateList();
-            var akAkaun = await _akAkaunRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akAkaun.JKWId);
-            akAkaun.JKW = kw;
-            var akCarta1 = await _akCarta1Repo.GetById(akAkaun.AkCartaId1);
-            akAkaun.AkCarta1 = akCarta1;
-            var akCarta2 = await _akCarta2Repo.GetById(akAkaun.AkCartaId2);
-            akAkaun.AkCarta2 = akCarta2;
-
-            if (akAkaun == null)
+            if (!String.IsNullOrEmpty(searchedCarta))
             {
-                return NotFound();
+                ViewBag.AkCarta1 = new SelectList(carta1Select, "Value", "Text", searchedCarta);
             }
-           
-            return View(akAkaun);
-        }
-
-        // POST: AkAkaun/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkAkaun akAkaun, int KWId, int AkCartaId1, int AkCartaId2)
-        {
-            if (id != akAkaun.Id)
+            else
             {
-                return NotFound();
+                ViewBag.AkCarta1 = new SelectList(carta1Select, "Value", "Text", "");
             }
-
-            AkAkaun m = new AkAkaun();
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    m.JKWId = KWId;
-                    m.AkCartaId1 = AkCartaId1;
-                    m.AkCartaId2 = AkCartaId2;
-                    m.Tarikh = akAkaun.Tarikh;
-                    m.NoRujukan = akAkaun.NoRujukan;
-                    m.Debit = akAkaun.Debit;
-                    m.Kredit = akAkaun.Kredit;
-                    await _akAkaunRepo.Update(akAkaun);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AkAkaunExists(akAkaun.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            PopulateList();
-            return View(akAkaun);
-        }
-
-        // GET: AkAkaun/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var akAkaun = await _context.AkAkaun
-                .Include(a => a.AkCarta1)
-                .Include(a => a.AkCarta2)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (akAkaun == null)
-            {
-                return NotFound();
-            }
-
-            return View(akAkaun);
-        }
-
-        // POST: AkAkaun/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var akAkaun = await _context.AkAkaun.FindAsync(id);
-            _context.AkAkaun.Remove(akAkaun);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool AkAkaunExists(int id)
-        {
-            return _context.AkAkaun.Any(e => e.Id == id);
         }
     }
 }
