@@ -1,0 +1,98 @@
+﻿@model MSNK.Models.Modules.AkPO
+
+@{
+    ViewData["Title"] = "Tambah";
+
+}
+
+
+<h1>Tambah</h1>
+
+<h4>Pesanan Tempatan</h4>
+<hr />
+<div class="row">
+    @*Column Kiri*@
+    <div class="col-sm">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NoPO" class="control-label"></label>
+                <input asp-for="NoPO" class="form-control" />
+                <span asp-validation-for="NoPO" class="text-danger"></span>
+            </div>
+        </form>
+        <div class="form-group">
+            <label asp-for="JKWId" class="control-label"></label>
+            <select class="form-control" asp-for="JKWId">
+                <option value="" hidden>-- Pilih Kumpulan Wang --</option>
+                @foreach (var s in ViewBag.JKW)
+                {
+                    <option value="@s.Id">@s.Perihal </option>
+                }
+            </select>
+        </div>
+    </div>
+    @*Column Tengah*@
+    <div class="col-sm">
+        <div class="form-group">
+            <label asp-for="AkPembekalId" class="control-label"></label>
+            <select asp-for="AkPembekalId" class="form-control" asp-items="ViewBag.AkPembekalId"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="Posting" class="control-label"></label>
+            <input asp-for="Posting" class="form-control" />
+            <span asp-validation-for="Posting" class="text-danger"></span>
+        </div>
+    </div>
+    @*Column Kanan*@
+    <div class="col-sm">
+        <div class="form-group">
+            <label asp-for="Tarikh" class="control-label"></label>
+            <input asp-for="Tarikh" class="form-control" />
+            <span asp-validation-for="Tarikh" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="TarikhPosting" class="control-label"></label>
+            <input asp-for="TarikhPosting" class="form-control" />
+            <span asp-validation-for="TarikhPosting" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="AkPembekal" class="control-label"></label>
+    <input asp-for="AkPembekal" class="form-control" />
+    <span asp-validation-for="AkPembekal" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="AkPembekal" class="control-label"></label>
+    <input asp-for="AkPembekal" class="form-control" />
+    <span asp-validation-for="AkPembekal" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Jumlah" class="control-label"></label>
+    <input asp-for="Jumlah" class="form-control" />
+    <span asp-validation-for="Jumlah" class="text-danger"></span>
+</div>
+
+
+<div class="form-group">
+    <label asp-for="Tahun" class="control-label"></label>
+    <input asp-for="Tahun" class="form-control" />
+    <span asp-validation-for="Tahun" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Batal" class="control-label"></label>
+    <input asp-for="Batal" class="form-control" />
+    <span asp-validation-for="Batal" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <input type="submit" value="Simpan" class="btn btn-primary" />
+</div>
+
+<div>
+    <a asp-action="Index">Kembali ke Senarai</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
