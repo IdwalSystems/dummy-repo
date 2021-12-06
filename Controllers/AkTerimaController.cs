@@ -27,6 +27,7 @@ namespace MSNK.Controllers
         private readonly AkTerima1IRepository<AkTerima1, int> _akTerima1Repo;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
         private readonly AkTerima2IRepository<AkTerima2, int> _akTerima2Repo;
+        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
         private CartTerima _cart;
 
         public AkTerimaController(
@@ -39,6 +40,7 @@ namespace MSNK.Controllers
             IRepository<JKW, int> kwRepository,
             IRepository<JNegeri, int> negeriRepository,
             IRepository<AkCarta, int> akCartaRepository,
+            IRepository<AkAkaun, int> akAkaunRepository,
             CartTerima cart
             )
         {
@@ -51,6 +53,7 @@ namespace MSNK.Controllers
             _akTerima1Repo = akTerima1Repository;
             _akTerima2Repo = akTerima2Repository;
             _akCartaRepo = akCartaRepository;
+            _akAkaunRepo = akAkaunRepository;
             _cart = cart;
         }
 
@@ -80,7 +83,8 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
-
+            PopulateList();
+            PopulateTable(id);
             return View(akTerima);
         }
 
@@ -711,6 +715,47 @@ namespace MSNK.Controllers
             {
                 return Json(new { result = "ERROR", message = ex.Message });
             }
+        }
+
+        public async Task<IActionResult> Posting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkTerima akTerima = await _context.AkTerima.Include(x => x.AkTerima1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == id);
+
+                List<AkTerima1> akT1 = akTerima.AkTerima1.ToList();
+
+                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akTerima.NoRujukan).FirstOrDefaultAsync();
+                if (akAkaun != null)
+                {
+                    //duplicate id error
+                }
+                else
+                {
+                    //posting operation start here
+                    AkAkaun akADebit = new AkAkaun();
+                    foreach(AkTerima1 item in akT1)
+                    {
+                        akADebit.NoRujukan = akTerima.NoRujukan;
+                        akADebit.JKWId = akTerima.JKWId;
+                        akADebit.AkCartaId1 = akTerima.AkBankId;
+                        akADebit.AkCartaId2 = item.AkCartaId;
+                        akADebit.Tarikh = DateTime.Now;
+                        akADebit.Debit = item.Amaun;
+                    }
+                    await _akAkaunRepo.Insert(akADebit);
+
+                    await _context.SaveChangesAsync();
+                }
+       
+            }
+
+            return RedirectToAction(nameof(Index));
+
         }
 
     }

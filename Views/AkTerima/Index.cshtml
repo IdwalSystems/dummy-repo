@@ -5,92 +5,105 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    th:last-child, td:last-child {
+        position: sticky;
+        right: 0px;
+        background-color: white;
+    }
+</style>
+
 <h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Tahun)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NoRujukan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tarikh)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Jumlah)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlCetak)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlPosting)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlBatal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KodPembayar)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NoKp)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nama)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alamat1)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tahun)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoRujukan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tarikh)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Jumlah)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlCetak)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlPosting)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlBatal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.KodPembayar)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoKp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nama)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alamat1)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover text-nowrap table-sm hover nowrap " width="100%">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tahun)
+                </th>
+                <th>
+                    No Rujukan
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tarikh)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Jumlah)
+                </th>
+                <th>
+                    Cetak
+                </th>
+                <th>
+                    Posting
+                </th>
+                <th>
+                    Batal
+                </th>
+                <th>
+                    Kod Pembayar
+                </th>
+                <th>
+                    No KP
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nama)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Alamat1)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tahun)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoRujukan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tarikh)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Jumlah)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlCetak)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlPosting)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlBatal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.KodPembayar)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoKp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nama)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Alamat1)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Ubah</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Papar</a> |
+                    <a asp-action="Posting" asp-route-id="@item.Id">Posting</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Hapus</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
