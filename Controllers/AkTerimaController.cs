@@ -172,6 +172,7 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId)
         {
+            TempData["IsSuccess"] = "0";
             AkTerima m = new AkTerima();
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15); ;
 
@@ -212,6 +213,8 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
+                    TempData["IsSuccess"] = "1";
+                    TempData["AlertMessage"] = "Data berjaya ditambah..!";
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -254,6 +257,7 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId)
         {
+            TempData["IsSuccess"] = "0";
             if (id != akTerima.Id)
             {
                 return NotFound();
@@ -278,6 +282,8 @@ namespace MSNK.Controllers
                     }
                 }
                 CartEmpty();
+                TempData["IsSuccess"] = "1";
+                TempData["AlertMessage"] = "Data berjaya diubah..!";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -315,6 +321,8 @@ namespace MSNK.Controllers
             var akTerima = await _context.AkTerima.FindAsync(id);
             _context.AkTerima.Remove(akTerima);
             await _context.SaveChangesAsync();
+            TempData["IsSuccess"] = "1";
+            TempData["AlertMessage"] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -717,8 +725,10 @@ namespace MSNK.Controllers
             }
         }
 
+        // posting function
         public async Task<IActionResult> Posting(int? id)
         {
+            TempData["IsSuccess"] = "0";
             if (id == null)
             {
                 return NotFound();
@@ -732,11 +742,15 @@ namespace MSNK.Controllers
                 var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akTerima.NoRujukan).FirstOrDefaultAsync();
                 if (akAkaun != null)
                 {
+
                     //duplicate id error
+                    TempData["AlertMessage"] = "Data telah dikemaskini ke lejar.";
+                   
                 }
                 else
                 {
                     //posting operation start here
+                    //insert into akAkaun
                     AkAkaun akADebit = new AkAkaun();
                     foreach(AkTerima1 item in akT1)
                     {
@@ -744,19 +758,74 @@ namespace MSNK.Controllers
                         akADebit.JKWId = akTerima.JKWId;
                         akADebit.AkCartaId1 = akTerima.AkBankId;
                         akADebit.AkCartaId2 = item.AkCartaId;
-                        akADebit.Tarikh = DateTime.Now;
+                        akADebit.Tarikh = akTerima.Tarikh;
                         akADebit.Debit = item.Amaun;
                     }
                     await _akAkaunRepo.Insert(akADebit);
 
+                    //update posting status in akTerima
+                    akTerima.FlPosting = 1;
+                    await _akTerimaRepo.Update(akTerima);
+
                     await _context.SaveChangesAsync();
+
+                    TempData["IsSuccess"] = "1";
+                    TempData["AlertMessage"] = "Data berjaya dikemaskini ke lejar.";
                 }
-       
+
+                
             }
 
             return RedirectToAction(nameof(Index));
 
         }
+        // posting function end
+
+        // unposting function
+        public async Task<IActionResult> UnPosting(int? id)
+        {
+            TempData["IsSuccess"] = "0";
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkTerima akTerima = await _context.AkTerima.Include(x => x.AkTerima1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == id);
+
+                List<AkTerima1> akT1 = akTerima.AkTerima1.ToList();
+
+                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akTerima.NoRujukan).FirstOrDefaultAsync();
+                if (akAkaun == null)
+                {
+
+                    //duplicate id error
+                    TempData["AlertMessage"] = "Data belum dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //posting operation start here
+                    //delete data from akAkaun
+                    await _akAkaunRepo.Delete(akAkaun.Id);
+
+                    //update posting status in akTerima
+                    akTerima.FlPosting = 0;
+                    await _akTerimaRepo.Update(akTerima);
+
+                    await _context.SaveChangesAsync();
+
+                    TempData["IsSuccess"] = "1";
+                    TempData["AlertMessage"] = "Data berjaya batal kemaskini dari lejar.";
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // unposting function end
 
     }
 }

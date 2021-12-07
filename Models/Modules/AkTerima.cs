@@ -14,19 +14,26 @@ namespace MSNK.Models.Modules
         public string Tahun { get; set; }
         [DisplayName("Jenis Kumpulan Wang")]
         public int JKWId { get; set; }
+        [DisplayName("No Rujukan")]
         [MaxLength(20)]
         public string NoRujukan { get; set; }
         public DateTime Tarikh { get; set; }
         public decimal Jumlah { get; set; }
+        [DisplayName("Kod Bank")]
         public int AkBankId { get; set; }
+        [DisplayName("Cetak")]
         [DefaultValue("0")]
         public int FlCetak { get; set; }
+        [DisplayName("Posting")]
         [DefaultValue("0")]
         public int FlPosting { get; set; }
+        [DisplayName("Batal")]
         [DefaultValue("0")]
         public int FlBatal { get; set; }
+        [DisplayName("Kod Pembayar")]
         [MaxLength(20)]
         public string KodPembayar { get; set; }
+        [DisplayName("No KP")]
         [MaxLength(15)]
         public string NoKp { get; set; }
         [MaxLength(100)]
@@ -41,6 +48,7 @@ namespace MSNK.Models.Modules
         public string Poskod { get; set; }
         [MaxLength(100)]
         public string Bandar { get; set; }
+        [DisplayName("Negeri")]
         public int JNegeriId { get; set; }
         [MaxLength(15)]
         public string Tel { get; set; }
@@ -50,9 +58,11 @@ namespace MSNK.Models.Modules
         public string Sebab { get; set; }
         [MaxLength(15)]
         public string UserId { get; set; }
+        [DisplayName("Tarikh Masuk")]
         public DateTime TarMasuk { get; set; }
         [MaxLength(15)]
         public string UserIdKemaskini { get; set; }
+        [DisplayName("Tarikh Kemaskini")]
         public DateTime TarKemaskini { get; set; } = DateTime.Now;
         
         //Relationship
