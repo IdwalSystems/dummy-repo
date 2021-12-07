@@ -97,7 +97,7 @@ namespace MSNK.Controllers
             carta1Select.Add(new SelectListItem() { Text = "-- Pilih Carta --", Value = "" });
             foreach (var q in Carta1List)
             {
-                carta1Select.Add(new SelectListItem() { Text = q.Kod + " - " + q.Nama, Value = q.Kod });
+                carta1Select.Add(new SelectListItem() { Text = q.Kod + " - " + q.Perihal, Value = q.Kod });
             }
             if (!String.IsNullOrEmpty(searchedCarta))
             {

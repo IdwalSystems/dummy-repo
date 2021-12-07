@@ -12,58 +12,78 @@
     <h4>AkCarta</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.JKW)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JKW.Kod)
-        </dd class>
-        <dt class = "col-sm-2">
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Kod)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Kod)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nama)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Perihal)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nama)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Perihal)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.JJenis)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JJenis.Id)
-        </dd class>
-        <dt class = "col-sm-2">
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.JJenis.Kod) - @Html.DisplayFor(model => model.JJenis.Nama)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.JParas)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JParas.Id)
-        </dd class>
-        <dt class = "col-sm-2">
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.JParas.Kod)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DebitKredit)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DebitKredit)
+        <dd class="col-sm-10">
+            @if (Model.DebitKredit == "D")
+            {
+                <label class="mb-0">DEBIT</label>
+            }
+            else if (Model.DebitKredit == "K")
+            {
+                <label class="mb-0">KREDIT</label>
+            }
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UmumDetail)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UmumDetail)
+        <dd class="col-sm-10">
+            @if (Model.UmumDetail == "U")
+            {
+                <label class="mb-0">UMUM</label>
+            }
+            else if (Model.UmumDetail == "D")
+            {
+                <label class="mb-0">DETAIL</label>
+            }
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Baki)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Baki)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Catatan1)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Catatan1)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Catatan2)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Catatan2)
         </dd>
     </dl>

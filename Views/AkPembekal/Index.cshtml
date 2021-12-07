@@ -8,24 +8,8 @@
 
 <h1>Index</h1>
 
-@*datatables setup*@
-<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<link href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
-<script type="text/javascript">
-    //$(document).ready(function () {
-    //    $('.table').DataTable({
-    //        "scrollX": true
-    //    });
-    //});
-</script>
-
-<style>
-    th:last-child, td:last-child {
-        position: sticky;
-        right: 0px;
-        background-color: white;
-    }
-</style>
+<partial name="_TableStickyLastColumn">
+<partial name="_ToTopButton">
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -51,7 +35,7 @@
 </form>
 
 <div class="table-responsive">
-    <table class="table table-hover text-nowrap table-sm hover nowrap " width="100%">
+    <table class="table table-hover text-nowrap table-sm" width="100%">
         <thead>
             <tr>
                 <th>

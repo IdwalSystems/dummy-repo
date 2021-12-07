@@ -107,22 +107,7 @@ namespace MSNK.Controllers
 
             if (!String.IsNullOrEmpty(searchColumn))
             {
-                if (searchColumn == "1")
-                {
-                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "1");
-                }
-                else if (searchColumn == "2")
-                {
-                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "2");
-                }
-                else if (searchColumn == "3")
-                {
-                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "3");
-                }
-                else
-                {
-                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "");
-                }
+                ViewBag.searchColumn = new SelectList(test, "Value", "Text", searchColumn);
             }
             else
             {

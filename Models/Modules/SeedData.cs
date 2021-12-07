@@ -346,229 +346,248 @@ namespace MSNK.Models.Modules
                     {
                         JKWId = kw.Id,
                         Kod = "A10000",
-                        Nama = "ASET SEMASA",
+                        Perihal = "ASET SEMASA",
                         JJenisId = jenisA.Id,
                         JParasId = paras1.Id,
                         DebitKredit = "D",
                         UmumDetail = "U",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "A11000",
-                        Nama = "WANG TUNAI DAN BAKI BANK",
+                        Perihal = "WANG TUNAI DAN BAKI BANK",
                         JJenisId = jenisA.Id,
                         JParasId = paras2.Id,
                         DebitKredit = "D",
                         UmumDetail = "U",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "A11100",
-                        Nama = "WANG TUNAI DAN BAKI BANK",
+                        Perihal = "WANG TUNAI DAN BAKI BANK",
                         JJenisId = jenisA.Id,
                         JParasId = paras3.Id,
                         DebitKredit = "D",
                         UmumDetail = "U",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "A11101",
-                        Nama = "BIMB ... ",
+                        Perihal = "BIMB ... ",
                         JJenisId = jenisA.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "D",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "A11106",
-                        Nama = "BMMB ... ",
+                        Perihal = "BMMB ... ",
                         JJenisId = jenisA.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "D",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "A11108",
-                        Nama = "MBB ... ",
+                        Perihal = "MBB ... ",
                         JJenisId = jenisA.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "D",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H10000",
-                        Nama = "Hasil Bukan Cukai",
+                        Perihal = "Hasil Bukan Cukai",
                         JJenisId = jenisH.Id,
                         JParasId = paras1.Id,
                         DebitKredit = "K",
                         UmumDetail = "U",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11000",
-                        Nama = "Hasil Bukan Cukai",
+                        Perihal = "Hasil Bukan Cukai",
                         JJenisId = jenisH.Id,
                         JParasId = paras2.Id,
                         DebitKredit = "K",
                         UmumDetail = "U",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11100",
-                        Nama = "Hasil Dokumen",
+                        Perihal = "Hasil Dokumen",
                         JJenisId = jenisH.Id,
                         JParasId = paras3.Id,
                         DebitKredit = "K",
                         UmumDetail = "U",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11101",
-                        Nama = "Hasil Dokumen Tender",
+                        Perihal = "Hasil Dokumen Tender",
                         JJenisId = jenisH.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "K",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11102",
-                        Nama = "Hasil Dokumen Sebutharga",
+                        Perihal = "Hasil Dokumen Sebutharga",
                         JJenisId = jenisH.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "K",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11203",
-                        Nama = "ZAKAT SIMPANAN",
+                        Perihal = "ZAKAT SIMPANAN",
                         JJenisId = jenisH.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "K",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11204",
-                        Nama = "ZAKAT PENDAPATAN",
+                        Perihal = "ZAKAT PENDAPATAN",
                         JJenisId = jenisH.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "K",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11206",
-                        Nama = "ZAKAT PELABURAN/ SAHAM",
+                        Perihal = "ZAKAT PELABURAN/ SAHAM",
                         JJenisId = jenisH.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "K",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11207",
-                        Nama = "ZAKAT KWSP DAN LTAT",
+                        Perihal = "ZAKAT KWSP DAN LTAT",
                         JJenisId = jenisH.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "K",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11219",
-                        Nama = "ZAKAT HARTA ( FPX / EJEN PUNGUTAN )",
+                        Perihal = "ZAKAT HARTA ( FPX / EJEN PUNGUTAN )",
                         JJenisId = jenisH.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "K",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11220",
-                        Nama = "ZAKAT EMAS / PERAK ( FPX / EJEN PUNGUTAN )",
+                        Perihal = "ZAKAT EMAS / PERAK ( FPX / EJEN PUNGUTAN )",
                         JJenisId = jenisH.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "K",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11301",
-                        Nama = "ZAKAT PERNIAGAAN",
+                        Perihal = "ZAKAT PERNIAGAAN",
                         JJenisId = jenisH.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "K",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     },
                     new AkCarta
                     {
                         JKWId = kw.Id,
                         Kod = "H11401",
-                        Nama = "ZAKAT TANAMAN",
+                        Perihal = "ZAKAT TANAMAN",
                         JJenisId = jenisH.Id,
                         JParasId = paras4.Id,
                         DebitKredit = "K",
                         UmumDetail = "D",
                         Catatan1 = "",
-                        Catatan2 = ""
+                        Catatan2 = "",
+                        Baki = 0.00m
                     }
                 );
             }

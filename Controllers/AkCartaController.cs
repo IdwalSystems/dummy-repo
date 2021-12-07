@@ -30,9 +30,44 @@ namespace MSNK.Controllers
         }
 
         // GET: AkCarta
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string searchColumn)
         {
+            ViewData["CurrentFilter"] = searchString;
+            List<SelectListItem> test = new List<SelectListItem>();
+            test.Add(new SelectListItem() { Text = "KW", Value = "" });
+            test.Add(new SelectListItem() { Text = "Kod", Value = "1" });
+            test.Add(new SelectListItem() { Text = "Perihal", Value = "2" });
+
+            if (!String.IsNullOrEmpty(searchColumn))
+            {
+                ViewBag.searchColumn = new SelectList(test, "Value", "Text", searchColumn);
+            }
+            else
+            {
+                ViewBag.searchColumn = new SelectList(test, "Value", "Text", "");
+            }
+
             var akCarta = await _akCartaRepo.GetAll();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                if (searchColumn == "1")
+                {
+                    akCarta = akCarta.Where(s => s.Kod.ToUpper().Contains(searchString.ToUpper()));
+                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "1");
+                }
+                else if (searchColumn == "2")
+                {
+                    akCarta = akCarta.Where(s => s.Perihal.ToUpper().Contains(searchString.ToUpper()));
+                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "2");
+                }
+                else
+                {
+                    akCarta = akCarta.Where(s => s.JKW.Kod.ToUpper().Contains(searchString.ToUpper()));
+                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "");
+                }
+            }
+
             return View(akCarta);
         }
 
@@ -84,20 +119,21 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkCarta akCarta, int KWId, int JenisId, int ParasId)
+        public async Task<IActionResult> Create(AkCarta akCarta, int JKWId, int JJenisId, int JParasId)
         {
             AkCarta akC = new AkCarta();
             if (ModelState.IsValid)
             {
-                if (akCarta != null && KWId != 0)
+                if (akCarta != null && JKWId != 0)
                 {
-                    akC.JKWId = KWId;
+                    akC.JKWId = JKWId;
                     akC.Kod = akCarta.Kod;
-                    akC.JJenisId = JenisId;
-                    akC.Nama = akCarta.Nama;
-                    akC.JParasId = ParasId;
+                    akC.JJenisId = JJenisId;
+                    akC.Perihal = akCarta.Perihal;
+                    akC.JParasId = JParasId;
                     akC.DebitKredit = akCarta.DebitKredit;
                     akC.UmumDetail = akCarta.UmumDetail;
+                    akC.Baki = akCarta.Baki;
                     akC.Catatan1 = akCarta.Catatan1;
                     akC.Catatan2 = akCarta.Catatan2;
                     await _akCartaRepo.Insert(akC);
@@ -141,7 +177,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkCarta akCarta, int KWId, int JenisId, int ParasId)
+        public async Task<IActionResult> Edit(int id, AkCarta akCarta, int JKWId, int JJenisId, int JParasId)
         {
 
             if (id != akCarta.Id)
@@ -155,13 +191,14 @@ namespace MSNK.Controllers
             {
                 try
                 {
-                    akC.JKWId = KWId;
+                    akC.JKWId = JKWId;
                     akC.Kod = akCarta.Kod;
-                    akC.JJenisId = JenisId;
-                    akC.Nama = akCarta.Nama;
-                    akC.JParasId = ParasId;
+                    akC.JJenisId = JJenisId;
+                    akC.Perihal = akCarta.Perihal;
+                    akC.JParasId = JParasId;
                     akC.UmumDetail = akCarta.UmumDetail;
                     akC.DebitKredit = akCarta.DebitKredit;
+                    akC.Baki = akCarta.Baki;
                     akC.Catatan1 = akCarta.Catatan1;
                     akC.Catatan2 = akCarta.Catatan2;
                     await _akCartaRepo.Update(akCarta);
@@ -192,9 +229,14 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akCarta = await _context.AkCarta
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akCarta = await _akCartaRepo.GetById((int)id);
+            var kw = await _kwRepo.GetById(akCarta.JKWId);
+            akCarta.JKW = kw;
+            var jenis = _context.JJenis.FirstOrDefault(b => b.Id == akCarta.JJenisId);
+            akCarta.JJenis = jenis;
+            var paras = _context.JParas.FirstOrDefault(b => b.Id == akCarta.JParasId);
+            akCarta.JParas = paras;
+
             if (akCarta == null)
             {
                 return NotFound();
@@ -208,7 +250,12 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var akCarta = await _context.AkCarta.FindAsync(id);
+            var akCarta = await _context.AkCarta
+                .Include(q => q.AkAkaun1)
+                .Include(q => q.AkAkaun2)
+                .Include(q => q.AkBank)
+                .Include(q => q.AkPO2)
+                .Include(q => q.AkTerima1).FirstOrDefaultAsync(q => q.Id == id);
             _context.AkCarta.Remove(akCarta);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
