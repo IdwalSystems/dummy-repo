@@ -76,6 +76,9 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
+            List<AkPembekal> PembekalList = _context.AkPembekal.OrderBy(b => b.Id).ToList();
+            ViewBag.AkPembekal = PembekalList;
+
             List<JNegeri> negeriList = _context.JNegeri.OrderBy(b => b.Kod).ToList();
             ViewBag.JNegeri = negeriList;
 
