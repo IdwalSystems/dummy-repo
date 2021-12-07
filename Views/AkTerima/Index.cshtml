@@ -5,92 +5,126 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+@if (TempData["AlertMessage"] != null)
+{
+    @if ((string)TempData["IsSuccess"] == "0")
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <i class="far fa-times-circle text-danger fa-lg"></i> <strong> Ralat! </strong>@TempData["AlertMessage"]
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <i class="far fa-check-circle text-success fa-lg"></i> <strong> Berjaya! </strong> @TempData["AlertMessage"]
+        </div>
+    }
+}
+
+<h1>Resit Rasmi</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Tambah Baru</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Tahun)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NoRujukan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tarikh)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Jumlah)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlCetak)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlPosting)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlBatal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KodPembayar)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NoKp)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nama)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alamat1)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tahun)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoRujukan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tarikh)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Jumlah)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlCetak)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlPosting)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlBatal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.KodPembayar)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoKp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nama)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alamat1)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover text-nowrap table-sm hover nowrap " width="100%">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tahun)
+                </th>
+                <th>
+                    No Rujukan
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tarikh)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Jumlah)
+                </th>
+                <th>
+                    Cetak
+                </th>
+                <th>
+                    Posting
+                </th>
+                <th>
+                    Batal
+                </th>
+                <th>
+                    Kod Pembayar
+                </th>
+                <th>
+                    No KP
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nama)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Alamat1)
+                </th>
+                <th class="action-button"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tahun)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoRujukan)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tarikh)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Jumlah)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FlCetak)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FlPosting)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FlBatal)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.KodPembayar)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoKp)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nama)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Alamat1)
+                    </td>
+                    <td class="action-button">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        @if (item.FlPosting == 0)
+                        {
+                            <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                <i class="fas fa-sync"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
+                                <i class="fas fa-sync"></i>
+                            </a>
+                        }
+
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

@@ -24,21 +24,23 @@ namespace MSNK.Controllers
         private readonly IRepository<AkBank, int> _akBankRepo;
         private readonly IRepository<JKW, int> _kwRepo;
         private readonly IRepository<JNegeri, int> _negeriRepo;
-        private readonly IRepository<AkTerima1, int> _akTerima1Repo;
+        private readonly AkTerima1IRepository<AkTerima1, int> _akTerima1Repo;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
-        private readonly IRepository<AkTerima2, int> _akTerima2Repo;
+        private readonly AkTerima2IRepository<AkTerima2, int> _akTerima2Repo;
+        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
         private CartTerima _cart;
 
         public AkTerimaController(
             ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
             IRepository<AkTerima, int> akTerimaRepository,
-            IRepository<AkTerima1, int> akTerima1Repository,
-            IRepository<AkTerima2, int> akTerima2Repository,
+            AkTerima1IRepository<AkTerima1, int> akTerima1Repository,
+            AkTerima2IRepository<AkTerima2, int> akTerima2Repository,
             IRepository<AkBank, int> akBankRepository,
             IRepository<JKW, int> kwRepository,
             IRepository<JNegeri, int> negeriRepository,
             IRepository<AkCarta, int> akCartaRepository,
+            IRepository<AkAkaun, int> akAkaunRepository,
             CartTerima cart
             )
         {
@@ -51,6 +53,7 @@ namespace MSNK.Controllers
             _akTerima1Repo = akTerima1Repository;
             _akTerima2Repo = akTerima2Repository;
             _akCartaRepo = akCartaRepository;
+            _akAkaunRepo = akAkaunRepository;
             _cart = cart;
         }
 
@@ -80,7 +83,8 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
-
+            PopulateList();
+            PopulateTable(id);
             return View(akTerima);
         }
 
@@ -168,9 +172,8 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId)
         {
+            TempData["IsSuccess"] = "0";
             AkTerima m = new AkTerima();
-            AkTerima1 t1 = new AkTerima1();
-            AkTerima2 t2 = new AkTerima2();
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15); ;
 
             if (ModelState.IsValid)
@@ -200,7 +203,7 @@ namespace MSNK.Controllers
                     m.Emel = akTerima.Emel;
                     m.Sebab = akTerima.Sebab;
                     m.UserId = username;
-                    m.TarMasuk = akTerima.TarMasuk;
+                    m.TarMasuk = DateTime.Now;
                     m.TarKemaskini = akTerima.TarKemaskini;
 
                     m.AkTerima1 = _cart.Lines1.ToArray();
@@ -210,6 +213,8 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
+                    TempData["IsSuccess"] = "1";
+                    TempData["AlertMessage"] = "Data berjaya ditambah..!";
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -252,6 +257,7 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId)
         {
+            TempData["IsSuccess"] = "0";
             if (id != akTerima.Id)
             {
                 return NotFound();
@@ -276,6 +282,8 @@ namespace MSNK.Controllers
                     }
                 }
                 CartEmpty();
+                TempData["IsSuccess"] = "1";
+                TempData["AlertMessage"] = "Data berjaya diubah..!";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -313,6 +321,8 @@ namespace MSNK.Controllers
             var akTerima = await _context.AkTerima.FindAsync(id);
             _context.AkTerima.Remove(akTerima);
             await _context.SaveChangesAsync();
+            TempData["IsSuccess"] = "1";
+            TempData["AlertMessage"] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -453,5 +463,369 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
+
+        // Ubah AkTerima1
+        public async Task<JsonResult> UpdateAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+                AkTerima1 data = await _akTerima1Repo.GetBy2Id(akTerima1.AkTerimaId, akTerima1.AkCartaId);
+
+                return Json(new { result = "OK" , record = data});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> InsertUpdateAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+                if (akTerima1 != null || akTerima1.Amaun != 0)
+                {
+                    var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akTerima1.AkCartaId);
+                    akTerima1.AkCarta = akCarta;
+                    await _akTerima1Repo.Insert(akTerima1);
+
+                    decimal total = 0;
+
+                    AkTerima akTerima = await _akTerimaRepo.GetById(akTerima1.AkTerimaId);
+
+                    total = akTerima.Jumlah + akTerima1.Amaun;
+
+                    akTerima.Jumlah = total;
+
+                    await _akTerimaRepo.Update(akTerima);
+                    await _context.SaveChangesAsync();
+
+                }
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> RemoveUpdateAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+                if (akTerima1 != null)
+                {
+                    var akT1 = await _context.AkTerima1.FirstOrDefaultAsync(x=> x.AkCartaId == akTerima1.AkCartaId && x.AkTerimaId == akTerima1.AkTerimaId);
+                    _context.AkTerima1.Remove(akT1);
+
+                    decimal total = 0;
+
+                    AkTerima akTerima = await _akTerimaRepo.GetById(akTerima1.AkTerimaId);
+
+                    total = akTerima.Jumlah - akT1.Amaun;
+
+                    akTerima.Jumlah = total;
+
+                    await _akTerimaRepo.Update(akTerima);
+
+                    await _context.SaveChangesAsync();
+
+                }
+
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> SaveUpdateAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+                _cart.Clear1();
+
+                AkTerima1 akT1 = await _akTerima1Repo.GetById(akTerima1.Id);
+                akT1.Amaun = akTerima1.Amaun;
+                _context.AkTerima1.Update(akT1);
+                await _context.SaveChangesAsync();
+
+                return Json(new { result = "OK"});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> GetCart1(AkTerima1 akTerima1)
+        {
+            try
+            {
+                AkTerima data = await _context.AkTerima.Include(x => x.AkTerima1).ThenInclude(x=>x.AkCarta).FirstOrDefaultAsync(x => x.Id == akTerima1.AkTerimaId);
+
+                List<AkTerima1> akT1 = data.AkTerima1.ToList();
+
+                foreach (AkTerima1 item in akT1)
+                {
+                    _cart.AddItem1(item.AkTerimaId, item.Amaun, item.AkCartaId);
+                }
+
+
+                decimal total = 0;
+                foreach (var item in akT1)
+                {
+                    total += item.Amaun;
+                }
+                AkTerima akTerima = await _akTerimaRepo.GetById(akTerima1.AkTerimaId);
+
+                akTerima.Jumlah = total;
+
+                await _akTerimaRepo.Update(akTerima);
+                await _context.SaveChangesAsync();
+
+
+                return Json(new { result = "OK", data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // Ubah AkTerima1 End
+
+        // Ubah AkTerima1
+        public async Task<JsonResult> UpdateAkTerima2(AkTerima2 akTerima2)
+        {
+
+            try
+            {
+                AkTerima2 data = await _akTerima2Repo.GetBy2Id(akTerima2.AkTerimaId, akTerima2.JCaraBayarId);
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> InsertUpdateAkTerima2(AkTerima2 akTerima2)
+        {
+
+            try
+            {
+                if (akTerima2 != null || akTerima2.Amaun != 0)
+                {
+                    var jCaraBayar = _context.JCaraBayar.FirstOrDefault(x => x.Id == akTerima2.JCaraBayarId);
+                    akTerima2.JCaraBayar = jCaraBayar;
+                    await _akTerima2Repo.Insert(akTerima2);
+  
+                    await _context.SaveChangesAsync();
+                }
+
+                
+                
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> RemoveUpdateAkTerima2(AkTerima2 akTerima2)
+        {
+
+            try
+            {
+                if (akTerima2 != null)
+                {
+                    var akT2 = await _context.AkTerima2.FirstOrDefaultAsync(x => x.JCaraBayarId == akTerima2.JCaraBayarId && x.AkTerimaId == akTerima2.AkTerimaId);
+                    _context.AkTerima2.Remove(akT2);
+
+                    await _context.SaveChangesAsync();
+
+                }
+
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> SaveUpdateAkTerima2(AkTerima2 akTerima2)
+        {
+
+            try
+            {
+                _cart.Clear2();
+
+                AkTerima2 akT2 = await _akTerima2Repo.GetById(akTerima2.Id);
+
+                akT2.Amaun = akTerima2.Amaun;
+                akT2.NoCek = akTerima2.NoCek;
+                akT2.JenisCek = akTerima2.JenisCek;
+                akT2.KodBankCek = akTerima2.KodBankCek;
+                akT2.TempatCek = akTerima2.TempatCek;
+                akT2.NoSlip = akTerima2.NoSlip;
+                akT2.TarSlip = akTerima2.TarSlip;
+
+                _context.AkTerima2.Update(akT2);
+                await _context.SaveChangesAsync();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> GetCart2(AkTerima2 akTerima2)
+        {
+            try
+            {
+                AkTerima data = await _context.AkTerima.Include(x => x.AkTerima2).ThenInclude(x => x.JCaraBayar).FirstOrDefaultAsync(x => x.Id == akTerima2.AkTerimaId);
+
+                List<AkTerima2> akT2 = data.AkTerima2.ToList();
+
+                foreach (AkTerima2 item in akT2)
+                {
+                    _cart.AddItem2(akTerima2.AkTerimaId,
+                               akTerima2.JCaraBayarId,
+                               akTerima2.Amaun,
+                               akTerima2.NoCek,
+                               akTerima2.JenisCek,
+                               akTerima2.KodBankCek,
+                               akTerima2.TempatCek,
+                               akTerima2.NoSlip,
+                               akTerima2.TarSlip);
+                }
+
+                return Json(new { result = "OK", data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        // posting function
+        public async Task<IActionResult> Posting(int? id)
+        {
+            TempData["IsSuccess"] = "0";
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkTerima akTerima = await _context.AkTerima.Include(x => x.AkTerima1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == id);
+
+                List<AkTerima1> akT1 = akTerima.AkTerima1.ToList();
+
+                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akTerima.NoRujukan).FirstOrDefaultAsync();
+                if (akAkaun != null)
+                {
+
+                    //duplicate id error
+                    TempData["AlertMessage"] = "Data telah dikemaskini ke lejar.";
+                   
+                }
+                else
+                {
+                    //posting operation start here
+                    //insert into akAkaun
+                    AkAkaun akADebit = new AkAkaun();
+                    foreach(AkTerima1 item in akT1)
+                    {
+                        akADebit.NoRujukan = akTerima.NoRujukan;
+                        akADebit.JKWId = akTerima.JKWId;
+                        akADebit.AkCartaId1 = akTerima.AkBankId;
+                        akADebit.AkCartaId2 = item.AkCartaId;
+                        akADebit.Tarikh = akTerima.Tarikh;
+                        akADebit.Debit = item.Amaun;
+                    }
+                    await _akAkaunRepo.Insert(akADebit);
+
+                    //update posting status in akTerima
+                    akTerima.FlPosting = 1;
+                    await _akTerimaRepo.Update(akTerima);
+
+                    await _context.SaveChangesAsync();
+
+                    TempData["IsSuccess"] = "1";
+                    TempData["AlertMessage"] = "Data berjaya dikemaskini ke lejar.";
+                }
+
+                
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // posting function end
+
+        // unposting function
+        public async Task<IActionResult> UnPosting(int? id)
+        {
+            TempData["IsSuccess"] = "0";
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkTerima akTerima = await _context.AkTerima.Include(x => x.AkTerima1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == id);
+
+                List<AkTerima1> akT1 = akTerima.AkTerima1.ToList();
+
+                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akTerima.NoRujukan).FirstOrDefaultAsync();
+                if (akAkaun == null)
+                {
+
+                    //duplicate id error
+                    TempData["AlertMessage"] = "Data belum dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //posting operation start here
+                    //delete data from akAkaun
+                    await _akAkaunRepo.Delete(akAkaun.Id);
+
+                    //update posting status in akTerima
+                    akTerima.FlPosting = 0;
+                    await _akTerimaRepo.Update(akTerima);
+
+                    await _context.SaveChangesAsync();
+
+                    TempData["IsSuccess"] = "1";
+                    TempData["AlertMessage"] = "Data berjaya batal kemaskini dari lejar.";
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // unposting function end
+
     }
 }

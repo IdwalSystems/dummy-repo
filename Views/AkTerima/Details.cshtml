@@ -163,6 +163,78 @@
         </dd>
     </dl>
 </div>
+<div class="container">
+    <div class="row">
+        @*table Objek*@
+        <h3>Objek</h3>
+        <table id="tblObjek" class="table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th style="width:40%">Kod</th>
+                    <th style="width:50%">Amaun</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbodyObjek">
+                @foreach (var item in ViewBag.akTerima1)
+                {
+                    <tr id="@item.Id">
+                        <td id="akCartaId" hidden>@item.AkCartaId</td>
+                        <td>@item.AkCarta.Kod</td>
+                        <td class="editable-txt" id="td1Amaun">@item.Amaun</td>
+                    </tr>
+
+                }
+            </tbody>
+            <tfoot>
+                
+            </tfoot>
+        </table>
+        @*table Objek end*@
+        <br />
+        @*table urusniaga*@
+        <h3>Urusniaga</h3>
+        <table id="tblUrusniaga" class="table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>CaraBayar</th>
+                    <th>Amaun</th>
+                    <th>No Cek</th>
+                    <th>Jenis Cek</th>
+                    <th>Kod Bank Cek</th>
+                    <th>Tempat Cek</th>
+                    <th>No Slip</th>
+                    <th>Tarikh Slip</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbodyUrusniaga">
+                @foreach (var item in ViewBag.akTerima2)
+                {
+                    <tr>
+                        <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
+                        <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
+                        <td>@item.JCaraBayar.Kod</td>
+                        <td class="editable-txt">@item.Amaun</td>
+                        <td class="editable-txt">@item.NoCek</td>
+                        <td class="editable-txt">@item.JenisCek</td>
+                        <td class="editable-txt">@item.KodBankCek</td>
+                        <td class="editable-txt">@item.TempatCek</td>
+                        <td class="editable-txt">@item.NoSlip</td>
+                        <td>@item.TarSlip.ToString("dd/MM/yyyy")</td>
+                    </tr>
+
+                }
+            </tbody>
+            <tfoot>
+              
+            </tfoot>
+        </table>
+        @*table urusniaga end*@
+        <br />
+    </div>
+
+</div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
