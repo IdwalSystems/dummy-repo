@@ -33,8 +33,8 @@ namespace MSNK.Data
         public DbSet<AkTerima2> AkTerima2 { get; set; }
         public DbSet<AkPembekal> AkPembekal { get; set; }
         public DbSet<AkPO> AkPO { get; set; }
-        public DbSet<AkPO1> AkPO1 { get; set; }
-        public DbSet<AkPO2> AkPO2 { get; set; }
+        public DbSet<AkPO2> AkPO1 { get; set; }
+        public DbSet<AkPO1> AkPO2 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -109,16 +109,16 @@ namespace MSNK.Data
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
-            modelBuilder.Entity<AkPO2>()
+            modelBuilder.Entity<AkPO1>()
                     .HasOne(m => m.JKW)
-                    .WithMany(t => t.AkPO2)
+                    .WithMany(t => t.AkPO1)
                     .HasForeignKey(m => m.JKWId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
-            modelBuilder.Entity<AkPO2>()
+            modelBuilder.Entity<AkPO1>()
                     .HasOne(m => m.AkPO)
-                    .WithMany(t => t.AkPO2)
+                    .WithMany(t => t.AkPO1)
                     .HasForeignKey(m => m.AkPOId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();

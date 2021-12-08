@@ -206,6 +206,36 @@ namespace MSNK.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AkCartaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AkPOId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amaun")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("JKWId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AkCartaId");
+
+                    b.HasIndex("AkPOId");
+
+                    b.HasIndex("JKWId");
+
+                    b.ToTable("AkPO2");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkPO2", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<int>("AkPOId")
                         .HasColumnType("int");
 
@@ -242,36 +272,6 @@ namespace MSNK.Migrations
                     b.HasIndex("AkPOId");
 
                     b.ToTable("AkPO1");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.AkPO2", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AkCartaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AkPOId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Amaun")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("JKWId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AkCartaId");
-
-                    b.HasIndex("AkPOId");
-
-                    b.HasIndex("JKWId");
-
-                    b.ToTable("AkPO2");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPembekal", b =>
@@ -992,17 +992,6 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPO1", b =>
                 {
-                    b.HasOne("MSNK.Models.Modules.AkPO", "AkPO")
-                        .WithMany("AkPO1")
-                        .HasForeignKey("AkPOId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AkPO");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.AkPO2", b =>
-                {
                     b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
                         .WithMany("AkPO2")
                         .HasForeignKey("AkCartaId")
@@ -1010,7 +999,7 @@ namespace MSNK.Migrations
                         .IsRequired();
 
                     b.HasOne("MSNK.Models.Modules.AkPO", "AkPO")
-                        .WithMany("AkPO2")
+                        .WithMany("AkPO1")
                         .HasForeignKey("AkPOId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1026,6 +1015,17 @@ namespace MSNK.Migrations
                     b.Navigation("AkPO");
 
                     b.Navigation("JKW");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkPO2", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.AkPO", "AkPO")
+                        .WithMany("AkPO2")
+                        .HasForeignKey("AkPOId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AkPO");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPembekal", b =>

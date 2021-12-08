@@ -35,7 +35,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Nama Pembekal")]
         public AkPembekal AkPembekal { get; set; }
         public JKW JKW { get; set; }
-        public ICollection<AkPO1> AkPO1 { get; set; }
         public ICollection<AkPO2> AkPO2 { get; set; }
+        public ICollection<AkPO1> AkPO1 { get; set; }
     }
 }

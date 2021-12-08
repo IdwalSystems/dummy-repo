@@ -254,7 +254,7 @@ namespace MSNK.Controllers
                 .Include(q => q.AkAkaun1)
                 .Include(q => q.AkAkaun2)
                 .Include(q => q.AkBank)
-                .Include(q => q.AkPO2)
+                .Include(q => q.AkPO1)
                 .Include(q => q.AkTerima1).FirstOrDefaultAsync(q => q.Id == id);
             _context.AkCarta.Remove(akCarta);
             await _context.SaveChangesAsync();
