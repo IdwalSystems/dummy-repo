@@ -17,6 +17,8 @@ namespace MSNK.Models.Modules
         [DisplayName("No Rujukan")]
         [MaxLength(20)]
         public string NoRujukan { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}",
+               ApplyFormatInEditMode = true)]
         public DateTime Tarikh { get; set; }
         public decimal Jumlah { get; set; }
         [DisplayName("Kod Bank")]

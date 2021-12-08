@@ -49,11 +49,7 @@
 
                     //Add Button cell.
                     cell = $(row.insertCell(-1));
-                    var btnRemove1 = $("<input />");
-                    btnRemove1.attr("class", "btn btn-danger btn-table-mini");
-                    btnRemove1.attr("type", "button");
-                    btnRemove1.attr("onclick", "Remove1(this);");
-                    btnRemove1.val("-");
+                    var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                     cell.append(btnRemove1);
 
                     var AkTerima1 = {
@@ -150,17 +146,13 @@
 
                     //Add TarSlip cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtTarSlip.val());
+                    cell.html(showDate(txtTarSlip.val()));
 
 
 
                     //Add Button cell.
                     cell = $(row.insertCell(-1));
-                    var btnRemove2 = $("<input />");
-                    btnRemove2.attr("class", "btn btn-danger btn-table-mini");
-                    btnRemove2.attr("type", "button");
-                    btnRemove2.attr("onclick", "Remove2(this);");
-                    btnRemove2.val("-");
+                    var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
                     cell.append(btnRemove2);
 
                     var AkTerima2 = {

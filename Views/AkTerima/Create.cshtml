@@ -17,7 +17,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Tahun" class="control-label"></label>
-                <input asp-for="Tahun" class="form-control form-control-sm" />
+                <input asp-for="Tahun" class="form-control form-control-sm form-control-sm-custom" />
                 <span asp-validation-for="Tahun" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -48,7 +48,7 @@
             <div class="form-group">
                 <label asp-for="AkBankId" class="control-label"></label>
                 <select class="form-control form-control-sm select2" asp-for="AkBankId">
-                    <option value="" hidden>-- Pilih Bank --</option>
+                    <option value="" disabled selected>-- Pilih Bank --</option>
                     @foreach (var s in ViewBag.AkBank)
                     {
                         <option value="@s.Id">@s.Kod - @s.JBank.Nama</option>
@@ -113,7 +113,7 @@
             <div class="form-group">
                 <label asp-for="JNegeriId" class="control-label"></label>
                 <select class="form-control form-control-sm select2" asp-for="JNegeriId">
-                    <option value="" hidden>-- Pilih Negeri --</option>
+                    <option value="" disabled selected>-- Pilih Negeri --</option>
                     @foreach (var s in ViewBag.JNegeri)
                     {
                         <option value="@s.Id">@s.Perihal </option>
@@ -157,7 +157,7 @@
             </div>
             @*table Objek*@
             <h3>Objek</h3>
-            <table id="tblObjek" class="table" cellpadding="0" cellspacing="0">
+            <table id="tblObjek" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
                 <thead>
                     <tr>
                         <th style="width:40%">Kod</th>
@@ -172,7 +172,7 @@
                         <td id="akCartaId" hidden></td>
                         <td style="width:40%">
                             <select class="form-control form-control-sm select2" id="txtKodAkaun">
-                                <option value="" hidden>-- Pilih Kod Akaun --</option>
+                                <option value="" disabled selected>-- Pilih Kod Akaun --</option>
                                 @foreach (var s in ViewBag.AkCarta)
                                 {
                                     <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -189,7 +189,7 @@
             @*table urusniaga*@
             <h3>Urusniaga</h3>
             <div class="table-responsive-md">
-                <table id="tblUrusniaga" class="table table-sm" cellpadding="0" cellspacing="0">
+                <table id="tblUrusniaga" class="table table-sm nowrap text-nowrap" cellpadding="0" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Cara Bayar</th>
@@ -210,7 +210,7 @@
                             <td id="caraBayarId" hidden></td>
                             <td>
                                 <select class="form-control form-control-sm select2" id="ddlCaraBayar">
-                                    <option value="" hidden>-- Pilih Cara Bayar --</option>
+                                    <option value="" disabled selected>-- Pilih Cara Bayar --</option>
                                     @foreach (var s in ViewBag.JCaraBayar)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>

@@ -47,7 +47,7 @@
             <div class="form-group">
                 <label asp-for="AkBankId" class="control-label"></label>
                 <select class="form-control form-control-sm" asp-for="AkBankId">
-                    <option value="" hidden>-- Pilih Bank --</option>
+                    <option value="" disabled selected>-- Pilih Bank --</option>
                     @foreach (var s in ViewBag.AkBank)
                     {
                         <option value="@s.Id">@s.Kod - @s.JBank.Nama</option>
@@ -112,7 +112,7 @@
             <div class="form-group">
                 <label asp-for="JNegeriId" class="control-label"></label>
                 <select class="form-control form-control-sm" asp-for="JNegeriId">
-                    <option value="" hidden>-- Pilih Negeri --</option>
+                    <option value="" disabled selected>-- Pilih Negeri --</option>
                     @foreach (var s in ViewBag.JNegeri)
                     {
                         <option value="@s.Id">@s.Perihal </option>
@@ -193,7 +193,7 @@
                             <td hidden><input id="txtAkTerima1" value="@Model.Id" /></td>
                             <td style="width:40%">
                                 <select class="form-control form-control-sm" id="txtKodAkaun">
-                                    <option value="" hidden>-- Pilih Kod Akaun --</option>
+                                    <option value="" disabled selected>-- Pilih Kod Akaun --</option>
                                     @foreach (var s in ViewBag.AkCarta)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -261,7 +261,7 @@
                             <td id="jCaraBayarId" hidden></td>
                             <td>
                                 <select class="form-control form-control-sm" id="txtCaraBayar">
-                                    <option value="" hidden>-- Pilih Cara Bayar --</option>
+                                    <option value="" disabled selected>-- Pilih Cara Bayar --</option>
                                     @foreach (var s in ViewBag.JCaraBayar)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -311,7 +311,7 @@
                     <div class="form-group">
                         <label class="col-form-label">Kod Akaun</label>
                         <select class="form-control form-control-sm" id="moKodAkaun" disabled>
-                            <option value="" hidden>-- Pilih Kod Akaun --</option>
+                            <option value="" disabled selected>-- Pilih Kod Akaun --</option>
                             @foreach (var s in ViewBag.AkCarta)
                             {
                                 <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -348,7 +348,7 @@
                     <div class="form-group">
                         <label class="col-form-label">Cara Bayar</label>
                         <select class="form-control form-control-sm" id="moCaraBayar" disabled>
-                            <option value="" hidden>-- Pilih Cara Bayar --</option>
+                            <option value="" disabled selected>-- Pilih Cara Bayar --</option>
                             @foreach (var s in ViewBag.JCaraBayar)
                             {
                                 <option value="@s.Id">@s.Kod - @s.Perihal </option>
