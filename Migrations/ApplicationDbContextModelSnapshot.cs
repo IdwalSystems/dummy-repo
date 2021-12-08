@@ -113,6 +113,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("DebitKredit")
+                        .IsRequired()
                         .HasMaxLength(1)
                         .HasColumnType("nvarchar(1)");
 
@@ -126,14 +127,17 @@ namespace MSNK.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Kod")
+                        .IsRequired()
                         .HasMaxLength(6)
                         .HasColumnType("nvarchar(6)");
 
                     b.Property<string>("Perihal")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UmumDetail")
+                        .IsRequired()
                         .HasMaxLength(1)
                         .HasColumnType("nvarchar(1)");
 

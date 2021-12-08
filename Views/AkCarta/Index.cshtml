@@ -10,8 +10,8 @@
 <partial name="_TableStickyLastColumn">
 <partial name="_ToTopButton">
 
-<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<link href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+@*<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>*@
+@*<link href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />*@
 <script type="text/javascript">
     $(document).ready(function () {
         $('.table').dataTable({
@@ -28,6 +28,7 @@
             "order": [[1, "asc"]]
         });
     });
+
 </script>
 
 <p>
@@ -53,7 +54,7 @@
 </form>
 
 <div class="table-responsive">
-    <table class="table table-hover table-sm nowrap">
+    <table class="table table-hover table-bordered nowrap">
         <thead>
             <tr>
                 <th>
@@ -140,9 +141,21 @@
                         @Html.DisplayFor(modelItem => item.Catatan2)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
+                        @*<a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
+                        @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                        <a asp-action="Details" asp-route-id="@item.Id"
+                           class="btn btn-primary btn-sm" type="button"
+                           data-toggle="tooltip" data-placement="top"
+                           title="Ubah/Papar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id"
+                           class="btn btn-danger btn-sm" type="button"
+                           data-toggle="tooltip" data-placement="top"
+                           title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </a>
                     </td>
                 </tr>
             }

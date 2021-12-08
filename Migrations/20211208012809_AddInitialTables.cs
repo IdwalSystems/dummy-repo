@@ -258,17 +258,17 @@ namespace MSNK.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     KodSykt = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
-                    NamaSykt = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    NoPendaftaran = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Alamat1 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    NamaSykt = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    NoPendaftaran = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Alamat1 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Alamat2 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Alamat3 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Poskod = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
-                    Bandar = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Poskod = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    Bandar = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     JNegeriId = table.Column<int>(type: "int", nullable: false),
-                    Telefon1 = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    Emel = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    AkaunBank = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Telefon1 = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Emel = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    AkaunBank = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     JBankId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -295,14 +295,15 @@ namespace MSNK.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     JKWId = table.Column<int>(type: "int", nullable: false),
-                    Kod = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
-                    Nama = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Kod = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
+                    Perihal = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     JJenisId = table.Column<int>(type: "int", nullable: false),
                     JParasId = table.Column<int>(type: "int", nullable: false),
-                    DebitKredit = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true),
-                    UmumDetail = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true),
+                    DebitKredit = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
+                    UmumDetail = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
                     Catatan1 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Catatan2 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                    Catatan2 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Baki = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
