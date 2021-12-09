@@ -1,0 +1,94 @@
+﻿@model MSNK.Models.Modules.AkJurnal
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>AkJurnal</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="JKWId" class="control-label"></label>
+                <select asp-for="JKWId" class ="form-control" asp-items="ViewBag.JKWId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NoJurnal" class="control-label"></label>
+                <input asp-for="NoJurnal" class="form-control" />
+                <span asp-validation-for="NoJurnal" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tarikh" class="control-label"></label>
+                <input asp-for="Tarikh" class="form-control" />
+                <span asp-validation-for="Tarikh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JumDebit" class="control-label"></label>
+                <input asp-for="JumDebit" class="form-control" />
+                <span asp-validation-for="JumDebit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JumKredit" class="control-label"></label>
+                <input asp-for="JumKredit" class="form-control" />
+                <span asp-validation-for="JumKredit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Catatan1" class="control-label"></label>
+                <input asp-for="Catatan1" class="form-control" />
+                <span asp-validation-for="Catatan1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Catatan2" class="control-label"></label>
+                <input asp-for="Catatan2" class="form-control" />
+                <span asp-validation-for="Catatan2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Catatan3" class="control-label"></label>
+                <input asp-for="Catatan3" class="form-control" />
+                <span asp-validation-for="Catatan3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Catatan4" class="control-label"></label>
+                <input asp-for="Catatan4" class="form-control" />
+                <span asp-validation-for="Catatan4" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Posting" class="control-label"></label>
+                <input asp-for="Posting" class="form-control" />
+                <span asp-validation-for="Posting" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cetak" class="control-label"></label>
+                <input asp-for="Cetak" class="form-control" />
+                <span asp-validation-for="Cetak" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Batal" class="control-label"></label>
+                <input asp-for="Batal" class="form-control" />
+                <span asp-validation-for="Batal" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TarikhMasuk" class="control-label"></label>
+                <input asp-for="TarikhMasuk" class="form-control" />
+                <span asp-validation-for="TarikhMasuk" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

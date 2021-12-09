@@ -20,6 +20,8 @@ namespace MSNK.Models.Modules
         public string TempatCek { get; set; }
         [MaxLength(30)]
         public string NoSlip { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}",
+               ApplyFormatInEditMode = true)]
         public DateTime TarSlip { get; set; }
 
         

@@ -13,6 +13,8 @@ using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -826,6 +828,33 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
+
+        // printing resit rasmi by akTerima.Id
+        public async Task<IActionResult> PrintPdf(int id)
+        {
+            AkTerima akTerima = await _context.AkTerima.Include(x => x.AkTerima2).ThenInclude(x => x.JCaraBayar).FirstOrDefaultAsync(x => x.Id == id);
+            JNegeri negeri = await _context.JNegeri.FirstOrDefaultAsync(x => x.Kod == "02");
+
+            ResitPrintModel data = new ResitPrintModel();
+
+            data.NamaSyarikat = "Majlis Sukan Negeri Kedah";
+            data.AlamatSyarikat1 = "Stadium Sultan Abdul Halim";
+            data.AlamatSyarikat2 = "Jalan Suka Menanti";
+            data.AlamatSyarikat3 = "05150 Alor Setar";
+            data.Negeri = negeri;
+            data.AkTerima = akTerima;
+
+            return new ViewAsPdf("ResitPrintPdf",data)
+            {
+                PageMargins = { Left = 20, Bottom = 20, Right = 20, Top = 20 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                CustomSwitches = "--footer-center \"  Tarikh: " +
+                    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+        // printing resit rasmi end
 
     }
 }

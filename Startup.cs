@@ -14,6 +14,7 @@ using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.Cart.Session;
 using MSNK.Models.Modules.EFRepository;
 using MSNK.Models.Modules.IRepository;
+using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +65,7 @@ namespace MSNK
             services.AddTransient<IRepository<AkPO1, int>, AkPO1Repository>();
             services.AddTransient<IRepository<AkPO2, int>, AkPO2Repository>();
             services.AddTransient<IRepository<AkPembekal, int>, AkPembekalRepository>();
+            services.AddTransient<IRepository<AkJurnal, int>, AkJurnalRepository>();
 
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
@@ -105,6 +107,9 @@ namespace MSNK
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            RotativaConfiguration.Setup(env.ContentRootPath, "wwwroot/plugins/Rotativa");
+
         }
     }
 }

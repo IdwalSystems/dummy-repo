@@ -16,11 +16,8 @@ namespace MSNK.Data
 
         //module
         public DbSet<JKW> JKW { get; set; }
-
         public DbSet<JCaraBayar> JCaraBayar { get; set; }
-
         public DbSet<SiModul> SiModul { get; set; }
-
         public DbSet<JBank> JBank { get; set; }
         public DbSet<JNegeri> JNegeri { get; set; }
         public DbSet<AkBank> AkBank { get; set; }
@@ -33,8 +30,8 @@ namespace MSNK.Data
         public DbSet<AkTerima2> AkTerima2 { get; set; }
         public DbSet<AkPembekal> AkPembekal { get; set; }
         public DbSet<AkPO> AkPO { get; set; }
-        public DbSet<AkPO1> AkPO1 { get; set; }
-        public DbSet<AkPO2> AkPO2 { get; set; }
+        public DbSet<AkPO2> AkPO1 { get; set; }
+        public DbSet<AkPO1> AkPO2 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -123,7 +120,25 @@ namespace MSNK.Data
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
+            modelBuilder.Entity<AkJurnal>()
+                .HasOne(m => m.JKW)
+                .WithMany(t => t.AkJurnal)
+                .HasForeignKey(m => m.JKWId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            //modelBuilder.Entity<AkJurnal1>()
+            //    .HasOne(m => m.AkJurnal)
+            //    .WithMany(t => t.AkJurnal1)
+            //    .HasForeignKey(m => m.AkJurnalId)
+            //    .OnDelete(DeleteBehavior.NoAction);
+
+            //modelBuilder.Entity<AkJurnal>()
+            //    .HasMany(m => m.AkJurnal1)
+            //    .WithOne(t => t.AkJurnal)
+            //    .OnDelete(DeleteBehavior.Cascade)
+            //    .IsRequired();
+
         }
     }
-    
 }

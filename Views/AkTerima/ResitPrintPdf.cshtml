@@ -1,0 +1,98 @@
+﻿@model MSNK.Models.Modules.PrintModel.ResitPrintModel
+
+@{
+    ViewData["Title"] = "Cetakan Resit";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+<style>
+    .flexrow {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex !important;
+    }
+
+    .flexrow > div {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+    }
+
+    .image-container {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+</style>
+<div class="row flexrow">
+    <div class="col-2 image-container">
+        <img src="~/img/MainLogo_Syarikat.jpg"  alt="Logo syarikat" />
+    </div>
+    <div class="col-5">
+        <h5 class="mb-1"><strong>@Html.DisplayFor(x => x.NamaSyarikat)</strong></h5>
+        <p class="mb-0"> @Html.DisplayFor(x => x.AlamatSyarikat1)</p>
+        <p class="mb-0">@Html.DisplayFor(x => x.AlamatSyarikat2)</p>
+        <p>@Html.DisplayFor(x => x.AlamatSyarikat3), @Html.DisplayFor(x=>x.Negeri.Perihal)</p>
+    </div>
+    
+    <div class="col-5 text-right">
+        <h5 class="mb-0">Resit: @Html.DisplayFor(x => x.AkTerima.NoRujukan)</h5>
+        Tarikh: @Html.DisplayFor(x => x.AkTerima.Tarikh, "{0:dd/MM/yyyy}")
+    </div>
+</div>
+<hr />
+        <div>
+            <div>
+                <h5>Penerima:</h5>
+                <h6 class="text-dark mb-1">@Html.DisplayFor(x => x.AkTerima.KodPembayar) - @Html.DisplayFor(x => x.AkTerima.Nama)</h6>
+                <h6 class="mb-0">@Html.DisplayFor(x => x.AkTerima.Alamat1)</h6>
+                <h6 class="mb-0">@Html.DisplayFor(x => x.AkTerima.Alamat2)</h6>
+                <h6 class="mb-0">@Html.DisplayFor(x => x.AkTerima.Alamat3), @Html.DisplayFor(x => x.AkTerima.JNegeri.Perihal)</h6>
+                <h6 class="mb-0">@Html.DisplayFor(x => x.AkTerima.Emel)</h6>
+                <h6>@Html.DisplayFor(x => x.AkTerima.Tel)</h6>
+            </div>
+            <br />
+            <div class="table-responsive-sm">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tarikh Slip</th>
+                            <th>No Cek</th>
+                            <th align="right">Amaun (RM)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.AkTerima.AkTerima2)
+                        {
+                        <tr>
+                            <td>@item.TarSlip.ToString("dd/MM/yyyy")</td>
+                            <td>@item.NoCek</td>
+                            <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                        </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-5">
+                </div>
+                <div class="col-lg-4 col-sm-5 ml-auto">
+                    <table class="table table-clear">
+                        <tbody>
+                            <tr>
+                                <td class="left">
+                                    <strong class="text-dark">Jumlah Keseluruhan (RM)</strong>
+                                </td>
+                                <td align="right">
+                                    <strong class="text-dark">@Convert.ToDecimal(Model.AkTerima.Jumlah).ToString("#,##0.00")</strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
