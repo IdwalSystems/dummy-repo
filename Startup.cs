@@ -61,10 +61,14 @@ namespace MSNK
             services.AddTransient<IRepository<AkTerima, int>, AkTerimaRepository>();
             services.AddTransient<AkTerima1IRepository<AkTerima1, int>, AkTerima1Repository>();
             services.AddTransient<AkTerima2IRepository<AkTerima2, int>, AkTerima2Repository>();
+            services.AddTransient<IRepository<AkPO, int>, AkPORepository>();
+            services.AddTransient<IRepository<AkPO1, int>, AkPO1Repository>();
+            services.AddTransient<IRepository<AkPO2, int>, AkPO2Repository>();
             services.AddTransient<IRepository<AkPembekal, int>, AkPembekalRepository>();
             services.AddTransient<IRepository<AkJurnal, int>, AkJurnalRepository>();
 
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
+            services.AddScoped(ss => SessionCartPO.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

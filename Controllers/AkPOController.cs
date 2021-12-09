@@ -20,35 +20,47 @@ namespace MSNK.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IRepository<AkPO, int> _akPORepo;
+        private readonly IRepository<AkPO1, int> _akPO1Repo;
+        private readonly IRepository<AkPO2, int> _akPO2Repo;
         private readonly IRepository<AkPembekal, int> _akpembekalRepo;
         private readonly IRepository<AkBank, int> _akBankRepo;
         private readonly IRepository<JBank, int> _jbankRepo;
-        private readonly IRepository<JNegeri, int> _jnegeriRepo;
+        private readonly IRepository<JNegeri, int> _negeriRepo;
         private readonly IRepository<JKW, int> _kwRepo;
+        private CartPO _cart;
 
         public AkPOController(ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
+            IRepository<AkPO, int> AkPORepository,
+            IRepository<AkPO1, int> AkPO1Repository,
+            IRepository<AkPO2, int> AkPO2Repository,
             IRepository<AkPembekal, int> AkPembekalRepository,
             IRepository<AkBank, int> akBankRepository,
             IRepository<JBank, int> JBankRepository,
-            IRepository<JNegeri, int> JNegeriRepository,
-            IRepository<JKW, int> kwRepository
+            IRepository<JNegeri, int> negeriRepository,
+            IRepository<JKW, int> kwRepository,
+            CartPO cart
             )
         {
             _context = context;
             _userManager = userManager;
+            _akPORepo = AkPORepository;
+            _akPO1Repo = AkPO1Repository;
+            _akPO2Repo = AkPO2Repository;
             _kwRepo = kwRepository;
+            _negeriRepo = negeriRepository;
             _akpembekalRepo = AkPembekalRepository;
             _akBankRepo = akBankRepository;
             _jbankRepo = JBankRepository;
-            _jnegeriRepo = JNegeriRepository;
+            _cart = cart;
         }
 
         // GET: AkPO
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.AkPO.Include(a => a.AkPembekal).Include(a => a.JKW);
-            return View(await applicationDbContext.ToListAsync());
+            var akPO = await _akPORepo.GetAll();
+            return View(akPO);
         }
 
         // GET: AkPO/Details/5
@@ -59,15 +71,17 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPO = await _context.AkPO
-                .Include(a => a.AkPembekal)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akPO = await _akPORepo.GetById((int)id);
+            var kw = await _kwRepo.GetById(akPO.JKWId);
+            akPO.JKW = kw;
+            var negeri = await _negeriRepo.GetById(akPO.AkPembekal.JNegeriId);
+            akPO.AkPembekal.JNegeri = negeri;
             if (akPO == null)
             {
                 return NotFound();
             }
-
+            PopulateList();
+            PopulateTable(id);
             return View(akPO);
         }
 
@@ -91,6 +105,55 @@ namespace MSNK.Controllers
             List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.OrderBy(b => b.Kod).ToList();
             ViewBag.JCaraBayar = jCaraBayarList;
 
+        }
+
+        private void PopulateTable(int? id)
+        {
+            List<AkPO1> akPO1Table = _context.AkPO1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkPOId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            ViewBag.akPO1 = akPO1Table;
+
+            List<AkPO2> akPO2Table = _context.AkPO2
+                //.Include(b => b.AkCarta)
+                .Where(b => b.AkPOId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            ViewBag.akPO2 = akPO2Table;
+        }
+        private void PopulateCart(AkPO akPO)
+        {
+            List<AkPO1> akPO1Table = _context.AkPO1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkPOId == akPO.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            foreach (AkPO1 akPO1 in akPO1Table)
+            {
+                _cart.AddItem1(akPO1.AkPOId,
+                               akPO1.Amaun,
+                               akPO1.AkCartaId);
+            }
+
+            List<AkPO2> akPO2Table = _context.AkPO2
+                //.Include(b => b.JCaraBayar)
+                .Where(b => b.AkPOId == akPO.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            foreach (AkPO2 akPO2 in akPO2Table)
+            {
+                _cart.AddItem2(akPO2.AkPOId,
+                               akPO2.Indek,
+                               akPO2.Bil,
+                               akPO2.NoStok,
+                               akPO2.Perihal,
+                               akPO2.Kuantiti,
+                               akPO2.Unit,
+                               akPO2.Harga,
+                               akPO2.Amaun);
+            }
         }
 
         // GET: AkPO/Create

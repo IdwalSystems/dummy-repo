@@ -1,0 +1,31 @@
+﻿<script type="text/javascript">
+    $("#select2-AkPembekalId-container").change(function () {
+
+        var pembekalId = $('#select2-AkPembekalId-container option[value="' + $('#select2-AkPembekalId-container').val() + '"]').data('id'); //Get Datalist ID
+
+
+            var pembekal =
+            {
+                id: pembekalId
+            };
+
+            $("#AkPembekal_NamaSykt").val('');
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Details", "AkPembekal")',
+                data: pembekal,
+                dataType: "json",
+                success: function (data) {
+                var item = data.record;
+                //alert(item.alamat1);
+                $("#AkPembekal_NamaSykt").val(item.NamaSykt);
+                   // var listId = $("#select2-AkPembekalId-container").val(); //Get Datalist Value
+                //var string = listId.substring(0, 7); // Substring a Value
+                //document.getElementById("AkPembekal_NamaSykt").value = string;
+                //$("#AkPembekal_NamaSykt").val('item.');
+                }
+                //console.log(listId);
+                });
+});
+</script>
