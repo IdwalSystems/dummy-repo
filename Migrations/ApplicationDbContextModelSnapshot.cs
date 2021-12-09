@@ -236,9 +236,9 @@ namespace MSNK.Migrations
                     b.Property<decimal>("Kredit")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("NoRujukan")
+                    b.Property<string>("NoRujukan")
                         .HasMaxLength(20)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211209031434_AddInitialTables")]
+    [Migration("20211209074737_AddInitialTables")]
     partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -238,9 +238,9 @@ namespace MSNK.Migrations
                     b.Property<decimal>("Kredit")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("NoRujukan")
+                    b.Property<string>("NoRujukan")
                         .HasMaxLength(20)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 

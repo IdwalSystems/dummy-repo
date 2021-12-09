@@ -472,7 +472,7 @@ namespace MSNK.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AkJurnalId = table.Column<int>(type: "int", nullable: false),
-                    NoRujukan = table.Column<int>(type: "int", maxLength: 20, nullable: false),
+                    NoRujukan = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Indeks = table.Column<int>(type: "int", nullable: false),
                     AkCartaId = table.Column<int>(type: "int", nullable: false),
                     Debit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
