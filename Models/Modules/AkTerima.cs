@@ -17,8 +17,7 @@ namespace MSNK.Models.Modules
         [DisplayName("No Rujukan")]
         [MaxLength(20)]
         public string NoRujukan { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}",
-               ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Tarikh { get; set; }
         public decimal Jumlah { get; set; }
         [DisplayName("Kod Bank")]
@@ -61,10 +60,12 @@ namespace MSNK.Models.Modules
         [MaxLength(15)]
         public string UserId { get; set; }
         [DisplayName("Tarikh Masuk")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarMasuk { get; set; }
         [MaxLength(15)]
         public string UserIdKemaskini { get; set; }
         [DisplayName("Tarikh Kemaskini")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarKemaskini { get; set; } = DateTime.Now;
         
         //Relationship

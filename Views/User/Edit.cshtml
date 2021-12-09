@@ -1,0 +1,33 @@
+﻿@model MSNK.Models.Administration.ApplicationUser
+    
+<h1 class="text-info">Ubah</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post" asp-action="Edit">
+            <input asp-for="@Model.Id" hidden/>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Nama"></label>
+                <input asp-for="Nama" class="form-control form-control-sm" />
+                <span asp-validation-for="Nama" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email">Emel</label>
+                <input asp-for="Email" readonly class="form-control form-control-sm" />
+                <input asp-for="Email" hidden />
+            </div>
+            <div class="form-group">
+                <label asp-for="RoleId">Tahap Pengguna</label>
+                <select asp-for="RoleId" asp-items="@Model.RoleList" class="form-control form-control-sm">
+                    <option disabled selected>-- Pilih Tahap Pengguna --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+                <a asp-action="Index" class="btn btn-warning" style="width:auto">Batal</a>
+            </div>
+        </form>
+    </div>
+
+</div>

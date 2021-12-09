@@ -174,7 +174,7 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId)
         {
-            TempData["IsSuccess"] = "0";
+            
             AkTerima m = new AkTerima();
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15); ;
 
@@ -215,8 +215,7 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
-                    TempData["IsSuccess"] = "1";
-                    TempData["AlertMessage"] = "Data berjaya ditambah..!";
+                    TempData[SD.Success] = "Maklumat berjaya ditambah.";
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -259,7 +258,6 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId)
         {
-            TempData["IsSuccess"] = "0";
             if (id != akTerima.Id)
             {
                 return NotFound();
@@ -284,8 +282,7 @@ namespace MSNK.Controllers
                     }
                 }
                 CartEmpty();
-                TempData["IsSuccess"] = "1";
-                TempData["AlertMessage"] = "Data berjaya diubah..!";
+                TempData[SD.Success] = "Data berjaya diubah..!";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -323,8 +320,7 @@ namespace MSNK.Controllers
             var akTerima = await _context.AkTerima.FindAsync(id);
             _context.AkTerima.Remove(akTerima);
             await _context.SaveChangesAsync();
-            TempData["IsSuccess"] = "1";
-            TempData["AlertMessage"] = "Data berjaya dihapuskan..!";
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -605,7 +601,7 @@ namespace MSNK.Controllers
         }
         // Ubah AkTerima1 End
 
-        // Ubah AkTerima1
+        // Ubah AkTerima2
         public async Task<JsonResult> UpdateAkTerima2(AkTerima2 akTerima2)
         {
 
@@ -726,11 +722,11 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
+        //Ubah AkTerima2 end
 
         // posting function
         public async Task<IActionResult> Posting(int? id)
         {
-            TempData["IsSuccess"] = "0";
             if (id == null)
             {
                 return NotFound();
@@ -746,7 +742,7 @@ namespace MSNK.Controllers
                 {
 
                     //duplicate id error
-                    TempData["AlertMessage"] = "Data telah dikemaskini ke lejar.";
+                    TempData[SD.Error] = "Data telah dikemaskini ke lejar.";
                    
                 }
                 else
@@ -771,8 +767,7 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    TempData["IsSuccess"] = "1";
-                    TempData["AlertMessage"] = "Data berjaya dikemaskini ke lejar.";
+                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
                 }
 
                 
@@ -786,7 +781,6 @@ namespace MSNK.Controllers
         // unposting function
         public async Task<IActionResult> UnPosting(int? id)
         {
-            TempData["IsSuccess"] = "0";
             if (id == null)
             {
                 return NotFound();
@@ -802,7 +796,7 @@ namespace MSNK.Controllers
                 {
 
                     //duplicate id error
-                    TempData["AlertMessage"] = "Data belum dikemaskini ke lejar.";
+                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
 
                 }
                 else
@@ -817,8 +811,7 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    TempData["IsSuccess"] = "1";
-                    TempData["AlertMessage"] = "Data berjaya batal kemaskini dari lejar.";
+                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
                 }
 
 

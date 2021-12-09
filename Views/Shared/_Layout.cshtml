@@ -10,12 +10,14 @@
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
     <link href="~/lib/datatables/css/dataTables.bootstrap4.css" rel="stylesheet" />
     <link href="~/lib/select2/css/select2.css" rel="stylesheet" />
+    <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     <script src="~/lib/datatables/js/jquery.dataTables.js"></script>
     <script src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
     <script src="~/lib/select2/js/select2.js"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @*<script>
             $(function () {
@@ -42,6 +44,7 @@
 
                             @if (User.IsInRole("Admin"))
                             {
+                                <partial name="_SistemPartialNavbar" />
                                 <partial name="_JadualPartialNavbar" />
                                 <partial name="_DaftarPartialNavbar" />
                                 <partial name="_LejarPartialNavbar" />
@@ -62,6 +65,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <partial name="_Notifications" />
             @RenderBody()
         </main>
     </div>

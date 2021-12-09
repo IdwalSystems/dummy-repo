@@ -13,6 +13,10 @@
     {
       "library": "select2@4.0.13",
       "destination": "wwwroot/lib/select2/"
+    },
+    {
+      "library": "toastr.js@2.1.4",
+      "destination": "wwwroot/lib/toastr.js/"
     }
   ]
 }
