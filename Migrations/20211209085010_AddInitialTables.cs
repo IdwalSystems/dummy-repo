@@ -502,6 +502,40 @@ namespace MSNK.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AkPOId = table.Column<int>(type: "int", nullable: false),
+                    JKWId = table.Column<int>(type: "int", nullable: false),
+                    AkCartaId = table.Column<int>(type: "int", nullable: false),
+                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AkPO1", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AkPO1_AkCarta_AkCartaId",
+                        column: x => x.AkCartaId,
+                        principalTable: "AkCarta",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AkPO1_AkPO_AkPOId",
+                        column: x => x.AkPOId,
+                        principalTable: "AkPO",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AkPO1_JKW_JKWId",
+                        column: x => x.JKWId,
+                        principalTable: "JKW",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AkPO2",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AkPOId = table.Column<int>(type: "int", nullable: false),
                     Indek = table.Column<int>(type: "int", nullable: false),
                     Bil = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
                     NoStok = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
@@ -513,47 +547,13 @@ namespace MSNK.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AkPO1", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AkPO1_AkPO_AkPOId",
-                        column: x => x.AkPOId,
-                        principalTable: "AkPO",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AkPO2",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AkPOId = table.Column<int>(type: "int", nullable: false),
-                    JKWId = table.Column<int>(type: "int", nullable: false),
-                    AkCartaId = table.Column<int>(type: "int", nullable: false),
-                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
                     table.PrimaryKey("PK_AkPO2", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AkPO2_AkCarta_AkCartaId",
-                        column: x => x.AkCartaId,
-                        principalTable: "AkCarta",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AkPO2_AkPO_AkPOId",
                         column: x => x.AkPOId,
                         principalTable: "AkPO",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AkPO2_JKW_JKWId",
-                        column: x => x.JKWId,
-                        principalTable: "JKW",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -759,24 +759,24 @@ namespace MSNK.Migrations
                 column: "JKWId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AkPO1_AkCartaId",
+                table: "AkPO1",
+                column: "AkCartaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AkPO1_AkPOId",
                 table: "AkPO1",
                 column: "AkPOId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AkPO2_AkCartaId",
-                table: "AkPO2",
-                column: "AkCartaId");
+                name: "IX_AkPO1_JKWId",
+                table: "AkPO1",
+                column: "JKWId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkPO2_AkPOId",
                 table: "AkPO2",
                 column: "AkPOId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AkPO2_JKWId",
-                table: "AkPO2",
-                column: "JKWId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkTerima_AkAkaunId",

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211209074737_AddInitialTables")]
+    [Migration("20211209085010_AddInitialTables")]
     partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -325,7 +325,7 @@ namespace MSNK.Migrations
 
                     b.HasIndex("JKWId");
 
-                    b.ToTable("AkPO2");
+                    b.ToTable("AkPO1");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPO2", b =>
@@ -370,7 +370,7 @@ namespace MSNK.Migrations
 
                     b.HasIndex("AkPOId");
 
-                    b.ToTable("AkPO1");
+                    b.ToTable("AkPO2");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPembekal", b =>

@@ -323,7 +323,7 @@ namespace MSNK.Migrations
 
                     b.HasIndex("JKWId");
 
-                    b.ToTable("AkPO2");
+                    b.ToTable("AkPO1");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPO2", b =>
@@ -368,7 +368,7 @@ namespace MSNK.Migrations
 
                     b.HasIndex("AkPOId");
 
-                    b.ToTable("AkPO1");
+                    b.ToTable("AkPO2");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPembekal", b =>
