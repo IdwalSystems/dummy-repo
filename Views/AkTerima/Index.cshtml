@@ -5,24 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (TempData["AlertMessage"] != null)
-{
-    @if ((string)TempData["IsSuccess"] == "0")
-    {
-        <div class="alert alert-danger alert-dismissible fade show">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <i class="far fa-times-circle text-danger fa-lg"></i> <strong> Ralat! </strong>@TempData["AlertMessage"]
-        </div>
-    }
-    else
-    {
-        <div class="alert alert-success alert-dismissible fade show">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <i class="far fa-check-circle text-success fa-lg"></i> <strong> Berjaya! </strong> @TempData["AlertMessage"]
-        </div>
-    }
-}
-
 <h1>Resit Rasmi</h1>
 
 <p>
