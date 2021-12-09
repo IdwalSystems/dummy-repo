@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Details</h1>
@@ -10,63 +11,132 @@
     <h4>AkPO</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.NoPO)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.NoPO)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Tarikh)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Tarikh)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.TarikhPosting)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.TarikhPosting)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Jumlah)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Jumlah)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Posting)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Posting)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Tahun)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Tahun)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Batal)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Batal)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.AkPembekal)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.AkPembekal.Id)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.JKW)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.JKW.Kod)
         </dd>
     </dl>
+</div>
+<div class="container">
+    <div class="row">
+        @*table Objek*@
+        <h3>Objek</h3>
+        <table id="tblObjek" class="table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th style="width:40%">Kod</th>
+                    <th style="width:50%">Amaun</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbodyObjek">
+                @foreach (var item in ViewBag.akPO1)
+                {
+                    <tr id="@item.Id">
+                        <td id="akCartaId" hidden>@item.AkCartaId</td>
+                        <td>@item.AkCarta.Kod</td>
+                        <td class="editable-txt" id="td1Amaun">@item.Amaun</td>
+                    </tr>
+
+                }
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+        </table>
+        @*table Objek end*@
+        <br />
+        @*table urusniaga*@
+        <h3>Urusniaga</h3>
+        <table id="tblPerihal" class="table" cellpadding="0" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Baris</th>
+                    <th>Bil</th>
+                    <th>Perihal</th>
+                    <th>Kuantiti</th>
+                    <th>Unit</th>
+                    <th>Harga/Unit</th>
+                    <th>Amaun</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbodyPerihal">
+                @foreach (var item in ViewBag.akPO2)
+                {
+                <tr>
+                    <td class="editable-txt">@item.Baris</td>
+                    <td class="editable-txt">@item.Bil</td>
+                    <td class="editable-txt">@item.Perihal</td>
+                    <td class="editable-txt">@item.Kuantiti</td>
+                    <td class="editable-txt">@item.Unit</td>
+                    <td class="editable-txt">@item.Harga/Unit</td>
+                    <td class="editable-txt">@item.Amaun</td>
+                </tr>
+
+                }
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+        </table>
+        @*table urusniaga end*@
+        <br />
+    </div>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
