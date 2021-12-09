@@ -29,7 +29,7 @@
     <a asp-action="Create">Tambah Baru</a>
 </p>
 <div class="table-responsive">
-    <table class="table table-bordered table-hover text-nowrap table-sm hover nowrap " width="100%">
+    <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
         <thead>
             <tr>
                 <th>
@@ -79,7 +79,7 @@
                         @Html.DisplayFor(modelItem => item.NoRujukan)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Tarikh)
+                        @Html.DisplayFor(modelItem => item.Tarikh, "{0:dd/MM/yyyy}")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Jumlah)
@@ -107,6 +107,7 @@
                     </td>
                     <td class="action-button">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print"></i></a>
                         @if (item.FlPosting == 0)
                         {
                             <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
@@ -115,7 +116,7 @@
                         }
                         else
                         {
-                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
+                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
                                 <i class="fas fa-sync"></i>
                             </a>
                         }

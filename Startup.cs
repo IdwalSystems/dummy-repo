@@ -14,6 +14,7 @@ using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.Cart.Session;
 using MSNK.Models.Modules.EFRepository;
 using MSNK.Models.Modules.IRepository;
+using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,6 +103,9 @@ namespace MSNK
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            RotativaConfiguration.Setup(env.ContentRootPath, "wwwroot/plugins/Rotativa");
+
         }
     }
 }
