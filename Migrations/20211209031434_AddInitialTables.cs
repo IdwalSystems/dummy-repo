@@ -252,6 +252,38 @@ namespace MSNK.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AkJurnal",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    JKWId = table.Column<int>(type: "int", nullable: false),
+                    NoJurnal = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Tarikh = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    JumDebit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    JumKredit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Catatan1 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Catatan2 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Catatan3 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Catatan4 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Posting = table.Column<int>(type: "int", nullable: false),
+                    Cetak = table.Column<int>(type: "int", nullable: false),
+                    Batal = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    TarikhMasuk = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AkJurnal", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AkJurnal_JKW_JKWId",
+                        column: x => x.JKWId,
+                        principalTable: "JKW",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AkPembekal",
                 columns: table => new
                 {
@@ -431,6 +463,36 @@ namespace MSNK.Migrations
                         principalTable: "JKW",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AkJurnal1",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AkJurnalId = table.Column<int>(type: "int", nullable: false),
+                    NoRujukan = table.Column<int>(type: "int", maxLength: 20, nullable: false),
+                    Indeks = table.Column<int>(type: "int", nullable: false),
+                    AkCartaId = table.Column<int>(type: "int", nullable: false),
+                    Debit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Kredit = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AkJurnal1", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AkJurnal1_AkCarta_AkCartaId",
+                        column: x => x.AkCartaId,
+                        principalTable: "AkCarta",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AkJurnal1_AkJurnal_AkJurnalId",
+                        column: x => x.AkJurnalId,
+                        principalTable: "AkJurnal",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -662,6 +724,21 @@ namespace MSNK.Migrations
                 column: "JParasId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AkJurnal_JKWId",
+                table: "AkJurnal",
+                column: "JKWId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AkJurnal1_AkCartaId",
+                table: "AkJurnal1",
+                column: "AkCartaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AkJurnal1_AkJurnalId",
+                table: "AkJurnal1",
+                column: "AkJurnalId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AkPembekal_JBankId",
                 table: "AkPembekal",
                 column: "JBankId");
@@ -784,6 +861,9 @@ namespace MSNK.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AkJurnal1");
+
+            migrationBuilder.DropTable(
                 name: "AkPO1");
 
             migrationBuilder.DropTable(
@@ -812,6 +892,9 @@ namespace MSNK.Migrations
 
             migrationBuilder.DropTable(
                 name: "SiModul");
+
+            migrationBuilder.DropTable(
+                name: "AkJurnal");
 
             migrationBuilder.DropTable(
                 name: "AkPO");

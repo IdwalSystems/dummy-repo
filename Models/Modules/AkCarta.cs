@@ -54,5 +54,6 @@ namespace MSNK.Models.Modules
         public virtual ICollection<AkAkaun> AkAkaun1 { get; set; }
         public virtual ICollection<AkAkaun> AkAkaun2 { get; set; }
         public ICollection<AkPO1> AkPO1 { get; set; }
+        public ICollection<AkJurnal1> AkJurnal1 { get; set; }
     }
 }

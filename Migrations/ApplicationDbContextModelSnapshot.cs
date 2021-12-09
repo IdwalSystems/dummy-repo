@@ -152,6 +152,103 @@ namespace MSNK.Migrations
                     b.ToTable("AkCarta");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.AkJurnal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Batal")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Catatan1")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Catatan2")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Catatan3")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Catatan4")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Cetak")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JKWId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("JumDebit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("JumKredit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("NoJurnal")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Posting")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Tarikh")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarikhMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JKWId");
+
+                    b.ToTable("AkJurnal");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkJurnal1", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AkCartaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AkJurnalId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Debit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Indeks")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Kredit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("NoRujukan")
+                        .HasMaxLength(20)
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AkCartaId");
+
+                    b.HasIndex("AkJurnalId");
+
+                    b.ToTable("AkJurnal1");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.AkPO", b =>
                 {
                     b.Property<int>("Id")
@@ -971,6 +1068,34 @@ namespace MSNK.Migrations
                     b.Navigation("JParas");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.AkJurnal", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.JKW", "JKW")
+                        .WithMany("AkJurnal")
+                        .HasForeignKey("JKWId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("JKW");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkJurnal1", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
+                        .WithMany("AkJurnal1")
+                        .HasForeignKey("AkCartaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.AkJurnal", null)
+                        .WithMany("AkJurnal1")
+                        .HasForeignKey("AkJurnalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AkCarta");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.AkPO", b =>
                 {
                     b.HasOne("MSNK.Models.Modules.AkPembekal", "AkPembekal")
@@ -993,7 +1118,7 @@ namespace MSNK.Migrations
             modelBuilder.Entity("MSNK.Models.Modules.AkPO1", b =>
                 {
                     b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
-                        .WithMany("AkPO2")
+                        .WithMany("AkPO1")
                         .HasForeignKey("AkCartaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1005,7 +1130,7 @@ namespace MSNK.Migrations
                         .IsRequired();
 
                     b.HasOne("MSNK.Models.Modules.JKW", "JKW")
-                        .WithMany("AkPO2")
+                        .WithMany("AkPO1")
                         .HasForeignKey("JKWId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1181,9 +1306,16 @@ namespace MSNK.Migrations
 
                     b.Navigation("AkBank");
 
-                    b.Navigation("AkPO2");
+                    b.Navigation("AkJurnal1");
+
+                    b.Navigation("AkPO1");
 
                     b.Navigation("AkTerima1");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkJurnal", b =>
+                {
+                    b.Navigation("AkJurnal1");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPO", b =>
@@ -1230,9 +1362,11 @@ namespace MSNK.Migrations
 
                     b.Navigation("AkCarta");
 
+                    b.Navigation("AkJurnal");
+
                     b.Navigation("AkPO");
 
-                    b.Navigation("AkPO2");
+                    b.Navigation("AkPO1");
 
                     b.Navigation("AkTerima");
                 });
