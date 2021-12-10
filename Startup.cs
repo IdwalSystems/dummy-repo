@@ -66,6 +66,7 @@ namespace MSNK
             services.AddTransient<IRepository<AkPO2, int>, AkPO2Repository>();
             services.AddTransient<IRepository<AkPembekal, int>, AkPembekalRepository>();
             services.AddTransient<IRepository<AkJurnal, int>, AkJurnalRepository>();
+            services.AddTransient<IRepository2<AkJurnal1, int>, AkJurnal1Repository>();
 
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
