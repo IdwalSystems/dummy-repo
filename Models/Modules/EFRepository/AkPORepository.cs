@@ -54,10 +54,5 @@ namespace MSNK.Models.Modules.EFRepository
             context.Update(entity);
             await context.SaveChangesAsync();
         }
-
-        Task<AkPO> IRepository<AkPO, int>.GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
