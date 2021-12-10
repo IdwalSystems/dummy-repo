@@ -1,0 +1,63 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace MSNK.Controllers
+{
+    
+    public class AccessCheckerController : Controller
+    {
+        [AllowAnonymous]
+        //Accessible by everyone, even if users are not logged in
+        public IActionResult AllAccess()
+        {
+            return View();
+        }
+        [Authorize]
+        //Accessible by logged in users
+        public IActionResult AuthorizedAccess()
+        {
+            return View();
+        }
+        [Authorize(Roles = "User")]
+        //Accessible by users who have user role
+        public IActionResult UserAccess()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "User,Admin")]
+        //Accessible by users who have user role
+        public IActionResult UserOrAdminAccess()
+        {
+            return View();
+        }
+
+        [Authorize(Policy = "Admin")]
+        //Accessible by users who have admin role
+        public IActionResult AdminAccess()
+        {
+            return View();
+        }
+
+        //Accessible by Admin users with a claim of create to be True
+        public IActionResult Admin_CreateAccess()
+        {
+            return View();
+        }
+
+        //Accessible by Admin users with a claim of create, Edit and delete (AND condition)
+        public IActionResult Admin_Create_Edit_DeleteAccess()
+        {
+            return View();
+        }
+        //Accessible by Admin users with create,edit, and delete (AND condition), OR if the user role is superAdmin
+        public IActionResult SuperAdminAccess()
+        {
+            return View();
+        }
+    }
+}
