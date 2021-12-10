@@ -8,70 +8,13 @@
 <h1>Index</h1>
 
 <partial name="_TableStickyLastColumn" />  
-
-<script type="text/javascript">
-    var qqqq;
-    $(document).ready(function () {
-
-        $('#batalCari').click(function () {
-            table
-                .columns('')
-                .search('')
-                .draw();
-            $('#myInput').val('');
-        });
-
-        $('#columnSearch').trigger('change');
-
-        $('#columnSearch').change(function () {
-            qqqq = $(this).val();
-        });
-
-        $('.table').dataTable({
-            "paging": false,
-            "scrollX": true,
-            rowReorder: true,
-            columnDefs: [
-                { orderable: true, className: 'reorder', targets: 0 },
-                { orderable: true, className: 'reorder', targets: 1 },
-                { orderable: true, className: 'reorder', targets: 2 },
-                { orderable: false, targets: '_all' }
-            ],
-            "order": [[1, "asc"]],
-            dom: 'lrt'
-        });
-
-        var table = $('.table').DataTable();
-        $('#myInput').on('keyup', function () {
-            table
-                .columns(qqqq)
-                .search(this.value)
-                .draw();
-        });
-    });
-</script>
+<partial name="_JSIndex" />
       
 <p>
     <a asp-action="Create">Create New</a>
 </p>
 
 <label class="form-control-plaintext" for="searchselect">Carian : </label>
-@*<form asp-action="Index" method="get">
-    <div class="form-actions no-color mb-3">
-        <div class="form-row">
-            <div class="col-sm mb-3">
-                <select class="form-control" name="searchColumn" asp-items="@ViewBag.searchColumn"></select>
-            </div>
-            <div class="col-sm mb-3">
-                <input class="form-control" type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
-            </div>
-            <div class="col-sm mb-3">
-                <input type="submit" value="Cari" class="btn btn-outline-primary" /> |
-                <a asp-action="Index" class="btn btn-link">Batal Carian</a>
-            </div>
-        </div>
-    </div>
-</form>*@
 
 <div class="form-actions no-color mb-3">
     <div class="form-row">
@@ -96,6 +39,7 @@
     <table class="table table-hover table-bordered nowrap" width="100%">
         <thead>
             <tr>
+                <th></th>
                 <th class="kw">
                     @Html.DisplayNameFor(model => model.JKW)
                 </th>
@@ -133,6 +77,7 @@
             @foreach (var item in Model)
             {
             <tr>
+                <td></td>
                 <td>
                     @Html.DisplayFor(modelItem => item.JKW.Kod)
                 </td>

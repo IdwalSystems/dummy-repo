@@ -48,7 +48,9 @@ namespace MSNK.Models.Modules
         public DateTime TarikhMasuk { get; set; }
 
         //Relationship
+        [DisplayName("KW")]
         public JKW JKW { get; set; }
+        [DisplayName("Objek")]
         public ICollection<AkJurnal1> AkJurnal1 { get; set; }
     }
 }

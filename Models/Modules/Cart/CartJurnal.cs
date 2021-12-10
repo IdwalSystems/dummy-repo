@@ -26,7 +26,6 @@ namespace MSNK.Models.Modules.Cart
                 collection1.Add(new AkJurnal1
                 {
                     AkJurnalId = AkJurnalId,
-                    NoRujukan = NoRujukan,
                     Indeks = Indeks,
                     AkCartaId = AkCartaId,
                     Debit = Debit,

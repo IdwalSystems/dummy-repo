@@ -1,0 +1,41 @@
+﻿<script>
+    $(document).ready(function () {
+        var sum = 0
+        $('tr').each(function () {
+            $(this).find('.debit').each(function () {
+                var debit = $(this).text();
+                if (!isNaN(debit) && debit.length !== 0) {
+                    sum += parseFloat(debit);
+                }
+            });
+            $(this).find('.kredit').each(function () {
+                var kredit = $(this).text();
+                if (!isNaN(kredit) && kredit.length !== 0) {
+                    sum -= parseFloat(kredit);
+                }
+            });
+            $('.total', this).html(sum.toFixed(2));
+        });
+    });
+</script>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>

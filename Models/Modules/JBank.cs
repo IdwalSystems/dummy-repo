@@ -13,6 +13,7 @@ namespace MSNK.Models.Modules
         [Required]
         [MaxLength(100)]
         public string Nama { get; set; }
+        public string KodEFT { get; set; }
         public ICollection<AkBank> AkBank { get; set; }
         public ICollection<AkPembekal> AkPembekal { get; set; }
         //public ICollection<AkTerima2> AkTerima2 { get; set; }
