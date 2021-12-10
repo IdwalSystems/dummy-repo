@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MSNK.Data;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Controllers
 {
+    [Authorize]
     public class RolesController : Controller
     {
         private readonly ApplicationDbContext _db;
