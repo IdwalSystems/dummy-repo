@@ -15,6 +15,10 @@ a {
   color: #0366d6;
 }
 
+.btn {
+    font-size: 0.8rem;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #0275d8;
@@ -85,6 +89,10 @@ body {
     background-color: white;
 }
 
+.form-group {
+    margin-bottom: 0.4rem;
+}
+
 .form-control-sm {
     padding: 0.1rem 0.5rem;
     height: calc(1.4em + 0.5rem + 2px);
@@ -122,6 +130,21 @@ label {
     border-radius: 0.2rem;
 }
 
+.card-header {
+    padding: 0.5rem 0.75rem;
+}
+
+.table {
+    font-size: .8rem;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    font-size: 0.8rem;
+}
+
+.dropdown-item {
+    font-size: 0.8rem;
+}
 /*ToTopBtn -----------------------------------------------------------------------*/
 #myBtn {
     display: none;

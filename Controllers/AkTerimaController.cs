@@ -162,7 +162,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTerima/Create
-        public IActionResult PR001C()
+        public IActionResult Create()
         {
             PopulateList();
             CartEmpty();
