@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSNK.Models.Administration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ namespace MSNK.Models.Modules.PrintModel
         public string AlamatSyarikat2 { get; set; }
         public string AlamatSyarikat3 { get; set; }
         public string TelSyarikat { get; set; }
+        public string JumlahDalamPerkataan { get; set; }
+        public string username { get; set; }
         public JNegeri Negeri { get; set; }
         public AkTerima AkTerima { get; set; }
     }

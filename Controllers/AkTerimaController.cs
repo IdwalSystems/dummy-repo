@@ -16,6 +16,7 @@ using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
 using Rotativa.AspNetCore;
+using MSNK.Infrastructure;
 
 namespace MSNK.Controllers
 {
@@ -861,8 +862,17 @@ namespace MSNK.Controllers
         // printing resit rasmi by akTerima.Id
         public async Task<IActionResult> PrintPdf(int id)
         {
-            AkTerima akTerima = await _context.AkTerima.Include(x => x.AkTerima2).ThenInclude(x => x.JCaraBayar).FirstOrDefaultAsync(x => x.Id == id);
+            AkTerima akTerima = await _context.AkTerima
+                .Include(x=> x.JKW)
+                .Include(x => x.AkTerima2).ThenInclude(x => x.JCaraBayar)
+                .Include(x=> x.AkTerima1).ThenInclude(x=> x.AkCarta)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             JNegeri negeri = await _context.JNegeri.FirstOrDefaultAsync(x => x.Kod == "02");
+
+            var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akTerima.Jumlah)).ToUpper();
+
+            var user = await _userManager.GetUserAsync(User);
 
             ResitPrintModel data = new ResitPrintModel();
 
@@ -872,14 +882,16 @@ namespace MSNK.Controllers
             data.AlamatSyarikat3 = "05150 Alor Setar";
             data.Negeri = negeri;
             data.AkTerima = akTerima;
+            data.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            data.username = user.UserName;
 
             return new ViewAsPdf("ResitPrintPdf",data)
             {
-                PageMargins = { Left = 20, Bottom = 20, Right = 20, Top = 20 },
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
-                CustomSwitches = "--footer-center \"  Tarikh: " +
-                    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
-                    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                //CustomSwitches = "--footer-center \"  Tarikh: " +
+                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
         }

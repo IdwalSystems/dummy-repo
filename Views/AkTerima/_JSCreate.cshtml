@@ -118,7 +118,7 @@
 
                     //Add caraBayar cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(r.record.kod);
+                    cell.html(r.record.perihal);
 
                     //Add Amaun cell.
                     var cell = $(row.insertCell(-1));
@@ -146,7 +146,14 @@
 
                     //Add TarSlip cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(showDate(txtTarSlip.val()));
+                    if (txtTarSlip.val() == null || txtTarSlip.val() == '') {
+                        cell.html('');
+                    } else {
+                        
+                        cell.html(showDate(txtTarSlip.val()));
+                    }
+                    
+                    
 
 
 

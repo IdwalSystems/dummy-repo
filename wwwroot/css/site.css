@@ -15,7 +15,7 @@ a {
   color: #0366d6;
 }
 
-span, li, .dropdown-item, .navbar-light .navbar-nav .nav-link, .table, .col-form-label, a {
+span, li, .dropdown-item, .navbar-light .navbar-nav .nav-link, .table, .col-form-label, a, .btn-sm {
     font-size: 0.8rem;
 }
 
