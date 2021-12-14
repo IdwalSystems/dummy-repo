@@ -1,0 +1,143 @@
+﻿<script type="text/javascript">
+
+    var rowno = 0;
+    var debit = 0;
+    var kredit = 0;
+    //add tbl objek
+    $("body").on("click", "#btnAdd1", function () {
+        //Reference the Name and Country TextBoxes.
+        var txtKodAkaun = $("#txtKodAkaun");
+        GetCarta(txtKodAkaun.val());
+    });
+
+    function GetCarta(id) {
+        var Objek = {
+            Id: id
+        }
+        if (id != "") {
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/AkJurnal/GetCarta",
+                data: Objek,
+                dataType: "json",
+                success: function (r) {
+                    //Reference the TextBoxes.
+                    var txtKodAkaun = $("#txtKodAkaun");
+                    var txtDebitObjek = $("#txtDebitObjek");
+                    var txtKreditObjek = $("#txtKreditObjek");
+                    var jumDebit = $("#JumDebit");
+                    var jumKredit = $("#JumKredit");
+
+                    //Sum value to debit text field
+                    //debit += parseFloat(txtDebitObjek.val());
+                    //jumDebit.val(debit);
+
+                    //Sum value to krdit text field
+                    //kredit += parseFloat(txtKreditObjek.val());
+                    //jumKredit.val(kredit);
+
+                    //Get the reference of the Table's TBODY element.
+                    var tBody = $("#tblObjek > TBODY")[0];
+                    //Add Row.
+                    var row = tBody.insertRow(-1);
+
+                    //Add indeks cell.
+                    //var cell = $(row.insertCell(-1));
+                    //cell.html(++rowno);
+
+                    //Add akCartaId cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.id);
+                    cell.prop("hidden", !this.checked);
+
+                    //Add kod cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.kod + " - " + r.record.perihal);
+
+                    //Add debit cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtDebitObjek.val());
+
+                    //Add kredit cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtKreditObjek.val());
+
+                    //Add Button cell.
+                    cell = $(row.insertCell(-1));
+                    var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                    cell.append(btnRemove1);
+
+                    var AkJurnal1 = {
+                        AkCartaId: txtKodAkaun.val(),
+                        Debit: txtDebitObjek.val(),
+                        Kredit: txtKreditObjek.val()
+                    }
+
+                    if (txtKodAkaun.val() != null) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/AkJurnal/SaveAkJurnal1",
+                            data: AkJurnal1,
+                            dataType: "json",
+                            success: function (r) {
+                                //Clear the TextBoxes.
+                                txtDebitObjek.val("0.00");
+                                txtKreditObjek.val("0.00");
+                                /*alert(r.record.value.debit);*/
+                                jumDebit.val(r.record.value.debit);
+                                jumKredit.val(r.record.value.kredit);
+                            },
+                            error: function (req, status, error) {
+                                alert(error);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    function Remove1(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var name = $("TD", row).eq(1).html();
+        var objekDebit = $("TD", row).eq(2).html();
+        var objekKredit = $("TD", row).eq(3).html();
+        var jumDebit = $("#JumDebit");
+        var jumKredit = $("#JumKredit");
+        var cartaId = $("TD", row).eq(0).html();
+        if (confirm("Hapus kod Akaun : " + name + " ?")) {
+            //Get the reference of the Table.
+            var table = $("#tblObjek")[0];
+
+            ////Sum value to Total text field
+            //debit = parseFloat(jumDebit.val()) - parseFloat(objekDebit);
+            //jumDebit.val(Intl.NumberFormat('en', { style: 'currency', currency: 'MYR' }).format(debit));
+            //kredit = parseFloat(jumKredit.val()) - parseFloat(objekKredit);
+            //jumKredit.val(kredit);
+
+            var AkJurnal1 = {
+                AkCartaId: cartaId,
+            }
+            if (name != null) {
+                $.ajax({
+                    type: "POST",
+                    url: "/AkJurnal/RemoveAkJurnal1",
+                    data: AkJurnal1,
+                    dataType: "json",
+                    success: function (r) {
+                        //Delete the Table row using it's Index.
+                        table.deleteRow(row[0].rowIndex);
+                        jumDebit.val(r.record.value.debit);
+                        jumKredit.val(r.record.value.kredit);
+                    }
+                });
+            }
+        }
+    };
+
+    $("body").on("click", "#btnSave", function () {
+        //insert validation form here
+    });
+</script>

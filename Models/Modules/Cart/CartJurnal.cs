@@ -10,7 +10,6 @@ namespace MSNK.Models.Modules.Cart
         private List<AkJurnal1> collection1 = new List<AkJurnal1>();
         public virtual void AddItem1(
             int AkJurnalId,
-            string NoRujukan,
             int Indeks,
             int AkCartaId,
             decimal Debit,

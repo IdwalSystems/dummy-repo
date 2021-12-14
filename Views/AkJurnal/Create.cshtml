@@ -1,40 +1,52 @@
 ﻿@model MSNK.Models.Modules.AkJurnal
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Tambah";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<partial name="_JSCreate" />
 
-<h1>Create</h1>
+<h1>Tambah</h1>
 
-<h4>AkJurnal</h4>
+<h4>Baucer Jurnal</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="JKWId" class="control-label"></label>
-                <select asp-for="JKWId" class ="form-control" asp-items="ViewBag.JKWId"></select>
+            <div class="form-row">
+                <div class="form-group col-sm">
+                    <label asp-for="JKWId" class="control-label"></label>
+                    <select asp-for="JKWId" class="form-control" asp-items="ViewBag.JKWId">
+                        <option value="" hidden>-- Pilih Kumpulan Wang --</option>
+                        @foreach (var s in ViewBag.JKw)
+                        {
+                            <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-sm">
+                    <label asp-for="NoJurnal" class="control-label"></label>
+                    <input asp-for="NoJurnal" class="form-control" />
+                    <span asp-validation-for="NoJurnal" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm">
+                    <label asp-for="Tarikh" class="control-label"></label>
+                    <input asp-for="Tarikh" class="form-control" />
+                    <span asp-validation-for="Tarikh" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="NoJurnal" class="control-label"></label>
-                <input asp-for="NoJurnal" class="form-control" />
-                <span asp-validation-for="NoJurnal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Tarikh" class="control-label"></label>
-                <input asp-for="Tarikh" class="form-control" />
-                <span asp-validation-for="Tarikh" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="JumDebit" class="control-label"></label>
-                <input asp-for="JumDebit" class="form-control" />
-                <span asp-validation-for="JumDebit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="JumKredit" class="control-label"></label>
-                <input asp-for="JumKredit" class="form-control" />
-                <span asp-validation-for="JumKredit" class="text-danger"></span>
+            <div class="form-row">
+                <div class="form-group col-sm-4">
+                    <label asp-for="JumDebit" class="control-label"></label>
+                    <input asp-for="JumDebit" class="form-control" id="JumDebit" value="0.00" disabled />
+                    <span asp-validation-for="JumDebit" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label asp-for="JumKredit" class="control-label"></label>
+                    <input asp-for="JumKredit" class="form-control" id="JumKredit" value="0.00" disabled />
+                    <span asp-validation-for="JumKredit" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="Catatan1" class="control-label"></label>
@@ -56,39 +68,100 @@
                 <input asp-for="Catatan4" class="form-control" />
                 <span asp-validation-for="Catatan4" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Posting" class="control-label"></label>
-                <input asp-for="Posting" class="form-control" />
-                <span asp-validation-for="Posting" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cetak" class="control-label"></label>
-                <input asp-for="Cetak" class="form-control" />
-                <span asp-validation-for="Cetak" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Batal" class="control-label"></label>
-                <input asp-for="Batal" class="form-control" />
-                <span asp-validation-for="Batal" class="text-danger"></span>
+            <div class="form-row">
+                <div class="form-group col-sm">
+                    <label asp-for="Posting" class="control-label"></label>
+                    <div class="custom-control custom-radio">
+                        <input asp-for="Posting" type="radio" id="Posting1" name="Posting" class="custom-control-input" value="0" checked>
+                        <label class="custom-control-label" for="Posting1">BELUM</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input asp-for="Posting" type="radio" id="Posting2" name="Posting" class="custom-control-input" value="1">
+                        <label class="custom-control-label" for="Posting2">SUDAH</label>
+                    </div>
+                    <span asp-validation-for="Posting" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm">
+                    <label asp-for="Cetak" class="control-label"></label>
+                    <div class="custom-control custom-radio">
+                        <input asp-for="Cetak" type="radio" id="Cetak1" name="Cetak" class="custom-control-input" value="0" checked>
+                        <label class="custom-control-label" for="Cetak1">BELUM</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input asp-for="Cetak" type="radio" id="Cetak2" name="SUDAH" class="custom-control-input" value="1">
+                        <label class="custom-control-label" for="Cetak2">KREDIT</label>
+                    </div>
+                    <span asp-validation-for="Cetak" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm">
+                    <label asp-for="Batal" class="control-label"></label>
+                    <div class="custom-control custom-radio">
+                        <input asp-for="Batal" type="radio" id="Batal1" name="Batal" class="custom-control-input" value="0" checked>
+                        <label class="custom-control-label" for="Batal1">TIDAK BATAL</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input asp-for="Batal" type="radio" id="Batal2" name="Batal" class="custom-control-input" value="1">
+                        <label class="custom-control-label" for="Batal2">BATAL</label>
+                    </div>
+                    <span asp-validation-for="Batal" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
+                <input asp-for="UserId" class="form-control" disabled />
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TarikhMasuk" class="control-label"></label>
-                <input asp-for="TarikhMasuk" class="form-control" />
+                <input asp-for="TarikhMasuk" class="form-control" disabled />
                 <span asp-validation-for="TarikhMasuk" class="text-danger"></span>
             </div>
+
+            @*table Objek*@
+            <h3>Objek</h3>
+            <table id="tblObjek" class="table table-bordered table-sm nowrap" cellpadding="0" cellspacing="0">
+                <thead>
+                    <tr>
+                        @*<th>Bil</th>*@
+                        <th style="width:60%">Objek</th>
+                        <th>Debit</th>
+                        <th>Kredit</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td id="akCartaId" hidden></td>
+                        @*<td>
+                            <input class="form-control form-control-sm" type="number" id="txtIndeksObjek" disabled>
+                        </td>*@
+                        <td>
+                            <select class="form-control form-control-sm select2" id="txtKodAkaun" style="width:100%">
+                                <option value="" hidden>-- Pilih Kod Akaun --</option>
+                                @foreach (var s in ViewBag.AkCarta)
+                                {
+                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                }
+                            </select>
+                        </td>
+                        <td><input class="form-control form-control-sm" type="number" id="txtDebitObjek" step="0.01" value="0.00"></td>
+                        <td><input class="form-control form-control-sm" type="number" id="txtKreditObjek" step="0.01" value="0.00"></td>
+                        <td><button class="btn btn-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
+                    </tr>
+                </tfoot>
+            </table>
+            @*table Objek end*@
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Tambah" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Kembali ke Senarai</a>
 </div>
 

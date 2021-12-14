@@ -70,6 +70,7 @@ namespace MSNK
 
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
+            services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
