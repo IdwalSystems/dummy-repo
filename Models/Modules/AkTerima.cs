@@ -10,16 +10,20 @@ namespace MSNK.Models.Modules
     public class AkTerima
     {
         public int Id { get; set; }
+        [Required(ErrorMessage = "Tahun Diperlukan.")]
         [MaxLength(4)]
         public string Tahun { get; set; }
+        [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
         [DisplayName("Jenis Kumpulan Wang")]
         public int JKWId { get; set; }
         [DisplayName("No Rujukan")]
         [MaxLength(20)]
         public string NoRujukan { get; set; }
+        [Required(ErrorMessage = "Tarikh Diperlukan")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Tarikh { get; set; }
         public decimal Jumlah { get; set; }
+        [Required(ErrorMessage = "Kod Bank Diperlukan")]
         [DisplayName("Kod Bank")]
         public int AkBankId { get; set; }
         [DisplayName("Cetak")]
@@ -37,6 +41,7 @@ namespace MSNK.Models.Modules
         [DisplayName("No KP")]
         [MaxLength(15)]
         public string NoKp { get; set; }
+        [Required(ErrorMessage = "Nama Diperlukan")]
         [MaxLength(100)]
         public string Nama { get; set; }
         [MaxLength(100)]
@@ -49,6 +54,7 @@ namespace MSNK.Models.Modules
         public string Poskod { get; set; }
         [MaxLength(100)]
         public string Bandar { get; set; }
+        [Required(ErrorMessage = "Negeri Diperlukan.")]
         [DisplayName("Negeri")]
         public int JNegeriId { get; set; }
         [MaxLength(15)]

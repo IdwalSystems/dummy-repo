@@ -109,6 +109,16 @@ namespace MSNK.Controllers
             List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.OrderBy(b => b.Kod).ToList();
             ViewBag.JCaraBayar = jCaraBayarList;
 
+            //var jenisCek = new Dictionary<string, string>
+            //{
+            //    { "1",   "Cek Cawangan Ini"},
+            //    { "2",    "Cek Tempatan" },
+            //    { "3", "Cek Luar" },
+            //    { "4", "Cek Antarabangsa"}
+            //};
+
+            //ViewBag.JenisCek = jenisCek;
+
         }
 
         private void PopulateTable(int? id)
@@ -178,7 +188,31 @@ namespace MSNK.Controllers
         {
             
             AkTerima m = new AkTerima();
-            var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15); ;
+            var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
+
+            // get latest no rujukan running number  
+            var kw = _context.JKW.FirstOrDefault(x => x.Id == akTerima.JKWId);
+
+            var kumpulanWang = kw.Kod;
+            var year = DateTime.Now.Year.ToString();
+            var month = DateTime.Now.Month.ToString();
+            string prefix = "RR/IB" + kumpulanWang + year;
+            int x = 1;
+            string noRujukan = prefix + "000000";
+
+            var LatestNoRujukan = _context.AkTerima.Max(x => x.NoRujukan);
+            if (LatestNoRujukan == null)
+            {
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            else
+            {
+                x = int.Parse(LatestNoRujukan.Substring(12));
+                x++;
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+
+            // get latest no rujukan running number end
 
             if (ModelState.IsValid)
             {
@@ -189,7 +223,7 @@ namespace MSNK.Controllers
                     m.JNegeriId = JNegeriId;
                     m.AkBankId = AkBankId;
                     m.Tahun = akTerima.Tahun;
-                    m.NoRujukan = akTerima.NoRujukan;
+                    m.NoRujukan = noRujukan;
                     m.Tarikh = akTerima.Tarikh;
                     m.Jumlah = akTerima.Jumlah;
                     m.FlCetak = 0;
@@ -217,7 +251,7 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
-                    TempData[SD.Success] = "Maklumat berjaya ditambah.";
+                    TempData[SD.Success] = "Maklumat berjaya ditambah. No rujukan pendaftaran adalah " + noRujukan;
                     return RedirectToAction(nameof(Index));
                 }
             }
