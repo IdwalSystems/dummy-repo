@@ -140,4 +140,24 @@
     $("body").on("click", "#btnSave", function () {
         //insert validation form here
     });
+
+    $("body").on('change', "#ddlKW", function () {
+        var kodkw = $("#ddlKW").val();
+        JsonKod(kodkw);
+    });
+
+    function JsonKod(id) {
+        $.ajax({
+            type: "POST",
+            url: "/AkJurnal/JsonGetKod",
+            data: { data: id},
+            dataType: "json",
+            success: function (msg) {
+                $("#txtNoJurnal").val(msg.record);
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
 </script>

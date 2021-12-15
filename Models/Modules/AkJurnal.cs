@@ -11,12 +11,14 @@ namespace MSNK.Models.Modules
     public class AkJurnal
     {
         public int Id { get; set; }
-        [DisplayName("KW")]
+        [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
+        [DisplayName("Jenis Kumpulan Wang")]
         public int JKWId { get; set; }
         [DisplayName("No Jurnal")]
         [MaxLength(20)]
         public string NoJurnal { get; set; }
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm tt}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [Required(ErrorMessage = "Tarikh Diperlukan")]
         public DateTime Tarikh { get; set; }
         [DisplayName("Jumlah Debit RM")]
         [Column(TypeName = "decimal(18, 2)")]

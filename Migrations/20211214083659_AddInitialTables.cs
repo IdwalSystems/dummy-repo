@@ -55,7 +55,8 @@ namespace MSNK.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Kod = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
-                    Nama = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Nama = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    KodEFT = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -472,7 +473,6 @@ namespace MSNK.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AkJurnalId = table.Column<int>(type: "int", nullable: false),
-                    NoRujukan = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Indeks = table.Column<int>(type: "int", nullable: false),
                     AkCartaId = table.Column<int>(type: "int", nullable: false),
                     Debit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -562,7 +562,7 @@ namespace MSNK.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Tahun = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true),
+                    Tahun = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
                     JKWId = table.Column<int>(type: "int", nullable: false),
                     NoRujukan = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Tarikh = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -573,7 +573,7 @@ namespace MSNK.Migrations
                     FlBatal = table.Column<int>(type: "int", nullable: false),
                     KodPembayar = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     NoKp = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    Nama = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Nama = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Alamat1 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Alamat2 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Alamat3 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),

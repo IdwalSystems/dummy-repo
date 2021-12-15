@@ -1,0 +1,123 @@
+﻿<script type="text/javascript">
+    //add tbl objek
+    $("body").on("click", "#btnAdd1", function () {
+        //Reference the Name and Country TextBoxes.
+        var txtKodAkaun = $("#txtKodAkaun");
+        GetCarta(txtKodAkaun.val());
+    });
+
+    function GetCarta(id) {
+        var Objek = {
+            Id: id
+        }
+        if (id != "") {
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/AkTerima/GetCarta",
+                data: Objek,
+                dataType: "json",
+                success: function (r) {
+                    //Reference the TextBoxes.
+                    var txtAkJurnal1 = $("#txtAkJurnal1");
+                    var txtKodAkaun = $("#txtKodAkaun");
+                    var txtDebitObjek = $("#txtDebitObjek");
+                    var txtKreditObjek = $("#txtKreditObjek");
+
+                    //Get the reference of the Table's TBODY element.
+                    var tBody = $("#tblObjek > TBODY")[0];
+                    //Add Row.
+                    var row = tBody.insertRow(-1);
+
+                    //Add akCartaId cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.id);
+                    cell.prop("hidden", !this.checked);
+
+                    //Add kod cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.kod + ' - ' + r.record.perihal);
+
+                    //Add debit cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtDebitObjek.val());
+                    cell.attr("class", "editable-txt");
+                    cell.attr("id", "td1Debit_" + r.record.Id);
+
+                    //Add kredit cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtKreditObjek.val());
+                    cell.attr("class", "editable-txt");
+                    cell.attr("id", "td1Kredit_" + r.record.Id);
+
+                    //Add Edit Button cell.
+                    cell = $(row.insertCell(-1));
+
+                    var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                    cell.append(btnUpdate1);
+
+                    //Add Remove Button cell.
+                    cell = $(row.insertCell(-1));
+
+                    var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                    cell.append(btnRemove1);
+
+                    var AkTerima1 = {
+                        AkJurnalId: txtAkJurnal1.val(),
+                        AkCartaId: txtKodAkaun.val(),
+                        Debit: txtDebitObjek.val(),
+                        Kredit: txtKreditObjek.val()
+                    }
+
+                    if (noRujukan != null) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/AkTerima/InsertUpdateAkTerima1",
+                            data: AkTerima1,
+                            dataType: "json",
+                            success: function (r) {
+                                //Clear the TextBoxes.
+                                txtKodAkaun.val("");
+                                txtDebitObjek.val("");
+                                txtKreditObjek.val("");
+                            }
+                        });
+                    }
+
+                }
+            });
+        }
+
+    }
+    //add tbl objek end
+
+    function Update1(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var akTerimaId = $('#Id').val();
+        var akCartaId = $("TD", row).eq(0).html();
+
+
+        var AkTerima1 = {
+            AkTerimaId: akTerimaId,
+            AkCartaId: akCartaId
+        }
+        if (name != null) {
+            $.ajax({
+                type: "POST",
+                url: "/AkTerima/UpdateAkTerima1",
+                data: AkTerima1,
+                dataType: "json",
+                success: function (r) {
+                    //Delete the Table row using it's Index.
+                    $("#moId1").val(r.record.id);
+                    $("#moKodAkaun").val(r.record.akCartaId);
+                    $("#moAmaun1").val(r.record.amaun);
+
+
+                }
+            });
+        }
+    };
+
+</script>

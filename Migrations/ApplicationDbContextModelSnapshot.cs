@@ -497,6 +497,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Nama")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -517,6 +518,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(400)");
 
                     b.Property<string>("Tahun")
+                        .IsRequired()
                         .HasMaxLength(4)
                         .HasColumnType("nvarchar(4)");
 

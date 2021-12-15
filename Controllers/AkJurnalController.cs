@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -37,7 +38,50 @@ namespace MSNK.Controllers
             _akCartaRepo = akCartaRepository;
             _cart = cart;
         }
+        private string GetKod(int kod)
+        {
+            var kw = _context.JKW.FirstOrDefault(x => x.Id == kod);
 
+            var kumpulanWang = kw.Kod;
+            var year = DateTime.Now.Year.ToString();
+            string prefix = year +"/"+ kumpulanWang+"/";
+            int x = 1;
+            string noRujukan = prefix + "000000";
+
+            var LatestNoRujukan = _context.AkJurnal.Max(x => x.NoJurnal);
+            if (LatestNoRujukan == null)
+            {
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            else
+            {
+                x = int.Parse(LatestNoRujukan.Substring(12));
+                x++;
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            return noRujukan;
+        }
+        [HttpPost]
+        public JsonResult JsonGetKod(string data)
+        {
+            try
+            {
+                var result = "";
+                if (data == null || data == "")
+                {
+                    result = "";
+                }
+                else
+                {
+                    result = GetKod(int.Parse(data));
+                }
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
         private void PopulateList()
         {
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
@@ -54,9 +98,8 @@ namespace MSNK.Controllers
                 .Where(b => b.AkJurnalId == id)
                 .OrderBy(b => b.Id)
                 .ToList();
-            ViewBag.akTerima1 = akJurnal1Table;
+            ViewBag.akJurnal1 = akJurnal1Table;
         }
-
         private void PopulateCart(AkJurnal akJurnal)
         {
             List<AkJurnal1> akJurnal1Table = _context.AkJurnal1
@@ -75,12 +118,11 @@ namespace MSNK.Controllers
                     );
             }
         }
-
         // GET: AkJurnal
         public async Task<IActionResult> Index()
         {
-            var akTerima = await _akJurnalRepo.GetAll();
-            return View(akTerima);
+            var akJunal = await _akJurnalRepo.GetAll();
+            return View(akJunal);
         }
 
         // GET: AkJurnal/Details/5
@@ -98,7 +140,8 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
-
+            PopulateList();
+            PopulateTable(id);
             return View(akJurnal);
         }
 
@@ -115,15 +158,41 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkJurnal akJurnal, int JKWId)
+        public async Task<IActionResult> Create(AkJurnal akJurnal, int JKWId, decimal JumDebit, decimal JumKredit)
         {
+            AkJurnal m = new AkJurnal();
+            var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
+
             if (ModelState.IsValid)
             {
-                _context.Add(akJurnal);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                string noRujukan = GetKod(akJurnal.JKWId);
+                if (akJurnal != null && JKWId != 0)
+                {
+                    m.JKWId = akJurnal.JKWId;
+                    m.NoJurnal = noRujukan;
+                    m.Tarikh = akJurnal.Tarikh;
+                    m.JumDebit = JumDebit;
+                    m.JumKredit = JumKredit;
+                    m.Catatan1 = akJurnal.Catatan1;
+                    m.Catatan2 = akJurnal.Catatan2;
+                    m.Catatan3 = akJurnal.Catatan3;
+                    m.Catatan4 = akJurnal.Catatan4;
+                    m.Posting = akJurnal.Posting;
+                    m.Cetak = akJurnal.Cetak;
+                    m.Batal = akJurnal.Batal;
+                    m.UserId = username;
+                    m.TarikhMasuk = DateTime.Now;
+                    m.AkJurnal1 = _cart.Lines1.ToArray();
+
+                    await _akJurnalRepo.Insert(m);
+                    await _context.SaveChangesAsync();
+
+                    CartEmpty();
+                    TempData[SD.Success] = "Maklumat berjaya ditambah. No jurnal adalah " + noRujukan;
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", akJurnal.JKWId);
+            PopulateList();
             return View(akJurnal);
         }
 
@@ -135,12 +204,18 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akJurnal = await _context.AkJurnal.FindAsync(id);
+            var akJurnal = await _akJurnalRepo.GetById((int)id);
+            akJurnal.JKW = await _jKWRepo.GetById(akJurnal.JKWId);
+
             if (akJurnal == null)
             {
                 return NotFound();
             }
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", akJurnal.JKWId);
+
+            CartEmpty();
+            PopulateList();
+            PopulateTable(id);
+            PopulateCart(akJurnal);
             return View(akJurnal);
         }
 

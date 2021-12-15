@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211210062534_model_jurnal_update")]
-    partial class model_jurnal_update
+    [Migration("20211214083659_AddInitialTables")]
+    partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -499,6 +499,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Nama")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -519,6 +520,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(400)");
 
                     b.Property<string>("Tahun")
+                        .IsRequired()
                         .HasMaxLength(4)
                         .HasColumnType("nvarchar(4)");
 

@@ -1,102 +1,171 @@
 ﻿@model MSNK.Models.Modules.AkJurnal
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Papar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card box-shadow border-dark mb-3">
+            <div class="card-header bg-dark text-white">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-left">Baucer Jurnal - @ViewData["Title"]</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-right">@Model.NoJurnal</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <div class="form-row">
+                            <div class="form-group col-md">
+                                <label asp-for="JKW" class="control-label"></label>
+                                <input class="form-control form-control-sm"
+                                       value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
+                            </div>
+                            <div class="form-group col-md">
+                                <label asp-for="Tarikh" class="control-label"></label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Tarikh)" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md">
+                                <label asp-for="JumDebit" class="control-label"></label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JumDebit)" readonly />
+                            </div>
+                            <div class="form-group col-md">
+                                <label asp-for="JumKredit" class="control-label"></label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JumKredit)" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md">
+                                <label class="control-label">Catatan</label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan1)" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md">
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan2)" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md">
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan3)" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md">
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan4)" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md">
+                                <label asp-for="UserId" class="control-label"></label>
+                                <input class="form-control form-control-sm"
+                                       value="@Html.DisplayFor(model => model.UserId)" readonly />
+                            </div>
+                            <div class="form-group col-md">
+                                <label asp-for="TarikhMasuk" class="control-label"></label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhMasuk)" readonly />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+                                <div class="form-group col-sm">
+                                    <label asp-for="Cetak" class="control-label"></label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="Cetak" type="radio" id="Cetak1" name="Cetak" class="custom-control-input" value="0">
+                                        <label class="custom-control-label" for="Cetak1">Belum</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="Cetak" type="radio" id="Cetak2" name="Cetak" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="Cetak">Sudah</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+                                <div class="form-group col-sm">
+                                    <label asp-for="Posting" class="control-label"></label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="Posting" type="radio" id="Posting1" name="Posting" class="custom-control-input" value="0">
+                                        <label class="custom-control-label" for="Posting">Belum</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="Posting" type="radio" id="Posting2" name="Posting" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="Posting">Sudah</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+                                <div class="form-group col-sm">
+                                    <label asp-for="Batal" class="control-label"></label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="Batal" type="radio" id="Batal1" name="Batal1" class="custom-control-input" value="0">
+                                        <label class="custom-control-label" for="Batal">Belum</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="Batal" type="radio" id="Batal1" name="Batal" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="Batal">Sudah</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="card box-shadow mb-3">
+                    <div class="card-header">
+                        <h6>Objek</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th style="width:60%">Kod</th>
+                                        <th class="text-right">Debit RM</th>
+                                        <th class="text-right">Kredit RM</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyObjek">
+                                    @foreach (var item in ViewBag.akJurnal1)
+                                    {
+                                    <tr id="@item.Id">
+                                        <td id="akCartaId" hidden>@item.AkCartaId</td>
+                                        <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
+                                        <td class="editable-txt text-right" id="td1Amaun">@item.Debit</td>
+                                        <td class="editable-txt text-right" id="td1Amaun">@item.Kredit</td>
+                                    </tr>
+
+                                    }
+                                </tbody>
+                                <tfoot>
+
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div>
-    <h4>AkJurnal</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NoJurnal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NoJurnal)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tarikh)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tarikh)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JumDebit)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JumDebit)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JumKredit)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JumKredit)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Catatan1)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Catatan1)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Catatan2)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Catatan2)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Catatan3)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Catatan3)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Catatan4)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Catatan4)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Posting)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Posting)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cetak)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cetak)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Batal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Batal)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TarikhMasuk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TarikhMasuk)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JKW)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JKW.Kod)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Ubah</a> |
+    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
