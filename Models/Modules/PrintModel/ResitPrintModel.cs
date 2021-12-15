@@ -8,15 +8,11 @@ namespace MSNK.Models.Modules.PrintModel
 {
     public class ResitPrintModel
     {
-        public string LogoSyarikat { get; set; }
-        public string NamaSyarikat { get; set; }
-        public string AlamatSyarikat1 { get; set; }
-        public string AlamatSyarikat2 { get; set; }
-        public string AlamatSyarikat3 { get; set; }
-        public string TelSyarikat { get; set; }
         public string JumlahDalamPerkataan { get; set; }
         public string username { get; set; }
         public JNegeri Negeri { get; set; }
         public AkTerima AkTerima { get; set; }
+        public CompanyDetails CompanyDetail { get; set; }
     }
+
 }

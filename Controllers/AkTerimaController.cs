@@ -17,13 +17,17 @@ using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
 using Rotativa.AspNetCore;
 using MSNK.Infrastructure;
+using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
     [Authorize]
     public class AkTerimaController : Controller
     {
+        public const string modul = "PR001";
+
         private readonly ApplicationDbContext _context;
+        private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkTerima, int> _akTerimaRepo;
         private readonly IRepository<AkBank, int> _akBankRepo;
@@ -37,6 +41,7 @@ namespace MSNK.Controllers
 
         public AkTerimaController(
             ApplicationDbContext context,
+            AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
             IRepository<AkTerima, int> akTerimaRepository,
             AkTerima1IRepository<AkTerima1, int> akTerima1Repository,
@@ -50,6 +55,7 @@ namespace MSNK.Controllers
             )
         {
             _context = context;
+            _appLog = appLog;
             _userManager = userManager;
             _kwRepo = kwRepository;
             _negeriRepo = negeriRepository;
@@ -63,9 +69,42 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTerima
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string searchString,
+            string searchDate1, 
+            string searchDate2,
+            string searchColumn)
         {
+            
             var akTerima = await _akTerimaRepo.GetAll();
+            
+            // searching with '%like%' condition
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                if (searchColumn == "NoRujukan")
+                {
+                    akTerima = akTerima.Where(s => s.NoRujukan.ToUpper().Contains(searchString.ToUpper())).ToList();
+                }
+                else if (searchColumn == "Nama")
+                {
+                    akTerima = akTerima.Where(s => s.Nama.ToUpper().Contains(searchString.ToUpper())).ToList();
+                }
+            }
+            // searching with '%like%' condition end
+
+            // searching with date range condition
+            if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+            {
+                if (searchColumn == "Tarikh")
+                {
+                    DateTime date1 = DateTime.Parse(searchDate1);
+                    DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
+                    akTerima = akTerima.Where(x => x.Tarikh >= date1
+                        && x.Tarikh <= date2).ToList();
+                }
+            }
+            // searching with date range condition end
+
             return View(akTerima);
         }
 
@@ -249,6 +288,22 @@ namespace MSNK.Controllers
                     m.AkTerima2 = _cart.Lines2.ToArray();
 
                     await _akTerimaRepo.Insert(m);
+
+                    //insert applog
+                    var user = await _userManager.GetUserAsync(User);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "C";
+                    appLog.LgOperation = "Tambah";
+                    appLog.LgNote = modul + " Penerimaan - Tambah";
+                    appLog.NoRujukan = noRujukan;
+                    appLog.Jumlah = akTerima.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
@@ -270,6 +325,14 @@ namespace MSNK.Controllers
             }
 
             var akTerima = await _akTerimaRepo.GetById((int)id);
+
+            // check if already posting redirect back
+            if (akTerima.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
             var kw = await _kwRepo.GetById(akTerima.JKWId);
             akTerima.JKW = kw;
             var negeri = await _negeriRepo.GetById(akTerima.JNegeriId);
@@ -304,7 +367,25 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                   
                     _context.Update(akTerima);
+
+                    //insert applog
+                    var user = await _userManager.GetUserAsync(User);
+                    
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule =  modul + "E";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Penerimaan - Ubah";
+                    appLog.NoRujukan = akTerima.NoRujukan;
+                    appLog.Jumlah = akTerima.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -338,6 +419,7 @@ namespace MSNK.Controllers
 
             var akTerima = await _context.AkTerima
                 .Include(a => a.AkBank)
+                .ThenInclude(a => a.JBank)
                 .Include(a => a.JKW)
                 .Include(a => a.JNegeri)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -346,6 +428,10 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
+            CartEmpty();
+            PopulateList();
+            PopulateTable(id);
+            PopulateCart(akTerima);
             return View(akTerima);
         }
 
@@ -355,7 +441,29 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akTerima = await _context.AkTerima.FindAsync(id);
+            // check if already posting redirect back
+            if (akTerima.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
             _context.AkTerima.Remove(akTerima);
+
+            //insert applog
+            var user = await _userManager.GetUserAsync(User);
+
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "D";
+            appLog.LgOperation = "Hapus";
+            appLog.LgNote = modul + " Penerimaan - Hapus";
+            appLog.NoRujukan = akTerima.NoRujukan;
+            appLog.Jumlah = akTerima.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
@@ -779,7 +887,7 @@ namespace MSNK.Controllers
                 {
 
                     //duplicate id error
-                    TempData[SD.Error] = "Data telah dikemaskini ke lejar.";
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
                    
                 }
                 else
@@ -802,7 +910,23 @@ namespace MSNK.Controllers
                     akTerima.FlPosting = 1;
                     await _akTerimaRepo.Update(akTerima);
 
+                    //insert applog
+                    var user = await _userManager.GetUserAsync(User);
+                    
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "T";
+                    appLog.LgOperation = "Posting";
+                    appLog.LgNote = modul + " Penerimaan - Posting";
+                    appLog.NoRujukan = akTerima.NoRujukan;
+                    appLog.Jumlah = akTerima.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
+
 
                     TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
                 }
@@ -846,6 +970,21 @@ namespace MSNK.Controllers
                     akTerima.FlPosting = 0;
                     await _akTerimaRepo.Update(akTerima);
 
+                    //insert applog
+                    var user = await _userManager.GetUserAsync(User);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "UT";
+                    appLog.LgOperation = "UnPosting";
+                    appLog.LgNote = modul + " Penerimaan - UnPosting";
+                    appLog.NoRujukan = akTerima.NoRujukan;
+                    appLog.Jumlah = akTerima.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
 
                     TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
@@ -876,14 +1015,31 @@ namespace MSNK.Controllers
 
             ResitPrintModel data = new ResitPrintModel();
 
-            data.NamaSyarikat = "Majlis Sukan Negeri Kedah";
-            data.AlamatSyarikat1 = "Stadium Sultan Abdul Halim";
-            data.AlamatSyarikat2 = "Jalan Suka Menanti";
-            data.AlamatSyarikat3 = "05150 Alor Setar";
-            data.Negeri = negeri;
+            CompanyDetails company = new CompanyDetails();
+            data.CompanyDetail = company;
             data.AkTerima = akTerima;
+            data.AkTerima.JNegeri = negeri;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
             data.username = user.UserName;
+
+            //update cetak -> 1
+            akTerima.FlCetak = 1;
+            await _akTerimaRepo.Update(akTerima);
+
+            //insert applog
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "P";
+            appLog.LgOperation = "Cetak";
+            appLog.LgNote = modul + " Penerimaan - Cetak";
+            appLog.NoRujukan = akTerima.NoRujukan;
+            appLog.Jumlah = akTerima.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
 
             return new ViewAsPdf("ResitPrintPdf",data)
             {
