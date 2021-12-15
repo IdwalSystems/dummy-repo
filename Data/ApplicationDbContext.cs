@@ -34,6 +34,7 @@ namespace MSNK.Data
         public DbSet<AkPO2> AkPO2 { get; set; }
         public DbSet<AkJurnal> AkJurnal { get; set; }
         public DbSet<AkJurnal1> AkJurnal1 { get; set; }
+        public DbSet<AppLog> AppLog { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -629,6 +629,42 @@ namespace MSNK.Migrations
                     b.ToTable("AkTerima2");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.AppLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Jumlah")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("LgDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LgModule")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LgNote")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LgOperation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoRujukan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SysCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppLog");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.JBank", b =>
                 {
                     b.Property<int>("Id")

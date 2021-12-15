@@ -8,6 +8,26 @@ namespace MSNK.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AppLog",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LgDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LgModule = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LgOperation = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LgNote = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NoRujukan = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Jumlah = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    SysCode = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -874,6 +894,9 @@ namespace MSNK.Migrations
 
             migrationBuilder.DropTable(
                 name: "AkTerima2");
+
+            migrationBuilder.DropTable(
+                name: "AppLog");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
