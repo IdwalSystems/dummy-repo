@@ -19,7 +19,7 @@ namespace MSNK.Infrastructure
 
             if (rs[rs.Length - 1] != "sen")
             {
-                result += " ringgit sahaja";
+                result += " sahaja";
             }
             else
             {
@@ -34,7 +34,7 @@ namespace MSNK.Infrastructure
             Decimal frac = d - decimal.Truncate(d);
 
             if (Decimal.Compare(frac, 0.0m) != 0)
-                strHasil = "ringgit dan " + saying(Decimal.Round(frac * 100)) + " sen ";
+                strHasil = "dan sen " + saying(Decimal.Round(frac * 100));
             else
                 strHasil = "";
             int xDigit = 0;

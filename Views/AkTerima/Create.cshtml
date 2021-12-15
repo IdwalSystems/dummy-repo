@@ -21,7 +21,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Tarikh" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Tarikh" class="form-control form-control-sm" value="@DateTime.UtcNow.ToString("s")"/>
+                                <input asp-for="Tarikh" class="form-control form-control-sm" value="@DateTime.Now.ToString("s")"/>
                                 <span asp-validation-for="Tarikh" class="text-danger"></span>
                             </div>
                         </div>
@@ -70,22 +70,22 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label asp-for="Nama" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Nama" class="form-control form-control-sm" />
+                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" />
                                 <span asp-validation-for="Nama" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label asp-for="Alamat1" class="control-label">Alamat</label>
-                        <input asp-for="Alamat1" class="form-control form-control-sm" />
+                        <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" />
                         <span asp-validation-for="Alamat1" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input asp-for="Alamat2" class="form-control form-control-sm" />
+                        <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase" />
                         <span asp-validation-for="Alamat2" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input asp-for="Alamat3" class="form-control form-control-sm" />
+                        <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" />
                         <span asp-validation-for="Alamat3" class="text-danger"></span>
                     </div>
                     <div class="row">
@@ -99,7 +99,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="Bandar" class="control-label"></label>
-                                <input asp-for="Bandar" class="form-control form-control-sm" />
+                                <input asp-for="Bandar" class="form-control form-control-sm text-uppercase" />
                                 <span asp-validation-for="Bandar" class="text-danger"></span>
                             </div>
                         </div>
@@ -134,7 +134,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Sebab" class="control-label"></label>
-                        <textarea asp-for="Sebab" class="form-control form-control-sm" rows="2"></textarea>
+                        <textarea asp-for="Sebab" class="form-control form-control-sm text-uppercase" rows="2"></textarea>
                         <span asp-validation-for="Sebab" class="text-danger"></span>
                     </div>
 
@@ -225,8 +225,8 @@
                                                 </select>
                                                 @*<input class="form-control form-control-sm" type="text" id="txtJenisCek" maxlength="1">*@
                                             </td>
-                                            <td><input class="form-control form-control-sm" type="text" id="txtKodBankCek" maxlength="4"></td>
-                                            <td><input class="form-control form-control-sm" type="text" id="txtTempatCek"></td>
+                                            <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtKodBankCek" maxlength="4"></td>
+                                            <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtTempatCek"></td>
                                             <td><input class="form-control form-control-sm" type="text" id="txtNoSlip" maxlength="30"></td>
                                             <td><input class="form-control form-control-sm" type="datetime-local" id="txtTarSlip"></td>
                                             <td><button class="btn btn-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
@@ -280,7 +280,7 @@
             </div>
             <div class="form-group" hidden>
                 <label asp-for="TarMasuk" class="control-label"></label>
-                <input asp-for="TarMasuk" class="form-control form-control-sm" value="@DateTime.UtcNow.ToString("s")" disabled />
+                <input asp-for="TarMasuk" class="form-control form-control-sm" value="@DateTime.Now.ToString("s")" disabled />
                 <span asp-validation-for="TarMasuk" class="text-danger"></span>
             </div>
             <div class="form-group" hidden>
@@ -290,7 +290,7 @@
             </div>
             <div class="form-group" hidden>
                 <label asp-for="TarKemaskini" class="control-label"></label>
-                <input asp-for="TarKemaskini" class="form-control form-control-sm" value="@DateTime.UtcNow.ToString("s")" disabled />
+                <input asp-for="TarKemaskini" class="form-control form-control-sm" value="@DateTime.Now.ToString("s")" disabled />
                 <span asp-validation-for="TarKemaskini" class="text-danger"></span>
             </div>
             @*hidden type input end*@

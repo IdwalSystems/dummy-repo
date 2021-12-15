@@ -14,7 +14,7 @@
                         <h5 class="text-left">Resit Rasmi - @ViewData["Title"]</h5>
                     </div>
                     <div class="col-md-6">
-                        <p class="text-right">@Model.NoRujukan.Substring(3)</p>
+                        <p class="text-right">No Resit: @Model.NoRujukan.Substring(3)</p>
                     </div>
                 </div>
                 
@@ -58,19 +58,19 @@
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <label class="control-label">Nama</label>
-                                    <input class="form-control form-control-sm" value="@Model.Nama " readonly />
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.Nama " readonly />
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Alamat</label>
-                            <input class="form-control form-control-sm" value="@Model.Alamat1 " readonly />
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.Alamat1 " readonly />
                         </div>
                         <div class="form-group">
-                            <input class="form-control form-control-sm" value="@Model.Alamat2 " readonly />
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.Alamat2 " readonly />
                         </div>
                         <div class="form-group">
-                            <input class="form-control form-control-sm" value="@Model.Alamat3 " readonly />
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.Alamat3 " readonly />
                         </div>
                         <div class="row">
                             <div class="col-md-4">
@@ -82,7 +82,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Bandar</label>
-                                    <input class="form-control form-control-sm" value="@Model.Bandar " readonly />
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.Bandar " readonly />
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -108,7 +108,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Sebab</label>
-                            <textarea class="form-control form-control-sm" readonly rows="2">@Model.Sebab</textarea>
+                            <textarea class="form-control form-control-sm text-uppercase" readonly rows="2">@Model.Sebab</textarea>
                         </div>
                     </div>
                     <div class="col-lg-2">
@@ -171,7 +171,7 @@
                     <div class="card-body">
                         <div class="table-responsive">
 
-                            <table id="tblObjek" class="table" cellpadding="0" cellspacing="0">
+                            <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th style="width:40%">Kod</th>
@@ -208,7 +208,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="tblUrusniaga" class="table" cellpadding="0" cellspacing="0">
+                            <table id="tblUrusniaga" class="table table-sm" cellpadding="0" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>Cara Bayar</th>
@@ -225,18 +225,45 @@
                                 <tbody id="tbodyUrusniaga">
                                     @foreach (var item in ViewBag.akTerima2)
                                     {
-                                        <tr>
-                                            <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
-                                            <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
-                                            <td>@item.JCaraBayar.Perihal</td>
-                                            <td class="editable-txt">@item.Amaun</td>
-                                            <td class="editable-txt">@item.NoCek</td>
-                                            <td class="editable-txt">@item.JenisCek</td>
-                                            <td class="editable-txt">@item.KodBankCek</td>
-                                            <td class="editable-txt">@item.TempatCek</td>
-                                            <td class="editable-txt">@item.NoSlip</td>
+                                    <tr>
+                                        <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
+                                        <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
+                                        <td>@item.JCaraBayar.Perihal</td>
+                                        <td class="editable-txt">@item.Amaun</td>
+                                        <td class="editable-txt">@item.NoCek</td>
+                                        @switch (@item.JenisCek)
+                                        {
+                                            case "1":
+                                                <td class="editable-txt">Cek Cawangan Ini</td>
+                                                break;
+                                            case "2":
+                                                <td class="editable-txt">Cek Tempatan</td>
+                                                break;
+                                            case "3":
+                                                <td class="editable-txt">Cek Luar</td>
+                                                break;
+                                            case "4":
+                                                <td class="editable-txt">Cek Antarabangsa</td>
+                                                break;
+                                            default:
+                                                <td class="editable-txt"></td>
+                                                break;
+                                        }
+
+                                        <td class="editable-txt">@item.KodBankCek</td>
+                                        <td class="editable-txt">@item.TempatCek</td>
+                                        <td class="editable-txt">@item.NoSlip</td>
+                                        @if (@item.TarSlip.ToString("dd/MM/yyyy") == "01/01/0001")
+                                        {
+                                            <td></td>
+                                        }
+                                        else
+                                        {
                                             <td>@item.TarSlip.ToString("dd/MM/yyyy")</td>
-                                        </tr>
+                                        }
+
+
+                                    </tr>
 
                                     }
                                 </tbody>
@@ -245,7 +272,8 @@
                                 </tfoot>
                             </table>
                         </div>
-                            
+
+
                     </div>
                 </div>
                 @*table urusniaga end*@
@@ -257,6 +285,6 @@
 </div>
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Ubah</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a> |
     <a asp-action="Index">Kembali ke Indeks</a>
 </div>

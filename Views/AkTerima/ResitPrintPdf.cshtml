@@ -11,11 +11,11 @@
         display: flex !important;
     }
 
-    .flexrow > div {
-        -webkit-box-flex: 1;
-        -webkit-flex: 1;
-        flex: 1;
-    }
+        .flexrow > div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
 
     .image-container {
         width: 80px;
@@ -26,73 +26,309 @@
         .image-container img {
             height: 100%;
         }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    h6 {
+        font-size: 0.8rem;
+    }
+    p {
+        font-size: 0.6rem;
+    }
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+    .notbold {
+        font-weight: normal
+    }
+
+    ​
 </style>
-<div class="row flexrow">
+@*Asal*@
+<div class="row flexrow mb-1 ml-1">
     <div class="col-2 image-container">
-        <img src="~/img/MainLogo_Syarikat.png"  alt="Logo syarikat" />
+        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
     </div>
-    <div class="col-5">
-        <h5 class="mb-1"><strong>@Html.DisplayFor(x => x.NamaSyarikat)</strong></h5>
-        <p class="mb-0"> @Html.DisplayFor(x => x.AlamatSyarikat1)</p>
-        <p class="mb-0">@Html.DisplayFor(x => x.AlamatSyarikat2)</p>
-        <p>@Html.DisplayFor(x => x.AlamatSyarikat3), @Html.DisplayFor(x=>x.Negeri.Perihal)</p>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@Model.NamaSyarikat</strong></h5>
+        <p class="mb-0"> @Model.AkTerima.Alamat1</p>
+        <p class="mb-0">@Model.AkTerima.Alamat2</p>
+        <p>@Model.AkTerima.Alamat3</p>
+        <p>@Model.AkTerima.Poskod,@Model.AkTerima.Bandar,@Model.AkTerima.JNegeri.Perihal</p>
     </div>
-    
-    <div class="col-5 text-right">
-        <h5 class="mb-0">Resit: @Html.DisplayFor(x => x.AkTerima.NoRujukan)</h5>
-        Tarikh: @Html.DisplayFor(x => x.AkTerima.Tarikh, "{0:dd/MM/yyyy}")
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0"><strong>ASAL</strong></h6>
+        <h6 class="mb-0 text-white">-</h6>
+        <h6 class="mb-0"><strong>RESIT RASMI</strong></h6>
+        <h6 class="mb-0">NO RESIT:</h6>
+        <h6 class="mb-0 ">@Model.AkTerima.NoRujukan.Substring(3)</h6>
+        TARIKH: @Html.DisplayFor(x => x.AkTerima.Tarikh, "{0:dd/MM/yyyy}")
     </div>
 </div>
-<hr />
-        <div>
-            <div>
-                <h5>Penerima:</h5>
-                <h6 class="text-dark mb-1">@Html.DisplayFor(x => x.AkTerima.KodPembayar) - @Html.DisplayFor(x => x.AkTerima.Nama)</h6>
-                <h6 class="mb-0">@Html.DisplayFor(x => x.AkTerima.Alamat1)</h6>
-                <h6 class="mb-0">@Html.DisplayFor(x => x.AkTerima.Alamat2)</h6>
-                <h6 class="mb-0">@Html.DisplayFor(x => x.AkTerima.Alamat3), @Html.DisplayFor(x => x.AkTerima.JNegeri.Perihal)</h6>
-                <h6 class="mb-0">@Html.DisplayFor(x => x.AkTerima.Emel)</h6>
-                <h6>@Html.DisplayFor(x => x.AkTerima.Tel)</h6>
-            </div>
-            <br />
-            <div class="table-responsive-sm">
-                <table class="table table-striped">
-                    <thead>
+<hr class="bg-dark"/>
+<div class="table-responsive-sm">
+    <table class="table table-dark table-sm topic">
+        <thead>
+            <tr>
+                <th class="text-center">MAKLUMAT PEMBAYAR</th>
+                <th class="text-center">MAKLUMAT BAYARAN</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class="row flexrow mb-1">
+    <div class="col-6 text-left text-uppercase">
+        <h6 class="mb-0">@Model.AkTerima.Nama</h6>
+        <h6 class="mb-0">@Model.AkTerima.Alamat1</h6>
+        <h6 class="mb-0">@Model.AkTerima.Alamat2</h6>
+        <h6 class="mb-0">@Model.AkTerima.Alamat3, @Html.DisplayFor(x => x.AkTerima.JNegeri.Perihal)</h6>
+    </div>
+
+    <div class="col-6">
+        <div class="table-responsive-sm">
+            <table class="table table-striped table-sm topic">
+                <thead>
+                    <tr>
+                        <th>TUJUAN BAYARAN</th>
+                        <th>AMAUN (RM)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.AkTerima.AkTerima1)
+                    {
                         <tr>
-                            <th>Tarikh Slip</th>
-                            <th>No Cek</th>
-                            <th align="right">Amaun (RM)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.AkTerima.AkTerima2)
-                        {
-                        <tr>
-                            <td>@item.TarSlip.ToString("dd/MM/yyyy")</td>
-                            <td>@item.NoCek</td>
+                            <td>@item.AkCarta.Perihal</td>
                             <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
                         </tr>
+                    }
+                    <tr class="bg-light">
+                        <td class="text-right">JUMLAH BAYARAN (RM)</td>
+                        <td class="text-right">@Convert.ToDecimal(@Model.AkTerima.Jumlah).ToString("#,##0.00")</td>
+                    </tr>
+                </tbody>
+            </table>
 
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-sm-5">
-                </div>
-                <div class="col-lg-4 col-sm-5 ml-auto">
-                    <table class="table table-clear">
-                        <tbody>
-                            <tr>
-                                <td class="left">
-                                    <strong class="text-dark">Jumlah Keseluruhan (RM)</strong>
-                                </td>
-                                <td align="right">
-                                    <strong class="text-dark">@Convert.ToDecimal(Model.AkTerima.Jumlah).ToString("#,##0.00")</strong>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
+    </div>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic pb-2">
+        <thead>
+            <tr>
+                <th class="text-left" style="line-height:0.8rem;">JUMLAH DALAM PERKATAAN</th>
+                <th class="text-left" style="line-height:0.8rem;">@Model.JumlahDalamPerkataan</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class="table-responsive-sm">
+    <table class="table table-light table-sm topic">
+        <thead>
+            <tr>
+                <th class="text-center">KAEDAH BAYARAN</th>
+                <th class="text-center">KETERANGAN BAYARAN</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class="row flexrow mb-1">
+    <div class="col-6 text-left">
+        <div class="table-responsive-sm">
+            <table class="table table-striped table-sm topic">
+                <tbody>
+                    @foreach (var item in Model.AkTerima.AkTerima2)
+                    {
+                        <tr>
+                            <td>@item.JCaraBayar.Perihal : @item.NoCek</td>
+                            <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="col-6 text-left">
+        <h6 class="mb-0 text-uppercase">@Html.DisplayFor(x => x.AkTerima.Sebab)</h6>
+    </div>
+</div>
+<hr class="bg-dark mb-0" />
+<p class="mb-1 text-center">Resit ini adalah cetakan komputer, tandatangan tidak diperlukan</p>
+
+<p class="mb-0 text-right">@Model.username : @DateTime.Now</p>
+@*Asal End*@
+<hr />
+@*Salinan*@
+<div class="row flexrow mb-1 ml-1">
+    <div class="col-2 image-container">
+        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@Model.NamaSyarikat</strong></h5>
+        <p class="mb-0"> @Model.AkTerima.Alamat1</p>
+        <p class="mb-0">@Model.AkTerima.Alamat2</p>
+        <p>@Model.AkTerima.Alamat3</p> 
+        <p>@Model.AkTerima.Poskod,@Model.AkTerima.Bandar,@Model.AkTerima.JNegeri.Perihal</p>
+    </div>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0"><strong>SALINAN</strong></h6>
+        <h6 class="mb-0 text-white">-</h6>
+        <h6 class="mb-0"><strong>RESIT RASMI</strong></h6>
+        <h6 class="mb-0">NO RESIT:</h6>
+        <h6 class="mb-0 ">@Model.AkTerima.NoRujukan.Substring(3)</h6>
+        TARIKH: @Html.DisplayFor(x => x.AkTerima.Tarikh, "{0:dd/MM/yyyy}")
+    </div>
+</div>
+<hr class="bg-dark"/>
+<div class="table-responsive-sm">
+    <table class="table table-dark table-sm topic">
+        <thead>
+            <tr>
+                <th class="text-center">MAKLUMAT PEMBAYAR</th>
+                <th class="text-center">MAKLUMAT BAYARAN</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class="row flexrow mb-1">
+    <div class="col-6 text-left text-uppercase">
+        <h6 class="mb-0">@Model.AkTerima.Nama</h6>
+        <h6 class="mb-0">@Model.AkTerima.Alamat1</h6>
+        <h6 class="mb-0">@Model.AkTerima.Alamat2</h6>
+        <h6 class="mb-0">@Model.AkTerima.Alamat3, @Html.DisplayFor(x => x.AkTerima.JNegeri.Perihal)</h6>
+    </div>
+
+    <div class="col-6">
+        <div class="table-responsive-sm">
+            <table class="table table-striped table-sm topic">
+                <thead>
+                    <tr>
+                        <th>TUJUAN BAYARAN</th>
+                        <th>AMAUN (RM)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.AkTerima.AkTerima1)
+                    {
+                        <tr>
+                            <td>@item.AkCarta.Perihal</td>
+                            <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                        </tr>
+                    }
+                    <tr class="bg-light">
+                        <td class="text-right">JUMLAH BAYARAN (RM)</td>
+                        <td class="text-right">@Convert.ToDecimal(@Model.AkTerima.Jumlah).ToString("#,##0.00")</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic pb-2">
+        <thead>
+            <tr>
+                <th class="text-left" style="line-height:0.8rem;">JUMLAH DALAM PERKATAAN</th>
+                <th class="text-left" style="line-height:0.8rem;">@Model.JumlahDalamPerkataan</th>
+            </tr>
+        </thead>
+    </table>
+    <table class="table table-light table-sm topic">
+        <thead>
+            <tr>
+                <th class="text-center">KAEDAH BAYARAN</th>
+                <th class="text-center">KETERANGAN BAYARAN</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class="table-responsive-sm">
+    
+</div>
+<div class="row flexrow mb-1">
+    <div class="col-6 text-left">
+        <div class="table-responsive-sm">
+            <table class="table table-striped table-sm topic">
+                <tbody>
+                    @foreach (var item in Model.AkTerima.AkTerima2)
+                    {
+                        <tr>
+                            <td>@item.JCaraBayar.Perihal : @item.NoCek</td>
+                            <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="col-6 text-left">
+        <h6 class="mb-0 text-uppercase">@Html.DisplayFor(x => x.AkTerima.Sebab)</h6>
+    </div>
+</div>
+<div class="table-responsive-sm">
+    <table class="table table-bordered table-sm topic mb-0">
+        <thead>
+            <tr>
+                <th class="text-center">PERINCIAN AKAUN</th>
+            </tr>
+        </thead>
+    </table>
+    <table class="table table-bordered table-sm topic">
+        <thead>
+            <tr>
+                <th class="text-center" style="line-height:1.0rem;" >KUMPULAN WANG</th>
+                <th class="text-center " style="line-height:1.0rem;">KOD AKAUN</th>
+                <th class="align-middle text-center" style="width:70%; line-height: 1.0rem;">PERIHAL AKAUN</th>
+                <th class="text-center"style="line-height:1.0rem;">AMAUN (RM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.AkTerima.AkTerima1)
+            {
+            <tr>
+                <td>@Model.AkTerima.JKW.Kod</td>
+                <td>@item.AkCarta.Kod</td>
+                <td>@item.AkCarta.Perihal</td>
+                <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<hr class="bg-dark mb-0" />
+<p class="mb-1 text-center">Resit ini adalah cetakan komputer, tandatangan tidak diperlukan</p>
+
+<p class="mb-0 text-right">@Model.username : @DateTime.Now</p>
+
