@@ -214,9 +214,9 @@ namespace MSNK.Controllers
                     m.TarikhPosting = akPO.TarikhPosting;
                     m.AkPembekal = pembekal;
                     m.Jumlah = akPO.Jumlah;
-                    m.Posting = akPO.Posting;
+                    m.FlPosting = akPO.FlPosting;
                     m.Tahun = akPO.Tahun;
-                    m.Batal = akPO.Batal;
+                    m.FlBatal = akPO.FlBatal;
                     m.AkPembekal = akPO.AkPembekal;
 
                     m.AkPO1 = _cart.Lines1.ToArray();

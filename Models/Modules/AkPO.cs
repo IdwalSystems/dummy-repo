@@ -22,6 +22,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Jumlah")]
         public decimal Jumlah { get; set; }
         [DisplayName("Posting")]
+        [DefaultValue("0")]
         [MaxLength(1)]
         [DefaultValue("0")]
         public int FlPosting { get; set; }
