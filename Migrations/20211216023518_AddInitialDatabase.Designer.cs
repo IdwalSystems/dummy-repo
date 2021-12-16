@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211215024134_AddInitialTables")]
-    partial class AddInitialTables
+    [Migration("20211216023518_AddInitialDatabase")]
+    partial class AddInitialDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -257,9 +257,13 @@ namespace MSNK.Migrations
                     b.Property<int>("AkPembekalId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Batal")
+                    b.Property<int>("FlBatal")
                         .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
+                        .HasColumnType("int");
+
+                    b.Property<int>("FlPosting")
+                        .HasMaxLength(1)
+                        .HasColumnType("int");
 
                     b.Property<int>("JKWId")
                         .HasColumnType("int");
@@ -270,10 +274,6 @@ namespace MSNK.Migrations
                     b.Property<string>("NoPO")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Posting")
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
 
                     b.Property<string>("Tahun")
                         .HasMaxLength(4)
@@ -310,7 +310,7 @@ namespace MSNK.Migrations
                     b.Property<decimal>("Amaun")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("JKWId")
+                    b.Property<int?>("JKWId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -1168,17 +1168,13 @@ namespace MSNK.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MSNK.Models.Modules.JKW", "JKW")
+                    b.HasOne("MSNK.Models.Modules.JKW", null)
                         .WithMany("AkPO1")
-                        .HasForeignKey("JKWId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("JKWId");
 
                     b.Navigation("AkCarta");
 
                     b.Navigation("AkPO");
-
-                    b.Navigation("JKW");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPO2", b =>

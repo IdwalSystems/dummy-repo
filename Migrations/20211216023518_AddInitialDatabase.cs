@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MSNK.Migrations
 {
-    public partial class AddInitialTables : Migration
+    public partial class AddInitialDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -392,10 +392,10 @@ namespace MSNK.Migrations
                     TarikhPosting = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AkPembekalId = table.Column<int>(type: "int", nullable: false),
                     Jumlah = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Posting = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true),
+                    FlPosting = table.Column<int>(type: "int", maxLength: 1, nullable: false),
                     JKWId = table.Column<int>(type: "int", nullable: false),
                     Tahun = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true),
-                    Batal = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true)
+                    FlBatal = table.Column<int>(type: "int", maxLength: 1, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -522,9 +522,9 @@ namespace MSNK.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AkPOId = table.Column<int>(type: "int", nullable: false),
-                    JKWId = table.Column<int>(type: "int", nullable: false),
                     AkCartaId = table.Column<int>(type: "int", nullable: false),
-                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    JKWId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
