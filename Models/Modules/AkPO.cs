@@ -24,7 +24,6 @@ namespace MSNK.Models.Modules
         [DisplayName("Posting")]
         [DefaultValue("0")]
         [MaxLength(1)]
-        [DefaultValue("0")]
         public int FlPosting { get; set; }
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
