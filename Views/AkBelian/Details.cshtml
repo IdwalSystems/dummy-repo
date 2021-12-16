@@ -1,0 +1,79 @@
+﻿@model MSNK.Models.Modules.AkBelian
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>AkBelian</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Tahun)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Tahun)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Tarikh)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Tarikh)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TarikhPosting)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TarikhPosting)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NoInbois)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NoInbois)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Jumlah)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Jumlah)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FlCetak)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FlCetak)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FlPosting)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FlPosting)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FlBatal)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FlBatal)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AkPO)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AkPO.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.JKW)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.JKW.Kod)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

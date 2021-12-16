@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class AkTerima2Repository : AkTerima2IRepository<AkTerima2, int>
+    public class AkTerima2Repository : ListViewIRepository<AkTerima2, int>
     {
         public readonly ApplicationDbContext context;
 

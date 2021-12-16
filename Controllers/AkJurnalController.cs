@@ -18,7 +18,7 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IRepository<AkJurnal, int> _akJurnalRepo;
         private readonly IRepository<JKW, int> _jKWRepo;
-        private readonly IRepository2<AkJurnal1, int> _akJurnal1Repo;
+        private readonly ListViewIRepository<AkJurnal1, int> _akJurnal1Repo;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
         private CartJurnal _cart;
 
@@ -26,7 +26,7 @@ namespace MSNK.Controllers
             ApplicationDbContext context,
             IRepository<AkJurnal, int> akJurnalRepository,
             IRepository<JKW, int> jKWRepository,
-            IRepository2<AkJurnal1, int> akJurnal1Repository,
+            ListViewIRepository<AkJurnal1, int> akJurnal1Repository,
             IRepository<AkCarta, int> akCartaRepository,
             CartJurnal cart
             )

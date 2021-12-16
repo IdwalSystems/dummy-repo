@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class AkJurnal1Repository : IRepository2<AkJurnal1, int>
+    public class AkJurnal1Repository : ListViewIRepository<AkJurnal1, int>
     {
         public readonly ApplicationDbContext context;
         public AkJurnal1Repository(ApplicationDbContext context) => this.context = context;
