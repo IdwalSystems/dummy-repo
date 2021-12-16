@@ -32,10 +32,13 @@ namespace MSNK.Models.Modules
         [MaxLength(1)]
         [DisplayName("Status Batal")]
         public string Batal { get; set; }
+
+        //relationship
         [DisplayName("Nama Pembekal")]
         public AkPembekal AkPembekal { get; set; }
         public JKW JKW { get; set; }
         public ICollection<AkPO2> AkPO2 { get; set; }
         public ICollection<AkPO1> AkPO1 { get; set; }
+        public ICollection<AkBelian> AkBelian { get; set; }
     }
 }

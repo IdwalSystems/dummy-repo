@@ -35,6 +35,9 @@ namespace MSNK.Data
         public DbSet<AkJurnal> AkJurnal { get; set; }
         public DbSet<AkJurnal1> AkJurnal1 { get; set; }
         public DbSet<AppLog> AppLog { get; set; }
+        public DbSet<AkBelian> AkBelian { get; set; }
+        public DbSet<AkBelian1> AkBelian1 { get; set; }
+        public DbSet<AkBelian2> AkBelian2 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -142,6 +145,19 @@ namespace MSNK.Data
             //    .OnDelete(DeleteBehavior.Cascade)
             //    .IsRequired();
 
+            modelBuilder.Entity<AkBelian>()
+                .HasOne(m => m.JKW)
+                .WithMany(t => t.AkBelian)
+                .HasForeignKey(m => m.JKWId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<AkBelian>()
+                .HasOne(m => m.AkPO)
+                .WithMany(t => t.AkBelian)
+                .HasForeignKey(m => m.AkPOId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
         }
     }
 }

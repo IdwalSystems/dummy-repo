@@ -376,5 +376,104 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
+
+        public async Task<JsonResult> InsertUpdateAkJurnal1(AkJurnal1 akJurnal1)
+        {
+            try
+            {
+                decimal debit = 0;
+                decimal kredit = 0;
+                var data = Json(new { });
+                if (akJurnal1 != null || akJurnal1.Debit != 0 || akJurnal1.Kredit !=0)
+                {
+                    var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akJurnal1.AkCartaId);
+                    akJurnal1.AkCarta = akCarta;
+                    await _akJurnal1Repo.Insert(akJurnal1);
+
+                    AkJurnal akJurnal = await _akJurnalRepo.GetById(akJurnal1.AkJurnalId);
+
+                    debit = akJurnal.JumDebit + akJurnal1.Debit;
+                    kredit = akJurnal.JumKredit + akJurnal1.Kredit;
+                    akJurnal.JumDebit = debit;
+                    akJurnal.JumKredit = kredit;
+
+                    await _akJurnalRepo.Update(akJurnal);
+                    await _context.SaveChangesAsync();
+                }
+                data = Json(new { debit = debit, kredit = kredit });
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> RemoveUpdateAkJurnal1(AkJurnal1 akJurnal1)
+        {
+            try
+            {
+                decimal debit = 0;
+                decimal kredit = 0;
+                var data = Json(new { });
+                if (akJurnal1 != null)
+                {
+                    var akJ1 = await _context.AkJurnal1.FirstOrDefaultAsync(
+                        x => x.AkCartaId == akJurnal1.AkCartaId 
+                        && x.AkJurnalId == akJurnal1.AkJurnalId
+                        && x.Id == akJurnal1.Id);
+                    _context.AkJurnal1.Remove(akJ1);
+
+                    AkJurnal akJurnal = await _akJurnalRepo.GetById(akJurnal1.AkJurnalId);
+
+                    debit = akJurnal.JumDebit - akJ1.Debit;
+                    kredit = akJurnal.JumKredit - akJ1.Kredit;
+                    akJurnal.JumDebit = debit;
+                    akJurnal.JumKredit = kredit;
+
+                    await _akJurnalRepo.Update(akJurnal);
+                    await _context.SaveChangesAsync();
+                }
+                data = Json(new { debit = debit, kredit = kredit });
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> UpdateAkJurnal1(AkJurnal1 akJurnal1)
+        {
+            try
+            {
+                AkJurnal1 data = await _akJurnal1Repo.GetBy2Id(akJurnal1.AkJurnalId, akJurnal1.Id);
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> SaveUpdateAkJurnal1(AkJurnal1 akJurnal1)
+        {
+            try
+            {
+                _cart.Clear1();
+
+                AkJurnal1 akJ1 = await _akJurnal1Repo.GetById(akJurnal1.Id);
+                akJ1.Debit = akJurnal1.Debit;
+                akJ1.Kredit = akJurnal1.Kredit;
+                _context.AkJurnal1.Update(akJ1);
+                await _context.SaveChangesAsync();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
     }
 }

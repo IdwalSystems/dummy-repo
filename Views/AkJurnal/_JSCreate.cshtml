@@ -14,7 +14,7 @@
         var Objek = {
             Id: id
         }
-        if (id != "") {
+        if (id != "" || id != null) {
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",

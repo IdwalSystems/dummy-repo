@@ -31,7 +31,7 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<AkJurnal1> GetBy2Id(int id1, int id2)
         {
-            return await context.AkJurnal1.FirstOrDefaultAsync(x => x.AkJurnalId == id1 && x.AkCartaId == id2);
+            return await context.AkJurnal1.FirstOrDefaultAsync(x => x.AkJurnalId == id1 && x.Id == id2);
         }
 
         public async Task<AkJurnal1> GetById(int id)

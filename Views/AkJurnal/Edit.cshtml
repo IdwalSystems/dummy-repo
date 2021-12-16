@@ -46,12 +46,12 @@
                     <div class="form-row">
                         <div class="form-group col-md">
                             <label asp-for="JumDebit" class="control-label"></label>
-                            <input asp-for="JumDebit" class="form-control form-control-sm" />
+                            <input asp-for="JumDebit" class="form-control form-control-sm" readonly />
                             <span asp-validation-for="JumDebit" class="text-danger"></span>
                         </div>
                         <div class="form-group col-md">
                             <label asp-for="JumKredit" class="control-label"></label>
-                            <input asp-for="JumKredit" class="form-control form-control-sm" />
+                            <input asp-for="JumKredit" class="form-control form-control-sm" readonly />
                             <span asp-validation-for="JumKredit" class="text-danger"></span>
                         </div>
                     </div>
@@ -189,11 +189,11 @@
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Debit</label>
-                        <input type="number" class="form-control form-control-sm" id="moDebit">
+                        <input type="number" class="form-control form-control-sm" id="moDebit" step="0.01">
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Kredit</label>
-                        <input type="number" class="form-control form-control-sm" id="moKredit">
+                        <input type="number" class="form-control form-control-sm" id="moKredit" step="0.01">
                     </div>
                 </form>
             </div>
