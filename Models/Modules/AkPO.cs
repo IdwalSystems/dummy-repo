@@ -31,7 +31,7 @@ namespace MSNK.Models.Modules
         public string Tahun { get; set; }
         [MaxLength(1)]
         [DisplayName("Status Batal")]
-        public string FlBatal { get; set; }
+        public int FlBatal { get; set; }
         [DisplayName("Nama Pembekal")]
         public AkPembekal AkPembekal { get; set; }
         public JKW JKW { get; set; }

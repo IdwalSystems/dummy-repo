@@ -110,13 +110,6 @@ namespace MSNK.Data
                     .IsRequired();
 
             modelBuilder.Entity<AkPO1>()
-                    .HasOne(m => m.JKW)
-                    .WithMany(t => t.AkPO1)
-                    .HasForeignKey(m => m.JKWId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .IsRequired();
-
-            modelBuilder.Entity<AkPO1>()
                     .HasOne(m => m.AkPO)
                     .WithMany(t => t.AkPO1)
                     .HasForeignKey(m => m.AkPOId)
