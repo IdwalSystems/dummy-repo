@@ -17,7 +17,7 @@
     <form asp-action="Create">
         <div class="col-sm">
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="NoPO" class="control-label"></label>
                 <input asp-for="NoPO" class="form-control form-control-sm" />
@@ -92,7 +92,7 @@
         <div class="form-group">
             <label asp-for="AkPembekal.Telefon1" class="control-label"></label>
             <input asp-for="AkPembekal.Telefon1" class="form-control form-control-sm" />
-            <span asp-validation-for="AkPembekal.Alamat1" class="text-danger"></span>
+            <span asp-validation-for="AkPembekal.Telefon1" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="Jumlah" class="control-label"></label>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.Cart
 {
@@ -11,9 +12,9 @@ namespace MSNK.Models.Modules.Cart
         private List<AkPO1> collection1 = new List<AkPO1>();
 
         public virtual void AddItem1(
-            int AkPOId,
-            decimal Jumlah,
-            int akCartaId
+            int AkPOId,         
+            int akCartaId,
+            decimal Amaun 
             )
         {
             AkPO1 line = collection1
@@ -25,9 +26,9 @@ namespace MSNK.Models.Modules.Cart
                 collection1.Add(new AkPO1
                 {
                     AkPOId = AkPOId,
-                    Amaun = Jumlah,
-                    AkCartaId = akCartaId
-                });
+                    AkCartaId = akCartaId,
+                    Amaun = Amaun              
+            });
             }
         }
 
@@ -49,9 +50,9 @@ namespace MSNK.Models.Modules.Cart
             string Bil,
             string NoStok,
             string Perihal,
-            decimal Kuantiti, 
+            decimal Kuantiti,
             string Unit,
-            decimal Harga, 
+            decimal Harga,
             decimal Amaun
             )
         {
@@ -65,8 +66,8 @@ namespace MSNK.Models.Modules.Cart
                 {
                     AkPOId = akPOId,
                     Indek = Indek,
-                    Bil =Bil,
-                    NoStok =NoStok,
+                    Bil = Bil,
+                    NoStok = NoStok,
                     Perihal = Perihal,
                     Kuantiti = Kuantiti,
                     Unit = Unit,
@@ -85,4 +86,3 @@ namespace MSNK.Models.Modules.Cart
         public virtual IEnumerable<AkPO2> Lines2 => collection2;
     }
 }
-

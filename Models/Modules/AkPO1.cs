@@ -9,13 +9,11 @@ namespace MSNK.Models.Modules
     {
         public int Id { get; set; }
         public int AkPOId { get; set; }
-        public int JKWId { get; set; }
         public int AkCartaId { get; set; }
         public decimal Amaun { get; set; }
 
         //Relationship
         public AkPO AkPO { get; set; }
-        public JKW JKW { get; set; }
         public AkCarta AkCarta { get; set; }
     }
 }

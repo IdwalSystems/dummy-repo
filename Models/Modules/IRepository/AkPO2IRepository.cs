@@ -9,7 +9,7 @@ namespace MSNK.Models.Modules.IRepository
     {
         Task<IEnumerable<T1>> GetAll(T2 akPO2Id);
         Task<T1> GetById(T2 id);
-        Task<T1> GetBy2Id(T2 akPO2Id);
+        //Task<T1> GetBy2Id(T2 akPOId, T2 akPO2Id);
         Task<T1> Insert(T1 entity);
         Task Delete(T2 id);
         Task Save();
