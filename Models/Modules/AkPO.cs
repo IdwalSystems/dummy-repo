@@ -23,7 +23,7 @@ namespace MSNK.Models.Modules
         public decimal Jumlah { get; set; }
         [DisplayName("Posting")]
         [MaxLength(1)]
-        public string Posting { get; set; }
+        public int FlPosting { get; set; }
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         [MaxLength(4)]
@@ -31,9 +31,7 @@ namespace MSNK.Models.Modules
         public string Tahun { get; set; }
         [MaxLength(1)]
         [DisplayName("Status Batal")]
-        public string Batal { get; set; }
-
-        //relationship
+        public int FlBatal { get; set; }
         [DisplayName("Nama Pembekal")]
         public AkPembekal AkPembekal { get; set; }
         public JKW JKW { get; set; }

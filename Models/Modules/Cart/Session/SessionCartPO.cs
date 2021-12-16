@@ -24,12 +24,12 @@ namespace MSNK.Models.Modules.Cart.Session
 
         //Terima1
         public override void AddItem1(
-            int AkPOId,
-            decimal Jumlah,
-            int akCartaId
+                int AkPOId,
+                int akCartaId,
+                decimal Amaun
             )
         {
-            base.AddItem1(AkPOId, Jumlah, akCartaId);
+            base.AddItem1(AkPOId, akCartaId, Amaun);
             Session.SetJson("CartPO", this);
         }
         public override void RemoveItem1(int id)

@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 namespace MSNK.Models.Modules.EFRepository
 {
 
-    public class AkPO2Repository : IRepository<AkPO2, int>
+    public class AkPO2Repository : AkPO2IRepository<AkPO2, int>
     {
         public readonly ApplicationDbContext context;
 
         public AkPO2Repository(ApplicationDbContext context) => this.context = context;
+
         public async Task Delete(int id)
         {
             var model = await context.AkPO2.FirstOrDefaultAsync(b => b.Id == id);
@@ -23,9 +24,11 @@ namespace MSNK.Models.Modules.EFRepository
             }
         }
 
-        public async Task<IEnumerable<AkPO2>> GetAll()
+        public async Task<IEnumerable<AkPO2>> GetAll(int akPOId)
         {
             return await context.AkPO2
+                //.Include(b => b.JCaraBayar)
+                .Where(x => x.AkPOId == akPOId)
                 .ToListAsync();
         }
 
@@ -49,11 +52,6 @@ namespace MSNK.Models.Modules.EFRepository
         {
             context.Update(entity);
             await context.SaveChangesAsync();
-        }
-
-        Task<AkPO2> IRepository<AkPO2, int>.GetById(int id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

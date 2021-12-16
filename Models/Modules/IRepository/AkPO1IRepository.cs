@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.IRepository
 {
-    public interface AkPOIRepository<T1, T2> where T1 : class
+    public interface AkPO1IRepository<T1, T2> where T1 : class
     {
         Task<IEnumerable<T1>> GetAll(T2 akPOId);
         Task<T1> GetById(T2 id);
