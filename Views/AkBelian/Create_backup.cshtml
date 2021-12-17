@@ -8,7 +8,27 @@
 <partial name="_JSCreate" />
 <div class="row">
     <div class="col-md-12">
-          
+            <div class="card box-shadow border-success mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5>Pilih Jenis</h5>
+                </div>
+                <div class="card-body pb-0">
+                    <div class="form-row">
+                        <div class="form-group col-sm">
+                            <div class="custom-control custom-radio mb-3">
+                                <input type="radio" class="custom-control-input" id="fl2" name="radiofl" value="0">
+                                <label class="custom-control-label" for="fl2">Tanpa Pesanan Tempatan</label>
+                                <div class="invalid-feedback">Sila pilih jenis tanggungan</div>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="fl1" name="radiofl" value="1">
+                                <label class="custom-control-label" for="fl1">Dengan Pesanan Tempatan</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         <form asp-action="Create">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="card box-shadow border-success mb-3" id="denganPesananTempatan">
@@ -63,76 +83,23 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="col-2">
-                            <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
-                            <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal">
-                                <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
-                                @foreach (var s in ViewBag.AkPembekal)
-                                {
-                                    <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="col-md-10">
-                            <div class="form-group">
-                                <label class="control-label">Nama Pembekal</label>
-                                <input id="txtNamaPembekal" class="form-control form-control-sm text-uppercase" readonly />
-                            </div>
-                        </div>
-                    </div>
-                    @*table Objek*@
-                    <div class="card box-shadow mb-3 mt-2">
-                        <div class="card-header">
-                            <h6>Objek</h6>
-                        </div>
-                        <div class="card-body">
-                            <table id="tblObjek" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th style="width:40%">Kod</th>
-                                        <th style="width:50%">Amaun</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td id="akCartaId" hidden></td>
-                                        <td style="width:40%">
-                                            <select class="form-control form-control-sm select2" id="txtKodAkaun">
-                                                <option value="" disabled selected>-- Pilih Kod Akaun --</option>
-                                                @foreach (var s in ViewBag.AkCarta)
-                                                {
-                                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                                }
-                                            </select>
-                                        </td>
-                                        <td style="width:50%"><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01"></td>
-                                        <td><button class="btn btn-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-
-                    </div>
-                    @*table Objek end*@
                 </div>
             </div>
             
-                @*<div class="form-group" hidden>
-                    <label asp-for="Jumlah" class="control-label"></label>
-                    <input asp-for="Jumlah" class="form-control" />
-                    <span asp-validation-for="Jumlah" class="text-danger"></span>
-                </div>*@
+                
                 
                 @*<div class="form-group" hidden>
                     <label asp-for="TarikhPosting" class="control-label"></label>
                     <input asp-for="TarikhPosting" class="form-control" />
                     <span asp-validation-for="TarikhPosting" class="text-danger"></span>
                 </div>
+                
 
+                <div class="form-group" hidden>
+                    <label asp-for="Jumlah" class="control-label"></label>
+                    <input asp-for="Jumlah" class="form-control" />
+                    <span asp-validation-for="Jumlah" class="text-danger"></span>
+                </div>
                 <div class="form-group" hidden>
                     <label asp-for="FlCetak" class="control-label"></label>
                     <input asp-for="FlCetak" class="form-control" />

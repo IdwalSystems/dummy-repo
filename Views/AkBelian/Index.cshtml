@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MSNK.Models.Modules.AkBelian>
+﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.AkBelianViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -28,9 +28,9 @@
                 <div class="form-row">
                     <div class="col-sm-3 mb-2">
                         <select name="searchColumn" class="custom-select form-control-sm" id="searchColumn">
-                            <option value="NoRujukan">No Resit</option>
+                            <option value="@ViewBag.SearchColumn">Tarikh</option>
+                            <option value="NoRujukan">No Inbois</option>
                             <option value="Nama">Nama</option>
-                            <option selected value="@ViewBag.SearchColumn">Tarikh</option>
                         </select>
                     </div>
                     <div class="col-sm-9 mb-2">
@@ -81,10 +81,10 @@
                     @Html.DisplayNameFor(model => model.Jumlah)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.AkPO.AkPembekal.NamaSykt)
+                    @Html.DisplayNameFor(model => model.NamaSykt)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.AkPO.AkPembekal.Alamat1)
+                    @Html.DisplayNameFor(model => model.Alamat1)
                 </th>
                 <th>
                     Cetak
@@ -109,16 +109,16 @@
                         @item.NoInbois.Substring(3)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Tarikh, "{0:dd/MM/yyyy}")
+                        @item.Tarikh.ToString("dd-M-yyyy")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Jumlah)
                     </td>
                     <td>
-                        @item.AkPO.AkPembekal.NamaSykt.ToUpper()
+                        @item.NamaSykt.ToUpper()
                     </td>
                     <td>
-                        @item.AkPO.AkPembekal.Alamat1.ToUpper()
+                        @item.Alamat1.ToUpper()
                     </td>
                     <td>
                         @if (item.FlCetak == 0)

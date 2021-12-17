@@ -1,3 +1,114 @@
 ﻿<script type="text/javascript">
+    $(document).ready(function () {
+        //$("#denganPesananTempatan").hide();
+        //$("#fl1").change(function () {
+        //    $("#denganPesananTempatan").show();
+        //    //$("#myInput").val('');
+        //    //$("#inputTarikh1").val('');
+        //    //$("#inputTarikh2").val('');
+        //});
+        //$("#fl2").change(function () {
+        //    $("#denganPesananTempatan").hide();
+        //    //$("#myInput").val('');
+        //    //$("#inputTarikh1").val('');
+        //    //$("#inputTarikh2").val('');
+        //});
+    }); 
 
+    // onchange kod pembekal
+    $("body").on('change', "#ddlKodPembekal", function () {
+        var kodPembekal = $("#ddlKodPembekal").val();
+        JsonKodPembekal(kodPembekal);
+    });
+    function JsonKodPembekal(id) {
+        $.ajax({
+            type: "POST",
+            url: "/AkBelian/JsonGetPembekal",
+            data: { data: id },
+            dataType: "json",
+            success: function (msg) {
+                $("#txtNamaPembekal").val(msg.record.namaSykt);
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    //on change kod pembekal end
+
+    //add tbl objek
+    $("body").on("click", "#btnAdd1", function () {
+        //Reference the Name and Country TextBoxes.
+        var txtKodAkaun = $("#txtKodAkaun");
+        GetCarta(txtKodAkaun.val());
+    });
+
+    function GetCarta(id) {
+        var Objek = {
+            Id: id
+        }
+        if (id != "") {
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/AkBelian/GetCarta",
+                data: Objek,
+                dataType: "json",
+                success: function (r) {
+                    //Reference the TextBoxes.
+                    var txtKodAkaun = $("#txtKodAkaun");
+                    var txtAmaunObjek = $("#txtAmaunObjek");
+                    var txtJumlah = $("#jumlahObjek");
+
+                    //Sum value to Total text field
+                    var sum = 0;
+                    sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
+                    txtJumlah.val(sum);
+
+                    //Get the reference of the Table's TBODY element.
+                    var tBody = $("#tblObjek > TBODY")[0];
+                    //Add Row.
+                    var row = tBody.insertRow(-1);
+
+                    //Add akCartaId cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.id);
+                    cell.prop("hidden", !this.checked);
+
+                    //Add kod cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.kod + ' - ' + r.record.perihal);
+
+                    //Add amaun cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(txtAmaunObjek.val());
+
+                    //Add Button cell.
+                    cell = $(row.insertCell(-1));
+                    var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                    cell.append(btnRemove1);
+
+                    var AkBelian1 = {
+                        AkCartaId: txtKodAkaun.val(),
+                        Amaun: txtAmaunObjek.val()
+                    }
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/AkBelian/SaveAkBelian1",
+                            data: AkBelian1,
+                            dataType: "json",
+                            success: function (r) {
+                                //Clear the TextBoxes.
+                                txtKodAkaun.val("");
+                                txtAmaunObjek.val("");
+                            }
+                        });
+
+                }
+            });
+        }
+
+    }
+    //add tbl objek end
 </script>

@@ -68,10 +68,12 @@ namespace MSNK
             services.AddTransient<IRepository<AkJurnal, int>, AkJurnalRepository>();
             services.AddTransient<ListViewIRepository<AkJurnal1, int>, AkJurnal1Repository>();
             services.AddTransient<IRepository<AkBelian, int>, AkBelianRepository>();
+            services.AddTransient<ListViewIRepository<AkBelian1, int>, AkBelian1Repository>();
             services.AddTransient<AppLogIRepository<AppLog, int>, AppLogRepository>();
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
+            services.AddScoped(ss => SessionCartBelian.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

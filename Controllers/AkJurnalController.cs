@@ -181,7 +181,7 @@ namespace MSNK.Controllers
                     m.Cetak = akJurnal.Cetak;
                     m.Batal = akJurnal.Batal;
                     m.UserId = username;
-                    m.TarikhMasuk = DateTime.Now;
+                    m.TarMasuk = DateTime.Now;
                     m.AkJurnal1 = _cart.Lines1.ToArray();
 
                     await _akJurnalRepo.Insert(m);

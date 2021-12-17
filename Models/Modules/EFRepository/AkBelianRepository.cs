@@ -29,6 +29,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JKW)
                 .Include(b => b.AkPO)
                 .ThenInclude(b => b.AkPembekal)
+                .Include(b => b.AkPembekal)
                 .Include(b => b.AkBelian1)
                 .Include(b => b.AkBelian2)
                 .ToListAsync();
