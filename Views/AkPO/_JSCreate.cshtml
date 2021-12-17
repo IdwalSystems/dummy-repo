@@ -1,5 +1,50 @@
 ﻿<script type="text/javascript">
 
+    // In your Javascript (external .js resource or <script> tag)
+    $(document).ready(function () {
+        //$('.js-example-basic-single').select2();
+
+
+        //$("#ddlPembekal").on('change', function () { //Guna untk capture value input
+        //    var pembekal = $("#ddlPembekal").val();
+        //    //alert(pembekal);
+
+        //});
+
+        $("#ddlPembekal").on('change', function () {
+            var pembekal = $("#ddlPembekal").val();
+            JsonKod(pembekal); alert(pembekal);
+        });
+    });
+
+    function JsonKod(id) {
+        var Objek = {
+            Id: id
+        }
+        alert(id);
+        $.ajax({
+            type: "POST",
+            url: "/AkPO/GetMaklumat",
+            data: Objek,
+            dataType: "json",
+            success: function (data) {
+                var item = data.record;
+                $("#txtNamaSykt").val(item.namaSykt);//Nama kena camelcase
+                //var listId = $("#select2-ddlPembekal-container").val(); //Get Datalist Value
+                //var string = listId.substring(0, 7); // Substring a Value
+                //document.getElementById("txtNamaSykt").value = string;
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+
+    //Sum value to Total text field
+    //var sum = 0;
+    //sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
+    //txtJumlah.val(sum);
+
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
@@ -75,116 +120,104 @@
 
     }
     //add tbl objek end
-    //add tbl Urusniaga
+
+    //add tbl Perihal
     $("body").on("click", "#btnAdd2", function () {
         //Reference the Name and Country TextBoxes.
-        var ddlCaraBayar = $("#ddlCaraBayar");
-        GetCaraBayar(ddlCaraBayar.val());
+        var txtBil = $("#txtBil");
+        GetPerihal(txtBil.val());
     });
 
-    function GetCaraBayar(id) {
-        var JCaraBayar = {
+    function GetPerihal(id) {
+        var Perihal = {
             Id: id
         }
         if (id != "") {
             //Send the JSON array to Controller using AJAX.
-            $.ajax({
-                type: "POST",
-                url: "/AkTerima/GetCaraBayar",
-                data: JCaraBayar,
-                dataType: "json",
-                success: function (r) {
-                    //Reference the TextBoxes.
-                    var ddlCaraBayar = $("#ddlCaraBayar");
-                    var txtAmaunUrusniaga = $("#txtAmaunUrusniaga");
-                    var txtNoCek = $("#txtNoCek");
-                    var txtJenisCek = $("#txtJenisCek");
-                    var txtKodBankCek = $("#txtKodBankCek");
-                    var txtTempatCek = $("#txtTempatCek");
-                    var txtNoSlip = $("#txtNoSlip");
-                    var txtTarSlip = $("#txtTarSlip");
 
-                    //Get the reference of the Table's TBODY element.
-                    var tBody = $("#tblUrusniaga > TBODY")[0];
-                    //Add Row.
-                    var row = tBody.insertRow(-1);
+            //Reference the TextBoxes.
+            var txtBaris = $("#txtBaris");
+            var txtBil = $("#txtBil");
+            var txtNoStok = $("#txtNoStok");
+            var txtPerihal = $("#txtPerihal");
+            var txtKuantiti = $("#txtKuantiti");
+            var txtUnit = $("#txtUnit");
+            var txtHargaUnit = $("#txtHargaUnit");
+            var txtAmaun = $("#txtAmaun");
 
-                    //Add caraBayarId cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
+            //Get the reference of the Table's TBODY element.
+            var tBody = $("#tblPerihal > TBODY")[0];
+            //Add Row.
+            var row = tBody.insertRow(-1);
 
-                    //Add caraBayar cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.kod);
+            //Add Baris cell.
+            var cell = $(row.insertCell(-1));
+            cell.html(txtBaris.val());
 
-                    //Add Amaun cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtAmaunUrusniaga.val());
+            //Add Bil cell.
+            var cell = $(row.insertCell(-1));
+            cell.html(txtBil.val());
 
-                    //Add NoCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtNoCek.val());
+            //Add No Stok cell.
+            var cell = $(row.insertCell(-1));
+            cell.html(txtNoStok.val());
 
-                    //Add JenisCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtJenisCek.val());
+            //Add Perihal cell.
+            var cell = $(row.insertCell(-1));
+            cell.html(txtPerihal.val());
 
-                    //Add KodBankCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtKodBankCek.val());
+            //Add Kuantiti cell.
+            var cell = $(row.insertCell(-1));
+            cell.html(txtKuantiti.val());
 
-                    //Add TempatCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtTempatCek.val());
+            //Add Unit cell.
+            var cell = $(row.insertCell(-1));
+            cell.html(txtUnit.val());
 
-                    //Add NoSlip cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtNoSlip.val());
+            //Add Harga cell.
+            var cell = $(row.insertCell(-1));
+            cell.html(txtHargaUnit.val());
 
-                    //Add TarSlip cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(showDate(txtTarSlip.val()));
+            //Add Amaun cell.
+            var cell = $(row.insertCell(-1));
+            cell.html(txtAmaun.val());
 
+            //Add Button cell.
+            cell = $(row.insertCell(-1));
+            var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
+            cell.append(btnRemove2);
 
-
-                    //Add Button cell.
-                    cell = $(row.insertCell(-1));
-                    var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
-                    cell.append(btnRemove2);
-
-                    var AkPO2 = {
-                        JCaraBayarId: ddlCaraBayar.val(),
-                        Amaun: txtAmaunUrusniaga.val(),
-                        NoCek: txtNoCek.val(),
-                        JenisCek: txtJenisCek.val(),
-                        KodBankCek: txtKodBankCek.val(),
-                        TempatCek: txtTempatCek.val(),
-                        NoSlip: txtNoSlip.val(),
-                        TarSlip: txtTarSlip.val()
+            var AkPO2 = {
+                Baris: txtBaris.val(),
+                Bil: txtBil.val(),
+                NoStok: txtNoStok.val(),
+                Perihal: txtPerihal.val(),
+                Kuantiti: txtKuantiti.val(),
+                Unit: txtUnit.val(),
+                Harga: txtHargaUnit.val(),
+                Amaun: txtAmaun.val()
+            }
+            if (Perihal != null) {
+                $.ajax({
+                    type: "POST",
+                    url: "/AkPO/SaveAkPO2",
+                    data: AkPO2,
+                    dataType: "json",
+                    success: function (r) {
+                        //Clear the TextBoxes.
+                        txtBaris.val("");
+                        txtBil.val("");
+                        txtNoStok.val("");
+                        txtPerihal.val("");
+                        txtKuantiti.val("");
+                        txtUnit.val("");
+                        txtHargaUnit.val("");
+                        txtAmaun.val("");
                     }
-                    if (noRujukan != null) {
-                        $.ajax({
-                            type: "POST",
-                            url: "/AkPO/SaveAkPO2",
-                            data: AkPO2,
-                            dataType: "json",
-                            success: function (r) {
-                                //Clear the TextBoxes.
-                                ddlCaraBayar.val("");
-                                txtAmaunUrusniaga.val("");
-                                txtNoCek.val("");
-                                txtJenisCek.val("");
-                                txtKodBankCek.val("");
-                                txtTempatCek.val("");
-                                txtNoSlip.val("");
-                                txtTarSlip.val("");
-                            }
-                        });
-                    }
+                });
+            }
 
-                }
-            });
+
         }
 
     }
@@ -233,7 +266,7 @@
         var name = $("TD", row).eq(0).html();
         if (confirm("Hapus : " + name + " ?")) {
             //Get the reference of the Table.
-            var table = $("#tblUrusniaga")[0];
+            var table = $("#tblPerihal")[0];
 
             var AkPO2 = {
                 JCaraBayarId: name,
@@ -257,4 +290,5 @@
     $("body").on("click", "#btnSave", function () {
         //insert validation form here
     });
+
 </script>

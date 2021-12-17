@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MSNK.Models.Modules.EFRepository
 {
 
-    public class AkPO1Repository : AkPO1IRepository<AkPO1, int>
+    public class AkPO1Repository : ListViewIRepository<AkPO1, int>
     {
         public readonly ApplicationDbContext context;
 

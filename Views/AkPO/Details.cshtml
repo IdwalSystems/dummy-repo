@@ -103,6 +103,7 @@
                 <tr>
                     <th>Baris</th>
                     <th>Bil</th>
+                    <th>No Stok</th>
                     <th>Perihal</th>
                     <th>Kuantiti</th>
                     <th>Unit</th>
@@ -115,8 +116,9 @@
                 @foreach (var item in ViewBag.akPO2)
                 {
                 <tr>
-                    <td class="editable-txt">@item.Baris</td>
+                    <td class="editable-txt">@item.Indek</td>
                     <td class="editable-txt">@item.Bil</td>
+                    <td class="editable-txt">@item.NoStok</td>
                     <td class="editable-txt">@item.Perihal</td>
                     <td class="editable-txt">@item.Kuantiti</td>
                     <td class="editable-txt">@item.Unit</td>
