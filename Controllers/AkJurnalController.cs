@@ -205,6 +205,12 @@ namespace MSNK.Controllers
             }
 
             var akJurnal = await _akJurnalRepo.GetById((int)id);
+            if (akJurnal.Posting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
             akJurnal.JKW = await _jKWRepo.GetById(akJurnal.JKWId);
 
             if (akJurnal == null)
@@ -224,7 +230,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,JKWId,NoJurnal,Tarikh,JumDebit,JumKredit,Catatan1,Catatan2,Catatan3,Catatan4,Posting,Cetak,Batal,UserId,TarikhMasuk")] AkJurnal akJurnal)
+        public async Task<IActionResult> Edit(int id, AkJurnal akJurnal)
         {
             if (id != akJurnal.Id)
             {
@@ -469,6 +475,45 @@ namespace MSNK.Controllers
                 await _context.SaveChangesAsync();
 
                 return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> GetCart1(AkJurnal1 akJurnal1)
+        {
+            try
+            {
+                AkJurnal data = await _context.AkJurnal
+                    .Include(x => x.AkJurnal1)
+                    .ThenInclude(x=> x.AkCarta)
+                    .FirstOrDefaultAsync(x => x.Id == akJurnal1.AkJurnalId);
+
+                List<AkJurnal1> akJ1 = data.AkJurnal1.ToList();
+
+                foreach (AkJurnal1 item in akJ1)
+                {
+                    _cart.AddItem1(item.AkJurnalId, item.Indeks, item.AkCartaId, item.Debit, item.Kredit);
+                }
+
+                decimal debit = 0;
+                decimal kredit = 0;
+                foreach (var item in akJ1)
+                {
+                    debit += item.Debit;
+                    kredit += item.Kredit;
+                }
+                AkJurnal akJurnal = await _akJurnalRepo.GetById(akJurnal1.AkJurnalId);
+
+                akJurnal.JumDebit = debit;
+                akJurnal.JumKredit = kredit;
+
+                await _akJurnalRepo.Update(akJurnal);
+                await _context.SaveChangesAsync();
+
+                return Json(new { result = "OK", data = data });
             }
             catch (Exception ex)
             {

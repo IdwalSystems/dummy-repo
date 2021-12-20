@@ -25,80 +25,91 @@
                     var txtKreditObjek = $("#txtKreditObjek");
                     var jumDebit = $("#JumDebit");
                     var jumKredit = $("#JumKredit");
+                    var txtKodAkaunText = $("#txtKodAkaun option:selected");
 
                     //Get the reference of the Table's TBODY element.
                     var tBody = $("#tblObjek > TBODY")[0];
-                    //Add Row.
-                    var row = tBody.insertRow(-1);
+                    var check = false;
+                    var table = $("#tblObjek tbody");
+                    table.find('tr').each(function (i, el) {
+                        var $tds = $(this).find('td');
+                        var loop = $tds.eq(1).text();
+                        if (txtKodAkaunText.text().trim() === loop.trim()) {
+                            check = true;
+                        };
+                    });
+                    if (!check) {
+                        //Add Row.
+                        var row = tBody.insertRow(-1);
 
-                    //Add akCartaId cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
+                        //Add akCartaId cell.
+                        var cell = $(row.insertCell(-1));
+                        cell.html(r.record.id);
+                        cell.prop("hidden", !this.checked);
 
-                    //Add kod cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.kod + ' - ' + r.record.perihal);
+                        //Add kod cell.
+                        var cell = $(row.insertCell(-1));
+                        cell.html(r.record.kod + ' - ' + r.record.perihal);
 
-                    //Add debit cell.
-                    var cell = $(row.insertCell(-1));
-                    if (txtDebitObjek.val()) {
-                        cell.html(parseFloat(txtDebitObjek.val()).toFixed(2));
-                    } else {
-                        cell.html("0.00");
-                    }
-                    cell.attr("class", "editable-txt text-right");
-                    cell.attr("id", "td1Debit_" + r.record.Id);
+                        //Add debit cell.
+                        var cell = $(row.insertCell(-1));
+                        if (txtDebitObjek.val()) {
+                            cell.html(parseFloat(txtDebitObjek.val()).toFixed(2));
+                        } else {
+                            cell.html("0.00");
+                        }
+                        cell.attr("class", "editable-txt text-right");
+                        cell.attr("id", "td1Debit_" + r.record.Id);
 
-                    //Add kredit cell.
-                    var cell = $(row.insertCell(-1));
-                    if (txtKreditObjek.val()) {
-                        cell.html(parseFloat(txtKreditObjek.val()).toFixed(2));
-                    } else {
-                        cell.html("0.00");
-                    }
-                    cell.attr("class", "editable-txt text-right");
-                    cell.attr("id", "td1Kredit_" + r.record.Id);
+                        //Add kredit cell.
+                        var cell = $(row.insertCell(-1));
+                        if (txtKreditObjek.val()) {
+                            cell.html(parseFloat(txtKreditObjek.val()).toFixed(2));
+                        } else {
+                            cell.html("0.00");
+                        }
+                        cell.attr("class", "editable-txt text-right");
+                        cell.attr("id", "td1Kredit_" + r.record.Id);
 
-                    //Add Edit Button cell.
-                    cell = $(row.insertCell(-1));
+                        //Add Edit Button cell.
+                        cell = $(row.insertCell(-1));
 
-                    var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
-                    cell.append(btnUpdate1);
+                        var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                        cell.append(btnUpdate1);
 
-                    //Add Remove Button cell.
-                    cell = $(row.insertCell(-1));
+                        //Add Remove Button cell.
+                        cell = $(row.insertCell(-1));
 
-                    var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
-                    cell.append(btnRemove1);
+                        var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                        cell.append(btnRemove1);
 
-                    var AkJurnal1 = {
-                        AkJurnalId: txtAkJurnal1.val(),
-                        AkCartaId: txtKodAkaun.val(),
-                        Debit: txtDebitObjek.val(),
-                        Kredit: txtKreditObjek.val()
-                    }
+                        var AkJurnal1 = {
+                            AkJurnalId: txtAkJurnal1.val(),
+                            AkCartaId: txtKodAkaun.val(),
+                            Debit: txtDebitObjek.val(),
+                            Kredit: txtKreditObjek.val()
+                        }
 
-                    if (txtKodAkaun.val) {
-                        $.ajax({
-                            type: "POST",
-                            url: "/AkJurnal/InsertUpdateAkJurnal1",
-                            data: AkJurnal1,
-                            dataType: "json",
-                            success: function (r) {
-                                //Clear the TextBoxes.
-                                txtKodAkaun.val("");
-                                txtDebitObjek.val("0.00");
-                                txtKreditObjek.val("0.00");
-                                jumDebit.val(r.record.value.debit);
-                                jumKredit.val(r.record.value.kredit);
-                            }
-                        });
+                        if (txtKodAkaun.val) {
+                            $.ajax({
+                                type: "POST",
+                                url: "/AkJurnal/InsertUpdateAkJurnal1",
+                                data: AkJurnal1,
+                                dataType: "json",
+                                success: function (r) {
+                                    //Clear the TextBoxes.
+                                    txtKodAkaun.val("");
+                                    txtDebitObjek.val("0.00");
+                                    txtKreditObjek.val("0.00");
+                                    jumDebit.val(r.record.value.debit);
+                                    jumKredit.val(r.record.value.kredit);
+                                }
+                            });
+                        }
                     }
                 }
             });
         }
-
     }
     //add tbl objek end
 
@@ -132,52 +143,71 @@
     };
     function modalUpdate1() {
         var id = $("#moId1").val();
-        var amaun = $("#moAmaun1").val();
-        var akTerimaId = $("#Id").val();
-        var jumlah = $("#jumlahObjek");
+        var debit = $("#moDebit").val();
+        var kredit = $("#moKredit").val();
+        var akJurnalId = $("#Id").val();
+        var jumDebit = $("#JumDebit");
+        var jumKredit = $("#JumKredit");
 
-        var AkTerima1 = {
+        var AkJurnal1 = {
             Id: id,
-            AkTerimaId: akTerimaId,
-            Amaun: amaun
+            AkJurnalId: akJurnalId,
+            Debit: debit,
+            Kredit: kredit
         }
+
+
+        $("table tbody#tbodyObjek").empty();
+        
         $.ajax({
             type: "POST",
-            url: "/AkTerima/SaveUpdateAkTerima1",
-            data: AkTerima1,
+            url: "/AkJurnal/SaveUpdateAkJurnal1",
+            data: AkJurnal1,
             dataType: "json",
+            beforeSend: function () {
+                $('#tblObjek').addClass('d-none');
+                $('#loader').removeClass('d-none');
+            },
             success: function (r) {
                 //insert notification here
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkTerima/GetCart1",
-                    data: AkTerima1,
+                    url: "/AkJurnal/GetCart1",
+                    data: AkJurnal1,
                     dataType: "json",
                     success: function (r) {
 
                         //refresh updated table objek
-                        $("table tbody#tbodyObjek").empty();
-                        var sum = 0;
-                        if (r.data.akTerima1.length > 0) {
-                            for (var i = 0; i < r.data.akTerima1.length; i++) {
-                                var item1 = r.data.akTerima1[i];
-                                var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
-                                    "</td><td>" + item1.akCarta.kod +
-                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                        var sumdebit = 0;
+                        var sumkredit = 0;
+                        if (r.data.akJurnal1.length > 0) {
+                            for (var i = 0; i < r.data.akJurnal1.length; i++) {
+                                var item1 = r.data.akJurnal1[i];
+                                var str =
+                                    "<tr id='" + item1.id + "'><td id='akCartaId' hidden>" + item1.akCartaId +
+                                    "</td><td>" + item1.akCarta.kod + ' - ' + item1.akCarta.perihal +
+                                    "</td><td class='editable-txt text-right'>" + (item1.debit).toFixed(2) +
+                                    "</td><td class='editable-txt text-right'>" + (item1.kredit).toFixed(2) +
                                     "</td><td>" +
-                                    "<button class='btn btn-primary btn-table-mini' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalUrusniaga' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
-                                    "<button class='btn btn-danger btn-table-mini' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
                                 $("table tbody#tbodyObjek").append(str);
-                                sum += item1.amaun;
+                                sumdebit += item1.debit;
+                                sumkredit += item1.kredit;
                             }
                         }
-                        jumlah.val(sum);
+                        jumDebit.val(sumdebit.toFixed(2));
+                        jumKredit.val(sumkredit.toFixed(2));
                     }
                 });
-            }
+            },
+            complete: function () {
+                $('#tblObjek').removeClass('d-none');
+                $('#loader').addClass('d-none');
+            },
         });
     };
 

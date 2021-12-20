@@ -34,7 +34,7 @@
                         <div class="form-group col-md">
                             <label asp-for="Tarikh" class="control-label"></label>
                             <span class="text-danger control-label">*</span>
-                            <input asp-for="Tarikh" class="form-control form-control-sm" />
+                            <input asp-for="Tarikh" class="form-control form-control-sm" type="date" />
                             <span asp-validation-for="Tarikh" class="text-danger"></span>
                         </div>
                     </div>
@@ -80,8 +80,8 @@
                                     <tr>
                                         @*<th>Bil</th>*@
                                         <th style="width:60%">Kod</th>
-                                        <th>Debit RM</th>
-                                        <th>Kredit RM</th>
+                                        <th class="text-right">Debit RM</th>
+                                        <th class="text-right">Kredit RM</th>
                                         <th></th>
                                     </tr>
                                 </thead>

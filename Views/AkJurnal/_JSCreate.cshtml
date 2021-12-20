@@ -14,7 +14,7 @@
         var Objek = {
             Id: id
         }
-        if (id != "" || id != null) {
+        if (id) {
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
@@ -24,49 +24,59 @@
                 success: function (r) {
                     //Reference the TextBoxes.
                     var txtKodAkaun = $("#txtKodAkaun");
+                    var txtKodAkaunText = $("#txtKodAkaun option:selected");
                     var txtDebitObjek = $("#txtDebitObjek");
                     var txtKreditObjek = $("#txtKreditObjek");
                     var jumDebit = $("#JumDebit");
                     var jumKredit = $("#JumKredit");
 
-                    //Sum value to debit text field
-                    //debit += parseFloat(txtDebitObjek.val());
-                    //jumDebit.val(debit);
-
-                    //Sum value to krdit text field
-                    //kredit += parseFloat(txtKreditObjek.val());
-                    //jumKredit.val(kredit);
-
                     //Get the reference of the Table's TBODY element.
                     var tBody = $("#tblObjek > TBODY")[0];
                     //Add Row.
-                    var row = tBody.insertRow(-1);
+                    var check = false;
+                    var table = $("#tblObjek tbody");
+                    table.find('tr').each(function (i, el) {
+                        var $tds = $(this).find('td');
+                        var loop = $tds.eq(1).text();
+                        if (txtKodAkaunText.text().trim() === loop.trim()) {
+                            check = true;
+                        };
+                    });
+                    if (!check) {
+                        var row = tBody.insertRow(-1);
 
-                    //Add indeks cell.
-                    //var cell = $(row.insertCell(-1));
-                    //cell.html(++rowno);
+                        //Add akCartaId cell.
+                        var cell = $(row.insertCell(-1));
+                        cell.html(r.record.id);
+                        cell.prop("hidden", !this.checked);
 
-                    //Add akCartaId cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
+                        //Add kod cell.
+                        var cell = $(row.insertCell(-1));
+                        cell.html(r.record.kod + " - " + r.record.perihal);
 
-                    //Add kod cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.kod + " - " + r.record.perihal);
+                        //Add debit cell.
+                        var cell = $(row.insertCell(-1));
+                        if (txtDebitObjek.val()) {
+                            cell.html(parseFloat(txtDebitObjek.val()).toFixed(2));
+                        } else {
+                            cell.html("0.00");
+                        }
+                        cell.attr("class", "editable-txt text-right");
 
-                    //Add debit cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtDebitObjek.val());
+                        //Add kredit cell.
+                        var cell = $(row.insertCell(-1));
+                        if (txtKreditObjek.val()) {
+                            cell.html(parseFloat(txtKreditObjek.val()).toFixed(2));
+                        } else {
+                            cell.html("0.00");
+                        }
+                        cell.attr("class", "editable-txt text-right");
 
-                    //Add kredit cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtKreditObjek.val());
-
-                    //Add Button cell.
-                    cell = $(row.insertCell(-1));
-                    var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
-                    cell.append(btnRemove1);
+                        //Add Button cell.
+                        cell = $(row.insertCell(-1));
+                        var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                        cell.append(btnRemove1);
+                    };
 
                     var AkJurnal1 = {
                         AkCartaId: txtKodAkaun.val(),
@@ -74,7 +84,7 @@
                         Kredit: txtKreditObjek.val()
                     }
 
-                    if (txtKodAkaun.val() != null) {
+                    if (txtKodAkaun.val()) {
                         $.ajax({
                             type: "POST",
                             url: "/AkJurnal/SaveAkJurnal1",
@@ -84,7 +94,6 @@
                                 //Clear the TextBoxes.
                                 txtDebitObjek.val("0.00");
                                 txtKreditObjek.val("0.00");
-                                /*alert(r.record.value.debit);*/
                                 jumDebit.val(r.record.value.debit);
                                 jumKredit.val(r.record.value.kredit);
                             },
