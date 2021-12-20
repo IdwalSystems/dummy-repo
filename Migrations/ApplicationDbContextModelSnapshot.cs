@@ -93,8 +93,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -164,8 +163,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -204,8 +202,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -264,8 +261,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -331,8 +327,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -403,8 +398,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -445,8 +439,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -503,8 +496,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -544,8 +536,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -606,8 +597,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -691,8 +681,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -798,12 +787,10 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("UserId")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -844,8 +831,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -905,8 +891,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -983,8 +968,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1018,8 +1002,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1071,8 +1054,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1106,8 +1088,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserIdKemaskini")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

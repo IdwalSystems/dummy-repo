@@ -26,10 +26,20 @@ namespace MSNK.Models.Modules.Cart.Session
         public override void AddItem1(
             int akTerimaId,
             decimal amaun,
-            int akCartaId
+            int akCartaId,
+            string userId,
+            DateTime tarMasuk,
+            string userIdKemasikini,
+            DateTime tarKemaskini
            )
         {
-            base.AddItem1(akTerimaId, amaun, akCartaId);
+            base.AddItem1(akTerimaId,
+                          amaun,
+                          akCartaId,
+                          userId,
+                          tarMasuk,
+                          userIdKemasikini,
+                          tarKemaskini);
             Session.SetJson("CartTerima", this);
         }
         public override void RemoveItem1(int id)
@@ -50,7 +60,11 @@ namespace MSNK.Models.Modules.Cart.Session
             decimal amaun, string noCek,
             string jenisCek, string kodBankCek,
             string tempatCek, string noSlip,
-            DateTime tarSlip
+            DateTime tarSlip,
+            string userId,
+            DateTime tarMasuk,
+            string userIdKemasikini,
+            DateTime tarKemaskini
             )
         {
             base.AddItem2(akTerimaId,
@@ -61,7 +75,11 @@ namespace MSNK.Models.Modules.Cart.Session
                           kodBankCek,
                           tempatCek,
                           noSlip,
-                          tarSlip);
+                          tarSlip,
+                          userId, 
+                          tarMasuk, 
+                          userIdKemasikini, 
+                          tarKemaskini);
 
             Session.SetJson("CartTerima", this);
         }

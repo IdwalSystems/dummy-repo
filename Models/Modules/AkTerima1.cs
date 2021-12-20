@@ -23,7 +23,6 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Masuk")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarMasuk { get; set; }
-        [MaxLength(15)]
         public string UserIdKemaskini { get; set; }
         [DisplayName("Tarikh Kemaskini")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]

@@ -12,11 +12,11 @@ namespace MSNK.Models.Modules
         public int JCaraBayarId { get; set; }
         public decimal Amaun { get; set; }
         [MaxLength(10)]
-        public string NoCek { get; set; }
+        public string NoCek { get; set; } 
         [MaxLength(1)]
-        public string JenisCek { get; set; }
+        public string JenisCek { get; set; } 
         [MaxLength(4)]
-        public string KodBankCek { get; set; }
+        public string KodBankCek { get; set; } 
         [MaxLength(100)]
         public string TempatCek { get; set; }
         [MaxLength(30)]
@@ -35,7 +35,6 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Masuk")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarMasuk { get; set; }
-        [MaxLength(15)]
         public string UserIdKemaskini { get; set; }
         [DisplayName("Tarikh Kemaskini")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]

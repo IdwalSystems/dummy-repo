@@ -36,7 +36,7 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<AkTerima1> GetById(int id)
         {
-            return await context.AkTerima1.FindAsync(id);
+            return await context.AkTerima1.Include(d=> d.AkCarta).Where(x=> x.Id == id).FirstOrDefaultAsync();
         }
 
 

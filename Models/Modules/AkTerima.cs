@@ -63,12 +63,10 @@ namespace MSNK.Models.Modules
         public string Emel { get; set; }
         [MaxLength(400)]
         public string Sebab { get; set; }
-        [MaxLength(15)]
         public string UserId { get; set; }
         [DisplayName("Tarikh Masuk")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarMasuk { get; set; }
-        [MaxLength(15)]
         public string UserIdKemaskini { get; set; }
         [DisplayName("Tarikh Kemaskini")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
