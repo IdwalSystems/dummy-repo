@@ -45,14 +45,22 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int Batal { get; set; }
         [MaxLength(15)]
-        public string UserId { get; set; }
-        [DisplayName("Tarikh Masuk")]
-        public DateTime TarikhMasuk { get; set; }
 
         //Relationship
         [DisplayName("KW")]
         public JKW JKW { get; set; }
         [DisplayName("Objek")]
         public ICollection<AkJurnal1> AkJurnal1 { get; set; }
+
+        // log
+        public string UserId { get; set; }
+        [DisplayName("Tarikh Masuk")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime TarMasuk { get; set; }
+        [MaxLength(15)]
+        public string UserIdKemaskini { get; set; }
+        [DisplayName("Tarikh Kemaskini")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime TarKemaskini { get; set; } = DateTime.Now;
     }
 }

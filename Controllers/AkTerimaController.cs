@@ -33,9 +33,9 @@ namespace MSNK.Controllers
         private readonly IRepository<AkBank, int> _akBankRepo;
         private readonly IRepository<JKW, int> _kwRepo;
         private readonly IRepository<JNegeri, int> _negeriRepo;
-        private readonly AkTerima1IRepository<AkTerima1, int> _akTerima1Repo;
+        private readonly ListViewIRepository<AkTerima1, int> _akTerima1Repo;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
-        private readonly AkTerima2IRepository<AkTerima2, int> _akTerima2Repo;
+        private readonly ListViewIRepository<AkTerima2, int> _akTerima2Repo;
         private readonly IRepository<AkAkaun, int> _akAkaunRepo;
         private CartTerima _cart;
 
@@ -44,8 +44,8 @@ namespace MSNK.Controllers
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
             IRepository<AkTerima, int> akTerimaRepository,
-            AkTerima1IRepository<AkTerima1, int> akTerima1Repository,
-            AkTerima2IRepository<AkTerima2, int> akTerima2Repository,
+            ListViewIRepository<AkTerima1, int> akTerima1Repository,
+            ListViewIRepository<AkTerima2, int> akTerima2Repository,
             IRepository<AkBank, int> akBankRepository,
             IRepository<JKW, int> kwRepository,
             IRepository<JNegeri, int> negeriRepository,
@@ -71,39 +71,55 @@ namespace MSNK.Controllers
         // GET: AkTerima
         public async Task<IActionResult> Index(
             string searchString,
-            string searchDate1, 
+            string searchDate1,
             string searchDate2,
             string searchColumn)
         {
-            
-            var akTerima = await _akTerimaRepo.GetAll();
-            
-            // searching with '%like%' condition
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                if (searchColumn == "NoRujukan")
-                {
-                    akTerima = akTerima.Where(s => s.NoRujukan.ToUpper().Contains(searchString.ToUpper())).ToList();
-                }
-                else if (searchColumn == "Nama")
-                {
-                    akTerima = akTerima.Where(s => s.Nama.ToUpper().Contains(searchString.ToUpper())).ToList();
-                }
-            }
-            // searching with '%like%' condition end
 
-            // searching with date range condition
-            if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
-            {
-                if (searchColumn == "Tarikh")
+
+            var akTerima = await _akTerimaRepo.GetAll();
+
+            if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            { 
+                    // searching with '%like%' condition
+                    if (!String.IsNullOrEmpty(searchString))
+                    {
+                        if (searchColumn == "NoRujukan")
+                        {
+                            akTerima = akTerima.Where(s => s.NoRujukan.ToUpper().Contains(searchString.ToUpper())).ToList();
+                        }
+                        else if (searchColumn == "Nama")
+                        {
+                            akTerima = akTerima.Where(s => s.Nama.ToUpper().Contains(searchString.ToUpper())).ToList();
+                        }
+
+                        ViewBag.SearchData1 = searchString;
+
+                    }
+
+                // searching with '%like%' condition end
+
+                // searching with date range condition
+                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
                 {
-                    DateTime date1 = DateTime.Parse(searchDate1);
-                    DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                    akTerima = akTerima.Where(x => x.Tarikh >= date1
-                        && x.Tarikh <= date2).ToList();
+                    if (searchColumn == "Tarikh")
+                    {
+                        DateTime date1 = DateTime.Parse(searchDate1);
+                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
+                        akTerima = akTerima.Where(x => x.Tarikh >= date1
+                            && x.Tarikh <= date2).ToList();
+                    }
+                    ViewBag.SearchData1 = searchDate1;
+                    ViewBag.SearchData2 = searchDate2;
                 }
+
+                ViewBag.SearchColumn = searchColumn;
             }
             // searching with date range condition end
+            else
+            {
+                ViewBag.SearchColumn = "Tarikh";
+            }
 
             return View(akTerima);
         }

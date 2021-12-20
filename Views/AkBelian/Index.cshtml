@@ -1,31 +1,36 @@
-﻿@model IEnumerable<MSNK.Models.Modules.AkTerima>
+﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.AkBelianViewModel>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <partial name="_JSIndex" />
 
+@*div Header*@
 <div class="row mb-2">
     <div class="col-8">
-        <h3 class="text-left">Resit Rasmi</h3>
+        <h3 class="text-left">Inbois Pembekal</h3>
     </div>
     <div class="col-4 text-right">
         <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
     </div>
 </div>
+@*div Header end*@
+
+@*div carian*@
 <div class="card mb-2">
     <div class="card-body pl-3 pb-2 ">
         <label class="form-control-plaintext" for="searchselect">Carian : </label>
-                
+
         <div class="form-actions no-color mb-2">
             <form asp-action="Index" method="get">
                 <div class="form-row">
                     <div class="col-sm-3 mb-2">
                         <select name="searchColumn" class="custom-select form-control-sm" id="searchColumn">
-                            <option  value="NoRujukan">No Resit</option>
+                            <option value="@ViewBag.SearchColumn">Tarikh</option>
+                            <option value="NoRujukan">No Inbois</option>
                             <option value="Nama">Nama</option>
-                            <option selected value="@ViewBag.SearchColumn">Tarikh</option>
                         </select>
                     </div>
                     <div class="col-sm-9 mb-2">
@@ -33,13 +38,13 @@
                             <div class="col-10">
                                 <div class="form-row">
                                     <div class="col-12">
-                                        <input class="form-control form-control-sm" type="text" name="searchString" id="myInput" value="@ViewBag.SearchData1"/>
+                                        <input class="form-control form-control-sm" type="text" name="searchString" id="myInput" value="@ViewBag.SearchData1" />
                                     </div>
-                                    <div class="col-6" id="myInputDate1" >
-                                        <input class="form-control form-control-sm mb-2" type="date" name="searchDate1" id="inputTarikh1" value="@ViewBag.SearchData1"/>
+                                    <div class="col-6" id="myInputDate1">
+                                        <input class="form-control form-control-sm mb-2" type="date" name="searchDate1" id="inputTarikh1" value="@ViewBag.SearchData1" />
                                     </div>
-                                    <div class="col-6" id="myInputDate2" >
-                                        <input class="form-control form-control-sm" type="date" name="searchDate2" id="inputTarikh2" value="@ViewBag.SearchData2"/>
+                                    <div class="col-6" id="myInputDate2">
+                                        <input class="form-control form-control-sm" type="date" name="searchDate2" id="inputTarikh2" value="@ViewBag.SearchData2" />
                                     </div>
                                 </div>
                             </div>
@@ -47,7 +52,7 @@
                                 <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
-                                
+
                     </div>
 
                 </div>
@@ -55,7 +60,10 @@
         </div>
     </div>
 </div>
+@*div carian end*@
 
+@*div table*@
+@*div table end*@
 <div class="table-responsive">
     <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
         <thead>
@@ -72,12 +80,8 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Jumlah)
                 </th>
-
                 <th>
-                    No KP
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nama)
+                    @Html.DisplayNameFor(model => model.NamaSykt)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Alamat1)
@@ -102,19 +106,16 @@
                         @Html.DisplayFor(modelItem => item.Tahun)
                     </td>
                     <td>
-                        @item.NoRujukan.Substring(3)
+                        @item.NoInbois.Substring(3)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Tarikh, "{0:dd/MM/yyyy}")
+                        @item.Tarikh.ToString("dd-M-yyyy")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Jumlah)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.NoKp)
-                    </td>
-                    <td>
-                        @item.Nama.ToUpper()
+                        @item.NamaSykt.ToUpper()
                     </td>
                     <td>
                         @item.Alamat1.ToUpper()
@@ -173,4 +174,3 @@
         </tbody>
     </table>
 </div>
-

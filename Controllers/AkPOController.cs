@@ -1,18 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using MSNK.Data;
+using MSNK.Models.Modules;
+using MSNK.Models.Modules.Cart;
+using MSNK.Models.Modules.IRepository;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using MSNK.Data;
-using MSNK.Models.Administration;
-using MSNK.Models.Modules;
-using MSNK.Models.Modules.Cart;
-using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
@@ -21,8 +20,8 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkPO, int> _akPORepo;
-        private readonly AkPO1IRepository<AkPO1, int> _akPO1Repo;
-        private readonly AkPO2IRepository<AkPO2, int> _akPO2Repo;
+        private readonly ListViewIRepository<AkPO1, int> _akPO1Repo;
+        private readonly ListViewIRepository<AkPO2, int> _akPO2Repo;
         private readonly IRepository<AkPembekal, int> _akpembekalRepo;
         private readonly IRepository<AkBank, int> _akBankRepo;
         private readonly IRepository<JBank, int> _jbankRepo;
@@ -33,8 +32,8 @@ namespace MSNK.Controllers
         public AkPOController(ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
             IRepository<AkPO, int> AkPORepository,
-            AkPO1IRepository<AkPO1, int> AkPO1Repository,
-            AkPO2IRepository<AkPO2, int> AkPO2Repository,
+            ListViewIRepository<AkPO1, int> AkPO1Repository,
+            ListViewIRepository<AkPO2, int> AkPO2Repository,
             IRepository<AkPembekal, int> AkPembekalRepository,
             IRepository<AkBank, int> akBankRepository,
             IRepository<JBank, int> JBankRepository,
@@ -74,8 +73,6 @@ namespace MSNK.Controllers
             var akPO = await _akPORepo.GetById((int)id);
             var kw = await _kwRepo.GetById(akPO.JKWId);
             akPO.JKW = kw;
-            var negeri = await _negeriRepo.GetById(akPO.AkPembekal.JNegeriId);
-            akPO.AkPembekal.JNegeri = negeri;
             if (akPO == null)
             {
                 return NotFound();
@@ -101,9 +98,6 @@ namespace MSNK.Controllers
 
             List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW).OrderBy(b => b.Kod).ToList();
             ViewBag.AkCarta = akCartaList;
-
-            List<AkPO2> PerihalList = _context.AkPO2.OrderBy(b => b.Indek).ToList();
-            ViewBag.Perihal = PerihalList;
 
         }
 
@@ -217,7 +211,6 @@ namespace MSNK.Controllers
                     m.FlPosting = akPO.FlPosting;
                     m.Tahun = akPO.Tahun;
                     m.FlBatal = akPO.FlBatal;
-                    m.AkPembekal = akPO.AkPembekal;
 
                     m.AkPO1 = _cart.Lines1.ToArray();
                     m.AkPO2 = _cart.Lines2.ToArray();
@@ -311,6 +304,10 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
+            CartEmpty();
+            PopulateList();
+            PopulateTable(id);
+            PopulateCart(akPO);
             return View(akPO);
         }
 
@@ -328,20 +325,6 @@ namespace MSNK.Controllers
         private bool AkPOExists(int id)
         {
             return _context.AkPO.Any(e => e.Id == id);
-        }
-        public JsonResult GetPerihal(AkPO2 lPerihal)
-        {
-            try
-            {
-                var result = _context.AkPO2.Where(b => b.Id == lPerihal.Id).FirstOrDefault();
-
-                return Json(new { result = "OK", record = result });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "Error", message = ex.Message });
-            }
-
         }
 
         public JsonResult GetCarta(AkCarta akCarta)
@@ -404,8 +387,7 @@ namespace MSNK.Controllers
             {
                 if (akPO2 != null)
                 {
-                    _cart.AddItem2(
-                        akPO2.AkPOId,
+                    _cart.AddItem2(akPO2.AkPOId,
                          akPO2.Indek,
                          akPO2.Bil,
                          akPO2.NoStok,
@@ -724,5 +706,22 @@ namespace MSNK.Controllers
             }
         }
         //Ubah AkPO2 end
+
+        [HttpPost]
+        public JsonResult GetMaklumat(AkPembekal akPembekal)
+        {
+            try
+            {
+                var result = _context.AkPembekal.Where(b => b.Id == akPembekal.Id).FirstOrDefault();
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+
     }
 }

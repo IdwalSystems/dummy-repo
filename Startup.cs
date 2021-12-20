@@ -59,18 +59,21 @@ namespace MSNK
             services.AddTransient<IRepository<AkCarta, int>, AkCartaRepository>();
             services.AddTransient<IRepository<AkAkaun, int>, AkAkaunRepository>();
             services.AddTransient<IRepository<AkTerima, int>, AkTerimaRepository>();
-            services.AddTransient<AkTerima1IRepository<AkTerima1, int>, AkTerima1Repository>();
-            services.AddTransient<AkTerima2IRepository<AkTerima2, int>, AkTerima2Repository>();
+            services.AddTransient<ListViewIRepository<AkTerima1, int>, AkTerima1Repository>();
+            services.AddTransient<ListViewIRepository<AkTerima2, int>, AkTerima2Repository>();
             services.AddTransient<IRepository<AkPO, int>, AkPORepository>();
-            services.AddTransient<AkPO1IRepository<AkPO1, int>, AkPO1Repository>();
-            services.AddTransient<AkPO2IRepository<AkPO2, int>, AkPO2Repository>();
+            services.AddTransient<ListViewIRepository<AkPO1, int>, AkPO1Repository>();
+            services.AddTransient<ListViewIRepository<AkPO2, int>, AkPO2Repository>();
             services.AddTransient<IRepository<AkPembekal, int>, AkPembekalRepository>();
             services.AddTransient<IRepository<AkJurnal, int>, AkJurnalRepository>();
-            services.AddTransient<IRepository2<AkJurnal1, int>, AkJurnal1Repository>();
+            services.AddTransient<ListViewIRepository<AkJurnal1, int>, AkJurnal1Repository>();
+            services.AddTransient<IRepository<AkBelian, int>, AkBelianRepository>();
+            services.AddTransient<ListViewIRepository<AkBelian1, int>, AkBelian1Repository>();
             services.AddTransient<AppLogIRepository<AppLog, int>, AppLogRepository>();
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
+            services.AddScoped(ss => SessionCartBelian.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

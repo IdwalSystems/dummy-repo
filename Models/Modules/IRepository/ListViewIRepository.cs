@@ -5,15 +5,14 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.IRepository
 {
-    public interface AkPO2IRepository<T1, T2> where T1 : class
+    public interface ListViewIRepository<T1, T2> where T1 : class
     {
-        Task<IEnumerable<T1>> GetAll(T2 akPO2Id);
+        Task<IEnumerable<T1>> GetAll(T2 id);
         Task<T1> GetById(T2 id);
-        //Task<T1> GetBy2Id(T2 akPOId, T2 akPO2Id);
+        Task<T1> GetBy2Id(T2 id1, T2 id2);
         Task<T1> Insert(T1 entity);
         Task Delete(T2 id);
         Task Save();
         Task Update(T1 entity);
     }
 }
-

@@ -38,5 +38,16 @@ namespace MSNK.Models.Modules
         public ICollection<AkPO2> AkPO2 { get; set; }
         public ICollection<AkPO1> AkPO1 { get; set; }
         public ICollection<AkBelian> AkBelian { get; set; }
+
+        // log
+        public string UserId { get; set; }
+        [DisplayName("Tarikh Masuk")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime TarMasuk { get; set; }
+        [MaxLength(15)]
+        public string UserIdKemaskini { get; set; }
+        [DisplayName("Tarikh Kemaskini")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime TarKemaskini { get; set; } = DateTime.Now;
     }
 }

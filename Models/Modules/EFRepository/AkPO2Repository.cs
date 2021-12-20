@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MSNK.Models.Modules.EFRepository
 {
 
-    public class AkPO2Repository : AkPO2IRepository<AkPO2, int>
+    public class AkPO2Repository : ListViewIRepository<AkPO2, int>
     {
         public readonly ApplicationDbContext context;
 
@@ -30,6 +30,11 @@ namespace MSNK.Models.Modules.EFRepository
                 //.Include(b => b.JCaraBayar)
                 .Where(x => x.AkPOId == akPOId)
                 .ToListAsync();
+        }
+
+        public Task<AkPO2> GetBy2Id(int id1, int id2)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<AkPO2> GetById(int id)
