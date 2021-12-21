@@ -47,6 +47,12 @@
                     var cell = $(row.insertCell(-1));
                     cell.html(txtAmaunObjek.val());
 
+                    //Add Edit Button cell.
+                    cell = $(row.insertCell(-1));
+
+                    var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                    cell.append(btnUpdate1);
+
                     //Add Button cell.
                     cell = $(row.insertCell(-1));
                     var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
@@ -153,9 +159,11 @@
                         cell.html(showDate(txtTarSlip.val()));
                     }
                     
-                    
+                    //Add Edit Button cell.
+                    cell = $(row.insertCell(-1));
 
-
+                    var btnUpdate2 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
+                    cell.append(btnUpdate2);
 
                     //Add Button cell.
                     cell = $(row.insertCell(-1));
@@ -262,6 +270,187 @@
         }
     };
     //remove tbl urusniaga end
+
+    //update tbl objek
+    function Update1(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var akCartaId = $("TD", row).eq(0).html();
+
+        var AkTerima1 = {
+            AkCartaId: akCartaId
+        }
+        if (name != null) {
+            $.ajax({
+                type: "POST",
+                url: "/AkTerima/GetAnItemCartAkTerima1",
+                data: AkTerima1,
+                dataType: "json",
+                success: function (r) {
+                    //insert data in modal objek
+                    $("#moId1").val(r.record.id);
+                    $("#moKodAkaun").val(r.record.akCartaId);
+                    $("#moAmaun1").val(r.record.amaun);
+
+                    //show modal objek
+                    $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
+
+                }
+            });
+        }
+    };
+
+    function modalUpdate1() {
+        var id = $("#moId1").val();
+        var amaun = $("#moAmaun1").val();
+        var akCartaId = $("#moKodAkaun").val();
+        var jumlah = $("#jumlahObjek");
+
+        var AkTerima1 = {
+            Id: id,
+            akCartaId: akCartaId,
+            Amaun: amaun
+        }
+        $.ajax({
+            type: "POST",
+            url: "/AkTerima/SaveCartAkTerima1",
+            data: AkTerima1,
+            dataType: "json",
+            success: function (r) {
+                //insert notification here
+
+                $.ajax({
+                    type: "POST",
+                    url: "/AkTerima/GetAllItemCartAkTerima1",
+                    dataType: "json",
+                    success: function (r) {
+
+                        //refresh updated table objek
+                        $("table tbody#tbodyObjek").empty();
+                        var sum = 0;
+                        if (r.record.length > 0) {
+                            for (var i = 0; i < r.record.length; i++) {
+                                var item1 = r.record[i];
+                                var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
+                                    "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
+                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td>" +
+                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "</td><td>" +
+                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "</td><tr>";
+                                $("table tbody#tbodyObjek").append(str);
+                                sum += item1.amaun;
+                            }
+                        }
+
+                        jumlah.val(sum);
+                    }
+                });
+            }
+        });
+    };
+    //update tbl objek end
+
+    //update tbl urusniaga
+    function Update2(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var jCaraBayarId = $("TD", row).eq(0).html();
+
+        var AkTerima2 = {
+            jCaraBayarId: jCaraBayarId
+        }
+        if (name != null) {
+            $.ajax({
+                type: "POST",
+                url: "/AkTerima/GetAnItemCartAkTerima2",
+                data: AkTerima2,
+                dataType: "json",
+                success: function (r) {
+                    //insert data in modal urusniaga
+                    $$("#moId2").val(r.record.id);
+                    $("#moCaraBayar").val(r.record.jCaraBayarId);
+                    $("#moAmaun2").val(r.record.amaun);
+                    $("#moNoCek").val(r.record.noCek);
+                    $("#moJenisCek").val(r.record.jenisCek);
+                    $("#moKodBankCek").val(r.record.kodBankCek);
+                    $("#moTempatCek").val(r.record.tempatCek);
+                    $("#moNoSlip").val(r.record.noSlip);
+                    $("#moTarSlip").val(r.record.tarSlip);
+
+                    //show modal objek
+                    $("#modalUrusniaga").modal({ backdrop: 'static', keyboard: false });
+
+                }
+            });
+        }
+    };
+
+    function modalUpdate2() {
+        var id = $("#moId2").val();
+        var amaun = $("#moAmaun2").val();
+        var noCek = $("#moNoCek").val();
+        var jenisCek = $("#moJenisCek").val();
+        var kodBankCek = $("#moKodBankCek").val();
+        var tempatCek = $("#moTempatCek").val();
+        var noSlip = $("#moNoSlip").val();
+        var tarSlip = $("#moTarSlip").val();
+        var akTerimaId = $("#Id").val();
+
+        var AkTerima2 = {
+            Id: id,
+            AkTerimaId: akTerimaId,
+            Amaun: amaun,
+            NoCek: noCek,
+            JenisCek: jenisCek,
+            KodBankCek: kodBankCek,
+            TempatCek: tempatCek,
+            NoSlip: noSlip,
+            TarSlip: tarSlip
+        }
+        $.ajax({
+            type: "POST",
+            url: "/AkTerima/SaveCartAkTerima2",
+            data: AkTerima2,
+            dataType: "json",
+            success: function (r) {
+                //insert notification here
+
+                $.ajax({
+                    type: "POST",
+                    url: "/AkTerima/GetAllItemCartAkTerima2",
+                    dataType: "json",
+                    success: function (r) {
+
+                        //refresh updated table Urusniaga
+                        $("table tbody#tbodyUrusniaga").empty();
+                        if (r.record.length > 0) {
+                            for (var i = 0; i < r.record.length; i++) {
+                                var item1 = r.record[i];
+                                var str = "<tr><td id='jCaraBayarId' hidden>" + item1.jCaraBayarId +
+                                    "</td><td>" + item1.jCaraBayar.kod +
+                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td>" + item1.noCek +
+                                    "</td><td>" + item1.jenisCek +
+                                    "</td><td>" + item1.kodBankCek +
+                                    "</td><td>" + item1.tempatCek +
+                                    "</td><td>" + item1.noSlip +
+                                    "</td><td>" + showDate(item1.tarSlip) +
+                                    "</td><td>" +
+                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalUrusniaga' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "</td><td>" +
+                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "</td><tr>";
+                                $("table tbody#tbodyUrusniaga").append(str);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    };
+    //update tbl urusniaga end
 
     $("body").on("click", "#btnSave", function () {
         //insert validation form here

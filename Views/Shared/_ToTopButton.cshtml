@@ -1,4 +1,4 @@
-﻿<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+﻿<button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-chevron-up"></i></button>
 <style>
     #myBtn {
         display: none;
@@ -8,15 +8,18 @@
         z-index: 99;
         border: none;
         outline: none;
-        background-color: lightsalmon;
+        background-color: limegreen;
         color: white;
         cursor: pointer;
         padding: 15px;
         border-radius: 4px;
+        transition: 0.5s;
     }
-    #myBtn:hover {
-        background-color: #555;
-    }
+        #myBtn:hover {
+            transform: rotate(360deg);
+            background-color: gold;
+            color: black;
+        }
 </style>
 <script>
     //Get the button

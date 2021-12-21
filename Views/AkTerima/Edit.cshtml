@@ -169,7 +169,7 @@
                                                 @*<td id="akTerima1Id" hidden>@item.Id</td>*@
                                                 <td id="akCartaId" hidden>@item.AkCartaId</td>
                                                 <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                                <td class="editable-txt" id="td1Amaun">@item.Amaun</td>
+                                                <td id="td1Amaun">@item.Amaun</td>
                                                 <td>
                                                     <button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
                                                         <i class="fa fa-edit"></i>
@@ -236,29 +236,29 @@
                                             <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
                                             <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
                                             <td>@item.JCaraBayar.Kod</td>
-                                            <td class="editable-txt">@item.Amaun</td>
-                                            <td class="editable-txt">@item.NoCek</td>
+                                            <td>@item.Amaun</td>
+                                            <td>@item.NoCek</td>
                                             @switch (@item.JenisCek)
                                             {
                                                 case "1":
-                                                    <td class="editable-txt">Cek Cawangan Ini</td>
+                                                    <td>Cek Cawangan Ini</td>
                                                     break;
                                                 case "2":
-                                                    <td class="editable-txt">Cek Tempatan</td>
+                                                    <td>Cek Tempatan</td>
                                                     break;
                                                 case "3":
-                                                    <td class="editable-txt">Cek Luar</td>
+                                                    <td>Cek Luar</td>
                                                     break;
                                                 case "4":
-                                                    <td class="editable-txt">Cek Antarabangsa</td>
+                                                    <td>Cek Antarabangsa</td>
                                                     break;
                                                 default:
-                                                    <td class="editable-txt"></td>
+                                                    <td></td>
                                                     break;
                                             }
-                                            <td class="editable-txt">@item.KodBankCek</td>
-                                            <td class="editable-txt">@item.TempatCek</td>
-                                            <td class="editable-txt">@item.NoSlip</td>
+                                            <td>@item.KodBankCek</td>
+                                            <td>@item.TempatCek</td>
+                                            <td>@item.NoSlip</td>
                                             @if (@item.TarSlip.ToString("dd/MM/yyyy") == "01/01/0001")
                                             {
                                                 <td></td>

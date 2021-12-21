@@ -189,7 +189,7 @@
                                         <tr id="@item.Id">
                                             <td id="akCartaId" hidden>@item.AkCartaId</td>
                                             <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                            <td class="editable-txt text-right" id="td1Amaun">@item.Amaun</td>
+                                            <td class="text-right" id="td1Amaun">@item.Amaun</td>
                                         </tr>
 
                                     }
@@ -233,30 +233,30 @@
                                             <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
                                             <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
                                             <td>@item.JCaraBayar.Perihal</td>
-                                            <td class="editable-txt">@item.Amaun</td>
-                                            <td class="editable-txt">@item.NoCek</td>
+                                            <td>@item.Amaun</td>
+                                            <td>@item.NoCek</td>
                                             @switch (@item.JenisCek)
                                             {
                                                 case "1":
-                                                    <td class="editable-txt">Cek Cawangan Ini</td>
+                                                    <td>Cek Cawangan Ini</td>
                                                     break;
                                                 case "2":
-                                                    <td class="editable-txt">Cek Tempatan</td>
+                                                    <td>Cek Tempatan</td>
                                                     break;
                                                 case "3":
-                                                    <td class="editable-txt">Cek Luar</td>
+                                                    <td>Cek Luar</td>
                                                     break;
                                                 case "4":
-                                                    <td class="editable-txt">Cek Antarabangsa</td>
+                                                    <td>Cek Antarabangsa</td>
                                                     break;
                                                 default:
-                                                    <td class="editable-txt"></td>
+                                                    <td></td>
                                                     break;
                                             }
 
-                                            <td class="editable-txt">@item.KodBankCek</td>
-                                            <td class="editable-txt text-uppercase">@item.TempatCek</td>
-                                            <td class="editable-txt">@item.NoSlip</td>
+                                            <td>@item.KodBankCek</td>
+                                            <td class="text-uppercase">@item.TempatCek</td>
+                                            <td>@item.NoSlip</td>
                                             @if (@item.TarSlip.ToString("dd/MM/yyyy") == "01/01/0001")
                                             {
                                                 <td></td>
