@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Administration;
@@ -17,7 +15,6 @@ using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
 using Rotativa.AspNetCore;
 using MSNK.Infrastructure;
-using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
@@ -558,8 +555,7 @@ namespace MSNK.Controllers
                                    akTerima1.UserId,
                                    akTerima1.TarMasuk,
                                    akTerima1.UserIdKemaskini,
-                                   akTerima1.TarKemaskini);  
-                    
+                                   akTerima1.TarKemaskini);    
                 }
 
 

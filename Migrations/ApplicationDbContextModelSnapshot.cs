@@ -226,6 +226,9 @@ namespace MSNK.Migrations
                     b.Property<decimal>("Amaun")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("Baris")
+                        .HasColumnType("int");
+
                     b.Property<string>("Bil")
                         .HasMaxLength(3)
                         .HasColumnType("nvarchar(3)");
@@ -561,6 +564,9 @@ namespace MSNK.Migrations
 
                     b.Property<decimal>("Amaun")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Baris")
+                        .HasColumnType("int");
 
                     b.Property<string>("Bil")
                         .HasMaxLength(3)

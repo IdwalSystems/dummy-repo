@@ -12,6 +12,7 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         public int AkBelianId { get; set; }
         public int Indek { get; set; }
+        public int Baris { get; set; }
         [MaxLength(3)]
         public string Bil { get; set; }
         [MaxLength(20)]
