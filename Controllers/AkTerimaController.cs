@@ -75,8 +75,6 @@ namespace MSNK.Controllers
             string searchDate2,
             string searchColumn)
         {
-
-
             var akTerima = await _akTerimaRepo.GetAll();
 
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
@@ -205,7 +203,11 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem1(akTerima1.AkTerimaId,
                                akTerima1.Amaun,
-                               akTerima1.AkCartaId);
+                               akTerima1.AkCartaId,
+                               akTerima1.UserId,
+                               akTerima1.TarMasuk,
+                               akTerima1.UserIdKemaskini,
+                               akTerima1.TarKemaskini);
             }
 
             List<AkTerima2> akTerima2Table = _context.AkTerima2
@@ -223,7 +225,11 @@ namespace MSNK.Controllers
                                akTerima2.KodBankCek,
                                akTerima2.TempatCek,
                                akTerima2.NoSlip,
-                               akTerima2.TarSlip);
+                               akTerima2.TarSlip,
+                               akTerima2.UserId,
+                               akTerima2.TarMasuk,
+                               akTerima2.UserIdKemaskini,
+                               akTerima2.TarKemaskini);
             }
         }
 
@@ -244,7 +250,7 @@ namespace MSNK.Controllers
         {
             
             AkTerima m = new AkTerima();
-            var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
+            var user = await _userManager.GetUserAsync(User);
 
             // get latest no rujukan running number  
             var kw = _context.JKW.FirstOrDefault(x => x.Id == akTerima.JKWId);
@@ -296,9 +302,9 @@ namespace MSNK.Controllers
                     m.Tel = akTerima.Tel;
                     m.Emel = akTerima.Emel;
                     m.Sebab = akTerima.Sebab;
-                    m.UserId = username;
+                    m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
-                    m.TarKemaskini = akTerima.TarKemaskini;
+                    //m.TarKemaskini = akTerima.TarKemaskini;
 
                     m.AkTerima1 = _cart.Lines1.ToArray();
                     m.AkTerima2 = _cart.Lines2.ToArray();
@@ -306,7 +312,6 @@ namespace MSNK.Controllers
                     await _akTerimaRepo.Insert(m);
 
                     //insert applog
-                    var user = await _userManager.GetUserAsync(User);
 
                     AppLog appLog = new AppLog();
 
@@ -383,13 +388,13 @@ namespace MSNK.Controllers
             {
                 try
                 {
-                   
+                    var user = await _userManager.GetUserAsync(User);
+                    akTerima.UserIdKemaskini = user.UserName;
+                    akTerima.TarKemaskini = DateTime.Now;
+
                     _context.Update(akTerima);
 
                     //insert applog
-                    var user = await _userManager.GetUserAsync(User);
-                    
-
                     AppLog appLog = new AppLog();
 
                     appLog.UserId = user.UserName;
@@ -535,16 +540,25 @@ namespace MSNK.Controllers
             }
         }
 
-        public JsonResult SaveAkTerima1(AkTerima1 akTerima1)
+        public async Task<JsonResult> SaveAkTerima1(AkTerima1 akTerima1)
         {
 
             try
             {
                 if (akTerima1 != null )
                 {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    akTerima1.UserId = user.UserName;
+                    akTerima1.TarMasuk = DateTime.Now;
+
                     _cart.AddItem1(akTerima1.AkTerimaId,
-                                    akTerima1.Amaun,
-                                    akTerima1.AkCartaId);  
+                                   akTerima1.Amaun,
+                                   akTerima1.AkCartaId,
+                                   akTerima1.UserId,
+                                   akTerima1.TarMasuk,
+                                   akTerima1.UserIdKemaskini,
+                                   akTerima1.TarKemaskini);  
                     
                 }
 
@@ -558,23 +572,31 @@ namespace MSNK.Controllers
             }
         }
 
-        public JsonResult SaveAkTerima2(AkTerima2 akTerima2)
+        public async Task<JsonResult> SaveAkTerima2(AkTerima2 akTerima2)
         {
 
             try
             {
                 if (akTerima2 != null)
                 {
-                    _cart.AddItem2(
-                        akTerima2.AkTerimaId,
-                        akTerima2.JCaraBayarId,
-                        akTerima2.Amaun,
-                        akTerima2.NoCek,
-                        akTerima2.JenisCek,
-                        akTerima2.KodBankCek,
-                        akTerima2.TempatCek,
-                        akTerima2.NoSlip,
-                        akTerima2.TarSlip);
+                    var user = await _userManager.GetUserAsync(User);
+
+                    akTerima2.UserId = user.UserName;
+                    akTerima2.TarMasuk = DateTime.Now;
+
+                    _cart.AddItem2(akTerima2.AkTerimaId,
+                                   akTerima2.JCaraBayarId,
+                                   akTerima2.Amaun,
+                                   akTerima2.NoCek,
+                                   akTerima2.JenisCek,
+                                   akTerima2.KodBankCek,
+                                   akTerima2.TempatCek,
+                                   akTerima2.NoSlip,
+                                   akTerima2.TarSlip,
+                                   akTerima2.UserId,
+                                   akTerima2.TarMasuk,
+                                   akTerima2.UserIdKemaskini,
+                                   akTerima2.TarKemaskini);
                 }
 
                 return Json(new { result = "OK" });
@@ -646,8 +668,12 @@ namespace MSNK.Controllers
             {
                 if (akTerima1 != null || akTerima1.Amaun != 0)
                 {
+                    var user = await _userManager.GetUserAsync(User);
                     var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akTerima1.AkCartaId);
                     akTerima1.AkCarta = akCarta;
+                    akTerima1.UserId = user.UserName;
+                    akTerima1.TarMasuk = DateTime.Now;
+
                     await _akTerima1Repo.Insert(akTerima1);
 
                     decimal total = 0;
@@ -657,8 +683,24 @@ namespace MSNK.Controllers
                     total = akTerima.Jumlah + akTerima1.Amaun;
 
                     akTerima.Jumlah = total;
+                    akTerima.UserIdKemaskini = user.UserName;
+                    //akTerima.TarKemaskini = DateTime.Now;
 
                     await _akTerimaRepo.Update(akTerima);
+
+                    //insert applog
+                    //AppLog appLog = new AppLog();
+
+                    //appLog.UserId = user.UserName;
+                    //appLog.LgModule = modul + "EC";
+                    //appLog.LgOperation = "Tambah";
+                    //appLog.LgNote = modul + " Penerimaan - Tambah Objek";
+                    //appLog.NoRujukan = akTerima.NoRujukan + "/" + akTerima1.AkCarta.Kod;
+                    //appLog.Jumlah = akTerima1.Amaun;
+
+                    //await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
 
                 }
@@ -679,6 +721,7 @@ namespace MSNK.Controllers
             {
                 if (akTerima1 != null)
                 {
+                    var user = await _userManager.GetUserAsync(User);
                     var akT1 = await _context.AkTerima1.FirstOrDefaultAsync(x=> x.AkCartaId == akTerima1.AkCartaId && x.AkTerimaId == akTerima1.AkTerimaId);
                     _context.AkTerima1.Remove(akT1);
 
@@ -689,8 +732,23 @@ namespace MSNK.Controllers
                     total = akTerima.Jumlah - akT1.Amaun;
 
                     akTerima.Jumlah = total;
-
+                    akTerima.UserIdKemaskini = user.UserName;
+                    akTerima.TarKemaskini = DateTime.Now;
                     await _akTerimaRepo.Update(akTerima);
+
+                    //insert applog
+                    var akCarta = await _akCartaRepo.GetById(akT1.AkCartaId);
+
+                    AppLog appLog = new AppLog();
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "ED";
+                    appLog.LgOperation = "Hapus";
+                    appLog.LgNote = modul + " Penerimaan - Hapus Objek";
+                    appLog.NoRujukan = akTerima.NoRujukan + "/" + akCarta.Kod;
+                    appLog.Jumlah = akT1.Amaun;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
 
                     await _context.SaveChangesAsync();
 
@@ -714,8 +772,44 @@ namespace MSNK.Controllers
                 _cart.Clear1();
 
                 AkTerima1 akT1 = await _akTerima1Repo.GetById(akTerima1.Id);
+
+                decimal originalAmount = akT1.Amaun;
+                var user = await _userManager.GetUserAsync(User);
+
                 akT1.Amaun = akTerima1.Amaun;
+                akT1.UserIdKemaskini = user.UserName;
+                akT1.TarKemaskini = DateTime.Now;
                 _context.AkTerima1.Update(akT1);
+
+                // update total akTerima with date updated and userUpdated
+                var akTerima = await _akTerimaRepo.GetById(akTerima1.AkTerimaId);
+                decimal total = 0;
+
+                total = akTerima.Jumlah - originalAmount + akT1.Amaun;
+                akTerima.Jumlah = total;
+                akTerima.UserIdKemaskini = user.UserName;
+                akTerima.TarKemaskini = DateTime.Now;
+                await _akTerimaRepo.Update(akTerima);
+                // update total akTerima with date updated and userUpdated end
+
+                //insert applog
+                if (akTerima1.Amaun != originalAmount)
+                {
+                    var akCarta = await _akCartaRepo.GetById(akT1.AkCartaId);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "EE";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Penerimaan - Ubah Objek";
+                    appLog.NoRujukan = akTerima.NoRujukan + "/" + akCarta.Kod + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akTerima1.Amaun.ToString();
+                    appLog.Jumlah = akT1.Amaun;
+
+                    await _appLog.Insert(appLog);
+                }
+                //insert applog end
+
                 await _context.SaveChangesAsync();
 
                 return Json(new { result = "OK"});
@@ -736,7 +830,13 @@ namespace MSNK.Controllers
 
                 foreach (AkTerima1 item in akT1)
                 {
-                    _cart.AddItem1(item.AkTerimaId, item.Amaun, item.AkCartaId);
+                    _cart.AddItem1(item.AkTerimaId,
+                                   item.Amaun,
+                                   item.AkCartaId,
+                                   item.UserId,
+                                   item.TarMasuk,
+                                   item.UserIdKemaskini,
+                                   item.TarKemaskini);
                 }
 
 
@@ -786,9 +886,28 @@ namespace MSNK.Controllers
                 if (akTerima2 != null || akTerima2.Amaun != 0)
                 {
                     var jCaraBayar = _context.JCaraBayar.FirstOrDefault(x => x.Id == akTerima2.JCaraBayarId);
+                    var user = await _userManager.GetUserAsync(User);
+
                     akTerima2.JCaraBayar = jCaraBayar;
+                    akTerima2.UserId = user.UserName;
+                    akTerima2.TarMasuk = DateTime.Now;
                     await _akTerima2Repo.Insert(akTerima2);
-  
+
+                    //insert applog
+                    var akTerima = await _akTerimaRepo.GetById(akTerima2.AkTerimaId);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "EC";
+                    appLog.LgOperation = "Tambah";
+                    appLog.LgNote = modul + " Penerimaan - Tambah Perihal";
+                    appLog.NoRujukan = akTerima.NoRujukan + "/" + akTerima2.JCaraBayar.Kod;
+                    appLog.Jumlah = akTerima2.Amaun;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
                 }
 
@@ -811,7 +930,24 @@ namespace MSNK.Controllers
                 if (akTerima2 != null)
                 {
                     var akT2 = await _context.AkTerima2.FirstOrDefaultAsync(x => x.JCaraBayarId == akTerima2.JCaraBayarId && x.AkTerimaId == akTerima2.AkTerimaId);
+                    var user = await _userManager.GetUserAsync(User);
+
                     _context.AkTerima2.Remove(akT2);
+
+                    //insert applog
+                    var akTerima = await _akTerimaRepo.GetById(akTerima2.AkTerimaId);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "ED";
+                    appLog.LgOperation = "Hapus";
+                    appLog.LgNote = modul + " Penerimaan - Hapus Perihal";
+                    appLog.NoRujukan = akTerima.NoRujukan + "/" + akTerima2.JCaraBayar.Kod;
+                    appLog.Jumlah = akTerima2.Amaun;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
 
                     await _context.SaveChangesAsync();
 
@@ -835,6 +971,8 @@ namespace MSNK.Controllers
                 _cart.Clear2();
 
                 AkTerima2 akT2 = await _akTerima2Repo.GetById(akTerima2.Id);
+                var user = await _userManager.GetUserAsync(User);
+                decimal originalAmount = akT2.Amaun;
 
                 akT2.Amaun = akTerima2.Amaun;
                 akT2.NoCek = akTerima2.NoCek;
@@ -843,8 +981,29 @@ namespace MSNK.Controllers
                 akT2.TempatCek = akTerima2.TempatCek;
                 akT2.NoSlip = akTerima2.NoSlip;
                 akT2.TarSlip = akTerima2.TarSlip;
+                akT2.UserIdKemaskini = user.UserName;
+                akT2.TarKemaskini = DateTime.Now;
 
                 _context.AkTerima2.Update(akT2);
+
+                //insert applog
+                if (akTerima2.Amaun != originalAmount)
+                {
+                    var akTerima = await _akTerimaRepo.GetById(akTerima2.AkTerimaId);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "EE";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Penerimaan - Ubah Perihal";
+                    appLog.NoRujukan = akTerima.NoRujukan + "/" + akT2.JCaraBayar.Kod + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akTerima2.Amaun.ToString();
+                    appLog.Jumlah = akTerima2.Amaun;
+
+                    await _appLog.Insert(appLog);
+                }
+                //insert applog end
+
                 await _context.SaveChangesAsync();
 
                 return Json(new { result = "OK" });
@@ -865,15 +1024,19 @@ namespace MSNK.Controllers
 
                 foreach (AkTerima2 item in akT2)
                 {
-                    _cart.AddItem2(akTerima2.AkTerimaId,
-                               akTerima2.JCaraBayarId,
-                               akTerima2.Amaun,
-                               akTerima2.NoCek,
-                               akTerima2.JenisCek,
-                               akTerima2.KodBankCek,
-                               akTerima2.TempatCek,
-                               akTerima2.NoSlip,
-                               akTerima2.TarSlip);
+                    _cart.AddItem2(item.AkTerimaId,
+                                   item.JCaraBayarId,
+                                   item.Amaun,
+                                   item.NoCek,
+                                   item.JenisCek,
+                                   item.KodBankCek,
+                                   item.TempatCek,
+                                   item.NoSlip,
+                                   item.TarSlip,
+                                   item.UserId,
+                                   item.TarMasuk,
+                                   item.UserIdKemaskini,
+                                   item.TarKemaskini);
                 }
 
                 return Json(new { result = "OK", data = data });

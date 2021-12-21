@@ -79,7 +79,7 @@ namespace MSNK.Migrations
                     KodEFT = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -97,7 +97,7 @@ namespace MSNK.Migrations
                     Perihal = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -129,7 +129,7 @@ namespace MSNK.Migrations
                     Perihal = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -147,7 +147,7 @@ namespace MSNK.Migrations
                     Perihal = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -308,7 +308,7 @@ namespace MSNK.Migrations
                     Batal = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -343,7 +343,7 @@ namespace MSNK.Migrations
                     JBankId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -381,7 +381,7 @@ namespace MSNK.Migrations
                     Baki = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -424,7 +424,7 @@ namespace MSNK.Migrations
                     FlBatal = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -494,7 +494,7 @@ namespace MSNK.Migrations
                     NoAkaun = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -533,7 +533,7 @@ namespace MSNK.Migrations
                     Kredit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -573,7 +573,7 @@ namespace MSNK.Migrations
                     FlTanggungan = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -609,7 +609,7 @@ namespace MSNK.Migrations
                     Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false),
                     JKWId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -653,7 +653,7 @@ namespace MSNK.Migrations
                     Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -694,9 +694,9 @@ namespace MSNK.Migrations
                     Tel = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     Emel = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Sebab = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AkAkaunId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -740,7 +740,7 @@ namespace MSNK.Migrations
                     Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -777,7 +777,7 @@ namespace MSNK.Migrations
                     Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -802,7 +802,7 @@ namespace MSNK.Migrations
                     Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -839,7 +839,7 @@ namespace MSNK.Migrations
                     TarSlip = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserIdKemaskini = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

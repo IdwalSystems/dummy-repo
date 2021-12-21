@@ -13,7 +13,28 @@
 
         $("#ddlPembekal").on('change', function () {
             var pembekal = $("#ddlPembekal").val();
-            JsonKod(pembekal); alert(pembekal);
+            JsonKod(pembekal);
+            //alert(pembekal);
+        });
+
+        //Sum value to Total text field
+        $("#txtHargaUnit").on('change', function () {
+            var sum = 0;
+            var txtKuantiti = $("#txtKuantiti");
+            var txtHargaUnit = $("#txtHargaUnit");
+            var txtAmaun = $("#txtAmaun");
+            sum = parseFloat(txtKuantiti.val()) * parseFloat(txtHargaUnit.val());
+            txtAmaun.val(sum);
+        });
+
+        //Sum value to Total text field
+        $("#txtKuantiti").on('change', function () {
+            var sum = 0;
+            var txtKuantiti = $("#txtKuantiti");
+            var txtHargaUnit = $("#txtHargaUnit");
+            var txtAmaun = $("#txtAmaun");
+            sum = parseFloat(txtKuantiti.val()) * parseFloat(txtHargaUnit.val());
+            txtAmaun.val(sum);
         });
     });
 
@@ -21,7 +42,7 @@
         var Objek = {
             Id: id
         }
-        alert(id);
+        //alert(id);
         $.ajax({
             type: "POST",
             url: "/AkPO/GetMaklumat",
@@ -29,7 +50,11 @@
             dataType: "json",
             success: function (data) {
                 var item = data.record;
-                $("#txtNamaSykt").val(item.namaSykt);//Nama kena camelcase
+                //Nama val kena camelcase
+                $("#txtNamaSykt").val(item.namaSykt);
+                $("#txtAkaunBank").val(item.akaunBank);
+                $("#txtJenisBank").val(item.jBank.nama);
+                $("#txtTelefon").val(item.telefon1);
                 //var listId = $("#select2-ddlPembekal-container").val(); //Get Datalist Value
                 //var string = listId.substring(0, 7); // Substring a Value
                 //document.getElementById("txtNamaSykt").value = string;
@@ -39,11 +64,6 @@
             }
         });
     }
-
-    //Sum value to Total text field
-    //var sum = 0;
-    //sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
-    //txtJumlah.val(sum);
 
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {

@@ -2,9 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using MSNK.Infrastructure;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.Cart.Session
 {
@@ -25,12 +22,26 @@ namespace MSNK.Models.Modules.Cart.Session
         public override void AddItem1(
             int akBelianId,
             decimal amaun,
-            int akCartaId
+            int akCartaId,
+            string userId,
+            DateTime tarMasuk,
+            string userIdKemasikini,
+            DateTime tarKemaskini
            )
         {
-            base.AddItem1(akBelianId, amaun, akCartaId);
+            base.AddItem1(akBelianId,
+                          amaun,
+                          akCartaId,
+                          userId,
+                          tarMasuk,
+                          userIdKemasikini,
+                          tarKemaskini);
+
             Session.SetJson("CartBelian", this);
         }
+
+
+
         public override void RemoveItem1(int id)
         {
             base.RemoveItem1(id);
@@ -42,5 +53,50 @@ namespace MSNK.Models.Modules.Cart.Session
             Session.Remove("CartBelian");
         }
         //Belian1 End
+
+        //Belian2
+        public override void AddItem2(
+            int akPOId,
+            int Indek,
+            string Bil,
+            string NoStok,
+            string Perihal,
+            decimal Kuantiti,
+            string Unit,
+            decimal Harga,
+            decimal Amaun,
+            string userId,
+            DateTime tarMasuk,
+            string userIdKemasikini,
+            DateTime tarKemaskini
+            )
+        {
+            base.AddItem2(akPOId,
+                    Indek,
+                    Bil,
+                    NoStok,
+                    Perihal,
+                    Kuantiti,
+                    Unit,
+                    Harga,
+                    Amaun,
+                    userId,
+                    tarMasuk,
+                    userIdKemasikini,
+                    tarKemaskini);
+
+            Session.SetJson("CartBelian", this);
+        }
+        public override void RemoveItem2(int id)
+        {
+            base.RemoveItem2(id);
+            Session.SetJson("CartBelian", this);
+        }
+        public override void Clear2()
+        {
+            base.Clear2();
+            Session.Remove("CartBelian");
+        }
+        //Belian2 End
     }
 }

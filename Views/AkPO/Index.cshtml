@@ -6,109 +6,143 @@
 }
 <partial name="_JSIndex" />
 
-<h1>Pesanan Tempatan</h1>
+<h1></h1>
 
-<p>
-    <a asp-action="Create">Tambah</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NoPO)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tarikh)
-            </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.TarikhPosting)
-            </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.Jumlah)
-            </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Tahun)
-            </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.AkPembekal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.JKW)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlPosting)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlBatal)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="row mb-2">
+    <div class="col-8">
+        <h3 class="text-left">Pesanan Tempatan</h3>
+    </div>
+    <div class="col-4 text-right">
+        <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
+    </div>
+</div>
+<div class="card mb-2">
+    <div class="card-body pl-3 pb-2 ">
+        <label class="form-control-plaintext" for="searchselect">Carian : </label>
+
+        <div class="form-actions no-color mb-2">
+            <form asp-action="Index" method="get">
+                <div class="form-row">
+                    <div class="col-sm-3 mb-2">
+                        <select name="searchColumn" class="custom-select form-control-sm" id="searchColumn">
+                            <option value="NoPO">No PO</option>
+                            <option value="NamaSykt">Syarikat</option>
+                            <option selected value="@ViewBag.SearchColumn">Tarikh</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-9 mb-2">
+                        <div class="form-row">
+                            <div class="col-10">
+                                <div class="form-row">
+                                    <div class="col-12">
+                                        <input class="form-control form-control-sm" type="text" name="searchString" id="myInput" value="@ViewBag.SearchData1" />
+                                    </div>
+                                    <div class="col-6" id="myInputDate1">
+                                        <input class="form-control form-control-sm mb-2" type="date" name="searchDate1" id="inputTarikh1" value="@ViewBag.SearchData1" />
+                                    </div>
+                                    <div class="col-6" id="myInputDate2">
+                                        <input class="form-control form-control-sm" type="date" name="searchDate2" id="inputTarikh2" value="@ViewBag.SearchData2" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NoPO)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tarikh)
-                </td>
-                @*<td>
-                    @Html.DisplayFor(modelItem => item.TarikhPosting)
-                </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.Jumlah)
-                </td>
-                @*<td>
-                    @Html.DisplayFor(modelItem => item.Tahun)
-                </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.AkPembekal.KodSykt) @Html.DisplayFor(modelItem => item.AkPembekal.NamaSykt)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.JKW.Kod)
-                </td>
-                <td>
-                    @if (item.FlPosting == 0)
-                    {
-                        <label class="mb-0">BELUM</label>
-                    }
-                    else
-                    {
-                        <label class="mb-0">SUDAH</label>
-                    }
-                </td>
-                <td>
-                    @if (item.FlBatal == 0)
-                    {
-                        <label class="mb-0">TIDAK</label>
-                    }
-                    else
-                    {
-                        <label class="mb-0">YA</label>
-                    }
-                </td>
-                <td class="action-button">
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                    <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
-                    @if (item.FlPosting == 0)
-                    {
-                        <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
-                            <i class="fas fa-sync"></i>
-                        </a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
-                    }
-                    else
-                    {
-                        <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
-                            <i class="fas fa-sync"></i>
-                        </a>
-                    }
-
-
-                </td>
+                <th>
+                    No PO
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tarikh)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Jumlah)
+                </th>
+                <th>
+                    Nama Pembekal
+                </th>
+                <th>
+                    Posting
+                </th>
+                <th>
+                    Batal
+                </th>
+                <th class="action-button"></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoPO)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tarikh, "{0:dd/MM/yyyy}")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Jumlah)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AkPembekal.KodSykt) @Html.DisplayFor(modelItem => item.AkPembekal.NamaSykt)
+                    </td>
+                    <td>
+                        @if (item.FlPosting == 0)
+                        {
+                            <label class="mb-0">BELUM</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">SUDAH</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.FlBatal == 0)
+                        {
+                            <label class="mb-0">TIDAK</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">YA</label>
+                        }
+                    </td>
+                    <td class="action-button">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                        @if (item.FlPosting == 0)
+                        {
+                            <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                <i class="fas fa-sync"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                        }
+                        else
+                        {
+                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
+                                <i class="fas fa-sync"></i>
+                            </a>
+                        }
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

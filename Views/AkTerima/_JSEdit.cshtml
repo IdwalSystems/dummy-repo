@@ -306,11 +306,13 @@
                 data: AkTerima1,
                 dataType: "json",
                 success: function (r) {
-                    //Delete the Table row using it's Index.
+                    //insert data in modal objek
                     $("#moId1").val(r.record.id);
                     $("#moKodAkaun").val(r.record.akCartaId);
                     $("#moAmaun1").val(r.record.amaun);
 
+                    //show modal objek
+                    $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
 
                 }
             });
@@ -350,12 +352,12 @@
                             for (var i = 0; i < r.data.akTerima1.length; i++) {
                                 var item1 = r.data.akTerima1[i];
                                 var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
-                                    "</td><td>" + item1.akCarta.kod +
+                                    "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
                                     "</td><td>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" +
-                                    "<button class='btn btn-primary btn-table-mini' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalUrusniaga' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
-                                    "<button class='btn btn-danger btn-table-mini' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
                                 $("table tbody#tbodyObjek").append(str);
                                 sum += item1.amaun;
@@ -456,9 +458,9 @@
                                     "</td><td>" + item1.noSlip +
                                     "</td><td>" + showDate(item1.tarSlip) +
                                     "</td><td>" +
-                                    "<button class='btn btn-primary btn-table-mini' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalUrusniaga' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalUrusniaga' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
-                                    "<button class='btn btn-danger btn-table-mini' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
                                 $("table tbody#tbodyUrusniaga").append(str);
                                 jumlah2 += item1.amaun;

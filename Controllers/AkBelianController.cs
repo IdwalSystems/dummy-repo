@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
+using MSNK.Models.Modules.Cart.Session;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.ViewModel;
 
@@ -169,6 +172,62 @@ namespace MSNK.Controllers
 
         }
 
+        private void PopulateTable(int? id)
+        {
+            List<AkBelian1> akBelian1Table = _context.AkBelian1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkBelianId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            ViewBag.akBelian1 = akBelian1Table;
+
+            List<AkBelian2> akBelian2Table = _context.AkBelian2
+                .Where(b => b.AkBelianId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            ViewBag.akBelian2 = akBelian2Table;
+        }
+
+        private void PopulateCart(AkBelian akBelian)
+        {
+            List<AkBelian1> akBelian1Table = _context.AkBelian1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkBelianId == akBelian.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            foreach (AkBelian1 item in akBelian1Table)
+            {
+                _cart.AddItem1(item.AkBelianId,
+                               item.Amaun,
+                               item.AkCartaId,
+                               item.UserId,
+                               item.TarMasuk,
+                               item.UserIdKemaskini,
+                               item.TarKemaskini);
+            }
+
+            List<AkBelian2> akBelian2Table = _context.AkBelian2
+                .Where(b => b.AkBelianId == akBelian.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            foreach (AkBelian2 item in akBelian2Table)
+            {
+                _cart.AddItem2(item.AkBelianId,
+                               item.Indek,
+                               item.Bil,
+                               item.NoStok,
+                               item.Perihal,
+                               item.Kuantiti,
+                               item.Unit,
+                               item.Harga,
+                               item.Amaun,
+                               item.UserId,
+                               item.TarMasuk,
+                               item.UserIdKemaskini,
+                               item.TarKemaskini);
+            }                  
+        }
+
         // GET: AkBelian/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -193,8 +252,23 @@ namespace MSNK.Controllers
         public IActionResult Create()
         {
             PopulateList();
-            //CartEmpty();
+            CartEmpty();
             return View();
+        }
+
+        public JsonResult CartEmpty()
+        {
+            try
+            {
+                _cart.Clear1();
+                _cart.Clear2();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
         }
 
         // on change kod pembekal controller
@@ -214,12 +288,36 @@ namespace MSNK.Controllers
         }
         //on change kod pembekal controller end
 
-        // function  json tbl objek
-        public JsonResult GetCarta(AkCarta akCarta)
+        private readonly string SessionKeyName = "itemlist";
+        // on change no PO controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetNoPO(int id)
         {
             try
             {
-                var result = _context.AkCarta.Where(b => b.Id == akCarta.Id).FirstOrDefault();
+                CartEmpty();
+                PopulateCartFromAkPO(id);
+                var result = await _akPORepo.GetById(id);
+
+                List<AkPO1> akPO1Table = await _context.AkPO1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkPOId == id)
+                .OrderBy(b => b.Id)
+                .ToListAsync();
+
+                foreach (AkPO1 item in akPO1Table)
+                {
+                    result.AkPO1.Add(item);
+                }
+
+                List<AkPO2> akPO2Table = await _context.AkPO2
+                .Where(b => b.AkPOId == id)
+                .OrderBy(b => b.Id)
+                .ToListAsync();
+                foreach (AkPO2 item in akPO2Table)
+                {
+                    result.AkPO2.Add(item);
+                }
 
                 return Json(new { result = "OK", record = result });
             }
@@ -227,31 +325,64 @@ namespace MSNK.Controllers
             {
                 return Json(new { result = "Error", message = ex.Message });
             }
-
         }
 
-        public JsonResult SaveAkBelian1(AkBelian1 akBelian1)
+        private void PopulateCartFromAkPO(int id)
         {
+            var user = _userManager.GetUserName(User);
 
-            try
+            List<AkPO1> akPO1Table =  _context.AkPO1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkPOId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+
+            foreach (AkPO1 item in akPO1Table)
             {
-                if (akBelian1 != null)
-                {
-                    _cart.AddItem1(akBelian1.AkBelianId,
-                                    akBelian1.Amaun,
-                                    akBelian1.AkCartaId);
 
-                }
+                item.AkPOId = 0;
+                item.UserId = user;
+                item.TarMasuk = DateTime.Now;
 
-                return Json(new { result = "OK" });
+                _cart.AddItem1(item.AkPOId,
+                               item.Amaun,
+                               item.AkCartaId,
+                               item.UserId,
+                               item.TarMasuk,
+                               item.UserIdKemaskini,
+                               item.TarKemaskini);
             }
-            catch (Exception ex)
+
+            List<AkPO2> akPO2Table = _context.AkPO2
+                .AsNoTracking()
+                .Where(b => b.AkPOId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+
+            foreach (AkPO2 item in akPO2Table)
             {
-                return Json(new { result = "ERROR", message = ex.Message });
+                item.AkPOId = 0;
+                item.UserId = user;
+                item.TarMasuk = DateTime.Now;
+
+                _cart.AddItem2(item.AkPOId,
+                               item.Indek,
+                               item.Bil,
+                               item.NoStok,
+                               item.Perihal,
+                               item.Kuantiti,
+                               item.Unit,
+                               item.Harga,
+                               item.Amaun,
+                               item.UserId,
+                               item.TarMasuk,
+                               item.UserIdKemaskini,
+                               item.TarKemaskini);
             }
+
+            
         }
-
-        // function json tbl objek end
+        //on change no PO controller end
 
         // POST: AkBelian/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -261,6 +392,8 @@ namespace MSNK.Controllers
         public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId)
         {
             AkBelian m = new AkBelian();
+            var user = await _userManager.GetUserAsync(User);
+
             var noRujukan = "IN/" + akBelian.NoInbois;
 
             var akPo = await _akPORepo.GetById(AkPOId);
@@ -290,17 +423,15 @@ namespace MSNK.Controllers
                         m.AkPembekalId = AkPembekalId;
                     }
 
-                    //m.UserId = username;
-                    //m.TarMasuk = DateTime.Now;
-                    //m.TarKemaskini = akTerima.TarKemaskini;
+                    m.UserId = user.UserName;
+                    m.TarMasuk = DateTime.Now;
 
                     m.AkBelian1 = _cart.Lines1.ToArray();
-                    //m.AkTerima2 = _cart.Lines2.ToArray();
+                    m.AkBelian2 = _cart.Lines2.ToArray();
 
                     await _akBelianRepo.Insert(m);
 
                     //insert applog
-                    var user = await _userManager.GetUserAsync(User);
 
                     AppLog appLog = new AppLog();
 
@@ -416,5 +547,126 @@ namespace MSNK.Controllers
         {
             return _context.AkBelian.Any(e => e.Id == id);
         }
+
+        // function  json Create
+        public JsonResult GetCarta(AkCarta akCarta)
+        {
+            try
+            {
+                var result = _context.AkCarta.Where(b => b.Id == akCarta.Id).FirstOrDefault();
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+
+        public async Task<JsonResult> SaveAkBelian1(AkBelian1 akBelian1)
+        {
+
+            try
+            {
+                if (akBelian1 != null)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    akBelian1.UserId = user.UserName;
+                    akBelian1.TarMasuk = DateTime.Now;
+
+                    _cart.AddItem1(akBelian1.AkBelianId,
+                                    akBelian1.Amaun,
+                                    akBelian1.AkCartaId,
+                                   akBelian1.UserId,
+                                   akBelian1.TarMasuk,
+                                   akBelian1.UserIdKemaskini,
+                                   akBelian1.TarKemaskini);
+
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public JsonResult RemoveAkBelian1(AkBelian1 akBelian1)
+        {
+
+            try
+            {
+                if (akBelian1 != null)
+                {
+
+                    _cart.RemoveItem1(akBelian1.AkCartaId);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> SaveAkBelian2(AkBelian2 akBelian2)
+        {
+
+            try
+            {
+                if (akBelian2 != null)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    akBelian2.UserId = user.UserName;
+                    akBelian2.TarMasuk = DateTime.Now;
+
+                    _cart.AddItem2(akBelian2.AkBelianId,
+                                   akBelian2.Indek,
+                                   akBelian2.Bil,
+                                   akBelian2.NoStok,
+                                   akBelian2.Perihal,
+                                   akBelian2.Kuantiti,
+                                   akBelian2.Unit,
+                                   akBelian2.Harga,
+                                   akBelian2.Amaun,
+                                   akBelian2.UserId,
+                                   akBelian2.TarMasuk,
+                                   akBelian2.UserIdKemaskini,
+                                   akBelian2.TarKemaskini);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public JsonResult RemoveAkBelian2(AkBelian2 akBelian2)
+        {
+
+            try
+            {
+                if (akBelian2 != null)
+                {
+
+                    _cart.RemoveItem2(akBelian2.Indek);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // function  json Create end
+
     }
 }
