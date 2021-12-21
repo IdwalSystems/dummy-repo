@@ -5,13 +5,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Baucer Jurnal</h1>
-
-<p>
-    <a asp-action="Create">Tambah Baru</a>
-</p>
+<div class="row mb-2">
+    <div class="col-8">
+        <h3 class="text-left">Baucer Jurnal</h3>
+    </div>
+    <div class="col-4 text-right">
+        <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
+    </div>
+</div>
 <div class="table-responsive">
-    <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
+    <table class="table table-bordered table-hover text-nowrap table-sm nowrap" width="100%">
         <thead>
             <tr>
                 <th>
@@ -20,23 +23,11 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Tarikh)
                 </th>
-                <th>
+                <th align="right">
                     @Html.DisplayNameFor(model => model.JumDebit)
                 </th>
-                <th>
+                <th align="right">
                     @Html.DisplayNameFor(model => model.JumKredit)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Catatan1)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Catatan2)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Catatan3)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Catatan4)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Posting)
@@ -46,15 +37,6 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Batal)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UserId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TarMasuk)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.JKW)
                 </th>
                 <th class="action-button"></th>
             </tr>
@@ -69,42 +51,30 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Tarikh, "{0:dd/MM/yyyy}")
                     </td>
-                    <td>
+                    <td align="right">
                         @Html.DisplayFor(modelItem => item.JumDebit)
                     </td>
-                    <td>
+                    <td align="right">
                         @Html.DisplayFor(modelItem => item.JumKredit)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Catatan1)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Catatan2)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Catatan3)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Catatan4)
                     </td>
                     <td>
                         @if (item.Posting == 0)
                         {
-                            <label class="mb-0">TIDAK</label>
+                            <label class="mb-0">BELUM</label>
                         }
                         else
                         {
-                            <label class="mb-0">YA</label>
+                            <label class="mb-0">SUDAH</label>
                         }
                     </td>
                     <td>
                         @if (item.Cetak == 0)
                         {
-                            <label class="mb-0">TIDAK</label>
+                            <label class="mb-0">BELUM</label>
                         }
                         else
                         {
-                            <label class="mb-0">YA</label>
+                            <label class="mb-0">SUDAH</label>
                         }
                     </td>
                     <td>
@@ -116,15 +86,6 @@
                         {
                             <label class="mb-0">YA</label>
                         }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TarMasuk)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.JKW.Kod) - @Html.DisplayFor(modelItem => item.JKW.Perihal)
                     </td>
                     <td class="action-button">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>

@@ -11,6 +11,7 @@ namespace MSNK.Models.Modules
     public class AkCarta
     {
         [Display(Name = "KW")]
+        [Required(ErrorMessage = "Kumpulan Wang Diperlukan.")]
         public int JKWId { get; set; }
 
         public int Id { get; set; }
@@ -22,8 +23,10 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Perihal Diperlukan.")]
         public string Perihal { get; set; }
         [Display(Name = "Jenis")]
+        [Required(ErrorMessage = "Jenis Diperlukan.")]
         public int JJenisId { get; set; }
         [Display(Name = "Paras")]
+        [Required(ErrorMessage = "Paras Diperlukan.")]
         public int JParasId { get; set; }
         [MaxLength(1)]
         [Display(Name = "Debit / Kredit")]

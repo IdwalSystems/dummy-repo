@@ -24,6 +24,7 @@
                                     <option value="@s.Id">@s.Kod - @s.Perihal </option>
                                 }
                             </select>
+                            <span asp-validation-for="JKWId" class="text-danger"></span>
                         </div>
                         <div class="form-group col-sm">
                             <label asp-for="JJenisId" class="control-label"></label>
@@ -34,6 +35,7 @@
                                     <option value="@s.Id">@s.Kod - @s.Nama</option>
                                 }
                             </select>
+                            <span asp-validation-for="JJenisId" class="text-danger"></span>
                         </div>
                         <div class="form-group col-sm">
                             <label asp-for="JParasId" class="control-label"></label>
@@ -44,6 +46,7 @@
                                     <option value="@s.Id">Paras @s.Kod </option>
                                 }
                             </select>
+                            <span asp-validation-for="JParasId" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-row">

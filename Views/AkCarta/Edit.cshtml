@@ -57,11 +57,11 @@
                         </div>
                     </div>
                     <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Kod" />
                     <div class="form-row">
                         <div class="form-group col-sm-4">
-                            <label asp-for="Kod" class="control-label"></label>
-                            <input asp-for="Kod" class="form-control form-control-sm" />
-                            <span asp-validation-for="Kod" class="text-danger"></span>
+                            <label class="control-label">Kod</label>
+                            <input value="@Model.Kod" class="form-control form-control-sm" readonly />
                         </div>
                         <div class="form-group col-sm-8">
                             <label asp-for="Perihal" class="control-label"></label>

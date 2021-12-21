@@ -235,9 +235,19 @@ namespace MSNK.Controllers
                 allCarta = allCarta
                     .Where(x => x.Kod.CompareTo(kodCarta) >= 0 && x.Kod.CompareTo(maxKodCarta) <= 0)
                     .OrderBy(x => x.Kod).ToList();
-                if (allCarta.Count() > 1)
+                if (allCarta.Count() == 1)
                 {
-                    TempData[SD.Error] = "Pastikan maklumat Paras 2 telah dipadam.";
+                    _context.AkCarta.Remove(akCarta);
+                    await _context.SaveChangesAsync();
+                    TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
+                }
+                else if (allCarta.Count() > 1)
+                {
+                    TempData[SD.Error] = kodCarta + " - " + akCarta.Perihal + " gagal dipadam.";
+                }
+                else 
+                {
+                    TempData[SD.Error] = "Something went wrong!!!";
                 };
             }
             else if (akCarta.JParas.Kod == "2")
@@ -249,9 +259,19 @@ namespace MSNK.Controllers
                 allCarta = allCarta
                     .Where(x => x.Kod.CompareTo(kodCarta) >= 0 && x.Kod.CompareTo(maxKodCarta) <= 0)
                     .OrderBy(x => x.Kod).ToList();
-                if (allCarta.Count() > 1)
+                if (allCarta.Count() == 1)
                 {
-                    TempData[SD.Error] = "Pastikan maklumat Paras 3 telah dipadam.";
+                    _context.AkCarta.Remove(akCarta);
+                    await _context.SaveChangesAsync();
+                    TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
+                }
+                else if (allCarta.Count() > 1)
+                {
+                    TempData[SD.Error] = kodCarta + " - " + akCarta.Perihal + " gagal dipadam.";
+                }
+                else
+                {
+                    TempData[SD.Error] = "Something went wrong!!!";
                 };
             }
             else if (akCarta.JParas.Kod == "3")
@@ -263,10 +283,26 @@ namespace MSNK.Controllers
                 allCarta = allCarta
                     .Where(x => x.Kod.CompareTo(kodCarta) >= 0 && x.Kod.CompareTo(maxKodCarta) <= 0)
                     .OrderBy(x => x.Kod).ToList();
-                if (allCarta.Count() > 1) 
-                { 
-                    TempData[SD.Error] = "Pastikan maklumat Paras 4 telah dipadam."; 
+                if (allCarta.Count() == 1)
+                {
+                    _context.AkCarta.Remove(akCarta);
+                    await _context.SaveChangesAsync();
+                    TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
+                }
+                else if (allCarta.Count() > 1)
+                {
+                    TempData[SD.Error] = kodCarta + " - " + akCarta.Perihal + " gagal dipadam.";
+                }
+                else
+                {
+                    TempData[SD.Error] = "Something went wrong!!!";
                 };
+            }
+            else if(akCarta.JParas.Kod == "4")
+            {
+                _context.AkCarta.Remove(akCarta);
+                await _context.SaveChangesAsync();
+                TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
             }
 
             //_context.AkCarta.Remove(akCarta);

@@ -66,11 +66,11 @@
                                 <div class="form-group col-sm">
                                     <label asp-for="DebitKredit" class="control-label"></label>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="DebitKredit" type="radio" id="DebitKredit1" name="DebitKredit" class="custom-control-input" value="D">
+                                        <input asp-for="DebitKredit" type="radio" id="DebitKredit1" name="DebitKredit" class="custom-control-input" value="D" disabled>
                                         <label class="custom-control-label" for="DebitKredit1">DEBIT</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="DebitKredit" type="radio" id="DebitKredit2" name="DebitKredit" class="custom-control-input" value="K">
+                                        <input asp-for="DebitKredit" type="radio" id="DebitKredit2" name="DebitKredit" class="custom-control-input" value="K" disabled>
                                         <label class="custom-control-label" for="DebitKredit2">KREDIT</label>
                                     </div>
                                 </div>
@@ -81,11 +81,11 @@
                                 <div class="form-group col-sm">
                                     <label asp-for="UmumDetail" class="control-label"></label>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="UmumDetail" type="radio" id="UmumDetail1" name="UmumDetail" class="custom-control-input" value="U">
+                                        <input asp-for="UmumDetail" type="radio" id="UmumDetail1" name="UmumDetail" class="custom-control-input" value="U" disabled>
                                         <label class="custom-control-label" for="UmumDetail1">UMUM</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="UmumDetail" type="radio" id="UmumDetail2" name="UmumDetail" class="custom-control-input" value="D">
+                                        <input asp-for="UmumDetail" type="radio" id="UmumDetail2" name="UmumDetail" class="custom-control-input" value="D" disabled>
                                         <label class="custom-control-label" for="UmumDetail2">DETAIL</label>
                                     </div>
                                 </div>
@@ -100,5 +100,5 @@
 
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
-    <a asp-action="Index">Kembali ke Indeks</a>
+    <a asp-action="Index" class="btn btn-link">Kembali ke Indeks</a>
 </div>

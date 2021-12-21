@@ -1,96 +1,110 @@
 ﻿@model MSNK.Models.Modules.AkCarta
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Hapus";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Delete</h1>
+<h1>Hapus</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3 class="text-danger">Anda pasti?</h3>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card box-shadow border-danger mb-3">
+            <div class="card-header bg-danger text-white">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-left">Carta Akaun - @ViewData["Title"]</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-right">Kod Carta: @Model.Kod</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <div class="form-row">
+                            <div class="form-group col-md">
+                                <label asp-for="JKW" class="control-label"></label>
+                                <input class="form-control form-control-sm"
+                                       value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
+                            </div>
+                            <div class="form-group col-md">
+                                <label asp-for="Perihal" class="control-label"></label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Perihal)" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md">
+                                <label asp-for="JJenis" class="control-label"></label>
+                                <input class="form-control form-control-sm"
+                                       value="@Html.DisplayFor(model => model.JJenis.Kod) - @Html.DisplayFor(model => model.JJenis.Nama)" readonly />
+                            </div>
+                            <div class="form-group col-md">
+                                <label asp-for="JParas" class="control-label"></label>
+                                <input class="form-control form-control-sm"
+                                       value="PARAS @Html.DisplayFor(model => model.JParas.Kod)" readonly />
+                            </div>
+                            <div class="form-group col-md">
+                                <label asp-for="Baki" class="control-label"></label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Baki)" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md">
+                                <label class="control-label">Catatan</label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan1)" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md">
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan2)" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+                                <div class="form-group col-sm">
+                                    <label asp-for="DebitKredit" class="control-label"></label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="DebitKredit" type="radio" id="DebitKredit1" name="DebitKredit" class="custom-control-input" value="D" disabled>
+                                        <label class="custom-control-label" for="DebitKredit1">DEBIT</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="DebitKredit" type="radio" id="DebitKredit2" name="DebitKredit" class="custom-control-input" value="K" disabled>
+                                        <label class="custom-control-label" for="DebitKredit2">KREDIT</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+                                <div class="form-group col-sm">
+                                    <label asp-for="UmumDetail" class="control-label"></label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="UmumDetail" type="radio" id="UmumDetail1" name="UmumDetail" class="custom-control-input" value="U" disabled>
+                                        <label class="custom-control-label" for="UmumDetail1">UMUM</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="UmumDetail" type="radio" id="UmumDetail2" name="UmumDetail" class="custom-control-input" value="D" disabled>
+                                        <label class="custom-control-label" for="UmumDetail2">DETAIL</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div>
-    <h4>AkCarta</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JKW)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Kod)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Kod)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Perihal)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Perihal)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JJenis)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JJenis.Kod) - @Html.DisplayFor(model => model.JJenis.Nama)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JParas)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JParas.Kod)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DebitKredit)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.DebitKredit == "D")
-            {
-                <label class="mb-0">DEBIT</label>
-            }
-            else if (Model.DebitKredit == "K")
-            {
-                <label class="mb-0">KREDIT</label>
-            }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UmumDetail)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.UmumDetail == "U")
-            {
-                <label class="mb-0">UMUM</label>
-            }
-            else if (Model.UmumDetail == "D")
-            {
-                <label class="mb-0">DETAIL</label>
-            }
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Baki)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Baki)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Catatan1)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Catatan1)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Catatan2)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Catatan2)
-        </dd>
-    </dl>
-    
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Hapus" class="btn btn-danger btn-sm" />
+        <a asp-action="Index" class="btn btn-link">Kembali Ke Indeks</a>
     </form>
 </div>
