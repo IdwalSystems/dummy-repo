@@ -42,12 +42,13 @@ namespace MSNK.Controllers
             string searchFrom,
             string searchUntil)
         {
+            PopulateList(!String.IsNullOrEmpty(searchKW) ? searchKW : "", !String.IsNullOrEmpty(searchCarta) ? searchCarta : "");
             ViewData["searchFrom"] = searchFrom;
             ViewData["searchUntil"] = searchUntil;
-
-            PopulateList(!String.IsNullOrEmpty(searchKW) ? searchKW : "", !String.IsNullOrEmpty(searchCarta) ? searchCarta : "");
-
             var akAkaun = await _akAkaunRepo.GetAll();
+            List<AkAkaun> akAkBakiAwal = new();
+            decimal bakiawalDebit = 0;
+            decimal bakiawalKredit = 0;
 
             if (!String.IsNullOrEmpty(searchKW))
             {
@@ -59,19 +60,53 @@ namespace MSNK.Controllers
                 akAkaun = akAkaun.Where(q => q.AkCarta1.Kod == searchCarta);
             }
 
-            if (!String.IsNullOrEmpty(searchFrom))
+            if (!String.IsNullOrEmpty(searchFrom) && !String.IsNullOrEmpty(searchUntil))
             {
-                akAkaun = akAkaun.Where(q => q.Tarikh > Convert.ToDateTime(searchFrom));
-            }
+                DateTime date1 = DateTime.Parse(searchFrom);
+                DateTime date2 = DateTime.Parse(searchUntil).AddHours(23.99);
+                foreach (var i in akAkaun.Where(q=>q.Tarikh<date1))
+                {
+                    bakiawalDebit += i.Debit;
+                    bakiawalKredit += i.Kredit;
+                };
+                akAkaun = akAkaun.Where(x => x.Tarikh >= date1 && x.Tarikh <= date2);
+                //akAkaun = akAkaun.OrderByDescending(c => c.Tarikh.Date).ThenBy(c => c.Tarikh.TimeOfDay);
 
-            if (!String.IsNullOrEmpty(searchUntil))
+                if (bakiawalDebit>0 || bakiawalKredit > 0)
+                {
+                    akAkBakiAwal.Add(new AkAkaun() {
+                        Tarikh = date1,
+                        NoRujukan = "Baki Awal",
+                        Debit = bakiawalDebit,
+                        Kredit = bakiawalKredit
+                    });
+                    foreach(var i in akAkaun)
+                    {
+                        akAkBakiAwal.Add(new AkAkaun() {
+                            JKWId = i.JKWId,
+                            AkCartaId1=i.AkCartaId1,
+                            Tarikh = i.Tarikh,
+                            AkCartaId2=i.AkCartaId2,
+                            Id=i.Id,
+                            NoRujukan=i.NoRujukan,
+                            Debit=i.Debit,
+                            Kredit=i.Kredit,
+                            JKW=i.JKW,
+                            AkCarta1 = i.AkCarta1,
+                            AkCarta2 = i.AkCarta2,
+                            AkTerima = i.AkTerima
+                        });
+                    }
+                };
+            }
+            if (bakiawalDebit > 0 || bakiawalKredit > 0)
             {
-                akAkaun = akAkaun.Where(q => q.Tarikh < Convert.ToDateTime(searchUntil));
+                return View(akAkBakiAwal.OrderBy(c => c.Tarikh));
             }
-
-            akAkaun = akAkaun.OrderBy(q => q.NoRujukan);
-
-            return View(akAkaun);
+            else
+            {
+                return View(akAkaun.OrderBy(c => c.Tarikh));
+            }
         }
 
         private void PopulateList(string searchedKw, string searchedCarta)
@@ -94,7 +129,7 @@ namespace MSNK.Controllers
 
             List<AkCarta> Carta1List = _context.AkCarta.OrderBy(b => b.Kod).ToList();
             List<SelectListItem> carta1Select = new();
-            carta1Select.Add(new SelectListItem() { Text = "-- Pilih Carta --", Value = "" });
+            carta1Select.Add(new SelectListItem() { Text = "-- Pilih Carta 1 --", Value = "" });
             foreach (var q in Carta1List)
             {
                 carta1Select.Add(new SelectListItem() { Text = q.Kod + " - " + q.Perihal, Value = q.Kod });

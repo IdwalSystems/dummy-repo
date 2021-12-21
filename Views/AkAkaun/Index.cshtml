@@ -14,6 +14,7 @@
         text-align: center;
     }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" integrity="sha512-kq3FES+RuuGoBW3a9R2ELYKRywUEQv0wvPTItv3DSGqjpbNtGWVdvT8qwdKkqvPzT93jp8tSF4+oN4IeTEIlQA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <partial name="_JSIndex" />
 
@@ -22,7 +23,6 @@
         <h3 class="text-left">Lejar Am</h3>
     </div>
 </div>
-
 <div class="card mb-2">
     <div class="card-body pl-3 pb-2 ">
         <label class="form-control-plaintext" for="searchselect">Carian : </label>
@@ -31,28 +31,28 @@
                 <div class="form-actions no-color mb-3">
                     <div class="form-row">
                         <div class="col-md">
-                            <div class="input-group mb-3 input-group-sm ">
+                            <div class="input-group mb-2 input-group-sm ">
                                 <select class="custom-select" name="searchKW" asp-items="@ViewBag.Kw" required></select>
                                 <label class="invalid-feedback">Kumpulan Wang Diperlukan.</label>
                             </div>
-                            <div class="input-group mb-3 input-group-sm ">
-                                <select class="custom-select" name="searchCarta" asp-items="@ViewBag.AkCarta1" required></select>
+                            <div class="input-group mb-2 input-group-sm ">
+                                <select class="custom-select select2" name="searchCarta" asp-items="@ViewBag.AkCarta1" style="width:100%" required></select>
                                 <label class="invalid-feedback">Carta Diperlukan.</label>
                             </div>
                         </div>
                         <div class="col-md">
-                            <div class="input-group mb-3 input-group-sm ">
+                            <div class="input-group mb-2 input-group-sm ">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">Daripada</span>
                                 </div>
-                                <input class="form-control" type="datetime-local" name="searchFrom" value="@ViewData["searchFrom"]" required />
+                                <input class="form-control" type="date" name="searchFrom" value="@ViewData["searchFrom"]" required />
                                 <label class="invalid-feedback">Tarikh Diperlukan.</label>
                             </div>
-                            <div class="input-group mb-3 input-group-sm ">
+                            <div class="input-group mb- input-group-sm ">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">Sehingga</span>
                                 </div>
-                                <input class="form-control" type="datetime-local" name="searchUntil" value="@ViewData["searchUntil"]" required />
+                                <input class="form-control" type="date" name="searchUntil" value="@ViewData["searchUntil"]" required />
                                 <label class="invalid-feedback">Tarikh Diperlukan.</label>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
 </div>
 
 <div class="table-responsive">
-    <table class="table table-hover table-sm text-nowrap">
+    <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%">
         <thead>
             <tr>
                 <th class="thbil">
@@ -77,10 +77,10 @@
                     @Html.DisplayNameFor(model => model.Tarikh)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.AkCarta2)
+                    @Html.DisplayNameFor(model => model.AkCarta1)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.AkCarta2.Perihal)
+                    @Html.DisplayNameFor(model => model.AkCarta2)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.NoRujukan)
@@ -100,31 +100,31 @@
             @{ int rowNo = 0; }
             @foreach (var item in Model)
             {
-                <tr>
-                    <td class="bil">
-                        @(rowNo += 1)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Tarikh)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AkCarta2.Kod)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NoRujukan)
-                    </td>
-                    <td class="debit">
-                        @Html.DisplayFor(modelItem => item.Debit)
-                    </td>
-                    <td class="kredit">
-                        @Html.DisplayFor(modelItem => item.Kredit)
-                    </td>
-                    <td class="total">
-                    </td>
-                </tr>
+            <tr>
+                <td class="bil">
+                    @(rowNo += 1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tarikh)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AkCarta1.Kod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AkCarta2.Kod) - @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoRujukan)
+                </td>
+                <td class="debit">
+                    @Html.DisplayFor(modelItem => item.Debit)
+                </td>
+                <td class="kredit">
+                    @Html.DisplayFor(modelItem => item.Kredit)
+                </td>
+                <td class="total">
+                </td>
+            </tr>
             }
         </tbody>
     </table>

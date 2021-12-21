@@ -30,44 +30,9 @@ namespace MSNK.Controllers
         }
 
         // GET: AkCarta
-        public async Task<IActionResult> Index(string searchString, string searchColumn)
+        public async Task<IActionResult> Index()
         {
-            ViewData["CurrentFilter"] = searchString;
-            List<SelectListItem> test = new List<SelectListItem>();
-            test.Add(new SelectListItem() { Text = "KW", Value = "" });
-            test.Add(new SelectListItem() { Text = "Kod", Value = "1" });
-            test.Add(new SelectListItem() { Text = "Perihal", Value = "2" });
-
-            if (!String.IsNullOrEmpty(searchColumn))
-            {
-                ViewBag.searchColumn = new SelectList(test, "Value", "Text", searchColumn);
-            }
-            else
-            {
-                ViewBag.searchColumn = new SelectList(test, "Value", "Text", "");
-            }
-
             var akCarta = await _akCartaRepo.GetAll();
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                if (searchColumn == "1")
-                {
-                    akCarta = akCarta.Where(s => s.Kod.ToUpper().Contains(searchString.ToUpper()));
-                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "1");
-                }
-                else if (searchColumn == "2")
-                {
-                    akCarta = akCarta.Where(s => s.Perihal.ToUpper().Contains(searchString.ToUpper()));
-                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "2");
-                }
-                else
-                {
-                    akCarta = akCarta.Where(s => s.JKW.Kod.ToUpper().Contains(searchString.ToUpper()));
-                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "");
-                }
-            }
-
             return View(akCarta);
         }
 
@@ -255,9 +220,57 @@ namespace MSNK.Controllers
                 .Include(q => q.AkAkaun2)
                 .Include(q => q.AkBank)
                 .Include(q => q.AkPO1)
-                .Include(q => q.AkTerima1).FirstOrDefaultAsync(q => q.Id == id);
-            _context.AkCarta.Remove(akCarta);
-            await _context.SaveChangesAsync();
+                .Include(q => q.AkTerima1)
+                .Include(q => q.JParas)
+                .FirstOrDefaultAsync(q => q.Id == id);
+
+            string kodCarta = akCarta.Kod;
+            decimal decimalMaxKodCarta = Convert.ToDecimal(kodCarta.Substring(1));
+            if(akCarta.JParas.Kod == "1") 
+            {
+                decimalMaxKodCarta = (decimalMaxKodCarta / 10000) + 1;
+                decimalMaxKodCarta = (Math.Floor(decimalMaxKodCarta) * 10000) - 1;
+                string maxKodCarta = kodCarta.Substring(0, 1) + decimalMaxKodCarta.ToString();
+                var allCarta = await _akCartaRepo.GetAll();
+                allCarta = allCarta
+                    .Where(x => x.Kod.CompareTo(kodCarta) >= 0 && x.Kod.CompareTo(maxKodCarta) <= 0)
+                    .OrderBy(x => x.Kod).ToList();
+                if (allCarta.Count() > 1)
+                {
+                    TempData[SD.Error] = "Pastikan maklumat Paras 2 telah dipadam.";
+                };
+            }
+            else if (akCarta.JParas.Kod == "2")
+            {
+                decimalMaxKodCarta = (decimalMaxKodCarta / 1000) + 1;
+                decimalMaxKodCarta = (Math.Floor(decimalMaxKodCarta) * 1000) - 1;
+                string maxKodCarta = kodCarta.Substring(0, 1) + decimalMaxKodCarta.ToString();
+                var allCarta = await _akCartaRepo.GetAll();
+                allCarta = allCarta
+                    .Where(x => x.Kod.CompareTo(kodCarta) >= 0 && x.Kod.CompareTo(maxKodCarta) <= 0)
+                    .OrderBy(x => x.Kod).ToList();
+                if (allCarta.Count() > 1)
+                {
+                    TempData[SD.Error] = "Pastikan maklumat Paras 3 telah dipadam.";
+                };
+            }
+            else if (akCarta.JParas.Kod == "3")
+            {
+                decimalMaxKodCarta = (decimalMaxKodCarta / 100) + 1;
+                decimalMaxKodCarta = (Math.Floor(decimalMaxKodCarta) * 100) - 1;
+                string maxKodCarta = kodCarta.Substring(0, 1) + decimalMaxKodCarta.ToString();
+                var allCarta = await _akCartaRepo.GetAll();
+                allCarta = allCarta
+                    .Where(x => x.Kod.CompareTo(kodCarta) >= 0 && x.Kod.CompareTo(maxKodCarta) <= 0)
+                    .OrderBy(x => x.Kod).ToList();
+                if (allCarta.Count() > 1) 
+                { 
+                    TempData[SD.Error] = "Pastikan maklumat Paras 4 telah dipadam."; 
+                };
+            }
+
+            //_context.AkCarta.Remove(akCarta);
+            //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
