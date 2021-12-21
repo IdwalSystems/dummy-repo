@@ -1,22 +1,31 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using MSNK.Data;
-using MSNK.Models.Modules;
-using MSNK.Models.Modules.Cart;
-using MSNK.Models.Modules.IRepository;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using MSNK.Data;
+using MSNK.Models.Administration;
+using MSNK.Models.Modules;
+using MSNK.Models.Modules.Cart;
+using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
+using Rotativa.AspNetCore;
+using MSNK.Infrastructure;
+using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
+    [Authorize]
     public class AkPOController : Controller
     {
+        public const string modul = "TG001";
+
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkPO, int> _akPORepo;
@@ -27,6 +36,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JBank, int> _jbankRepo;
         private readonly IRepository<JNegeri, int> _negeriRepo;
         private readonly IRepository<JKW, int> _kwRepo;
+        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
         private CartPO _cart;
 
         public AkPOController(ApplicationDbContext context,
@@ -39,6 +49,7 @@ namespace MSNK.Controllers
             IRepository<JBank, int> JBankRepository,
             IRepository<JNegeri, int> negeriRepository,
             IRepository<JKW, int> kwRepository,
+            IRepository<AkAkaun, int> akAkaunRepository,
             CartPO cart
             )
         {
@@ -52,6 +63,7 @@ namespace MSNK.Controllers
             _akpembekalRepo = AkPembekalRepository;
             _akBankRepo = akBankRepository;
             _jbankRepo = JBankRepository;
+            _akAkaunRepo = akAkaunRepository;
             _cart = cart;
         }
 
@@ -712,7 +724,7 @@ namespace MSNK.Controllers
         {
             try
             {
-                var result = _context.AkPembekal.Where(b => b.Id == akPembekal.Id).FirstOrDefault();
+                var result = _context.AkPembekal.Where(b => b.Id == akPembekal.Id).Include(x => x.JBank).FirstOrDefault();
 
                 return Json(new { result = "OK", record = result });
             }
@@ -722,6 +734,75 @@ namespace MSNK.Controllers
             }
 
         }
+
+        // Fungsi Posting
+        public async Task<IActionResult> Posting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkPO akPO = await _context.AkPO.Include(x => x.AkPO1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == id);
+
+                List<AkPO1> akT1 = akPO.AkPO1.ToList();
+
+                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akPO.NoPO).FirstOrDefaultAsync();
+                if (akAkaun != null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //posting operation start here
+                    //insert into akAkaun
+                    AkAkaun akADebit = new AkAkaun();
+                    foreach (AkPO1 item in akT1)
+                    {
+                        akADebit.NoRujukan = akPO.NoPO;
+                        akADebit.JKWId = akPO.JKWId;
+                        //akADebit.AkCartaId1 = akPO.AkBankId;
+                        akADebit.AkCartaId2 = item.AkCartaId;
+                        akADebit.Tarikh = akPO.Tarikh;
+                        akADebit.Debit = item.Amaun;
+                    }
+                    await _akAkaunRepo.Insert(akADebit);
+
+                    //update posting status in akPO
+                    akPO.FlPosting = 1;
+                    await _akPORepo.Update(akPO);
+
+                    //insert applog
+
+                    //AppLog appLog = new AppLog();
+
+                    //appLog.UserId = user.UserName;
+                    //appLog.LgModule = modul + "C";
+                    //appLog.LgOperation = "Tambah";
+                    //appLog.LgNote = modul + " Pesanan Tempatan - Tambah";
+                    //appLog.NoRujukan = AkPO.NoPO;
+                    //appLog.Jumlah = akPO.Jumlah;
+
+                    //await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+
+                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // posting function end
 
     }
 }
