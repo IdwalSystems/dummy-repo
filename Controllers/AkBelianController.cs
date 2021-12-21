@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
-using MSNK.Infrastructure;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
-using MSNK.Models.Modules.Cart.Session;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.ViewModel;
 
@@ -32,7 +29,6 @@ namespace MSNK.Controllers
         private readonly IRepository<JKW, int> _kwRepo;
         private readonly IRepository<AkPO, int> _akPORepo;
         private readonly ListViewIRepository<AkBelian1, int> _akBelian1Repo;
-        private readonly IRepository<AkCarta, int> _akCartaRepo;
         private CartBelian _cart;
 
         public AkBelianController(
@@ -288,7 +284,6 @@ namespace MSNK.Controllers
         }
         //on change kod pembekal controller end
 
-        private readonly string SessionKeyName = "itemlist";
         // on change no PO controller
         [HttpPost]
         public async Task<JsonResult> JsonGetNoPO(int id)
@@ -314,6 +309,7 @@ namespace MSNK.Controllers
                 .Where(b => b.AkPOId == id)
                 .OrderBy(b => b.Id)
                 .ToListAsync();
+
                 foreach (AkPO2 item in akPO2Table)
                 {
                     result.AkPO2.Add(item);
@@ -383,6 +379,83 @@ namespace MSNK.Controllers
             
         }
         //on change no PO controller end
+
+        // get an item from cart akBelian1
+        public JsonResult GetAnItemCartAkBelian1(AkBelian1 akBelian1)
+        {
+
+            try
+            {
+                AkBelian1 data = _cart.Lines1.Where(x => x.AkCartaId == akBelian1.AkCartaId).FirstOrDefault();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get an item from cart akBelian1 end
+
+        //save cart akBelian1
+        public JsonResult SaveCartAkBelian1(AkBelian1 akBelian1)
+        {
+
+            try
+            {
+
+                var akT1 = _cart.Lines1.Where(x => x.AkCartaId == akBelian1.AkCartaId).FirstOrDefault();
+
+                var user = _userManager.GetUserName(User);
+
+                if (akT1 != null)
+                {
+                    _cart.RemoveItem1(akBelian1.AkCartaId);
+
+                    akBelian1.UserId = user;
+                    akBelian1.TarMasuk = DateTime.Now;
+
+                    _cart.AddItem1(akBelian1.AkBelianId,
+                                    akBelian1.Amaun,
+                                    akBelian1.AkCartaId,
+                                   akBelian1.UserId,
+                                   akBelian1.TarMasuk,
+                                   akBelian1.UserIdKemaskini,
+                                   akBelian1.TarKemaskini);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //save cart akBelian1 end
+
+        // get all item from cart akBelian1
+        public JsonResult GetAllItemCartAkBelian1(AkBelian1 akBelian1)
+        {
+
+            try
+            {
+                List<AkBelian1> data = _cart.Lines1.ToList();
+
+                foreach (AkBelian1 item in data)
+                {
+                    var akCarta = _context.AkCarta.Find(item.AkCartaId);
+
+                    item.AkCarta = akCarta;
+                }
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart akBelian1 end
 
         // POST: AkBelian/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

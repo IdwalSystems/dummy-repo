@@ -8,7 +8,7 @@
 <partial name="_JSCreate" />
 <div class="row">
     <div class="col-md-12">
-          
+
         <form asp-action="Create">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="card box-shadow border-success mb-3" id="denganPesananTempatan">
@@ -64,7 +64,7 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-2">
+                        <div class="col-md-2">
                             <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
                             <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal">
                                 <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
@@ -96,7 +96,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyObjek">
-                                    
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -146,7 +145,7 @@
                                     <tfoot>
                                         <tr>
                                             <td id="perihalId" hidden></td>
-                                            <td hidden><input class="form-control form-control-sm" type="text" id="txtIndek" maxlength="3" ></td>
+                                            <td hidden><input class="form-control form-control-sm" type="text" id="txtIndek" maxlength="3"></td>
                                             <td><input class="form-control form-control-sm" type="number" id="txtBaris" maxlength="3"></td>
                                             <td><input class="form-control form-control-sm" type="number" id="txtBil" maxlength="3"></td>
                                             <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtNoStok" maxlength="100"></td>
@@ -165,20 +164,20 @@
                         </div>
 
                     </div>
-                    
-                    
+
+
 
                     @*table urusniaga end*@
                 </div>
             </div>
-            
-                @*<div class="form-group" hidden>
+
+            <div class="form-group pb-2">
                     <label asp-for="Jumlah" class="control-label"></label>
-                    <input asp-for="Jumlah" class="form-control" />
+                    <input asp-for="Jumlah" class="form-control" id="jumlahObjek" readonly/>
                     <span asp-validation-for="Jumlah" class="text-danger"></span>
-                </div>*@
-                
-                @*<div class="form-group" hidden>
+                </div>
+
+            @*<div class="form-group" hidden>
                     <label asp-for="TarikhPosting" class="control-label"></label>
                     <input asp-for="TarikhPosting" class="form-control" />
                     <span asp-validation-for="TarikhPosting" class="text-danger"></span>
@@ -199,14 +198,50 @@
                     <input asp-for="FlBatal" class="form-control" />
                     <span asp-validation-for="FlBatal" class="text-danger"></span>
                 </div>*@
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                </div>
+            <div class="form-group ">
+                <input type="submit" value="Simpan" class="btn btn-primary" />
+            </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Kembali Ke Indeks</a>
 </div>
 
+<!-- Modal Objek -->
+<div class="modal fade bd-example-modal-lg" id="modalObjek" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Objek</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input id="moId1" hidden />
+                    <div class="form-group">
+                        <label class="col-form-label">Kod Akaun</label>
+                        <select class="form-control form-control-sm" id="moKodAkaun" disabled>
+                            <option value="" disabled selected>-- Pilih Kod Akaun --</option>
+                            @foreach (var s in ViewBag.AkCarta)
+                            {
+                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Amaun</label>
+                        <input type="number" class="form-control form-control-sm" id="moAmaun1">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate1()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Objek End -->

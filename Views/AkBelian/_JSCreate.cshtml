@@ -69,6 +69,9 @@
                 "</td><td>" + item.akCarta.kod + " - " + item.akCarta.perihal +
                 "</td><td>" + (item.amaun).toFixed(2) +
                 "</td><td>" +
+                "</td><td>" +
+                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                "</td><td>" +
                 "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                 "</td><tr>";
             $("table tbody#tbodyObjek").append(str);
@@ -124,10 +127,11 @@
                     var txtKodAkaun = $("#txtKodAkaun");
                     var txtAmaunObjek = $("#txtAmaunObjek");
                     var txtJumlah = $("#jumlahObjek");
+                    alert(txtAmaunObjek.val());
 
                     //Sum value to Total text field
                     var sum = 0;
-                    sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
+                    sum = txtAmaunObjek.val() + txtJumlah.val();
                     txtJumlah.val(sum);
 
                     //Get the reference of the Table's TBODY element.
@@ -147,6 +151,12 @@
                     //Add amaun cell.
                     var cell = $(row.insertCell(-1));
                     cell.html(txtAmaunObjek.val());
+
+                    //Add Edit Button cell.
+                    cell = $(row.insertCell(-1));
+
+                    var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                    cell.append(btnUpdate1);
 
                     //Add Button cell.
                     cell = $(row.insertCell(-1));
@@ -300,7 +310,7 @@
 
             //Sum value to Total text field
             var sum = 0;
-            sum = parseFloat(amaun) - parseFloat(txtJumlah.val());
+            sum = amaun - txtJumlah.val();
             txtJumlah.val(sum);
 
             var AkBelian1 = {
@@ -350,6 +360,89 @@
         }
     };
     //remove tbl urusniaga end
+
+    //update tbl objek
+    function Update1(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var akCartaId = $("TD", row).eq(0).html();
+
+        var AkBelian1 = {
+            AkCartaId: akCartaId
+        }
+        if (name != null) {
+            $.ajax({
+                type: "POST",
+                url: "/AkBelian/GetAnItemCartAkBelian1",
+                data: AkBelian1,
+                dataType: "json",
+                success: function (r) {
+                    //insert data in modal objek
+                    $("#moId1").val(r.record.id);
+                    $("#moKodAkaun").val(r.record.akCartaId);
+                    $("#moAmaun1").val(r.record.amaun);
+
+                    //show modal objek
+                    $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
+
+                }
+            });
+        }
+    };
+
+    function modalUpdate1() {
+        var id = $("#moId1").val();
+        var amaun = $("#moAmaun1").val();
+        var akCartaId = $("#moKodAkaun").val();
+        var jumlah = $("#jumlahObjek");
+        var kodAkaun = $("#moKodAkaun option:selected").text();
+
+        var AkBelian1 = {
+            Id: id,
+            akCartaId: akCartaId,
+            Amaun: amaun
+        }
+        $.ajax({
+            type: "POST",
+            url: "/AkBelian/SaveCartAkBelian1",
+            data: AkBelian1,
+            dataType: "json",
+            success: function (r) {
+                //insert notification here
+
+                $.ajax({
+                    type: "POST",
+                    url: "/AkBelian/GetAllItemCartAkBelian1",
+                    data: AkBelian1,
+                    dataType: "json",
+                    success: function (r) {
+
+                        //refresh updated table objek
+                        $("table tbody#tbodyObjek").empty();
+                        var sum = 0;
+                        if (r.record.length > 0) {
+                            for (var i = 0; i < r.record.length; i++) {
+                                var item1 = r.record[i];
+                                var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
+                                    "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
+                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td>" +
+                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "</td><td>" +
+                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "</td><tr>";
+                                $("table tbody#tbodyObjek").append(str);
+                                sum += item1.amaun;
+                            }
+                        }
+
+                        jumlah.val(sum);
+                    }
+                });
+            }
+        });
+    };
+    //update tbl objek end
 
     // onchange harga/unit and kuantiti
     $("body").on('change', "#txtHargaUnit", function () {

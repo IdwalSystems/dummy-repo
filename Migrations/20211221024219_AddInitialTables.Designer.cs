@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211220030138_AddInitialTables")]
+    [Migration("20211221024219_AddInitialTables")]
     partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -227,6 +227,9 @@ namespace MSNK.Migrations
 
                     b.Property<decimal>("Amaun")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Baris")
+                        .HasColumnType("int");
 
                     b.Property<string>("Bil")
                         .HasMaxLength(3)
@@ -563,6 +566,9 @@ namespace MSNK.Migrations
 
                     b.Property<decimal>("Amaun")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Baris")
+                        .HasColumnType("int");
 
                     b.Property<string>("Bil")
                         .HasMaxLength(3)
