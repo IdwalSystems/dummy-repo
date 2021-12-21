@@ -55,6 +55,7 @@ namespace MSNK.Models.Modules.Cart
         public virtual void AddItem2(
             int akBelianId,
             int Indek,
+            int Baris,
             string Bil,
             string NoStok,
             string Perihal,
@@ -68,29 +69,23 @@ namespace MSNK.Models.Modules.Cart
             DateTime tarKemaskini
             )
         {
-            AkBelian2 line = collection2
-            //.Where(p => p.JCaraBayarId == jCaraBayarId)
-            .FirstOrDefault();
-
-            if (line == null)
+            collection2.Add(new AkBelian2
             {
-                collection2.Add(new AkBelian2
-                {
-                    AkBelianId = akBelianId,
-                    Indek = Indek,
-                    Bil = Bil,
-                    NoStok = NoStok,
-                    Perihal = Perihal,
-                    Kuantiti = Kuantiti,
-                    Unit = Unit,
-                    Harga = Harga,
-                    Amaun = Amaun,
-                    UserId = userId,
-                    TarMasuk = tarMasuk,
-                    UserIdKemaskini = userIdKemasikini,
-                    TarKemaskini = tarKemaskini
-                });
-            }
+                AkBelianId = akBelianId,
+                Indek = Indek,
+                Baris = Baris,
+                Bil = Bil,
+                NoStok = NoStok,
+                Perihal = Perihal,
+                Kuantiti = Kuantiti,
+                Unit = Unit,
+                Harga = Harga,
+                Amaun = Amaun,
+                UserId = userId,
+                TarMasuk = tarMasuk,
+                UserIdKemaskini = userIdKemasikini,
+                TarKemaskini = tarKemaskini
+            });
         }
 
         public virtual void RemoveItem2(int id) =>

@@ -56,8 +56,9 @@ namespace MSNK.Models.Modules.Cart.Session
 
         //Belian2
         public override void AddItem2(
-            int akPOId,
+            int akBelianId,
             int Indek,
+            int Baris,
             string Bil,
             string NoStok,
             string Perihal,
@@ -71,8 +72,9 @@ namespace MSNK.Models.Modules.Cart.Session
             DateTime tarKemaskini
             )
         {
-            base.AddItem2(akPOId,
+            base.AddItem2(akBelianId,
                     Indek,
+                    Baris,
                     Bil,
                     NoStok,
                     Perihal,

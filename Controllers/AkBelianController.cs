@@ -210,6 +210,7 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem2(item.AkBelianId,
                                item.Indek,
+                               item.Baris,
                                item.Bil,
                                item.NoStok,
                                item.Perihal,
@@ -363,6 +364,7 @@ namespace MSNK.Controllers
 
                 _cart.AddItem2(item.AkPOId,
                                item.Indek,
+                               item.Baris,
                                item.Bil,
                                item.NoStok,
                                item.Perihal,
@@ -456,6 +458,83 @@ namespace MSNK.Controllers
             }
         }
         // get all item from cart akBelian1 end
+
+        // get an item from cart akBelian2
+        public JsonResult GetAnItemCartAkBelian2(AkBelian2 akBelian2)
+        {
+
+            try
+            {
+                AkBelian2 data = _cart.Lines2.Where(x => x.Indek == akBelian2.Indek).FirstOrDefault();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get an item from cart akBelian2 end
+
+        //save cart akBelian2
+        public JsonResult SaveCartAkBelian2(AkBelian2 akBelian2)
+        {
+
+            try
+            {
+
+                var akT2 = _cart.Lines2.Where(x => x.Indek == akBelian2.Indek).FirstOrDefault();
+
+                var user = _userManager.GetUserName(User);
+
+                if (akT2 != null)
+                {
+                    _cart.RemoveItem2(akBelian2.Indek);
+
+                    akBelian2.UserId = user;
+                    akBelian2.TarMasuk = DateTime.Now;
+
+                    _cart.AddItem2(akBelian2.AkBelianId,
+                                   akBelian2.Indek,
+                                   akBelian2.Baris,
+                                   akBelian2.Bil,
+                                   akBelian2.NoStok,
+                                   akBelian2.Perihal,
+                                   akBelian2.Kuantiti,
+                                   akBelian2.Unit,
+                                   akBelian2.Harga,
+                                   akBelian2.Amaun,
+                                   akBelian2.UserId,
+                                   akBelian2.TarMasuk,
+                                   akBelian2.UserIdKemaskini,
+                                   akBelian2.TarKemaskini);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //save cart akBelian2 end
+
+        // get all item from cart akBelian2
+        public JsonResult GetAllItemCartAkBelian2()
+        {
+
+            try
+            {
+                List<AkBelian2> data = _cart.Lines2.ToList();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart akBelian2 end
 
         // POST: AkBelian/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -700,6 +779,7 @@ namespace MSNK.Controllers
 
                     _cart.AddItem2(akBelian2.AkBelianId,
                                    akBelian2.Indek,
+                                   akBelian2.Baris,
                                    akBelian2.Bil,
                                    akBelian2.NoStok,
                                    akBelian2.Perihal,

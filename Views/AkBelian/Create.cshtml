@@ -119,14 +119,14 @@
                     </div>
                     @*table Objek end*@
 
-                    @*table urusniaga*@
+                    @*table perihal*@
                     <div class="card box-shadow mb-3 mt-2">
                         <div class="card-header">
                             <h3>Perihal</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive-md">
-                                <table id="tblUrusniaga" class="table table-sm" cellpadding="0" cellspacing="0">
+                                <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>Baris</th>
@@ -140,20 +140,19 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tbodyUrusniaga">
+                                    <tbody id="tbodyPerihal">
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td id="perihalId" hidden></td>
                                             <td hidden><input class="form-control form-control-sm" type="text" id="txtIndek" maxlength="3"></td>
                                             <td><input class="form-control form-control-sm" type="number" id="txtBaris" maxlength="3"></td>
                                             <td><input class="form-control form-control-sm" type="number" id="txtBil" maxlength="3"></td>
                                             <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtNoStok" maxlength="100"></td>
                                             <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtPerihal" maxlength="100"></td>
-                                            <td><input class="form-control form-control-sm" type="number" id="txtKuantiti" maxlength="4"></td>
+                                            <td><input class="form-control form-control-sm kuantiti" type="number" id="txtKuantiti" maxlength="4"></td>
                                             <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtUnit" maxlength="4"></td>
-                                            <td><input class="form-control form-control-sm" type="number" id="txtHargaUnit" maxlength="4"></td>
-                                            <td><input class="form-control form-control-sm" type="number" id="txtAmaun" maxlength="6" readonly></td>
+                                            <td><input class="form-control form-control-sm hargaUnit" type="number" id="txtHargaUnit" maxlength="4"></td>
+                                            <td><input class="form-control form-control-sm amaun" type="number" id="txtAmaun" maxlength="6" readonly></td>
                                             @*<td><input class="form-control form-control-sm" type="datetime-local" id="txtTarSlip"></td>*@
                                             <td><button class="btn btn-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
                                         </tr>
@@ -167,15 +166,15 @@
 
 
 
-                    @*table urusniaga end*@
+                    @*table perihal end*@
                 </div>
             </div>
 
             <div class="form-group pb-2">
-                    <label asp-for="Jumlah" class="control-label"></label>
-                    <input asp-for="Jumlah" class="form-control" id="jumlahObjek" readonly/>
-                    <span asp-validation-for="Jumlah" class="text-danger"></span>
-                </div>
+                <label asp-for="Jumlah" class="control-label"></label>
+                <input asp-for="Jumlah" class="form-control" id="jumlahObjek" readonly />
+                <span asp-validation-for="Jumlah" class="text-danger"></span>
+            </div>
 
             @*<div class="form-group" hidden>
                     <label asp-for="TarikhPosting" class="control-label"></label>
@@ -245,3 +244,84 @@
     </div>
 </div>
 <!-- Modal Objek End -->
+
+<!-- Modal Perihal -->
+<div class="modal fade bd-example-modal-lg" id="modalPerihal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Perihal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input id="moId2" hidden />
+                    <input id="moIndek" hidden />
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="col-form-label">Baris</label>
+                                <input type="number" class="form-control form-control-sm" id="moBaris">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="col-form-label">Bil</label>
+                                <input type="number" class="form-control form-control-sm" id="moBil">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label class="col-form-label">No Stok</label>
+                                <input type="text" class="form-control form-control-sm" id="moNoStok">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-form-label">Perihal</label>
+                                <input type="text" class="form-control form-control-sm" id="moPerihal">
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Kuantiti</label>
+                                <input type="number" class="form-control form-control-sm kuantiti" id="moKuantiti">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Unit</label>
+                                <input type="text" class="form-control form-control-sm" id="moUnit">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Harga/Unit</label>
+                                <input type="number" class="form-control form-control-sm hargaUnit" id="moHargaUnit">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-form-label">Amaun</label>
+                                <input type="text" class="form-control form-control-sm amaun" id="moAmaun2" readonly>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate2()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Perihal End -->

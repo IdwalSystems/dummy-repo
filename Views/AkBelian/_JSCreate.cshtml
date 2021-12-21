@@ -50,7 +50,7 @@
             success: function (msg) {
                 $("#ddlKodPembekal").val(msg?.record?.akPembekal?.id).change();
                 displayObjekList(msg.record.akPO1);
-                displayUrusniagaList(msg.record.akPO2);
+                displayPerihalList(msg.record.akPO2);
             },
             error: function (req, status, error) {
                 alert(error);
@@ -80,9 +80,9 @@
         jumlah.val(sum);
     }
 
-    function displayUrusniagaList(data) {
+    function displayPerihalList(data) {
         //refresh updated table objek
-        $("table tbody#tbodyUrusniaga").empty();
+        $("table tbody#tbodyPerihal").empty();
         var jumlah2 = 0;
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
@@ -96,9 +96,11 @@
                 "</td><td>" + (item.harga).toFixed(2) +
                 "</td><td>" + (item.amaun).toFixed(2) +
                 "</td><td>" +
+                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                "</td><td>" +
                 "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
                 "</td><tr>";
-            $("table tbody#tbodyUrusniaga").append(str);
+            $("table tbody#tbodyPerihal").append(str);
             jumlah2 += item.amaun;
         }
     }
@@ -188,114 +190,117 @@
     //add tbl objek end
 
     //add tbl Perihal
-    var bil = 1;
+    var bil = $('#tblPerihal tr').length;
+    if (bil == 0) {
+        bil = 1;
+    }
     $("body").on("click", "#btnAdd2", function () {
         //Reference the Name and Country TextBoxes.
-        var txtBil = $("#txtBil");
-        GetPerihal(txtBil.val());
+        GetIndek(bil);
     });
 
-    function GetPerihal(id) {
-        if (id != "") {
+    function GetIndek(indek) {
             //Send the JSON array to Controller using AJAX.
 
-            //Reference the TextBoxes.
-            var txtBaris = $("#txtBaris");
-            var txtBil = $("#txtBil");
-            var txtNoStok = $("#txtNoStok");
-            var txtPerihal = $("#txtPerihal");
-            var txtKuantiti = $("#txtKuantiti");
-            var txtUnit = $("#txtUnit");
-            var txtHargaUnit = $("#txtHargaUnit");
-            var txtAmaun = $("#txtAmaun");
+        //Reference the TextBoxes.
+        var txtIndek = indek;
+        var txtBaris = $("#txtBaris");
+        var txtBil = $("#txtBil");
+        var txtNoStok = $("#txtNoStok");
+        var txtPerihal = $("#txtPerihal");
+        var txtKuantiti = $("#txtKuantiti");
+        var txtUnit = $("#txtUnit");
+        var txtHargaUnit = $("#txtHargaUnit");
+        var txtAmaun = $("#txtAmaun");
 
-            //Get the reference of the Table's TBODY element.
-            var tBody = $("#tblUrusniaga > TBODY")[0];
-            //Add Row.
-            var row = tBody.insertRow(-1);
+        //Get the reference of the Table's TBODY element.
+        var tBody = $("#tblPerihal > TBODY")[0];
+        //Add Row.
+        var row = tBody.insertRow(-1);
 
-            //Add Indek cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(bil);
-            cell.prop("hidden", !this.checked);
+        //Add Indek cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtIndek);
+        cell.prop("hidden", !this.checked);
 
-            //Add Baris cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtBaris.val());
+        //Add Baris cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtBaris.val());
 
-            //Add Bil cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtBil.val());
+        //Add Bil cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtBil.val());
 
-            //Add No Stok cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtNoStok.val());
-            cell.addClass('text-uppercase');
+        //Add No Stok cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtNoStok.val());
+        cell.addClass('text-uppercase');
 
-            //Add Perihal cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtPerihal.val());
-            cell.addClass('text-uppercase');
+        //Add Perihal cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtPerihal.val());
+        cell.addClass('text-uppercase');
 
-            //Add Kuantiti cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtKuantiti.val());
+        //Add Kuantiti cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtKuantiti.val());
 
-            //Add Unit cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtUnit.val());
-            cell.addClass('text-uppercase');
+        //Add Unit cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtUnit.val());
+        cell.addClass('text-uppercase');
 
-            //Add Harga cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtHargaUnit.val());
+        //Add Harga cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtHargaUnit.val());
 
-            //Add Amaun cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtAmaun.val());
+        //Add Amaun cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtAmaun.val());
 
-            //Add Button cell.
-            cell = $(row.insertCell(-1));
-            var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
-            cell.append(btnRemove2);
+        //Add Edit Button cell.
+        cell = $(row.insertCell(-1));
 
-            var AkBelian2 = {
-                Indek: bil,
-                Baris: txtBaris.val(),
-                Bil: txtBil.val(),
-                NoStok: txtNoStok.val(),
-                Perihal: txtPerihal.val(),
-                Kuantiti: txtKuantiti.val(),
-                Unit: txtUnit.val(),
-                Harga: txtHargaUnit.val(),
-                Amaun: txtAmaun.val()
-            }
-            if (id != null) {
-                $.ajax({
-                    type: "POST",
-                    url: "/AkBelian/SaveAkBelian2",
-                    data: AkBelian2,
-                    dataType: "json",
-                    success: function (r) {
-                        //Clear the TextBoxes.
-                        txtBaris.val("");
-                        txtBil.val("");
-                        txtNoStok.val("");
-                        txtPerihal.val("");
-                        txtKuantiti.val("");
-                        txtUnit.val("");
-                        txtHargaUnit.val("");
-                        txtAmaun.val("");
-                        bil++;
-                    }
-                });
-            }
+        var btnUpdate2 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
+        cell.append(btnUpdate2);
 
+        //Add Button cell.
+        cell = $(row.insertCell(-1));
+        var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
+        cell.append(btnRemove2);
 
+        var AkBelian2 = {
+            Indek: indek,
+            Baris: txtBaris.val(),
+            Bil: txtBil.val(),
+            NoStok: txtNoStok.val(),
+            Perihal: txtPerihal.val(),
+            Kuantiti: txtKuantiti.val(),
+            Unit: txtUnit.val(),
+            Harga: txtHargaUnit.val(),
+            Amaun: txtAmaun.val()
         }
 
+        $.ajax({
+            type: "POST",
+            url: "/AkBelian/SaveAkBelian2",
+            data: AkBelian2,
+            dataType: "json",
+            success: function (r) {
+                //Clear the TextBoxes.
+                txtBaris.val("");
+                txtBil.val("");
+                txtNoStok.val("");
+                txtPerihal.val("");
+                txtKuantiti.val("");
+                txtUnit.val("");
+                txtHargaUnit.val("");
+                txtAmaun.val("");
+                bil++;
+            }
+        });
     }
-    //add tbl urusniaga end
+    //add tbl perihal end
 
     //remove tbl objek
     function Remove1(button) {
@@ -333,14 +338,14 @@
     };
     //remove tbl objek end
 
-    //remove tb urusniaga
+    //remove tb perihal
     function Remove2(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var name = $("TD", row).eq(0).html();
         if (confirm("Hapus : " + name + " ?")) {
             //Get the reference of the Table.
-            var table = $("#tblUrusniaga")[0];
+            var table = $("#tblPerihal")[0];
 
             var AkBelian2 = {
                 Indek: name,
@@ -359,7 +364,7 @@
             }
         }
     };
-    //remove tbl urusniaga end
+    //remove tbl perihal end
 
     //update tbl objek
     function Update1(button) {
@@ -395,7 +400,6 @@
         var amaun = $("#moAmaun1").val();
         var akCartaId = $("#moKodAkaun").val();
         var jumlah = $("#jumlahObjek");
-        var kodAkaun = $("#moKodAkaun option:selected").text();
 
         var AkBelian1 = {
             Id: id,
@@ -444,19 +448,125 @@
     };
     //update tbl objek end
 
-    // onchange harga/unit and kuantiti
-    $("body").on('change', "#txtHargaUnit", function () {
+    //update tbl perihal
+    function Update2(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var indek = $("TD", row).eq(0).html();
+
+        var AkBelian2 = {
+            Indek: indek
+        }
+        if (name != null) {
+            $.ajax({
+                type: "POST",
+                url: "/AkBelian/GetAnItemCartAkBelian2",
+                data: AkBelian2,
+                dataType: "json",
+                success: function (r) {
+                    //insert data in modal perihal
+                    $("#moId2").val(r.record.id);
+                    $("#moIndek").val(r.record.indek);
+                    $("#moBaris").val(r.record.baris);
+                    $("#moBil").val(r.record.bil);
+                    $("#moNoStok").val(r.record.noStok);
+                    $("#moPerihal").val(r.record.perihal);
+                    $("#moKuantiti").val(r.record.kuantiti);
+                    $("#moUnit").val(r.record.unit);
+                    $("#moHargaUnit").val(r.record.harga);
+                    $("#moAmaun2").val(r.record.amaun);
+
+                    //show modal perihal
+                    $("#modalPerihal").modal({ backdrop: 'static', keyboard: false });
+                }
+            });
+        }
+    };
+
+    function modalUpdate2() {
+
+        var id = $("#moId2").val();
+        var indek = $("#moIndek").val();
+        var baris = $("#moBaris").val();
+        var bil = $("#moBil").val();
+        var noStok = $("#moNoStok").val();
+        var perihal = $("#moPerihal").val();
+        var kuantiti = $("#moKuantiti").val();
+        var unit = $("#moUnit").val();
+        var harga = $("#moHargaUnit").val();
+        var amaun = $("#moAmaun2").val();
+
+        var AkBelian2 = {
+            Id: id,
+            Indek: indek,
+            Baris: baris,
+            Bil: bil,
+            NoStok: noStok,
+            Perihal: perihal,
+            Kuantiti: kuantiti,
+            Unit: unit,
+            Harga: harga,
+            Amaun: amaun
+        }
+        $.ajax({
+            type: "POST",
+            url: "/AkBelian/SaveCartAkBelian2",
+            data: AkBelian2,
+            dataType: "json",
+            success: function (r) {
+                //insert notification here
+
+                $.ajax({
+                    type: "POST",
+                    url: "/AkBelian/GetAllItemCartAkBelian2",
+                    data: AkBelian2,
+                    dataType: "json",
+                    success: function (r) {
+
+                        //refresh updated table perihal
+                        $("table tbody#tbodyPerihal").empty();
+                        if (r.record.length > 0) {
+                            for (var i = 0; i < r.record.length; i++) {
+                                var item1 = r.record[i];
+                                var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
+                                    "</td><td>" + item1.baris +
+                                    "</td><td>" + item1.bil +
+                                    "</td><td>" + item1.noStok +
+                                    "</td><td>" + item1.perihal +
+                                    "</td><td>" + item1.kuantiti +
+                                    "</td><td>" + item1.unit +
+                                    "</td><td>" + (item1.harga).toFixed(2) +
+                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td>" +
+                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "</td><td>" +
+                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "</td><tr>";
+                                $("table tbody#tbodyPerihal").append(str);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    };
+    //update tbl perihal end
+
+    // onchange harga/unit and kuantiti 
+    $("body").on('change', ".hargaUnit, .kuantiti", function () {
+        //main body
         var amount = $("#txtHargaUnit").val();
         var quantity = $("#txtKuantiti").val();
 
         $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)));
-    });
+        //main body end
 
-    $("body").on('change', "#txtKuantiti", function () {
-        var amount = $("#txtHargaUnit").val();
-        var quantity = $("#txtKuantiti").val();
+        //modal perihal
+        var moAmount = $("#moHargaUnit").val();
+        var moQuantity = $("#moKuantiti").val();
 
-        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)));
+        $("#moAmaun2").val((countTotalAmountPerItem(moAmount, moQuantity)));
+        //modal perihal end
     });
 
     function countTotalAmountPerItem(amount, quantity) {
