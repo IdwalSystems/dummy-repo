@@ -89,86 +89,10 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPembekal
-        public async Task<IActionResult> Index(
-            string sortOrder, 
-            string currentFilter, 
-            string searchString, 
-            string searchColumn,
-            int? pageNumber)
+        public async Task<IActionResult> Index()
         {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NamaSyktSortParm"] = String.IsNullOrEmpty(sortOrder) ? "nama_desc" : "";
-            ViewData["KodSyktSortParm"] = sortOrder == "kod" ? "kod_desc" : "kod";
-            ViewData["CurrentFilter"] = searchString;
-
-            List<SelectListItem> test = new List<SelectListItem>();
-            test.Add(new SelectListItem() { Text = "Nama Syarikat", Value = "" });
-            test.Add(new SelectListItem() { Text = "No Pendaftaran", Value = "1" });
-            test.Add(new SelectListItem() { Text = "Bandar", Value = "2" });
-            test.Add(new SelectListItem() { Text = "Negeri", Value = "3" });
-
-            if (!String.IsNullOrEmpty(searchColumn))
-            {
-                ViewBag.searchColumn = new SelectList(test, "Value", "Text", searchColumn);
-            }
-            else
-            {
-                ViewBag.searchColumn = new SelectList(test, "Value", "Text", "");
-            }
-
-            if (searchString != null)
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-
             var akpembekal = await _akpembekalRepo.GetAll();
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                if (searchColumn == "1")
-                {
-                    akpembekal = akpembekal.Where(s => s.KodSykt.ToUpper().Contains(searchString.ToUpper()));
-                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "1");
-                }
-                else if (searchColumn == "2")
-                {
-                    akpembekal = akpembekal.Where(s => s.Bandar.ToUpper().Contains(searchString.ToUpper()));
-                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "2");
-                }
-                else if (searchColumn == "3")
-                {
-                    akpembekal = akpembekal.Where(s => s.JNegeri.Perihal.ToUpper().Contains(searchString.ToUpper()));
-                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "3");
-                }
-                else
-                {
-                    akpembekal = akpembekal.Where(s => s.NamaSykt.ToUpper().Contains(searchString.ToUpper()));
-                    ViewBag.searchColumn = new SelectList(test, "Value", "Text", "");
-                }
-            }
-
-            switch (sortOrder)
-            {
-                case "nama_desc":
-                    akpembekal = akpembekal.OrderByDescending(s => s.NamaSykt);
-                    break;
-                case "kod":
-                    akpembekal = akpembekal.OrderBy(s => s.KodSykt);
-                    break;
-                case "kod_desc":
-                    akpembekal = akpembekal.OrderByDescending(s => s.KodSykt);
-                    break;
-                default:
-                    akpembekal = akpembekal.OrderBy(s => s.NamaSykt);
-                    break;
-            }
-
-            int pageSize = 5;
-            return View(await PaginatedList<AkPembekal>.CreateAsync(akpembekal, pageNumber ?? 1, pageSize));
+            return View(akpembekal);
         }
 
         // GET: AkPembekal/Details/5
@@ -196,8 +120,6 @@ namespace MSNK.Controllers
         // GET: AkPembekal/Create
         public IActionResult Create()
         {
-            //ViewData["AkBankId"] = new SelectList(_context.AkBank, "Id", "Id");
-            //ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod");
             PopulateList();
             return View();
         }
@@ -207,15 +129,6 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkPembekal akPembekal, int jNegeriId, int jBankId)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    _context.Add(akPembekal);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //ViewData["JBankId"] = new SelectList(_context.JBank, "Id", "Id", akPembekal.JBankId);
-            //ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", akPembekal.JNegeriId);
-            //return View(akPembekal);
             AkPembekal akP = new();
             if (ModelState.IsValid)
             {
@@ -227,7 +140,7 @@ namespace MSNK.Controllers
                     akP.NamaSykt = akPembekal.NamaSykt;
                     akP.NoPendaftaran = akPembekal.NoPendaftaran;
                     akP.Poskod = akPembekal.Poskod;
-                    akP.Telefon1 = akPembekal.Telefon1;
+                    akP.Telefon = akPembekal.Telefon;
                     akP.AkaunBank = akPembekal.AkaunBank;
                     akP.Alamat1 = akPembekal.Alamat1;
                     akP.Alamat2 = akPembekal.Alamat2;
@@ -236,6 +149,7 @@ namespace MSNK.Controllers
                     akP.Emel = akPembekal.Emel;
                     await _akpembekalRepo.Insert(akP);
                     await _akpembekalRepo.Save();
+                    TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Syarikat adalah " + akP.KodSykt;
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -303,6 +217,7 @@ namespace MSNK.Controllers
                     //akP.Bandar = akPembekal.Bandar;
                     //akP.Emel = akPembekal.Emel;
                     await _akpembekalRepo.Update(akPembekal);
+                    TempData[SD.Success] = "Data berjaya diubah..!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -351,6 +266,7 @@ namespace MSNK.Controllers
             var akPembekal = await _context.AkPembekal.FindAsync(id);
             _context.AkPembekal.Remove(akPembekal);
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 

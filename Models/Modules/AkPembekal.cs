@@ -36,7 +36,7 @@ namespace MSNK.Models.Modules
         [Display(Name = "Negeri")]
         public int JNegeriId { get; set; }
         [Required(ErrorMessage = "Nombor Telefon Diperlukan."), Phone(ErrorMessage = "Nombor Telefon Tidak Sah."), MaxLength(30)]
-        public string Telefon1 { get; set; }
+        public string Telefon { get; set; }
         [Required(ErrorMessage = "Emel Diperlukan."), EmailAddress(ErrorMessage = "Emel Tidak Sah."), MaxLength(100)]
         public string Emel { get; set; }
         [Required(ErrorMessage = "Nombor Akaun Bank Diperlukan."), MaxLength(20)]

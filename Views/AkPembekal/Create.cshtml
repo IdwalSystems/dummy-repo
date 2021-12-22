@@ -6,11 +6,6 @@
 }
 
 <partial name="_JSCreate" />
-<style>
-    .form-control-sm {
-        text-transform: uppercase;
-    }
-</style>
 
 <div class="row">
     <div class="col-md-12">
@@ -24,18 +19,18 @@
                     <div class="form-row">
                         <div class="form-group col-sm">
                             <label asp-for="KodSykt" class="control-label"></label>
-                            <input asp-for="KodSykt" class="form-control form-control-sm" id="txtboxKodSykt" disabled="disabled" />
+                            <input asp-for="KodSykt" class="form-control form-control-sm" id="txtboxKodSykt" readonly />
                             <span asp-validation-for="KodSykt" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-sm">
-                            <label asp-for="NamaSykt" class="control-label"></label>
-                            <input asp-for="NamaSykt" class="form-control form-control-sm" id="txtboxNamaSykt" />
-                            <span asp-validation-for="NamaSykt" class="text-danger"></span>
                         </div>
                         <div class="form-group col-sm">
                             <label asp-for="NoPendaftaran" class="control-label"></label>
                             <input asp-for="NoPendaftaran" class="form-control form-control-sm" />
                             <span asp-validation-for="NoPendaftaran" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm">
+                            <label asp-for="NamaSykt" class="control-label"></label>
+                            <input asp-for="NamaSykt" class="form-control form-control-sm" id="txtboxNamaSykt" />
+                            <span asp-validation-for="NamaSykt" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -77,9 +72,9 @@
 
                     <div class="form-row">
                         <div class="form-group col-sm-4">
-                            <label asp-for="Telefon1" class="control-label"></label>
-                            <input asp-for="Telefon1" class="form-control form-control-sm" type="tel" />
-                            <span asp-validation-for="Telefon1" class="text-danger"></span>
+                            <label asp-for="Telefon" class="control-label"></label>
+                            <input asp-for="Telefon" class="form-control form-control-sm" type="tel" />
+                            <span asp-validation-for="Telefon" class="text-danger"></span>
                         </div>
                         <div class="form-group col-sm-4">
                             <label asp-for="Emel" class="control-label"></label>

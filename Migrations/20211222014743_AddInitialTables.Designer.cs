@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211221024836_AddInitialTables")]
+    [Migration("20211222014743_AddInitialTables")]
     partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -680,7 +680,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("TarMasuk")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Telefon1")
+                    b.Property<string>("Telefon")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");

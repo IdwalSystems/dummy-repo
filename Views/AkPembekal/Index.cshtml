@@ -30,7 +30,7 @@
                     </select>
                 </div>
                 <div class="col-sm mb-2">
-                    <input class="form-control form-control-sm" type="text" id="myInput" />
+                    <input class="form-control form-control-sm" type="text" id="myInput" style="text-transform:uppercase" />
                 </div>
                 <div class="col-sm mb-2">
                     <button class="btn btn-warning btn-sm" id="batalCari" value="Batal Carian"><i class="fas fa-backspace"></i></button>
@@ -43,6 +43,7 @@
     <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%">
         <thead>
             <tr>
+                <th align="center">Bil</th>
                 <th>
                     @Html.DisplayNameFor(model => model.KodSykt)
                 </th>
@@ -53,31 +54,22 @@
                     @Html.DisplayNameFor(model => model.NoPendaftaran)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Alamat1)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Alamat2)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Alamat3)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Poskod)
+                    Alamat
                 </th>
                 <th class="bandar">
                     @Html.DisplayNameFor(model => model.Bandar)
                 </th>
+                <th class="negeri">
+                    @Html.DisplayNameFor(model => model.JNegeri)
+                </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Telefon1)
+                    @Html.DisplayNameFor(model => model.Telefon)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Emel)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.AkaunBank)
-                </th>
-                <th class="negeri">
-                    @Html.DisplayNameFor(model => model.JNegeri)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.JBank)
@@ -88,57 +80,49 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.KodSykt)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NamaSykt)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NoPendaftaran)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Alamat1)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Alamat2)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Alamat3)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Poskod)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Bandar)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Telefon1)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Emel)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AkaunBank)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.JNegeri.Perihal)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.JBank.Nama)
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id"
-                           class="btn btn-primary btn-sm" type="button"
-                           data-toggle="tooltip" data-placement="top"
-                           title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                        <a asp-action="Delete" asp-route-id="@item.Id"
-                           class="btn btn-danger btn-sm" type="button"
-                           data-toggle="tooltip" data-placement="top"
-                           title="Hapus"><i class="fas fa-trash"></i></a>
-                    </td>
-                </tr>
+            <tr>
+                <td align="center"></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.KodSykt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NamaSykt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoPendaftaran)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Alamat1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Bandar)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JNegeri.Perihal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telefon)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Emel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AkaunBank)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JBank.Nama)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id"
+                       class="btn btn-primary btn-sm" type="button"
+                       data-toggle="tooltip" data-placement="top"
+                       title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id"
+                       class="btn btn-danger btn-sm" type="button"
+                       data-toggle="tooltip" data-placement="top"
+                       title="Hapus"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>

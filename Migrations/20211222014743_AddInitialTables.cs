@@ -337,7 +337,7 @@ namespace MSNK.Migrations
                     Poskod = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
                     Bandar = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     JNegeriId = table.Column<int>(type: "int", nullable: false),
-                    Telefon1 = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Telefon = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Emel = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     AkaunBank = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     JBankId = table.Column<int>(type: "int", nullable: false),
