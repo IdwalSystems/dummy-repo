@@ -636,7 +636,7 @@ namespace MSNK.Models.Modules
                         Poskod="43650",
                         Bandar = "BANDAR BARU BANGI ",
                         JNegeriId = negeri.Id,
-                        Telefon = "+601133272978",
+                        Telefon1 = "+601133272978",
                         Emel = "admin@idwal.com.my",
                         AkaunBank = "1300882525",
                         JBankId = jbank.Id

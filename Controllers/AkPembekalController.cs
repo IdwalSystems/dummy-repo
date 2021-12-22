@@ -140,7 +140,7 @@ namespace MSNK.Controllers
                     akP.NamaSykt = akPembekal.NamaSykt;
                     akP.NoPendaftaran = akPembekal.NoPendaftaran;
                     akP.Poskod = akPembekal.Poskod;
-                    akP.Telefon = akPembekal.Telefon;
+                    akP.Telefon1 = akPembekal.Telefon1;
                     akP.AkaunBank = akPembekal.AkaunBank;
                     akP.Alamat1 = akPembekal.Alamat1;
                     akP.Alamat2 = akPembekal.Alamat2;

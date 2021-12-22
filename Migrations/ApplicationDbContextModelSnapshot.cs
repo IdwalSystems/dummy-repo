@@ -683,7 +683,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("TarMasuk")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Telefon")
+                    b.Property<string>("Telefon1")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
