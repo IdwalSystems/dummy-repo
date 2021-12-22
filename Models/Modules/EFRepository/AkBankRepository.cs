@@ -34,7 +34,7 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<AkBank> GetById(int id)
         {
-            return await context.AkBank.FindAsync(id);
+            return await context.AkBank.Include(d=> d.JBank).Where(d=> d.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<AkBank> Insert(AkBank entity)

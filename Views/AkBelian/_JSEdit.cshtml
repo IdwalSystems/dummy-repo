@@ -462,6 +462,27 @@
     //};
     //update tbl urusniaga end
 
+    // onchange kod pembekal
+    $("body").on('change', "#ddlKodPembekal", function () {
+        var kodPembekal = $("#ddlKodPembekal").val();
+        JsonKodPembekal(kodPembekal);
+    });
+    function JsonKodPembekal(id) {
+        $.ajax({
+            type: "POST",
+            url: "/AkBelian/JsonGetPembekal",
+            data: { data: id },
+            dataType: "json",
+            success: function (msg) {
+                $("#txtNamaPembekal").val(msg.record.namaSykt);
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    //on change Kod Pembekal end
+
     $("body").on("click", "#btnSave", function () {
         //insert validation form here
     });

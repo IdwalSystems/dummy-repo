@@ -859,6 +859,14 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
 
+                    _cart.AddItem1(akTerima1.AkTerimaId,
+                                   akTerima1.Amaun,
+                                   akTerima1.AkCartaId,
+                                   akTerima1.UserId,
+                                   akTerima1.TarMasuk,
+                                   akTerima1.UserIdKemaskini,
+                                   akTerima1.TarKemaskini);
+
                 }
 
 
@@ -907,6 +915,8 @@ namespace MSNK.Controllers
                     //insert applog end
 
                     await _context.SaveChangesAsync();
+
+                    _cart.RemoveItem1(akTerima1.AkCartaId);
 
                 }
 

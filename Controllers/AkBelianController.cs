@@ -30,6 +30,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkPO, int> _akPORepo;
         private readonly ListViewIRepository<AkBelian1, int> _akBelian1Repo;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
+        private readonly IRepository<AkBank, int> _akBankRepo;
         private CartBelian _cart;
 
         public AkBelianController(
@@ -42,6 +43,7 @@ namespace MSNK.Controllers
             IRepository<AkPO, int> akPORepo,
             ListViewIRepository<AkBelian1, int> akBelian1Repository,
             IRepository<AkCarta, int> akCartaRepository,
+            IRepository<AkBank, int> akBankRepository,
             CartBelian cart
             )
         {
@@ -54,6 +56,7 @@ namespace MSNK.Controllers
             _akPORepo = akPORepo;
             _akBelian1Repo = akBelian1Repository;
             _akCartaRepo = akCartaRepository;
+            _akBankRepo = akBankRepository;
             _cart = cart;
         }
 
@@ -169,6 +172,9 @@ namespace MSNK.Controllers
             List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW).OrderBy(b => b.Kod).ToList();
             ViewBag.AkCarta = akCartaList;
 
+            List<AkBank> akBankList = _context.AkBank.Include(b => b.JBank).OrderBy(b => b.Kod).ToList();
+            ViewBag.AkBank = akBankList;
+
         }
 
         private void PopulateTable(int? id)
@@ -239,6 +245,8 @@ namespace MSNK.Controllers
             var akBelian = await _akBelianRepo.GetById((int)id);
             var kw = await _kwRepo.GetById(akBelian.JKWId);
             akBelian.JKW = kw;
+            var akBank = await _akBankRepo.GetById(akBelian.AkBankId);
+            akBelian.AkBank = akBank;
             var akPO = new AkPO();
             if (akBelian.AkPOId != null)
             {
@@ -260,7 +268,7 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
-
+                
             PopulateTable(id);
             return View(akBelian);
         }
@@ -561,7 +569,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId)
+        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int AkBankId)
         {
             AkBelian m = new AkBelian();
             var user = await _userManager.GetUserAsync(User);
@@ -574,7 +582,7 @@ namespace MSNK.Controllers
             {
                 if (akBelian != null && JKWId != 0)
                 {
-                    
+                    m.AkBankId = AkBankId;
                     m.JKWId = JKWId;
                     m.Tahun = akBelian.Tahun;
                     m.NoInbois = noRujukan;
@@ -640,6 +648,8 @@ namespace MSNK.Controllers
             var akBelian = await _akBelianRepo.GetById((int)id);
             var kw = await _kwRepo.GetById(akBelian.JKWId);
             akBelian.JKW = kw;
+            var akBank = await _akBankRepo.GetById(akBelian.AkBankId);
+            akBelian.AkBank = akBank;
             var akPO = new AkPO();
             if (akBelian.AkPOId != null)
             {
@@ -696,6 +706,14 @@ namespace MSNK.Controllers
                     await _akBelianRepo.Update(akBelian);
 
                     await _context.SaveChangesAsync();
+
+                    _cart.AddItem1(akBelian1.AkBelianId,
+                                   akBelian1.Amaun,
+                                   akBelian1.AkCartaId,
+                                   akBelian1.UserId,
+                                   akBelian1.TarMasuk,
+                                   akBelian1.UserIdKemaskini,
+                                   akBelian1.TarKemaskini);
                 }
 
 
@@ -746,6 +764,8 @@ namespace MSNK.Controllers
                     //insert applog end
 
                     await _context.SaveChangesAsync();
+
+                    _cart.RemoveItem1(akBelian1.AkCartaId);
 
                 }
 

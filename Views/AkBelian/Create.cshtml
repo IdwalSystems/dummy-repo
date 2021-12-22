@@ -11,6 +11,7 @@
 
         <form asp-action="Create">
             <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="card box-shadow border-success mb-3" id="denganPesananTempatan">
                 <div class="card-header bg-success text-white">
                     <h5>Invois Pembekal Dengan Pesanan Tempatan - @ViewData["Title"]</h5>
@@ -78,6 +79,20 @@
                             <div class="form-group">
                                 <label class="control-label">Nama Pembekal</label>
                                 <input id="txtNamaPembekal" class="form-control form-control-sm text-uppercase" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="AkBankId" class="control-label">Kod Bank</label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm select2" asp-for="AkBankId">
+                                    <option value="" disabled selected>-- Pilih Bank --</option>
+                                    @foreach (var s in ViewBag.AkBank)
+                                    {
+                                        <option value="@s.Id">@s.NoAkaun - @s.JBank.Nama</option>
+                                    }
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -177,26 +192,26 @@
             </div>
 
             @*<div class="form-group" hidden>
-                    <label asp-for="TarikhPosting" class="control-label"></label>
-                    <input asp-for="TarikhPosting" class="form-control" />
-                    <span asp-validation-for="TarikhPosting" class="text-danger"></span>
-                </div>
+            <label asp-for="TarikhPosting" class="control-label"></label>
+            <input asp-for="TarikhPosting" class="form-control" />
+            <span asp-validation-for="TarikhPosting" class="text-danger"></span>
+        </div>
 
-                <div class="form-group" hidden>
-                    <label asp-for="FlCetak" class="control-label"></label>
-                    <input asp-for="FlCetak" class="form-control" />
-                    <span asp-validation-for="FlCetak" class="text-danger"></span>
-                </div>
-                <div class="form-group" hidden>
-                    <label asp-for="FlPosting" class="control-label"></label>
-                    <input asp-for="FlPosting" class="form-control" />
-                    <span asp-validation-for="FlPosting" class="text-danger"></span>
-                </div>
-                <div class="form-group" hidden>
-                    <label asp-for="FlBatal" class="control-label"></label>
-                    <input asp-for="FlBatal" class="form-control" />
-                    <span asp-validation-for="FlBatal" class="text-danger"></span>
-                </div>*@
+        <div class="form-group" hidden>
+            <label asp-for="FlCetak" class="control-label"></label>
+            <input asp-for="FlCetak" class="form-control" />
+            <span asp-validation-for="FlCetak" class="text-danger"></span>
+        </div>
+        <div class="form-group" hidden>
+            <label asp-for="FlPosting" class="control-label"></label>
+            <input asp-for="FlPosting" class="form-control" />
+            <span asp-validation-for="FlPosting" class="text-danger"></span>
+        </div>
+        <div class="form-group" hidden>
+            <label asp-for="FlBatal" class="control-label"></label>
+            <input asp-for="FlBatal" class="form-control" />
+            <span asp-validation-for="FlBatal" class="text-danger"></span>
+        </div>*@
             <div class="form-group ">
                 <input type="submit" value="Simpan" class="btn btn-primary" />
             </div>
