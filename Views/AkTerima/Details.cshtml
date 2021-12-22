@@ -9,7 +9,7 @@
     <div class="col-md-12">
         <div class="card box-shadow border-dark mb-3">
             <div class="card-header bg-dark text-white">
-                <div class="row">
+                <div class="form-row">
                     <div class="col-md-6">
                         <h5 class="text-left">Resit Rasmi - @ViewData["Title"]</h5>
                     </div>
@@ -20,9 +20,9 @@
                 
             </div>
             <div class="card-body">
-                <div class="row">
+                <div class="form-row">
                     <div class="col-lg-10">
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label asp-for="Tarikh" class="control-label"></label>
@@ -38,17 +38,17 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Jenis Kumpulan Wang</label>
-                                    <input class="form-control form-control-sm" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Kod Bank</label>
-                                    <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">No Kad Pengenalan</label>
@@ -72,7 +72,7 @@
                         <div class="form-group">
                             <input class="form-control form-control-sm text-uppercase" value="@Model.Alamat3 " readonly />
                         </div>
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Poskod</label>
@@ -92,7 +92,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Tel</label>
@@ -176,7 +176,6 @@
                                     <tr>
                                         <th style="width:40%">Kod</th>
                                         <th style="width:50%" class="text-right">Amaun</th>
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyObjek">
@@ -185,7 +184,7 @@
                                         <tr id="@item.Id">
                                             <td id="akCartaId" hidden>@item.AkCartaId</td>
                                             <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                            <td class="editable-txt text-right" id="td1Amaun">@item.Amaun</td>
+                                            <td class="text-right" id="td1Amaun">@item.Amaun</td>
                                         </tr>
 
                                     }
@@ -219,7 +218,6 @@
                                         <th>Tempat Cek</th>
                                         <th>No Slip</th>
                                         <th>Tarikh Slip</th>
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyUrusniaga">
@@ -229,30 +227,30 @@
                                         <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
                                         <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
                                         <td>@item.JCaraBayar.Perihal</td>
-                                        <td class="editable-txt">@item.Amaun</td>
-                                        <td class="editable-txt">@item.NoCek</td>
+                                        <td>@item.Amaun</td>
+                                        <td>@item.NoCek</td>
                                         @switch (@item.JenisCek)
                                         {
                                             case "1":
-                                                <td class="editable-txt">Cek Cawangan Ini</td>
+                                                <td>Cek Cawangan Ini</td>
                                                 break;
                                             case "2":
-                                                <td class="editable-txt">Cek Tempatan</td>
+                                                <td>Cek Tempatan</td>
                                                 break;
                                             case "3":
-                                                <td class="editable-txt">Cek Luar</td>
+                                                <td>Cek Luar</td>
                                                 break;
                                             case "4":
-                                                <td class="editable-txt">Cek Antarabangsa</td>
+                                                <td>Cek Antarabangsa</td>
                                                 break;
                                             default:
-                                                <td class="editable-txt"></td>
+                                                <td></td>
                                                 break;
                                         }
 
-                                        <td class="editable-txt">@item.KodBankCek</td>
-                                        <td class="editable-txt">@item.TempatCek</td>
-                                        <td class="editable-txt">@item.NoSlip</td>
+                                        <td>@item.KodBankCek</td>
+                                        <td>@item.TempatCek</td>
+                                        <td>@item.NoSlip</td>
                                         @if (@item.TarSlip.ToString("dd/MM/yyyy") == "01/01/0001")
                                         {
                                             <td></td>

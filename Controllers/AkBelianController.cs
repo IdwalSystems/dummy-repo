@@ -233,15 +233,32 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akBelian = await _context.AkBelian
-                .Include(a => a.AkPO)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akBelian = await _akBelianRepo.GetById((int)id);
+            var kw = await _kwRepo.GetById(akBelian.JKWId);
+            akBelian.JKW = kw;
+            var akPO = new AkPO();
+            if (akBelian.AkPOId != null)
+            {
+                akPO = await _akPORepo.GetById((int)akBelian.AkPOId);
+            } else
+            {
+                akPO = new AkPO()
+                {
+                    NoPO = "-"
+                };     
+            }
+
+            akBelian.AkPO = akPO;
+
+            var pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
+            akBelian.AkPembekal = pembekal;
+
             if (akBelian == null)
             {
                 return NotFound();
             }
 
+            PopulateTable(id);
             return View(akBelian);
         }
 
@@ -436,7 +453,7 @@ namespace MSNK.Controllers
         //save cart akBelian1 end
 
         // get all item from cart akBelian1
-        public JsonResult GetAllItemCartAkBelian1(AkBelian1 akBelian1)
+        public JsonResult GetAllItemCartAkBelian1()
         {
 
             try
@@ -672,15 +689,33 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akBelian = await _context.AkBelian
-                .Include(a => a.AkPO)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akBelian = await _akBelianRepo.GetById((int)id);
+            var kw = await _kwRepo.GetById(akBelian.JKWId);
+            akBelian.JKW = kw;
+            var akPO = new AkPO();
+            if (akBelian.AkPOId != null)
+            {
+                akPO = await _akPORepo.GetById((int)akBelian.AkPOId);
+            }
+            else
+            {
+                akPO = new AkPO()
+                {
+                    NoPO = "-"
+                };
+            }
+
+            akBelian.AkPO = akPO;
+
+            var pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
+            akBelian.AkPembekal = pembekal;
+
             if (akBelian == null)
             {
                 return NotFound();
             }
 
+            PopulateTable(id);
             return View(akBelian);
         }
 

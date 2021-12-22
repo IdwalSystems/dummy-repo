@@ -238,6 +238,166 @@ namespace MSNK.Controllers
             return View();
         }
 
+        // get an item from cart akTerima1
+        public JsonResult GetAnItemCartAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+                AkTerima1 data = _cart.Lines1.Where(x => x.AkCartaId == akTerima1.AkCartaId).FirstOrDefault();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get an item from cart akTerima1 end
+
+        //save cart akTerima1
+        public JsonResult SaveCartAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+
+                var akT1 = _cart.Lines1.Where(x => x.AkCartaId == akTerima1.AkCartaId).FirstOrDefault();
+
+                var user = _userManager.GetUserName(User);
+
+                if (akT1 != null)
+                {
+                    _cart.RemoveItem1(akTerima1.AkCartaId);
+
+                    akTerima1.UserId = user;
+                    akTerima1.TarMasuk = DateTime.Now;
+
+                    _cart.AddItem1(akTerima1.AkTerimaId,
+                                    akTerima1.Amaun,
+                                    akTerima1.AkCartaId,
+                                   akTerima1.UserId,
+                                   akTerima1.TarMasuk,
+                                   akTerima1.UserIdKemaskini,
+                                   akTerima1.TarKemaskini);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //save cart akTerima1 end
+
+        // get all item from cart akTerima1
+        public JsonResult GetAllItemCartAkTerima1(AkTerima1 akTerima1)
+        {
+
+            try
+            {
+                List<AkTerima1> data = _cart.Lines1.ToList();
+
+                foreach (AkTerima1 item in data)
+                {
+                    var akCarta = _context.AkCarta.Find(item.AkCartaId);
+
+                    item.AkCarta = akCarta;
+                }
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart akTerima1 end
+
+        // get an item from cart akTerima2
+        public JsonResult GetAnItemCartAkTerima2(AkTerima2 akTerima2)
+        {
+
+            try
+            {
+                AkTerima2 data = _cart.Lines2.Where(x => x.JCaraBayarId == akTerima2.JCaraBayarId).FirstOrDefault();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get an item from cart akTerima2 end
+
+        //save cart akTerima2
+        public JsonResult SaveCartAkTerima2(AkTerima2 akTerima2)
+        {
+
+            try
+            {
+
+                var akT2 = _cart.Lines2.Where(x => x.JCaraBayarId == akTerima2.JCaraBayarId).FirstOrDefault();
+
+                var user = _userManager.GetUserName(User);
+
+                if (akT2 != null)
+                {
+                    _cart.RemoveItem2(akTerima2.JCaraBayarId);
+
+                    akTerima2.UserId = user;
+                    akTerima2.TarMasuk = DateTime.Now;
+
+                    _cart.AddItem2(akTerima2.AkTerimaId,
+                                   akTerima2.JCaraBayarId,
+                                   akTerima2.Amaun,
+                                   akTerima2.NoCek,
+                                   akTerima2.JenisCek,
+                                   akTerima2.KodBankCek,
+                                   akTerima2.TempatCek,
+                                   akTerima2.NoSlip,
+                                   akTerima2.TarSlip,
+                                   akTerima2.UserId,
+                                   akTerima2.TarMasuk,
+                                   akTerima2.UserIdKemaskini,
+                                   akTerima2.TarKemaskini);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //save cart akTerima2 end
+
+        // get all item from cart akTerima2
+        public JsonResult GetAllItemCartAkTerima2()
+        {
+
+            try
+            {
+                List<AkTerima2> data = _cart.Lines2.ToList();
+
+                foreach (AkTerima2 item in data)
+                {
+                    var jCaraBayar = _context.JCaraBayar.Find(item.JCaraBayarId);
+
+                    item.JCaraBayar = jCaraBayar;
+                }
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart akTerima2 end
+
         // POST: AkTerima/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
