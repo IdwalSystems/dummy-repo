@@ -153,6 +153,7 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem2(akPO2.AkPOId,
                                akPO2.Indek,
+                               akPO2.Baris,
                                akPO2.Bil,
                                akPO2.NoStok,
                                akPO2.Perihal,
@@ -401,6 +402,7 @@ namespace MSNK.Controllers
                 {
                     _cart.AddItem2(akPO2.AkPOId,
                          akPO2.Indek,
+                         akPO2.Baris,
                          akPO2.Bil,
                          akPO2.NoStok,
                          akPO2.Perihal,
@@ -671,6 +673,7 @@ namespace MSNK.Controllers
                 akT2.Amaun = akPO2.Amaun;
                 akT2.Indek = akPO2.Indek;
                 akT2.Bil = akPO2.Bil;
+                akT2.Baris = akPO2.Baris;
                 akT2.NoStok = akPO2.NoStok;
                 akT2.Perihal = akPO2.Perihal;
                 akT2.Kuantiti = akPO2.Kuantiti;
@@ -701,6 +704,7 @@ namespace MSNK.Controllers
                 {
                     _cart.AddItem2(akPO2.AkPOId,
                          akPO2.Indek,
+                         akPO2.Baris,
                          akPO2.Bil,
                          akPO2.NoStok,
                          akPO2.Perihal,
