@@ -75,19 +75,17 @@
                         Amaun: txtAmaunObjek.val()
                     }
 
-                    if (noRujukan != null) {
-                        $.ajax({
-                            type: "POST",
-                            url: "/AkTerima/InsertUpdateAkTerima1",
-                            data: AkTerima1,
-                            dataType: "json",
-                            success: function (r) {
-                                //Clear the TextBoxes.
-                                txtKodAkaun.val("");
-                                txtAmaunObjek.val("");
-                            }
-                        });
-                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "/AkTerima/InsertUpdateAkTerima1",
+                        data: AkTerima1,
+                        dataType: "json",
+                        success: function (r) {
+                            //Clear the TextBoxes.
+                            txtKodAkaun.val("");
+                            txtAmaunObjek.val("");
+                        }
+                    });
 
                 }
             });

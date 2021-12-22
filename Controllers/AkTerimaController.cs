@@ -995,20 +995,6 @@ namespace MSNK.Controllers
                                    item.TarKemaskini);
                 }
 
-
-                decimal total = 0;
-                foreach (var item in akT1)
-                {
-                    total += item.Amaun;
-                }
-                AkTerima akTerima = await _akTerimaRepo.GetById(akTerima1.AkTerimaId);
-
-                akTerima.Jumlah = total;
-
-                await _akTerimaRepo.Update(akTerima);
-                await _context.SaveChangesAsync();
-
-
                 return Json(new { result = "OK", data = data });
             }
             catch (Exception ex)
