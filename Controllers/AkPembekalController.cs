@@ -63,7 +63,7 @@ namespace MSNK.Controllers
             }
 
             string newkodsykt = namasykt.Substring(0, 1) + intkodsykt.ToString("D4");
-            return newkodsykt;
+            return newkodsykt.ToUpper();
         }
 
         [HttpPost]

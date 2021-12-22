@@ -1,85 +1,88 @@
-﻿@*@model IEnumerable<MSNK.Models.Modules.AkPembekal>*@
-@model PaginatedList<MSNK.Models.Modules.AkPembekal>
+﻿@model IEnumerable<MSNK.Models.Modules.AkPembekal>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Index</h1>
-
 <partial name="_TableStickyLastColumn">
-<partial name="_ToTopButton">
+<partial name="_JSIndex" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-@*@Html.Label((string)ViewData["SearchColumn"])*@
-
-<label class="form-control-plaintext" for="searchselect">Carian : </label>
-<form asp-action="Index" method="get">
-    <div class="form-actions no-color mb-3">
-        <div class="form-row">
-            <div class="col-sm mb-3">
-                <select class="form-control" name="searchColumn" id="searchselect" asp-items="@ViewBag.searchColumn"></select>
-            </div>
-            <div class="col-sm mb-3">
-                <input class="form-control" type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
-            </div>
-            <div class="col-sm mb-3">
-                <input type="submit" value="Cari" class="btn btn-outline-primary" /> |
-                <a asp-action="Index" class="btn btn-link">Batal Carian</a>
+<div class="row mb-2">
+    <div class="col-8">
+        <h3 class="text-left">Pembekal</h3>
+    </div>
+    <div class="col-4 text-right">
+        <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
+    </div>
+</div>
+<div class="card mb-2">
+    <div class="card-body pl-3 pb-2">
+        <label class="form-control-plaintext" for="columnSearch">Carian : </label>
+        <div class="form-actions no-color mb-2">
+            <div class="form-row">
+                <div class="col-sm mb-2">
+                    <select class="custom-select form-control-sm" id="columnSearch">
+                        <option value="" selected>Semua</option>
+                        <option value=".namaSykt">Nama Syarikat</option>
+                        <option value=".noDaftar">No Pendaftaran</option>
+                        <option value=".bandar">Bandar</option>
+                        <option value=".negeri">Negeri</option>  
+                    </select>
+                </div>
+                <div class="col-sm mb-2">
+                    <input class="form-control form-control-sm" type="text" id="myInput" />
+                </div>
+                <div class="col-sm mb-2">
+                    <button class="btn btn-warning btn-sm" id="batalCari" value="Batal Carian"><i class="fas fa-backspace"></i></button>
+                </div>
             </div>
         </div>
     </div>
-</form>
-
+</div>
 <div class="table-responsive">
-    <table class="table table-hover text-nowrap table-sm" width="100%">
+    <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%">
         <thead>
             <tr>
                 <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["KodSyktSortParm"]">Kod Sykt</a>
-                    @*Kod Sykt*@
+                    @Html.DisplayNameFor(model => model.KodSykt)
+                </th>
+                <th class="namaSykt">
+                    @Html.DisplayNameFor(model => model.NamaSykt)
+                </th>
+                <th class="noDaftar">
+                    @Html.DisplayNameFor(model => model.NoPendaftaran)
                 </th>
                 <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NamaSyktSortParm"]">Nama Syarikat</a>
-                    @*Nama Syarikat*@
+                    @Html.DisplayNameFor(model => model.Alamat1)
                 </th>
                 <th>
-                    No Pendaftaran
+                    @Html.DisplayNameFor(model => model.Alamat2)
                 </th>
                 <th>
-                    Alamat 1
+                    @Html.DisplayNameFor(model => model.Alamat3)
                 </th>
                 <th>
-                    Alamat 2
+                    @Html.DisplayNameFor(model => model.Poskod)
+                </th>
+                <th class="bandar">
+                    @Html.DisplayNameFor(model => model.Bandar)
                 </th>
                 <th>
-                    Alamat 3
+                    @Html.DisplayNameFor(model => model.Telefon1)
                 </th>
                 <th>
-                    Poskod
+                    @Html.DisplayNameFor(model => model.Emel)
                 </th>
                 <th>
-                    Bandar
+                    @Html.DisplayNameFor(model => model.AkaunBank)
+                </th>
+                <th class="negeri">
+                    @Html.DisplayNameFor(model => model.JNegeri)
                 </th>
                 <th>
-                    Telefon
+                    @Html.DisplayNameFor(model => model.JBank)
                 </th>
-                <th>
-                    Emel
-                </th>
-                <th>
-                    Akaun Bank
-                </th>
-                <th>
-                    Negeri
-                </th>
-                <th>
-                    Bank
-                </th>
-                <th class="optionCol"></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -125,10 +128,15 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.JBank.Nama)
                     </td>
-                    <td class="optionCol">
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id"
+                           class="btn btn-primary btn-sm" type="button"
+                           data-toggle="tooltip" data-placement="top"
+                           title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.Id"
+                           class="btn btn-danger btn-sm" type="button"
+                           data-toggle="tooltip" data-placement="top"
+                           title="Hapus"><i class="fas fa-trash"></i></a>
                     </td>
                 </tr>
             }
@@ -136,22 +144,3 @@
     </table>
 </div>
 
-@{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-}
-
-<a asp-action="Index"
-   asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@(Model.PageIndex - 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @prevDisabled">
-    Previous
-</a>
-<a asp-action="Index"
-   asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@(Model.PageIndex + 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @nextDisabled">
-    Next
-</a>
