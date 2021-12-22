@@ -157,6 +157,13 @@ namespace MSNK.Data
                 .HasForeignKey(m => m.AkPembekalId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
+
+            modelBuilder.Entity<AkBelian>()
+                    .HasOne(m => m.AkBank)
+                    .WithMany(t => t.AkBelian)
+                    .HasForeignKey(m => m.AkBankId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
         }
     }
 }

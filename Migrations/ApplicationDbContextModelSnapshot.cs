@@ -113,6 +113,9 @@ namespace MSNK.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AkBankId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("AkPOId")
                         .HasColumnType("int");
 
@@ -166,6 +169,8 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AkBankId");
 
                     b.HasIndex("AkPOId");
 
@@ -788,6 +793,9 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("Tarikh")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("TarikhPosting")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Tel")
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
@@ -1407,6 +1415,12 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkBelian", b =>
                 {
+                    b.HasOne("MSNK.Models.Modules.AkBank", "AkBank")
+                        .WithMany("AkBelian")
+                        .HasForeignKey("AkBankId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MSNK.Models.Modules.AkPO", "AkPO")
                         .WithMany("AkBelian")
                         .HasForeignKey("AkPOId")
@@ -1423,6 +1437,8 @@ namespace MSNK.Migrations
                         .HasForeignKey("JKWId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("AkBank");
 
                     b.Navigation("AkPembekal");
 
@@ -1707,6 +1723,8 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkBank", b =>
                 {
+                    b.Navigation("AkBelian");
+
                     b.Navigation("AkTerima");
                 });
 

@@ -22,6 +22,7 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Tarikh Diperlukan")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Tarikh { get; set; }
+        public DateTime TarikhPosting { get; set; }
         public decimal Jumlah { get; set; }
         [Required(ErrorMessage = "Kod Bank Diperlukan")]
         [DisplayName("Kod Bank")]
