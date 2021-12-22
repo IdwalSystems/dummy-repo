@@ -441,7 +441,7 @@ namespace MSNK.Migrations
                         column: x => x.JKWId,
                         principalTable: "JKW",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -565,8 +565,7 @@ namespace MSNK.Migrations
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    JKWId = table.Column<int>(type: "int", nullable: true)
+                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -582,13 +581,7 @@ namespace MSNK.Migrations
                         column: x => x.AkPOId,
                         principalTable: "AkPO",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AkPO1_JKW_JKWId",
-                        column: x => x.JKWId,
-                        principalTable: "JKW",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -993,11 +986,6 @@ namespace MSNK.Migrations
                 name: "IX_AkPO1_AkPOId",
                 table: "AkPO1",
                 column: "AkPOId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AkPO1_JKWId",
-                table: "AkPO1",
-                column: "JKWId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkPO2_AkPOId",

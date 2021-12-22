@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211222021526_AddInitialTables")]
+    [Migration("20211222030830_AddInitialTables")]
     partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -533,9 +533,6 @@ namespace MSNK.Migrations
                     b.Property<decimal>("Amaun")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("JKWId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("TarKemaskini")
                         .HasColumnType("datetime2");
 
@@ -553,8 +550,6 @@ namespace MSNK.Migrations
                     b.HasIndex("AkCartaId");
 
                     b.HasIndex("AkPOId");
-
-                    b.HasIndex("JKWId");
 
                     b.ToTable("AkPO1");
                 });
@@ -1541,7 +1536,7 @@ namespace MSNK.Migrations
                     b.HasOne("MSNK.Models.Modules.JKW", "JKW")
                         .WithMany("AkPO")
                         .HasForeignKey("JKWId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AkPembekal");
@@ -1557,19 +1552,13 @@ namespace MSNK.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MSNK.Models.Modules.AkPO", "AkPO")
+                    b.HasOne("MSNK.Models.Modules.AkPO", null)
                         .WithMany("AkPO1")
                         .HasForeignKey("AkPOId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MSNK.Models.Modules.JKW", null)
-                        .WithMany("AkPO1")
-                        .HasForeignKey("JKWId");
-
                     b.Navigation("AkCarta");
-
-                    b.Navigation("AkPO");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPO2", b =>
@@ -1812,8 +1801,6 @@ namespace MSNK.Migrations
                     b.Navigation("AkJurnal");
 
                     b.Navigation("AkPO");
-
-                    b.Navigation("AkPO1");
 
                     b.Navigation("AkTerima");
                 });

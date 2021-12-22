@@ -15,7 +15,6 @@ namespace MSNK.Models.Modules
         public decimal Amaun { get; set; }
 
         //Relationship
-        public AkPO AkPO { get; set; }
         public AkCarta AkCarta { get; set; }
 
         // log
