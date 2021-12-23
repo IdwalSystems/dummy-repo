@@ -10,10 +10,8 @@ namespace MSNK.Models.Modules
 {
     public class AkCarta
     {
-        [Display(Name = "KW")]
-        [Required(ErrorMessage = "Kumpulan Wang Diperlukan.")]
-        public int JKWId { get; set; }
-
+        
+        //field
         public int Id { get; set; }
         [MaxLength(6)]
         [Required(ErrorMessage = "Kod Carta Diperlukan.")]
@@ -22,12 +20,6 @@ namespace MSNK.Models.Modules
         [MaxLength(100)]
         [Required(ErrorMessage = "Perihal Diperlukan.")]
         public string Perihal { get; set; }
-        [Display(Name = "Jenis")]
-        [Required(ErrorMessage = "Jenis Diperlukan.")]
-        public int JJenisId { get; set; }
-        [Display(Name = "Paras")]
-        [Required(ErrorMessage = "Paras Diperlukan.")]
-        public int JParasId { get; set; }
         [MaxLength(1)]
         [Display(Name = "Debit / Kredit")]
         [Required(ErrorMessage = "Pilih Debit atau Kredit.")]
@@ -45,12 +37,22 @@ namespace MSNK.Models.Modules
         [Display(Name = "Baki RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Baki { get; set; }
+        //field end
 
         //Relationship
         [Display(Name = "KW")]
+        [Required(ErrorMessage = "Kumpulan Wang Diperlukan.")]
+        public int JKWId { get; set; }
+        [Display(Name = "KW")]
         public JKW JKW { get; set; }
         [Display(Name = "Jenis")]
+        [Required(ErrorMessage = "Jenis Diperlukan.")]
+        public int JJenisId { get; set; }
+        [Display(Name = "Jenis")]
         public JJenis JJenis { get; set; }
+        [Display(Name = "Paras")]
+        [Required(ErrorMessage = "Paras Diperlukan.")]
+        public int JParasId { get; set; }
         [Display(Name = "Paras")]
         public JParas JParas { get; set; }
         public ICollection<AkTerima1> AkTerima1 { get; set; }
@@ -60,6 +62,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkPO1> AkPO1 { get; set; }
         public ICollection<AkJurnal1> AkJurnal1 { get; set; }
         public ICollection<AkBelian1> AkBelian1 { get; set; }
+        //relationship end
 
         // log
         public string UserId { get; set; }
@@ -70,5 +73,6 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Kemaskini")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarKemaskini { get; set; } = DateTime.Now;
+        // log end
     }
 }

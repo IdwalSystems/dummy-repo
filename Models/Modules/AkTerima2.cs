@@ -7,6 +7,7 @@ namespace MSNK.Models.Modules
 {
     public class AkTerima2
     {
+        //field
         public int Id { get; set; }
         public int AkTerimaId { get; set; }
         public int JCaraBayarId { get; set; }
@@ -23,12 +24,12 @@ namespace MSNK.Models.Modules
         public string NoSlip { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarSlip { get; set; }
-
+        //field end
         
 
         //Relationship
         public JCaraBayar JCaraBayar { get; set; }
-        //public AkTerima AkTerima { get; set; }
+        //relationship end
 
         // log
         public string UserId { get; set; }
@@ -39,5 +40,6 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Kemaskini")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarKemaskini { get; set; } = DateTime.Now;
+        //log end
     }
 }

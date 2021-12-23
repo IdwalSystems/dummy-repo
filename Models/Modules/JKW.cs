@@ -7,6 +7,7 @@ namespace MSNK.Models.Modules
 {
     public class JKW
     {
+        //field
         public int Id { get; set; }
         [Required]
         [MaxLength(3)]
@@ -14,6 +15,7 @@ namespace MSNK.Models.Modules
         [Required]
         [MaxLength(100)]
         public string Perihal { get; set; }
+        //field end
 
 
         //Relationship
@@ -24,6 +26,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkPO> AkPO { get; set; }
         public ICollection<AkJurnal> AkJurnal { get; set; }
         public ICollection<AkBelian> AkBelian { get; set; }
+        //relationship end
 
         // log
         public string UserId { get; set; }
@@ -34,5 +37,6 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Kemaskini")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarKemaskini { get; set; } = DateTime.Now;
+        //log end
     }
 }

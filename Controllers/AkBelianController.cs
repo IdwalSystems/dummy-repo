@@ -29,6 +29,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JKW, int> _kwRepo;
         private readonly IRepository<AkPO, int> _akPORepo;
         private readonly ListViewIRepository<AkBelian1, int> _akBelian1Repo;
+        private readonly ListViewIRepository<AkBelian2, int> _akBelian2Repo;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
         private readonly IRepository<AkBank, int> _akBankRepo;
         private CartBelian _cart;
@@ -42,6 +43,7 @@ namespace MSNK.Controllers
             IRepository<JKW, int> kwRepo,
             IRepository<AkPO, int> akPORepo,
             ListViewIRepository<AkBelian1, int> akBelian1Repository,
+            ListViewIRepository<AkBelian2, int> akBelian2Repository,
             IRepository<AkCarta, int> akCartaRepository,
             IRepository<AkBank, int> akBankRepository,
             CartBelian cart
@@ -55,6 +57,7 @@ namespace MSNK.Controllers
             _kwRepo = kwRepo;
             _akPORepo = akPORepo;
             _akBelian1Repo = akBelian1Repository;
+            _akBelian2Repo = akBelian2Repository;
             _akCartaRepo = akCartaRepository;
             _akBankRepo = akBankRepository;
             _cart = cart;
@@ -141,7 +144,6 @@ namespace MSNK.Controllers
                         Jumlah = item.Jumlah,
                         NamaSykt = namaSykt,
                         Alamat1 = alamat1,
-                        FlCetak = item.FlCetak,
                         FlBatal = item.FlBatal,
                         FlPosting = item.FlPosting
                     }
@@ -588,18 +590,17 @@ namespace MSNK.Controllers
                     m.NoInbois = noRujukan;
                     m.Tarikh = akBelian.Tarikh;
                     m.Jumlah = akBelian.Jumlah;
-                    m.FlCetak = 0;
                     m.FlPosting = 0;
                     m.FlBatal = 0;
                     if (akPo != null)
                     {
-                        m.FlTanggungan = "1";
+                        m.FlPO = "1";
                         m.AkPOId = AkPOId;
                         m.AkPembekalId = akPo.AkPembekalId;
                     }
                     else
                     {
-                        m.FlTanggungan = "0";
+                        m.FlPO = "0";
                         m.AkPembekalId = AkPembekalId;
                     }
 
@@ -707,13 +708,6 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    _cart.AddItem1(akBelian1.AkBelianId,
-                                   akBelian1.Amaun,
-                                   akBelian1.AkCartaId,
-                                   akBelian1.UserId,
-                                   akBelian1.TarMasuk,
-                                   akBelian1.UserIdKemaskini,
-                                   akBelian1.TarKemaskini);
                 }
 
 

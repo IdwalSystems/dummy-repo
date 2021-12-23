@@ -30,6 +30,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPO)
                 .ThenInclude(b => b.AkPembekal)
                 .Include(b => b.AkPembekal)
+                .Include(b => b.AkBank)
                 .Include(b => b.AkBelian1)
                 .Include(b => b.AkBelian2)
                 .ToListAsync();
@@ -37,7 +38,15 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<AkBelian> GetById(int id)
         {
-            return await context.AkBelian.FindAsync(id);
+            return await context.AkBelian.Include(b => b.JKW)
+                .Include(b => b.AkPO)
+                .ThenInclude(b => b.AkPembekal)
+                .Include(b => b.AkPembekal)
+                .Include(b => b.AkBank)
+                .Include(b => b.AkBelian1)
+                .Include(b => b.AkBelian2)
+                .Where(b=> b.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<AkBelian> Insert(AkBelian entity)

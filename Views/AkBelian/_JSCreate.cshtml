@@ -86,8 +86,8 @@
         var jumlah2 = 0;
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
-            var str = "<tr><td id='jCaraBayarId' hidden>" + item.indek +
-                "</td><td>" + item.indek +
+            var str = "<tr><td id='indekId' hidden>" + item.indek +
+                "</td><td>" + item.baris +
                 "</td><td>" + item.bil +
                 "</td><td>" + item.noStok +
                 "</td><td>" + item.perihal +
@@ -102,6 +102,7 @@
                 "</td><tr>";
             $("table tbody#tbodyPerihal").append(str);
             jumlah2 += item.amaun;
+            bil++;
         }
     }
     //on change no PO end

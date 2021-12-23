@@ -1239,6 +1239,7 @@ namespace MSNK.Controllers
 
                     //update posting status in akTerima
                     akTerima.FlPosting = 1;
+                    akTerima.TarikhPosting = DateTime.Now;
                     await _akTerimaRepo.Update(akTerima);
 
                     //insert applog
@@ -1299,6 +1300,7 @@ namespace MSNK.Controllers
 
                     //update posting status in akTerima
                     akTerima.FlPosting = 0;
+                    //akTerima.TarikhPosting = null;
                     await _akTerimaRepo.Update(akTerima);
 
                     //insert applog

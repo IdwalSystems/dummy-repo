@@ -9,6 +9,7 @@ namespace MSNK.Models.Modules
 {
     public class AkPembekal
     {
+        //field
         public int Id { get; set; }
         [MaxLength(5)]
         [Display(Name = "Kod Syarikat")]
@@ -32,9 +33,7 @@ namespace MSNK.Models.Modules
         public string Poskod { get; set; }//nvarchar
         [Required(ErrorMessage = "Bandar Diperlukan."), MaxLength(100)]
         public string Bandar { get; set; }
-        [Required(ErrorMessage = "Negeri Diperlukan.")]
-        [Display(Name = "Negeri")]
-        public int JNegeriId { get; set; }
+        
         [Required(ErrorMessage = "Nombor Telefon Diperlukan."), Phone(ErrorMessage = "Nombor Telefon Tidak Sah."), MaxLength(30)]
         public string Telefon1 { get; set; }
         [Required(ErrorMessage = "Emel Diperlukan."), EmailAddress(ErrorMessage = "Emel Tidak Sah."), MaxLength(100)]
@@ -42,18 +41,23 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Nombor Akaun Bank Diperlukan."), MaxLength(20)]
         [Display(Name = "No Akaun Bank")]
         public string AkaunBank { get; set; }
+        //field end
+        
+
+        //Relationship
+        [Required(ErrorMessage = "Negeri Diperlukan.")]
+        [Display(Name = "Negeri")]
+        public int JNegeriId { get; set; }
+        [Display(Name = "Negeri")]
+        public JNegeri JNegeri { get; set; }
         [Required(ErrorMessage = "Nama Bank Diperlukan.")]
         [Display(Name = "Bank")]
         public int JBankId { get; set; }
-
-        //Relationship
-
-        [Display(Name = "Negeri")]
-        public JNegeri JNegeri { get; set; }
         [Display(Name = "Bank")]
         public JBank JBank { get; set; }
         public ICollection<AkPO> AkPO { get; set; }
         public ICollection<AkBelian> AkBelian { get; set; }
+        //relationship end
 
         // log
         public string UserId { get; set; }
@@ -64,6 +68,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Kemaskini")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarKemaskini { get; set; } = DateTime.Now;
+        // log end
 
     }
 }

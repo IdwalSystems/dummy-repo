@@ -125,14 +125,11 @@ namespace MSNK.Migrations
                     b.Property<int>("FlBatal")
                         .HasColumnType("int");
 
-                    b.Property<int>("FlCetak")
-                        .HasColumnType("int");
+                    b.Property<string>("FlPO")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FlPosting")
                         .HasColumnType("int");
-
-                    b.Property<string>("FlTanggungan")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("JKWId")
                         .HasColumnType("int");
@@ -159,7 +156,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("Tarikh")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("TarikhPosting")
+                    b.Property<DateTime?>("TarikhPosting")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
@@ -497,7 +494,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("Tarikh")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("TarikhPosting")
+                    b.Property<DateTime?>("TarikhPosting")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
@@ -788,7 +785,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("Tarikh")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("TarikhPosting")
+                    b.Property<DateTime?>("TarikhPosting")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Tel")
@@ -1561,13 +1558,11 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPO2", b =>
                 {
-                    b.HasOne("MSNK.Models.Modules.AkPO", "AkPO")
+                    b.HasOne("MSNK.Models.Modules.AkPO", null)
                         .WithMany("AkPO2")
                         .HasForeignKey("AkPOId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AkPO");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPembekal", b =>

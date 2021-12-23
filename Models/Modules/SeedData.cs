@@ -658,7 +658,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 00:19:32.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11203").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000001",
+                        NoRujukan = "RR/IB1002021010001",
                         Debit = 820,
                         Kredit = 0
                     }, 
@@ -668,7 +668,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 00:19:32.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000001",
+                        NoRujukan = "RR/IB1002021011001",
                         Debit = 835,
                         Kredit = 0
                     },
@@ -678,7 +678,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 00:24:37.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000002",
+                        NoRujukan = "RR/IB1002021010002",
                         Debit = 3629.10M,
                         Kredit = 0
                     },
@@ -688,7 +688,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 00:44:43.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000003",
+                        NoRujukan = "RR/IB1002021010003",
                         Debit = 2386.75m,
                         Kredit = 0
                     },
@@ -698,7 +698,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 01:13:43.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000004",
+                        NoRujukan = "RR/IB1002021010004",
                         Debit = 303.00m,
                         Kredit = 0
                     },
@@ -708,7 +708,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 01:33:07.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000005",
+                        NoRujukan = "RR/IB1002021010005",
                         Debit = 130.00m,
                         Kredit = 0
                     },
@@ -718,7 +718,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 02:36:03.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000006",
+                        NoRujukan = "RR/IB1002021010006",
                         Debit = 1060.00m,
                         Kredit = 0
                     },
@@ -728,7 +728,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 04:36:12.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11207").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000007",
+                        NoRujukan = "RR/IB1002021010007",
                         Debit = 150.00m,
                         Kredit = 0
                     },
@@ -738,7 +738,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 04:54:47.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000008",
+                        NoRujukan = "RR/IB1002021010008",
                         Debit = 53.00m,
                         Kredit = 0
                     },
@@ -748,7 +748,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 06:18:02.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000009",
+                        NoRujukan = "RR/IB1002021010009",
                         Debit = 800.00m,
                         Kredit = 0
                     },
@@ -758,7 +758,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 06:38:33.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11301").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000010",
+                        NoRujukan = "RR/IB1002021010010",
                         Debit = 50.00m,
                         Kredit = 0
                     },
@@ -768,7 +768,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 06:39:17.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000011",
+                        NoRujukan = "RR/IB1002021010011",
                         Debit = 1600.00m,
                         Kredit = 0
                     },
@@ -778,7 +778,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 06:42:05.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000012",
+                        NoRujukan = "RR/IB1002021010012",
                         Debit = 100.00m,
                         Kredit = 0
                     },
@@ -788,7 +788,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 06:43:50.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000013",
+                        NoRujukan = "RR/IB1002021010013",
                         Debit = 10.80m,
                         Kredit = 0
                     },
@@ -798,7 +798,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 06:43:50.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000013",
+                        NoRujukan = "RR/IB1002021011013",
                         Debit = 10.80m,
                         Kredit = 0
                     },
@@ -808,7 +808,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 06:55:46.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11301").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000014",
+                        NoRujukan = "RR/IB1002021010014",
                         Debit = 100.00m,
                         Kredit = 0
                     },
@@ -818,7 +818,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:06:29.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000015",
+                        NoRujukan = "RR/IB1002021010015",
                         Debit = 50.00m,
                         Kredit = 0
                     },
@@ -828,7 +828,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:13:06.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000016",
+                        NoRujukan = "RR/IB1002021010016",
                         Debit = 10.00m,
                         Kredit = 0
                     },
@@ -838,7 +838,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:13:22.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11203").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000017",
+                        NoRujukan = "RR/IB1002021010017",
                         Debit = 20.00m,
                         Kredit = 0
                     },
@@ -848,7 +848,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:20:54.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000018",
+                        NoRujukan = "RR/IB1002021010018",
                         Debit = 50.00m,
                         Kredit = 0
                     },
@@ -858,7 +858,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:21:11.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000019",
+                        NoRujukan = "RR/IB1002021010019",
                         Debit = 74.00m,
                         Kredit = 0
                     },
@@ -868,7 +868,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:24:11.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11203").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000020",
+                        NoRujukan = "RR/IB1002021010020",
                         Debit = 1000.00m,
                         Kredit = 0
                     },
@@ -878,7 +878,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:29:06.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000021",
+                        NoRujukan = "RR/IB1002021010021",
                         Debit = 100.00m,
                         Kredit = 0
                     },
@@ -888,7 +888,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:30:06.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11301").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000022",
+                        NoRujukan = "RR/IB1002021010022",
                         Debit = 50.00m,
                         Kredit = 0
                     },
@@ -898,7 +898,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:30:06.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11206").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000022",
+                        NoRujukan = "RR/IB1002021010022",
                         Debit = 100.00m,
                         Kredit = 0
                     },
@@ -908,7 +908,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:41:14.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000023",
+                        NoRujukan = "RR/IB1002021010023",
                         Debit = 500.00m,
                         Kredit = 0
                     },
@@ -918,7 +918,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:41:19.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11207").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000024",
+                        NoRujukan = "RR/IB1002021010024",
                         Debit = 25.00m,
                         Kredit = 0
                     },
@@ -928,7 +928,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:47:27.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000025",
+                        NoRujukan = "RR/IB1002021010025",
                         Debit = 300.00m,
                         Kredit = 0
                     },
@@ -938,7 +938,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:48:42.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11207").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000026",
+                        NoRujukan = "RR/IB1002021010026",
                         Debit = 25.00m,
                         Kredit = 0
                     },
@@ -948,7 +948,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:52:34.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11207").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000027",
+                        NoRujukan = "RR/IB1002021010027",
                         Debit = 25.00m,
                         Kredit = 0
                     },
@@ -958,7 +958,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:55:19.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11204").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000028",
+                        NoRujukan = "RR/IB1002021010028",
                         Debit = 900.00m,
                         Kredit = 0
                     },
@@ -968,7 +968,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 07:56:09.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11207").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000029",
+                        NoRujukan = "RR/IB1002021010029",
                         Debit = 25.00m,
                         Kredit = 0
                     },
@@ -978,7 +978,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 08:28:57.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11203").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000030",
+                        NoRujukan = "RR/IB1002021010030",
                         Debit = 954.00m,
                         Kredit = 0
                     },
@@ -988,7 +988,7 @@ namespace MSNK.Models.Modules
                         AkCartaId1 = carta1.Id,
                         Tarikh = DateTime.Parse("2021-01-01 09:28:29.000"),
                         AkCartaId2 = context.AkCarta.Where(b => b.Kod == "H11301").FirstOrDefault().Id,
-                        NoRujukan = "RR/IB1002021000031",
+                        NoRujukan = "RR/IB1002021010031",
                         Debit = 7.00m,
                         Kredit = 0
                     },
