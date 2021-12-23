@@ -171,7 +171,11 @@ namespace MSNK.Controllers
                 .OrderBy(b => b.KodSykt).ToList();
             ViewBag.AkPembekal = akPembekalList;
 
-            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW).OrderBy(b => b.Kod).ToList();
+            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Where(b => b.JParas.Kod == "4" && b.Kod.Substring(0, 1) == "B")
+                .OrderBy(b => b.Kod)
+                .ToList();
             ViewBag.AkCarta = akCartaList;
 
             List<AkBank> akBankList = _context.AkBank.Include(b => b.JBank).OrderBy(b => b.Kod).ToList();
@@ -720,6 +724,35 @@ namespace MSNK.Controllers
         }
         // update add akBelian1 end
 
+        // update add akBelian2
+        public async Task<JsonResult> InsertUpdateAkBelian2(AkBelian2 akBelian2)
+        {
+
+            try
+            {
+                if (akBelian2 != null || akBelian2.Amaun != 0)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    akBelian2.UserId = user.UserName;
+                    akBelian2.TarMasuk = DateTime.Now;
+
+                    await _akBelian2Repo.Insert(akBelian2);
+
+                    await _context.SaveChangesAsync();
+
+                }
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update add akBelian2 end
+
         // update remove akBelian1
         public async Task<JsonResult> RemoveUpdateAkBelian1(AkBelian1 akBelian1)
         {
@@ -759,7 +792,6 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    _cart.RemoveItem1(akBelian1.AkCartaId);
 
                 }
 
@@ -771,6 +803,45 @@ namespace MSNK.Controllers
             }
         }
         // update remove akBelian1 end
+
+        // update remove akBelian2
+        public async Task<JsonResult> RemoveUpdateAkBelian2(AkBelian2 akBelian2)
+        {
+
+            try
+            {
+                if (akBelian2 != null)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    var akB2 = await _context.AkBelian2.FirstOrDefaultAsync(x => x.Indek == akBelian2.Indek && x.AkBelianId == akBelian2.AkBelianId);
+                    _context.AkBelian2.Remove(akB2);
+
+                    AkBelian akBelian = await _akBelianRepo.GetById(akBelian2.AkBelianId);
+
+                    //insert applog
+                    AppLog appLog = new AppLog();
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "ED";
+                    appLog.LgOperation = "Hapus";
+                    appLog.LgNote = modul + " Inbois Pembekal - Hapus Objek";
+                    appLog.NoRujukan = akBelian.NoInbois + "/" + akBelian2.Indek;
+                    appLog.Jumlah = akB2.Amaun;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update remove akBelian2 end
 
         // update update akBelian1
         public async Task<JsonResult> UpdateAkBelian1(AkBelian1 akBelian1)
@@ -793,7 +864,6 @@ namespace MSNK.Controllers
 
             try
             {
-                _cart.Clear1();
 
                 AkBelian1 akB1 = await _akBelian1Repo.GetById(akBelian1.Id);
 
@@ -850,20 +920,88 @@ namespace MSNK.Controllers
         {
             try
             {
-                AkBelian data = await _context.AkBelian.Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == akBelian1.AkBelianId);
+                AkBelian data = await _context.AkBelian
+                    .Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta)
+                    .FirstOrDefaultAsync(x => x.Id == akBelian1.AkBelianId);
 
-                List<AkBelian1> akB1 = data.AkBelian1.ToList();
+                return Json(new { result = "OK", data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get cart for updated akBelian1 end
 
-                foreach (AkBelian1 item in akB1)
+        // update update akBelian2
+        public async Task<JsonResult> UpdateAkBelian2(AkBelian2 akBelian2)
+        {
+
+            try
+            {
+                AkBelian2 data = await _akBelian2Repo.GetBy2Id(akBelian2.AkBelianId, akBelian2.Indek);
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> SaveUpdateAkBelian2(AkBelian2 akBelian2)
+        {
+
+            try
+            {
+
+                AkBelian2 akB2 = await _akBelian2Repo.GetById(akBelian2.Id);
+
+                decimal originalAmount = akB2.Amaun;
+                var user = await _userManager.GetUserAsync(User);
+
+                akB2.Amaun = akBelian2.Amaun;
+                akB2.UserIdKemaskini = user.UserName;
+                akB2.TarKemaskini = DateTime.Now;
+                _context.AkBelian2.Update(akB2);
+
+                var akBelian = await _akBelianRepo.GetById(akBelian2.AkBelianId);
+
+                //insert applog
+                if (akBelian2.Amaun != originalAmount)
                 {
-                    _cart.AddItem1(item.AkBelianId,
-                                   item.Amaun,
-                                   item.AkCartaId,
-                                   item.UserId,
-                                   item.TarMasuk,
-                                   item.UserIdKemaskini,
-                                   item.TarKemaskini);
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "EE";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Invois Pembekal - Ubah Objek";
+                    appLog.NoRujukan = akBelian.NoInbois + "/" + akBelian2.Indek + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akBelian2.Amaun.ToString();
+                    appLog.Jumlah = akB2.Amaun;
+
+                    await _appLog.Insert(appLog);
                 }
+                //insert applog end
+
+                await _context.SaveChangesAsync();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update update akBelian1 end
+
+        // get cart for updated akBelian1
+        public async Task<JsonResult> GetAkBelian2(AkBelian2 akBelian2)
+        {
+            try
+            {
+                AkBelian data = await _context.AkBelian
+                    .Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta)
+                    .FirstOrDefaultAsync(x => x.Id == akBelian2.AkBelianId);
 
                 return Json(new { result = "OK", data = data });
             }

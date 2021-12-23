@@ -178,26 +178,27 @@
                                     <tbody id="tbodyPerihal">
                                         @foreach (var item in ViewBag.AkBelian2)
                                         {
-                                            <tr id="@item.Id">
-                                                <td class="text-left">@item.Baris</td>
-                                                <td class="text-left">@item.Bil</td>
-                                                <td class="text-left">@item.NoStok</td>
-                                                <td class="text-left">@item.Perihal</td>
-                                                <td class="text-right">@item.Kuantiti</td>
-                                                <td class="text-center">@item.Unit</td>
-                                                <td class="text-right">@item.Harga</td>
-                                                <td class="text-right">@item.Amaun</td>
-                                                <td>
-                                                    <button class="btn btn-primary btn-sm" type="button" id="btnUpdate2" data-toggle="modal" data-target="#modalUrusniaga" onclick="Update2(this)">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-danger btn-sm" type="button" id="btnRemove2" onclick="Remove2(this)">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                        <tr id="@item.Id">
+                                            <td hidden><input id="txtIndek" value="@item.Indek" /></td>
+                                            <td class="text-left">@item.Baris</td>
+                                            <td class="text-left">@item.Bil</td>
+                                            <td class="text-left">@item.NoStok</td>
+                                            <td class="text-left">@item.Perihal</td>
+                                            <td class="text-right">@item.Kuantiti</td>
+                                            <td class="text-center">@item.Unit</td>
+                                            <td class="text-right">@item.Harga</td>
+                                            <td class="text-right">@item.Amaun</td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm" type="button" id="btnUpdate2" data-toggle="modal" data-target="#modalUrusniaga" onclick="Update2(this)">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm" type="button" id="btnRemove2" onclick="Remove2(this)">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
                                         }
                                     </tbody>
                                     <tfoot>

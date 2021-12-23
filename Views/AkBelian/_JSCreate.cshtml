@@ -38,6 +38,8 @@
 
     // onchange No PO
     $("body").on('change', "#ddlAkPOId", function () {
+        $("#txtKodAkaun option").prop('disabled', false);
+        $("#txtKodAkaun option[value='']").prop('disabled', true);
         var noPo = $("#ddlAkPOId").val();
         JsonNoPo(noPo);
     });
@@ -76,6 +78,8 @@
                 "</td><tr>";
             $("table tbody#tbodyObjek").append(str);
             sum += item.amaun;
+
+            $("#txtKodAkaun option[value=" + item.akCartaId + "]").prop('disabled', true);
         }
         jumlah.val(sum);
     }
@@ -83,10 +87,9 @@
     function displayPerihalList(data) {
         //refresh updated table objek
         $("table tbody#tbodyPerihal").empty();
-        var jumlah2 = 0;
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
-            var str = "<tr><td id='indekId' hidden>" + item.indek +
+            var str = "<tr><td id='txtIndek' hidden>" + item.indek +
                 "</td><td>" + item.baris +
                 "</td><td>" + item.bil +
                 "</td><td>" + item.noStok +
@@ -101,7 +104,7 @@
                 "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
                 "</td><tr>";
             $("table tbody#tbodyPerihal").append(str);
-            jumlah2 += item.amaun;
+
             bil++;
         }
     }
@@ -130,7 +133,6 @@
                     var txtKodAkaun = $("#txtKodAkaun");
                     var txtAmaunObjek = $("#txtAmaunObjek");
                     var txtJumlah = $("#jumlahObjek");
-                    alert(txtAmaunObjek.val());
 
                     //Sum value to Total text field
                     var sum = 0;
@@ -171,17 +173,19 @@
                         Amaun: txtAmaunObjek.val()
                     }
 
-                        $.ajax({
-                            type: "POST",
-                            url: "/AkBelian/SaveAkBelian1",
-                            data: AkBelian1,
-                            dataType: "json",
-                            success: function (r) {
-                                //Clear the TextBoxes.
-                                txtKodAkaun.val("");
-                                txtAmaunObjek.val("");
-                            }
-                        });
+                    $.ajax({
+                        type: "POST",
+                        url: "/AkBelian/SaveAkBelian1",
+                        data: AkBelian1,
+                        dataType: "json",
+                        success: function (r) {
+                            //Clear the TextBoxes.
+                            txtKodAkaun.val("").trigger('change');
+                            txtAmaunObjek.val("");
+                        }
+                    });
+
+                    $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
 
                 }
             });
@@ -334,6 +338,7 @@
                     }
                 });
             }
+            $("#txtKodAkaun option[value=" + name + "]").prop('disabled', false);
 
         }
     };
@@ -458,30 +463,28 @@
         var AkBelian2 = {
             Indek: indek
         }
-        if (name != null) {
-            $.ajax({
-                type: "POST",
-                url: "/AkBelian/GetAnItemCartAkBelian2",
-                data: AkBelian2,
-                dataType: "json",
-                success: function (r) {
-                    //insert data in modal perihal
-                    $("#moId2").val(r.record.id);
-                    $("#moIndek").val(r.record.indek);
-                    $("#moBaris").val(r.record.baris);
-                    $("#moBil").val(r.record.bil);
-                    $("#moNoStok").val(r.record.noStok);
-                    $("#moPerihal").val(r.record.perihal);
-                    $("#moKuantiti").val(r.record.kuantiti);
-                    $("#moUnit").val(r.record.unit);
-                    $("#moHargaUnit").val(r.record.harga);
-                    $("#moAmaun2").val(r.record.amaun);
+        $.ajax({
+            type: "POST",
+            url: "/AkBelian/GetAnItemCartAkBelian2",
+            data: AkBelian2,
+            dataType: "json",
+            success: function (r) {
+                //insert data in modal perihal
+                $("#moId2").val(r.record.id);
+                $("#moIndek").val(r.record.indek);
+                $("#moBaris").val(r.record.baris);
+                $("#moBil").val(r.record.bil);
+                $("#moNoStok").val(r.record.noStok);
+                $("#moPerihal").val(r.record.perihal);
+                $("#moKuantiti").val(r.record.kuantiti);
+                $("#moUnit").val(r.record.unit);
+                $("#moHargaUnit").val(r.record.harga);
+                $("#moAmaun2").val(r.record.amaun);
 
-                    //show modal perihal
-                    $("#modalPerihal").modal({ backdrop: 'static', keyboard: false });
-                }
-            });
-        }
+                //show modal perihal
+                $("#modalPerihal").modal({ backdrop: 'static', keyboard: false });
+            }
+        });
     };
 
     function modalUpdate2() {

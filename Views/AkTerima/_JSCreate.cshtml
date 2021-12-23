@@ -21,6 +21,7 @@
                 success: function (r) {
                     //Reference the TextBoxes.
                     var txtKodAkaun = $("#txtKodAkaun");
+
                     var txtAmaunObjek = $("#txtAmaunObjek");
                     var txtJumlah = $("#jumlahObjek");
 
@@ -63,19 +64,19 @@
                         Amaun: txtAmaunObjek.val()
                     }
 
-                    if (noRujukan != null) {
-                        $.ajax({
-                            type: "POST",
-                            url: "/AkTerima/SaveAkTerima1",
-                            data: AkTerima1,
-                            dataType: "json",
-                            success: function (r) {
-                                //Clear the TextBoxes.
-                                txtKodAkaun.val("");
-                                txtAmaunObjek.val("");
-                            }
-                        });
-                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "/AkTerima/SaveAkTerima1",
+                        data: AkTerima1,
+                        dataType: "json",
+                        success: function (r) {
+                            //Clear the TextBoxes.
+                            txtKodAkaun.val("").trigger('change');
+                            txtAmaunObjek.val("");
+                            
+                        }
+                    });
+                    $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
 
                 }
             });
@@ -180,25 +181,24 @@
                         NoSlip: txtNoSlip.val(),
                         TarSlip: txtTarSlip.val()
                     }
-                    if (noRujukan != null) {
-                        $.ajax({
-                            type: "POST",
-                            url: "/AkTerima/SaveAkTerima2",
-                            data: AkTerima2,
-                            dataType: "json",
-                            success: function (r) {
-                                //Clear the TextBoxes.
-                                ddlCaraBayar.val("");
-                                txtAmaunUrusniaga.val("");
-                                txtNoCek.val("");
-                                txtJenisCek.val("");
-                                txtKodBankCek.val("");
-                                txtTempatCek.val("");
-                                txtNoSlip.val("");
-                                txtTarSlip.val("");
-                            }
-                        });
-                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "/AkTerima/SaveAkTerima2",
+                        data: AkTerima2,
+                        dataType: "json",
+                        success: function (r) {
+                            //Clear the TextBoxes.
+                            ddlCaraBayar.val("").trigger('change');
+                            txtAmaunUrusniaga.val("");
+                            txtNoCek.val("");
+                            txtJenisCek.val("");
+                            txtKodBankCek.val("");
+                            txtTempatCek.val("");
+                            txtNoSlip.val("");
+                            txtTarSlip.val("");
+                        }
+                    });
+                    $("#ddlCaraBayar option[value=" + ddlCaraBayar.val() + "]").prop('disabled', true);
 
                 }
             });
@@ -235,9 +235,11 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
+
                     }
                 });
             }
+            $("#txtKodAkaun option[value=" + name + "]").prop('disabled', false);
 
         }
     };
@@ -267,6 +269,7 @@
                     }
                 });
             }
+            $("#ddlCaraBayar option[value=" + name + "]").prop('disabled', false);
         }
     };
     //remove tbl urusniaga end

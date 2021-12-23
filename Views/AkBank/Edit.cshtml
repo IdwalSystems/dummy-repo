@@ -1,32 +1,32 @@
 ﻿@model MSNK.Models.Modules.AkBank
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Ubah";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
+<h4>Bank - Ubah</h4>
 
-<h4>AkBank</h4>
+<h6>AkBank</h6>
 <hr />
-<div class="row">
+<div class="form-row">
     <div class="col-md-4">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Kod" class="control-label"></label>
-                <input asp-for="Kod" class="form-control" />
+                <input asp-for="Kod" class="form-control form-control-sm" readonly/>
                 <span asp-validation-for="Kod" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="NoAkaun" class="control-label"></label>
-                <input asp-for="NoAkaun" class="form-control" />
+                <input asp-for="NoAkaun" class="form-control form-control-sm" />
                 <span asp-validation-for="NoAkaun" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="JBank" class="control-label"></label>
-                <select class="form-control" asp-for="JBankId">
+                <select class="form-control form-control-sm" asp-for="JBankId">
                     @foreach (var s in ViewBag.JBank)
                     {
                         <option value="@s.Id">@s.Nama </option>
@@ -34,24 +34,32 @@
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="JKW" class="control-label">Kumpulan Wang</label>
-                <select class="form-control" asp-for="JKWId">
+                <label asp-for="JKW" class="control-label"></label>
+                <select class="form-control form-control-sm" asp-for="JKWId">
                     @foreach (var s in ViewBag.JKW)
                     {
                         <option value="@s.Id">@s.Perihal </option>
                     }
                 </select>
             </div>
-
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="AkCarta" class="control-label"></label>
+                <select class="form-control form-control-sm" asp-for="AkCartaId">
+                    @foreach (var s in ViewBag.AkCarta)
+                    {
+                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Simpan" class="btn btn-primary btn-sm" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
 @section Scripts {

@@ -886,7 +886,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("TarMasuk")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("TarSlip")
+                    b.Property<DateTime?>("TarSlip")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TempatCek")

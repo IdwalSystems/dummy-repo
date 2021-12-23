@@ -1,5 +1,10 @@
 ﻿<script type="text/javascript">
-
+    
+    var bil = 1;
+    $(document).ready(function () {
+        bil = $('#tblPerihal tr').length - 1;
+    }); 
+    
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
@@ -86,127 +91,118 @@
     }
     //add tbl objek end
 
-    //add tbl Urusniaga
-    //$("body").on("click", "#btnAdd2", function () {
-    //    //Reference the Name and Country TextBoxes.
-    //    var txtIndek = $("#txtIndek");
-    //    GetIndek(txtIndek.val());
-    //});
+    //add tbl Perihal
+    $("body").on("click", "#btnAdd2", function () {
+        //Reference the Name and Country TextBoxes.
+        var txtIndek = $("#txtIndek");
+        GetIndek(txtIndek.val());
+    });
 
-    //function GetIndek(id) {
-    //    var Indek = {
-    //        Id: id
-    //    }
-    //    if (id != "") {
-    //        //Send the JSON array to Controller using AJAX.
-    //        $.ajax({
-    //            type: "POST",
-    //            url: "/AkBelian/GetIndek",
-    //            data: Indek,
-    //            dataType: "json",
-    //            success: function (r) {
-    //                //Reference the TextBoxes.
-    //                var txtAkTerima = $("#txtAkTerima2");
-    //                var txtCaraBayar = $("#txtCaraBayar");
-    //                var amaun = $("#txtAmaunUrusniaga");
-    //                var txtNoCek = $("#txtNoCek");
-    //                var txtJenisCek = $("#txtJenisCek");
-    //                var txtKodBankCek = $("#txtKodBankCek");
-    //                var txtTempatCek = $("#txtTempatCek");
-    //                var txtNoSlip = $("#txtNoSlip");
-    //                var txtTarSlip = $("#txtTarSlip");
+    function GetIndek(id) {
+        //Send the JSON array to Controller using AJAX.
 
-    //                //Get the reference of the Table's TBODY element.
-    //                var tBody = $("#tblUrusniaga > TBODY")[0];
-    //                //Add Row.
-    //                var row = tBody.insertRow(-1);
+        //Reference the TextBoxes.
+        var txtAkBelian = $("#Id");
+        var txtIndek = id;
+        var txtBaris = $("#txtBaris");
+        var txtBil = $("#txtBil");
+        var txtNoStok = $("#txtNoStok");
+        var txtPerihal = $("#txtPerihal");
+        var txtKuantiti = $("#txtKuantiti");
+        var txtUnit = $("#txtUnit");
+        var txtHargaUnit = $("#txtHargaUnit");
+        var txtAmaun = $("#txtAmaun");
 
-    //                //Add caraBayarId cell.
-    //                var cell = $(row.insertCell(-1));
-    //                cell.html(r.record.id);
-    //                cell.prop("hidden", !this.checked);
+        //Get the reference of the Table's TBODY element.
+        var tBody = $("#tblPerihal > TBODY")[0];
+        //Add Row.
+        var row = tBody.insertRow(-1);
 
-    //                //Add caraBayar cell.
-    //                var cell = $(row.insertCell(-1));
-    //                cell.html(r.record.kod);
+        //Add Indek cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtIndek);
+        cell.prop("hidden", !this.checked);
 
-    //                //Add Amaun cell.
-    //                var cell = $(row.insertCell(-1));
-    //                cell.html(amaun.val());
+        //Add Baris cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtBaris.val());
 
-    //                //Add NoCek cell.
-    //                var cell = $(row.insertCell(-1));
-    //                cell.html(txtNoCek.val());
+        //Add Bil cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtBil.val());
 
-    //                //Add JenisCek cell.
-    //                var cell = $(row.insertCell(-1));
-    //                cell.html(txtJenisCek.val());
+        //Add No Stok cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtNoStok.val());
+        cell.addClass('text-uppercase');
 
-    //                //Add KodBankCek cell.
-    //                var cell = $(row.insertCell(-1));
-    //                cell.html(txtKodBankCek.val());
+        //Add Perihal cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtPerihal.val());
+        cell.addClass('text-uppercase');
 
-    //                //Add TempatCek cell.
-    //                var cell = $(row.insertCell(-1));
-    //                cell.html(txtTempatCek.val());
+        //Add Kuantiti cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtKuantiti.val());
 
-    //                //Add NoSlip cell.
-    //                var cell = $(row.insertCell(-1));
-    //                cell.html(txtNoSlip.val());
+        //Add Unit cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtUnit.val());
+        cell.addClass('text-uppercase');
 
-    //                //Add TarSlip cell.
-    //                var cell = $(row.insertCell(-1));
-    //                cell.html(showDate(txtTarSlip.val()));
+        //Add Harga cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtHargaUnit.val());
 
-    //                //Add Edit Button cell.
-    //                cell = $(row.insertCell(-1));
+        //Add Amaun cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtAmaun.val());
 
-    //                var btnUpdate2 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
-    //                cell.append(btnUpdate2);
+        //Add Edit Button cell.
+        cell = $(row.insertCell(-1));
 
-    //                //Add Remove Button cell.
-    //                cell = $(row.insertCell(-1));
+        var btnUpdate2 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
+        cell.append(btnUpdate2);
 
-    //                var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
-    //                cell.append(btnRemove2);
+        //Add Button cell.
+        cell = $(row.insertCell(-1));
+        var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
+        cell.append(btnRemove2);
 
-    //                var AkTerima2 = {
-    //                    AkTerimaId: txtAkTerima.val(),
-    //                    JCaraBayarId: txtCaraBayar.val(),
-    //                    Amaun: amaun.val(),
-    //                    NoCek: txtNoCek.val(),
-    //                    JenisCek: txtJenisCek.val(),
-    //                    KodBankCek: txtKodBankCek.val(),
-    //                    TempatCek: txtTempatCek.val(),
-    //                    NoSlip: txtNoSlip.val(),
-    //                    TarSlip: txtTarSlip.val()
-    //                }
-    //                if (noRujukan != null) {
-    //                    $.ajax({
-    //                        type: "POST",
-    //                        url: "/AkTerima/InsertUpdateAkTerima2",
-    //                        data: AkTerima2,
-    //                        dataType: "json",
-    //                        success: function (r) {
-    //                            //Clear the TextBoxes.
-    //                            txtCaraBayar.val("");
-    //                            amaun.val("");
-    //                            txtNoCek.val("");
-    //                            txtJenisCek.val("");
-    //                            txtKodBankCek.val("");
-    //                            txtTempatCek.val("");
-    //                            txtNoSlip.val("");
-    //                            txtTarSlip.val("");
-    //                        }
-    //                    });
-    //                }
+        var AkBelian2 = {
+            AkBelianId: txtAkBelian.val(),
+            Indek: id,
+            Baris: txtBaris.val(),
+            Bil: txtBil.val(),
+            NoStok: txtNoStok.val(),
+            Perihal: txtPerihal.val(),
+            Kuantiti: txtKuantiti.val(),
+            Unit: txtUnit.val(),
+            Harga: txtHargaUnit.val(),
+            Amaun: txtAmaun.val()
+        }
 
-    //            }
-    //        });
-    //    }
-
-    //}
-    //add tbl urusniaga end
+        $.ajax({
+            type: "POST",
+            url: "/AkBelian/InsertUpdateAkBelian2",
+            data: AkBelian2,
+            dataType: "json",
+            success: function (r) {
+                //Clear the TextBoxes.
+                $("#txtIndek").val("");
+                txtBaris.val("");
+                txtBil.val("");
+                txtNoStok.val("");
+                txtPerihal.val("");
+                txtKuantiti.val("");
+                txtUnit.val("");
+                txtHargaUnit.val("");
+                txtAmaun.val("");
+                bil++;
+            }
+        });
+    }
+    //add tbl perihal end
 
     //remove tbl objek
     function Remove1(button) {
@@ -246,35 +242,35 @@
     };
     //remove tbl objek end
 
-    //remove tbl urusniaga
-    //function Remove2(button) {
-    //    //Determine the reference of the Row using the Button.
-    //    var row = $(button).closest("TR");
-    //    var akTerimaId = $('#Id').val();
-    //    var name = $("TD", row).eq(0).html();
-    //    if (confirm("Hapus : " + name + " ?")) {
-    //        //Get the reference of the Table.
-    //        var table = $("#tblUrusniaga")[0];
+    //remove tb perihal
+    function Remove2(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var akBelianId = $("#Id").val();
+        var indek = $("TD", row).eq(1).html();
+        if (confirm("Hapus : " + indek + " ?")) {
+            //Get the reference of the Table.
+            var table = $("#tblPerihal")[0];
 
-    //        var AkTerima2 = {
-    //            JCaraBayarId: name,
-    //            AkTerimaId: akTerimaId
-    //        }
-    //        if (name != null) {
-    //            $.ajax({
-    //                type: "POST",
-    //                url: "/AkTerima/RemoveUpdateAkTerima2",
-    //                data: AkTerima2,
-    //                dataType: "json",
-    //                success: function (r) {
-    //                    //Delete the Table row using it's Index.
-    //                    table.deleteRow(row[0].rowIndex);
-    //                }
-    //            });
-    //        }
-    //    }
-    //};
-    //remove tbl urusniaga end
+            var AkBelian2 = {
+                AkBelianId: akBelianId,
+                Indek: indek
+            }
+            if (name != null) {
+                $.ajax({
+                    type: "POST",
+                    url: "/AkBelian/RemoveUpdateAkBelian2",
+                    data: AkBelian2,
+                    dataType: "json",
+                    success: function (r) {
+                        //Delete the Table row using it's Index.
+                        table.deleteRow(row[0].rowIndex);
+                    }
+                });
+            }
+        }
+    };
+    //remove tbl perihal end
 
     //update tbl objek
     function Update1(button) {
@@ -361,106 +357,108 @@
     };
     //update tbl objek end
 
-    //update tbl urusniaga
-    //function Update2(button) {
-    //    //Determine the reference of the Row using the Button.
-    //    var row = $(button).closest("TR");
-    //    var akTerimaId = $('#Id').val();
-    //    var jCaraBayarId = $("TD", row).eq(0).html();
+    //update tbl perihal
+    function Update2(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var akBelianId = $('#Id').val();
+        var IndekId = $("TD", row).eq(1).html();
 
-    //    var AkTerima2 = {
-    //        AkTerimaId: akTerimaId,
-    //        JCaraBayarId: jCaraBayarId
-    //    }
-    //    if (name != null) {
-    //        $.ajax({
-    //            type: "POST",
-    //            url: "/AkTerima/UpdateAkTerima2",
-    //            data: AkTerima2,
-    //            dataType: "json",
-    //            success: function (r) {
-    //                //Delete the Table row using it's Index.
-    //                $("#moId2").val(r.record.id);
-    //                $("#moCaraBayar").val(r.record.jCaraBayarId);
-    //                $("#moAmaun2").val(r.record.amaun);
-    //                $("#moNoCek").val(r.record.noCek);
-    //                $("#moJenisCek").val(r.record.jenisCek);
-    //                $("#moKodBankCek").val(r.record.kodBankCek);
-    //                $("#moTempatCek").val(r.record.tempatCek);
-    //                $("#moNoSlip").val(r.record.noSlip);
-    //                $("#moTarSlip").val(r.record.tarSlip);
-    //            }
-    //        });
-    //    }
-    //};
+        var AkBelian2 = {
+            AkBelianId: akBelianId,
+            Indek: IndekId
+        }
+        $.ajax({
+            type: "POST",
+            url: "/AkBelian/UpdateAkBelian2",
+            data: AkBelian2,
+            dataType: "json",
+            success: function (r) {
+                //insert data in modal perihal
+                $("#moId2").val(r.record.id);
+                $("#moIndek").val(r.record.indek);
+                $("#moBaris").val(r.record.baris);
+                $("#moBil").val(r.record.bil);
+                $("#moNoStok").val(r.record.noStok);
+                $("#moPerihal").val(r.record.perihal);
+                $("#moKuantiti").val(r.record.kuantiti);
+                $("#moUnit").val(r.record.unit);
+                $("#moHargaUnit").val(r.record.harga);
+                $("#moAmaun2").val(r.record.amaun);
 
-    //function modalUpdate2() {
-    //    var id = $("#moId2").val();
-    //    var amaun = $("#moAmaun2").val();
-    //    var noCek = $("#moNoCek").val();
-    //    var jenisCek = $("#moJenisCek").val();
-    //    var kodBankCek = $("#moKodBankCek").val();
-    //    var tempatCek = $("#moTempatCek").val();
-    //    var noSlip = $("#moNoSlip").val();
-    //    var tarSlip = $("#moTarSlip").val();
-    //    var akTerimaId = $("#Id").val();
+                //show modal perihal
+                $("#modalPerihal").modal({ backdrop: 'static', keyboard: false });
+            }
+        });
+    };
 
-    //    var AkTerima2 = {
-    //        Id: id,
-    //        AkTerimaId: akTerimaId,
-    //        Amaun: amaun,
-    //        NoCek: noCek,
-    //        JenisCek: jenisCek,
-    //        KodBankCek: kodBankCek,
-    //        TempatCek: tempatCek,
-    //        NoSlip: noSlip,
-    //        TarSlip: tarSlip
-    //    }
-    //    $.ajax({
-    //        type: "POST",
-    //        url: "/AkTerima/SaveUpdateAkTerima2",
-    //        data: AkTerima2,
-    //        dataType: "json",
-    //        success: function (r) {
-    //            //insert notification here
+    function modalUpdate2() {
+        var id = $("#moId2").val();
+        var indek = $("#moIndek").val();
+        var baris = $("#moBaris").val();
+        var bil = $("#moBil").val();
+        var noStok = $("#moNoStok").val();
+        var perihal = $("#moPerihal").val();
+        var kuantiti = $("#moKuantiti").val();
+        var unit = $("#moUnit").val();
+        var harga = $("#moHargaUnit").val();
+        var amaun = $("#moAmaun2").val();
 
-    //            $.ajax({
-    //                type: "POST",
-    //                url: "/AkTerima/GetCart2",
-    //                data: AkTerima2,
-    //                dataType: "json",
-    //                success: function (r) {
+        var AkBelian2 = {
+            Id: id,
+            Indek: indek,
+            Baris: baris,
+            Bil: bil,
+            NoStok: noStok,
+            Perihal: perihal,
+            Kuantiti: kuantiti,
+            Unit: unit,
+            Harga: harga,
+            Amaun: amaun
+        }
+        $.ajax({
+            type: "POST",
+            url: "/AkBelian/SaveUpdateAkBelian2",
+            data: AkBelian2,
+            dataType: "json",
+            success: function (r) {
+                //insert notification here
 
-    //                    //refresh updated table urusniaga
-    //                    $("table tbody#tbodyUrusniaga").empty();
-    //                    var jumlah2 = 0;
-    //                    if (r.data.akTerima2.length > 0) {
-    //                        for (var i = 0; i < r.data.akTerima2.length; i++) {
-    //                            var item1 = r.data.akTerima2[i];
-    //                            var str = "<tr><td id='jCaraBayarId' hidden>" + item1.jCaraBayarId +
-    //                                "</td><td>" + item1.jCaraBayar.kod +
-    //                                "</td><td>" + (item1.amaun).toFixed(2) +
-    //                                "</td><td>" + item1.noCek +
-    //                                "</td><td>" + item1.jenisCek +
-    //                                "</td><td>" + item1.kodBankCek +
-    //                                "</td><td>" + item1.tempatCek +
-    //                                "</td><td>" + item1.noSlip +
-    //                                "</td><td>" + showDate(item1.tarSlip) +
-    //                                "</td><td>" +
-    //                                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalUrusniaga' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
-    //                                "</td><td>" +
-    //                                "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
-    //                                "</td><tr>";
-    //                            $("table tbody#tbodyUrusniaga").append(str);
-    //                            jumlah2 += item1.amaun;
-    //                        }
-    //                    }
-    //                }
-    //            });
-    //        }
-    //    });
-    //};
-    //update tbl urusniaga end
+                $.ajax({
+                    type: "POST",
+                    url: "/AkBelian/GetAkBelian2",
+                    data: AkBelian2,
+                    dataType: "json",
+                    success: function (r) {
+
+                        //refresh updated table urusniaga
+                        $("table tbody#tbodyPerihal").empty();
+                        if (r.data.akBelian2.length > 0) {
+                            for (var i = 0; i < r.data.akBelian2.length; i++) {
+                                var item1 = r.data.akBelian2[i];
+                                var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
+                                    "</td><td>" + item1.baris +
+                                    "</td><td>" + item1.bil +
+                                    "</td><td>" + item1.noStok +
+                                    "</td><td>" + item1.perihal +
+                                    "</td><td>" + item1.kuantiti +
+                                    "</td><td>" + item1.unit +
+                                    "</td><td>" + (item1.harga).toFixed(2) +
+                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td>" +
+                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "</td><td>" +
+                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "</td><tr>";
+                                $("table tbody#tbodyPerihal").append(str);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    };
+    //update tbl perihal end
 
     // onchange kod pembekal
     $("body").on('change', "#ddlKodPembekal", function () {
@@ -482,6 +480,30 @@
         });
     }
     //on change Kod Pembekal end
+
+    // onchange harga/unit and kuantiti 
+    $("body").on('change', ".hargaUnit, .kuantiti", function () {
+        //main body
+        var amount = $("#txtHargaUnit").val();
+        var quantity = $("#txtKuantiti").val();
+
+        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)));
+        //main body end
+
+        //modal perihal
+        var moAmount = $("#moHargaUnit").val();
+        var moQuantity = $("#moKuantiti").val();
+
+        $("#moAmaun2").val((countTotalAmountPerItem(moAmount, moQuantity)));
+        //modal perihal end
+    });
+
+    function countTotalAmountPerItem(amount, quantity) {
+        if (amount != null && quantity != null) {
+            return total = amount * quantity;
+        }
+    }
+    //on change harga/unit and kuantiti end
 
     $("body").on("click", "#btnSave", function () {
         //insert validation form here

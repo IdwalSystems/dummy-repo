@@ -487,11 +487,11 @@ namespace MSNK.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Kod = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
+                    NoAkaun = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     JKWId = table.Column<int>(type: "int", nullable: false),
                     JBankId = table.Column<int>(type: "int", nullable: false),
                     AkCartaId = table.Column<int>(type: "int", nullable: false),
-                    Kod = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
-                    NoAkaun = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -838,7 +838,7 @@ namespace MSNK.Migrations
                     KodBankCek = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true),
                     TempatCek = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     NoSlip = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    TarSlip = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TarSlip = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),

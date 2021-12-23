@@ -154,7 +154,13 @@ namespace MSNK.Controllers
             List<AkBank> akBankList = _context.AkBank.Include(b=> b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
 
-            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW).OrderBy(b => b.Kod).ToList();
+            List<AkCarta> akCartaList = _context.AkCarta
+                .Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Where(b=>b.JParas.Kod == "4" && b.Kod.Substring(0,1) == "H")
+                .OrderBy(b => b.Kod)
+                .ToList();
+
             ViewBag.AkCarta = akCartaList;
 
             List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.OrderBy(b => b.Kod).ToList();
@@ -1294,12 +1300,13 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    //posting operation start here
+                    //unposting operation start here
                     //delete data from akAkaun
                     await _akAkaunRepo.Delete(akAkaun.Id);
 
                     //update posting status in akTerima
                     akTerima.FlPosting = 0;
+                    akTerima.TarikhPosting = null;
                     //akTerima.TarikhPosting = null;
                     await _akTerimaRepo.Update(akTerima);
 
@@ -1321,6 +1328,7 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
                     TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                    //unposting operation end
                 }
 
 

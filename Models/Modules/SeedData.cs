@@ -336,6 +336,7 @@ namespace MSNK.Models.Modules
             {
                 var kw = context.JKW.Where(b => b.Kod == "100").FirstOrDefault();
                 var jenisH = context.JJenis.Where(b => b.Kod == "H").FirstOrDefault();
+                var jenisB = context.JJenis.Where(b => b.Kod == "H").FirstOrDefault();
                 var jenisA = context.JJenis.Where(b => b.Kod == "A").FirstOrDefault();
                 var paras1 = context.JParas.Where(b => b.Kod == "1").FirstOrDefault();
                 var paras2 = context.JParas.Where(b => b.Kod == "2").FirstOrDefault();
@@ -588,7 +589,165 @@ namespace MSNK.Models.Modules
                         Catatan1 = "",
                         Catatan2 = "",
                         Baki = 0.00m
+                    },
+                    // AK CODE (23/12/2021)
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B20000",
+                        Perihal = "PERKHIDMATAN DAN BEKALAN",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras1.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "U",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
+                    },
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B23000",
+                        Perihal = "PERHUBUNGAN DAN UTILITI",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras2.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "U",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
+                    },
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B23100",
+                        Perihal = "PERHUBUNGAN",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras3.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "U",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
+                    },
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B23101",
+                        Perihal = "POS BIASA, MEL UDARA, MEL BERDAFTAR DAN EXPRESS",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras4.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "D",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
+                    },
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B23102",
+                        Perihal = "TELEFON TERMASUK SEWAAN DAN KOS PEMASANGAN ALAT",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras4.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "D",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
+                    },
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B23103",
+                        Perihal = "PERHUBUNGAN TELEKS, TELEGRAF DAN KABEL",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras4.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "D",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
+                    },
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B23199",
+                        Perihal = "PERKHIDMATAN PERHUBUNGAN YANG LAIN",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras4.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "D",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
+                    },
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B27000",
+                        Perihal = "BEKALAN DAN BAHAN-BAHAN LAIN",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras2.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "U",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
+                    },
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B27100",
+                        Perihal = "BEKALAN PEJABAT",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras3.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "U",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
+                    },
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B27101",
+                        Perihal = "BUKU, MAJALAH & AKHBAR",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras4.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "U",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
+                    },
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B27102",
+                        Perihal = "ALAT TULIS KOMPUTER",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras4.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "U",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
+                    },
+                    new AkCarta
+                    {
+                        JKWId = kw.Id,
+                        Kod = "B27199",
+                        Perihal = "BEKALAN-BEKALAN PEJABAT YANG LAIN",
+                        JJenisId = jenisB.Id,
+                        JParasId = paras4.Id,
+                        DebitKredit = "D",
+                        UmumDetail = "U",
+                        Catatan1 = "",
+                        Catatan2 = "",
+                        Baki = 0.00m
                     }
+                    // AK CODE (23/12/2021) end
                 );
             }
             context.SaveChanges();

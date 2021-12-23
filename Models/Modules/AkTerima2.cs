@@ -23,7 +23,7 @@ namespace MSNK.Models.Modules
         [MaxLength(30)]
         public string NoSlip { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TarSlip { get; set; }
+        public DateTime? TarSlip { get; set; }
         //field end
         
 
