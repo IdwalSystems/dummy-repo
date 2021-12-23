@@ -760,14 +760,14 @@ namespace MSNK.Models.Modules
             {
                 var kw = context.JKW.Where(b => b.Kod == "100").FirstOrDefault();
                 var bank = context.JBank.Where(b => b.Kod == "BIMB").FirstOrDefault();
-                var carta = context.AkCarta.Where(b => b.Kod == "H11102");
+                var carta = context.AkCarta.Where(b => b.Kod == "A11101").FirstOrDefault();
 
                 context.AkBank.AddRange(
                     new AkBank
                     {
                         JKWId = kw.Id,
                         JBankId = 1,
-                        AkCartaId = 1,
+                        AkCartaId = carta.Id,
                         Kod = "001",
                         NoAkaun = "1200210005702"
                     }

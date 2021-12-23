@@ -3,6 +3,12 @@
     var bil = 1;
     $(document).ready(function () {
         bil = $('#tblPerihal tr').length - 1;
+
+        // disable each kod akaun that has been picked
+        $('#tbodyObjek tr').each(function () {
+            var akCartaId = $(this).find("#akCartaId").html();
+            $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', true);
+        });
     }); 
     
     //add tbl objek
@@ -287,7 +293,7 @@
         if (name != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkTerima/UpdateAkBelian1",
+                url: "/AkBelian/UpdateAkBelian1",
                 data: AkBelian1,
                 dataType: "json",
                 success: function (r) {
@@ -394,6 +400,7 @@
 
     function modalUpdate2() {
         var id = $("#moId2").val();
+        var akBelianId = $("#Id").val();
         var indek = $("#moIndek").val();
         var baris = $("#moBaris").val();
         var bil = $("#moBil").val();
@@ -406,6 +413,7 @@
 
         var AkBelian2 = {
             Id: id,
+            AkBelianId: akBelianId,
             Indek: indek,
             Baris: baris,
             Bil: bil,
@@ -437,14 +445,14 @@
                             for (var i = 0; i < r.data.akBelian2.length; i++) {
                                 var item1 = r.data.akBelian2[i];
                                 var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
-                                    "</td><td>" + item1.baris +
-                                    "</td><td>" + item1.bil +
-                                    "</td><td>" + item1.noStok +
-                                    "</td><td>" + item1.perihal +
-                                    "</td><td>" + item1.kuantiti +
-                                    "</td><td>" + item1.unit +
-                                    "</td><td>" + (item1.harga).toFixed(2) +
-                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td class='text-left'>" + item1.baris +
+                                    "</td><td class='text-left'>" + item1.bil +
+                                    "</td><td class='text-left'>" + item1.noStok +
+                                    "</td><td class='text-left'>" + item1.perihal +
+                                    "</td><td class='text-right'>" + item1.kuantiti +
+                                    "</td><td class='text-center'>" + item1.unit +
+                                    "</td><td class='text-right'>" + (item1.harga).toFixed(2) +
+                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" +
                                     "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +

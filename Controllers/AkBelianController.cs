@@ -32,6 +32,7 @@ namespace MSNK.Controllers
         private readonly ListViewIRepository<AkBelian2, int> _akBelian2Repo;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
         private readonly IRepository<AkBank, int> _akBankRepo;
+        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
         private CartBelian _cart;
 
         public AkBelianController(
@@ -46,6 +47,7 @@ namespace MSNK.Controllers
             ListViewIRepository<AkBelian2, int> akBelian2Repository,
             IRepository<AkCarta, int> akCartaRepository,
             IRepository<AkBank, int> akBankRepository,
+            IRepository<AkAkaun, int> akAkaunRepository,
             CartBelian cart
             )
         {
@@ -60,6 +62,7 @@ namespace MSNK.Controllers
             _akBelian2Repo = akBelian2Repository;
             _akCartaRepo = akCartaRepository;
             _akBankRepo = akBankRepository;
+            _akAkaunRepo = akAkaunRepository;
             _cart = cart;
         }
 
@@ -960,10 +963,17 @@ namespace MSNK.Controllers
                 decimal originalAmount = akB2.Amaun;
                 var user = await _userManager.GetUserAsync(User);
 
+                akB2.Baris = akBelian2.Baris;
+                akB2.Bil = akBelian2.Bil;
+                akB2.NoStok = akBelian2.NoStok;
+                akB2.Perihal = akBelian2.Perihal;
+                akB2.Kuantiti = akBelian2.Kuantiti;
+                akB2.Unit = akBelian2.Unit;
+                akB2.Harga = akBelian2.Harga;
                 akB2.Amaun = akBelian2.Amaun;
                 akB2.UserIdKemaskini = user.UserName;
                 akB2.TarKemaskini = DateTime.Now;
-                _context.AkBelian2.Update(akB2);
+                _context.Update(akB2);
 
                 var akBelian = await _akBelianRepo.GetById(akBelian2.AkBelianId);
 
@@ -977,7 +987,7 @@ namespace MSNK.Controllers
                     appLog.LgOperation = "Ubah";
                     appLog.LgNote = modul + " Invois Pembekal - Ubah Objek";
                     appLog.NoRujukan = akBelian.NoInbois + "/" + akBelian2.Indek + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akBelian2.Amaun.ToString();
-                    appLog.Jumlah = akB2.Amaun;
+                    appLog.Jumlah = akBelian2.Amaun;
 
                     await _appLog.Insert(appLog);
                 }
@@ -1000,7 +1010,7 @@ namespace MSNK.Controllers
             try
             {
                 AkBelian data = await _context.AkBelian
-                    .Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta)
+                    .Include(x => x.AkBelian2)
                     .FirstOrDefaultAsync(x => x.Id == akBelian2.AkBelianId);
 
                 return Json(new { result = "OK", data = data });
@@ -1243,6 +1253,150 @@ namespace MSNK.Controllers
             }
         }
         // function  json Create end
+
+        // posting function
+        public async Task<IActionResult> Posting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkBelian akBelian = await _context.AkBelian
+                    .Include(x=> x.AkBank)
+                    .Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                List<AkBelian1> akB1 = akBelian.AkBelian1.ToList();
+
+                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akBelian.NoInbois).FirstOrDefaultAsync();
+                if (akAkaun != null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //posting operation start here
+                    //insert into akAkaun
+                    
+                    foreach (AkBelian1 item in akB1)
+                    {
+                        AkAkaun akAKredit = new AkAkaun()
+                        {
+                            NoRujukan = akBelian.NoInbois,
+                            JKWId = akBelian.JKWId,
+                            AkCartaId1 = akBelian.AkBank.AkCartaId,
+                            AkCartaId2 = item.AkCartaId,
+                            Tarikh = akBelian.Tarikh,
+                            Kredit = item.Amaun
+                        };
+
+                        await _akAkaunRepo.Insert(akAKredit);
+                    }
+                    
+
+                    //update posting status in akTerima
+                    akBelian.FlPosting = 1;
+                    akBelian.TarikhPosting = DateTime.Now;
+                    await _akBelianRepo.Update(akBelian);
+
+                    //insert applog
+                    var user = await _userManager.GetUserAsync(User);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "T";
+                    appLog.LgOperation = "Posting";
+                    appLog.LgNote = modul + " Inbois Pembekal - Posting";
+                    appLog.NoRujukan = akBelian.NoInbois;
+                    appLog.Jumlah = akBelian.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+
+                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // posting function end
+
+        // unposting function
+        public async Task<IActionResult> UnPosting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkBelian akBelian = await _context.AkBelian
+                    .Include(x=> x.AkBank)
+                    .Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akBelian.NoInbois).ToList();
+                if (akAkaun == null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //unposting operation start here
+                    //delete data from akAkaun
+                    foreach (AkAkaun item in akAkaun)
+                    {
+                        await _akAkaunRepo.Delete(item.Id);
+                    }
+
+                    //update posting status in akTerima
+                    akBelian.FlPosting = 0;
+                    akBelian.TarikhPosting = null;
+                    await _akBelianRepo.Update(akBelian);
+
+                    //insert applog
+                    var user = await _userManager.GetUserAsync(User);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "UT";
+                    appLog.LgOperation = "UnPosting";
+                    appLog.LgNote = modul + " Inbois Pembekal - UnPosting";
+                    appLog.NoRujukan = akBelian.NoInbois;
+                    appLog.Jumlah = akBelian.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                    //unposting operation end
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // unposting function end
 
     }
 }

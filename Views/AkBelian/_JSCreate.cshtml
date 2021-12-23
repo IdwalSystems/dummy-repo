@@ -71,7 +71,6 @@
                 "</td><td>" + item.akCarta.kod + " - " + item.akCarta.perihal +
                 "</td><td>" + (item.amaun).toFixed(2) +
                 "</td><td>" +
-                "</td><td>" +
                 "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                 "</td><td>" +
                 "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
@@ -92,10 +91,10 @@
             var str = "<tr><td id='txtIndek' hidden>" + item.indek +
                 "</td><td>" + item.baris +
                 "</td><td>" + item.bil +
-                "</td><td>" + item.noStok +
-                "</td><td>" + item.perihal +
+                "</td><td class='text-uppercase'>" + item.noStok +
+                "</td><td class='text-uppercase'>" + item.perihal +
                 "</td><td>" + item.kuantiti +
-                "</td><td>" + item.unit +
+                "</td><td class='text-uppercase'>" + item.unit +
                 "</td><td>" + (item.harga).toFixed(2) +
                 "</td><td>" + (item.amaun).toFixed(2) +
                 "</td><td>" +
@@ -136,7 +135,7 @@
 
                     //Sum value to Total text field
                     var sum = 0;
-                    sum = txtAmaunObjek.val() + txtJumlah.val();
+                    sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
                     txtJumlah.val(sum);
 
                     //Get the reference of the Table's TBODY element.
@@ -319,8 +318,9 @@
             var table = $("#tblObjek")[0];
 
             //Sum value to Total text field
+            
             var sum = 0;
-            sum = amaun - txtJumlah.val();
+            sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
             txtJumlah.val(sum);
 
             var AkBelian1 = {
@@ -532,14 +532,14 @@
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
-                                    "</td><td>" + item1.baris +
-                                    "</td><td>" + item1.bil +
-                                    "</td><td>" + item1.noStok +
-                                    "</td><td>" + item1.perihal +
-                                    "</td><td>" + item1.kuantiti +
-                                    "</td><td>" + item1.unit +
-                                    "</td><td>" + (item1.harga).toFixed(2) +
-                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td class='text-left'>" + item1.baris +
+                                    "</td><td class='text-left'>" + item1.bil +
+                                    "</td><td class='text-left'>" + item1.noStok +
+                                    "</td><td class='text-left'>" + item1.perihal +
+                                    "</td><td class='text-right'>" + item1.kuantiti +
+                                    "</td><td class='text-center'>" + item1.unit +
+                                    "</td><td class='text-right'>" + (item1.harga).toFixed(2) +
+                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" +
                                     "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
