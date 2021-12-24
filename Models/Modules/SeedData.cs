@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MSNK.Data;
+using MSNK.Models.Administration;
 using System;
 using System.Linq;
 
@@ -12,6 +14,22 @@ namespace MSNK.Models.Modules
         {
             context.Database.EnsureCreated();
 
+            //if (userManager.FindByEmailAsync("admin@idwal.com.my").Result == null)
+            //{
+            //    var user = new ApplicationUser
+            //    {
+            //        UserName = "admin@idwal.com.my",
+            //        Email = "admin@idwal.com.my",
+            //        Nama = "Admin"
+            //    };
+
+            //    IdentityResult result = userManager.CreateAsync(user, "Idwalsys57#").Result;
+
+            //    if (result.Succeeded)
+            //    {
+            //        userManager.AddToRoleAsync(user, "Admin").Wait();
+            //    }
+            //}
             // Look for any movies.
             if (context.JKW.Any())
             {

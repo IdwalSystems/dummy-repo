@@ -46,6 +46,11 @@ namespace MSNK.Controllers
 
             return View(userList);
         }
+        
+        public IActionResult Register()
+        {
+            return RedirectToAction(nameof(AccountController.Register), "Account");
+        }
 
         public IActionResult Edit(string userId)
         {

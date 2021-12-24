@@ -1,22 +1,27 @@
 ﻿@model IEnumerable<MSNK.Models.Administration.ApplicationUser>
-    <br />
-<div class="row">
-    <div class="col-6">
-        <h2 class="text-primary">Maklumat Pengguna</h2>
+<br />
+@*div Header*@
+<div class="row mb-2">
+    <div class="col-8">
+        <h3 class="text-left">Maklumat Pengguna</h3>
+    </div>
+    <div class="col-4 text-right">
+        <a class="text-right btn btn-success text-white" asp-action="Register">Tambah Baru</a>
     </div>
 </div>
+@*div Header end*@
 <div class="p-4 border" rounded>
     @if (Model.Count() > 0)
+    {
+        <table class="table table-striped border">
+            <tr class="table-secondary">
+                <th>Emel</th>
+                <th>Nama</th>
+                <th>Tahap Pengguna</th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
             {
-                <table class="table table-striped border">
-                    <tr class="table-secondary">
-                        <th>Emel</th>
-                        <th>Nama</th>
-                        <th>Tahap Pengguna</th>
-                        <th></th>
-                    </tr>
-                    @foreach(var item in Model)
-                {
                 <tr>
                     <td>
                         @item.Email
@@ -54,7 +59,7 @@
                         </div>
                     </td>
                 </tr>
-                }
-                </table>
             }
+        </table>
+    }
 </div>
