@@ -108,13 +108,24 @@ namespace MSNK.Controllers
             List<AkBank> akBankList = _context.AkBank.Include(b => b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
 
-            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW).OrderBy(b => b.Kod).ToList();
+            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Where(b => b.JParas.Kod == "4" && b.Kod.Substring(0, 1) == "B")
+                .OrderBy(b => b.Kod)
+                .ToList();
             ViewBag.AkCarta = akCartaList;
 
         }
 
         private void PopulateTable(int? id)
         {
+            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Where(b => b.JParas.Kod == "4" && b.Kod.Substring(0, 1) == "B")
+                .OrderBy(b => b.Kod)
+                .ToList();
+            ViewBag.AkCarta = akCartaList;
+
             List<AkPO1> akPO1Table = _context.AkPO1
                 .Include(b => b.AkCarta)
                 .Where(b => b.AkPOId == id)

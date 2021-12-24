@@ -141,106 +141,125 @@
     }
     //add tbl objek end
 
+
     //add tbl Perihal
+    var bil = $('#tblPerihal tr').length;
+    if (bil == 0) {
+        bil = 1;
+    }
     $("body").on("click", "#btnAdd2", function () {
         //Reference the Name and Country TextBoxes.
-        var txtBil = $("#txtBil");
-        GetPerihal(txtBil.val());
+        GetIndek(bil);
     });
 
-    function GetPerihal(id) {
-        var Perihal = {
-            Id: id
+    function GetIndek(indek) {
+        //Send the JSON array to Controller using AJAX.
+
+        //Reference the TextBoxes.
+        var txtIndek = indek;
+        var txtBaris = $("#txtBaris");
+        var txtBil = $("#txtBil");
+        var txtNoStok = $("#txtNoStok");
+        var txtPerihal = $("#txtPerihal");
+        var txtKuantiti = $("#txtKuantiti");
+        var txtUnit = $("#txtUnit");
+        var txtHargaUnit = $("#txtHargaUnit");
+        var txtAmaun = $("#txtAmaun");
+        var txtJumlah = $("#jumlahPerihal");
+
+        //Sum value to Total text field
+        var sum = 0;
+        sum = parseFloat(txtAmaun.val()) + parseFloat(txtJumlah.val());
+        txtJumlah.val(sum);
+
+        //Get the reference of the Table's TBODY element.
+        var tBody = $("#tblPerihal > TBODY")[0];
+        //Add Row.
+        var row = tBody.insertRow(-1);
+
+        //Add Indek cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtIndek);
+        cell.prop("hidden", !this.checked);
+
+        //Add Baris cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtBaris.val());
+
+        //Add Bil cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtBil.val());
+
+        //Add No Stok cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtNoStok.val());
+        cell.addClass('text-uppercase');
+
+        //Add Perihal cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtPerihal.val());
+        cell.addClass('text-uppercase');
+
+        //Add Kuantiti cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtKuantiti.val());
+
+        //Add Unit cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtUnit.val());
+        cell.addClass('text-uppercase');
+
+        //Add Harga cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtHargaUnit.val());
+
+        //Add Amaun cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtAmaun.val());
+
+        //Add Edit Button cell.
+        cell = $(row.insertCell(-1));
+
+        var btnUpdate2 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
+        cell.append(btnUpdate2);
+
+        //Add Button cell.
+        cell = $(row.insertCell(-1));
+        var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
+        cell.append(btnRemove2);
+
+        var AkPO2 = {
+            Indek: indek,
+            Baris: txtBaris.val(),
+            Bil: txtBil.val(),
+            NoStok: txtNoStok.val(),
+            Perihal: txtPerihal.val(),
+            Kuantiti: txtKuantiti.val(),
+            Unit: txtUnit.val(),
+            Harga: txtHargaUnit.val(),
+            Amaun: txtAmaun.val()
         }
-        if (id != "") {
-            //Send the JSON array to Controller using AJAX.
-
-            //Reference the TextBoxes.
-            var txtBaris = $("#txtBaris");
-            var txtBil = $("#txtBil");
-            var txtNoStok = $("#txtNoStok");
-            var txtPerihal = $("#txtPerihal");
-            var txtKuantiti = $("#txtKuantiti");
-            var txtUnit = $("#txtUnit");
-            var txtHargaUnit = $("#txtHargaUnit");
-            var txtAmaun = $("#txtAmaun");
-
-            //Get the reference of the Table's TBODY element.
-            var tBody = $("#tblPerihal > TBODY")[0];
-            //Add Row.
-            var row = tBody.insertRow(-1);
-
-            //Add Baris cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtBaris.val());
-
-            //Add Bil cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtBil.val());
-
-            //Add No Stok cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtNoStok.val());
-
-            //Add Perihal cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtPerihal.val());
-
-            //Add Kuantiti cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtKuantiti.val());
-
-            //Add Unit cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtUnit.val());
-
-            //Add Harga cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtHargaUnit.val());
-
-            //Add Amaun cell.
-            var cell = $(row.insertCell(-1));
-            cell.html(txtAmaun.val());
-
-            //Add Button cell.
-            cell = $(row.insertCell(-1));
-            var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
-            cell.append(btnRemove2);
-
-            var AkPO2 = {
-                Baris: txtBaris.val(),
-                Bil: txtBil.val(),
-                NoStok: txtNoStok.val(),
-                Perihal: txtPerihal.val(),
-                Kuantiti: txtKuantiti.val(),
-                Unit: txtUnit.val(),
-                Harga: txtHargaUnit.val(),
-                Amaun: txtAmaun.val()
+        $.ajax({
+            type: "POST",
+            url: "/AkPO/SaveAkPO2",
+            data: AkPO2,
+            dataType: "json",
+            success: function (r) {
+                //Clear the TextBoxes.
+                txtBaris.val("0");
+                txtBil.val("0");
+                txtNoStok.val("");
+                txtPerihal.val("");
+                txtKuantiti.val("0");
+                txtUnit.val("");
+                txtHargaUnit.val("0.00");
+                txtAmaun.val("0.00");
+                bil++;
             }
-            if (Perihal != null) {
-                $.ajax({
-                    type: "POST",
-                    url: "/AkPO/SaveAkPO2",
-                    data: AkPO2,
-                    dataType: "json",
-                    success: function (r) {
-                        //Clear the TextBoxes.
-                        txtBaris.val("");
-                        txtBil.val("");
-                        txtNoStok.val("");
-                        txtPerihal.val("");
-                        txtKuantiti.val("");
-                        txtUnit.val("");
-                        txtHargaUnit.val("");
-                        txtAmaun.val("");
-                    }
-                });
-            }
-
-
-        }
-
+        });
     }
+
+
     //add tbl urusniaga end
 
     //remove tbl objek
@@ -256,7 +275,7 @@
 
             //Sum value to Total text field
             var sum = 0;
-            sum = parseFloat(amaun) - parseFloat(txtJumlah.val());
+            sum = parseFloat(txtJumlah.val() - parseFloat(amaun));
             txtJumlah.val(sum);
 
             var AkPO1 = {
@@ -284,9 +303,17 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var name = $("TD", row).eq(0).html();
+        var amaun = $("TD", row).eq(8).html();
+        var txtJumlah = $("#jumlahObjek");
         if (confirm("Hapus : " + name + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblPerihal")[0];
+            var txtJumlah = $("#jumlahPerihal");
+
+            //Sum value to Total text field
+            var sum = 0;
+            sum = parseFloat(txtJumlah.val() - parseFloat(amaun));
+            txtJumlah.val(sum);
 
             var AkPO2 = {
                 JCaraBayarId: name,

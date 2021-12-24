@@ -57,11 +57,7 @@ namespace MSNK.Models.Modules.Cart
             decimal Amaun
             )
         {
-            AkPO2 line = collection2
-            //.Where(p => p.JCaraBayarId == jCaraBayarId)
-            .FirstOrDefault();
 
-            if (line == null)
             {
                 collection2.Add(new AkPO2
                 {
@@ -80,7 +76,7 @@ namespace MSNK.Models.Modules.Cart
         }
 
         public virtual void RemoveItem2(int id) =>
-            collection2.RemoveAll(l => l.AkPOId == id);
+            collection2.RemoveAll(l => l.Indek == id);
 
 
         public virtual void Clear2() => collection2.Clear();
