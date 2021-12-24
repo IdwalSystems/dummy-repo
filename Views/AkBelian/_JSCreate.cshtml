@@ -80,12 +80,14 @@
 
             $("#txtKodAkaun option[value=" + item.akCartaId + "]").prop('disabled', true);
         }
-        jumlah.val(sum);
+        jumlah.val(sum.toFixed(2));
     }
 
     function displayPerihalList(data) {
         //refresh updated table objek
         $("table tbody#tbodyPerihal").empty();
+        var jumlah = $("#jumlahPerihal");
+        var sum = 0;
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
             var str = "<tr><td id='txtIndek' hidden>" + item.indek +
@@ -103,9 +105,10 @@
                 "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
                 "</td><tr>";
             $("table tbody#tbodyPerihal").append(str);
-
+            sum += item.amaun;
             bil++;
         }
+        jumlah.val(sum.toFixed(2));
     }
     //on change no PO end
 
@@ -136,7 +139,7 @@
                     //Sum value to Total text field
                     var sum = 0;
                     sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
-                    txtJumlah.val(sum);
+                    txtJumlah.val(sum.toFixed(2));
 
                     //Get the reference of the Table's TBODY element.
                     var tBody = $("#tblObjek > TBODY")[0];
@@ -180,7 +183,7 @@
                         success: function (r) {
                             //Clear the TextBoxes.
                             txtKodAkaun.val("").trigger('change');
-                            txtAmaunObjek.val("");
+                            txtAmaunObjek.val("0.00");
                         }
                     });
 
@@ -216,6 +219,12 @@
         var txtUnit = $("#txtUnit");
         var txtHargaUnit = $("#txtHargaUnit");
         var txtAmaun = $("#txtAmaun");
+        var txtJumlah = $("#jumlahPerihal");
+
+        //Sum value to Total text field
+        var sum = 0;
+        sum = parseFloat(txtAmaun.val()) + parseFloat(txtJumlah.val());
+        txtJumlah.val(sum.toFixed(2));
 
         //Get the reference of the Table's TBODY element.
         var tBody = $("#tblPerihal > TBODY")[0];
@@ -292,14 +301,14 @@
             dataType: "json",
             success: function (r) {
                 //Clear the TextBoxes.
-                txtBaris.val("");
-                txtBil.val("");
-                txtNoStok.val("");
-                txtPerihal.val("");
-                txtKuantiti.val("");
-                txtUnit.val("");
-                txtHargaUnit.val("");
-                txtAmaun.val("");
+                txtBaris.val("0");
+                txtBil.val("0");
+                txtNoStok.val("-");
+                txtPerihal.val("-");
+                txtKuantiti.val("0");
+                txtUnit.val("-");
+                txtHargaUnit.val("0.00");
+                txtAmaun.val("0.00");
                 bil++;
             }
         });
@@ -318,10 +327,9 @@
             var table = $("#tblObjek")[0];
 
             //Sum value to Total text field
-            
             var sum = 0;
             sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
-            txtJumlah.val(sum);
+            txtJumlah.val(sum.toFixed(2));
 
             var AkBelian1 = {
                 AkCartaId: name,
@@ -349,9 +357,15 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var name = $("TD", row).eq(0).html();
+        var amaun = $("TD", row).eq(8).html();
+        var txtJumlah = $("#jumlahPerihal");
         if (confirm("Hapus : " + name + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblPerihal")[0];
+
+            var sum = 0;
+            sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
+            txtJumlah.val(sum.toFixed(2));
 
             var AkBelian2 = {
                 Indek: name,
@@ -446,7 +460,7 @@
                             }
                         }
 
-                        jumlah.val(sum);
+                        jumlah.val(sum.toFixed(2));
                     }
                 });
             }
@@ -499,6 +513,7 @@
         var unit = $("#moUnit").val();
         var harga = $("#moHargaUnit").val();
         var amaun = $("#moAmaun2").val();
+        var jumlah = $("#jumlahPerihal");
 
         var AkBelian2 = {
             Id: id,
@@ -528,6 +543,7 @@
 
                         //refresh updated table perihal
                         $("table tbody#tbodyPerihal").empty();
+                        var sum = 0;
                         if (r.record.length > 0) {
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
@@ -546,8 +562,10 @@
                                     "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
                                 $("table tbody#tbodyPerihal").append(str);
+                                sum += item1.amaun;
                             }
                         }
+                        jumlah.val(sum.toFixed(2));
                     }
                 });
             }

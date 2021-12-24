@@ -8,8 +8,8 @@
 
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Edit">
-            <div asp-validation-summary="All" class="text-danger"></div>
+        <form asp-action="Edit" class="needs-validation">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="card box-shadow border-primary mb-3">
                 <div class="card-header bg-primary text-white ">
                     <div class="row">
@@ -26,39 +26,41 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Tarikh" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Tarikh" class="form-control form-control-sm" />
+                                <input asp-for="Tarikh" class="form-control form-control-sm" required/>
                                 <span asp-validation-for="Tarikh" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Tahun" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Tahun" class="form-control form-control-sm" />
+                                <input asp-for="Tahun" class="form-control form-control-sm" required/>
                                 <span asp-validation-for="Tahun" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm" asp-for="JKWId">
+                                <select class="form-control form-control-sm" asp-for="JKWId" required>
                                     <option value="" hidden>-- Pilih Kumpulan Wang --</option>
                                     @foreach (var s in ViewBag.JKW)
                                     {
                                         <option value="@s.Id">@s.Perihal </option>
                                     }
                                 </select>
+                                <span asp-validation-for="JKWId" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="AkBankId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm" asp-for="AkBankId">
+                                <select class="form-control form-control-sm" asp-for="AkBankId" required>
                                     <option value="" disabled selected>-- Pilih Bank --</option>
                                     @foreach (var s in ViewBag.AkBank)
                                     {
                                         <option value="@s.Id">@s.NoAkaun - @s.JBank.Nama</option>
                                     }
                                 </select>
+                                <span asp-validation-for="AkBankId" class="text-danger"></span>
                             </div>
                         </div>
 
@@ -74,7 +76,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label asp-for="Nama" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" />
+                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" required/>
                                 <span asp-validation-for="Nama" class="text-danger"></span>
                             </div>
                         </div>
@@ -112,13 +114,14 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JNegeriId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm" asp-for="JNegeriId">
+                                <select class="form-control form-control-sm" asp-for="JNegeriId" required>
                                     <option value="" disabled selected>-- Pilih Negeri --</option>
                                     @foreach (var s in ViewBag.JNegeri)
                                     {
                                         <option value="@s.Id">@s.Perihal </option>
                                     }
                                 </select>
+                                <span asp-validation-for="JNegeriId" class="text-danger"></span>
                             </div>
                         </div>
                     </div>

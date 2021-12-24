@@ -12,8 +12,17 @@ function showDate(d) {
 }
 
 $(document).ready(function () {
-    $('.select2').select2();
+    $(".select2").select2({
+        theme: "bootstrap"
+    });   
+
+    $('.select2').on('change', function () {
+        $(this).valid();
+    });
+
 });
+
+
 
 //ToTopBtn------------------------------------------------------------------------
 //Get the button
@@ -36,3 +45,4 @@ function topFunction() {
     document.documentElement.scrollTop = 0;
 }
 //ToTopBtn------------------------------------------------------------------------
+

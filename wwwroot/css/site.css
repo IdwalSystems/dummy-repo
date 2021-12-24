@@ -101,24 +101,7 @@ body {
     padding: 0.1rem 0.5rem;
     height: calc(1.4em + 0.5rem + 2px);
     font-size: .8rem;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    padding: 0.1rem 0.5rem;
-    height: calc(1.5em + 0.5rem + 2px);
-    font-size: .8rem;
-}
-
-.select2-results__option {
-    padding: 0.1rem 0.5rem;
-    height: calc(1.5em + 0.5rem + 2px);
-    font-size: .8rem;
-}
-
-.select2-container--default .select2-search--dropdown .select2-search__field {
-    padding: 0.1rem 0.5rem;
-    height: calc(1.5em + 0.5rem + 2px);
-    font-size: .8rem;
+    border-radius: 0.3rem;
 }
 
 label {

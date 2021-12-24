@@ -119,7 +119,7 @@
                                                     }
                                                 </select>
                                             </td>
-                                            <td style="width:50%"><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01"></td>
+                                            <td style="width:50%"><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" value="0.00"></td>
                                             <td><button class="btn btn-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
                                         </tr>
                                     </tfoot>
@@ -128,7 +128,7 @@
                             <div class="card-footer">
                                 <div class="form-group">
                                     <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
-                                    <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" value="0" readonly />
+                                    <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" value="0.00" readonly />
                                 </div>
                             </div>
                         </div>
@@ -137,7 +137,7 @@
                         @*table urusniaga*@
                     <div class="card box-shadow mb-3 mt-2">
                         <div class="card-header">
-                            <h3>Perihal</h3>
+                            <h6>Perihal</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive-md">
@@ -179,7 +179,7 @@
                         <div class="card-footer">
                             <div class="form-group">
                                 <label class="control-label">Jumlah Perihal</label>
-                                <input class="form-control form-control-sm" id="jumlahPerihal" value="0" readonly />
+                                <input class="form-control form-control-sm" id="jumlahPerihal" value="0.00" readonly />
                             </div>
                         </div>
 
