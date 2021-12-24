@@ -1,17 +1,18 @@
 ﻿@model IEnumerable<IdentityRole>
 <br />
-<div class="row">
+<div class="row mb-2">
     <div class="col-6">
-        <h2 class="text-primary">Senarai Tahap Pengguna</h2>
+        <h4 class="text-primary">Maklumat Tahap Pengguna</h4>
     </div>
     <div class="col-6 text-right">
-        <a asp-action="Upsert" asp-controller="Roles" class="btn btn-primary">Tambah Baru</a>
+        <a asp-action="Upsert" asp-controller="Roles" class="btn btn-success">Tambah Baru</a>
     </div>
 </div>
 <div class="p-4 border" rounded>
     @if (Model.Any())
     {
-        <table class="table table-striped border">
+    <div class="table-responsive-md">
+        <table class="table table-striped border table-sm">
             <tr class="table-secondary">
                 <th>Id</th>
                 <th>Tahap Pengguna</th>
@@ -29,17 +30,19 @@
                     <td>
                         <div class="text-center">
                             <form asp-action="Delete" asp-route-id="@item.Id">
-                                <a asp-action="Upsert" asp-route-id="@item.Id" class="btn btn-info text-white" style="cursor:pointer">
+                                <a asp-action="Upsert" asp-route-id="@item.Id" class="btn btn-info text-white btn-sm" style="cursor:pointer">
                                     Ubah
                                 </a>
 
-                                <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger">Hapus</button>
+                                <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger btn-sm">Hapus</button>
                             </form>
                         </div>
-                        
+
                     </td>
                 </tr>
             }
         </table>
+
+    </div>
     }
 </div>

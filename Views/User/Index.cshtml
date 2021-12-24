@@ -3,7 +3,7 @@
 @*div Header*@
 <div class="row mb-2">
     <div class="col-8">
-        <h3 class="text-left">Maklumat Pengguna</h3>
+        <h4 class="text-primary">Maklumat Pengguna</h4>
     </div>
     <div class="col-4 text-right">
         <a class="text-right btn btn-success text-white" asp-action="Register">Tambah Baru</a>
@@ -13,7 +13,8 @@
 <div class="p-4 border" rounded>
     @if (Model.Count() > 0)
     {
-        <table class="table table-striped border">
+    <div class="table-responsive-md">
+        <table class="table table-striped border table-sm">
             <tr class="table-secondary">
                 <th>Emel</th>
                 <th>Nama</th>
@@ -35,15 +36,15 @@
                     <td>
                         <div class="text-center">
                             <form asp-action="Delete" asp-route-userId="@item.Id">
-                                <a asp-action="Edit" asp-route-userId="@item.Id" class="btn btn-info text-white" style="cursor:pointer">
+                                <a asp-action="Edit" asp-route-userId="@item.Id" class="btn btn-info text-white btn-sm" style="cursor:pointer">
                                     Ubah
                                 </a>
-                                <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn btn-primary text-white" style="cursor:pointer">Capaian</a>
+                                <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn btn-primary text-white btn-sm" style="cursor:pointer">Capaian</a>
 
                                 @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now)
                                 {
                                     // we want to show them the option to lock
-                                    <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-success text-white" style="cursor:pointer">
+                                    <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-success text-white btn-sm" style="cursor:pointer">
                                         <span>&nbsp; Lock &nbsp;</span>
                                     </button>
                                 }
@@ -54,12 +55,14 @@
                                         <span>Unlock</span>
                                     </button>
                                 }
-                                <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger">Hapus</button>
+                                <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger btn-sm">Hapus</button>
                             </form>
                         </div>
                     </td>
                 </tr>
             }
         </table>
+
+    </div>
     }
 </div>

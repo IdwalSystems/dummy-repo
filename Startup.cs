@@ -103,7 +103,7 @@ namespace MSNK
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -131,6 +131,7 @@ namespace MSNK
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
+            SeedData.SeedUsers(userManager);
             RotativaConfiguration.Setup(env.ContentRootPath, "wwwroot/plugins/Rotativa");
 
         }

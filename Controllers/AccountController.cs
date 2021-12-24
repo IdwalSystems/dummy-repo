@@ -29,6 +29,7 @@ namespace MSNK.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register(string returnurl=null)
         {
             if (!await _roleManager.RoleExistsAsync("Admin"))

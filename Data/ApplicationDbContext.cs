@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Models.Administration;
 using MSNK.Models.Modules;
@@ -41,6 +42,10 @@ namespace MSNK.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<IdentityRole>()
+                .HasData(new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() 
+                });
 
             modelBuilder.Entity<AkBank>()
                 .HasOne(e => e.JBank)

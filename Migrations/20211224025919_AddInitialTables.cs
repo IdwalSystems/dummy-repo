@@ -861,6 +861,11 @@ namespace MSNK.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "4761405f-d4c5-4b1b-919c-07211af58366", "c3b28833-5cc0-438b-9930-222200221f50", "Admin", "ADMIN" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AkAkaun_AkCartaId1",
                 table: "AkAkaun",

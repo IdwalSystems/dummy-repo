@@ -10,26 +10,30 @@ namespace MSNK.Models.Modules
 {
     public static class SeedData
     {
+        public static void SeedUsers(UserManager<IdentityUser> userManager)
+        {
+            if (userManager.FindByEmailAsync("admin@idwal.com.my").Result == null)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = "admin@idwal.com.my",
+                    Email = "admin@idwal.com.my",
+                    Nama = "Admin"
+                };
+
+                IdentityResult result = userManager.CreateAsync(user, "Idwalsys57#").Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Admin").Wait();
+                }
+            }
+        }
+
         public static void Initialize(ApplicationDbContext context)
         {
             context.Database.EnsureCreated();
 
-            //if (userManager.FindByEmailAsync("admin@idwal.com.my").Result == null)
-            //{
-            //    var user = new ApplicationUser
-            //    {
-            //        UserName = "admin@idwal.com.my",
-            //        Email = "admin@idwal.com.my",
-            //        Nama = "Admin"
-            //    };
-
-            //    IdentityResult result = userManager.CreateAsync(user, "Idwalsys57#").Result;
-
-            //    if (result.Succeeded)
-            //    {
-            //        userManager.AddToRoleAsync(user, "Admin").Wait();
-            //    }
-            //}
             // Look for any movies.
             if (context.JKW.Any())
             {
