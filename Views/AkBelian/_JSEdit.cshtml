@@ -1,15 +1,6 @@
 ﻿<script type="text/javascript">
     
     var bil = 1;
-    $(document).ready(function () {
-        bil = $('#tblPerihal tr').length - 1;
-
-        // disable each kod akaun that has been picked
-        $('#tbodyObjek tr').each(function () {
-            var akCartaId = $(this).find("#akCartaId").html();
-            $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', true);
-        });
-    }); 
     
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
@@ -90,6 +81,8 @@
                         }
                     });
 
+                    $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
+
                 }
             });
         }
@@ -100,8 +93,8 @@
     //add tbl Perihal
     $("body").on("click", "#btnAdd2", function () {
         //Reference the Name and Country TextBoxes.
-        var txtIndek = $("#txtIndek");
-        GetIndek(txtIndek.val());
+        var txtIndek = bil;
+        GetIndek(txtIndek);
     });
 
     function GetIndek(id) {
@@ -118,6 +111,12 @@
         var txtUnit = $("#txtUnit");
         var txtHargaUnit = $("#txtHargaUnit");
         var txtAmaun = $("#txtAmaun");
+        var txtJumlah = $("#jumlahPerihal");
+
+        //Sum value to Total text field
+        var sum = 0;
+        sum = parseFloat(txtAmaun.val()) + parseFloat(txtJumlah.val());
+        txtJumlah.val(sum);
 
         //Get the reference of the Table's TBODY element.
         var tBody = $("#tblPerihal > TBODY")[0];
@@ -195,7 +194,7 @@
             dataType: "json",
             success: function (r) {
                 //Clear the TextBoxes.
-                $("#txtIndek").val("");
+                $("#txtIndek").val(bil+1);
                 txtBaris.val("");
                 txtBil.val("");
                 txtNoStok.val("");
@@ -243,6 +242,7 @@
                     }
                 });
             }
+            $("#txtKodAkaun option[value=" + name + "]").prop('disabled', false);
 
         }
     };
@@ -254,9 +254,16 @@
         var row = $(button).closest("TR");
         var akBelianId = $("#Id").val();
         var indek = $("TD", row).eq(1).html();
+        var amaun = $("TD", row).eq(8).html();
+        var txtJumlah = $("#jumlahObjek");
         if (confirm("Hapus : " + indek + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblPerihal")[0];
+
+            //Sum value to Total text field
+            var sum = 0;
+            sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
+            txtJumlah.val(sum);
 
             var AkBelian2 = {
                 AkBelianId: akBelianId,
@@ -410,6 +417,7 @@
         var unit = $("#moUnit").val();
         var harga = $("#moHargaUnit").val();
         var amaun = $("#moAmaun2").val();
+        var jumlah = $("#jumlahPerihal");
 
         var AkBelian2 = {
             Id: id,
@@ -441,6 +449,7 @@
 
                         //refresh updated table urusniaga
                         $("table tbody#tbodyPerihal").empty();
+                        var sum = 0;
                         if (r.data.akBelian2.length > 0) {
                             for (var i = 0; i < r.data.akBelian2.length; i++) {
                                 var item1 = r.data.akBelian2[i];
@@ -459,8 +468,10 @@
                                     "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
                                 $("table tbody#tbodyPerihal").append(str);
+                                sum += item1.amaun;
                             }
                         }
+                        jumlah.val(sum);
                     }
                 });
             }
@@ -513,7 +524,65 @@
     }
     //on change harga/unit and kuantiti end
 
-    $("body").on("click", "#btnSave", function () {
-        //insert validation form here
+    //validation form
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    $(document).ready(function () {
+        bil = $('#tblPerihal tr').length - 1;
+
+        // disable each kod akaun that has been picked
+        $('#tbodyObjek tr').each(function () {
+            var akCartaId = $(this).find("#akCartaId").html();
+            $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', true);
+        });
+
+        // get total amaun perihal for each row in tbl perihal
+        var sum = 0;
+        $('#tbodyPerihal tr').each(function () {
+            var amaun = $(this).find(".amaunPerihal").html();
+            sum =+ amaun
+        });
+        $('#jumlahPerihal').val(sum);
+
+        $.validator.setDefaults({
+            errorElement: "span",
+            errorClass: "help-block",
+            //	validClass: 'stay',
+            highlight: function (element, errorClass) {
+                $(element).addClass(errorClass); //.removeClass(errorClass);
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            unhighlight: function (element, errorClass) {
+                $(element).removeClass(errorClass); //.addClass(validClass);
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+            },
+
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+
+            },
+
+        });
     });
+    //validation form end
 </script>

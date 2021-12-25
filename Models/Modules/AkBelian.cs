@@ -45,6 +45,8 @@ namespace MSNK.Models.Modules
         public int JKWId { get; set; }
         [DisplayName("No Pesanan Tempatan")]
         public int? AkPOId { get; set; }
+        [Required(ErrorMessage = "Kod Bank Diperlukan.")]
+        [DisplayName("Kod Bank")]
         public int AkBankId { get; set; }
         [Required(ErrorMessage = "Kod Pembekal Diperlukan.")]
         [DisplayName("Kod Pembekal")]

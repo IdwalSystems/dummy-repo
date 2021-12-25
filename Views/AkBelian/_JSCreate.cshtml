@@ -1,5 +1,5 @@
 ﻿<script type="text/javascript">
-    $(document).ready(function () {
+    //$(document).ready(function () {
         //$("#denganPesananTempatan").hide();
         //$("#fl1").change(function () {
         //    $("#denganPesananTempatan").show();
@@ -13,13 +13,16 @@
         //    //$("#inputTarikh1").val('');
         //    //$("#inputTarikh2").val('');
         //});
-    }); 
+
+    //}); 
+    
 
     // onchange kod pembekal
     $("body").on('change', "#ddlKodPembekal", function () {
         var kodPembekal = $("#ddlKodPembekal").val();
         JsonKodPembekal(kodPembekal);
     });
+
     function JsonKodPembekal(id) {
         $.ajax({
             type: "POST",
@@ -596,4 +599,51 @@
         }
     }
     //on change harga/unit and kuantiti end
+
+    //validation form
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    $(document).ready(function () {
+        $.validator.setDefaults({
+            errorElement: "span",
+            errorClass: "help-block",
+            //	validClass: 'stay',
+            highlight: function (element, errorClass) {
+                $(element).addClass(errorClass); //.removeClass(errorClass);
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            unhighlight: function (element, errorClass) {
+                $(element).removeClass(errorClass); //.addClass(validClass);
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+            },
+
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+
+            },
+
+        });
+    });
+    //validation form end
+    
 </script>

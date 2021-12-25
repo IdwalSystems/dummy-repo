@@ -16,10 +16,6 @@ $(document).ready(function () {
         theme: "bootstrap"
     });   
 
-    $('.select2').on('change', function () {
-        $(this).valid();
-    });
-
 });
 
 
