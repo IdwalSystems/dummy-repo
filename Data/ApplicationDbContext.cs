@@ -39,6 +39,9 @@ namespace MSNK.Data
         public DbSet<AkBelian> AkBelian { get; set; }
         public DbSet<AkBelian1> AkBelian1 { get; set; }
         public DbSet<AkBelian2> AkBelian2 { get; set; }
+        public DbSet<AkPV> AkPV { get; set; }
+        public DbSet<AkPV1> AkPV1 { get; set; }
+        public DbSet<AkPV2> AkPV2 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -74,7 +77,7 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.AkCartaId2)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
-
+            //AkTerima
             modelBuilder.Entity<AkTerima>()
                     .HasOne(m => m.JKW)
                     .WithMany(t => t.AkTerima)
@@ -95,7 +98,8 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.AkBankId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
-
+            //AkTerima end
+            //AkPO
             modelBuilder.Entity<AkPO>()
                     .HasOne(m => m.AkPembekal)
                     .WithMany(t => t.AkPO)
@@ -109,14 +113,16 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.JKWId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
-
+            //AkPO end
+            //AkJurnal
             modelBuilder.Entity<AkJurnal>()
                 .HasOne(m => m.JKW)
                 .WithMany(t => t.AkJurnal)
                 .HasForeignKey(m => m.JKWId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
-
+            //AkJurnal end
+            //AkBelian
             modelBuilder.Entity<AkBelian>()
                 .HasOne(m => m.JKW)
                 .WithMany(t => t.AkBelian)
@@ -143,6 +149,35 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.AkBankId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
+            //AkBelian end
+            //AkPV
+            modelBuilder.Entity<AkPV>()
+                .HasOne(m => m.JKW)
+                .WithMany(t => t.AkPV)
+                .HasForeignKey(m => m.JKWId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<AkPV2>()
+                .HasOne(m => m.AkBelian!)
+                .WithMany(t => t.AkPV2)
+                .HasForeignKey(m => m.AkBelianId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkPV>()
+                .HasOne(m => m.AkPembekal)
+                .WithMany(t => t.AkPV)
+                .HasForeignKey(m => m.AkPembekalId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<AkPV>()
+                    .HasOne(m => m.AkBank)
+                    .WithMany(t => t.AkPV)
+                    .HasForeignKey(m => m.AkBankId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+            //AKPV end
         }
     }
 }

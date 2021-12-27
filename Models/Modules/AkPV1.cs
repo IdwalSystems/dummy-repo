@@ -1,28 +1,28 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class JCaraBayar
+    public class AkPV1
     {
         //field
         public int Id { get; set; }
-        [Required]
-        [MaxLength(2)]
-        public string Kod { get; set; }
-        [Required]
-        [MaxLength(100)]
-        public string Perihal { get; set; }
+        public int AkPVId { get; set; }
+        
+        public decimal Amaun { get; set; }
         //field end
 
         //relationship
-        public ICollection<AkTerima2> akTerima2 { get; set; }
-        public ICollection<AkPV> AkPV { get; set; }
+        [DisplayName("Kod Akaun")]
+        public int AkCartaId { get; set; }
+        public AkCarta AkCarta { get; set; }
         //relationship end
 
-        // log
+        //log
         public string UserId { get; set; }
         [DisplayName("Tarikh Masuk")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]

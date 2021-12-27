@@ -668,6 +668,70 @@ namespace MSNK.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AkPV",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Tahun = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
+                    Tarikh = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TarikhTerima = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TarikhPosting = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    NoPV = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Jumlah = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    NoKP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nama = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Alamat1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Alamat2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Alamat3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Telefon = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NoAkaunBank = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Emel = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NoCekAtauEFT = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    TarCekAtauEFT = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Perihal = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
+                    FlCetak = table.Column<int>(type: "int", nullable: false),
+                    FlPosting = table.Column<int>(type: "int", nullable: false),
+                    FlBatal = table.Column<int>(type: "int", nullable: false),
+                    JKWId = table.Column<int>(type: "int", nullable: false),
+                    AkBankId = table.Column<int>(type: "int", nullable: false),
+                    AkPembekalId = table.Column<int>(type: "int", nullable: false),
+                    JCaraBayarId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AkPV", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AkPV_AkBank_AkBankId",
+                        column: x => x.AkBankId,
+                        principalTable: "AkBank",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AkPV_AkPembekal_AkPembekalId",
+                        column: x => x.AkPembekalId,
+                        principalTable: "AkPembekal",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AkPV_JCaraBayar_JCaraBayarId",
+                        column: x => x.JCaraBayarId,
+                        principalTable: "JCaraBayar",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AkPV_JKW_JKWId",
+                        column: x => x.JKWId,
+                        principalTable: "JKW",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AkTerima",
                 columns: table => new
                 {
@@ -794,6 +858,67 @@ namespace MSNK.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AkPV1",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AkPVId = table.Column<int>(type: "int", nullable: false),
+                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AkCartaId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AkPV1", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AkPV1_AkCarta_AkCartaId",
+                        column: x => x.AkCartaId,
+                        principalTable: "AkCarta",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AkPV1_AkPV_AkPVId",
+                        column: x => x.AkPVId,
+                        principalTable: "AkPV",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AkPV2",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AkPVId = table.Column<int>(type: "int", nullable: false),
+                    Amaun = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AkBelianId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AkPV2", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AkPV2_AkBelian_AkBelianId",
+                        column: x => x.AkBelianId,
+                        principalTable: "AkBelian",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AkPV2_AkPV_AkPVId",
+                        column: x => x.AkPVId,
+                        principalTable: "AkPV",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AkTerima1",
                 columns: table => new
                 {
@@ -864,7 +989,7 @@ namespace MSNK.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "4761405f-d4c5-4b1b-919c-07211af58366", "c3b28833-5cc0-438b-9930-222200221f50", "Admin", "ADMIN" });
+                values: new object[] { "92a1cc57-805f-442f-9338-c3b7610b2772", "8db2b3f5-306a-49f0-838d-7599e68efe60", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkAkaun_AkCartaId1",
@@ -997,6 +1122,46 @@ namespace MSNK.Migrations
                 column: "AkPOId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AkPV_AkBankId",
+                table: "AkPV",
+                column: "AkBankId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AkPV_AkPembekalId",
+                table: "AkPV",
+                column: "AkPembekalId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AkPV_JCaraBayarId",
+                table: "AkPV",
+                column: "JCaraBayarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AkPV_JKWId",
+                table: "AkPV",
+                column: "JKWId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AkPV1_AkCartaId",
+                table: "AkPV1",
+                column: "AkCartaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AkPV1_AkPVId",
+                table: "AkPV1",
+                column: "AkPVId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AkPV2_AkBelianId",
+                table: "AkPV2",
+                column: "AkBelianId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AkPV2_AkPVId",
+                table: "AkPV2",
+                column: "AkPVId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AkTerima_AkAkaunId",
                 table: "AkTerima",
                 column: "AkAkaunId");
@@ -1094,6 +1259,12 @@ namespace MSNK.Migrations
                 name: "AkPO2");
 
             migrationBuilder.DropTable(
+                name: "AkPV1");
+
+            migrationBuilder.DropTable(
+                name: "AkPV2");
+
+            migrationBuilder.DropTable(
                 name: "AkTerima1");
 
             migrationBuilder.DropTable(
@@ -1121,16 +1292,16 @@ namespace MSNK.Migrations
                 name: "SiModul");
 
             migrationBuilder.DropTable(
-                name: "AkBelian");
-
-            migrationBuilder.DropTable(
                 name: "AkJurnal");
 
             migrationBuilder.DropTable(
-                name: "AkTerima");
+                name: "AkBelian");
 
             migrationBuilder.DropTable(
-                name: "JCaraBayar");
+                name: "AkPV");
+
+            migrationBuilder.DropTable(
+                name: "AkTerima");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -1140,6 +1311,9 @@ namespace MSNK.Migrations
 
             migrationBuilder.DropTable(
                 name: "AkPO");
+
+            migrationBuilder.DropTable(
+                name: "JCaraBayar");
 
             migrationBuilder.DropTable(
                 name: "AkAkaun");

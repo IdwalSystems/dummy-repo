@@ -1,0 +1,22 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $("#myInput").hide();
+        $("#searchColumn").change(function () {
+            $("#myInput").hide();
+            $("#myInputDate1").hide();
+            $("#myInputDate2").hide();
+            $("#myInput").val('');
+            $("#inputTarikh1").val('');
+            $("#inputTarikh2").val('');
+            if (this.value != 'Tarikh') {
+                $("#myInput").show();
+                $("#myInputDate1").hide();
+                $("#myInputDate2").hide();
+            } else {
+                $("#myInput").hide();
+                $("#myInputDate1").show();
+                $("#myInputDate2").show();
+            }
+        });
+    });
+</script>

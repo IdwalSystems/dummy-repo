@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.AkBelianViewModel>
+﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.AkPVViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -10,7 +10,7 @@
 @*div Header*@
 <div class="row mb-2">
     <div class="col-8">
-        <h3 class="text-left">Inbois Pembekal</h3>
+        <h3 class="text-left">Baucer Pembayaran</h3>
     </div>
     <div class="col-4 text-right">
         <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
@@ -29,7 +29,7 @@
                     <div class="col-sm-3 mb-2">
                         <select name="searchColumn" class="custom-select form-control-sm" id="searchColumn">
                             <option value="@ViewBag.SearchColumn">Tarikh</option>
-                            <option value="NoRujukan">No Inbois</option>
+                            <option value="NoRujukan">No Baucer</option>
                             <option value="Nama">Nama</option>
                         </select>
                     </div>
@@ -84,7 +84,10 @@
                     Nama / Nama Syarikat
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Alamat1)
+                    Cara Bayaran
+                </th>
+                <th>
+                    Cetak
                 </th>
                 <th>
                     Posting
@@ -98,64 +101,75 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Tahun)
-                    </td>
-                    <td>
-                        @item.NoInbois.Substring(3)
-                    </td>
-                    <td>
-                        @item.Tarikh.ToString("dd-M-yyyy")
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Jumlah)
-                    </td>
-                    <td>
-                        @item.NamaSykt.ToUpper()
-                    </td>
-                    <td>
-                        @item.Alamat1.ToUpper()
-                    </td>
-                    <td>
-                        @if (item.FlPosting == 0)
-                        {
-                            <label class="mb-0">BELUM</label>
-                        }
-                        else
-                        {
-                            <label class="mb-0">SUDAH</label>
-                        }
-                    </td>
-                    <td>
-                        @if (item.FlBatal == 0)
-                        {
-                            <label class="mb-0">TIDAK</label>
-                        }
-                        else
-                        {
-                            <label class="mb-0">YA</label>
-                        }
-                    </td>
-                    <td class="action-button">
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                        @if (item.FlPosting == 0)
-                        {
-                            <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
-                                <i class="fas fa-sync"></i>
-                            </a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
-                        }
-                        else
-                        {
-                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
-                                <i class="fas fa-sync"></i>
-                            </a>
-                        }
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tahun)
+                </td>
+                <td>
+                    @item.NoPV.Substring(3)
+                </td>
+                <td>
+                    @item.Tarikh.ToString("dd-M-yyyy")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Jumlah)
+                </td>
+                <td>
+                    @item.Penerima.ToUpper()
+                </td>
+                <td>
+                    @item.CaraBayar.ToUpper()
+                </td>
+                <td>
+                    @if (item.FlCetak == 0)
+                    {
+                        <label class="mb-0">BELUM</label>
+                    }
+                    else
+                    {
+                        <label class="mb-0">SUDAH</label>
+                    }
+                </td>
+                <td>
+                    @if (item.FlPosting == 0)
+                    {
+                        <label class="mb-0">BELUM</label>
+                    }
+                    else
+                    {
+                        <label class="mb-0">SUDAH</label>
+                    }
+                </td>
+                <td>
+                    @if (item.FlBatal == 0)
+                    {
+                        <label class="mb-0">TIDAK</label>
+                    }
+                    else
+                    {
+                        <label class="mb-0">YA</label>
+                    }
+                </td>
+                <td class="action-button">
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                    <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                    @if (item.FlPosting == 0)
+                    {
+                        <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                            <i class="fas fa-sync"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                    }
+                    else
+                    {
+                        <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
+                            <i class="fas fa-sync"></i>
+                        </a>
+                    }
 
 
-                    </td>
-                </tr>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
