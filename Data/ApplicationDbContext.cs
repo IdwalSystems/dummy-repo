@@ -54,7 +54,8 @@ namespace MSNK.Data
 
             modelBuilder.Entity<AkCarta>()
                 .HasOne(e => e.JKW)
-                .WithMany(c => c.AkCarta);
+                .WithMany(c => c.AkCarta)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AkAkaun>()
                     .HasOne(m => m.AkCarta1)

@@ -14,7 +14,7 @@
                         <h5 class="text-left">Baucer Jurnal - @ViewData["Title"]</h5>
                     </div>
                     <div class="col-md-6">
-                        <p class="text-right">@Model.NoJurnal</p>
+                        <p class="text-right">No Jurnal : @Model.NoJurnal</p>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan4)" readonly />
                             </div>
                         </div>
-                        <div class="form-row">
+                        @*<div class="form-row" hidden>
                             <div class="form-group col-md">
                                 <label asp-for="UserId" class="control-label"></label>
                                 <input class="form-control form-control-sm"
@@ -73,7 +73,7 @@
                                 <label asp-for="TarMasuk" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarMasuk)" readonly />
                             </div>
-                        </div>
+                        </div>*@
 
                     </div>
                     <div class="col-lg-2">

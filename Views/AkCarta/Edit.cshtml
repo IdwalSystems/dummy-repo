@@ -16,7 +16,7 @@
                             <h5 class="text-left">Carta Akaun - @ViewData["Title"]</h5>
                         </div>
                         <div class="col-md-6">
-                            <p class="text-right">@Model.Kod</p>
+                            <p class="text-right">Kod Carta : @Model.Kod</p>
                         </div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                         <div class="form-group col-sm">
                             <label asp-for="DebitKredit" class="control-label"></label>
                             <div class="custom-control custom-radio">
-                                <input asp-for="DebitKredit" type="radio" id="DebitKredit1" name="DebitKredit" class="custom-control-input" value="D" checked>
+                                <input asp-for="DebitKredit" type="radio" id="DebitKredit1" name="DebitKredit" class="custom-control-input" value="D">
                                 <label class="custom-control-label" for="DebitKredit1">DEBIT</label>
                             </div>
                             <div class="custom-control custom-radio">
@@ -85,7 +85,7 @@
                         <div class="form-group col-sm">
                             <label asp-for="UmumDetail" class="control-label"></label>
                             <div class="custom-control custom-radio">
-                                <input asp-for="UmumDetail" type="radio" id="UmumDetail1" name="UmumDetail" class="custom-control-input" value="U" checked>
+                                <input asp-for="UmumDetail" type="radio" id="UmumDetail1" name="UmumDetail" class="custom-control-input" value="U">
                                 <label class="custom-control-label" for="UmumDetail1">UMUM</label>
                             </div>
                             <div class="custom-control custom-radio">

@@ -19,7 +19,7 @@
                             <h5 class="text-left">Baucer Jurnal - @ViewData["Title"]</h5>
                         </div>
                         <div class="col-md-6">
-                            <p class="text-right">@Model.NoJurnal</p>
+                            <p class="text-right">No Jurnal : @Model.NoJurnal</p>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                         <input asp-for="Catatan4" class="form-control form-control-sm" />
                         <span asp-validation-for="Catatan4" class="text-danger"></span>
                     </div>
-                    <div class="form-row">
+                    @*<div class="form-row" hidden>
                         <div class="form-group col-md">
                             <label asp-for="UserId" class="control-label"></label>
                             <input asp-for="UserId" class="form-control form-control-sm" readonly />
@@ -89,7 +89,7 @@
                             <input asp-for="TarMasuk" class="form-control form-control-sm" readonly />
                             <span asp-validation-for="TarMasuk" class="text-danger"></span>
                         </div>
-                    </div>
+                    </div>*@
                     <br />
                     @*table Objek*@
                     <div class="card box-shadow mb-3">

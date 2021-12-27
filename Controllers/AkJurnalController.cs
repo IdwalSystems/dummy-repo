@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,12 @@ namespace MSNK.Controllers
 {
     public class AkJurnalController : Controller
     {
+        public const string modul = "JU001";
+        public const string namamodul = "Baucer Jurnal";
+
         private readonly ApplicationDbContext _context;
+        private readonly AppLogIRepository<AppLog, int> _appLog;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkJurnal, int> _akJurnalRepo;
         private readonly IRepository<JKW, int> _jKWRepo;
         private readonly ListViewIRepository<AkJurnal1, int> _akJurnal1Repo;
@@ -24,6 +30,8 @@ namespace MSNK.Controllers
 
         public AkJurnalController(
             ApplicationDbContext context,
+            AppLogIRepository<AppLog, int> appLog,
+            UserManager<IdentityUser> userManager,
             IRepository<AkJurnal, int> akJurnalRepository,
             IRepository<JKW, int> jKWRepository,
             ListViewIRepository<AkJurnal1, int> akJurnal1Repository,
@@ -32,6 +40,8 @@ namespace MSNK.Controllers
             )
         {
             _context = context;
+            _appLog = appLog;
+            _userManager = userManager;
             _akJurnalRepo = akJurnalRepository;
             _jKWRepo = jKWRepository;
             _akJurnal1Repo = akJurnal1Repository;
@@ -154,8 +164,6 @@ namespace MSNK.Controllers
         }
 
         // POST: AkJurnal/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkJurnal akJurnal, int JKWId, decimal JumDebit, decimal JumKredit)
@@ -185,6 +193,7 @@ namespace MSNK.Controllers
                     m.AkJurnal1 = _cart.Lines1.ToArray();
 
                     await _akJurnalRepo.Insert(m);
+                    await AddLogAsync("Tambah", noRujukan, 0);
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
@@ -272,6 +281,8 @@ namespace MSNK.Controllers
             var akJurnal = await _context.AkJurnal
                 .Include(a => a.JKW)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            PopulateTable(id);
             if (akJurnal == null)
             {
                 return NotFound();
@@ -519,6 +530,134 @@ namespace MSNK.Controllers
             {
                 return Json(new { result = "ERROR", message = ex.Message });
             }
+        }
+
+        private async Task AddLogAsync(string operasi, string rujukan, decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.Jumlah = jumlah;
+
+            if (operasi == "Tambah")
+            {
+                appLog.LgModule = modul + "C";
+                appLog.LgOperation = "Tambah";
+                appLog.LgNote = modul + " " + namamodul + " - Tambah";
+            }
+            else if (operasi == "Hapus")
+            {
+                appLog.LgModule = modul + "D";
+                appLog.LgOperation = "Hapus";
+                appLog.LgNote = modul + " " + namamodul + " - Hapus";
+            }
+            else if (operasi == "Ubah")
+            {
+                appLog.LgModule = modul + "E";
+                appLog.LgOperation = "Ubah";
+                appLog.LgNote = modul + " " + namamodul + " - Ubah";
+            }
+            else if (operasi == "TambahObjek")
+            {
+                appLog.LgModule = modul + "EC";
+                appLog.LgOperation = "Tambah";
+                appLog.LgNote = modul + " " + namamodul + " - Tambah Objek";
+            }
+            else if (operasi == "HapusObjek")
+            {
+                appLog.LgModule = modul + "ED";
+                appLog.LgOperation = "Hapus";
+                appLog.LgNote = modul + " " + namamodul + " - Hapus Objek";
+            }
+            else if (operasi == "UbahObjek")
+            {
+                appLog.LgModule = modul + "EE";
+                appLog.LgOperation = "Ubah";
+                appLog.LgNote = modul + " " + namamodul + " - Ubah Objek";
+            }
+            else if (operasi == "TambahPerihal")
+            {
+                appLog.LgModule = modul + "EC";
+                appLog.LgOperation = "Tambah";
+                appLog.LgNote = modul + " " + namamodul + " - Tambah Perihal";
+            }
+            else if (operasi == "HapusPerihal")
+            {
+                appLog.LgModule = modul + "ED";
+                appLog.LgOperation = "Hapus";
+                appLog.LgNote = modul + " " + namamodul + " - Hapus Perihal";
+            }
+            else if (operasi == "UbahPerihal")
+            {
+                appLog.LgModule = modul + "EE";
+                appLog.LgOperation = "Ubah";
+                appLog.LgNote = modul + " " + namamodul + " - Ubah Perihal";
+            }
+            else if (operasi == "Posting")
+            {
+                appLog.LgModule = modul + "T";
+                appLog.LgOperation = "Posting";
+                appLog.LgNote = modul + " " + namamodul + " - Posting";
+            }
+            else if (operasi == "UnPosting")
+            {
+                appLog.LgModule = modul + "UT";
+                appLog.LgOperation = "UnPosting";
+                appLog.LgNote = modul + " " + namamodul + " - UnPosting";
+            }
+            else if (operasi == "Cetak")
+            {
+                appLog.LgModule = modul + "P";
+                appLog.LgOperation = "Cetak";
+                appLog.LgNote = modul + " " + namamodul + " - Cetak";
+            }
+            await _appLog.Insert(appLog);
+        }
+
+        public async Task<IActionResult> Posting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkJurnal akJurnal = await _context.AkJurnal.Include(x => x.AkJurnal1).FirstOrDefaultAsync(x => x.Id == id);
+                List<AkJurnal1> akJ1 = akJurnal.AkJurnal1.ToList();
+
+                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akJurnal.NoJurnal).FirstOrDefaultAsync();
+                if (akAkaun != null)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+                }
+                else
+                {
+                    //posting operation start here
+                    //insert into akAkaun
+                    AkAkaun akADebit = new AkAkaun();
+                    foreach (AkJurnal1 item in akJ1)
+                    {
+                        akADebit.NoRujukan = akAkaun.NoRujukan;
+                        akADebit.JKWId = akAkaun.JKWId;
+                        akADebit.AkCartaId1 = akAkaun.AkCartaId1;
+                        akADebit.AkCartaId2 = akAkaun.AkCartaId2;
+                        akADebit.Tarikh = akAkaun.Tarikh;
+                        //akADebit.Debit = item.Amaun;
+                    }
+                    //await _akAkaunRepo.Insert(akADebit);
+
+                    //update posting status in akTerima
+                    akJurnal.Posting = 1;
+                    await _akJurnalRepo.Update(akJurnal);
+
+                    await _context.SaveChangesAsync();
+                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

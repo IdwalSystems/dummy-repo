@@ -14,7 +14,7 @@
                         <h5 class="text-left">Carta Akaun - @ViewData["Title"]</h5>
                     </div>
                     <div class="col-md-6">
-                        <p class="text-right">@Model.Kod</p>
+                        <p class="text-right">Kod Carta : @Model.Kod</p>
                     </div>
                 </div>
             </div>
@@ -28,12 +28,6 @@
                                        value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
                             </div>
                             <div class="form-group col-md">
-                                <label asp-for="Perihal" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Perihal)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md">
                                 <label asp-for="JJenis" class="control-label"></label>
                                 <input class="form-control form-control-sm"
                                        value="@Html.DisplayFor(model => model.JJenis.Kod) - @Html.DisplayFor(model => model.JJenis.Nama)" readonly />
@@ -43,7 +37,13 @@
                                 <input class="form-control form-control-sm"
                                        value="PARAS @Html.DisplayFor(model => model.JParas.Kod)" readonly />
                             </div>
+                        </div>
+                        <div class="form-row">
                             <div class="form-group col-md">
+                                <label asp-for="Perihal" class="control-label"></label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Perihal)" readonly />
+                            </div>
+                            <div class="form-group col-md-4">
                                 <label asp-for="Baki" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Baki)" readonly />
                             </div>

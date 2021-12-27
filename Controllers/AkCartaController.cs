@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,16 +16,25 @@ namespace MSNK.Controllers
     [Authorize]
     public class AkCartaController : Controller
     {
+        public const string modul = "JU001";
+        public const string namamodul = "JU001";
+
         private readonly ApplicationDbContext _context;
+        private readonly AppLogIRepository<AppLog, int> _appLog;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
         private readonly IRepository<JKW, int> _kwRepo;
 
         public AkCartaController(
             ApplicationDbContext context,
+            AppLogIRepository<AppLog, int> appLog,
+            UserManager<IdentityUser> userManager,
             IRepository<JKW, int> kwRepository,
             IRepository<AkCarta, int> akCartaRepository)
         {
             _context = context;
+            _appLog = appLog;
+            _userManager = userManager;
             _kwRepo = kwRepository;
             _akCartaRepo = akCartaRepository;
         }
@@ -86,30 +96,36 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkCarta akCarta, int JKWId, int JJenisId, int JParasId)
         {
-            AkCarta akC = new AkCarta();
-            if (ModelState.IsValid)
+            if (CheckKod(akCarta.Kod))
             {
-                if (akCarta != null && JKWId != 0)
+                TempData[SD.Error] = "Maklumat gagal ditambah. Kod Carta " + akCarta.Kod + " sudah digunakan. ";
+            }
+            else
+            {
+                AkCarta akC = new AkCarta();
+                if (ModelState.IsValid)
                 {
-                    akC.JKWId = JKWId;
-                    akC.Kod = akCarta.Kod;
-                    akC.JJenisId = JJenisId;
-                    akC.Perihal = akCarta.Perihal;
-                    akC.JParasId = JParasId;
-                    akC.DebitKredit = akCarta.DebitKredit;
-                    akC.UmumDetail = akCarta.UmumDetail;
-                    akC.Baki = akCarta.Baki;
-                    akC.Catatan1 = akCarta.Catatan1;
-                    akC.Catatan2 = akCarta.Catatan2;
-                    await _akCartaRepo.Insert(akC);
-                    await _akCartaRepo.Save();
+                    if (akCarta != null && JKWId != 0)
+                    {
+                        akC.JKWId = JKWId;
+                        akC.Kod = akCarta.Kod;
+                        akC.JJenisId = JJenisId;
+                        akC.Perihal = akCarta.Perihal;
+                        akC.JParasId = JParasId;
+                        akC.DebitKredit = akCarta.DebitKredit;
+                        akC.UmumDetail = akCarta.UmumDetail;
+                        akC.Baki = akCarta.Baki;
+                        akC.Catatan1 = akCarta.Catatan1;
+                        akC.Catatan2 = akCarta.Catatan2;
+                        await _akCartaRepo.Insert(akC);
+                        await _akCartaRepo.Save();
+                        TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Carta adalah " + akCarta.Kod;
 
-                    return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
             }
-
             PopulateList();
-
             return View(akCarta);
         }
 
@@ -167,6 +183,7 @@ namespace MSNK.Controllers
                     akC.Catatan1 = akCarta.Catatan1;
                     akC.Catatan2 = akCarta.Catatan2;
                     await _akCartaRepo.Update(akCarta);
+                    TempData[SD.Success] = "Data berjaya diubah..!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -216,15 +233,35 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akCarta = await _context.AkCarta
-                .Include(q => q.AkAkaun1)
-                .Include(q => q.AkAkaun2)
-                .Include(q => q.AkBank)
-                .Include(q => q.AkPO1)
-                .Include(q => q.AkTerima1)
-                .Include(q => q.JParas)
-                .FirstOrDefaultAsync(q => q.Id == id);
+                .Include(a=>a.JKW)
+                .Include(a=>a.JJenis)
+                .Include(a=>a.JParas)
+                .Include(a=>a.AkAkaun1)
+                .Include(a=>a.AkAkaun2)
+                .Include(a=>a.AkBank)
+                .Include(a=>a.AkBelian1)
+                .Include(a => a.AkJurnal1)
+                .Include(a => a.AkPO1)
+                .Include(a => a.AkTerima1)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            _ = akCarta;
 
             string kodCarta = akCarta.Kod;
+
+            if (
+                akCarta.AkAkaun1.Count > 0||
+                akCarta.AkAkaun2.Count > 0||
+                akCarta.AkBank.Count>0||
+                akCarta.AkBelian1.Count>0||
+                akCarta.AkJurnal1.Count>0||
+                akCarta.AkPO1.Count>0||
+                akCarta.AkTerima1.Count>0
+                )
+            {
+                TempData[SD.Error] = kodCarta + " - " + akCarta.Perihal + " gagal dipadam. Maklumat digunakan dalam sistem. ";
+                return RedirectToAction(nameof(Index));
+            };
+
             decimal decimalMaxKodCarta = Convert.ToDecimal(kodCarta.Substring(1));
             if(akCarta.JParas.Kod == "1") 
             {
@@ -313,6 +350,95 @@ namespace MSNK.Controllers
         private bool AkCartaExists(int id)
         {
             return _context.AkCarta.Any(e => e.Id == id);
+        }
+
+        private bool CheckKod(string kod)
+        {
+            return _context.AkCarta.Any(e => e.Kod == kod);
+        }
+
+        private async Task AddLogAsync(string operasi, string rujukan, decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.Jumlah = jumlah;
+
+            if(operasi == "Tambah")
+            {
+                appLog.LgModule = modul + "C";
+                appLog.LgOperation = "Tambah";
+                appLog.LgNote = modul + " " + namamodul + " - Tambah";
+            }
+            else if (operasi == "Hapus")
+            {
+                appLog.LgModule = modul + "D";
+                appLog.LgOperation = "Hapus";
+                appLog.LgNote = modul + " " + namamodul + " - Hapus";
+            }
+            else if (operasi == "Ubah")
+            {
+                appLog.LgModule = modul + "E";
+                appLog.LgOperation = "Ubah";
+                appLog.LgNote = modul + " " + namamodul + " - Ubah";
+            }
+            else if (operasi == "TambahObjek")
+            {
+                appLog.LgModule = modul + "EC";
+                appLog.LgOperation = "Tambah";
+                appLog.LgNote = modul + " " + namamodul + " - Tambah Objek";
+            }
+            else if (operasi == "HapusObjek")
+            {
+                appLog.LgModule = modul + "ED";
+                appLog.LgOperation = "Hapus";
+                appLog.LgNote = modul + " " + namamodul + " - Hapus Objek";
+            }
+            else if (operasi == "UbahObjek")
+            {
+                appLog.LgModule = modul + "EE";
+                appLog.LgOperation = "Ubah";
+                appLog.LgNote = modul + " " + namamodul + " - Ubah Objek";
+            }
+            else if (operasi == "TambahPerihal")
+            {
+                appLog.LgModule = modul + "EC";
+                appLog.LgOperation = "Tambah";
+                appLog.LgNote = modul + " " + namamodul + " - Tambah Perihal";
+            }
+            else if(operasi == "HapusPerihal")
+            {
+                appLog.LgModule = modul + "ED";
+                appLog.LgOperation = "Hapus";
+                appLog.LgNote = modul + " " + namamodul + " - Hapus Perihal";
+            }
+            else if (operasi == "UbahPerihal")
+            {
+                appLog.LgModule = modul + "EE";
+                appLog.LgOperation = "Ubah";
+                appLog.LgNote = modul + " " + namamodul + " - Ubah Perihal";
+            }
+            else if (operasi=="Posting")
+            {
+                appLog.LgModule = modul + "T";
+                appLog.LgOperation = "Posting";
+                appLog.LgNote = modul + " " + namamodul + " - Posting";
+            }
+            else if (operasi=="UnPosting")
+            {
+                appLog.LgModule = modul + "UT";
+                appLog.LgOperation = "UnPosting";
+                appLog.LgNote = modul + " " + namamodul + " - UnPosting";
+            }
+            else if (operasi=="Cetak") 
+            {
+                appLog.LgModule = modul + "P";
+                appLog.LgOperation = "Cetak";
+                appLog.LgNote = modul +" "+ namamodul + " - Cetak";
+            }
+            await _appLog.Insert(appLog);
         }
     }
 }
