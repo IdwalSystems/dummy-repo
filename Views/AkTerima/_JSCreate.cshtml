@@ -252,7 +252,7 @@
     };
     //remove tbl objek end
 
-    //remove tb urusniaga
+    //remove tbl urusniaga
     function Remove2(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
@@ -377,32 +377,30 @@
         var jCaraBayarId = $("TD", row).eq(0).html();
 
         var AkTerima2 = {
-            jCaraBayarId: jCaraBayarId
+            JCaraBayarId: jCaraBayarId
         }
-        if (name != null) {
-            $.ajax({
-                type: "POST",
-                url: "/AkTerima/GetAnItemCartAkTerima2",
-                data: AkTerima2,
-                dataType: "json",
-                success: function (r) {
-                    //insert data in modal urusniaga
-                    $("#moId2").val(r.record.id);
-                    $("#moCaraBayar").val(r.record.jCaraBayarId);
-                    $("#moAmaun2").val(r.record.amaun);
-                    $("#moNoCek").val(r.record.noCek);
-                    $("#moJenisCek").val(r.record.jenisCek);
-                    $("#moKodBankCek").val(r.record.kodBankCek);
-                    $("#moTempatCek").val(r.record.tempatCek);
-                    $("#moNoSlip").val(r.record.noSlip);
-                    $("#moTarSlip").val(r.record.tarSlip);
+        $.ajax({
+            type: "POST",
+            url: "/AkTerima/GetAnItemCartAkTerima2",
+            data: AkTerima2,
+            dataType: "json",
+            success: function (r) {
+                //insert data in modal urusniaga
+                $("#moId2").val(r.record.id);
+                $("#moCaraBayar").val(r.record.jCaraBayarId);
+                $("#moAmaun2").val(r.record.amaun);
+                $("#moNoCek").val(r.record.noCek);
+                $("#moJenisCek").val(r.record.jenisCek);
+                $("#moKodBankCek").val(r.record.kodBankCek);
+                $("#moTempatCek").val(r.record.tempatCek);
+                $("#moNoSlip").val(r.record.noSlip);
+                $("#moTarSlip").val(r.record.tarSlip);
 
-                    //show modal objek
-                    $("#modalUrusniaga").modal({ backdrop: 'static', keyboard: false });
+                //show modal objek
+                $("#modalUrusniaga").modal({ backdrop: 'static', keyboard: false });
 
-                }
-            });
-        }
+            }
+        });
     };
 
     function modalUpdate2() {
@@ -418,7 +416,7 @@
         var jumlah = $("#jumlahPerihal");
 
         var AkTerima2 = {
-            Id: id,
+            JCaraBayarId: id,
             AkTerimaId: akTerimaId,
             Amaun: amaun,
             NoCek: noCek,

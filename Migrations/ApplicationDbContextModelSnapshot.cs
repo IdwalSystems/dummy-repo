@@ -609,6 +609,189 @@ namespace MSNK.Migrations
                     b.ToTable("AkPO2");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.AkPV", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AkBankId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AkPembekalId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Alamat1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Alamat2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Alamat3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Emel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FlBatal")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FlCetak")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FlPosting")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JCaraBayarId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JKWId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Jumlah")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Nama")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoAkaunBank")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoCekAtauEFT")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("NoKP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoPV")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Perihal")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<string>("Tahun")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
+
+                    b.Property<DateTime?>("TarCekAtauEFT")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarKemaskini")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Tarikh")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TarikhPosting")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TarikhTerima")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Telefon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdKemaskini")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AkBankId");
+
+                    b.HasIndex("AkPembekalId");
+
+                    b.HasIndex("JCaraBayarId");
+
+                    b.HasIndex("JKWId");
+
+                    b.ToTable("AkPV");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkPV1", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AkCartaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AkPVId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amaun")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("TarKemaskini")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdKemaskini")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AkCartaId");
+
+                    b.HasIndex("AkPVId");
+
+                    b.ToTable("AkPV1");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkPV2", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AkBelianId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AkPVId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amaun")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("TarKemaskini")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdKemaskini")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AkBelianId");
+
+                    b.HasIndex("AkPVId");
+
+                    b.ToTable("AkPV2");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.AkPembekal", b =>
                 {
                     b.Property<int>("Id")
@@ -1167,8 +1350,8 @@ namespace MSNK.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4761405f-d4c5-4b1b-919c-07211af58366",
-                            ConcurrencyStamp = "c3b28833-5cc0-438b-9930-222200221f50",
+                            Id = "92a1cc57-805f-442f-9338-c3b7610b2772",
+                            ConcurrencyStamp = "8db2b3f5-306a-49f0-838d-7599e68efe60",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -1574,6 +1757,74 @@ namespace MSNK.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.AkPV", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.AkBank", "AkBank")
+                        .WithMany("AkPV")
+                        .HasForeignKey("AkBankId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.AkPembekal", "AkPembekal")
+                        .WithMany("AkPV")
+                        .HasForeignKey("AkPembekalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.JCaraBayar", "JCaraBayar")
+                        .WithMany("AkPV")
+                        .HasForeignKey("JCaraBayarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.JKW", "JKW")
+                        .WithMany("AkPV")
+                        .HasForeignKey("JKWId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AkBank");
+
+                    b.Navigation("AkPembekal");
+
+                    b.Navigation("JCaraBayar");
+
+                    b.Navigation("JKW");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkPV1", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
+                        .WithMany("AkPV1")
+                        .HasForeignKey("AkCartaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.AkPV", null)
+                        .WithMany("AkPV1")
+                        .HasForeignKey("AkPVId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AkCarta");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkPV2", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.AkBelian", "AkBelian")
+                        .WithMany("AkPV2")
+                        .HasForeignKey("AkBelianId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("MSNK.Models.Modules.AkPV", null)
+                        .WithMany("AkPV2")
+                        .HasForeignKey("AkPVId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AkBelian");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.AkPembekal", b =>
                 {
                     b.HasOne("MSNK.Models.Modules.JBank", "JBank")
@@ -1718,6 +1969,8 @@ namespace MSNK.Migrations
                 {
                     b.Navigation("AkBelian");
 
+                    b.Navigation("AkPV");
+
                     b.Navigation("AkTerima");
                 });
 
@@ -1726,6 +1979,8 @@ namespace MSNK.Migrations
                     b.Navigation("AkBelian1");
 
                     b.Navigation("AkBelian2");
+
+                    b.Navigation("AkPV2");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkCarta", b =>
@@ -1741,6 +1996,8 @@ namespace MSNK.Migrations
                     b.Navigation("AkJurnal1");
 
                     b.Navigation("AkPO1");
+
+                    b.Navigation("AkPV1");
 
                     b.Navigation("AkTerima1");
                 });
@@ -1759,11 +2016,20 @@ namespace MSNK.Migrations
                     b.Navigation("AkPO2");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.AkPV", b =>
+                {
+                    b.Navigation("AkPV1");
+
+                    b.Navigation("AkPV2");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.AkPembekal", b =>
                 {
                     b.Navigation("AkBelian");
 
                     b.Navigation("AkPO");
+
+                    b.Navigation("AkPV");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkTerima", b =>
@@ -1782,6 +2048,8 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.JCaraBayar", b =>
                 {
+                    b.Navigation("AkPV");
+
                     b.Navigation("akTerima2");
                 });
 
@@ -1803,6 +2071,8 @@ namespace MSNK.Migrations
                     b.Navigation("AkJurnal");
 
                     b.Navigation("AkPO");
+
+                    b.Navigation("AkPV");
 
                     b.Navigation("AkTerima");
                 });

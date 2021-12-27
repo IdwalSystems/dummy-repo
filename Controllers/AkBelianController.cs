@@ -589,7 +589,7 @@ namespace MSNK.Controllers
 
             if (ModelState.IsValid)
             {
-                if (akBelian != null && JKWId != 0)
+                if (akBelian != null && JKWId != 0 && AkPembekalId != 0 && AkBankId != 0)
                 {
                     m.AkBankId = AkBankId;
                     m.JKWId = JKWId;
@@ -635,7 +635,7 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    //CartEmpty();
+                    CartEmpty();
                     TempData[SD.Success] = "Maklumat berjaya ditambah. No rujukan pendaftaran adalah " + akBelian.NoInbois;
                     return RedirectToAction(nameof(Index));
                 }

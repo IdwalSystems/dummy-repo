@@ -30,6 +30,7 @@ namespace MSNK.Models.Modules
         public AkCarta AkCarta { get; set; }
         public ICollection<AkTerima> AkTerima { get; set; }
         public ICollection<AkBelian> AkBelian { get; set; }
+        public ICollection<AkPV> AkPV { get; set; }
 
         // log
         public string UserId { get; set; }
