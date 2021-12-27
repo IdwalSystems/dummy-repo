@@ -108,13 +108,24 @@ namespace MSNK.Controllers
             List<AkBank> akBankList = _context.AkBank.Include(b => b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
 
-            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW).OrderBy(b => b.Kod).ToList();
+            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Where(b => b.JParas.Kod == "4" && b.Kod.Substring(0, 1) == "B")
+                .OrderBy(b => b.Kod)
+                .ToList();
             ViewBag.AkCarta = akCartaList;
 
         }
 
         private void PopulateTable(int? id)
         {
+            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Where(b => b.JParas.Kod == "4" && b.Kod.Substring(0, 1) == "B")
+                .OrderBy(b => b.Kod)
+                .ToList();
+            ViewBag.AkCarta = akCartaList;
+
             List<AkPO1> akPO1Table = _context.AkPO1
                 .Include(b => b.AkCarta)
                 .Where(b => b.AkPOId == id)
@@ -153,6 +164,7 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem2(akPO2.AkPOId,
                                akPO2.Indek,
+                               akPO2.Baris,
                                akPO2.Bil,
                                akPO2.NoStok,
                                akPO2.Perihal,
@@ -401,6 +413,7 @@ namespace MSNK.Controllers
                 {
                     _cart.AddItem2(akPO2.AkPOId,
                          akPO2.Indek,
+                         akPO2.Baris,
                          akPO2.Bil,
                          akPO2.NoStok,
                          akPO2.Perihal,
@@ -671,6 +684,7 @@ namespace MSNK.Controllers
                 akT2.Amaun = akPO2.Amaun;
                 akT2.Indek = akPO2.Indek;
                 akT2.Bil = akPO2.Bil;
+                akT2.Baris = akPO2.Baris;
                 akT2.NoStok = akPO2.NoStok;
                 akT2.Perihal = akPO2.Perihal;
                 akT2.Kuantiti = akPO2.Kuantiti;
@@ -701,6 +715,7 @@ namespace MSNK.Controllers
                 {
                     _cart.AddItem2(akPO2.AkPOId,
                          akPO2.Indek,
+                         akPO2.Baris,
                          akPO2.Bil,
                          akPO2.NoStok,
                          akPO2.Perihal,

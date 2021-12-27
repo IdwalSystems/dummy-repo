@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MSNK.Data;
 using MSNK.Models.Administration;
 using MSNK.Models.Login.ViewModel;
 using System;
@@ -15,7 +17,7 @@ namespace MSNK.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public AccountController(ApplicationDbContext db, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -27,6 +29,7 @@ namespace MSNK.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register(string returnurl=null)
         {
             if (!await _roleManager.RoleExistsAsync("Admin"))
@@ -37,16 +40,15 @@ namespace MSNK.Controllers
             }
 
             List<SelectListItem> listItems = new List<SelectListItem>();
-            listItems.Add(new SelectListItem()
+            var role = _roleManager.Roles.ToList();
+            foreach(IdentityRole item in role)
             {
-                Value = "Admin",
-                Text = "Admin"
-            });
-            listItems.Add(new SelectListItem()
-            {
-                Value = "User",
-                Text = "User"
-            });
+                listItems.Add(new SelectListItem()
+                {
+                    Value = item.Name,
+                    Text = item.Name
+                });
+            }
 
             ViewData["ReturnUrl"] = returnurl;
             RegisterViewModel registerViewModel = new RegisterViewModel()
@@ -85,9 +87,18 @@ namespace MSNK.Controllers
                     {
                         await _userManager.AddToRoleAsync(user, "User");
                     }
-
-                    await _signInManager.SignInAsync(user,isPersistent:false);
-                    return LocalRedirect(returnurl);
+                    if (!User.IsInRole("Admin"))
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnurl);
+                    }
+                    else
+                    {
+                        TempData[SD.Success] = "Data pengguna berjaya ditambah.";
+                        return RedirectToAction(nameof(UserController.Index), "User");
+                    }
+                    
+                    
                 }
                 AddErrors(result);
 

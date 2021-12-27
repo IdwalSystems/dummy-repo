@@ -336,10 +336,10 @@ namespace MSNK.Migrations
                     Alamat3 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Poskod = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
                     Bandar = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    JNegeriId = table.Column<int>(type: "int", nullable: false),
                     Telefon1 = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Emel = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     AkaunBank = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    JNegeriId = table.Column<int>(type: "int", nullable: false),
                     JBankId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -369,16 +369,16 @@ namespace MSNK.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    JKWId = table.Column<int>(type: "int", nullable: false),
                     Kod = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
                     Perihal = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    JJenisId = table.Column<int>(type: "int", nullable: false),
-                    JParasId = table.Column<int>(type: "int", nullable: false),
                     DebitKredit = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
                     UmumDetail = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
                     Catatan1 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Catatan2 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Baki = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    JKWId = table.Column<int>(type: "int", nullable: false),
+                    JJenisId = table.Column<int>(type: "int", nullable: false),
+                    JParasId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -415,13 +415,13 @@ namespace MSNK.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NoPO = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Tarikh = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TarikhPosting = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AkPembekalId = table.Column<int>(type: "int", nullable: false),
+                    TarikhPosting = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Jumlah = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    FlPosting = table.Column<int>(type: "int", nullable: false),
-                    JKWId = table.Column<int>(type: "int", nullable: false),
                     Tahun = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true),
                     FlBatal = table.Column<int>(type: "int", nullable: false),
+                    FlPosting = table.Column<int>(type: "int", nullable: false),
+                    AkPembekalId = table.Column<int>(type: "int", nullable: false),
+                    JKWId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -441,7 +441,7 @@ namespace MSNK.Migrations
                         column: x => x.JKWId,
                         principalTable: "JKW",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -487,11 +487,11 @@ namespace MSNK.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Kod = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
+                    NoAkaun = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     JKWId = table.Column<int>(type: "int", nullable: false),
                     JBankId = table.Column<int>(type: "int", nullable: false),
                     AkCartaId = table.Column<int>(type: "int", nullable: false),
-                    Kod = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: true),
-                    NoAkaun = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -565,8 +565,7 @@ namespace MSNK.Migrations
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    JKWId = table.Column<int>(type: "int", nullable: true)
+                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -582,13 +581,7 @@ namespace MSNK.Migrations
                         column: x => x.AkPOId,
                         principalTable: "AkPO",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AkPO1_JKW_JKWId",
-                        column: x => x.JKWId,
-                        principalTable: "JKW",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -631,17 +624,16 @@ namespace MSNK.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Tahun = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
                     Tarikh = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TarikhPosting = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TarikhPosting = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NoInbois = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Jumlah = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    FlPosting = table.Column<int>(type: "int", nullable: false),
+                    FlBatal = table.Column<int>(type: "int", nullable: false),
+                    FlPO = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     JKWId = table.Column<int>(type: "int", nullable: false),
                     AkPOId = table.Column<int>(type: "int", nullable: true),
                     AkBankId = table.Column<int>(type: "int", nullable: false),
                     AkPembekalId = table.Column<int>(type: "int", nullable: false),
-                    Jumlah = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    FlCetak = table.Column<int>(type: "int", nullable: false),
-                    FlPosting = table.Column<int>(type: "int", nullable: false),
-                    FlBatal = table.Column<int>(type: "int", nullable: false),
-                    FlTanggungan = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -682,15 +674,10 @@ namespace MSNK.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Tahun = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
-                    JKWId = table.Column<int>(type: "int", nullable: false),
                     NoRujukan = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Tarikh = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TarikhPosting = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TarikhPosting = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Jumlah = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    AkBankId = table.Column<int>(type: "int", nullable: false),
-                    FlCetak = table.Column<int>(type: "int", nullable: false),
-                    FlPosting = table.Column<int>(type: "int", nullable: false),
-                    FlBatal = table.Column<int>(type: "int", nullable: false),
                     KodPembayar = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     NoKp = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     Nama = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -699,10 +686,15 @@ namespace MSNK.Migrations
                     Alamat3 = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Poskod = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
                     Bandar = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    JNegeriId = table.Column<int>(type: "int", nullable: false),
                     Tel = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
                     Emel = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Sebab = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
+                    FlCetak = table.Column<int>(type: "int", nullable: false),
+                    FlPosting = table.Column<int>(type: "int", nullable: false),
+                    FlBatal = table.Column<int>(type: "int", nullable: false),
+                    JKWId = table.Column<int>(type: "int", nullable: false),
+                    JNegeriId = table.Column<int>(type: "int", nullable: false),
+                    AkBankId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -846,7 +838,7 @@ namespace MSNK.Migrations
                     KodBankCek = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true),
                     TempatCek = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     NoSlip = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    TarSlip = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TarSlip = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -868,6 +860,11 @@ namespace MSNK.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "4761405f-d4c5-4b1b-919c-07211af58366", "c3b28833-5cc0-438b-9930-222200221f50", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkAkaun_AkCartaId1",
@@ -993,11 +990,6 @@ namespace MSNK.Migrations
                 name: "IX_AkPO1_AkPOId",
                 table: "AkPO1",
                 column: "AkPOId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AkPO1_JKWId",
-                table: "AkPO1",
-                column: "JKWId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkPO2_AkPOId",

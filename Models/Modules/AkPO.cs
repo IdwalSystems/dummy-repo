@@ -9,6 +9,7 @@ namespace MSNK.Models.Modules
 {
     public class AkPO
     {
+        //field
         public int Id { get; set; }
         [MaxLength(50)]
         [DisplayName("No. Pesanan Tempatan")]
@@ -16,28 +17,35 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh")]
         public DateTime Tarikh { get; set; }
         [DisplayName("Tarikh Posting")]
-        public DateTime TarikhPosting { get; set; }
-        [DisplayName("Kod Pembekal")]
-        public int AkPembekalId { get; set; }
+        public DateTime? TarikhPosting { get; set; }
         [DisplayName("Jumlah")]
         public decimal Jumlah { get; set; }
-        [DisplayName("Posting")]
-        [DefaultValue("0")]
-        public int FlPosting { get; set; }
-        [DisplayName("Kumpulan Wang")]
-        public int JKWId { get; set; }
         [MaxLength(4)]
         [DisplayName("Tahun Belanjawan")]
         public string Tahun { get; set; }
+        //field end
+
+        //flag
         [DisplayName("Status Batal")]
         [DefaultValue("0")]
         public int FlBatal { get; set; }
+        [DisplayName("Posting")]
+        [DefaultValue("0")]
+        public int FlPosting { get; set; }
+        //flag end
+
+        //relationship
+        [DisplayName("Kod Pembekal")]
+        public int AkPembekalId { get; set; }
         [DisplayName("Nama Pembekal")]
         public AkPembekal AkPembekal { get; set; }
+        [DisplayName("Kumpulan Wang")]
+        public int JKWId { get; set; }
         public JKW JKW { get; set; }
         public ICollection<AkPO2> AkPO2 { get; set; }
         public ICollection<AkPO1> AkPO1 { get; set; }
         public ICollection<AkBelian> AkBelian { get; set; }
+        //relationship end
 
         // log
         public string UserId { get; set; }
@@ -48,5 +56,6 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Kemaskini")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarKemaskini { get; set; } = DateTime.Now;
+        //log end
     }
 }

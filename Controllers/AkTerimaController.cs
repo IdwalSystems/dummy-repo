@@ -154,7 +154,13 @@ namespace MSNK.Controllers
             List<AkBank> akBankList = _context.AkBank.Include(b=> b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
 
-            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW).OrderBy(b => b.Kod).ToList();
+            List<AkCarta> akCartaList = _context.AkCarta
+                .Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Where(b=>b.JParas.Kod == "4" && b.Kod.Substring(0,1) == "H")
+                .OrderBy(b => b.Kod)
+                .ToList();
+
             ViewBag.AkCarta = akCartaList;
 
             List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.OrderBy(b => b.Kod).ToList();
@@ -1209,7 +1215,10 @@ namespace MSNK.Controllers
             }
             else
             {
-                AkTerima akTerima = await _context.AkTerima.Include(x => x.AkTerima1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == id);
+                AkTerima akTerima = await _context.AkTerima
+                    .Include(x => x.AkBank)
+                    .Include(x => x.AkTerima1).ThenInclude(x => x.AkCarta)
+                    .FirstOrDefaultAsync(x => x.Id == id);
 
                 List<AkTerima1> akT1 = akTerima.AkTerima1.ToList();
 
@@ -1225,20 +1234,24 @@ namespace MSNK.Controllers
                 {
                     //posting operation start here
                     //insert into akAkaun
-                    AkAkaun akADebit = new AkAkaun();
+                    
                     foreach(AkTerima1 item in akT1)
                     {
-                        akADebit.NoRujukan = akTerima.NoRujukan;
-                        akADebit.JKWId = akTerima.JKWId;
-                        akADebit.AkCartaId1 = akTerima.AkBankId;
-                        akADebit.AkCartaId2 = item.AkCartaId;
-                        akADebit.Tarikh = akTerima.Tarikh;
-                        akADebit.Debit = item.Amaun;
+                        AkAkaun akADebit = new AkAkaun() 
+                        {
+                            NoRujukan = akTerima.NoRujukan,
+                            JKWId = akTerima.JKWId,
+                            AkCartaId1 = akTerima.AkBank.AkCartaId,
+                            AkCartaId2 = item.AkCartaId,
+                            Tarikh = akTerima.Tarikh,
+                            Debit = item.Amaun
+                        };
+                        await _akAkaunRepo.Insert(akADebit);
                     }
-                    await _akAkaunRepo.Insert(akADebit);
-
+                    
                     //update posting status in akTerima
                     akTerima.FlPosting = 1;
+                    akTerima.TarikhPosting = DateTime.Now;
                     await _akTerimaRepo.Update(akTerima);
 
                     //insert applog
@@ -1281,9 +1294,7 @@ namespace MSNK.Controllers
             {
                 AkTerima akTerima = await _context.AkTerima.Include(x => x.AkTerima1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == id);
 
-                List<AkTerima1> akT1 = akTerima.AkTerima1.ToList();
-
-                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akTerima.NoRujukan).FirstOrDefaultAsync();
+                List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akTerima.NoRujukan).ToList();
                 if (akAkaun == null)
                 {
 
@@ -1293,12 +1304,17 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    //posting operation start here
+                    //unposting operation start here
                     //delete data from akAkaun
-                    await _akAkaunRepo.Delete(akAkaun.Id);
+                    foreach (AkAkaun item in akAkaun)
+                    {
+                        await _akAkaunRepo.Delete(item.Id);
+                    }
 
                     //update posting status in akTerima
                     akTerima.FlPosting = 0;
+                    akTerima.TarikhPosting = null;
+                    //akTerima.TarikhPosting = null;
                     await _akTerimaRepo.Update(akTerima);
 
                     //insert applog
@@ -1319,6 +1335,7 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
                     TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                    //unposting operation end
                 }
 
 

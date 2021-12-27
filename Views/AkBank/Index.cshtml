@@ -5,38 +5,58 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+@*div Header*@
+<div class="row mb-2">
+    <div class="col-8">
+        <h3 class="text-left">Bank</h3>
+    </div>
+    <div class="col-4 text-right">
+        <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
+    </div>
+</div>
+@*div Header end*@
+<div class="table-responsive">
+    <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Kod)
+                </th>
+                <th>
+                    No Akaun
+                </th>
+                <th>
+                    Kod Akaun
+                </th>
+                <th>
+                    Nama Bank
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Kod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoAkaun)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AkCarta.Kod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JBank.Nama)
+                </td>
+                <td class="action-button">
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Kod)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NoAkaun)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Kod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoAkaun)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>

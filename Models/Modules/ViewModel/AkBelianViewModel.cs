@@ -14,7 +14,6 @@ namespace MSNK.Models.Modules.ViewModel
         public decimal Jumlah { get; set; }
         public string NamaSykt { get; set; }
         public string Alamat1 { get; set; }
-        public int FlCetak { get; set; }
         public int FlPosting { get; set; }
         public int FlBatal { get; set; }
     }

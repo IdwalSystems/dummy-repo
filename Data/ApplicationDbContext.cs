@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Models.Administration;
 using MSNK.Models.Modules;
@@ -42,6 +43,10 @@ namespace MSNK.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<IdentityRole>()
+                .HasData(new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() 
+                });
+
             modelBuilder.Entity<AkBank>()
                 .HasOne(e => e.JBank)
                 .WithMany(c => c.AkBank)
@@ -71,20 +76,6 @@ namespace MSNK.Data
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
-            //modelBuilder.Entity<AkTerima1>()
-            //        .HasOne(m => m.AkTerima)
-            //        .WithMany(t => t.AkTerima1)
-            //        .HasForeignKey(m => m.AkTerimaId)
-            //        .OnDelete(DeleteBehavior.Restrict)
-            //        .IsRequired();
-
-            //modelBuilder.Entity<AkTerima2>()
-            //        .HasOne(m => m.AkTerima)
-            //        .WithMany(t => t.AkTerima2)
-            //        .HasForeignKey(m => m.AkTerimaId)
-            //        .OnDelete(DeleteBehavior.Restrict)
-            //        .IsRequired();
-
             modelBuilder.Entity<AkTerima>()
                     .HasOne(m => m.JKW)
                     .WithMany(t => t.AkTerima)
@@ -113,10 +104,10 @@ namespace MSNK.Data
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
-            modelBuilder.Entity<AkPO1>()
-                    .HasOne(m => m.AkPO)
-                    .WithMany(t => t.AkPO1)
-                    .HasForeignKey(m => m.AkPOId)
+            modelBuilder.Entity<AkPO>()
+                    .HasOne(m => m.JKW)
+                    .WithMany(t => t.AkPO)
+                    .HasForeignKey(m => m.JKWId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 
@@ -126,18 +117,6 @@ namespace MSNK.Data
                 .HasForeignKey(m => m.JKWId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
-
-            //modelBuilder.Entity<AkJurnal1>()
-            //    .HasOne(m => m.AkJurnal)
-            //    .WithMany(t => t.AkJurnal1)
-            //    .HasForeignKey(m => m.AkJurnalId)
-            //    .OnDelete(DeleteBehavior.NoAction);
-
-            //modelBuilder.Entity<AkJurnal>()
-            //    .HasMany(m => m.AkJurnal1)
-            //    .WithOne(t => t.AkJurnal)
-            //    .OnDelete(DeleteBehavior.Cascade)
-            //    .IsRequired();
 
             modelBuilder.Entity<AkBelian>()
                 .HasOne(m => m.JKW)

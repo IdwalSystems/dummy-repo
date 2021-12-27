@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211222021526_AddInitialTables")]
+    [Migration("20211224025919_AddInitialTables")]
     partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,14 +127,11 @@ namespace MSNK.Migrations
                     b.Property<int>("FlBatal")
                         .HasColumnType("int");
 
-                    b.Property<int>("FlCetak")
-                        .HasColumnType("int");
+                    b.Property<string>("FlPO")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FlPosting")
                         .HasColumnType("int");
-
-                    b.Property<string>("FlTanggungan")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("JKWId")
                         .HasColumnType("int");
@@ -161,7 +158,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("Tarikh")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("TarikhPosting")
+                    b.Property<DateTime?>("TarikhPosting")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
@@ -499,7 +496,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("Tarikh")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("TarikhPosting")
+                    b.Property<DateTime?>("TarikhPosting")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
@@ -533,9 +530,6 @@ namespace MSNK.Migrations
                     b.Property<decimal>("Amaun")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("JKWId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("TarKemaskini")
                         .HasColumnType("datetime2");
 
@@ -553,8 +547,6 @@ namespace MSNK.Migrations
                     b.HasIndex("AkCartaId");
 
                     b.HasIndex("AkPOId");
-
-                    b.HasIndex("JKWId");
 
                     b.ToTable("AkPO1");
                 });
@@ -795,7 +787,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("Tarikh")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("TarikhPosting")
+                    b.Property<DateTime?>("TarikhPosting")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Tel")
@@ -896,7 +888,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("TarMasuk")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("TarSlip")
+                    b.Property<DateTime?>("TarSlip")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TempatCek")
@@ -1173,6 +1165,15 @@ namespace MSNK.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "4761405f-d4c5-4b1b-919c-07211af58366",
+                            ConcurrencyStamp = "c3b28833-5cc0-438b-9930-222200221f50",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1541,7 +1542,7 @@ namespace MSNK.Migrations
                     b.HasOne("MSNK.Models.Modules.JKW", "JKW")
                         .WithMany("AkPO")
                         .HasForeignKey("JKWId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AkPembekal");
@@ -1557,30 +1558,22 @@ namespace MSNK.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MSNK.Models.Modules.AkPO", "AkPO")
+                    b.HasOne("MSNK.Models.Modules.AkPO", null)
                         .WithMany("AkPO1")
-                        .HasForeignKey("AkPOId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MSNK.Models.Modules.JKW", null)
-                        .WithMany("AkPO1")
-                        .HasForeignKey("JKWId");
-
-                    b.Navigation("AkCarta");
-
-                    b.Navigation("AkPO");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.AkPO2", b =>
-                {
-                    b.HasOne("MSNK.Models.Modules.AkPO", "AkPO")
-                        .WithMany("AkPO2")
                         .HasForeignKey("AkPOId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AkPO");
+                    b.Navigation("AkCarta");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkPO2", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.AkPO", null)
+                        .WithMany("AkPO2")
+                        .HasForeignKey("AkPOId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPembekal", b =>
@@ -1812,8 +1805,6 @@ namespace MSNK.Migrations
                     b.Navigation("AkJurnal");
 
                     b.Navigation("AkPO");
-
-                    b.Navigation("AkPO1");
 
                     b.Navigation("AkTerima");
                 });

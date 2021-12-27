@@ -9,6 +9,7 @@ namespace MSNK.Models.Modules
 {
     public class AkPO2
     {
+        //field
         public int Id { get; set; }
         public int AkPOId { get; set; }
         public int Indek { get; set; }
@@ -24,9 +25,10 @@ namespace MSNK.Models.Modules
         public string Unit { get; set; }
         public decimal Harga { get; set; }
         public decimal Amaun { get; set; }
+        //field end
 
         //Relationship
-        public AkPO AkPO { get; set; }
+        //relationship end
 
         // log
         public string UserId { get; set; }
@@ -37,5 +39,6 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Kemaskini")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarKemaskini { get; set; } = DateTime.Now;
+        //log end
     }
 }

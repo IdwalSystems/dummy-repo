@@ -7,6 +7,7 @@ namespace MSNK.Models.Modules
 {
     public class JBank
     {
+        //field
         public int Id { get; set; }
         [Required]
         [MaxLength(12)]
@@ -17,7 +18,7 @@ namespace MSNK.Models.Modules
         public string KodEFT { get; set; }
         public ICollection<AkBank> AkBank { get; set; }
         public ICollection<AkPembekal> AkPembekal { get; set; }
-        //public ICollection<AkTerima2> AkTerima2 { get; set; }
+        //field end
 
         // log
         public string UserId { get; set; }
@@ -28,5 +29,6 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Kemaskini")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarKemaskini { get; set; } = DateTime.Now;
+        //log end
     }
 }

@@ -27,14 +27,23 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<AkBank>> GetAll()
         {
             
-            return await context.AkBank.Include(b => b.JKW).Include(b => b.JBank).ToListAsync();
+            return await context.AkBank
+                .Include(b => b.JKW)
+                .Include(b => b.JBank)
+                .Include(b => b.AkCarta)
+                .ToListAsync();
             
             
         }
 
         public async Task<AkBank> GetById(int id)
         {
-            return await context.AkBank.Include(d=> d.JBank).Where(d=> d.Id == id).FirstOrDefaultAsync();
+            return await context.AkBank
+                .Include(b => b.JKW)
+                .Include(b => b.JBank)
+                .Include(b => b.AkCarta)
+                .Where(d=> d.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<AkBank> Insert(AkBank entity)

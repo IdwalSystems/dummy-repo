@@ -70,6 +70,7 @@ namespace MSNK
             services.AddTransient<ListViewIRepository<AkJurnal1, int>, AkJurnal1Repository>();
             services.AddTransient<IRepository<AkBelian, int>, AkBelianRepository>();
             services.AddTransient<ListViewIRepository<AkBelian1, int>, AkBelian1Repository>();
+            services.AddTransient<ListViewIRepository<AkBelian2, int>, AkBelian2Repository>();
             services.AddTransient<AppLogIRepository<AppLog, int>, AppLogRepository>();
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
@@ -102,7 +103,7 @@ namespace MSNK
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -130,6 +131,7 @@ namespace MSNK
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
+            SeedData.SeedUsers(userManager);
             RotativaConfiguration.Setup(env.ContentRootPath, "wwwroot/plugins/Rotativa");
 
         }

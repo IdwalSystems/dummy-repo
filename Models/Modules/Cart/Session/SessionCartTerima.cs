@@ -60,7 +60,7 @@ namespace MSNK.Models.Modules.Cart.Session
             decimal amaun, string noCek,
             string jenisCek, string kodBankCek,
             string tempatCek, string noSlip,
-            DateTime tarSlip,
+            DateTime? tarSlip,
             string userId,
             DateTime tarMasuk,
             string userIdKemasikini,
