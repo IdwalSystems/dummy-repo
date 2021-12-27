@@ -619,7 +619,7 @@ namespace MSNK.Migrations
                     b.Property<int>("AkBankId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AkPembekalId")
+                    b.Property<int?>("AkPembekalId")
                         .HasColumnType("int");
 
                     b.Property<string>("Alamat1")
@@ -1350,8 +1350,8 @@ namespace MSNK.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "92a1cc57-805f-442f-9338-c3b7610b2772",
-                            ConcurrencyStamp = "8db2b3f5-306a-49f0-838d-7599e68efe60",
+                            Id = "77c5243d-645e-42a1-b206-8057f2f7a57e",
+                            ConcurrencyStamp = "b1a50950-aec1-4cd6-aa0d-66919caf3df1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -1768,8 +1768,7 @@ namespace MSNK.Migrations
                     b.HasOne("MSNK.Models.Modules.AkPembekal", "AkPembekal")
                         .WithMany("AkPV")
                         .HasForeignKey("AkPembekalId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MSNK.Models.Modules.JCaraBayar", "JCaraBayar")
                         .WithMany("AkPV")

@@ -17,6 +17,21 @@
                 dataType: "json",
                 success: function (msg) {
                     $("#txtNamaPembekal").val(msg.record.namaSykt);
+                    $("#txtAlamat1").val(msg.record.alamat1);
+                    $("#txtAlamat2").val(msg.record.alamat2);
+                    $("#txtAlamat3").val(msg.record.alamat3);
+                    $("#txtNoAkaunBank").val(msg.record.noAkaunBank);
+                    $("#txtTelefon").val(msg.record.Telefon);
+                    $("#txtEmel").val(msg.record.emel);
+                    // disable fields
+                    $("#txtNoKP").prop('disabled', true);
+                    $("#txtNamaPembekal").prop('disabled', true);
+                    $("#txtAlamat1").prop('disabled', true);
+                    $("#txtAlamat2").prop('disabled', true);
+                    $("#txtAlamat3").prop('disabled', true);
+                    $("#txtNoAkaunBank").prop('disabled', true);
+                    $("#txtTelefon").prop('disabled', true);
+                    $("#txtEmel").prop('disabled', true);
                 },
                 error: function (req, status, error) {
                     alert(error);
@@ -421,6 +436,7 @@
                         }
                     });
                     $("#ddlAkBelian option[value=" + ddlAkBelian.val() + "]").prop('disabled', true);
+                
 
                 }
             });

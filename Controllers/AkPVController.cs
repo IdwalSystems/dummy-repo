@@ -122,7 +122,7 @@ namespace MSNK.Controllers
                     NoPV = item.NoPV,
                     Tarikh = item.Tarikh,
                     Jumlah = item.Jumlah,
-                    Penerima = item.AkPembekal.NamaSykt,
+                    Penerima = item.Nama,
                     CaraBayar = item.JCaraBayar.Perihal,
                     FlBatal = item.FlBatal,
                     FlPosting = item.FlPosting,
@@ -312,6 +312,7 @@ namespace MSNK.Controllers
             {
                 var result = _context.AkBelian
                     .Include(b=>b.AkPO)
+                    .Include(b=>b.AkBelian1).ThenInclude(b=>b.AkCarta)
                     .Where(b => b.Id == akBelian.Id)
                     .FirstOrDefault();
 
@@ -542,6 +543,20 @@ namespace MSNK.Controllers
         {
             AkPV m = new AkPV();
             var user = await _userManager.GetUserAsync(User);
+            var pembekal = new AkPembekal();
+
+            if (AkPembekalId != 0)
+            {
+                pembekal = _context.AkPembekal.Find(AkPembekalId);
+
+                akPV.Nama = pembekal.NamaSykt;
+                akPV.Alamat1 = pembekal.Alamat1;
+                akPV.Alamat2 = pembekal.Alamat2;
+                akPV.Alamat3 = pembekal.Alamat3;
+                akPV.Telefon = pembekal.Telefon1;
+                akPV.Emel = pembekal.Emel;
+                akPV.NoAkaunBank = pembekal.AkaunBank;
+            }
 
             // get latest no rujukan running number  
             var kw = _context.JKW.FirstOrDefault(x => x.Id == akPV.JKWId);
@@ -570,15 +585,24 @@ namespace MSNK.Controllers
 
             if (ModelState.IsValid)
             {
-                if (akPV != null && JKWId != 0 && AkPembekalId != 0 && AkBankId != 0)
+                if (akPV != null && JKWId != 0 && AkBankId != 0 && akPV.Nama != null)
                 {
                     m.AkBankId = AkBankId;
                     m.JKWId = JKWId;
-                    m.AkPembekalId = AkPembekalId;
+
                     m.Tahun = akPV.Tahun;
                     m.NoPV = noRujukan;
                     m.Tarikh = akPV.Tarikh;
                     m.TarikhTerima = akPV.TarikhTerima;
+                    m.NoKP = akPV.NoKP;
+                    m.Nama = akPV.Nama;
+                    m.Alamat1 = akPV.Alamat1;
+                    m.Alamat2 = akPV.Alamat2;
+                    m.Alamat3 = akPV.Alamat3;
+                    m.NoAkaunBank = akPV.NoAkaunBank;
+                    m.Telefon = akPV.Telefon;
+                    m.Emel = akPV.Emel;
+
                     m.JCaraBayarId = JCaraBayarId;
                     m.NoCekAtauEFT = akPV.NoCekAtauEFT;
                     m.TarCekAtauEFT = akPV.TarCekAtauEFT;

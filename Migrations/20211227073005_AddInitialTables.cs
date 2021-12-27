@@ -695,7 +695,7 @@ namespace MSNK.Migrations
                     FlBatal = table.Column<int>(type: "int", nullable: false),
                     JKWId = table.Column<int>(type: "int", nullable: false),
                     AkBankId = table.Column<int>(type: "int", nullable: false),
-                    AkPembekalId = table.Column<int>(type: "int", nullable: false),
+                    AkPembekalId = table.Column<int>(type: "int", nullable: true),
                     JCaraBayarId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -715,8 +715,7 @@ namespace MSNK.Migrations
                         name: "FK_AkPV_AkPembekal_AkPembekalId",
                         column: x => x.AkPembekalId,
                         principalTable: "AkPembekal",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AkPV_JCaraBayar_JCaraBayarId",
                         column: x => x.JCaraBayarId,
@@ -989,7 +988,7 @@ namespace MSNK.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "92a1cc57-805f-442f-9338-c3b7610b2772", "8db2b3f5-306a-49f0-838d-7599e68efe60", "Admin", "ADMIN" });
+                values: new object[] { "77c5243d-645e-42a1-b206-8057f2f7a57e", "b1a50950-aec1-4cd6-aa0d-66919caf3df1", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkAkaun_AkCartaId1",
