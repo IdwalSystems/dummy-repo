@@ -24,6 +24,8 @@ namespace MSNK.Controllers
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkPV, int> _akPVRepo;
+        private readonly ListViewIRepository<AkPV1, int> _akPV1Repo;
+        private readonly ListViewIRepository<AkPV2, int> _akPV2Repo;
         private readonly IRepository<AkBelian, int> _akBelianRepo;
         private readonly IRepository<AkPembekal, int> _akPembekalRepo;
         private readonly IRepository<JKW, int> _kwRepo;
@@ -36,7 +38,9 @@ namespace MSNK.Controllers
             ApplicationDbContext context,
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
-            IRepository<AkPV, int> akPV,
+            IRepository<AkPV, int> akPVRepository,
+            ListViewIRepository<AkPV1, int> akPV1Repository,
+            ListViewIRepository<AkPV2, int> akPV2Repository,
             IRepository<AkBelian, int> akBelian,
             IRepository<AkPembekal, int> akPembekal,
             IRepository<JKW, int> kwRepo,
@@ -49,7 +53,9 @@ namespace MSNK.Controllers
             _context = context;
             _appLog = appLog;
             _userManager = userManager;
-            _akPVRepo = akPV;
+            _akPVRepo = akPVRepository;
+            _akPV1Repo = akPV1Repository;
+            _akPV2Repo = akPV2Repository;
             _akBelianRepo = akBelian;
             _akPembekalRepo = akPembekal;
             _kwRepo = kwRepo;
@@ -606,16 +612,14 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkPV akPV, int JKWId, int AkPembekalId, int AkBankId, int JCaraBayarId)
+        public async Task<IActionResult> Create(AkPV akPV, int JKWId, int? AkPembekalId, int AkBankId, int JCaraBayarId)
         {
             AkPV m = new AkPV();
             var user = await _userManager.GetUserAsync(User);
             var pembekal = new AkPembekal();
-
-            if (AkPembekalId != null)
+            pembekal = _context.AkPembekal.Find(AkPembekalId);
+            if (pembekal != null)
             {
-                pembekal = _context.AkPembekal.Find(AkPembekalId);
-
                 akPV.Nama = pembekal.NamaSykt;
                 akPV.Alamat1 = pembekal.Alamat1;
                 akPV.Alamat2 = pembekal.Alamat2;
@@ -721,24 +725,284 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPV = await _context.AkPV.FindAsync(id);
+            var akPV = await _akPVRepo.GetById((int)id);
             if (akPV == null)
             {
                 return NotFound();
             }
-            ViewData["AkBankId"] = new SelectList(_context.AkBank, "Id", "Id", akPV.AkBankId);
-            ViewData["AkPembekalId"] = new SelectList(_context.AkPembekal, "Id", "AkaunBank", akPV.AkPembekalId);
-            ViewData["JCaraBayarId"] = new SelectList(_context.JCaraBayar, "Id", "Kod", akPV.JCaraBayarId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", akPV.JKWId);
+
+            if(akPV.AkPV2.Any())
+            {
+                akPV.denganTanggungan = true;
+            }
+
+            PopulateList();
+            PopulateTable(id);
             return View(akPV);
         }
+
+        // update add akPV1
+        public async Task<JsonResult> InsertUpdateAkPV1(AkPV1 akPV1)
+        {
+
+            try
+            {
+                if (akPV1 != null || akPV1.Amaun != 0)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akPV1.AkCartaId);
+                    akPV1.AkCarta = akCarta;
+                    akPV1.UserId = user.UserName;
+                    akPV1.TarMasuk = DateTime.Now;
+
+                    await _akPV1Repo.Insert(akPV1);
+
+                    decimal total = 0;
+
+                    AkPV akPV = await _akPVRepo.GetById(akPV1.AkPVId);
+
+                    total = akPV.Jumlah + akPV1.Amaun;
+
+                    akPV.Jumlah = total;
+                    akPV.UserIdKemaskini = user.UserName;
+
+                    await _akPVRepo.Update(akPV);
+
+                    await _context.SaveChangesAsync();
+
+                }
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update add akPV1 end
+
+        // update remove akPV1
+        public async Task<JsonResult> RemoveUpdateAkPV1(AkPV1 akPV1)
+        {
+
+            try
+            {
+                if (akPV1 != null)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    var akB1 = await _context.AkPV1.FirstOrDefaultAsync(x => x.AkCartaId == akPV1.AkCartaId && x.AkPVId == akPV1.AkPVId);
+                    _context.AkPV1.Remove(akB1);
+
+                    decimal total = 0;
+
+                    AkPV akPV = await _akPVRepo.GetById(akPV1.AkPVId);
+
+                    total = akPV.Jumlah - akB1.Amaun;
+
+                    akPV.Jumlah = total;
+                    akPV.UserIdKemaskini = user.UserName;
+                    akPV.TarKemaskini = DateTime.Now;
+                    await _akPVRepo.Update(akPV);
+
+                    //insert applog
+                    var akCarta = await _akCartaRepo.GetById(akB1.AkCartaId);
+
+                    AppLog appLog = new AppLog();
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "ED";
+                    appLog.LgOperation = "Hapus";
+                    appLog.LgNote = modul + " Baucer Pembayaran - Hapus Objek";
+                    appLog.NoRujukan = akPV.NoPV + "/" + akCarta.Kod;
+                    appLog.Jumlah = akB1.Amaun;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update remove akPV1 end
+
+        // update update akPV1
+        public async Task<JsonResult> UpdateAkPV1(AkPV1 akPV1)
+        {
+
+            try
+            {
+                AkPV1 data = await _akPV1Repo.GetBy2Id(akPV1.AkPVId, akPV1.AkCartaId);
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> SaveUpdateAkPV1(AkPV1 akPV1)
+        {
+
+            try
+            {
+
+                AkPV1 akB1 = await _akPV1Repo.GetById(akPV1.Id);
+
+                decimal originalAmount = akB1.Amaun;
+                var user = await _userManager.GetUserAsync(User);
+
+                akB1.Amaun = akPV1.Amaun;
+                akB1.UserIdKemaskini = user.UserName;
+                akB1.TarKemaskini = DateTime.Now;
+                _context.AkPV1.Update(akB1);
+
+                // update total akBelian with date updated and userUpdated
+                var akPV = await _akPVRepo.GetById(akPV1.AkPVId);
+                decimal total = 0;
+
+                total = akPV.Jumlah - originalAmount + akB1.Amaun;
+                akPV.Jumlah = total;
+                akPV.UserIdKemaskini = user.UserName;
+                akPV.TarKemaskini = DateTime.Now;
+                await _akPVRepo.Update(akPV);
+                // update total akTerima with date updated and userUpdated end
+
+                //insert applog
+                if (akPV1.Amaun != originalAmount)
+                {
+                    var akCarta = await _akCartaRepo.GetById(akB1.AkCartaId);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "EE";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Baucer Pembayaran - Ubah Objek";
+                    appLog.NoRujukan = akPV.NoPV + "/" + akCarta.Kod + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akPV1.Amaun.ToString();
+                    appLog.Jumlah = akB1.Amaun;
+
+                    await _appLog.Insert(appLog);
+                }
+                //insert applog end
+
+                await _context.SaveChangesAsync();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update update akBelian1 end
+
+        // get cart for updated akBelian1
+        public async Task<JsonResult> GetAkPV1(AkPV1 akPV1)
+        {
+            try
+            {
+                AkPV data = await _context.AkPV
+                    .Include(x => x.AkPV1).ThenInclude(x => x.AkCarta)
+                    .FirstOrDefaultAsync(x => x.Id == akPV1.AkPVId);
+
+                return Json(new { result = "OK", data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get cart for updated akBelian1 end
+
+        // update create akPV2
+        public async Task<JsonResult> InsertUpdateAkPV2(AkPV2 akPV2)
+        {
+
+            try
+            {
+                if (akPV2 != null || akPV2.Amaun != 0)
+                {
+                    var akBelian = _context.AkBelian.FirstOrDefault(x => x.Id == akPV2.AkBelianId);
+                    var user = await _userManager.GetUserAsync(User);
+
+                    akPV2.AkBelian = akBelian;
+                    akPV2.UserId = user.UserName;
+                    akPV2.TarMasuk = DateTime.Now;
+                    await _akPV2Repo.Insert(akPV2);
+
+                    await _context.SaveChangesAsync();
+                }
+
+
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update create akPV2 end
+
+        // update remove akPV2
+        public async Task<JsonResult> RemoveUpdateAkPV2(AkPV2 akPV2)
+        {
+
+            try
+            {
+                if (akPV2 != null)
+                {
+                    var akT2 = await _context.AkPV2.Include(b=>b.AkBelian).ThenInclude(b=>b.AkPO).FirstOrDefaultAsync(x => x.AkBelianId == akPV2.AkBelianId && x.AkPVId == akPV2.AkPVId);
+                    var user = await _userManager.GetUserAsync(User);
+
+                    _context.AkPV2.Remove(akT2);
+
+                    //insert applog
+                    var akPV = await _akPVRepo.GetById(akPV2.AkPVId);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "ED";
+                    appLog.LgOperation = "Hapus";
+                    appLog.LgNote = modul + " Penerimaan - Hapus Perihal";
+                    appLog.NoRujukan = akPV.NoPV + "/" + akT2.AkBelian.NoInbois;
+                    appLog.Jumlah = akPV2.Amaun;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                }
+
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update remove akBelian2 end
 
         // POST: AkPV/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Tahun,Tarikh,TarikhTerima,TarikhPosting,NoPV,Jumlah,NoCekAtauEFT,TarCekAtauEFT,Perihal,FlCetak,FlPosting,FlBatal,JKWId,AkBankId,AkPembekalId,JCaraBayarId,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] AkPV akPV)
+        public async Task<IActionResult> Edit(int id, AkPV akPV, int JKWId, int AkPembekalId, int AkBankId, int JCaraBayarId)
         {
             if (id != akPV.Id)
             {
@@ -749,7 +1013,24 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(User);
+                    akPV.UserIdKemaskini = user.UserName;
+                    akPV.TarKemaskini = DateTime.Now;
                     _context.Update(akPV);
+
+                    //insert applog
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "E";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Baucer Pembayaran - Ubah";
+                    appLog.NoRujukan = akPV.NoPV;
+                    appLog.Jumlah = akPV.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -763,12 +1044,12 @@ namespace MSNK.Controllers
                         throw;
                     }
                 }
+                CartEmpty();
+                TempData[SD.Success] = "Data berjaya diubah..!";
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AkBankId"] = new SelectList(_context.AkBank, "Id", "Id", akPV.AkBankId);
-            ViewData["AkPembekalId"] = new SelectList(_context.AkPembekal, "Id", "AkaunBank", akPV.AkPembekalId);
-            ViewData["JCaraBayarId"] = new SelectList(_context.JCaraBayar, "Id", "Kod", akPV.JCaraBayarId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", akPV.JKWId);
+            PopulateList();
+            PopulateTable(id);
             return View(akPV);
         }
 

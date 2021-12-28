@@ -1051,21 +1051,6 @@ namespace MSNK.Controllers
                     akTerima2.TarMasuk = DateTime.Now;
                     await _akTerima2Repo.Insert(akTerima2);
 
-                    //insert applog
-                    var akTerima = await _akTerimaRepo.GetById(akTerima2.AkTerimaId);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "EC";
-                    appLog.LgOperation = "Tambah";
-                    appLog.LgNote = modul + " Penerimaan - Tambah Perihal";
-                    appLog.NoRujukan = akTerima.NoRujukan + "/" + akTerima2.JCaraBayar.Kod;
-                    appLog.Jumlah = akTerima2.Amaun;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
                     await _context.SaveChangesAsync();
                 }
 

@@ -73,6 +73,8 @@ namespace MSNK
             services.AddTransient<ListViewIRepository<AkBelian2, int>, AkBelian2Repository>();
             services.AddTransient<AppLogIRepository<AppLog, int>, AppLogRepository>();
             services.AddTransient<IRepository<AkPV, int>, AkPVRepository>();
+            services.AddTransient<ListViewIRepository<AkPV1, int>, AkPV1Repository>();
+            services.AddTransient<ListViewIRepository<AkPV2, int>, AkPV2Repository>();
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));

@@ -246,7 +246,8 @@
                                     <tbody id="tbodyInbois">
                                         @foreach (var item in ViewBag.AkPV2)
                                         {
-                                        <tr>
+                                        <tr id="@item.Id">
+                                            <td id="akBelianId" hidden>@item.AkBelianId</td>
                                             <td class="text-left">@item.AkBelian.NoInbois</td>
                                             <td>@item.AkBelian.Tarikh.ToString("dd/MM/yyyy")</td>
                                             <td class="text-right">@item.Amaun</td>
@@ -254,7 +255,7 @@
                                             {
                                                 <td class="text-left">@item.AkBelian.AkPO.NoPO</td>
                                                 <td>@item.AkBelian.AkPO.Tarikh.ToString("dd/MM/yyyy")</td>
-                                                <td class="text-right">@item.AkBelian.AkPO.Amaun</td>
+                                                <td class="text-right">@item.AkBelian.AkPO.Jumlah</td>
                                             }
                                             else
                                             {

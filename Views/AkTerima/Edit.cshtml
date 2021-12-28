@@ -206,40 +206,47 @@
                                     </tfoot>
                                 </table>
                             </div>
+                            <div class="card-footer">
+                                <div class="form-group pb-2">
+                                    <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
+                                    <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly />
+                                    <span asp-validation-for="Jumlah" class="text-danger"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     @*table Objek end*@
 
                     @*table urusniaga*@
-                    <div class="card box-shadow mb-3">
-                        <div class="card-header">
-                            <h6>Urusniaga</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="tblUrusniaga" class="table table-sm " cellpadding="0" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>CaraBayar</th>
-                                            <th>Amaun</th>
-                                            <th>No Cek</th>
-                                            <th>Jenis Cek</th>
-                                            <th>Kod Bank Cek</th>
-                                            <th>Tempat Cek</th>
-                                            <th>No Slip</th>
-                                            <th>Tarikh Slip</th>
-                                            <th class="action-button"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbodyUrusniaga">
-                                        @foreach (var item in ViewBag.AkTerima2)
-                                        {
+                <div class="card box-shadow mb-3">
+                    <div class="card-header">
+                        <h6>Urusniaga</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tblUrusniaga" class="table table-sm " cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>CaraBayar</th>
+                                        <th>Amaun</th>
+                                        <th>No Cek</th>
+                                        <th>Jenis Cek</th>
+                                        <th>Kod Bank Cek</th>
+                                        <th>Tempat Cek</th>
+                                        <th>No Slip</th>
+                                        <th>Tarikh Slip</th>
+                                        <th class="action-button"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyUrusniaga">
+                                    @foreach (var item in ViewBag.AkTerima2)
+                                    {
                                         <tr>
                                             @*<td id="@item.Id"hidden>@item.AkTerimaId</td>*@
                                             <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
                                             <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
                                             <td>@item.JCaraBayar.Kod</td>
-                                            <td>@item.Amaun</td>
+                                            <td class="text-right amaunUrusniaga">@item.Amaun</td>
                                             <td>@item.NoCek</td>
                                             @switch (@item.JenisCek)
                                             {
@@ -282,47 +289,53 @@
                                             </td>
                                         </tr>
 
-                                        }
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
-                                            <td id="jCaraBayarId" hidden></td>
-                                            <td>
-                                                <select class="form-control form-control-sm" id="txtCaraBayar">
-                                                    <option value="" disabled selected>-- Pilih Cara Bayar --</option>
-                                                    @foreach (var s in ViewBag.JCaraBayar)
-                                                    {
-                                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                                    }
-                                                </select>
-                                            </td>
-                                            <td><input class="form-control form-control-sm" type="number" id="txtAmaunUrusniaga" step="0.01"></td>
-                                            <td><input class="form-control form-control-sm" type="text" id="txtNoCek" maxlength="10"></td>
-                                            <td>
-                                                <select class="form-control form-control-sm" id="txtJenisCek">
-                                                    <option value="" disabled selected>-- Pilih Jenis Cek --</option>
-                                                    <option value="1">Cek Cawangan Ini</option>
-                                                    <option value="2">Cek Tempatan</option>
-                                                    <option value="3">Cek Luar</option>
-                                                    <option value="4">Cek Antarabangsa</option>
-                                                </select>
-                                                @*<input class="form-control form-control-sm" type="text" id="txtJenisCek" maxlength="1">*@
-                                            </td>
-                                            <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtKodBankCek" maxlength="4"></td>
-                                            <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtTempatCek"></td>
-                                            <td><input class="form-control form-control-sm" type="text" id="txtNoSlip" maxlength="30"></td>
-                                            <td><input class="form-control form-control-sm" type="datetime-local" id="txtTarSlip"></td>
-                                            <td><button class="btn btn-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-
-
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
+                                        <td id="jCaraBayarId" hidden></td>
+                                        <td>
+                                            <select class="form-control form-control-sm" id="txtCaraBayar">
+                                                <option value="" disabled selected>-- Pilih Cara Bayar --</option>
+                                                @foreach (var s in ViewBag.JCaraBayar)
+                                                {
+                                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td><input class="form-control form-control-sm" type="number" id="txtAmaunUrusniaga" step="0.01"></td>
+                                        <td><input class="form-control form-control-sm" type="text" id="txtNoCek" maxlength="10"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm" id="txtJenisCek">
+                                                <option value="" disabled selected>-- Pilih Jenis Cek --</option>
+                                                <option value="1">Cek Cawangan Ini</option>
+                                                <option value="2">Cek Tempatan</option>
+                                                <option value="3">Cek Luar</option>
+                                                <option value="4">Cek Antarabangsa</option>
+                                            </select>
+                                            @*<input class="form-control form-control-sm" type="text" id="txtJenisCek" maxlength="1">*@
+                                        </td>
+                                        <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtKodBankCek" maxlength="4"></td>
+                                        <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtTempatCek"></td>
+                                        <td><input class="form-control form-control-sm" type="text" id="txtNoSlip" maxlength="30"></td>
+                                        <td><input class="form-control form-control-sm" type="datetime-local" id="txtTarSlip"></td>
+                                        <td><button class="btn btn-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
 
+
                     </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <label class="control-label">Jumlah Urusniaga</label>
+                            <input class="form-control form-control-sm" id="jumlahUrusniaga" readonly />
+                        </div>
+                    </div>
+
+                </div>
                     @*table urusniaga end*@
 
                 </div>
@@ -336,12 +349,6 @@
                 <label asp-for="NoRujukan" class="control-label"></label>
                 <input id="noRujukan" asp-for="NoRujukan" class="form-control form-control-sm" readonly />
                 <span asp-validation-for="NoRujukan" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Jumlah" class="control-label"></label>
-                <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly />
-                <span asp-validation-for="Jumlah" class="text-danger"></span>
             </div>
 
             <div class="form-group" hidden>
