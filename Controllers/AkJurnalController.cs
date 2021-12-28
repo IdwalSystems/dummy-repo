@@ -26,6 +26,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JKW, int> _jKWRepo;
         private readonly ListViewIRepository<AkJurnal1, int> _akJurnal1Repo;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
+        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
         private CartJurnal _cart;
 
         public AkJurnalController(
@@ -36,6 +37,7 @@ namespace MSNK.Controllers
             IRepository<JKW, int> jKWRepository,
             ListViewIRepository<AkJurnal1, int> akJurnal1Repository,
             IRepository<AkCarta, int> akCartaRepository,
+            IRepository<AkAkaun, int> akAkaunRepository,
             CartJurnal cart
             )
         {
@@ -46,6 +48,7 @@ namespace MSNK.Controllers
             _jKWRepo = jKWRepository;
             _akJurnal1Repo = akJurnal1Repository;
             _akCartaRepo = akCartaRepository;
+            _akAkaunRepo = akAkaunRepository;
             _cart = cart;
         }
         private string GetKod(int kod)
@@ -171,6 +174,21 @@ namespace MSNK.Controllers
             AkJurnal m = new AkJurnal();
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
 
+            decimal debit = 0;
+            decimal kredit = 0;
+            foreach (var q in _cart.Lines1.ToArray())
+            {
+                debit += q.Debit;
+                kredit += q.Kredit;
+            };
+
+            if(!(debit == kredit))
+            {
+                TempData[SD.Error] = "Pastikan jumlah debit = jumlah kredit";
+                PopulateList();
+                return View(akJurnal);
+            }
+
             if (ModelState.IsValid)
             {
                 string noRujukan = GetKod(akJurnal.JKWId);
@@ -179,8 +197,8 @@ namespace MSNK.Controllers
                     m.JKWId = akJurnal.JKWId;
                     m.NoJurnal = noRujukan;
                     m.Tarikh = akJurnal.Tarikh;
-                    m.JumDebit = JumDebit;
-                    m.JumKredit = JumKredit;
+                    m.JumDebit = debit;
+                    m.JumKredit = kredit;
                     m.Catatan1 = akJurnal.Catatan1;
                     m.Catatan2 = akJurnal.Catatan2;
                     m.Catatan3 = akJurnal.Catatan3;
@@ -193,7 +211,7 @@ namespace MSNK.Controllers
                     m.AkJurnal1 = _cart.Lines1.ToArray();
 
                     await _akJurnalRepo.Insert(m);
-                    await AddLogAsync("Tambah", noRujukan, 0);
+                    await AddLogAsync("Tambah", noRujukan, kredit);
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
@@ -638,17 +656,38 @@ namespace MSNK.Controllers
                     //posting operation start here
                     //insert into akAkaun
                     AkAkaun akADebit = new AkAkaun();
-                    foreach (AkJurnal1 item in akJ1)
+                    foreach(AkJurnal1 debit1 in akJ1.Where(z => z.Debit > 0)) 
                     {
-                        akADebit.NoRujukan = akAkaun.NoRujukan;
-                        akADebit.JKWId = akAkaun.JKWId;
-                        akADebit.AkCartaId1 = akAkaun.AkCartaId1;
-                        akADebit.AkCartaId2 = akAkaun.AkCartaId2;
-                        akADebit.Tarikh = akAkaun.Tarikh;
-                        //akADebit.Debit = item.Amaun;
-                    }
-                    //await _akAkaunRepo.Insert(akADebit);
-
+                        foreach (AkJurnal1 kredit1 in akJ1.Where(z=>z.Kredit>0))
+                        {
+                            akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
+                            akADebit.JKWId = akJurnal.JKWId;
+                            akADebit.Tarikh = akJurnal.Tarikh;
+                            akADebit.AkCartaId1 = debit1.AkCartaId;
+                            akADebit.Debit = kredit1.Kredit;
+                            akADebit.AkCartaId2 = kredit1.AkCartaId;
+                            akADebit.Kredit = 0;
+                            try
+                            {
+                                await _akAkaunRepo.Insert(akADebit);
+                            }
+                            catch
+                            {
+                                TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+                            }
+                            finally
+                            {
+                                akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
+                                akADebit.JKWId = akJurnal.JKWId;
+                                akADebit.Tarikh = akJurnal.Tarikh;
+                                akADebit.AkCartaId1 = kredit1.AkCartaId;
+                                akADebit.Debit = 0;
+                                akADebit.AkCartaId2 = debit1.AkCartaId;
+                                akADebit.Kredit = kredit1.Kredit;
+                                await _akAkaunRepo.Insert(akADebit);
+                            }
+                        };
+                    };
                     //update posting status in akTerima
                     akJurnal.Posting = 1;
                     await _akJurnalRepo.Update(akJurnal);
