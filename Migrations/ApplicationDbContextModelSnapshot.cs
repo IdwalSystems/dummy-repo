@@ -1127,6 +1127,60 @@ namespace MSNK.Migrations
                     b.ToTable("AppLog");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.JAgama", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Perihal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TarKemaskini")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdKemaskini")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JAgama");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.JBangsa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Perihal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TarKemaskini")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdKemaskini")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JBangsa");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.JBank", b =>
                 {
                     b.Property<int>("Id")
@@ -1196,6 +1250,36 @@ namespace MSNK.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("JCaraBayar");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.JJawatanPekerja", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Kod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Perihal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TarKemaskini")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdKemaskini")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JJawatanPekerja");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.JJenis", b =>
@@ -1321,6 +1405,141 @@ namespace MSNK.Migrations
                     b.ToTable("SiModul");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.SuPekerja", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Alamat1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Alamat2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Alamat3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Bandar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("BilAnak")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Emel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("GajiPokok")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("JAgamaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JBangsaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JCaraBayarId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JJawatanPekerjaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JNegeriId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nama")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoGaji")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Poskod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StatusKahwin")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TarKemaskini")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TarikhBerhentiKerja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarikhMasukKerja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TarikhPencen")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TelefonBimbit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TelefonRumah")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdKemaskini")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JAgamaId");
+
+                    b.HasIndex("JBangsaId");
+
+                    b.HasIndex("JCaraBayarId");
+
+                    b.HasIndex("JJawatanPekerjaId");
+
+                    b.HasIndex("JNegeriId");
+
+                    b.ToTable("SuPekerja");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.SuTanggunganPekerja", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Hubungan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nama")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoKP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SuPekerjaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TarKemaskini")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdKemaskini")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SuPekerjaId");
+
+                    b.ToTable("SuTanggunganPekerja");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1350,8 +1569,8 @@ namespace MSNK.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "77c5243d-645e-42a1-b206-8057f2f7a57e",
-                            ConcurrencyStamp = "b1a50950-aec1-4cd6-aa0d-66919caf3df1",
+                            Id = "0e128e21-cf95-40c6-b54a-2bc50296f64e",
+                            ConcurrencyStamp = "d9ef83d5-5f7f-4ff5-8f70-0a9c4fcf2b57",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -1908,6 +2127,60 @@ namespace MSNK.Migrations
                     b.Navigation("JCaraBayar");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.SuPekerja", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.JAgama", "JAgama")
+                        .WithMany("SuPekerja")
+                        .HasForeignKey("JAgamaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.JBangsa", "JBangsa")
+                        .WithMany("SuPekerja")
+                        .HasForeignKey("JBangsaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.JCaraBayar", "JCaraBayar")
+                        .WithMany("SuPekerja")
+                        .HasForeignKey("JCaraBayarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.JJawatanPekerja", "JJawatanPekerja")
+                        .WithMany("SuPekerja")
+                        .HasForeignKey("JJawatanPekerjaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.JNegeri", "JNegeri")
+                        .WithMany("SuPekerja")
+                        .HasForeignKey("JNegeriId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JAgama");
+
+                    b.Navigation("JBangsa");
+
+                    b.Navigation("JCaraBayar");
+
+                    b.Navigation("JJawatanPekerja");
+
+                    b.Navigation("JNegeri");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.SuTanggunganPekerja", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.SuPekerja", "SuPekerja")
+                        .WithMany("SuTanggungan")
+                        .HasForeignKey("SuPekerjaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SuPekerja");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -2038,6 +2311,16 @@ namespace MSNK.Migrations
                     b.Navigation("AkTerima2");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.JAgama", b =>
+                {
+                    b.Navigation("SuPekerja");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.JBangsa", b =>
+                {
+                    b.Navigation("SuPekerja");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.JBank", b =>
                 {
                     b.Navigation("AkBank");
@@ -2050,6 +2333,13 @@ namespace MSNK.Migrations
                     b.Navigation("AkPV");
 
                     b.Navigation("akTerima2");
+
+                    b.Navigation("SuPekerja");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.JJawatanPekerja", b =>
+                {
+                    b.Navigation("SuPekerja");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.JJenis", b =>
@@ -2081,11 +2371,18 @@ namespace MSNK.Migrations
                     b.Navigation("AkPembekal");
 
                     b.Navigation("AkTerima");
+
+                    b.Navigation("SuPekerja");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.JParas", b =>
                 {
                     b.Navigation("AkCarta");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.SuPekerja", b =>
+                {
+                    b.Navigation("SuTanggungan");
                 });
 #pragma warning restore 612, 618
         }

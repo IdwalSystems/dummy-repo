@@ -69,6 +69,40 @@ namespace MSNK.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "JAgama",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Perihal = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JAgama", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JBangsa",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Perihal = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JBangsa", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "JBank",
                 columns: table => new
                 {
@@ -103,6 +137,24 @@ namespace MSNK.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_JCaraBayar", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JJawatanPekerja",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Kod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Perihal = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JJawatanPekerja", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -364,6 +416,73 @@ namespace MSNK.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SuPekerja",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NoGaji = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nama = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Alamat1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Alamat2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Alamat3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Poskod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Bandar = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    JNegeriId = table.Column<int>(type: "int", nullable: false),
+                    TelefonRumah = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TelefonBimbit = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Emel = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StatusKahwin = table.Column<int>(type: "int", nullable: false),
+                    BilAnak = table.Column<int>(type: "int", nullable: false),
+                    GajiPokok = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TarikhMasukKerja = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TarikhBerhentiKerja = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TarikhPencen = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    JAgamaId = table.Column<int>(type: "int", nullable: false),
+                    JBangsaId = table.Column<int>(type: "int", nullable: false),
+                    JJawatanPekerjaId = table.Column<int>(type: "int", nullable: false),
+                    JCaraBayarId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SuPekerja", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SuPekerja_JAgama_JAgamaId",
+                        column: x => x.JAgamaId,
+                        principalTable: "JAgama",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SuPekerja_JBangsa_JBangsaId",
+                        column: x => x.JBangsaId,
+                        principalTable: "JBangsa",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SuPekerja_JCaraBayar_JCaraBayarId",
+                        column: x => x.JCaraBayarId,
+                        principalTable: "JCaraBayar",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SuPekerja_JJawatanPekerja_JJawatanPekerjaId",
+                        column: x => x.JJawatanPekerjaId,
+                        principalTable: "JJawatanPekerja",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SuPekerja_JNegeri_JNegeriId",
+                        column: x => x.JNegeriId,
+                        principalTable: "JNegeri",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AkCarta",
                 columns: table => new
                 {
@@ -398,7 +517,7 @@ namespace MSNK.Migrations
                         column: x => x.JKWId,
                         principalTable: "JKW",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AkCarta_JParas_JParasId",
                         column: x => x.JParasId,
@@ -442,6 +561,32 @@ namespace MSNK.Migrations
                         principalTable: "JKW",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SuTanggunganPekerja",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nama = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Hubungan = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NoKP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SuPekerjaId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SuTanggunganPekerja", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SuTanggunganPekerja_SuPekerja_SuPekerjaId",
+                        column: x => x.SuPekerjaId,
+                        principalTable: "SuPekerja",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -988,7 +1133,7 @@ namespace MSNK.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "77c5243d-645e-42a1-b206-8057f2f7a57e", "b1a50950-aec1-4cd6-aa0d-66919caf3df1", "Admin", "ADMIN" });
+                values: new object[] { "0e128e21-cf95-40c6-b54a-2bc50296f64e", "d9ef83d5-5f7f-4ff5-8f70-0a9c4fcf2b57", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkAkaun_AkCartaId1",
@@ -1238,6 +1383,36 @@ namespace MSNK.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SuPekerja_JAgamaId",
+                table: "SuPekerja",
+                column: "JAgamaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SuPekerja_JBangsaId",
+                table: "SuPekerja",
+                column: "JBangsaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SuPekerja_JCaraBayarId",
+                table: "SuPekerja",
+                column: "JCaraBayarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SuPekerja_JJawatanPekerjaId",
+                table: "SuPekerja",
+                column: "JJawatanPekerjaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SuPekerja_JNegeriId",
+                table: "SuPekerja",
+                column: "JNegeriId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SuTanggunganPekerja_SuPekerjaId",
+                table: "SuTanggunganPekerja",
+                column: "SuPekerjaId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -1291,6 +1466,9 @@ namespace MSNK.Migrations
                 name: "SiModul");
 
             migrationBuilder.DropTable(
+                name: "SuTanggunganPekerja");
+
+            migrationBuilder.DropTable(
                 name: "AkJurnal");
 
             migrationBuilder.DropTable(
@@ -1309,16 +1487,28 @@ namespace MSNK.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AkPO");
+                name: "SuPekerja");
 
             migrationBuilder.DropTable(
-                name: "JCaraBayar");
+                name: "AkPO");
 
             migrationBuilder.DropTable(
                 name: "AkAkaun");
 
             migrationBuilder.DropTable(
                 name: "AkBank");
+
+            migrationBuilder.DropTable(
+                name: "JAgama");
+
+            migrationBuilder.DropTable(
+                name: "JBangsa");
+
+            migrationBuilder.DropTable(
+                name: "JCaraBayar");
+
+            migrationBuilder.DropTable(
+                name: "JJawatanPekerja");
 
             migrationBuilder.DropTable(
                 name: "AkPembekal");
