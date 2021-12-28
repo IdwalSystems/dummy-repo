@@ -66,9 +66,8 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Kod Bank Diperlukan.")]
         [DisplayName("Kod Bank")]
         public int AkBankId { get; set; }
-        [Required(ErrorMessage = "Kod Pembekal Diperlukan.")]
         [DisplayName("Kod Pembekal")]
-        public int AkPembekalId { get; set; }
+        public int? AkPembekalId { get; set; }
         [Required(ErrorMessage = "Cara Bayaran Diperlukan.")]
         [DisplayName("Cara Bayaran")]
         public int JCaraBayarId { get; set; }

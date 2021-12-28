@@ -122,7 +122,7 @@ namespace MSNK.Controllers
                     NoPV = item.NoPV,
                     Tarikh = item.Tarikh,
                     Jumlah = item.Jumlah,
-                    Penerima = item.AkPembekal.NamaSykt,
+                    Penerima = item.Nama,
                     CaraBayar = item.JCaraBayar.Perihal,
                     FlBatal = item.FlBatal,
                     FlPosting = item.FlPosting,
@@ -312,6 +312,7 @@ namespace MSNK.Controllers
             {
                 var result = _context.AkBelian
                     .Include(b=>b.AkPO)
+                    .Include(b=>b.AkBelian1).ThenInclude(b=>b.AkCarta)
                     .Where(b => b.Id == akBelian.Id)
                     .FirstOrDefault();
 
@@ -462,18 +463,85 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPV = await _context.AkPV
-                .Include(a => a.AkBank)
-                .Include(a => a.AkPembekal)
-                .Include(a => a.JCaraBayar)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akPV = await _akPVRepo.GetById((int)id);
+            
+
             if (akPV == null)
             {
                 return NotFound();
             }
+            AkPVViewModel akPVView = new AkPVViewModel();
 
-            return View(akPV);
+            //fill in view model AkPVViewModel from akPV
+            akPVView.Id = akPV.Id;
+            akPVView.Tahun = akPV.Tahun;
+            akPVView.NoPV = akPV.NoPV;
+            akPVView.Tarikh = akPV.Tarikh;
+            akPVView.TarikhTerima = akPV.TarikhTerima;
+            akPVView.JKW = akPV.JKW;
+            akPVView.AkBank = akPV.AkBank;
+            akPVView.Jumlah = akPV.Jumlah;
+            akPVView.TarikhPosting = akPV.TarikhPosting;
+
+            if (akPV.AkPembekalId == null)
+            {
+                akPVView.denganTanggungan = false;
+                akPVView.KodPenerima = "-";
+                akPVView.NoKP = akPV.NoKP;
+                akPVView.Penerima = akPV.Nama;
+                akPVView.Alamat1 = akPV.Alamat1;
+                akPVView.Alamat2 = akPV.Alamat2;
+                akPVView.Alamat3 = akPV.Alamat3;
+                akPVView.NoAkaunBank = akPV.NoAkaunBank;
+                akPVView.Telefon = akPV.Telefon;
+                akPVView.Emel = akPV.Emel;
+            }
+            else
+            {
+                akPVView.denganTanggungan = true;
+                akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
+                akPVView.NoKP = "-";
+                akPVView.Penerima = akPV.AkPembekal.NamaSykt;
+                akPVView.Alamat1 = akPV.AkPembekal.Alamat1;
+                akPVView.Alamat2 = akPV.AkPembekal.Alamat2;
+                akPVView.Alamat3 = akPV.AkPembekal.Alamat3;
+                akPVView.NoAkaunBank = akPV.AkPembekal.AkaunBank;
+                akPVView.Telefon = akPV.AkPembekal.Telefon1;
+                akPVView.Emel = akPV.AkPembekal.Emel;
+            }
+            akPVView.NoCekAtauEFT = akPV.NoCekAtauEFT;
+            akPVView.TarCekAtauEFT = akPV.TarCekAtauEFT;
+            akPVView.Perihal = akPV.Perihal;
+            akPVView.CaraBayar = akPV.JCaraBayar.Perihal;
+            akPVView.FlPosting = akPV.FlPosting;
+            akPVView.FlCetak = akPV.FlCetak;
+            akPVView.FlBatal = akPV.FlBatal;
+            akPVView.AkPV1 = akPV.AkPV1;
+            foreach(AkPV2 item in akPV.AkPV2)
+            {
+                akPVView.JumlahInbois += item.Amaun;
+            }
+            akPVView.AkPV2 = akPV.AkPV2;
+
+            PopulateTable(id);
+            return View(akPVView);
+        }
+
+        private void PopulateTable(int? id)
+        {
+            List<AkPV1> akPV1Table = _context.AkPV1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkPVId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            ViewBag.akPV1 = akPV1Table;
+
+            List<AkPV2> akPV2Table = _context.AkPV2
+                .Include(b=> b.AkBelian).ThenInclude(b=> b.AkPO)
+                .Where(b => b.AkPVId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            ViewBag.akPV2 = akPV2Table;
         }
 
         // GET: AkPV/Create
@@ -542,6 +610,20 @@ namespace MSNK.Controllers
         {
             AkPV m = new AkPV();
             var user = await _userManager.GetUserAsync(User);
+            var pembekal = new AkPembekal();
+
+            if (AkPembekalId != null)
+            {
+                pembekal = _context.AkPembekal.Find(AkPembekalId);
+
+                akPV.Nama = pembekal.NamaSykt;
+                akPV.Alamat1 = pembekal.Alamat1;
+                akPV.Alamat2 = pembekal.Alamat2;
+                akPV.Alamat3 = pembekal.Alamat3;
+                akPV.Telefon = pembekal.Telefon1;
+                akPV.Emel = pembekal.Emel;
+                akPV.NoAkaunBank = pembekal.AkaunBank;
+            }
 
             // get latest no rujukan running number  
             var kw = _context.JKW.FirstOrDefault(x => x.Id == akPV.JKWId);
@@ -570,15 +652,25 @@ namespace MSNK.Controllers
 
             if (ModelState.IsValid)
             {
-                if (akPV != null && JKWId != 0 && AkPembekalId != 0 && AkBankId != 0)
+                if (akPV != null && JKWId != 0 && AkBankId != 0 && akPV.Nama != null)
                 {
                     m.AkBankId = AkBankId;
                     m.JKWId = JKWId;
                     m.AkPembekalId = AkPembekalId;
+
                     m.Tahun = akPV.Tahun;
                     m.NoPV = noRujukan;
                     m.Tarikh = akPV.Tarikh;
                     m.TarikhTerima = akPV.TarikhTerima;
+                    m.NoKP = akPV.NoKP;
+                    m.Nama = akPV.Nama;
+                    m.Alamat1 = akPV.Alamat1;
+                    m.Alamat2 = akPV.Alamat2;
+                    m.Alamat3 = akPV.Alamat3;
+                    m.NoAkaunBank = akPV.NoAkaunBank;
+                    m.Telefon = akPV.Telefon;
+                    m.Emel = akPV.Emel;
+
                     m.JCaraBayarId = JCaraBayarId;
                     m.NoCekAtauEFT = akPV.NoCekAtauEFT;
                     m.TarCekAtauEFT = akPV.TarCekAtauEFT;

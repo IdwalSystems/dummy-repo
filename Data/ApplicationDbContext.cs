@@ -166,11 +166,10 @@ namespace MSNK.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<AkPV>()
-                .HasOne(m => m.AkPembekal)
+                .HasOne(m => m.AkPembekal!)
                 .WithMany(t => t.AkPV)
                 .HasForeignKey(m => m.AkPembekalId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired();
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<AkPV>()
                     .HasOne(m => m.AkBank)
