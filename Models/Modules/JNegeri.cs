@@ -20,6 +20,7 @@ namespace MSNK.Models.Modules
         //Relationship
         public ICollection<AkTerima> AkTerima { get; set; }
         public ICollection<AkPembekal> AkPembekal { get; set; }
+        public ICollection<SuPekerja> SuPekerja { get; set; }
         //relationship end
 
         // log

@@ -42,6 +42,11 @@ namespace MSNK.Data
         public DbSet<AkPV> AkPV { get; set; }
         public DbSet<AkPV1> AkPV1 { get; set; }
         public DbSet<AkPV2> AkPV2 { get; set; }
+        public DbSet<SuPekerja> SuPekerja { get; set; }
+        public DbSet<SuTanggunganPekerja> SuTanggunganPekerja { get; set; }
+        public DbSet<JJawatanPekerja>JJawatanPekerja { get; set; }
+        public DbSet<JBangsa> JBangsa { get; set; }
+        public DbSet<JAgama> JAgama { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
