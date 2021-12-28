@@ -41,12 +41,13 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkPV
                 .Include(b => b.JKW)
                 .Include(b => b.AkPembekal)
-                .Include(b => b.AkBank)
+                .Include(b => b.AkBank).ThenInclude(b => b.JBank)
                 .Include(b => b.JCaraBayar)
                 .Include(b => b.AkPV1)
-                .ThenInclude(b=>b.AkCarta)
+                    .ThenInclude(b=>b.AkCarta)
                 .Include(b => b.AkPV2)
-                .ThenInclude(b => b.AkBelian)
+                    .ThenInclude(b => b.AkBelian)
+                        .ThenInclude(b=>b.AkPO)
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
         }
