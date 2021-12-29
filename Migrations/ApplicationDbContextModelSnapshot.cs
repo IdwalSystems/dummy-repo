@@ -1575,8 +1575,8 @@ namespace MSNK.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0cd5c512-4a39-48f3-bc4f-4780f3b0104b",
-                            ConcurrencyStamp = "0c50e49d-76c0-4a42-959a-e6bad4ec69b3",
+                            Id = "5660d780-6744-4947-ace2-5a78c9449dab",
+                            ConcurrencyStamp = "015d4686-5650-415b-ae22-bb82df105f3b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
