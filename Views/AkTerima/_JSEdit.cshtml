@@ -36,7 +36,7 @@
                     //Sum value to Total text field
                     var sum = 0;
                     sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
-                    txtJumlah.val(sum);
+                    txtJumlah.val(sum.toFixed(2));
 
                     //Get the reference of the Table's TBODY element.
                     var tBody = $("#tblObjek > TBODY")[0];
@@ -82,10 +82,13 @@
                         dataType: "json",
                         success: function (r) {
                             //Clear the TextBoxes.
-                            txtKodAkaun.val("");
+                            txtKodAkaun.val("").trigger('change');
                             txtAmaunObjek.val("");
                         }
                     });
+
+                    $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
+
 
                 }
             });
@@ -123,7 +126,12 @@
                     var txtTempatCek = $("#txtTempatCek");
                     var txtNoSlip = $("#txtNoSlip");
                     var txtTarSlip = $("#txtTarSlip");
+                    var txtJumlah = $("#jumlahUrusniaga");
 
+                    //Sum value to Total text field
+                    var sum = 0;
+                    sum = parseFloat(amaun.val()) + parseFloat(txtJumlah.val());
+                    txtJumlah.val(sum.toFixed(2));
                     //Get the reference of the Table's TBODY element.
                     var tBody = $("#tblUrusniaga > TBODY")[0];
                     //Add Row.
@@ -189,26 +197,24 @@
                         NoSlip: txtNoSlip.val(),
                         TarSlip: txtTarSlip.val()
                     }
-                    if (noRujukan != null) {
-                        $.ajax({
-                            type: "POST",
-                            url: "/AkTerima/InsertUpdateAkTerima2",
-                            data: AkTerima2,
-                            dataType: "json",
-                            success: function (r) {
-                                //Clear the TextBoxes.
-                                txtCaraBayar.val("");
-                                amaun.val("");
-                                txtNoCek.val("");
-                                txtJenisCek.val("");
-                                txtKodBankCek.val("");
-                                txtTempatCek.val("");
-                                txtNoSlip.val("");
-                                txtTarSlip.val("");
-                            }
-                        });
-                    }
-
+                    $.ajax({
+                        type: "POST",
+                        url: "/AkTerima/InsertUpdateAkTerima2",
+                        data: AkTerima2,
+                        dataType: "json",
+                        success: function (r) {
+                            //Clear the TextBoxes.
+                            txtCaraBayar.val("").trigger('change');
+                            amaun.val("0.00");
+                            txtNoCek.val("");
+                            txtJenisCek.val("");
+                            txtKodBankCek.val("");
+                            txtTempatCek.val("");
+                            txtNoSlip.val("");
+                            txtTarSlip.val("");
+                        }
+                    });
+                    $("#txtCaraBayar option[value=" + txtCaraBayar.val() + "]").prop('disabled', true);
                 }
             });
         }
@@ -231,7 +237,7 @@
             //Sum value to Total text field
             var sum = 0;
             sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
-            txtJumlah.val(sum);
+            txtJumlah.val(sum.toFixed(2));
 
             var AkTerima1 = {
                 AkTerimaId: akTerimaId,
@@ -249,7 +255,7 @@
                     }
                 });
             }
-
+            $("#txtKodAkaun option[value=" + name + "]").prop('disabled', false);
         }
     };
     //remove tbl objek end
@@ -361,7 +367,7 @@
                             }
                         }
 
-                        jumlah.val(sum);
+                        jumlah.val(sum.toFixed(2));
                     }
                 });
             }
@@ -490,6 +496,25 @@
     })();
 
     $(document).ready(function () {
+        // disable each kod akaun that has been picked
+        $('#tbodyObjek tr').each(function () {
+            var akCartaId = $(this).find("#akCartaId").html();
+            $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', true);
+        });
+
+        // disable each JCarabayar that has been picked
+        $('#tbodyUrusniaga tr').each(function () {
+            var jCaraBayarId = $(this).find("#jCaraBayarId").html();
+            $("#txtCaraBayar option[value=" + jCaraBayarId + "]").prop('disabled', true);
+        });
+
+        // get total amaun perihal for each row in tbl perihal
+        var sum = 0;
+        $('#tbodyUrusniaga tr').each(function () {
+            var amaun = $(this).find(".amaunUrusniaga").html();
+            sum = + amaun
+        });
+        $('#jumlahUrusniaga').val(sum.toFixed(2));
 
         $.validator.setDefaults({
             errorElement: "span",

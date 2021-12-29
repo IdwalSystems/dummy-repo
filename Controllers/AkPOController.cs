@@ -27,6 +27,7 @@ namespace MSNK.Controllers
         public const string modul = "TG001";
 
         private readonly ApplicationDbContext _context;
+        private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkPO, int> _akPORepo;
         private readonly ListViewIRepository<AkPO1, int> _akPO1Repo;
@@ -193,6 +194,7 @@ namespace MSNK.Controllers
         {
 
             AkPO m = new AkPO();
+            var user = await _userManager.GetUserAsync(User);
             var pembekal = _context.AkPembekal.FirstOrDefault(x => x.Id == akPO.AkPembekalId);
 
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
@@ -235,6 +237,8 @@ namespace MSNK.Controllers
                     m.FlPosting = akPO.FlPosting;
                     m.Tahun = akPO.Tahun;
                     m.FlBatal = akPO.FlBatal;
+                    m.UserId = user.UserName;
+                    m.TarMasuk = DateTime.Now;
 
                     m.AkPO1 = _cart.Lines1.ToArray();
                     m.AkPO2 = _cart.Lines2.ToArray();
@@ -789,9 +793,11 @@ namespace MSNK.Controllers
 
                     //update posting status in akPO
                     akPO.FlPosting = 1;
+                    akPO.TarikhPosting = DateTime.Now;
                     await _akPORepo.Update(akPO);
 
-                    //insert applog
+
+                    ////Insert User Applog
 
                     //AppLog appLog = new AppLog();
 
@@ -805,7 +811,7 @@ namespace MSNK.Controllers
                     //await _appLog.Insert(appLog);
                     //insert applog end
 
-                    await _context.SaveChangesAsync();
+                    //await _context.SaveChangesAsync();
 
 
                     TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";

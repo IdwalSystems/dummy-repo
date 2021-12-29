@@ -30,7 +30,7 @@
                     //Sum value to Total text field
                     var sum = 0;
                     sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
-                    txtJumlah.val(sum);
+                    txtJumlah.val(sum.toFixed(2));
 
                     //Get the reference of the Table's TBODY element.
                     var tBody = $("#tblObjek > TBODY")[0];
@@ -116,7 +116,7 @@
         //Sum value to Total text field
         var sum = 0;
         sum = parseFloat(txtAmaun.val()) + parseFloat(txtJumlah.val());
-        txtJumlah.val(sum);
+        txtJumlah.val(sum.toFixed(2));
 
         //Get the reference of the Table's TBODY element.
         var tBody = $("#tblPerihal > TBODY")[0];
@@ -224,7 +224,7 @@
             //Sum value to Total text field
             var sum = 0;
             sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
-            txtJumlah.val(sum);
+            txtJumlah.val(sum.toFixed(2));
 
             var AkBelian1 = {
                 AkBelianId: akBelianId,
@@ -248,14 +248,14 @@
     };
     //remove tbl objek end
 
-    //remove tb perihal
+    //remove tbl perihal
     function Remove2(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var akBelianId = $("#Id").val();
         var indek = $("TD", row).eq(1).html();
         var amaun = $("TD", row).eq(8).html();
-        var txtJumlah = $("#jumlahObjek");
+        var txtJumlah = $("#jumlahPerihal");
         if (confirm("Hapus : " + indek + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblPerihal")[0];
@@ -263,7 +263,7 @@
             //Sum value to Total text field
             var sum = 0;
             sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
-            txtJumlah.val(sum);
+            txtJumlah.val(sum.toFixed(2));
 
             var AkBelian2 = {
                 AkBelianId: akBelianId,
@@ -351,7 +351,7 @@
                                 var item1 = r.data.akBelian1[i];
                                 var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
                                     "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
-                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" +
                                     "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
@@ -362,7 +362,7 @@
                             }
                         }
 
-                        jumlah.val(sum);
+                        jumlah.val(sum.toFixed(2));
                     }
                 });
             }
@@ -471,7 +471,7 @@
                                 sum += item1.amaun;
                             }
                         }
-                        jumlah.val(sum);
+                        jumlah.val(sum.toFixed(2));
                     }
                 });
             }
@@ -558,7 +558,7 @@
             var amaun = $(this).find(".amaunPerihal").html();
             sum =+ amaun
         });
-        $('#jumlahPerihal').val(sum);
+        $('#jumlahPerihal').val(sum.toFixed(2));
 
         $.validator.setDefaults({
             errorElement: "span",

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -56,6 +57,8 @@ namespace MSNK.Models.Modules
         [DisplayName("Batal")]
         [DefaultValue("0")]
         public int FlBatal { get; set; }
+        [NotMapped]
+        public bool denganTanggungan { get; set; }
         //flag end
 
         //relationship
