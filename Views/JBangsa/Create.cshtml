@@ -1,0 +1,50 @@
+﻿@model MSNK.Models.Modules.JBangsa
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>JBangsa</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Perihal" class="control-label"></label>
+                <input asp-for="Perihal" class="form-control" />
+                <span asp-validation-for="Perihal" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TarMasuk" class="control-label"></label>
+                <input asp-for="TarMasuk" class="form-control" />
+                <span asp-validation-for="TarMasuk" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserIdKemaskini" class="control-label"></label>
+                <input asp-for="UserIdKemaskini" class="form-control" />
+                <span asp-validation-for="UserIdKemaskini" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TarKemaskini" class="control-label"></label>
+                <input asp-for="TarKemaskini" class="form-control" />
+                <span asp-validation-for="TarKemaskini" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

@@ -399,6 +399,9 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("Tarikh")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("TarikhPosting")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
@@ -1451,6 +1454,9 @@ namespace MSNK.Migrations
                     b.Property<string>("Nama")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("NoAkaunBank")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NoGaji")
                         .HasColumnType("nvarchar(max)");
 
@@ -1569,8 +1575,8 @@ namespace MSNK.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0e128e21-cf95-40c6-b54a-2bc50296f64e",
-                            ConcurrencyStamp = "d9ef83d5-5f7f-4ff5-8f70-0a9c4fcf2b57",
+                            Id = "0cd5c512-4a39-48f3-bc4f-4780f3b0104b",
+                            ConcurrencyStamp = "0c50e49d-76c0-4a42-959a-e6bad4ec69b3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

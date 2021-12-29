@@ -346,6 +346,100 @@ namespace MSNK.Models.Modules
 
                 );
             }
+
+            if (context.JAgama.Any())
+            {
+                //return;   // DB has been seeded
+            }
+            else
+            {
+                context.JAgama.AddRange(
+                    new JAgama
+                    {
+                        Perihal="ISLAM"
+                    },
+
+                    new JAgama
+                    {
+                        Perihal= "BUDHA"
+                    },
+
+                    new JAgama
+                    {
+                        Perihal = "KRISTIAN"
+                    },
+                    new JAgama
+                    {
+                        Perihal = "HINDU"
+                    },
+                    new JAgama
+                    {
+                        Perihal = "TIADA AGAMA"
+                    },
+                    new JAgama
+                    {
+                        Perihal = "LAIN-LAIN"
+                    }
+
+                );
+            }
+
+            if (context.JBangsa.Any())
+            {
+                //return;   // DB has been seeded
+            }
+            else
+            {
+                context.JBangsa.AddRange(
+                    new JBangsa
+                    {
+                        Perihal = "MELAYU",
+                    },
+
+                    new JBangsa
+                    {
+                        Perihal = "CINA"
+                    },
+
+                    new JBangsa
+                    {
+                        Perihal = "INDIA"
+                    },
+                    new JBangsa
+                    {
+                        Perihal = "LAIN-LAIN"
+                    }
+
+                );
+            }
+
+            if (context.JJawatanPekerja.Any())
+            {
+                //return;   // DB has been seeded
+            }
+            else
+            {
+                context.JJawatanPekerja.AddRange(
+                    new JJawatanPekerja
+                    {
+                        Kod = "JT",
+                        Perihal = "JURUTEKNIK"
+                    },
+
+                    new JJawatanPekerja
+                    {
+                        Kod = "PG",
+                        Perihal = "PEGAWAI"
+                    },
+
+                    new JJawatanPekerja
+                    {
+                        Kod = "PPG",
+                        Perihal = "PENOLONG PEGAWAI"
+                    }
+
+                );
+            }
             context.SaveChanges();
             
             //Data with foreign key
@@ -821,6 +915,37 @@ namespace MSNK.Models.Modules
                         Emel = "admin@idwal.com.my",
                         AkaunBank = "1300882525",
                         JBankId = jbank.Id
+                    }
+                );
+            }
+            context.SaveChanges();
+
+            if (context.SuPekerja.Any())
+            {
+            }
+            else
+            {
+                context.SuPekerja.AddRange(
+                    new SuPekerja
+                    {
+                        NoGaji="A00001",
+                        Nama="JAMES DOE",
+                        Alamat1= "55 Jalan Raja Perempuan Mazwin Taman Rishah",
+                        Alamat2="",
+                        Poskod= "30100 ",
+                        Bandar="",
+                        JNegeriId= context.JNegeri.Where(b => b.Perihal.Contains("PERAK")).FirstOrDefault().Id,
+                        TelefonBimbit="0123456789",
+                        Emel="jamesdoe@example.com",
+                        StatusKahwin=0,
+                        BilAnak=0,
+                        GajiPokok=2000,
+                        TarikhMasukKerja = DateTime.Parse("2021-03-11"),
+                        JAgamaId = context.JAgama.Where(b => b.Perihal.Contains("LAIN")).FirstOrDefault().Id,
+                        JBangsaId = context.JBangsa.Where(b => b.Perihal.Contains("LAIN")).FirstOrDefault().Id,
+                        JJawatanPekerjaId = context.JJawatanPekerja.Where(b => b.Perihal.Contains("JURU")).FirstOrDefault().Id,
+                        JCaraBayarId = context.JCaraBayar.Where(b => b.Kod == "CK").FirstOrDefault().Id,
+                        NoAkaunBank = "1234509876"
                     }
                 );
             }

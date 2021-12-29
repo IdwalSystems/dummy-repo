@@ -1,0 +1,48 @@
+﻿@model MSNK.Models.Modules.JAgama
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>JAgama</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Perihal)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Perihal)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TarMasuk)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TarMasuk)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserIdKemaskini)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserIdKemaskini)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TarKemaskini)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TarKemaskini)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

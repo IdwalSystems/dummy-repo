@@ -1,0 +1,51 @@
+﻿@model MSNK.Models.Modules.JAgama
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>JAgama</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Perihal)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Perihal)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TarMasuk)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TarMasuk)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserIdKemaskini)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserIdKemaskini)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TarKemaskini)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TarKemaskini)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

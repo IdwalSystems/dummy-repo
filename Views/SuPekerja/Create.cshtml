@@ -1,0 +1,150 @@
+﻿@model MSNK.Models.Modules.SuPekerja
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>SuPekerja</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NoGaji" class="control-label"></label>
+                <input asp-for="NoGaji" class="form-control" />
+                <span asp-validation-for="NoGaji" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nama" class="control-label"></label>
+                <input asp-for="Nama" class="form-control" />
+                <span asp-validation-for="Nama" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Alamat1" class="control-label"></label>
+                <input asp-for="Alamat1" class="form-control" />
+                <span asp-validation-for="Alamat1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Alamat2" class="control-label"></label>
+                <input asp-for="Alamat2" class="form-control" />
+                <span asp-validation-for="Alamat2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Alamat3" class="control-label"></label>
+                <input asp-for="Alamat3" class="form-control" />
+                <span asp-validation-for="Alamat3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Poskod" class="control-label"></label>
+                <input asp-for="Poskod" class="form-control" />
+                <span asp-validation-for="Poskod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bandar" class="control-label"></label>
+                <input asp-for="Bandar" class="form-control" />
+                <span asp-validation-for="Bandar" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JNegeriId" class="control-label"></label>
+                <select asp-for="JNegeriId" class ="form-control" asp-items="ViewBag.JNegeriId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="TelefonRumah" class="control-label"></label>
+                <input asp-for="TelefonRumah" class="form-control" />
+                <span asp-validation-for="TelefonRumah" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TelefonBimbit" class="control-label"></label>
+                <input asp-for="TelefonBimbit" class="form-control" />
+                <span asp-validation-for="TelefonBimbit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Emel" class="control-label"></label>
+                <input asp-for="Emel" class="form-control" />
+                <span asp-validation-for="Emel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StatusKahwin" class="control-label"></label>
+                <input asp-for="StatusKahwin" class="form-control" />
+                <span asp-validation-for="StatusKahwin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BilAnak" class="control-label"></label>
+                <input asp-for="BilAnak" class="form-control" />
+                <span asp-validation-for="BilAnak" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GajiPokok" class="control-label"></label>
+                <input asp-for="GajiPokok" class="form-control" />
+                <span asp-validation-for="GajiPokok" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TarikhMasukKerja" class="control-label"></label>
+                <input asp-for="TarikhMasukKerja" class="form-control" />
+                <span asp-validation-for="TarikhMasukKerja" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TarikhBerhentiKerja" class="control-label"></label>
+                <input asp-for="TarikhBerhentiKerja" class="form-control" />
+                <span asp-validation-for="TarikhBerhentiKerja" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TarikhPencen" class="control-label"></label>
+                <input asp-for="TarikhPencen" class="form-control" />
+                <span asp-validation-for="TarikhPencen" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JAgamaId" class="control-label"></label>
+                <select asp-for="JAgamaId" class ="form-control" asp-items="ViewBag.JAgamaId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="JBangsaId" class="control-label"></label>
+                <select asp-for="JBangsaId" class ="form-control" asp-items="ViewBag.JBangsaId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="JJawatanPekerjaId" class="control-label"></label>
+                <select asp-for="JJawatanPekerjaId" class ="form-control" asp-items="ViewBag.JJawatanPekerjaId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="JCaraBayarId" class="control-label"></label>
+                <select asp-for="JCaraBayarId" class ="form-control" asp-items="ViewBag.JCaraBayarId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NoAkaunBank" class="control-label"></label>
+                <input asp-for="NoAkaunBank" class="form-control" />
+                <span asp-validation-for="NoAkaunBank" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TarMasuk" class="control-label"></label>
+                <input asp-for="TarMasuk" class="form-control" />
+                <span asp-validation-for="TarMasuk" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserIdKemaskini" class="control-label"></label>
+                <input asp-for="UserIdKemaskini" class="form-control" />
+                <span asp-validation-for="UserIdKemaskini" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TarKemaskini" class="control-label"></label>
+                <input asp-for="TarKemaskini" class="form-control" />
+                <span asp-validation-for="TarKemaskini" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
