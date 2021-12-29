@@ -655,11 +655,11 @@ namespace MSNK.Controllers
                 {
                     //posting operation start here
                     //insert into akAkaun
-                    AkAkaun akADebit = new AkAkaun();
                     foreach(AkJurnal1 debit1 in akJ1.Where(z => z.Debit > 0)) 
                     {
                         foreach (AkJurnal1 kredit1 in akJ1.Where(z=>z.Kredit>0))
                         {
+                            AkAkaun akADebit = new AkAkaun();
                             akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
                             akADebit.JKWId = akJurnal.JKWId;
                             akADebit.Tarikh = akJurnal.Tarikh;
@@ -677,6 +677,7 @@ namespace MSNK.Controllers
                             }
                             finally
                             {
+                                akADebit = new AkAkaun();
                                 akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
                                 akADebit.JKWId = akJurnal.JKWId;
                                 akADebit.Tarikh = akJurnal.Tarikh;
@@ -694,6 +695,63 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> UnPosting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkJurnal akJurnal = await _context.AkJurnal
+                    .Include(x => x.AkJurnal1)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == "JR/"+akJurnal.NoJurnal).ToList();
+                if (akAkaun == null)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
+                }
+                else
+                {
+                    //unposting operation start here
+                    //delete data from akAkaun
+                    foreach (AkAkaun item in akAkaun)
+                    {
+                        await _akAkaunRepo.Delete(item.Id);
+                    }
+
+                    //update posting status in akTerima
+                    akJurnal.Posting = 0;
+                    //akJurnal.TarikhPosting = null;
+                    //akTerima.TarikhPosting = null;
+                    await _akJurnalRepo.Update(akJurnal);
+
+                    //insert applog
+                    //var user = await _userManager.GetUserAsync(User);
+
+                    //AppLog appLog = new AppLog();
+
+                    //appLog.UserId = user.UserName;
+                    //appLog.LgModule = modul + "UT";
+                    //appLog.LgOperation = "UnPosting";
+                    //appLog.LgNote = modul + " Penerimaan - UnPosting";
+                    //appLog.NoRujukan = akTerima.NoRujukan;
+                    //appLog.Jumlah = akTerima.Jumlah;
+
+                    //await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                    //unposting operation end
                 }
             }
             return RedirectToAction(nameof(Index));

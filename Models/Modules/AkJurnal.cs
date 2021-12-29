@@ -20,6 +20,7 @@ namespace MSNK.Models.Modules
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         [Required(ErrorMessage = "Tarikh Diperlukan")]
         public DateTime Tarikh { get; set; }
+        //public DateTime? TarikhPosting { get; set; }
         [DisplayName("Jumlah Debit RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal JumDebit { get; set; }
