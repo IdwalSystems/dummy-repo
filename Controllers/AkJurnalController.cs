@@ -134,8 +134,8 @@ namespace MSNK.Controllers
         // GET: AkJurnal
         public async Task<IActionResult> Index()
         {
-            var akJunal = await _akJurnalRepo.GetAll();
-            return View(akJunal);
+            var akJurnal = await _akJurnalRepo.GetAll();
+            return View(akJurnal);
         }
 
         // GET: AkJurnal/Details/5

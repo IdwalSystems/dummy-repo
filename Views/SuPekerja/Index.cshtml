@@ -2,184 +2,136 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NoGaji)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nama)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alamat1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alamat2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alamat3)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Poskod)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bandar)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TelefonRumah)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TelefonBimbit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Emel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StatusKahwin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BilAnak)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GajiPokok)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarikhMasukKerja)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarikhBerhentiKerja)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarikhPencen)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NoAkaunBank)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.JNegeri)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.JAgama)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.JBangsa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.JJawatanPekerja)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.JCaraBayar)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarMasuk)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserIdKemaskini)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarKemaskini)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoGaji)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nama)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alamat1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alamat2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alamat3)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Poskod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bandar)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TelefonRumah)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TelefonBimbit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Emel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StatusKahwin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BilAnak)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GajiPokok)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarikhMasukKerja)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarikhBerhentiKerja)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarikhPencen)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoAkaunBank)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JNegeri.Kod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JAgama.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JBangsa.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JJawatanPekerja.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JCaraBayar.Kod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarMasuk)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserIdKemaskini)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarKemaskini)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row mb-2">
+    <div class="col-8">
+        <h3 class="text-left">Daftar Anggota</h3>
+    </div>
+    <div class="col-4 text-right">
+        <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover text-nowrap table-sm nowrap" width="100%">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.NoGaji)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nama)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Alamat1)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Poskod)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Bandar)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TelefonBimbit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Emel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StatusKahwin)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BilAnak)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TarikhMasukKerja)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TarikhBerhentiKerja)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TarikhPencen)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NoAkaunBank)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.JNegeri)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.JAgama)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.JBangsa)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.JJawatanPekerja)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoGaji)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nama)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Alamat1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Poskod)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Bandar)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TelefonBimbit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Emel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StatusKahwin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BilAnak)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TarikhMasukKerja)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TarikhBerhentiKerja)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TarikhPencen)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoAkaunBank)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.JNegeri.Kod)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.JAgama.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.JBangsa.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.JJawatanPekerja.Id)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

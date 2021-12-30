@@ -52,11 +52,16 @@ namespace MSNK.Models.Modules
         public string NoAkaunBank { get; set; }
 
         //relationship
+        [DisplayName("Negeri")]
         public JNegeri JNegeri { get; set; }
+        [DisplayName("Agama")]
         public JAgama JAgama { get; set; }
+        [DisplayName("Bangsa")]
         public JBangsa JBangsa { get; set; }
+        [DisplayName("Jawatan")]
         public JJawatanPekerja JJawatanPekerja { get; set; }
         public ICollection<SuTanggunganPekerja> SuTanggungan { get; set; }
+        [DisplayName("Cara Bayar")]
         public JCaraBayar JCaraBayar { get; set; }
         //relationship end
 

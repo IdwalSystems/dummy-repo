@@ -75,11 +75,18 @@ namespace MSNK
             services.AddTransient<IRepository<AkPV, int>, AkPVRepository>();
             services.AddTransient<ListViewIRepository<AkPV1, int>, AkPV1Repository>();
             services.AddTransient<ListViewIRepository<AkPV2, int>, AkPV2Repository>();
+            services.AddTransient<IRepository<SuPekerja, int>, SuPekerjaRepository>();
+            services.AddTransient<ListViewIRepository<SuTanggunganPekerja, int>, SuTanggunganPekerjaRepository>();
+            services.AddTransient<IRepository<JAgama, int>, JAgamaRepository>();
+            services.AddTransient<IRepository<JBangsa, int>, JBangsaRepository>();
+            services.AddTransient<IRepository<JJawatanPekerja, int>, JJawatanPekerjaRepository>();
+            services.AddTransient<IRepository<JCaraBayar, int>, JCaraBayarRepository>();
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
             services.AddScoped(ss => SessionCartBelian.GetCart(ss));
             services.AddScoped(ss => SessionCartPV.GetCart(ss));
+            services.AddScoped(ss => SessionCartPekerja.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
