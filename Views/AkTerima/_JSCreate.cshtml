@@ -1,5 +1,50 @@
 ﻿<script type="text/javascript">
 
+    // onchange CaraBayar
+    $("body").on('change', "#ddlCaraBayar", function () {
+        var caraBayar = $("#ddlCaraBayar").val();
+        $("#txtAmaunUrusniaga").val("0.00");
+        $("#txtNoCek").val("-");
+        $("#txtJenisCek").val("");
+        $("#txtKodBankCek").val("-");
+        $("#txtTempatCek").val("-");
+        $("#txtNoSlip").val("-");
+        $("#txtTarSlip").val("");
+        JsonCaraBayar(caraBayar);
+    });
+
+    function JsonCaraBayar(id) {
+        if (id != null) {
+            $.ajax({
+                type: "POST",
+                url: "/AkTerima/JsonGetCaraBayar",
+                data: { data: id },
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.record.perihal == "CEK") {
+                        // enable fields
+                        $("#txtJenisCek").prop('disabled', false);
+                        $("#txtKodBankCek").prop('disabled', false);
+                        $("#txtTempatCek").prop('disabled', false);
+                        $("#txtNoCek").prop('disabled', false);
+                    }
+                    else {
+                        // disable fields
+                        $("#txtJenisCek").prop('disabled', true);
+                        $("#txtKodBankCek").prop('disabled', true);
+                        $("#txtTempatCek").prop('disabled', true);
+                        $("#txtNoCek").prop('disabled', true);
+                    }
+                    
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+    // onchange CaraBayar end
+
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
@@ -46,7 +91,7 @@
 
                     //Add amaun cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtAmaunObjek.val());
+                    cell.html(parseFloat(txtAmaunObjek.val()).toFixed(2));
 
                     //Add Edit Button cell.
                     cell = $(row.insertCell(-1));
@@ -73,11 +118,11 @@
                             //Clear the TextBoxes.
                             txtKodAkaun.val("").trigger('change');
                             txtAmaunObjek.val("0.00");
-                            
+                            checkJumlah();
                         }
                     });
                     $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
-
+                    
                 }
             });
         }
@@ -113,7 +158,7 @@
                     var txtNoSlip = $("#txtNoSlip");
                     var txtTarSlip = $("#txtTarSlip");
 
-                    var txtJumlah = $("#jumlahPerihal");
+                    var txtJumlah = $("#jumlahUrusniaga");
 
                     //Sum value to Total text field
                     var sum = 0;
@@ -136,7 +181,7 @@
 
                     //Add Amaun cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtAmaunUrusniaga.val());
+                    cell.html(parseFloat(txtAmaunUrusniaga.val()).toFixed(2));
 
                     //Add NoCek cell.
                     var cell = $(row.insertCell(-1));
@@ -144,7 +189,12 @@
 
                     //Add JenisCek cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html($("#txtJenisCek option:selected").text());
+                    if ($("#txtJenisCek").val() == null) {
+                        cell.html("");
+                    } else {
+                        cell.html($("#txtJenisCek option:selected").text());
+                    }
+                    
 
                     //Add KodBankCek cell.
                     var cell = $(row.insertCell(-1));
@@ -203,6 +253,7 @@
                             txtTempatCek.val("-");
                             txtNoSlip.val("-");
                             txtTarSlip.val("");
+                            checkJumlah();
                         }
                     });
                     $("#ddlCaraBayar option[value=" + ddlCaraBayar.val() + "]").prop('disabled', true);
@@ -242,7 +293,7 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
-
+                        checkJumlah();
                     }
                 });
             }
@@ -251,14 +302,14 @@
         }
     };
     //remove tbl objek end
-
+    
     //remove tbl urusniaga
     function Remove2(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var name = $("TD", row).eq(0).html();
         var amaun = $("TD", row).eq(2).html();
-        var txtJumlah = $("#jumlahPerihal");
+        var txtJumlah = $("#jumlahUrusniaga");
 
         if (confirm("Hapus : " + name + " ?")) {
             //Get the reference of the Table.
@@ -281,6 +332,7 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
+                        checkJumlah();
                     }
                 });
             }
@@ -363,8 +415,10 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
+                
             }
         });
     };
@@ -375,6 +429,7 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var jCaraBayarId = $("TD", row).eq(0).html();
+        var jenisBayar = $("TD", row).eq(1).html();
 
         var AkTerima2 = {
             JCaraBayarId: jCaraBayarId
@@ -386,7 +441,7 @@
             dataType: "json",
             success: function (r) {
                 //insert data in modal urusniaga
-                $("#moId2").val(r.record.id);
+                $("#moId2").val(jCaraBayarId);
                 $("#moCaraBayar").val(r.record.jCaraBayarId);
                 $("#moAmaun2").val(r.record.amaun);
                 $("#moNoCek").val(r.record.noCek);
@@ -395,6 +450,23 @@
                 $("#moTempatCek").val(r.record.tempatCek);
                 $("#moNoSlip").val(r.record.noSlip);
                 $("#moTarSlip").val(r.record.tarSlip);
+
+                // check if jenis bayar equal to cek, enable all related cek fields, otherwise disabled it
+                if (jenisBayar == "CEK") {
+                    // enable fields
+                    $("#moNoCek").prop('disabled', false);
+                    $("#moJenisCek").prop('disabled', false);
+                    $("#moKodBankCek").prop('disabled', false);
+                    $("#moTempatCek").prop('disabled', false);
+                }
+                else {
+                    // disable fields
+                    $("#moNoCek").prop('disabled', true);
+                    $("#moJenisCek").prop('disabled', true);
+                    $("#moKodBankCek").prop('disabled', true);
+                    $("#moTempatCek").prop('disabled', true);
+                }
+                // end check
 
                 //show modal objek
                 $("#modalUrusniaga").modal({ backdrop: 'static', keyboard: false });
@@ -413,7 +485,7 @@
         var noSlip = $("#moNoSlip").val();
         var tarSlip = $("#moTarSlip").val();
         var akTerimaId = $("#Id").val();
-        var jumlah = $("#jumlahPerihal");
+        var jumlah = $("#jumlahUrusniaga");
 
         var AkTerima2 = {
             JCaraBayarId: id,
@@ -446,15 +518,20 @@
                         if (r.record.length > 0) {
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
+                                var tarSlip = "";
+                                if (item1.tarSlip == null) {
+                                } else {
+                                    tarSlip = showDate(item1.tarSlip);
+                                }
                                 var str = "<tr><td id='jCaraBayarId' hidden>" + item1.jCaraBayarId +
-                                    "</td><td>" + item1.jCaraBayar.kod +
+                                    "</td><td>" + item1.jCaraBayar.perihal +
                                     "</td><td>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" + item1.noCek +
                                     "</td><td>" + item1.jenisCek +
                                     "</td><td>" + item1.kodBankCek +
                                     "</td><td>" + item1.tempatCek +
                                     "</td><td>" + item1.noSlip +
-                                    "</td><td>" + showDate(item1.tarSlip) +
+                                    "</td><td>" + tarSlip +
                                     "</td><td>" +
                                     "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalUrusniaga' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
@@ -465,8 +542,10 @@
                             }
                         }
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
+                
             }
         });
     };
@@ -517,4 +596,22 @@
         });
     });
     //validation form end
+
+    // check if jumlahObjek is equal to jumlahUrusniaga
+    function checkJumlah() {
+        var jumlahObjek = $("#jumlahObjek").val();
+        var jumlahUrusniaga = $("#jumlahUrusniaga").val();
+
+        if (jumlahObjek == 0.00 && jumlahUrusniaga == 0.00) {
+            $("#btnSave").show();
+        } else {
+            if (jumlahObjek == jumlahUrusniaga) {
+                $("#btnSave").show();
+            }
+            else {
+                $("#btnSave").hide();
+            }
+        }
+    }
+    // check end
 </script>
