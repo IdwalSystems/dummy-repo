@@ -1,12 +1,57 @@
 ﻿<script type="text/javascript">
-    function showDate(d) {
-        var s = new Date(d);
-        var month = s.getMonth() + 1;
-        var day = s.getDate();
-        var year = s.getFullYear();
+    //function showDate(d) {
+    //    var s = new Date(d);
+    //    var month = s.getMonth() + 1;
+    //    var day = s.getDate();
+    //    var year = s.getFullYear();
 
-        return (day < 10 ? '0' + day : day) + "/" + (month < 10 ? '0' + month : month) + "/" + year;
+    //    return (day < 10 ? '0' + day : day) + "/" + (month < 10 ? '0' + month : month) + "/" + year;
+    //}
+
+    // onchange CaraBayar
+    $("body").on('change', "#ddlCaraBayar", function () {
+        var caraBayar = $("#ddlCaraBayar").val();
+        $("#txtAmaunUrusniaga").val("0.00");
+        $("#txtNoCek").val("-");
+        $("#txtJenisCek").val("");
+        $("#txtKodBankCek").val("-");
+        $("#txtTempatCek").val("-");
+        $("#txtNoSlip").val("-");
+        $("#txtTarSlip").val("");
+        JsonCaraBayar(caraBayar);
+    });
+
+    function JsonCaraBayar(id) {
+        if (id != null) {
+            $.ajax({
+                type: "POST",
+                url: "/AkTerima/JsonGetCaraBayar",
+                data: { data: id },
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.record.perihal == "CEK") {
+                        // enable fields
+                        $("#txtJenisCek").prop('disabled', false);
+                        $("#txtKodBankCek").prop('disabled', false);
+                        $("#txtTempatCek").prop('disabled', false);
+                        $("#txtNoCek").prop('disabled', false);
+                    }
+                    else {
+                        // disable fields
+                        $("#txtJenisCek").prop('disabled', true);
+                        $("#txtKodBankCek").prop('disabled', true);
+                        $("#txtTempatCek").prop('disabled', true);
+                        $("#txtNoCek").prop('disabled', true);
+                    }
+
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
     }
+    // onchange CaraBayar end
 
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {

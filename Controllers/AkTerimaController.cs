@@ -157,7 +157,7 @@ namespace MSNK.Controllers
             List<AkCarta> akCartaList = _context.AkCarta
                 .Include(b => b.JKW)
                 .Include(b => b.JParas)
-                .Where(b=>b.JParas.Kod == "4" && b.Kod.Substring(0,1) == "H")
+                .Where(b=>b.JParas.Kod == "4")
                 .OrderBy(b => b.Kod)
                 .ToList();
 
@@ -243,6 +243,22 @@ namespace MSNK.Controllers
             CartEmpty();
             return View();
         }
+        // on change CaraBayar controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetCaraBayar(int data)
+        {
+            try
+            {
+                var result = await _context.JCaraBayar.FindAsync(data);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change CaraBayar controller end
 
         // get an item from cart akTerima1
         public JsonResult GetAnItemCartAkTerima1(AkTerima1 akTerima1)
@@ -393,6 +409,10 @@ namespace MSNK.Controllers
                     var jCaraBayar = _context.JCaraBayar.Find(item.JCaraBayarId);
 
                     item.JCaraBayar = jCaraBayar;
+                    if (item.JenisCek == null)
+                    {
+                        item.JenisCek = "";
+                    }
                 }
 
                 return Json(new { result = "OK", record = data });
