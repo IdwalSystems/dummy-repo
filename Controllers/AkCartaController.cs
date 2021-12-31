@@ -90,8 +90,6 @@ namespace MSNK.Controllers
         }
 
         // POST: AkCarta/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkCarta akCarta, int JKWId, int JJenisId, int JParasId)
@@ -154,8 +152,6 @@ namespace MSNK.Controllers
         }
 
         // POST: AkCarta/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkCarta akCarta, int JKWId, int JJenisId, int JParasId)
@@ -244,7 +240,6 @@ namespace MSNK.Controllers
                 .Include(a => a.AkPO1)
                 .Include(a => a.AkTerima1)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            _ = akCarta;
 
             string kodCarta = akCarta.Kod;
 
@@ -341,9 +336,6 @@ namespace MSNK.Controllers
                 await _context.SaveChangesAsync();
                 TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
             }
-
-            //_context.AkCarta.Remove(akCarta);
-            //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

@@ -8,7 +8,7 @@
 <div class="row">
     <div class="col-md-12">
         <form asp-action="Create">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="card box-shadow border-success mb-3">
                 <div class="card-header bg-success text-white">
                     <h5>Baucer Jurnal - @ViewData["Title"]</h5>
@@ -37,18 +37,6 @@
                             <span class="text-danger control-label">*</span>
                             <input asp-for="Tarikh" class="form-control form-control-sm" type="date" />
                             <span asp-validation-for="Tarikh" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label asp-for="JumDebit" class="control-label"></label>
-                            <input asp-for="JumDebit" class="form-control form-control-sm" id="JumDebit" value="0.00" readonly />
-                            <span asp-validation-for="JumDebit" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label asp-for="JumKredit" class="control-label"></label>
-                            <input asp-for="JumKredit" class="form-control form-control-sm" id="JumKredit" value="0.00" readonly />
-                            <span asp-validation-for="JumKredit" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -91,9 +79,6 @@
                                 <tfoot>
                                     <tr>
                                         <td id="akCartaId" hidden></td>
-                                        @*<td>
-                                                <input class="form-control form-control-sm" type="number" id="txtIndeksObjek" disabled>
-                                            </td>*@
                                         <td>
                                             <select class="form-control form-control-sm select2" id="txtKodAkaun" style="width:100%">
                                                 <option value="" hidden>-- Pilih Kod Akaun --</option>
@@ -109,6 +94,28 @@
                                     </tr>
                                 </tfoot>
                             </table>
+                        </div>
+                        <div class="card-footer">
+                            <div class="form-row">
+                                <div class="form-group col-md-4 offset-md-4">
+                                    <div class="input-group input-group-sm mb-3">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text font-weight-bold">Jumlah Debit RM</div>
+                                        </div>
+                                        <input asp-for="JumDebit" class="form-control form-control-sm font-weight-bold text-right" id="JumDebit" value="0.00" readonly />
+                                    </div>
+                                    <span asp-validation-for="JumDebit" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <div class="input-group input-group-sm mb-3">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text font-weight-bold">Jumlah Kredit RM</div>
+                                        </div>
+                                        <input asp-for="JumKredit" class="form-control form-control-sm font-weight-bold text-right" id="JumKredit" value="0.00" readonly />
+                                    </div>
+                                    <span asp-validation-for="JumKredit" class="text-danger"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     @*table Objek end*@

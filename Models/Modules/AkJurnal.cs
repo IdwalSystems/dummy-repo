@@ -23,9 +23,11 @@ namespace MSNK.Models.Modules
         public DateTime? TarikhPosting { get; set; }
         [DisplayName("Jumlah Debit RM")]
         [Column(TypeName = "decimal(18, 2)")]
+        [Compare("JumKredit", ErrorMessage ="Pastikan jumlah debit dan jumlah kredit sama")]
         public decimal JumDebit { get; set; }
         [DisplayName("Jumlah Kredit RM")]
         [Column(TypeName = "decimal(18, 2)")]
+        [Compare("JumDebit", ErrorMessage = "Pastikan jumlah debit dan jumlah kredit sama")]
         public decimal JumKredit { get; set; }
         [MaxLength(100)]
         [Display(Name = "Catatan 1")]
