@@ -76,6 +76,13 @@ namespace MSNK.Controllers
             ViewBag.JJawatanPekerja = JJawatanPekerjaList;
 
         }
+
+        private void PopulateTable(int? id)
+        {
+            List<SuTanggunganPekerja> suTanggungan = _context.SuTanggunganPekerja.Where(b => b.SuPekerjaId == id).ToList();
+            ViewBag.suTanggungan = suTanggungan;
+        }
+
         private JsonResult CartEmpty()
         {
             try
@@ -87,6 +94,21 @@ namespace MSNK.Controllers
             catch (Exception ex)
             {
                 return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        private void PopulateCart(SuPekerja suPekerja)
+        {
+            List<SuTanggunganPekerja> suTanggungan = _context.SuTanggunganPekerja
+                .Where(b => b.SuPekerjaId == suPekerja.Id)
+                .ToList();
+            foreach (SuTanggunganPekerja suT in suTanggungan)
+            {
+                _cart.AddItem1(
+                    suT.SuPekerjaId,
+                    suT.Nama,
+                    suT.Hubungan,
+                    suT.NoKP
+                    );
             }
         }
 
@@ -112,7 +134,7 @@ namespace MSNK.Controllers
             }
 
             PopulateList();
-            //PopulateTable(id);
+            PopulateTable(id);
             return View(suPekerja);
         }
 
@@ -186,23 +208,23 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var suPekerja = await _context.SuPekerja.FindAsync(id);
+            var suPekerja = await _suPekerjaRepo.GetById((int)id);
             if (suPekerja == null)
             {
                 return NotFound();
             }
-            ViewData["JAgamaId"] = new SelectList(_context.JAgama, "Id", "Id", suPekerja.JAgamaId);
-            ViewData["JBangsaId"] = new SelectList(_context.JBangsa, "Id", "Id", suPekerja.JBangsaId);
-            ViewData["JCaraBayarId"] = new SelectList(_context.JCaraBayar, "Id", "Kod", suPekerja.JCaraBayarId);
-            ViewData["JJawatanPekerjaId"] = new SelectList(_context.JJawatanPekerja, "Id", "Id", suPekerja.JJawatanPekerjaId);
-            ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", suPekerja.JNegeriId);
+
+            CartEmpty();
+            PopulateList();
+            PopulateTable(id);
+            PopulateCart(suPekerja);
             return View(suPekerja);
         }
 
         // POST: SuPekerja/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NoGaji,Nama,Alamat1,Alamat2,Alamat3,Poskod,Bandar,JNegeriId,TelefonRumah,TelefonBimbit,Emel,StatusKahwin,BilAnak,GajiPokok,TarikhMasukKerja,TarikhBerhentiKerja,TarikhPencen,JAgamaId,JBangsaId,JJawatanPekerjaId,JCaraBayarId,NoAkaunBank,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] SuPekerja suPekerja)
+        public async Task<IActionResult> Edit(int id, SuPekerja suPekerja)
         {
             if (id != suPekerja.Id)
             {
@@ -229,11 +251,7 @@ namespace MSNK.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["JAgamaId"] = new SelectList(_context.JAgama, "Id", "Id", suPekerja.JAgamaId);
-            ViewData["JBangsaId"] = new SelectList(_context.JBangsa, "Id", "Id", suPekerja.JBangsaId);
-            ViewData["JCaraBayarId"] = new SelectList(_context.JCaraBayar, "Id", "Kod", suPekerja.JCaraBayarId);
-            ViewData["JJawatanPekerjaId"] = new SelectList(_context.JJawatanPekerja, "Id", "Id", suPekerja.JJawatanPekerjaId);
-            ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", suPekerja.JNegeriId);
+            PopulateList();
             return View(suPekerja);
         }
 
@@ -252,6 +270,7 @@ namespace MSNK.Controllers
                 .Include(s => s.JJawatanPekerja)
                 .Include(s => s.JNegeri)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            PopulateTable(id);
             if (suPekerja == null)
             {
                 return NotFound();

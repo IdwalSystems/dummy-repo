@@ -23,6 +23,8 @@ namespace MSNK.Models.Modules
         [MaxLength(4)]
         [DisplayName("Tahun Belanjawan")]
         public string Tahun { get; set; }
+        public DateTime TempohSiap { get; set; }
+        public DateTime TarikhSiap { get; set; }
         //field end
 
         //flag
