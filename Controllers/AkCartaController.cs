@@ -94,7 +94,69 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkCarta akCarta, int JKWId, int JJenisId, int JParasId)
         {
-            if (CheckKod(akCarta.Kod))
+            string paras = _context.JParas.FirstOrDefault(q => q.Id == JParasId).Kod;
+            int kodCarta = Convert.ToInt32(akCarta.Kod.Substring(1));
+            int kodman = Convert.ToInt32(akCarta.Kod.Substring(1, 1));
+            int kodsen = Convert.ToInt32(akCarta.Kod.Substring(2, 1));
+            int kodhyaku = Convert.ToInt32(akCarta.Kod.Substring(3, 1));
+            int kodju = Convert.ToInt32(akCarta.Kod.Substring(4));
+            string prefix = akCarta.Kod.Substring(0, 1);
+            bool check = false;
+            bool check2 = false;
+
+            if (paras == "1")
+            {
+                if (kodman > 0 && kodsen == 0 && kodhyaku == 0&& kodju==0)
+                {
+                    check = true;
+                }
+            }
+            else if (paras == "2")
+            {
+                if (kodman > 0 && kodsen > 0 && kodhyaku == 0 && kodju == 0)
+                {
+                    check = true;
+                }
+            }
+            else if (paras == "3")
+            {
+                if (kodman > 0 && kodsen > 0 && kodhyaku > 0 && kodju == 0)
+                {
+                    check = true;
+                }
+            }
+            else if (paras == "4")
+            {
+                if (kodman > 0 && kodsen > 0 && kodhyaku > 0 && kodju > 0 )
+                {
+                    check = true;
+                }
+            }
+
+            if(paras == "4")
+            {
+                check2 = CheckKod(prefix + (kodman * 10000 + kodsen * 1000 + kodhyaku * 100));
+            }
+            else if (paras == "3")
+            {
+                check2 = CheckKod(prefix + (kodman * 10000 + kodsen * 1000));
+            }
+            else if (paras == "2")
+            {
+                check2 = CheckKod(prefix + (kodman * 10000));
+            }
+
+            ///////---------------------------------------------------
+            if (!check)
+            {
+                TempData[SD.Error] = "Maklumat gagal ditambah. Kod Carta " + akCarta.Kod + " tidak sesuai untuk Paras " + paras + ". ";
+            }
+            else if (!check2)
+            {
+                int parasatas = Convert.ToInt32(paras)-1;
+                TempData[SD.Error] = "Maklumat gagal ditambah. Pastikan Paras " + parasatas + " telah wujud. ";
+            }
+            else if (CheckKod(akCarta.Kod))
             {
                 TempData[SD.Error] = "Maklumat gagal ditambah. Kod Carta " + akCarta.Kod + " sudah digunakan. ";
             }
@@ -123,6 +185,7 @@ namespace MSNK.Controllers
                     }
                 }
             }
+
             PopulateList();
             return View(akCarta);
         }

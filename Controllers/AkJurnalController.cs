@@ -182,43 +182,44 @@ namespace MSNK.Controllers
                 kredit += q.Kredit;
             };
 
-            if(!(debit == kredit))
+            if(debit == kredit)
             {
-                TempData[SD.Error] = "Pastikan jumlah debit = jumlah kredit";
-                PopulateList();
-                return View(akJurnal);
-            }
-
-            if (ModelState.IsValid)
-            {
-                string noRujukan = GetKod(akJurnal.JKWId);
-                if (akJurnal != null && JKWId != 0)
+                if (ModelState.IsValid)
                 {
-                    m.JKWId = akJurnal.JKWId;
-                    m.NoJurnal = noRujukan;
-                    m.Tarikh = akJurnal.Tarikh;
-                    m.JumDebit = debit;
-                    m.JumKredit = kredit;
-                    m.Catatan1 = akJurnal.Catatan1;
-                    m.Catatan2 = akJurnal.Catatan2;
-                    m.Catatan3 = akJurnal.Catatan3;
-                    m.Catatan4 = akJurnal.Catatan4;
-                    m.Posting = akJurnal.Posting;
-                    m.Cetak = akJurnal.Cetak;
-                    m.Batal = akJurnal.Batal;
-                    m.UserId = username;
-                    m.TarMasuk = DateTime.Now;
-                    m.AkJurnal1 = _cart.Lines1.ToArray();
+                    string noRujukan = GetKod(akJurnal.JKWId);
+                    if (akJurnal != null && JKWId != 0)
+                    {
+                        m.JKWId = akJurnal.JKWId;
+                        m.NoJurnal = noRujukan;
+                        m.Tarikh = akJurnal.Tarikh;
+                        m.JumDebit = debit;
+                        m.JumKredit = kredit;
+                        m.Catatan1 = akJurnal.Catatan1;
+                        m.Catatan2 = akJurnal.Catatan2;
+                        m.Catatan3 = akJurnal.Catatan3;
+                        m.Catatan4 = akJurnal.Catatan4;
+                        m.Posting = akJurnal.Posting;
+                        m.Cetak = akJurnal.Cetak;
+                        m.Batal = akJurnal.Batal;
+                        m.UserId = username;
+                        m.TarMasuk = DateTime.Now;
+                        m.AkJurnal1 = _cart.Lines1.ToArray();
 
-                    await _akJurnalRepo.Insert(m);
-                    await AddLogAsync("Tambah", noRujukan, kredit);
-                    await _context.SaveChangesAsync();
+                        await _akJurnalRepo.Insert(m);
+                        await AddLogAsync("Tambah", noRujukan, kredit);
+                        await _context.SaveChangesAsync();
 
-                    CartEmpty();
-                    TempData[SD.Success] = "Maklumat berjaya ditambah. No jurnal adalah " + noRujukan;
-                    return RedirectToAction(nameof(Index));
+                        CartEmpty();
+                        TempData[SD.Success] = "Maklumat berjaya ditambah. No jurnal adalah " + noRujukan;
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
             }
+            else
+            {
+                TempData[SD.Error] = "Pastikan jumlah debit = jumlah kredit";
+            }
+
             PopulateList();
             return View(akJurnal);
         }
