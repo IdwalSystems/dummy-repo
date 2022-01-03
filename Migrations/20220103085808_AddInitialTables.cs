@@ -539,6 +539,8 @@ namespace MSNK.Migrations
                     TarikhPosting = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Jumlah = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Tahun = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: true),
+                    TempohSiap = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TarikhSiap = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FlBatal = table.Column<int>(type: "int", nullable: false),
                     FlPosting = table.Column<int>(type: "int", nullable: false),
                     AkPembekalId = table.Column<int>(type: "int", nullable: false),
@@ -1135,7 +1137,7 @@ namespace MSNK.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "5660d780-6744-4947-ace2-5a78c9449dab", "015d4686-5650-415b-ae22-bb82df105f3b", "Admin", "ADMIN" });
+                values: new object[] { "9c542f0f-9ec4-4932-adb9-8712dcb0765d", "595ed9b4-4614-4155-a6a1-1cabbd3f86ba", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkAkaun_AkCartaId1",

@@ -500,6 +500,12 @@ namespace MSNK.Migrations
                     b.Property<DateTime?>("TarikhPosting")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("TarikhSiap")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TempohSiap")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
@@ -1575,8 +1581,8 @@ namespace MSNK.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5660d780-6744-4947-ace2-5a78c9449dab",
-                            ConcurrencyStamp = "015d4686-5650-415b-ae22-bb82df105f3b",
+                            Id = "9c542f0f-9ec4-4932-adb9-8712dcb0765d",
+                            ConcurrencyStamp = "595ed9b4-4614-4155-a6a1-1cabbd3f86ba",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
