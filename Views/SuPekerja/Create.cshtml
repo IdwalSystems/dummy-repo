@@ -17,7 +17,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label asp-for="NoGaji" class="control-label"></label>
-                            <input asp-for="NoGaji" class="form-control form-control-sm" />
+                            <input asp-for="NoGaji" class="form-control form-control-sm" readonly value="@ViewBag.nogaji" />
                             <span asp-validation-for="NoGaji" class="text-danger"></span>
                         </div>
                         <div class="form-group col-md">
@@ -42,9 +42,9 @@
                             <input asp-for="Alamat3" class="form-control form-control-sm" />
                             <span asp-validation-for="Alamat1" class="text-danger"></span>
                         </div>
-                    </div>
+                    </div>*@
                     <div class="form-row">
-                        <div class="form-group col-md">
+                        @*<div class="form-group col-md">
                             <label asp-for="Poskod" class="control-label"></label>
                             <input asp-for="Poskod" class="form-control form-control-sm" />
                             <span asp-validation-for="Poskod" class="text-danger"></span>
@@ -53,19 +53,19 @@
                             <label asp-for="Bandar" class="control-label"></label>
                             <input asp-for="Bandar" class="form-control form-control-sm" />
                             <span asp-validation-for="Bandar" class="text-danger"></span>
-                        </div>
+                        </div>*@
                         <div class="form-group col-md">
                             <label asp-for="JNegeriId" class="control-label"></label>
                             <select asp-for="JNegeriId" class="form-control form-control-sm">
                                 <option value="" hidden>-- Pilih Negeri --</option>
                                 @foreach (var s in ViewBag.JNegeri)
                                 {
-                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    <option value="@s.Id">@s.Perihal </option>
                                 }
                             </select>
                         </div>
                     </div>
-                    <div class="form-row">
+                    @*<div class="form-row">
                         <div class="form-group col-md">
                             <label asp-for="JAgamaId" class="control-label"></label>
                             <select asp-for="JAgamaId" class="form-control form-control-sm">
@@ -91,8 +91,8 @@
                             <input asp-for="StatusKahwin" class="form-control form-control-sm" />
                             <span asp-validation-for="StatusKahwin" class="text-danger"></span>
                         </div>
-                    </div>
-                    <div class="form-row">
+                    </div>*@
+                    @*<div class="form-row">
                         <div class="form-group col-md">
                             <label asp-for="TelefonRumah" class="control-label"></label>
                             <input asp-for="TelefonRumah" class="form-control form-control-sm" type="tel" />
@@ -108,8 +108,8 @@
                             <input asp-for="Emel" class="form-control form-control-sm" type="email" />
                             <span asp-validation-for="Emel" class="text-danger"></span>
                         </div>
-                    </div>
-                    <div class="form-row">
+                    </div>*@
+                    @*<div class="form-row">
                         <div class="form-group col-md">
                             <label asp-for="TarikhMasukKerja" class="control-label"></label>
                             <input asp-for="TarikhMasukKerja" class="form-control form-control-sm" type="date" />
@@ -125,8 +125,8 @@
                             <input asp-for="TarikhPencen" class="form-control form-control-sm" type="date" />
                             <span asp-validation-for="TarikhPencen" class="text-danger"></span>
                         </div>
-                    </div>
-                    <div class="form-row">
+                    </div>*@
+                    @*<div class="form-row">
                         <div class="form-group col-md">
                             <label asp-for="JJawatanPekerjaId" class="control-label"></label>
                             <select asp-for="JJawatanPekerjaId" class="form-control form-control-sm">

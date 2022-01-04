@@ -41,13 +41,13 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Pencen")]
         public DateTime? TarikhPencen { get; set; }
         [DisplayName("Agama")]
-        public int JAgamaId { get; set; }
+        public int? JAgamaId { get; set; }
         [DisplayName("Bangsa")]
-        public int JBangsaId { get; set; }
+        public int? JBangsaId { get; set; }
         [DisplayName("Jawatan")]
-        public int JJawatanPekerjaId { get; set; }
+        public int? JJawatanPekerjaId { get; set; }
         [DisplayName("Cara Bayar")]
-        public int JCaraBayarId { get; set; }
+        public int? JCaraBayarId { get; set; }
         [DisplayName("No Akaun Bank")]
         public string NoAkaunBank { get; set; }
 

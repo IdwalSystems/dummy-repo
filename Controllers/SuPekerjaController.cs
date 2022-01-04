@@ -77,6 +77,26 @@ namespace MSNK.Controllers
 
         }
 
+        private string GetNoGaji()
+        {
+            var suP = _suPekerjaRepo.GetAll()
+                .Result
+                .OrderByDescending(s => s.NoGaji).FirstOrDefault();
+            int no = 0;
+            if (suP != null)
+            {
+                if (int.TryParse(suP.NoGaji, out no))
+                {
+                    no += 1;
+                }
+            }
+            else
+            {
+                no = 1;
+            }
+            return no.ToString("D5");
+        }
+
         private void PopulateTable(int? id)
         {
             List<SuTanggunganPekerja> suTanggungan = _context.SuTanggunganPekerja.Where(b => b.SuPekerjaId == id).ToList();
@@ -141,6 +161,7 @@ namespace MSNK.Controllers
         // GET: SuPekerja/Create
         public IActionResult Create()
         {
+            ViewBag.nogaji = GetNoGaji();
             PopulateList();
             CartEmpty();
             return View();
@@ -158,27 +179,27 @@ namespace MSNK.Controllers
                 //string noRujukan = GetKod(akJurnal.JKWId);
                 if (suPekerja != null)
                 {
-                    m.NoGaji = suPekerja.NoGaji;
+                    m.NoGaji = GetNoGaji();
                     m.Nama = suPekerja.Nama;
-                    m.Alamat1 = suPekerja.Alamat1;
-                    m.Alamat2 = suPekerja.Alamat2;
-                    m.Alamat3 = suPekerja.Alamat3;
-                    m.Poskod = suPekerja.Poskod;
-                    m.Bandar = suPekerja.Bandar;
+                    //m.Alamat1 = suPekerja.Alamat1;
+                    //m.Alamat2 = suPekerja.Alamat2;
+                    //m.Alamat3 = suPekerja.Alamat3;
+                    //m.Poskod = suPekerja.Poskod;
+                    //m.Bandar = suPekerja.Bandar;
                     m.JNegeriId = suPekerja.JNegeriId;
-                    m.TelefonRumah = suPekerja.TelefonRumah;
-                    m.TelefonBimbit = suPekerja.TelefonBimbit;
-                    m.Emel = suPekerja.Emel;
-                    m.StatusKahwin = suPekerja.StatusKahwin;
-                    m.BilAnak = suPekerja.BilAnak;
-                    m.GajiPokok = suPekerja.GajiPokok;
-                    m.TarikhMasukKerja = suPekerja.TarikhMasukKerja;
-                    m.TarikhBerhentiKerja = suPekerja.TarikhBerhentiKerja;
-                    m.TarikhPencen = suPekerja.TarikhPencen;
-                    m.JAgamaId = suPekerja.JAgamaId;
-                    m.JBangsaId = suPekerja.JBangsaId;
-                    m.JJawatanPekerjaId = suPekerja.JJawatanPekerjaId;
-                    m.JCaraBayarId = suPekerja.JCaraBayarId;
+                    //m.TelefonRumah = suPekerja.TelefonRumah;
+                    //m.TelefonBimbit = suPekerja.TelefonBimbit;
+                    //m.Emel = suPekerja.Emel;
+                    //m.StatusKahwin = suPekerja.StatusKahwin;
+                    //m.BilAnak = suPekerja.BilAnak;
+                    //m.GajiPokok = suPekerja.GajiPokok;
+                    //m.TarikhMasukKerja = suPekerja.TarikhMasukKerja;
+                    //m.TarikhBerhentiKerja = suPekerja.TarikhBerhentiKerja;
+                    //m.TarikhPencen = suPekerja.TarikhPencen;
+                    //m.JAgamaId = suPekerja.JAgamaId;
+                    //m.JBangsaId = suPekerja.JBangsaId;
+                    //m.JJawatanPekerjaId = suPekerja.JJawatanPekerjaId;
+                    //m.JCaraBayarId = suPekerja.JCaraBayarId;
                     m.NoAkaunBank = suPekerja.NoAkaunBank;
                     m.UserId = username;
                     m.TarMasuk = DateTime.Now;
