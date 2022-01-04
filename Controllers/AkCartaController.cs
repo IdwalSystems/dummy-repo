@@ -145,6 +145,10 @@ namespace MSNK.Controllers
             {
                 check2 = CheckKod(prefix + (kodman * 10000));
             }
+            else if (paras == "1")
+            {
+                check2 = true;
+            }
 
             ///////---------------------------------------------------
             if (!check)
