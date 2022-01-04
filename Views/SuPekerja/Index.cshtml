@@ -23,7 +23,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Nama)
                 </th>
-                <th>
+                @*<th>
                     @Html.DisplayNameFor(model => model.Alamat1)
                 </th>
                 <th>
@@ -52,11 +52,11 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.TarikhPencen)
-                </th>
+                </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.NoAkaunBank)
                 </th>
-                <th>
+                @*<th>
                     @Html.DisplayNameFor(model => model.JNegeri)
                 </th>
                 <th>
@@ -67,7 +67,7 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.JJawatanPekerja)
-                </th>
+                </th>*@
                 <th></th>
             </tr>
         </thead>
@@ -81,7 +81,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Nama)
                     </td>
-                    <td>
+                    @*<td>
                         @Html.DisplayFor(modelItem => item.Alamat1)
                     </td>
                     <td>
@@ -110,11 +110,11 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TarikhPencen)
-                    </td>
+                    </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.NoAkaunBank)
                     </td>
-                    <td>
+                    @*<td>
                         @Html.DisplayFor(modelItem => item.JNegeri.Kod)
                     </td>
                     <td>
@@ -125,7 +125,7 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.JJawatanPekerja.Id)
-                    </td>
+                    </td>*@
                     <td>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
