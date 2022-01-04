@@ -12,6 +12,7 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         [DisplayName("No Gaji")]
         public string NoGaji { get; set; }
+        public string NoKp { get; set; }
         public string Nama { get; set; }
         [DisplayName("Alamat")]
         public string Alamat1 { get; set; }
