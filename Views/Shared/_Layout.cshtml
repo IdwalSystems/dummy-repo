@@ -55,9 +55,20 @@
                                 <partial name="_TanggunganPartialNavbar" />
                                 <partial name="_BaucerPartialNavbar" />
                             }
+                            else if (User.IsInRole("Supervisor"))
+                            {
+                                <partial name="_JadualPartialNavbar" />
+                                <partial name="_DaftarPartialNavbar" />
+                                <partial name="_LejarPartialNavbar" />
+                                <partial name="_TerimaanPartialNavbar" />
+                                <partial name="_TanggunganPartialNavbar" />
+                                <partial name="_BaucerPartialNavbar" />
+                            }
                             else
                             {
                                 <partial name="_TerimaanPartialNavbar" />
+                                <partial name="_TanggunganPartialNavbar" />
+                                <partial name="_BaucerPartialNavbar" />
                             }
                         }
                     </ul>

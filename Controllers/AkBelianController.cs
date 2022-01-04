@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
+using MSNK.Models.Modules.FormModel;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.ViewModel;
 
@@ -201,8 +202,23 @@ namespace MSNK.Controllers
                 .ToList();
             ViewBag.akBelian2 = akBelian2Table;
         }
+        private void PopulateCart()
+        {
+            List<AkBelian1> lines1 = _cart.Lines1.ToList();
 
-        private void PopulateCart(AkBelian akBelian)
+            foreach(AkBelian1 item in lines1)
+            {
+                var carta = _context.AkCarta.Where(x => x.Id == item.AkCartaId).FirstOrDefault();
+                item.AkCarta = carta;
+            }
+
+            List<AkBelian2> lines2 = _cart.Lines2.ToList();
+
+            ViewBag.akBelian1 = lines1;
+            ViewBag.akBelian2 = lines2;
+        }
+
+        private void PopulateCartFromDb(AkBelian akBelian)
         {
             List<AkBelian1> akBelian1Table = _context.AkBelian1
                 .Include(b => b.AkCarta)
@@ -285,6 +301,7 @@ namespace MSNK.Controllers
         // GET: AkBelian/Create
         public IActionResult Create()
         {
+            
             PopulateList();
             CartEmpty();
             return View();
@@ -294,6 +311,8 @@ namespace MSNK.Controllers
         {
             try
             {
+                ViewBag.akBelian1 = new List<int>();
+                ViewBag.akBelian2 = new List<int>();
                 _cart.Clear1();
                 _cart.Clear2();
 
@@ -578,7 +597,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int AkBankId)
+        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int AkBankId, string NamaPembekal, decimal JumlahPerihal)
         {
             AkBelian m = new AkBelian();
             var user = await _userManager.GetUserAsync(User);
@@ -586,7 +605,27 @@ namespace MSNK.Controllers
             var noRujukan = "IN/" + akBelian.NoInbois;
 
             var akPo = await _akPORepo.GetById(AkPOId);
+            // checking for existing no rujukan
+            var countNoRujukan = _context.AkBelian.Where(x => x.NoInbois == noRujukan).Count();
 
+            if (countNoRujukan > 0)
+            {
+                TempData[SD.Error] = "Maklumat gagal disimpan. No rujukan pendaftaran " + akBelian.NoInbois + " telah wujud";
+                //PopulateCart();
+                CartEmpty();
+                PopulateList();
+                return View(akBelian);
+            }
+
+            // checking for jumlah objek & jumlah perihal
+            if ( akBelian.Jumlah != JumlahPerihal)
+            {
+                TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Perihal";
+                //PopulateCart();
+                CartEmpty();
+                PopulateList();
+                return View(akBelian);
+            }
             if (ModelState.IsValid)
             {
                 if (akBelian != null && JKWId != 0 && AkPembekalId != 0 && AkBankId != 0)
@@ -641,6 +680,7 @@ namespace MSNK.Controllers
                 }
             }
 
+            PopulateCart();
             PopulateList();
             return View(akBelian);
         }

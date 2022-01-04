@@ -13,7 +13,7 @@ using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin , Supervisor")]
     public class AkPembekalController : Controller
     {
         private readonly ApplicationDbContext _context;

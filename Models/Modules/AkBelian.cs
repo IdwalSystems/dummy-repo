@@ -24,6 +24,7 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "No Rujukan Diperlukan")]
         [MaxLength(20)]
         public string NoInbois { get; set; }
+        [BindProperty]
         public decimal Jumlah { get; set; }
         //field end
 

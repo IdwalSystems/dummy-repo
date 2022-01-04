@@ -99,7 +99,7 @@
             var item = data[i];
             var str = "<tr><td id='txtIndek' hidden>" + item.indek +
                 "</td><td>" + item.baris +
-                "</td><td>" + item.bil +
+                "</td><td hidden>" + item.bil +
                 "</td><td class='text-uppercase'>" + item.noStok +
                 "</td><td class='text-uppercase'>" + item.perihal +
                 "</td><td>" + item.kuantiti +
@@ -250,6 +250,7 @@
         //Add Bil cell.
         var cell = $(row.insertCell(-1));
         cell.html(txtBil.val());
+        cell.prop("hidden", !this.checked);
 
         //Add No Stok cell.
         var cell = $(row.insertCell(-1));
@@ -402,24 +403,22 @@
         var AkBelian1 = {
             AkCartaId: akCartaId
         }
-        if (name != null) {
-            $.ajax({
-                type: "POST",
-                url: "/AkBelian/GetAnItemCartAkBelian1",
-                data: AkBelian1,
-                dataType: "json",
-                success: function (r) {
-                    //insert data in modal objek
-                    $("#moId1").val(r.record.id);
-                    $("#moKodAkaun").val(r.record.akCartaId);
-                    $("#moAmaun1").val(r.record.amaun);
+        $.ajax({
+            type: "POST",
+            url: "/AkBelian/GetAnItemCartAkBelian1",
+            data: AkBelian1,
+            dataType: "json",
+            success: function (r) {
+                //insert data in modal objek
+                $("#moId1").val(r.record.id);
+                $("#moKodAkaun").val(r.record.akCartaId);
+                $("#moAmaun1").val(r.record.amaun);
 
-                    //show modal objek
-                    $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
+                //show modal objek
+                $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
 
-                }
-            });
-        }
+            }
+        });
     };
 
     function modalUpdate1() {
@@ -556,7 +555,7 @@
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
                                     "</td><td class='text-left'>" + item1.baris +
-                                    "</td><td class='text-left'>" + item1.bil +
+                                    "</td><td class='text-left' hidden>" + item1.bil +
                                     "</td><td class='text-left'>" + item1.noStok +
                                     "</td><td class='text-left'>" + item1.perihal +
                                     "</td><td class='text-right'>" + item1.kuantiti +
