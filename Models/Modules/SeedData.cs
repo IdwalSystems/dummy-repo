@@ -34,56 +34,56 @@ namespace MSNK.Models.Modules
         {
             context.Database.EnsureCreated();
 
-            // Look for any movies.
-            if (context.JKW.Any())
-            {
-                //return;   // DB has been seeded
-            }
-            else
-            {
-                context.JKW.AddRange(
-                    new JKW
-                    {
-                        Kod = "100",
-                        Perihal = "MAJLIS SUKAN NEGERI KEDAH"
-                    }
-                );
-            }
+            //// Look for any movies.
+            //if (context.JKW.Any())
+            //{
+            //    //return;   // DB has been seeded
+            //}
+            //else
+            //{
+            //    context.JKW.AddRange(
+            //        new JKW
+            //        {
+            //            Kod = "100",
+            //            Perihal = "MAJLIS SUKAN NEGERI KEDAH"
+            //        }
+            //    );
+            //}
 
-            if (context.JCaraBayar.Any())
-            {
-                //return;
-            }
-            else
-            {
-                context.JCaraBayar.AddRange(
-                    new JCaraBayar
-                    {
-                        Kod = "TN",
-                        Perihal = "TUNAI"
-                    },
-                    new JCaraBayar
-                    {
-                        Kod = "CK",
-                        Perihal = "CEK"
-                    },
-                    new JCaraBayar
-                    {
-                        Kod = "MK",
-                        Perihal = "MAKLUMAN KREDIT"
-                    },
-                    new JCaraBayar
-                    {
-                        Kod = "EF",
-                        Perihal = "EFT"
-                    },
-                    new JCaraBayar
-                    {
-                        Kod = "FP",
-                        Perihal = "FPX"
-                    }
-                );
-            }
+            //if (context.JCaraBayar.Any())
+            //{
+            //    //return;
+            //}
+            //else
+            //{
+            //    context.JCaraBayar.AddRange(
+            //        new JCaraBayar
+            //        {
+            //            Kod = "TN",
+            //            Perihal = "TUNAI"
+            //        },
+            //        new JCaraBayar
+            //        {
+            //            Kod = "CK",
+            //            Perihal = "CEK"
+            //        },
+            //        new JCaraBayar
+            //        {
+            //            Kod = "MK",
+            //            Perihal = "MAKLUMAN KREDIT"
+            //        },
+            //        new JCaraBayar
+            //        {
+            //            Kod = "EF",
+            //            Perihal = "EFT"
+            //        },
+            //        new JCaraBayar
+            //        {
+            //            Kod = "FP",
+            //            Perihal = "FPX"
+            //        }
+            //    );
+            //}
 
             if (context.SiModul.Any())
             {
@@ -165,30 +165,30 @@ namespace MSNK.Models.Modules
                 );
             }
 
-            if (context.JBank.Any())
-            {
-                //return;   // DB has been seeded
-            }
-            else
-            {
-                context.JBank.AddRange(
-                    new JBank
-                    {
-                        Kod = "BIMB",
-                        Nama = "BANK ISLAM MALAYSIA BERHAD"
-                    },
-                    new JBank
-                    {
-                        Kod = "BMMB",
-                        Nama = "BANK MUAMALAT MALAYSIA BERHAD"
-                    },
-                    new JBank
-                    {
-                        Kod = "MBB",
-                        Nama = "MALAYAN BANKING BERHAD"
-                    }
-                );
-            }
+            //if (context.JBank.Any())
+            //{
+            //    //return;   // DB has been seeded
+            //}
+            //else
+            //{
+            //    context.JBank.AddRange(
+            //        new JBank
+            //        {
+            //            Kod = "BIMB",
+            //            Nama = "BANK ISLAM MALAYSIA BERHAD"
+            //        },
+            //        new JBank
+            //        {
+            //            Kod = "BMMB",
+            //            Nama = "BANK MUAMALAT MALAYSIA BERHAD"
+            //        },
+            //        new JBank
+            //        {
+            //            Kod = "MBB",
+            //            Nama = "MALAYAN BANKING BERHAD"
+            //        }
+            //    );
+            //}
 
             if (context.JNegeri.Any())
             {
@@ -290,13 +290,13 @@ namespace MSNK.Models.Modules
                     new JJenis
                     {
                         Kod = "L",
-                        Nama = "Liabiliti"
+                        Nama = "LIABILITI"
                     },
 
                     new JJenis
                     {
                         Kod = "E",
-                        Nama = "Ekuiti"
+                        Nama = "EKUITI"
                     },
 
                     new JJenis
@@ -312,7 +312,7 @@ namespace MSNK.Models.Modules
                     new JJenis
                     {
                         Kod = "H",
-                        Nama = "Hasil"
+                        Nama = "HASIL"
                     }
 
                 );
@@ -347,609 +347,609 @@ namespace MSNK.Models.Modules
                 );
             }
 
-            if (context.JAgama.Any())
-            {
-                //return;   // DB has been seeded
-            }
-            else
-            {
-                context.JAgama.AddRange(
-                    new JAgama
-                    {
-                        Perihal = "ISLAM"
-                    },
+            //if (context.JAgama.Any())
+            //{
+            //    //return;   // DB has been seeded
+            //}
+            //else
+            //{
+            //    context.JAgama.AddRange(
+            //        new JAgama
+            //        {
+            //            Perihal = "ISLAM"
+            //        },
 
-                    new JAgama
-                    {
-                        Perihal = "BUDHA"
-                    },
+            //        new JAgama
+            //        {
+            //            Perihal = "BUDHA"
+            //        },
 
-                    new JAgama
-                    {
-                        Perihal = "KRISTIAN"
-                    },
-                    new JAgama
-                    {
-                        Perihal = "HINDU"
-                    },
-                    new JAgama
-                    {
-                        Perihal = "TIADA AGAMA"
-                    },
-                    new JAgama
-                    {
-                        Perihal = "LAIN-LAIN"
-                    }
+            //        new JAgama
+            //        {
+            //            Perihal = "KRISTIAN"
+            //        },
+            //        new JAgama
+            //        {
+            //            Perihal = "HINDU"
+            //        },
+            //        new JAgama
+            //        {
+            //            Perihal = "TIADA AGAMA"
+            //        },
+            //        new JAgama
+            //        {
+            //            Perihal = "LAIN-LAIN"
+            //        }
 
-                );
-            }
+            //    );
+            //}
 
-            if (context.JBangsa.Any())
-            {
-                //return;   // DB has been seeded
-            }
-            else
-            {
-                context.JBangsa.AddRange(
-                    new JBangsa
-                    {
-                        Perihal = "MELAYU",
-                    },
+            //if (context.JBangsa.Any())
+            //{
+            //    //return;   // DB has been seeded
+            //}
+            //else
+            //{
+            //    context.JBangsa.AddRange(
+            //        new JBangsa
+            //        {
+            //            Perihal = "MELAYU",
+            //        },
 
-                    new JBangsa
-                    {
-                        Perihal = "CINA"
-                    },
+            //        new JBangsa
+            //        {
+            //            Perihal = "CINA"
+            //        },
 
-                    new JBangsa
-                    {
-                        Perihal = "INDIA"
-                    },
-                    new JBangsa
-                    {
-                        Perihal = "LAIN-LAIN"
-                    }
+            //        new JBangsa
+            //        {
+            //            Perihal = "INDIA"
+            //        },
+            //        new JBangsa
+            //        {
+            //            Perihal = "LAIN-LAIN"
+            //        }
 
-                );
-            }
+            //    );
+            //}
 
-            if (context.JJawatanPekerja.Any())
-            {
-                //return;   // DB has been seeded
-            }
-            else
-            {
-                context.JJawatanPekerja.AddRange(
-                    new JJawatanPekerja
-                    {
-                        Kod = "JT",
-                        Perihal = "JURUTEKNIK"
-                    },
+            //if (context.JJawatanPekerja.Any())
+            //{
+            //    //return;   // DB has been seeded
+            //}
+            //else
+            //{
+            //    context.JJawatanPekerja.AddRange(
+            //        new JJawatanPekerja
+            //        {
+            //            Kod = "JT",
+            //            Perihal = "JURUTEKNIK"
+            //        },
 
-                    new JJawatanPekerja
-                    {
-                        Kod = "PG",
-                        Perihal = "PEGAWAI"
-                    },
+            //        new JJawatanPekerja
+            //        {
+            //            Kod = "PG",
+            //            Perihal = "PEGAWAI"
+            //        },
 
-                    new JJawatanPekerja
-                    {
-                        Kod = "PPG",
-                        Perihal = "PENOLONG PEGAWAI"
-                    }
+            //        new JJawatanPekerja
+            //        {
+            //            Kod = "PPG",
+            //            Perihal = "PENOLONG PEGAWAI"
+            //        }
 
-                );
-            }
+            //    );
+            //}
             context.SaveChanges();
 
             //Data with foreign key
 
-            if (context.AkCarta.Any())
-            {
-                //return;   // DB has been seeded
-            }
-            else
-            {
-                var kw = context.JKW.Where(b => b.Kod == "100").FirstOrDefault();
-                var jenisH = context.JJenis.Where(b => b.Kod == "H").FirstOrDefault();
-                var jenisB = context.JJenis.Where(b => b.Kod == "H").FirstOrDefault();
-                var jenisA = context.JJenis.Where(b => b.Kod == "A").FirstOrDefault();
-                var paras1 = context.JParas.Where(b => b.Kod == "1").FirstOrDefault();
-                var paras2 = context.JParas.Where(b => b.Kod == "2").FirstOrDefault();
-                var paras3 = context.JParas.Where(b => b.Kod == "3").FirstOrDefault();
-                var paras4 = context.JParas.Where(b => b.Kod == "4").FirstOrDefault();
-                context.AkCarta.AddRange(
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "A10000",
-                        Perihal = "ASET SEMASA",
-                        JJenisId = jenisA.Id,
-                        JParasId = paras1.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "A11000",
-                        Perihal = "WANG TUNAI DAN BAKI BANK",
-                        JJenisId = jenisA.Id,
-                        JParasId = paras2.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "A11100",
-                        Perihal = "WANG TUNAI DAN BAKI BANK",
-                        JJenisId = jenisA.Id,
-                        JParasId = paras3.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "A11101",
-                        Perihal = "BIMB ... ",
-                        JJenisId = jenisA.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "A11106",
-                        Perihal = "BMMB ... ",
-                        JJenisId = jenisA.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "A11108",
-                        Perihal = "MBB ... ",
-                        JJenisId = jenisA.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H10000",
-                        Perihal = "Hasil Bukan Cukai",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras1.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11000",
-                        Perihal = "Hasil Bukan Cukai",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras2.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11100",
-                        Perihal = "Hasil Dokumen",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras3.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11101",
-                        Perihal = "Hasil Dokumen Tender",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11102",
-                        Perihal = "Hasil Dokumen Sebutharga",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11203",
-                        Perihal = "ZAKAT SIMPANAN",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11204",
-                        Perihal = "ZAKAT PENDAPATAN",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11206",
-                        Perihal = "ZAKAT PELABURAN/ SAHAM",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11207",
-                        Perihal = "ZAKAT KWSP DAN LTAT",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11219",
-                        Perihal = "ZAKAT HARTA ( FPX / EJEN PUNGUTAN )",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11220",
-                        Perihal = "ZAKAT EMAS / PERAK ( FPX / EJEN PUNGUTAN )",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11301",
-                        Perihal = "ZAKAT PERNIAGAAN",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "H11401",
-                        Perihal = "ZAKAT TANAMAN",
-                        JJenisId = jenisH.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "K",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    // AK CODE (23/12/2021)
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B20000",
-                        Perihal = "PERKHIDMATAN DAN BEKALAN",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras1.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B23000",
-                        Perihal = "PERHUBUNGAN DAN UTILITI",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras2.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B23100",
-                        Perihal = "PERHUBUNGAN",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras3.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B23101",
-                        Perihal = "POS BIASA, MEL UDARA, MEL BERDAFTAR DAN EXPRESS",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B23102",
-                        Perihal = "TELEFON TERMASUK SEWAAN DAN KOS PEMASANGAN ALAT",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B23103",
-                        Perihal = "PERHUBUNGAN TELEKS, TELEGRAF DAN KABEL",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B23199",
-                        Perihal = "PERKHIDMATAN PERHUBUNGAN YANG LAIN",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "D",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B27000",
-                        Perihal = "BEKALAN DAN BAHAN-BAHAN LAIN",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras2.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B27100",
-                        Perihal = "BEKALAN PEJABAT",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras3.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B27101",
-                        Perihal = "BUKU, MAJALAH & AKHBAR",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B27102",
-                        Perihal = "ALAT TULIS KOMPUTER",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    },
-                    new AkCarta
-                    {
-                        JKWId = kw.Id,
-                        Kod = "B27199",
-                        Perihal = "BEKALAN-BEKALAN PEJABAT YANG LAIN",
-                        JJenisId = jenisB.Id,
-                        JParasId = paras4.Id,
-                        DebitKredit = "D",
-                        UmumDetail = "U",
-                        Catatan1 = "",
-                        Catatan2 = "",
-                        Baki = 0.00m
-                    }
-                    // AK CODE (23/12/2021) end
-                );
-            }
-            context.SaveChanges();
+            //if (context.AkCarta.Any())
+            //{
+            //    //return;   // DB has been seeded
+            //}
+            //else
+            //{
+            //    var kw = context.JKW.Where(b => b.Kod == "100").FirstOrDefault();
+            //    var jenisH = context.JJenis.Where(b => b.Kod == "H").FirstOrDefault();
+            //    var jenisB = context.JJenis.Where(b => b.Kod == "H").FirstOrDefault();
+            //    var jenisA = context.JJenis.Where(b => b.Kod == "A").FirstOrDefault();
+            //    var paras1 = context.JParas.Where(b => b.Kod == "1").FirstOrDefault();
+            //    var paras2 = context.JParas.Where(b => b.Kod == "2").FirstOrDefault();
+            //    var paras3 = context.JParas.Where(b => b.Kod == "3").FirstOrDefault();
+            //    var paras4 = context.JParas.Where(b => b.Kod == "4").FirstOrDefault();
+            //    context.AkCarta.AddRange(
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "A10000",
+            //            Perihal = "ASET SEMASA",
+            //            JJenisId = jenisA.Id,
+            //            JParasId = paras1.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "A11000",
+            //            Perihal = "WANG TUNAI DAN BAKI BANK",
+            //            JJenisId = jenisA.Id,
+            //            JParasId = paras2.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "A11100",
+            //            Perihal = "WANG TUNAI DAN BAKI BANK",
+            //            JJenisId = jenisA.Id,
+            //            JParasId = paras3.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "A11101",
+            //            Perihal = "BIMB ... ",
+            //            JJenisId = jenisA.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "A11106",
+            //            Perihal = "BMMB ... ",
+            //            JJenisId = jenisA.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "A11108",
+            //            Perihal = "MBB ... ",
+            //            JJenisId = jenisA.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H10000",
+            //            Perihal = "Hasil Bukan Cukai",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras1.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11000",
+            //            Perihal = "Hasil Bukan Cukai",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras2.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11100",
+            //            Perihal = "Hasil Dokumen",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras3.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11101",
+            //            Perihal = "Hasil Dokumen Tender",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11102",
+            //            Perihal = "Hasil Dokumen Sebutharga",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11203",
+            //            Perihal = "ZAKAT SIMPANAN",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11204",
+            //            Perihal = "ZAKAT PENDAPATAN",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11206",
+            //            Perihal = "ZAKAT PELABURAN/ SAHAM",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11207",
+            //            Perihal = "ZAKAT KWSP DAN LTAT",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11219",
+            //            Perihal = "ZAKAT HARTA ( FPX / EJEN PUNGUTAN )",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11220",
+            //            Perihal = "ZAKAT EMAS / PERAK ( FPX / EJEN PUNGUTAN )",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11301",
+            //            Perihal = "ZAKAT PERNIAGAAN",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "H11401",
+            //            Perihal = "ZAKAT TANAMAN",
+            //            JJenisId = jenisH.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "K",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        // AK CODE (23/12/2021)
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B20000",
+            //            Perihal = "PERKHIDMATAN DAN BEKALAN",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras1.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B23000",
+            //            Perihal = "PERHUBUNGAN DAN UTILITI",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras2.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B23100",
+            //            Perihal = "PERHUBUNGAN",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras3.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B23101",
+            //            Perihal = "POS BIASA, MEL UDARA, MEL BERDAFTAR DAN EXPRESS",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B23102",
+            //            Perihal = "TELEFON TERMASUK SEWAAN DAN KOS PEMASANGAN ALAT",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B23103",
+            //            Perihal = "PERHUBUNGAN TELEKS, TELEGRAF DAN KABEL",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B23199",
+            //            Perihal = "PERKHIDMATAN PERHUBUNGAN YANG LAIN",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "D",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B27000",
+            //            Perihal = "BEKALAN DAN BAHAN-BAHAN LAIN",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras2.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B27100",
+            //            Perihal = "BEKALAN PEJABAT",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras3.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B27101",
+            //            Perihal = "BUKU, MAJALAH & AKHBAR",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B27102",
+            //            Perihal = "ALAT TULIS KOMPUTER",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        },
+            //        new AkCarta
+            //        {
+            //            JKWId = kw.Id,
+            //            Kod = "B27199",
+            //            Perihal = "BEKALAN-BEKALAN PEJABAT YANG LAIN",
+            //            JJenisId = jenisB.Id,
+            //            JParasId = paras4.Id,
+            //            DebitKredit = "D",
+            //            UmumDetail = "U",
+            //            Catatan1 = "",
+            //            Catatan2 = "",
+            //            Baki = 0.00m
+            //        }
+            //        // AK CODE (23/12/2021) end
+            //    );
+            //}
+            //context.SaveChanges();
 
-            if (context.AkBank.Any())
-            {
-                //return;   // DB has been seeded
-            }
-            else
-            {
-                var kw = context.JKW.Where(b => b.Kod == "100").FirstOrDefault();
-                var bank = context.JBank.Where(b => b.Kod == "BIMB").FirstOrDefault();
-                var carta = context.AkCarta.Where(b => b.Kod == "A11101").FirstOrDefault();
+            //if (context.AkBank.Any())
+            //{
+            //    //return;   // DB has been seeded
+            //}
+            //else
+            //{
+            //    var kw = context.JKW.Where(b => b.Kod == "100").FirstOrDefault();
+            //    var bank = context.JBank.Where(b => b.Kod == "BIMB").FirstOrDefault();
+            //    var carta = context.AkCarta.Where(b => b.Kod == "A11101").FirstOrDefault();
 
-                context.AkBank.AddRange(
-                    new AkBank
-                    {
-                        JKWId = kw.Id,
-                        JBankId = 1,
-                        AkCartaId = carta.Id,
-                        Kod = "001",
-                        NoAkaun = "1200210005702"
-                    }
-                );
-            }
-            context.SaveChanges();
+            //    context.AkBank.AddRange(
+            //        new AkBank
+            //        {
+            //            JKWId = kw.Id,
+            //            JBankId = 1,
+            //            AkCartaId = carta.Id,
+            //            Kod = "001",
+            //            NoAkaun = "1200210005702"
+            //        }
+            //    );
+            //}
+            //context.SaveChanges();
 
-            if (context.AkPembekal.Any())
-            {
-            }
-            else
-            {
-                var negeri = context.JNegeri.Where(b => b.Kod == "10").FirstOrDefault();
-                var jbank = context.JBank.Where(b => b.Kod == "BIMB").FirstOrDefault();
+            //if (context.AkPembekal.Any())
+            //{
+            //}
+            //else
+            //{
+            //    var negeri = context.JNegeri.Where(b => b.Kod == "10").FirstOrDefault();
+            //    var jbank = context.JBank.Where(b => b.Kod == "BIMB").FirstOrDefault();
 
-                context.AkPembekal.AddRange(
-                    new AkPembekal
-                    {
-                        KodSykt = "I0001",
-                        NamaSykt = "IDWAL SYSTEMS SDN BHD",
-                        NoPendaftaran = "187842-T",
-                        Alamat1 = "LOT 605G, KOMPLEKS DIAMOND, BANGI BUSINESS PARK, ",
-                        Alamat2 = "JALAN MEDAN BANGI, OFF PERSIARAN BANDAR, ",
-                        Alamat3 = "",
-                        Poskod = "43650",
-                        Bandar = "BANDAR BARU BANGI ",
-                        JNegeriId = negeri.Id,
-                        Telefon1 = "+601133272978",
-                        Emel = "admin@idwal.com.my",
-                        AkaunBank = "1300882525",
-                        JBankId = jbank.Id
-                    }
-                );
-            }
-            context.SaveChanges();
+            //    context.AkPembekal.AddRange(
+            //        new AkPembekal
+            //        {
+            //            KodSykt = "I0001",
+            //            NamaSykt = "IDWAL SYSTEMS SDN BHD",
+            //            NoPendaftaran = "187842-T",
+            //            Alamat1 = "LOT 605G, KOMPLEKS DIAMOND, BANGI BUSINESS PARK, ",
+            //            Alamat2 = "JALAN MEDAN BANGI, OFF PERSIARAN BANDAR, ",
+            //            Alamat3 = "",
+            //            Poskod = "43650",
+            //            Bandar = "BANDAR BARU BANGI ",
+            //            JNegeriId = negeri.Id,
+            //            Telefon1 = "+601133272978",
+            //            Emel = "admin@idwal.com.my",
+            //            AkaunBank = "1300882525",
+            //            JBankId = jbank.Id
+            //        }
+            //    );
+            //}
+            //context.SaveChanges();
 
-            if (context.SuPekerja.Any())
-            {
-            }
-            else
-            {
-                context.SuPekerja.AddRange(
-                    new SuPekerja
-                    {
-                        NoGaji = "A00001",
-                        Nama = "JAMES DOE",
-                        Alamat1 = "55 Jalan Raja Perempuan Mazwin Taman Rishah",
-                        Alamat2 = "",
-                        Poskod = "30100 ",
-                        Bandar = "",
-                        JNegeriId = context.JNegeri.Where(b => b.Perihal.Contains("PERAK")).FirstOrDefault().Id,
-                        TelefonBimbit = "0123456789",
-                        Emel = "jamesdoe@example.com",
-                        StatusKahwin = 0,
-                        BilAnak = 0,
-                        GajiPokok = 2000,
-                        TarikhMasukKerja = DateTime.Parse("2021-03-11"),
-                        JAgamaId = context.JAgama.Where(b => b.Perihal.Contains("LAIN")).FirstOrDefault().Id,
-                        JBangsaId = context.JBangsa.Where(b => b.Perihal.Contains("LAIN")).FirstOrDefault().Id,
-                        JJawatanPekerjaId = context.JJawatanPekerja.Where(b => b.Perihal.Contains("JURU")).FirstOrDefault().Id,
-                        JCaraBayarId = context.JCaraBayar.Where(b => b.Kod == "CK").FirstOrDefault().Id,
-                        NoAkaunBank = "1234509876"
-                    }
-                );
-            }
-            context.SaveChanges();
+            //if (context.SuPekerja.Any())
+            //{
+            //}
+            //else
+            //{
+            //    context.SuPekerja.AddRange(
+            //        new SuPekerja
+            //        {
+            //            NoGaji = "A00001",
+            //            Nama = "JAMES DOE",
+            //            Alamat1 = "55 Jalan Raja Perempuan Mazwin Taman Rishah",
+            //            Alamat2 = "",
+            //            Poskod = "30100 ",
+            //            Bandar = "",
+            //            JNegeriId = context.JNegeri.Where(b => b.Perihal.Contains("PERAK")).FirstOrDefault().Id,
+            //            TelefonBimbit = "0123456789",
+            //            Emel = "jamesdoe@example.com",
+            //            StatusKahwin = 0,
+            //            BilAnak = 0,
+            //            GajiPokok = 2000,
+            //            TarikhMasukKerja = DateTime.Parse("2021-03-11"),
+            //            JAgamaId = context.JAgama.Where(b => b.Perihal.Contains("LAIN")).FirstOrDefault().Id,
+            //            JBangsaId = context.JBangsa.Where(b => b.Perihal.Contains("LAIN")).FirstOrDefault().Id,
+            //            JJawatanPekerjaId = context.JJawatanPekerja.Where(b => b.Perihal.Contains("JURU")).FirstOrDefault().Id,
+            //            JCaraBayarId = context.JCaraBayar.Where(b => b.Kod == "CK").FirstOrDefault().Id,
+            //            NoAkaunBank = "1234509876"
+            //        }
+            //    );
+            //}
+            //context.SaveChanges();
 
             //if (context.AkAkaun.Any()) { }
             //else

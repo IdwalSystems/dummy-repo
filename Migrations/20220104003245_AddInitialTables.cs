@@ -1137,7 +1137,7 @@ namespace MSNK.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "9c542f0f-9ec4-4932-adb9-8712dcb0765d", "595ed9b4-4614-4155-a6a1-1cabbd3f86ba", "Admin", "ADMIN" });
+                values: new object[] { "1963d368-888f-4f74-add1-01840e2b5818", "ee61e760-3aff-4aaf-bdfc-62d3e98171e1", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkAkaun_AkCartaId1",

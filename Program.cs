@@ -26,7 +26,7 @@ namespace MSNK
                 try
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
-                    //SeedData.Initialize(context);
+                    SeedData.Initialize(context);
                 }
                 catch (Exception ex)
                 {
