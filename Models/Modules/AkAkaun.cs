@@ -37,6 +37,6 @@ namespace MSNK.Models.Modules
         public virtual AkCarta AkCarta1 { get; set; }
         [Display(Name = "Carta 2")]
         public virtual AkCarta AkCarta2 { get; set; }
-        public ICollection<AkTerima> AkTerima { get; set; } 
+        //public ICollection<AkTerima> AkTerima { get; set; } 
     }
 }

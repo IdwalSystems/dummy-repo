@@ -188,6 +188,12 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.AkBankId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
+
+            modelBuilder.Entity<AkPV>()
+                .HasOne(m => m.SuPekerja!)
+                .WithMany(t => t.AkPV)
+                .HasForeignKey(m => m.SuPekerjaId)
+                .OnDelete(DeleteBehavior.NoAction);
             //AKPV end
         }
     }

@@ -94,7 +94,7 @@ namespace MSNK.Controllers
                             JKW=i.JKW,
                             AkCarta1 = i.AkCarta1,
                             AkCarta2 = i.AkCarta2,
-                            AkTerima = i.AkTerima
+                            //AkTerima = i.AkTerima
                         });
                     }
                 };

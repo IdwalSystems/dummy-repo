@@ -45,6 +45,8 @@ namespace MSNK.Models.Modules
         public DateTime? TarCekAtauEFT { get; set; }
         [MaxLength(400)]
         public string Perihal { get; set; }
+        [DisplayName("Kod Pekerja")]
+        public int? SuPekerjaId { get; set; }
         //field end
 
         //flag
@@ -81,6 +83,7 @@ namespace MSNK.Models.Modules
         public JCaraBayar JCaraBayar { get; set; }
         public ICollection<AkPV1> AkPV1 { get; set; }
         public ICollection<AkPV2> AkPV2 { get; set; }
+        public SuPekerja SuPekerja { get; set; }
         //relationship end
 
         //log 

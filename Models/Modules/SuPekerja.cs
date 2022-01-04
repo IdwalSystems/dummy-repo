@@ -63,6 +63,7 @@ namespace MSNK.Models.Modules
         public ICollection<SuTanggunganPekerja> SuTanggungan { get; set; }
         [DisplayName("Cara Bayar")]
         public JCaraBayar JCaraBayar { get; set; }
+        public ICollection<AkPV> AkPV { get; set; }
         //relationship end
 
         // log
