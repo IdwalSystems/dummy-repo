@@ -51,9 +51,15 @@ namespace MSNK.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            //modelBuilder.Entity<IdentityRole>()
+            //    .HasData(new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() 
+            //    });
             modelBuilder.Entity<IdentityRole>()
-                .HasData(new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() 
-                });
+                .HasData(
+                    new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() },
+                    new IdentityRole { Name = "Supervisor", NormalizedName = "Supervisor".ToUpper() },
+                    new IdentityRole { Name = "User", NormalizedName = "User".ToUpper() }
+                );
 
             modelBuilder.Entity<AkBank>()
                 .HasOne(e => e.JBank)

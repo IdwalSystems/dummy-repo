@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220104003245_AddInitialTables")]
+    [Migration("20220104014329_AddInitialTables")]
     partial class AddInitialTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1583,10 +1583,24 @@ namespace MSNK.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1963d368-888f-4f74-add1-01840e2b5818",
-                            ConcurrencyStamp = "ee61e760-3aff-4aaf-bdfc-62d3e98171e1",
+                            Id = "06b9bbaf-3ca6-4349-b7dc-959d57cd6228",
+                            ConcurrencyStamp = "3da568ce-0cab-4a66-9e9e-77c533e20307",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "75bec53c-f5ed-4628-80f8-76f13a86b3ba",
+                            ConcurrencyStamp = "5bc28f35-6775-4ab9-be59-1b6c111d312c",
+                            Name = "Supervisor",
+                            NormalizedName = "SUPERVISOR"
+                        },
+                        new
+                        {
+                            Id = "b362e175-f6cb-4ad5-94fb-194919a1d85b",
+                            ConcurrencyStamp = "bfa90a60-ebcf-4c3f-af9e-1f9541a4d740",
+                            Name = "User",
+                            NormalizedName = "USER"
                         });
                 });
 
