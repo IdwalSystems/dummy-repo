@@ -235,6 +235,8 @@ namespace MSNK.Controllers
                                akTerima1.TarKemaskini);
             }
 
+            ViewBag.akTerima1 = akTerima1Table;
+
             List<AkTerima2> akTerima2Table = _context.AkTerima2
                 .Include(b => b.JCaraBayar)
                 .Where(b => b.AkTerimaId == akTerima.Id)
@@ -256,6 +258,8 @@ namespace MSNK.Controllers
                                akTerima2.UserIdKemaskini,
                                akTerima2.TarKemaskini);
             }
+
+            ViewBag.akTerima2 = akTerima2Table;
         }
 
         // GET: AkTerima/Create
@@ -593,11 +597,21 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId)
+        public async Task<IActionResult> Edit(int id, AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId, decimal JumlahUrusniaga)
         {
             if (id != akTerima.Id)
             {
                 return NotFound();
+            }
+
+            // checking for jumlah objek & jumlah perihal
+            if (akTerima.Jumlah != JumlahUrusniaga)
+            {
+                TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Perihal";             
+                CartEmpty();
+                PopulateCartFromDb(akTerima);
+                PopulateList();
+                return View(akTerima);
             }
 
             if (ModelState.IsValid)
@@ -1255,12 +1269,29 @@ namespace MSNK.Controllers
             }
             else
             {
+                
                 AkTerima akTerima = await _context.AkTerima
                     .Include(x => x.AkBank)
                     .Include(x => x.AkTerima1).ThenInclude(x => x.AkCarta)
+                    .Include(x => x.AkTerima2).ThenInclude(x=> x.JCaraBayar)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
                 List<AkTerima1> akT1 = akTerima.AkTerima1.ToList();
+                List<AkTerima2> akT2 = akTerima.AkTerima2.ToList();
+
+                //checking if jumlah objek equal to jumlah perihal 
+                decimal jumlahPerihal = 0;
+                foreach (AkTerima2 item in akT2)
+                {
+                    jumlahPerihal += item.Amaun;
+                }
+                if (akTerima.Jumlah != jumlahPerihal)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Jumlah Objek tidak sama dengan Jumlah Perihal.";
+                    return RedirectToAction(nameof(Index));
+                }
+                // checking end
 
                 var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akTerima.NoRujukan).FirstOrDefaultAsync();
                 if (akAkaun != null)

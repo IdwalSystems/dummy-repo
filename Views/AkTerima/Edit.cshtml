@@ -241,53 +241,53 @@
                                 <tbody id="tbodyUrusniaga">
                                     @foreach (var item in ViewBag.AkTerima2)
                                     {
-                                        <tr>
-                                            @*<td id="@item.Id"hidden>@item.AkTerimaId</td>*@
-                                            <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
-                                            <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
-                                            <td>@item.JCaraBayar.Kod</td>
-                                            <td class="text-right amaunUrusniaga">@item.Amaun</td>
-                                            <td>@item.NoCek</td>
-                                            @switch (@item.JenisCek)
-                                            {
-                                                case "1":
-                                                    <td>Cek Cawangan Ini</td>
-                                                    break;
-                                                case "2":
-                                                    <td>Cek Tempatan</td>
-                                                    break;
-                                                case "3":
-                                                    <td>Cek Luar</td>
-                                                    break;
-                                                case "4":
-                                                    <td>Cek Antarabangsa</td>
-                                                    break;
-                                                default:
-                                                    <td></td>
-                                                    break;
-                                            }
-                                            <td>@item.KodBankCek</td>
-                                            <td>@item.TempatCek</td>
-                                            <td>@item.NoSlip</td>
-                                            @if (@item.TarSlip.ToString("dd/MM/yyyy") == "01/01/0001")
-                                            {
+                                    <tr>
+                                        @*<td id="@item.Id"hidden>@item.AkTerimaId</td>*@
+                                        <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
+                                        <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
+                                        <td>@item.JCaraBayar.Kod</td>
+                                        <td class="text-right amaunUrusniaga">@item.Amaun</td>
+                                        <td>@item.NoCek</td>
+                                        @switch (@item.JenisCek)
+                                        {
+                                            case "1":
+                                                <td>Cek Cawangan Ini</td>
+                                                break;
+                                            case "2":
+                                                <td>Cek Tempatan</td>
+                                                break;
+                                            case "3":
+                                                <td>Cek Luar</td>
+                                                break;
+                                            case "4":
+                                                <td>Cek Antarabangsa</td>
+                                                break;
+                                            default:
                                                 <td></td>
-                                            }
-                                            else
-                                            {
-                                                <td>@item.TarSlip.ToString("dd/MM/yyyy")</td>
-                                            }
-                                            <td>
-                                                <button class="btn btn-primary btn-sm" type="button" id="btnUpdate2" data-toggle="modal" data-target="#modalUrusniaga" onclick="Update2(this)">
-                                                    <i class="fa fa-edit"></i>
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-danger btn-sm" type="button" id="btnRemove2" onclick="Remove2(this)">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                                break;
+                                        }
+                                        <td>@item.KodBankCek</td>
+                                        <td>@item.TempatCek</td>
+                                        <td>@item.NoSlip</td>
+                                        @if (@item.TarSlip == null)
+                                        {
+                                            <td></td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.TarSlip.ToString("dd/MM/yyyy")</td>
+                                        }
+                                        <td>
+                                            <button class="btn btn-primary btn-sm" type="button" id="btnUpdate2" data-toggle="modal" data-target="#modalUrusniaga" onclick="Update2(this)">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger btn-sm" type="button" id="btnRemove2" onclick="Remove2(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
 
                                     }
                                 </tbody>
@@ -331,7 +331,7 @@
                     <div class="card-footer">
                         <div class="form-group">
                             <label class="control-label">Jumlah Urusniaga</label>
-                            <input class="form-control form-control-sm" id="jumlahUrusniaga" readonly />
+                            <input class="form-control form-control-sm" id="jumlahUrusniaga"  name="JumlahUrusniaga" readonly />
                         </div>
                     </div>
 

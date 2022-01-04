@@ -246,11 +246,11 @@
         //Add Baris cell.
         var cell = $(row.insertCell(-1));
         cell.html(txtBaris.val());
+        cell.prop("hidden", !this.checked);
 
         //Add Bil cell.
         var cell = $(row.insertCell(-1));
         cell.html(txtBil.val());
-        cell.prop("hidden", !this.checked);
 
         //Add No Stok cell.
         var cell = $(row.insertCell(-1));
@@ -554,8 +554,8 @@
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
-                                    "</td><td class='text-left'>" + item1.baris +
-                                    "</td><td class='text-left' hidden>" + item1.bil +
+                                    "</td><td class='text-left' hidden>" + item1.baris +
+                                    "</td><td class='text-left'>" + item1.bil +
                                     "</td><td class='text-left'>" + item1.noStok +
                                     "</td><td class='text-left'>" + item1.perihal +
                                     "</td><td class='text-right'>" + item1.kuantiti +

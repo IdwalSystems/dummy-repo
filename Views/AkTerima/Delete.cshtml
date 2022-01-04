@@ -257,7 +257,7 @@
                                             <td>@item.KodBankCek</td>
                                             <td class="text-uppercase">@item.TempatCek</td>
                                             <td>@item.NoSlip</td>
-                                            @if (@item.TarSlip.ToString("dd/MM/yyyy") == "01/01/0001")
+                                            @if (@item.TarSlip == null)
                                             {
                                                 <td></td>
                                             }
