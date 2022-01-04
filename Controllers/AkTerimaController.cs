@@ -194,8 +194,30 @@ namespace MSNK.Controllers
                 .ToList();
             ViewBag.akTerima2 = akTerima2Table;
         }
+        private void PopulateCart()
+        {
+            List<AkTerima1> lines1 = _cart.Lines1.ToList();
 
-        private void PopulateCart(AkTerima akTerima)
+            foreach (AkTerima1 item in lines1)
+            {
+                var carta = _context.AkCarta.Where(x => x.Id == item.AkCartaId).FirstOrDefault();
+                item.AkCarta = carta;
+            }
+
+            ViewBag.akTerima1 = lines1;
+
+            List<AkTerima2> lines2 = _cart.Lines2.ToList();
+
+            foreach (AkTerima2 item in lines2)
+            {
+                var jCaraBayar = _context.JCaraBayar.Where(x => x.Id == item.JCaraBayarId).FirstOrDefault();
+                item.JCaraBayar = jCaraBayar;
+            }
+
+            ViewBag.akTerima2 = _cart.Lines2.ToList();
+        }
+
+        private void PopulateCartFromDb(AkTerima akTerima)
         {
             List<AkTerima1> akTerima1Table = _context.AkTerima1
                 .Include(b => b.AkCarta)
@@ -429,11 +451,21 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId)
+        public async Task<IActionResult> Create(AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId, decimal JumlahUrusniaga)
         {
             
             AkTerima m = new AkTerima();
             var user = await _userManager.GetUserAsync(User);
+
+            // checking for jumlah objek & jumlah perihal
+            if (akTerima.Jumlah != JumlahUrusniaga)
+            {
+                TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Perihal";
+                //PopulateCart();
+                CartEmpty();
+                PopulateList();
+                return View(akTerima);
+            }
 
             // get latest no rujukan running number  
             var kw = _context.JKW.FirstOrDefault(x => x.Id == akTerima.JKWId);
@@ -516,6 +548,7 @@ namespace MSNK.Controllers
                 }
             }
 
+            PopulateCart();
             PopulateList();
             return View(akTerima);
         }
@@ -551,7 +584,7 @@ namespace MSNK.Controllers
             CartEmpty();
             PopulateList();
             PopulateTable(id);
-            PopulateCart(akTerima);
+            PopulateCartFromDb(akTerima);
             return View(akTerima);
         }
 
@@ -635,7 +668,7 @@ namespace MSNK.Controllers
             CartEmpty();
             PopulateList();
             PopulateTable(id);
-            PopulateCart(akTerima);
+            PopulateCartFromDb(akTerima);
             return View(akTerima);
         }
 
@@ -712,6 +745,8 @@ namespace MSNK.Controllers
         {
             try
             {
+                ViewBag.akTerima1 = new List<int>();
+                ViewBag.akTerima2 = new List<int>();
                 _cart.Clear1();
                 _cart.Clear2();
 

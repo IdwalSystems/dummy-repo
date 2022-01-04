@@ -12,7 +12,7 @@ using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin , Supervisor")]
     public class AkAkaunController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -93,8 +93,7 @@ namespace MSNK.Controllers
                             Kredit=i.Kredit,
                             JKW=i.JKW,
                             AkCarta1 = i.AkCarta1,
-                            AkCarta2 = i.AkCarta2,
-                            //AkTerima = i.AkTerima
+                            AkCarta2 = i.AkCarta2
                         });
                     }
                 };

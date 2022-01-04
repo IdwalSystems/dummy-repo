@@ -23,6 +23,7 @@ namespace MSNK.Controllers
             _signInManager = signInManager;
             _roleManager = roleManager;
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             return View();
@@ -61,6 +62,7 @@ namespace MSNK.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnurl=null)
         {
             
@@ -112,6 +114,11 @@ namespace MSNK.Controllers
             });
             listItems.Add(new SelectListItem()
             {
+                Value = "Supervisor",
+                Text = "Supervisor"
+            });
+            listItems.Add(new SelectListItem()
+            {
                 Value = "User",
                 Text = "User"
             });
@@ -122,6 +129,7 @@ namespace MSNK.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin , Supervisor , User")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {

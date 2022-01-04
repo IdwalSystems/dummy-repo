@@ -14,7 +14,7 @@ using static MSNK.Models.Modules.ViewModel.UserClaimsViewModel;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _db;

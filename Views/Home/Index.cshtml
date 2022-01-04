@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Halaman Utama";
 }
 
 <div class="text-center">
@@ -14,9 +14,13 @@
         {
             <h2>Peranan anda - Admin</h2>
         }
+        else if (User.IsInRole("Supervisor"))
+        {
+            <h2>Peranan anda - Supervisor</h2>
+        }
         else
         {
-            <h2>Peranan anda - User</h2>
+        <h2>Peranan anda - User</h2>
         }
-    }
+}
 </div>

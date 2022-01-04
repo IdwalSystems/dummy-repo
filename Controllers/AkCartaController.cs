@@ -13,7 +13,7 @@ using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin , Supervisor")]
     public class AkCartaController : Controller
     {
         public const string modul = "JU001";

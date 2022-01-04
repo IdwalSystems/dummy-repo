@@ -11,7 +11,7 @@ using MSNK.Models.Modules;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin , Supervisor")]
     public class JCaraBayarController : Controller
     {
         private readonly ApplicationDbContext _context;
