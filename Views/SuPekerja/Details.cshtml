@@ -5,6 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .sorok {
+        display: none;
+    }
+</style>
 <div class="row">
     <div class="col-md-12">
         <div class="card box-shadow border-dark mb-3">
@@ -22,42 +27,46 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label asp-for="NoKp" class="control-label"></label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.NoKp)" readonly />
+                            </div>
                             <div class="form-group col-md">
                                 <label asp-for="Nama" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Nama)" readonly />
                             </div>
                         </div>
-                        @*<div class="form-row">
+                        <div class="form-row sorok">
                             <div class="form-group col-md">
                                 <label asp-for="Alamat1" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Alamat1)" readonly />
                             </div>
                         </div>
-                        <div class="form-row">
+                        <div class="form-row sorok">
                             <div class="form-group col-md">
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Alamat2)" readonly />
                             </div>
                         </div>
-                        <div class="form-row">
+                        <div class="form-row sorok">
                             <div class="form-group col-md">
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Alamat3)" readonly />
                             </div>
-                        </div>*@
+                        </div>
                         <div class="form-row">
-                            @*<div class="form-group col-md">
+                            <div class="form-group col-md sorok">
                                 <label asp-for="Poskod" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Poskod)" readonly />
                             </div>
-                            <div class="form-group col-md">
+                            <div class="form-group col-md sorok">
                                 <label asp-for="Bandar" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Bandar)" readonly />
-                            </div>*@
+                            </div>
                             <div class="form-group col-md">
                                 <label asp-for="JNegeri" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JNegeri.Perihal)" readonly />
                             </div>
                         </div>
-                        @*<div class="form-row">
+                        <div class="form-row sorok">
                             <div class="form-group col-md">
                                 <label asp-for="JAgama" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JAgama.Perihal)" readonly />
@@ -70,8 +79,8 @@
                                 <label asp-for="StatusKahwin" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.StatusKahwin)" readonly />
                             </div>
-                        </div>*@
-                        @*<div class="form-row">
+                        </div>
+                        <div class="form-row sorok">
                             <div class="form-group col-md">
                                 <label asp-for="TelefonRumah" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TelefonRumah)" readonly />
@@ -84,8 +93,8 @@
                                 <label asp-for="Emel" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Emel)" readonly />
                             </div>
-                        </div>*@
-                        @*<div class="form-row">
+                        </div>
+                        <div class="form-row sorok">
                             <div class="form-group col-md">
                                 <label asp-for="TarikhMasukKerja" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhMasukKerja)" readonly />
@@ -98,22 +107,22 @@
                                 <label asp-for="TarikhPencen" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhPencen)" readonly />
                             </div>
-                        </div>*@
-                        @*<div class="form-row">
+                        </div>
+                        <div class="form-row sorok">
                             <div class="form-group col-md">
                                 <label asp-for="JJawatanPekerja" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JJawatanPekerja.Perihal)" readonly />
                             </div>
-                        </div>*@
+                        </div>
                         <div class="form-row">
-                            @*<div class="form-group col-md">
+                            <div class="form-group col-md sorok">
                                 <label asp-for="GajiPokok" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.GajiPokok)" readonly />
                             </div>
-                            <div class="form-group col-md">
+                            <div class="form-group col-md sorok">
                                 <label asp-for="JCaraBayar" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JCaraBayar.Perihal)" readonly />
-                            </div>*@
+                            </div>
                             <div class="form-group col-md">
                                 <label asp-for="NoAkaunBank" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.NoAkaunBank)" readonly />
@@ -123,38 +132,38 @@
                 </div>
                 <br />
                 @*<div class="card box-shadow mb-3">
-                    <div class="card-header">
-                        <h6>Tanggungan</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th style="width:50%">Nama</th>
-                                        <th style="width: 25%">No KP</th>
-                                        <th style="width: 25%">Hubungan</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyObjek">
-                                    @foreach (var item in ViewBag.suTanggungan)
-                                    {
-                                        <tr id="@item.Id">
-                                            <td id="nokp" hidden>@item.NoKP</td>
-                                            <td>@item.Nama</td>
-                                            <td>@item.NoKP</td>
-                                            <td>@item.Hubungan</td>
-                                        </tr>
-
-                                    }
-                                </tbody>
-                                <tfoot>
-                                </tfoot>
-                            </table>
+                        <div class="card-header">
+                            <h6>Tanggungan</h6>
                         </div>
-                    </div>
-                </div>*@
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:50%">Nama</th>
+                                            <th style="width: 25%">No KP</th>
+                                            <th style="width: 25%">Hubungan</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyObjek">
+                                        @foreach (var item in ViewBag.suTanggungan)
+                                        {
+                                            <tr id="@item.Id">
+                                                <td id="nokp" hidden>@item.NoKP</td>
+                                                <td>@item.Nama</td>
+                                                <td>@item.NoKP</td>
+                                                <td>@item.Hubungan</td>
+                                            </tr>
+
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>*@
             </div>
         </div>
     </div>

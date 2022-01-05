@@ -183,6 +183,7 @@ namespace MSNK.Controllers
                 {
                     m.NoGaji = GetNoGaji();
                     m.Nama = suPekerja.Nama;
+                    m.NoKp = suPekerja.NoKp;
                     //m.Alamat1 = suPekerja.Alamat1;
                     //m.Alamat2 = suPekerja.Alamat2;
                     //m.Alamat3 = suPekerja.Alamat3;
