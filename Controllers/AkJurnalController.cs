@@ -268,27 +268,43 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            decimal debit = 0, kredit = 0;
+            var akj1 = _akJurnal1Repo.GetAll(akJurnal.Id);
+            _ = akj1.Result.ToArray();
+            foreach (var q in akj1.Result.ToArray())
             {
-                try
+                debit += q.Debit;
+                kredit += q.Kredit;
+            };
+            if (debit==kredit)
+            {
+                if (ModelState.IsValid)
                 {
-                    _context.Update(akJurnal);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AkJurnalExists(akJurnal.Id))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(akJurnal);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!AkJurnalExists(akJurnal.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", akJurnal.JKWId);
+            else
+            {
+                TempData[SD.Error] = "Pastikan jumlah debit = jumlah kredit";
+            }
+            PopulateList();
+            PopulateTable(id);
             return View(akJurnal);
         }
 
