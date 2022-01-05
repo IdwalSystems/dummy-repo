@@ -1,29 +1,47 @@
 ﻿@model MSNK.Models.Login.ViewModel.LoginViewModel
 
-<h4 class="text-info">Log Masuk</h4>
-<div class="row">
-    <div class="col-md-8">
-        <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" role="form">
-            <h6>Log masuk pengguna</h6>
-            <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Emel" class="col-md-5"></label>
-                <div class="col-md-10">
-                    <input asp-for="Emel" class="form-control form-control-sm" />
-                    <span asp-validation-for="Emel" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="Katalaluan" class="col-md-5"></label>
-                <div class="col-md-10">
-                    <input asp-for="Katalaluan" class="form-control form-control-sm" />
-                    <span asp-validation-for="Katalaluan" class="text-danger"></span>
-                </div>
+@{
+    ViewData["Title"] = "Log In";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+<div class="limiter">
+    <div class="container-login100">
+        <div class="wrap-login100">
+            <div class="login100-pic js-tilt" data-tilt="" style="will-change: transform; transform: perspective(300px) rotateX(0deg) rotateY(0deg);">
+                <img src="~/img/MainLogo_Syarikat.png" alt="IMG">
             </div>
 
-            <div class="form-group">
-                <div class="col-md-10">
+            <form class="login100-form validate-form" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" role="form">
+                <span class="login100-form-title">
+                    Log Masuk Pengguna
+                </span>
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="wrap-input100">
+                    <input class="input100" type="text" asp-for="Emel" placeholder="Emel">
+                    <span class="focus-input100"></span>
+                    <span class="symbol-input100">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                    </span>
+                </div>
+                
+
+                <div class="wrap-input100">
+                    <input class="input100" type="password" asp-for="Katalaluan" placeholder="Katalaluan">
+                    <span class="focus-input100"></span>
+                    <span class="symbol-input100">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                    </span>
+                </div>
+                
+
+                <div class="container-login100-form-btn">
+                    <button class="login100-form-btn" type="submit">
+                        Log Masuk
+                    </button>
+                </div>
+
+                <div class="text-center p-t-12">
                     <div class="custom-checkbox">
                         <label asp-for="IngatSaya">
                             <input asp-for="IngatSaya" />
@@ -31,23 +49,12 @@
                         </label>
 
                     </div>
+                </div>
+
+                <div class="text-center p-t-136">
 
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-4">
-                    <button type="submit" class="btn btn-success form-control">Log Masuk</button>
-                </div>
-            </div>
-
-            @*<p>
-                <a asp-action="ForgotPassword">Terlupa katalaluan?</a>
-            </p>*@
-            
-        </form>
+            </form>
+        </div>
     </div>
 </div>
-
-@section Scripts{
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}

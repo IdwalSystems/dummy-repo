@@ -8,11 +8,11 @@ namespace MSNK.Models.Login.ViewModel
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Emel diperlukan")]
         [EmailAddress]
         public string Emel { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Katalaluan diperlukan")]
         [DataType(DataType.Password)]
         public string Katalaluan { get; set; }
 
