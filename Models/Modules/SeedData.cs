@@ -26,7 +26,11 @@ namespace MSNK.Models.Modules
                 if (result.Succeeded)
                 {
                     userManager.AddToRoleAsync(user, "Admin").Wait();
-                }
+                } 
+            }
+            else
+            {
+                userManager.AddToRoleAsync(userManager.FindByEmailAsync("admin@idwal.com.my").Result, "Admin").Wait();
             }
         }
 
