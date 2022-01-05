@@ -35,10 +35,10 @@
                         <div class="form-row">
                             <div class="form-group col-md">
                                 <label class="control-label">Catatan</label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan1)" readonly />
+                                <textarea class="form-control form-control-sm text-uppercase" rows="4" readonly>@Html.DisplayFor(model => model.Catatan1)</textarea>
                             </div>
                         </div>
-                        <div class="form-row">
+                        @*<div class="form-row">
                             <div class="form-group col-md">
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan2)" readonly />
                             </div>
@@ -51,17 +51,6 @@
                         <div class="form-row">
                             <div class="form-group col-md">
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan4)" readonly />
-                            </div>
-                        </div>
-                        @*<div class="form-row" hidden>
-                            <div class="form-group col-md">
-                                <label asp-for="UserId" class="control-label"></label>
-                                <input class="form-control form-control-sm"
-                                       value="@Html.DisplayFor(model => model.UserId)" readonly />
-                            </div>
-                            <div class="form-group col-md">
-                                <label asp-for="TarMasuk" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarMasuk)" readonly />
                             </div>
                         </div>*@
 

@@ -1,0 +1,163 @@
+﻿@model MSNK.Models.Modules.PrintModel.JurnalPrintModel
+
+@{
+    ViewData["Title"] = "Cetakan Jurnal";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+<style>
+    .flexrow {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex !important;
+    }
+
+        .flexrow > div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+    .image-container {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    h6 {
+        font-size: 0.8rem;
+    }
+
+    p {
+        font-size: 0.6rem;
+    }
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+</style>
+<div class="row flexrow mb-1">
+    <div class="col-2 image-container">
+        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase text-center">
+        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1</p>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat2</p>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat3</p>
+    </div>
+    <div class="col-2 image-container"></div>
+</div>
+<div class="row flexrow mb-1">
+    <div class="col text-center">
+        <h4><strong>BAUCER JURNAL</strong></h4>
+    </div>
+</div>
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr>
+                <td class="text-right font-weight-bold" width="15%">Kump Wang : </td>
+                <td>@Model.AkJurnal.JKW.Kod - @Model.AkJurnal.JKW.Perihal</td>
+                <td class="text-center font-weight-bold" width="15%">Tarikh</td>
+            </tr>
+            <tr>
+                <td class="text-right font-weight-bold" width="15%">No Jurnal : </td>
+                <td>@Model.AkJurnal.NoJurnal</td>
+                <td class="text-center" width="15%">@Convert.ToDateTime(Model.AkJurnal.Tarikh).ToString("dd/MM/yyyy")</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <thead class="text-center">
+            <tr>
+                <th width="10%">Kod</th>
+                <th>Perihal Akaun ( Objek )</th>
+                <th width="15%">Debit RM</th>
+                <th width="15%">Kredit RM</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.AkJurnal.AkJurnal1)
+            {
+                <tr>
+                    <td class="text-center">@item.AkCarta.Kod</td>
+                    <td>@item.AkCarta.Perihal</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Debit).ToString("#,##0.00")</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Kredit).ToString("#,##0.00")</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="font-weight-bold">
+                <td style="border:none;"></td>
+                <td class="text-right" style="border:none;">Jumlah RM</td>
+                <td class="text-right">@Convert.ToDecimal(Model.AkJurnal.JumDebit).ToString("#,##0.00")</td>
+                <td class="text-right">@Convert.ToDecimal(Model.AkJurnal.JumKredit).ToString("#,##0.00")</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm">
+        <tbody>
+            <tr>
+                <td class="text-right" width="15%">Catatan : </td>
+                <td height="60px">@Model.AkJurnal.Catatan1.ToUpper()</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr>
+                <td width="50%" height="60px">Disediakan Oleh : </td>
+                <td width="50%" height="60px">Diluluskan Oleh : </td>
+            </tr>
+            <tr>
+                <td class="text-uppercase">@Model.Username</td>
+                <td><label></label></td>
+            </tr>
+            <tr>
+                <td><label></label></td>
+                <td><label></label></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

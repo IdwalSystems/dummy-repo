@@ -8,9 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -756,6 +759,37 @@ namespace MSNK.Controllers
                 }
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> PrintPdf(int id)
+        {
+            AkJurnal akJurnal = await _context.AkJurnal
+                .Include(x=>x.JKW)
+                .Include(x=>x.AkJurnal1).ThenInclude(x=>x.AkCarta)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            JurnalPrintModel data = new JurnalPrintModel();
+            var user = await _userManager.GetUserAsync(User);
+            var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
+
+            CompanyDetails company = new CompanyDetails();
+            data.Username = namaUser.Nama;
+            data.AkJurnal = akJurnal;
+            data.CompanyDetail = company;
+
+            //update cetak -> 1
+            akJurnal.Cetak = 1;
+            await _akJurnalRepo.Update(akJurnal);
+            await _context.SaveChangesAsync();
+
+            return new ViewAsPdf("JurnalPrintPdf", data)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                //CustomSwitches = "--footer-center \"  Tarikh: " +
+                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
         }
     }
 }

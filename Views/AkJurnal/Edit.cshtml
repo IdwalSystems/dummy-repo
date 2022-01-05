@@ -51,10 +51,10 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Catatan1" class="control-label">Catatan</label>
-                        <input asp-for="Catatan1" class="form-control form-control-sm" />
+                        <textarea class="form-control form-control-sm text-uppercase" maxlength="400" rows="4" asp-for="Catatan1"></textarea>
                         <span asp-validation-for="Catatan1" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <input asp-for="Catatan2" class="form-control form-control-sm" />
                         <span asp-validation-for="Catatan2" class="text-danger"></span>
                     </div>
@@ -65,18 +65,6 @@
                     <div class="form-group">
                         <input asp-for="Catatan4" class="form-control form-control-sm" />
                         <span asp-validation-for="Catatan4" class="text-danger"></span>
-                    </div>
-                    @*<div class="form-row" hidden>
-                        <div class="form-group col-md">
-                            <label asp-for="UserId" class="control-label"></label>
-                            <input asp-for="UserId" class="form-control form-control-sm" readonly />
-                            <span asp-validation-for="UserId" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md">
-                            <label asp-for="TarMasuk" class="control-label"></label>
-                            <input asp-for="TarMasuk" class="form-control form-control-sm" readonly />
-                            <span asp-validation-for="TarMasuk" class="text-danger"></span>
-                        </div>
                     </div>*@
                     <br />
                     @*table Objek*@
