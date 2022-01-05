@@ -6,23 +6,35 @@ using MSNK.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using System.Security.Claims;
+using MSNK.Models.Administration;
+using Microsoft.AspNetCore.Identity;
 
 namespace MSNK.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,  UserManager<IdentityUser> userManager)
         {
             _logger = logger;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
-
-            return View();
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            if (userEmail == null)
+            {
+                return RedirectToAction(nameof(AccountController.Login), "Account");
+            }
+            else
+            {
+                return View();
+            }
+            
         }
 
         [Authorize(Roles = "Admin")]
