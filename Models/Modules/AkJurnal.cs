@@ -29,7 +29,7 @@ namespace MSNK.Models.Modules
         [Column(TypeName = "decimal(18, 2)")]
         [Compare("JumDebit", ErrorMessage = "Pastikan jumlah debit dan jumlah kredit sama")]
         public decimal JumKredit { get; set; }
-        [MaxLength(100)]
+        [MaxLength(400)]
         [Display(Name = "Catatan 1")]
         public string Catatan1 { get; set; }
         [MaxLength(100)]

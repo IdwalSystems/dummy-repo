@@ -154,6 +154,10 @@ namespace MSNK.Controllers
                 .OrderBy(b => b.KodSykt).ToList();
             ViewBag.AkPembekal = akPembekalList;
 
+            List<SuPekerja> suPekerjaList = _context.SuPekerja
+                .OrderBy(b => b.NoGaji).ToList();
+            ViewBag.SuPekerja = suPekerjaList;
+
             List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
                 .Include(b => b.JParas)
                 .Where(b => b.JParas.Kod == "4")

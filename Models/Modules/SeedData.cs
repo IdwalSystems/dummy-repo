@@ -88,6 +88,18 @@ namespace MSNK.Models.Modules
             //        }
             //    );
             //}
+            if (context.Roles.Any())
+            {
+
+            }
+            else
+            {
+                context.Roles.AddRange(
+                   new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() },
+                    new IdentityRole { Name = "Supervisor", NormalizedName = "Supervisor".ToUpper() },
+                    new IdentityRole { Name = "User", NormalizedName = "User".ToUpper() }
+                    );
+            }
 
             if (context.SiModul.Any())
             {

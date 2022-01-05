@@ -57,7 +57,6 @@ namespace MSNK.Models.Modules
         [DisplayName("Batal")]
         [DefaultValue("0")]
         public int FlBatal { get; set; }
-        [NotMapped]
         public bool denganTanggungan { get; set; }
         //flag end
 
