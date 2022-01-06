@@ -81,6 +81,7 @@ namespace MSNK
             services.AddTransient<IRepository<JBangsa, int>, JBangsaRepository>();
             services.AddTransient<IRepository<JJawatanPekerja, int>, JJawatanPekerjaRepository>();
             services.AddTransient<IRepository<JCaraBayar, int>, JCaraBayarRepository>();
+            services.AddTransient<IRepository<AbBukuVot, int>, AbBukuVotRepository>();
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));

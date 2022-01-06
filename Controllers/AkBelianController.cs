@@ -32,7 +32,7 @@ namespace MSNK.Controllers
         private readonly ListViewIRepository<AkBelian1, int> _akBelian1Repo;
         private readonly ListViewIRepository<AkBelian2, int> _akBelian2Repo;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
-        private readonly IRepository<AkBank, int> _akBankRepo;
+        private readonly IRepository<AbBukuVot, int> _abBukuVotRepo;
         private readonly IRepository<AkAkaun, int> _akAkaunRepo;
         private CartBelian _cart;
 
@@ -47,7 +47,7 @@ namespace MSNK.Controllers
             ListViewIRepository<AkBelian1, int> akBelian1Repository,
             ListViewIRepository<AkBelian2, int> akBelian2Repository,
             IRepository<AkCarta, int> akCartaRepository,
-            IRepository<AkBank, int> akBankRepository,
+            IRepository<AbBukuVot, int> abBukuVotRepository,
             IRepository<AkAkaun, int> akAkaunRepository,
             CartBelian cart
             )
@@ -62,7 +62,7 @@ namespace MSNK.Controllers
             _akBelian1Repo = akBelian1Repository;
             _akBelian2Repo = akBelian2Repository;
             _akCartaRepo = akCartaRepository;
-            _akBankRepo = akBankRepository;
+            _abBukuVotRepo = abBukuVotRepository;
             _akAkaunRepo = akAkaunRepository;
             _cart = cart;
         }
@@ -189,8 +189,12 @@ namespace MSNK.Controllers
                 .ToList();
             ViewBag.AkCarta = akCartaList;
 
-            List<AkBank> akBankList = _context.AkBank.Include(b => b.JBank).OrderBy(b => b.Kod).ToList();
-            ViewBag.AkBank = akBankList;
+            List<AkCarta> KodObjekAPList = _context.AkCarta.Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Where(b => b.JParas.Kod == "4" && (b.Kod.Substring(0, 1) == "L"))
+                .OrderBy(b => b.Kod)
+                .ToList();
+            ViewBag.KodObjekAP = KodObjekAPList;
 
         }
 
@@ -604,7 +608,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int KodObjekAkaunPemiutangId, string NamaPembekal, decimal JumlahPerihal)
+        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int KodObjekAPId, string NamaPembekal, decimal JumlahPerihal)
         {
             AkBelian m = new AkBelian();
             var user = await _userManager.GetUserAsync(User);
@@ -635,9 +639,9 @@ namespace MSNK.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (akBelian != null && JKWId != 0 && AkPembekalId != 0 && KodObjekAkaunPemiutangId != 0)
+                if (akBelian != null && JKWId != 0 && AkPembekalId != 0 && KodObjekAPId != 0)
                 {
-                    m.KodObjekAPId = KodObjekAkaunPemiutangId;
+                    m.KodObjekAPId = KodObjekAPId;
                     m.JKWId = JKWId;
                     m.Tahun = akBelian.Tahun;
                     m.NoInbois = noRujukan;
@@ -1318,8 +1322,11 @@ namespace MSNK.Controllers
             }
             else
             {
+                var user = await _userManager.GetUserAsync(User);
+
                 AkBelian akBelian = await _context.AkBelian
                     .Include(x=> x.KodObjekAP)
+                    .Include(x=> x.AkPembekal)
                     .Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -1336,10 +1343,36 @@ namespace MSNK.Controllers
                 else
                 {
                     //posting operation start here
-                    //insert into akAkaun
-                    
+
+                    var kodPembekal = "";
+                    var penerima = "";
+
+                    if (akBelian.AkPembekalId != 0)
+                    {
+                        kodPembekal = akBelian.AkPembekal.KodSykt;
+                        penerima = akBelian.AkPembekal.NamaSykt;
+                    }
+
                     foreach (AkBelian1 item in akB1)
                     {
+                        //insert into AbBukuVot
+                        //AbBukuVot abBukuVot = new AbBukuVot()
+                        //{
+                        //    Tahun = akBelian.Tahun,
+                        //    JKWId = akBelian.JKWId,
+                        //    Tarikh = akBelian.Tarikh,
+                        //    Kod = kodPembekal,
+                        //    Penerima = penerima,
+                        //    AkCartaId = item.AkCartaId,
+                        //    Rujukan = akBelian.NoInbois,
+                        //    Liabiliti = item.Amaun,
+                        //    UserId = user.UserName
+                        //};
+
+                        //await _abBukuVotRepo.Insert(abBukuVot);
+                        // insert into AbBukuVot end
+
+                        //insert into akAkaun
                         AkAkaun akAKredit = new AkAkaun()
                         {
                             NoRujukan = akBelian.NoInbois,
@@ -1356,8 +1389,8 @@ namespace MSNK.Controllers
                         {
                             NoRujukan = akBelian.NoInbois,
                             JKWId = akBelian.JKWId,
-                            AkCartaId1 = akBelian.KodObjekAPId,
-                            AkCartaId2 = item.AkCartaId,
+                            AkCartaId1 = item.AkCartaId,
+                            AkCartaId2 = akBelian.KodObjekAPId,
                             Tarikh = akBelian.Tarikh,
                             Debit = item.Amaun
                         };
@@ -1365,15 +1398,12 @@ namespace MSNK.Controllers
                         await _akAkaunRepo.Insert(akADebit);
                     }
                     
-
                     //update posting status in akTerima
                     akBelian.FlPosting = 1;
                     akBelian.TarikhPosting = DateTime.Now;
                     await _akBelianRepo.Update(akBelian);
 
                     //insert applog
-                    var user = await _userManager.GetUserAsync(User);
-
                     AppLog appLog = new AppLog();
 
                     appLog.UserId = user.UserName;
@@ -1415,6 +1445,8 @@ namespace MSNK.Controllers
                     .FirstOrDefaultAsync(x => x.Id == id);
 
                 List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akBelian.NoInbois).ToList();
+
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan == akBelian.NoInbois).ToList();
                 if (akAkaun == null)
                 {
 
@@ -1430,6 +1462,13 @@ namespace MSNK.Controllers
                     {
                         await _akAkaunRepo.Delete(item.Id);
                     }
+
+                    //delete data from abBukuVot
+                    //foreach (AbBukuVot item in abBukuVot)
+                    //{
+                    //    await _abBukuVotRepo.Delete(item.Id);
+                    //}
+                    //delete data from abBukuVot
 
                     //update posting status in akTerima
                     akBelian.FlPosting = 0;
