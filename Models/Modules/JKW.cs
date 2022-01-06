@@ -27,6 +27,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkJurnal> AkJurnal { get; set; }
         public ICollection<AkBelian> AkBelian { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
+        public ICollection<AbBukuVot> AbBukuVot { get; set; }
         //relationship end
 
         // log

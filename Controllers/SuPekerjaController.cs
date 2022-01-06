@@ -355,6 +355,134 @@ namespace MSNK.Controllers
             }
         }
 
+        public async Task<JsonResult> InsertUpdateSuTanggungan(SuTanggunganPekerja suTanggungan)
+        {
+            try
+            {
+                if (suTanggungan != null)
+                {
+                    await _suTanggunganRepo.Insert(suTanggungan);
+
+                    int bilanak = 0;
+                    var suT = await _suTanggunganRepo.GetAll(suTanggungan.SuPekerjaId);
+                    foreach(var q in suT.Where(x=>x.Hubungan=="ANAK"))
+                    {
+                        bilanak++;
+                    }
+
+                    SuPekerja suPekerja = await _suPekerjaRepo.GetById(suTanggungan.SuPekerjaId);
+                    suPekerja.BilAnak += bilanak;
+
+                    await _suPekerjaRepo.Update(suPekerja);
+                    await _context.SaveChangesAsync();
+                }
+                return Json(new { result = "OK"});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> UpdateSuTanggungan(SuTanggunganPekerja suTanggungan)
+        {
+            try
+            {
+                SuTanggunganPekerja data = await _suTanggunganRepo.GetBy2Id(suTanggungan.SuPekerjaId, suTanggungan.Id);
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> SaveUpdateSuTanggungan(SuTanggunganPekerja suTanggungan)
+        {
+            try
+            {
+                _cart.Clear1();
+
+                SuTanggunganPekerja suT = await _suTanggunganRepo.GetById(suTanggungan.Id);
+                suT.Nama = suTanggungan.Nama;
+                suT.Hubungan = suTanggungan.Hubungan;
+
+                _context.SuTanggunganPekerja.Update(suT);
+                await _context.SaveChangesAsync();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> GetCart1(SuTanggunganPekerja suTanggungan)
+        {
+            try
+            {
+                SuPekerja data = await _context.SuPekerja
+                    .Include(x => x.SuTanggungan)
+                    .FirstOrDefaultAsync(x => x.Id == suTanggungan.SuPekerjaId);
+
+                List<SuTanggunganPekerja> suT = data.SuTanggungan.ToList();
+
+                foreach (SuTanggunganPekerja item in suT)
+                {
+                    _cart.AddItem1(item.SuPekerjaId, item.Nama, item.Hubungan, item.NoKP);
+                }
+
+                int bilanak = 0;
+                foreach (var item in suT.Where(x=>x.Hubungan == "ANAK"))
+                {
+                    bilanak++;
+                }
+
+                SuPekerja suPekerja = await _suPekerjaRepo.GetById(suTanggungan.SuPekerjaId);
+
+                suPekerja.BilAnak = bilanak;
+
+                await _suPekerjaRepo.Update(suPekerja);
+                await _context.SaveChangesAsync();
+
+                return Json(new { result = "OK", data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> RemoveUpdateSuTanggungan(SuTanggunganPekerja suTanggungan)
+        {
+            try
+            {
+                if (suTanggungan != null)
+                {
+                    var suT = await _context.SuTanggunganPekerja.FirstOrDefaultAsync(
+                        x => x.NoKP == suTanggungan.NoKP
+                        && x.SuPekerjaId == suTanggungan.SuPekerjaId
+                        && x.Id == suTanggungan.Id);
+                    _context.SuTanggunganPekerja.Remove(suT);
+
+                    SuPekerja suPekerja = await _suPekerjaRepo.GetById(suTanggungan.SuPekerjaId);
+
+                    if(suTanggungan.Hubungan == "ANAK")
+                    {
+                        suPekerja.BilAnak--;
+                    }
+                    
+                    await _suPekerjaRepo.Update(suPekerja);
+                    await _context.SaveChangesAsync();
+                }
+                return Json(new { result = "OK"});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
 
     }
 }
