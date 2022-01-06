@@ -28,6 +28,25 @@ namespace MSNK.Models.Modules
         [Display(Name = "Kredit RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Kredit { get; set; }
+        [DefaultValue("")]
+        [MaxLength(50)]
+        public string NoCek { get; set; }
+        [DefaultValue("")]
+        [MaxLength(50)]
+        public string NoSlip { get; set; }
+        public DateTime? TarSlip { get; set; }
+        [DefaultValue("0")]
+        [MaxLength(1)]
+        public string Tunai { get; set; }
+        [DefaultValue("")]
+        [MaxLength(4)]
+        public string Tahun { get; set; }
+        [DefaultValue("")]
+        [MaxLength(2)]
+        public string Bulan { get; set; }
+        [DefaultValue(0)]
+        [MaxLength(1)]
+        public int? Ganding { get; set; }
 
         //Relationship
 

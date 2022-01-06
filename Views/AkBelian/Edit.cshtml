@@ -80,15 +80,15 @@
                     <div class="form-row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label asp-for="AkBankId" class="control-label">Kod Bank</label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm" asp-for="AkBankId">
+                                <label asp-for="KodObjekAPId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm" asp-for="KodObjekAPId">
                                     <option value="" disabled selected>-- Pilih Bank --</option>
-                                    @foreach (var s in ViewBag.AkBank)
+                                    @foreach (var s in ViewBag.KodObjekAP)
                                     {
-                                        <option value="@s.Id">@s.NoAkaun - @s.JBank.Nama</option>
+                                        <option value="@s.Id">@s.Kod - @s.Perihal</option>
                                     }
                                 </select>
-                                <span asp-validation-for="AkBankId" class="text-danger"></span>
+                                <span asp-validation-for="KodObjekAPId" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -160,7 +160,7 @@
                     @*table perihal*@
                     <div class="card box-shadow mb-3 mt-2">
                         <div class="card-header">
-                            <h3>Perihal</h3>
+                            <h6>Perihal</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive-md">

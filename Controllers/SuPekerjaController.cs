@@ -363,15 +363,12 @@ namespace MSNK.Controllers
                 {
                     await _suTanggunganRepo.Insert(suTanggungan);
 
-                    int bilanak = 0;
-                    var suT = await _suTanggunganRepo.GetAll(suTanggungan.SuPekerjaId);
-                    foreach(var q in suT.Where(x=>x.Hubungan=="ANAK"))
-                    {
-                        bilanak++;
-                    }
-
                     SuPekerja suPekerja = await _suPekerjaRepo.GetById(suTanggungan.SuPekerjaId);
-                    suPekerja.BilAnak += bilanak;
+
+                    if(suTanggungan.Hubungan == "ANAK")
+                    {
+                        suPekerja.BilAnak++;
+                    }
 
                     await _suPekerjaRepo.Update(suPekerja);
                     await _context.SaveChangesAsync();
