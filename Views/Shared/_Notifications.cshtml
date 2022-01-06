@@ -10,3 +10,10 @@
             toastr.error('@TempData[SD.Error]');
     </script>
 }
+
+@if (TempData[SD.Warning] != null)
+{
+    <script type="text/javascript">
+            toastr.warning('@TempData[SD.Warning]');
+    </script>
+}

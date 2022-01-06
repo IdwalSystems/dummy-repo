@@ -1,11 +1,73 @@
 ﻿<script type="text/javascript">
+    //empty cart
+    function EmptyCart() {
+        $.ajax({
+            type: "POST",
+            url: "/AkPV/JsonEmptyCart",
+            dataType: "json",
+            success: function (msg) {
+
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    };
+    //empty cart end
+
+    // check if jumlahObjek is equal to jumlahInbois
+    function checkJumlah() {
+        var jumlahObjek = $("#jumlahObjek").val();
+        var jumlahInbois = $("#jumlahInbois").val();
+
+        if (jumlahObjek == 0.00 && jumlahInbois == 0.00) {
+            $("#btnSave").show();
+        } else {
+            if (jumlahObjek == jumlahInbois) {
+                $("#btnSave").show();
+            }
+            else {
+                $("#btnSave").hide();
+            }
+        }
+    }
+    // check end
 
     // onchange kod pembekal
     $("body").on('change', "#ddlKodPembekal", function () {
         var kodPembekal = $("#ddlKodPembekal").val();
         var card = $("#cardInbois");
-        card.removeAttr('hidden');
-        JsonKodPembekal(kodPembekal);
+        if (kodPembekal != 0) {
+            card.removeAttr('hidden');
+            JsonKodPembekal(kodPembekal);
+            $("#Nama").prop('required', false);
+        } else {
+            //enable field
+            $("#txtNoKP").prop('disabled', false);
+            $("#Nama").prop('disabled', false);
+            $("#txtAlamat1").prop('disabled', false);
+            $("#txtAlamat2").prop('disabled', false);
+            $("#txtAlamat3").prop('disabled', false);
+            $("#txtNoAkaunBank").prop('disabled', false);
+            $("#txtTelefon").prop('disabled', false);
+            $("#txtEmel").prop('disabled', false);
+            $("#ddlKodPekerja").prop('disabled', false);
+
+            //empty field
+            $("#txtNoKP").val('');
+            $("#Nama").val('');
+            $("#txtAlamat1").val('');
+            $("#txtAlamat2").val('');
+            $("#txtAlamat3").val('');
+            $("#txtNoAkaunBank").val('');
+            $("#txtTelefon").val('');
+            $("#txtEmel").val('');
+
+            $("#btnSave").show();
+            card.prop('hidden', true);
+            EmptyCart();
+        }
+        
     });
 
     function JsonKodPembekal(id) {
@@ -16,22 +78,106 @@
                 data: { data: id },
                 dataType: "json",
                 success: function (msg) {
-                    $("#txtNamaPembekal").val(msg.record.namaSykt);
+                    $("#Nama").val(msg.record.namaSykt);
                     $("#txtAlamat1").val(msg.record.alamat1);
                     $("#txtAlamat2").val(msg.record.alamat2);
                     $("#txtAlamat3").val(msg.record.alamat3);
                     $("#txtNoAkaunBank").val(msg.record.noAkaunBank);
-                    $("#txtTelefon").val(msg.record.Telefon);
+                    $("#txtTelefon").val(msg.record.telefon);
                     $("#txtEmel").val(msg.record.emel);
                     // disable fields
                     $("#txtNoKP").prop('disabled', true);
-                    $("#txtNamaPembekal").prop('disabled', true);
+                    $("#Nama").prop('disabled', true);
                     $("#txtAlamat1").prop('disabled', true);
                     $("#txtAlamat2").prop('disabled', true);
                     $("#txtAlamat3").prop('disabled', true);
                     $("#txtNoAkaunBank").prop('disabled', true);
                     $("#txtTelefon").prop('disabled', true);
                     $("#txtEmel").prop('disabled', true);
+                    $("#ddlKodPekerja").prop('disabled', true);
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+    //on change Kod Pembekal end
+
+    // onchange Cara Bayaran
+    $("body").on('change', "#ddlJCaraBayar", function () {
+        var value = $("#ddlJCaraBayar option:selected");
+        $("#txtNoCekAtauEFT").val("");
+        $("#txtTarCekAtauEFT").val("");
+        if (value.text() == 'C - CEK' || value.text() == 'E - EFT') {
+            $("#txtNoCekAtauEFT").prop('disabled', false);
+            $("#txtTarCekAtauEFT").prop('disabled', false);
+        } else {
+            $("#txtNoCekAtauEFT").prop('disabled', true);
+            $("#txtTarCekAtauEFT").prop('disabled', true);
+        }
+        
+
+    });
+    //onchange Cara Bayaran end
+
+    // onchange kod Pekerja
+    $("body").on('change', "#ddlKodPekerja", function () {
+        var kodPekerja = $("#ddlKodPekerja").val();
+        if (kodPekerja != 0) {
+            JsonKodPekerja(kodPekerja);
+            $("#Nama").prop('required', false);
+        } else {
+            //enable field
+            $("#txtNoKP").prop('disabled', false);
+            $("#Nama").prop('disabled', false);
+            $("#txtAlamat1").prop('disabled', false);
+            $("#txtAlamat2").prop('disabled', false);
+            $("#txtAlamat3").prop('disabled', false);
+            $("#txtNoAkaunBank").prop('disabled', false);
+            $("#txtTelefon").prop('disabled', false);
+            $("#txtEmel").prop('disabled', false);
+            $("#ddlKodPembekal").prop('disabled', false);
+
+            //empty field
+            //empty field
+            $("#txtNoKP").val('');
+            $("#Nama").val('');
+            $("#txtAlamat1").val('');
+            $("#txtAlamat2").val('');
+            $("#txtAlamat3").val('');
+            $("#txtNoAkaunBank").val('');
+            $("#txtTelefon").val('');
+            $("#txtEmel").val('');
+        }
+    });
+
+    function JsonKodPekerja(id) {
+        if (id != null) {
+            $.ajax({
+                type: "POST",
+                url: "/AkPV/JsonGetPekerja",
+                data: { data: id },
+                dataType: "json",
+                success: function (msg) {
+                    $("#Nama").val(msg.record.nama);
+                    $("#txtNoKP").val(msg.record.noKp);
+                    $("#txtAlamat1").val(msg.record.alamat1);
+                    $("#txtAlamat2").val(msg.record.alamat2);
+                    $("#txtAlamat3").val(msg.record.alamat3);
+                    $("#txtNoAkaunBank").val(msg.record.noAkaunBank);
+                    $("#txtTelefon").val(msg.record.telefonBimbit);
+                    $("#txtEmel").val(msg.record.emel);
+                    // disable fields
+                    $("#txtNoKP").prop('disabled', true);
+                    $("#Nama").prop('disabled', true);
+                    $("#txtAlamat1").prop('disabled', true);
+                    $("#txtAlamat2").prop('disabled', true);
+                    $("#txtAlamat3").prop('disabled', true);
+                    $("#txtNoAkaunBank").prop('disabled', true);
+                    $("#txtTelefon").prop('disabled', true);
+                    $("#txtEmel").prop('disabled', true);
+                    $("#ddlKodPembekal").prop('disabled', true);
                 },
                 error: function (req, status, error) {
                     alert(error);
@@ -196,6 +342,12 @@
                             //Clear the TextBoxes.
                             txtKodAkaun.val("").trigger('change');
                             txtAmaunObjek.val("0.00");
+                            if ($('#ddlKodPembekal').val() != 0) {
+                                checkJumlah();
+                            } else {
+
+                            }
+                            
                         }
                     });
 

@@ -9,6 +9,7 @@ namespace MSNK
     {
 
         public const string Success = "Berjaya";
+        public const string Warning = "Perhatian";
         public const string Error = "Ralat";
 
     }

@@ -28,6 +28,7 @@ namespace MSNK.Controllers
         private readonly ListViewIRepository<AkPV2, int> _akPV2Repo;
         private readonly IRepository<AkBelian, int> _akBelianRepo;
         private readonly IRepository<AkPembekal, int> _akPembekalRepo;
+        private readonly IRepository<SuPekerja, int> _suPekerjaRepo;
         private readonly IRepository<JKW, int> _kwRepo;
         private readonly IRepository<AkCarta, int> _akCartaRepo;
         private readonly IRepository<AkBank, int> _akBankRepo;
@@ -43,6 +44,7 @@ namespace MSNK.Controllers
             ListViewIRepository<AkPV2, int> akPV2Repository,
             IRepository<AkBelian, int> akBelian,
             IRepository<AkPembekal, int> akPembekal,
+            IRepository<SuPekerja, int> suPekerja,
             IRepository<JKW, int> kwRepo,
             IRepository<AkCarta, int> akCartaRepository,
             IRepository<AkBank, int> akBankRepository,
@@ -58,6 +60,7 @@ namespace MSNK.Controllers
             _akPV2Repo = akPV2Repository;
             _akBelianRepo = akBelian;
             _akPembekalRepo = akPembekal;
+            _suPekerjaRepo = suPekerja;
             _kwRepo = kwRepo;
             _akCartaRepo = akCartaRepository;
             _akBankRepo = akBankRepository;
@@ -120,7 +123,11 @@ namespace MSNK.Controllers
             List<AkPVViewModel> viewModel = new List<AkPVViewModel>();
             foreach(AkPV item in akPV)
             {
-
+                decimal jumlahInbois = 0;
+                foreach (AkPV2 item2 in item.AkPV2)
+                {
+                    jumlahInbois += item2.Amaun;
+                }
                 viewModel.Add(new AkPVViewModel
                 {
                     Id = item.Id,
@@ -132,7 +139,8 @@ namespace MSNK.Controllers
                     CaraBayar = item.JCaraBayar.Perihal,
                     FlBatal = item.FlBatal,
                     FlPosting = item.FlPosting,
-                    FlCetak = item.FlCetak
+                    FlCetak = item.FlCetak,
+                    JumlahInbois = jumlahInbois
                 }
                 );
             }
@@ -146,6 +154,7 @@ namespace MSNK.Controllers
 
             List<AkBelian> aBelianList = _context.AkBelian
                 .Include(b => b.AkPO)
+                .Where(b=> b.FlPosting == '1')
                 .OrderBy(b => b.Tarikh).ToList();
             ViewBag.AkBelian = aBelianList;
 
@@ -171,6 +180,70 @@ namespace MSNK.Controllers
             List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.ToList();
             ViewBag.JCaraBayar = jCaraBayarList;
 
+        }
+
+        private void PopulateCart()
+        {
+            List<AkPV1> lines1 = _cart.Lines1.ToList();
+
+            foreach (AkPV1 item in lines1)
+            {
+                var carta = _context.AkCarta.Where(x => x.Id == item.AkCartaId).FirstOrDefault();
+                item.AkCarta = carta;
+            }
+
+            ViewBag.akTerima1 = lines1;
+
+            List<AkPV2> lines2 = _cart.Lines2.ToList();
+
+            foreach (AkPV2 item in lines2)
+            {
+                var akBelian = _context.AkBelian
+                    .Include(x=> x.AkPO)
+                    .Where(x => x.Id == item.AkBelianId).FirstOrDefault();
+                item.AkBelian = akBelian;
+            }
+
+            ViewBag.akTerima2 = _cart.Lines2.ToList();
+        }
+
+        private void PopulateCartFromDb(AkPV akPV)
+        {
+            List<AkPV1> akPV1Table = _context.AkPV1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkPVId == akPV.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            foreach (AkPV1 akPV1 in akPV1Table)
+            {
+                _cart.AddItem1(akPV1.AkPVId,
+                               akPV1.Amaun,
+                               akPV1.AkCartaId,
+                               akPV1.UserId,
+                               akPV1.TarMasuk,
+                               akPV1.UserIdKemaskini,
+                               akPV1.TarKemaskini);
+            }
+
+            ViewBag.akPV1 = akPV1Table;
+
+            List<AkPV2> akPV2Table = _context.AkPV2
+                .Include(b => b.AkBelian).ThenInclude(b=> b.AkPO)
+                .Where(b => b.AkPVId == akPV.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            foreach (AkPV2 akPV2 in akPV2Table)
+            {
+                _cart.AddItem2(akPV2.AkPVId,
+                               akPV2.AkBelianId,
+                               akPV2.Amaun,
+                               akPV2.UserId,
+                               akPV2.TarMasuk,
+                               akPV2.UserIdKemaskini,
+                               akPV2.TarKemaskini);
+            }
+
+            ViewBag.akPV2 = akPV2Table;
         }
 
         // function  json Create akPV1
@@ -493,6 +566,7 @@ namespace MSNK.Controllers
             akPVView.Jumlah = akPV.Jumlah;
             akPVView.TarikhPosting = akPV.TarikhPosting;
 
+            
             if (akPV.AkPembekalId == null)
             {
                 akPVView.denganTanggungan = false;
@@ -594,7 +668,7 @@ namespace MSNK.Controllers
         }
         //on change kod pembekal controller end
 
-        // on change kod pembekal controller
+        // on change inbois controller
         [HttpPost]
         public async Task<JsonResult> JsonGetAkBelian(int data)
         {
@@ -609,16 +683,73 @@ namespace MSNK.Controllers
                 return Json(new { result = "Error", message = ex.Message });
             }
         }
-        //on change kod pembekal controller end
+        //on change inbois controller end
+
+        // on change kod Pekerja controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetPekerja(int data)
+        {
+            try
+            {
+                var result = await _suPekerjaRepo.GetById(data);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change kod Pekerja controller end
+
+        // on change kod Pekerja controller
+        [HttpPost]
+        public JsonResult JsonEmptyCart()
+        {
+            try
+            {
+                CartEmpty();
+
+                return Json(new { result = "OK"});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change kod Pekerja controller end
 
         // POST: AkPV/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkPV akPV, int JKWId, int? AkPembekalId, int AkBankId, int JCaraBayarId)
+        public async Task<IActionResult> Create(AkPV akPV, int JKWId, int? AkPembekalId, int? SuPekerjaId, int AkBankId, int JCaraBayarId, decimal JumlahInbois)
         {
             AkPV m = new AkPV();
+
+            //check if user fil in both pekerja and pembekal
+            if (AkPembekalId != null && SuPekerjaId != null)
+            {
+                TempData[SD.Error] = "Maklumat gagal disimpan. Sila isi salah satu kod pekerja atau kod pembekal";
+                //PopulateCart();
+                CartEmpty();
+                PopulateList();
+                return View(akPV);
+            }
+            // checking for jumlah objek & jumlah perihal
+            if (AkPembekalId != null)
+            {
+                if (akPV.Jumlah != JumlahInbois)
+                {
+                    TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Inbois";
+                    //PopulateCart();
+                    CartEmpty();
+                    PopulateList();
+                    return View(akPV);
+                }
+            }   
+
             var user = await _userManager.GetUserAsync(User);
             var pembekal = new AkPembekal();
             pembekal = _context.AkPembekal.Find(AkPembekalId);
@@ -631,6 +762,19 @@ namespace MSNK.Controllers
                 akPV.Telefon = pembekal.Telefon1;
                 akPV.Emel = pembekal.Emel;
                 akPV.NoAkaunBank = pembekal.AkaunBank;
+            }
+
+            var pekerja = new SuPekerja();
+            pekerja = _context.SuPekerja.Find(SuPekerjaId);
+            if (pekerja != null)
+            {
+                akPV.Nama = pekerja.Nama;
+                akPV.Alamat1 = pekerja.Alamat1;
+                akPV.Alamat2 = pekerja.Alamat2;
+                akPV.Alamat3 = pekerja.Alamat3;
+                akPV.Telefon = pekerja.TelefonBimbit;
+                akPV.Emel = pekerja.Emel;
+                akPV.NoAkaunBank = pekerja.NoAkaunBank;
             }
 
             // get latest no rujukan running number  
@@ -717,6 +861,7 @@ namespace MSNK.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
+           
             PopulateList();
             return View(akPV);
         }
@@ -1006,7 +1151,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkPV akPV, int JKWId, int AkPembekalId, int AkBankId, int JCaraBayarId)
+        public async Task<IActionResult> Edit(int id, AkPV akPV, int JKWId, int AkPembekalId, int AkBankId, int JCaraBayarId, decimal JumlahInbois)
         {
             if (id != akPV.Id)
             {
@@ -1049,7 +1194,23 @@ namespace MSNK.Controllers
                     }
                 }
                 CartEmpty();
+                // checking for jumlah objek & jumlah inbois (untuk pembekal)
+                if (akPV.AkPembekalId != null)
+                {
+                    if (akPV.Jumlah != JumlahInbois)
+                    {
+                        TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Inbois";
+                    }
+                    else
+                    {
+                        TempData[SD.Success] = "Data berjaya diubah..!";
+                    }
+
+                    return RedirectToAction(nameof(Index));
+                }
+                
                 TempData[SD.Success] = "Data berjaya diubah..!";
+                
                 return RedirectToAction(nameof(Index));
             }
             PopulateList();

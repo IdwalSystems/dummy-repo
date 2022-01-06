@@ -67,7 +67,7 @@
                         </div>
 
                     </div>
-                    @if (Model.denganTanggungan == true)
+                    @if (Model.AkPembekalId != null)
                     {
                         <div class="form-row">
                             <div class="col-md-12">
@@ -83,10 +83,24 @@
                             </div>
                         </div>
                     }
-                    else
-                    {
 
+                    @if (Model.SuPekerjaId != null)
+                    {
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <label asp-for="SuPekerjaId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPembekal" disabled>
+                                    <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
+                                    @foreach (var s in ViewBag.SuPekerja)
+                                    {
+                                        <option value="@s.Id">@s.NoGaji - @s.Nama</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
+                            </div>
+                        </div>
                     }
+
                     <div class="form-row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -231,7 +245,7 @@
                     @*table Objek end*@
 
                     @*table Inbois*@
-                    @if (Model.denganTanggungan == true)
+                    @if (Model.AkPembekalId != 0)
                     {
                         <div class="card box-shadow mb-3" id="cardInbois">
                             <div class="card-header">
@@ -313,7 +327,7 @@
                             <div class="card-footer">
                                 <div class="form-group">
                                     <label class="control-label">Jumlah Inbois</label>
-                                    <input class="form-control form-control-sm" id="jumlahInbois"  readonly />
+                                    <input class="form-control form-control-sm" id="jumlahInbois" name="JumlahInbois" readonly />
                                 </div>
                             </div>
                         </div>
@@ -371,7 +385,7 @@
             </div>
             @*hidden type input end*@
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Simpan" class="btn btn-primary" />
             </div>
         </form>
     </div>
