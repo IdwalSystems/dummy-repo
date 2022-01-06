@@ -32,6 +32,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkPO, int> _akPORepo;
         private readonly ListViewIRepository<AkPO1, int> _akPO1Repo;
         private readonly ListViewIRepository<AkPO2, int> _akPO2Repo;
+        private readonly IRepository<AkCarta, int> _akCartaRepo;
         private readonly IRepository<AkPembekal, int> _akpembekalRepo;
         private readonly IRepository<AkBank, int> _akBankRepo;
         private readonly IRepository<JBank, int> _jbankRepo;
@@ -41,10 +42,12 @@ namespace MSNK.Controllers
         private CartPO _cart;
 
         public AkPOController(ApplicationDbContext context,
+            AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
             IRepository<AkPO, int> AkPORepository,
             ListViewIRepository<AkPO1, int> AkPO1Repository,
             ListViewIRepository<AkPO2, int> AkPO2Repository,
+            IRepository<AkCarta, int> akCartaRepository,
             IRepository<AkPembekal, int> AkPembekalRepository,
             IRepository<AkBank, int> akBankRepository,
             IRepository<JBank, int> JBankRepository,
@@ -55,10 +58,12 @@ namespace MSNK.Controllers
             )
         {
             _context = context;
+            _appLog = appLog;
             _userManager = userManager;
             _akPORepo = AkPORepository;
             _akPO1Repo = AkPO1Repository;
             _akPO2Repo = AkPO2Repository;
+            _akCartaRepo = akCartaRepository;
             _kwRepo = kwRepository;
             _negeriRepo = negeriRepository;
             _akpembekalRepo = AkPembekalRepository;
@@ -69,9 +74,56 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPO
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string searchString,
+            string searchDate1,
+            string searchDate2,
+            string searchColumn)
         {
             var akPO = await _akPORepo.GetAll();
+
+            if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            {
+                // searching with '%like%' condition
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    if (searchColumn == "NoPO")
+                    {
+                        akPO = akPO.Where(s => s.NoPO.ToUpper().Contains(searchString.ToUpper())).ToList();
+                    }
+                    else if (searchColumn == "Pembekal")
+                    {
+                        akPO = akPO.Where(s => s.AkPembekal.NamaSykt.ToUpper().Contains(searchString.ToUpper())).ToList();
+                    }
+
+                    ViewBag.SearchData1 = searchString;
+
+                }
+
+                // searching with '%like%' condition end
+
+                // searching with date range condition
+                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+                {
+                    if (searchColumn == "Tarikh")
+                    {
+                        DateTime date1 = DateTime.Parse(searchDate1);
+                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
+                        akPO = akPO.Where(x => x.Tarikh >= date1
+                            && x.Tarikh <= date2).ToList();
+                    }
+                    ViewBag.SearchData1 = searchDate1;
+                    ViewBag.SearchData2 = searchDate2;
+                }
+
+                ViewBag.SearchColumn = searchColumn;
+            }
+            // searching with date range condition end
+            else
+            {
+                ViewBag.SearchColumn = "Tarikh";
+            }
+
             return View(akPO);
         }
 
@@ -152,8 +204,11 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem1(akPO1.AkPOId,
                                 akPO1.AkCartaId,
-                               akPO1.Amaun
-                               );
+                                akPO1.Amaun,
+                                akPO1.UserId,
+                                akPO1.TarMasuk,
+                                akPO1.UserIdKemaskini,
+                                akPO1.TarKemaskini);
             }
 
             List<AkPO2> akPO2Table = _context.AkPO2
@@ -172,7 +227,11 @@ namespace MSNK.Controllers
                                akPO2.Kuantiti,
                                akPO2.Unit,
                                akPO2.Harga,
-                               akPO2.Amaun);
+                               akPO2.Amaun,
+                               akPO2.UserId,
+                               akPO2.TarMasuk,
+                               akPO2.UserIdKemaskini,
+                               akPO2.TarKemaskini);
             }
         }
 
@@ -200,26 +259,26 @@ namespace MSNK.Controllers
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
 
             // get latest no rujukan running number  
-            //var kw = _context.JKW.FirstOrDefault(x => x.Id == akPO.JKWId);
+            var kw = _context.JKW.FirstOrDefault(x => x.Id == akPO.JKWId);
 
-            //var kumpulanWang = kw.Kod;
-            //var year = DateTime.Now.Year.ToString();
-            //var month = DateTime.Now.Month.ToString();
-            //string prefix = "RR/IB" + kumpulanWang + year;
-            //int x = 1;
-            //string noRujukan = prefix + "000000";
+            var kumpulanWang = kw.Kod;
+            var year = DateTime.Now.Year.ToString();
+            var month = DateTime.Now.Month.ToString();
+            string prefix = year;
+            int x = 1;
+            string noRujukan = prefix + "000000";
 
-            //var LatestNoRujukan = _context.AkPO.Max(x => x.NoPO);
-            //if (LatestNoRujukan == null)
-            //{
-            //    noRujukan = string.Format("{0:" + prefix + "000000}", x);
-            //}
-            //else
-            //{
-            //    x = int.Parse(LatestNoRujukan.Substring(12));
-            //    x++;
-            //    noRujukan = string.Format("{0:" + prefix + "000000}", x);
-            //}
+            var LatestNoRujukan = _context.AkPO.Max(x => x.NoPO);
+            if (LatestNoRujukan == null)
+            {
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            else
+            {
+                x = int.Parse(LatestNoRujukan.Substring(12));
+                x++;
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
 
             // get latest no rujukan running number end
 
@@ -244,6 +303,21 @@ namespace MSNK.Controllers
                     m.AkPO2 = _cart.Lines2.ToArray();
 
                     await _akPORepo.Insert(m);
+
+                    //insert applog
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "C";
+                    appLog.LgOperation = "Tambah";
+                    appLog.LgNote = modul + " Penerimaan - Tambah";
+                    appLog.NoRujukan = noRujukan;
+                    appLog.Jumlah = akPO.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
@@ -267,10 +341,14 @@ namespace MSNK.Controllers
             var akPO = await _akPORepo.GetById((int)id);
             var kw = await _kwRepo.GetById(akPO.JKWId);
             akPO.JKW = kw;
-            if (akPO == null)
+
+            // check if already posting redirect back
+            if (akPO.FlPosting == 1)
             {
-                return NotFound();
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
             }
+
             CartEmpty();
             PopulateList();
             PopulateTable(id);
@@ -294,7 +372,25 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(User);
+                    akPO.UserIdKemaskini = user.UserName;
+                    akPO.TarKemaskini = DateTime.Now;
+
                     _context.Update(akPO);
+
+                    //insert applog
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "E";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Penerimaan - Ubah";
+                    appLog.NoRujukan = akPO.NoPO;
+                    appLog.Jumlah = akPO.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -308,10 +404,12 @@ namespace MSNK.Controllers
                         throw;
                     }
                 }
+                CartEmpty();
+                TempData[SD.Success] = "Data berjaya diubah..!";
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AkPembekalId"] = new SelectList(_context.AkPembekal, "Id", "Id", akPO.AkPembekalId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", akPO.JKWId);
+            PopulateList();
+            PopulateTable(id);
             return View(akPO);
         }
 
@@ -385,16 +483,25 @@ namespace MSNK.Controllers
             }
         }
 
-        public JsonResult SaveAkPO1(AkPO1 akPO1)
+        public async Task<JsonResult> SaveAkPO1(AkPO1 akPO1)
         {
 
             try
             {
                 if (akPO1 != null)
                 {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    akPO1.UserId = user.UserName;
+                    akPO1.TarMasuk = DateTime.Now;
+
                     _cart.AddItem1(akPO1.AkPOId,
-                                akPO1.AkCartaId,
-                                    akPO1.Amaun);
+                                   akPO1.AkCartaId,
+                                   akPO1.Amaun,
+                                   akPO1.UserId,
+                                   akPO1.TarMasuk,
+                                   akPO1.UserIdKemaskini,
+                                   akPO1.TarKemaskini);
 
                 }
 
@@ -408,13 +515,18 @@ namespace MSNK.Controllers
             }
         }
 
-        public JsonResult SaveAkPO2(AkPO2 akPO2)
+        public async Task<JsonResult> SaveAkPO2(AkPO2 akPO2)
         {
 
             try
             {
                 if (akPO2 != null)
                 {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    akPO2.UserId = user.UserName;
+                    akPO2.TarMasuk = DateTime.Now;
+
                     _cart.AddItem2(akPO2.AkPOId,
                          akPO2.Indek,
                          akPO2.Baris,
@@ -424,7 +536,11 @@ namespace MSNK.Controllers
                          akPO2.Kuantiti,
                          akPO2.Unit,
                          akPO2.Harga,
-                         akPO2.Amaun);
+                         akPO2.Amaun,
+                         akPO2.UserId,
+                         akPO2.TarMasuk,
+                         akPO2.UserIdKemaskini,
+                         akPO2.TarKemaskini);
                 }
 
                 return Json(new { result = "OK" });
@@ -495,8 +611,12 @@ namespace MSNK.Controllers
             {
                 if (akPO1 != null || akPO1.Amaun != 0)
                 {
+                    var user = await _userManager.GetUserAsync(User);
                     var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akPO1.AkCartaId);
                     akPO1.AkCarta = akCarta;
+                    akPO1.UserId = user.UserName;
+                    akPO1.TarMasuk = DateTime.Now;
+
                     await _akPO1Repo.Insert(akPO1);
 
                     decimal total = 0;
@@ -506,9 +626,19 @@ namespace MSNK.Controllers
                     total = akPO.Jumlah + akPO1.Amaun;
 
                     akPO.Jumlah = total;
+                    akPO.UserIdKemaskini = user.UserName;
 
                     await _akPORepo.Update(akPO);
                     await _context.SaveChangesAsync();
+
+                    _cart.AddItem1(akPO1.AkPOId,
+                                   akPO1.AkCartaId,
+                                   akPO1.Amaun,
+                                   akPO1.UserId,
+                                   akPO1.TarMasuk,
+                                   akPO1.UserIdKemaskini,
+                                   akPO1.TarKemaskini);
+
 
                 }
 
@@ -528,6 +658,7 @@ namespace MSNK.Controllers
             {
                 if (akPO1 != null)
                 {
+                    var user = await _userManager.GetUserAsync(User);
                     var akT1 = await _context.AkPO1.FirstOrDefaultAsync(x => x.AkCartaId == akPO1.AkCartaId && x.AkPOId == akPO1.AkPOId);
                     _context.AkPO1.Remove(akT1);
 
@@ -538,10 +669,27 @@ namespace MSNK.Controllers
                     total = akPO.Jumlah - akT1.Amaun;
 
                     akPO.Jumlah = total;
-
+                    akPO.UserIdKemaskini = user.UserName;
+                    akPO.TarKemaskini = DateTime.Now;
                     await _akPORepo.Update(akPO);
 
+                    //insert applog
+                    var akCarta = await _akCartaRepo.GetById(akT1.AkCartaId);
+
+                    AppLog appLog = new AppLog();
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "ED";
+                    appLog.LgOperation = "Hapus";
+                    appLog.LgNote = modul + " Penerimaan - Hapus Objek";
+                    appLog.NoRujukan = akPO.NoPO + "/" + akCarta.Kod;
+                    appLog.Jumlah = akT1.Amaun;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
+
+                    _cart.RemoveItem1(akPO1.AkCartaId);
 
                 }
 
@@ -560,11 +708,48 @@ namespace MSNK.Controllers
 
             try
             {
+
                 _cart.Clear1();
 
                 AkPO1 akT1 = await _akPO1Repo.GetById(akPO1.Id);
+
+                decimal originalAmount = akT1.Amaun;
+                var user = await _userManager.GetUserAsync(User);
+
                 akT1.Amaun = akPO1.Amaun;
+                akT1.UserIdKemaskini = user.UserName;
+                akT1.TarKemaskini = DateTime.Now;
                 _context.AkPO1.Update(akT1);
+
+                // update total akPO with date updated and userUpdated
+                var akPO = await _akPORepo.GetById(akPO1.AkPOId);
+                decimal total = 0;
+
+                total = akPO.Jumlah - originalAmount + akT1.Amaun;
+                akPO.Jumlah = total;
+                akPO.UserIdKemaskini = user.UserName;
+                akPO.TarKemaskini = DateTime.Now;
+                await _akPORepo.Update(akPO);
+                // update total akPO with date updated and userUpdated end
+
+                //insert applog
+                if (akPO1.Amaun != originalAmount)
+                {
+                    var akCarta = await _akCartaRepo.GetById(akT1.AkCartaId);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "EE";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Pesanan Tempatan - Ubah Objek";
+                    appLog.NoRujukan = akPO.NoPO + "/" + akCarta.Kod + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akPO1.Amaun.ToString();
+                    appLog.Jumlah = akT1.Amaun;
+
+                    await _appLog.Insert(appLog);
+                }
+                //insert applog end
+
                 await _context.SaveChangesAsync();
 
                 return Json(new { result = "OK" });
@@ -585,7 +770,15 @@ namespace MSNK.Controllers
 
                 foreach (AkPO1 item in akT1)
                 {
-                    _cart.AddItem1(item.AkPOId, item.AkCartaId,item.Amaun);
+
+                    _cart.AddItem1(item.AkPOId,
+                                item.AkCartaId,
+                                item.Amaun,
+                                item.UserId,
+                                item.TarMasuk,
+                                item.UserIdKemaskini,
+                                item.TarKemaskini);
+
                 }
 
 
@@ -634,8 +827,12 @@ namespace MSNK.Controllers
             {
                 if (akPO2 != null || akPO2.Amaun != 0)
                 {
-                    //var jCaraBayar = _context.JCaraBayar.FirstOrDefault(x => x.Id == akTerima2.JCaraBayarId);
-                    //akTerima2.JCaraBayar = jCaraBayar;
+                    //var jPerihal = _context.Indek.FirstOrDefault(x => x.Id == akPO2.Indek);
+                    var user = await _userManager.GetUserAsync(User);
+
+                    //akPO2.Indek = jPerihal;
+                    akPO2.UserId = user.UserName;
+                    akPO2.TarMasuk = DateTime.Now;
                     await _akPO2Repo.Insert(akPO2);
 
                     await _context.SaveChangesAsync();
@@ -660,7 +857,24 @@ namespace MSNK.Controllers
                 if (akPO2 != null)
                 {
                     var akT2 = await _context.AkPO2.FirstOrDefaultAsync(x => x.Indek == akPO2.Indek && x.AkPOId == akPO2.AkPOId);
+                    var user = await _userManager.GetUserAsync(User);
+
                     _context.AkPO2.Remove(akT2);
+
+                    //insert applog
+                    var akPO = await _akPORepo.GetById(akPO2.AkPOId);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "ED";
+                    appLog.LgOperation = "Hapus";
+                    appLog.LgNote = modul + " Pesanan Tempatan - Hapus Perihal";
+                    appLog.NoRujukan = akPO.NoPO + "/" + akPO2.Indek;
+                    appLog.Jumlah = akPO2.Amaun;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
 
                     await _context.SaveChangesAsync();
 
@@ -684,6 +898,8 @@ namespace MSNK.Controllers
                 _cart.Clear2();
 
                 AkPO2 akT2 = await _akPO2Repo.GetById(akPO2.Id);
+                var user = await _userManager.GetUserAsync(User);
+                decimal originalAmount = akT2.Amaun;
 
                 akT2.Amaun = akPO2.Amaun;
                 akT2.Indek = akPO2.Indek;
@@ -697,6 +913,24 @@ namespace MSNK.Controllers
                 akT2.Amaun = akPO2.Amaun;
 
                 _context.AkPO2.Update(akT2);
+
+                //insert applog
+                if (akPO2.Amaun != originalAmount)
+                {
+                    var akPO = await _akPORepo.GetById(akPO2.AkPOId);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "EE";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Pesanan Tempatan - Ubah Perihal";
+                    appLog.NoRujukan = akPO.NoPO + "/" + akT2.Perihal + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akPO2.Amaun.ToString();
+                    appLog.Jumlah = akPO2.Amaun;
+
+                    await _appLog.Insert(appLog);
+                }
+                //insert applog end
                 await _context.SaveChangesAsync();
 
                 return Json(new { result = "OK" });
@@ -726,7 +960,11 @@ namespace MSNK.Controllers
                          akPO2.Kuantiti,
                          akPO2.Unit,
                          akPO2.Harga,
-                         akPO2.Amaun);
+                         akPO2.Amaun,
+                         akPO2.UserId,
+                         akPO2.TarMasuk,
+                         akPO2.UserIdKemaskini,
+                         akPO2.TarKemaskini);
                 }
 
                 return Json(new { result = "OK", data = data });
@@ -779,17 +1017,20 @@ namespace MSNK.Controllers
                 {
                     //posting operation start here
                     //insert into akAkaun
-                    AkAkaun akADebit = new AkAkaun();
+
                     foreach (AkPO1 item in akT1)
                     {
-                        akADebit.NoRujukan = akPO.NoPO;
-                        akADebit.JKWId = akPO.JKWId;
-                        //akADebit.AkCartaId1 = akPO.AkBankId;
-                        akADebit.AkCartaId2 = item.AkCartaId;
-                        akADebit.Tarikh = akPO.Tarikh;
-                        akADebit.Debit = item.Amaun;
+                        AkAkaun akADebit = new AkAkaun()
+                        {
+                            NoRujukan = akPO.NoPO,
+                            JKWId = -akPO.JKWId,
+                            //AkCartaId1 = akPO.AkBank.AkCartaId,
+                            AkCartaId2 = item.AkCartaId,
+                            Tarikh = akPO.Tarikh,
+                            Debit = item.Amaun
+                        };
+                        await _akAkaunRepo.Insert(akADebit);
                     }
-                    await _akAkaunRepo.Insert(akADebit);
 
                     //update posting status in akPO
                     akPO.FlPosting = 1;
@@ -797,21 +1038,22 @@ namespace MSNK.Controllers
                     await _akPORepo.Update(akPO);
 
 
-                    ////Insert User Applog
+                    //insert applog
+                    var user = await _userManager.GetUserAsync(User);
 
-                    //AppLog appLog = new AppLog();
+                    AppLog appLog = new AppLog();
 
-                    //appLog.UserId = user.UserName;
-                    //appLog.LgModule = modul + "C";
-                    //appLog.LgOperation = "Tambah";
-                    //appLog.LgNote = modul + " Pesanan Tempatan - Tambah";
-                    //appLog.NoRujukan = AkPO.NoPO;
-                    //appLog.Jumlah = akPO.Jumlah;
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "T";
+                    appLog.LgOperation = "Posting";
+                    appLog.LgNote = modul + " Pesanan Tempatan - Posting";
+                    appLog.NoRujukan = akPO.NoPO;
+                    appLog.Jumlah = akPO.Jumlah;
 
-                    //await _appLog.Insert(appLog);
+                    await _appLog.Insert(appLog);
                     //insert applog end
 
-                    //await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
 
 
                     TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
@@ -824,6 +1066,67 @@ namespace MSNK.Controllers
 
         }
         // posting function end
+        // unposting function
+        public async Task<IActionResult> UnPosting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkPO akPO = await _context.AkPO.Include(x => x.AkPO1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == id);
 
+                List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akPO.NoPO).ToList();
+                if (akAkaun == null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //unposting operation start here
+                    //delete data from akAkaun
+                    foreach (AkAkaun item in akAkaun)
+                    {
+                        await _akAkaunRepo.Delete(item.Id);
+                    }
+
+                    //update posting status in akPO
+                    akPO.FlPosting = 0;
+                    akPO.TarikhPosting = null;
+                    //akPO.TarikhPosting = null;
+                    await _akPORepo.Update(akPO);
+
+                    //insert applog
+                    var user = await _userManager.GetUserAsync(User);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "UT";
+                    appLog.LgOperation = "UnPosting";
+                    appLog.LgNote = modul + " Pesanan Tempatan - UnPosting";
+                    appLog.NoRujukan = akPO.NoPO;
+                    appLog.Jumlah = akPO.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                    //unposting operation end
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // unposting function end
     }
 }
