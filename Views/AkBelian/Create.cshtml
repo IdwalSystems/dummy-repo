@@ -80,15 +80,15 @@
                 <div class="form-row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label asp-for="AkBankId" class="control-label">Kod Bank</label><span class="text-danger control-label">*</span>
-                            <select class="form-control form-control-sm select2" asp-for="AkBankId" required>
+                            <label asp-for="KodObjekAPId" class="control-label">Kod Bank</label><span class="text-danger control-label">*</span>
+                            <select class="form-control form-control-sm select2" asp-for="KodObjekAPId" required>
                                 <option value="" disabled selected>-- Pilih Bank --</option>
-                                @foreach (var s in ViewBag.AkBank)
+                                @foreach (var s in ViewBag.KodObjekAP)
                                 {
-                                    <option value="@s.Id">@s.NoAkaun - @s.JBank.Nama</option>
+                                    <option value="@s.Id">@s.Kod - @s.Perihal</option>
                                 }
                             </select>
-                            <span asp-validation-for="AkBankId" class="text-danger"></span>
+                            <span asp-validation-for="KodObjekAP" class="text-danger"></span>
                         </div>
                     </div>
                 </div>

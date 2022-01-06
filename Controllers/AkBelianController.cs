@@ -277,8 +277,8 @@ namespace MSNK.Controllers
             var akBelian = await _akBelianRepo.GetById((int)id);
             var kw = await _kwRepo.GetById(akBelian.JKWId);
             akBelian.JKW = kw;
-            var akBank = await _akBankRepo.GetById(akBelian.AkBankId);
-            akBelian.AkBank = akBank;
+            var kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
+            akBelian.KodObjekAP = kodObjekAkaunPemiutang;
             var akPO = new AkPO();
             if (akBelian.AkPOId != null)
             {
@@ -604,7 +604,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int AkBankId, string NamaPembekal, decimal JumlahPerihal)
+        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int KodObjekAkaunPemiutangId, string NamaPembekal, decimal JumlahPerihal)
         {
             AkBelian m = new AkBelian();
             var user = await _userManager.GetUserAsync(User);
@@ -635,9 +635,9 @@ namespace MSNK.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (akBelian != null && JKWId != 0 && AkPembekalId != 0 && AkBankId != 0)
+                if (akBelian != null && JKWId != 0 && AkPembekalId != 0 && KodObjekAkaunPemiutangId != 0)
                 {
-                    m.AkBankId = AkBankId;
+                    m.KodObjekAPId = KodObjekAkaunPemiutangId;
                     m.JKWId = JKWId;
                     m.Tahun = akBelian.Tahun;
                     m.NoInbois = noRujukan;
@@ -703,8 +703,8 @@ namespace MSNK.Controllers
             var akBelian = await _akBelianRepo.GetById((int)id);
             var kw = await _kwRepo.GetById(akBelian.JKWId);
             akBelian.JKW = kw;
-            var akBank = await _akBankRepo.GetById(akBelian.AkBankId);
-            akBelian.AkBank = akBank;
+            var KodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
+            akBelian.KodObjekAP = KodObjekAkaunPemiutang;
             var akPO = new AkPO();
             if (akBelian.AkPOId != null)
             {
@@ -1319,7 +1319,7 @@ namespace MSNK.Controllers
             else
             {
                 AkBelian akBelian = await _context.AkBelian
-                    .Include(x=> x.AkBank)
+                    .Include(x=> x.KodObjekAP)
                     .Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -1344,13 +1344,25 @@ namespace MSNK.Controllers
                         {
                             NoRujukan = akBelian.NoInbois,
                             JKWId = akBelian.JKWId,
-                            AkCartaId1 = akBelian.AkBank.AkCartaId,
+                            AkCartaId1 = akBelian.KodObjekAPId,
                             AkCartaId2 = item.AkCartaId,
                             Tarikh = akBelian.Tarikh,
                             Kredit = item.Amaun
                         };
 
                         await _akAkaunRepo.Insert(akAKredit);
+
+                        AkAkaun akADebit = new AkAkaun()
+                        {
+                            NoRujukan = akBelian.NoInbois,
+                            JKWId = akBelian.JKWId,
+                            AkCartaId1 = akBelian.KodObjekAPId,
+                            AkCartaId2 = item.AkCartaId,
+                            Tarikh = akBelian.Tarikh,
+                            Debit = item.Amaun
+                        };
+
+                        await _akAkaunRepo.Insert(akADebit);
                     }
                     
 
@@ -1398,7 +1410,7 @@ namespace MSNK.Controllers
             else
             {
                 AkBelian akBelian = await _context.AkBelian
-                    .Include(x=> x.AkBank)
+                    .Include(x=> x.KodObjekAP)
                     .Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta)
                     .FirstOrDefaultAsync(x => x.Id == id);
 

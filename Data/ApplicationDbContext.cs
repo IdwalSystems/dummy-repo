@@ -157,9 +157,9 @@ namespace MSNK.Data
                 .IsRequired();
 
             modelBuilder.Entity<AkBelian>()
-                    .HasOne(m => m.AkBank)
-                    .WithMany(t => t.AkBelian)
-                    .HasForeignKey(m => m.AkBankId)
+                    .HasOne(m => m.KodObjekAP)
+                    .WithMany(t => t.KodObjekAP)
+                    .HasForeignKey(m => m.KodObjekAPId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
             //AkBelian end
