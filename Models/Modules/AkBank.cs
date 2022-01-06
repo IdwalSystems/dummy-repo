@@ -29,7 +29,6 @@ namespace MSNK.Models.Modules
         [Display(Name = "Kod Akaun")]
         public AkCarta AkCarta { get; set; }
         public ICollection<AkTerima> AkTerima { get; set; }
-        public ICollection<AkBelian> AkBelian { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
 
         // log

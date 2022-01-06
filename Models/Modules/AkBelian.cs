@@ -45,15 +45,15 @@ namespace MSNK.Models.Modules
         public int JKWId { get; set; }
         [DisplayName("No Pesanan Tempatan")]
         public int? AkPOId { get; set; }
-        [Required(ErrorMessage = "Kod Bank Diperlukan.")]
-        [DisplayName("Kod Bank")]
-        public int AkBankId { get; set; }
+        [Required(ErrorMessage = "Kod Pemiutang Diperlukan.")]
+        [DisplayName("Kod Pemiutang")]
+        public int KodObjekAPId { get; set; }
         [Required(ErrorMessage = "Kod Pembekal Diperlukan.")]
         [DisplayName("Kod Pembekal")]
         public int AkPembekalId { get; set; }
         public JKW JKW { get; set; }
         public AkPO AkPO { get; set; }
-        public AkBank AkBank { get; set; }
+        public AkCarta KodObjekAP { get; set; }
         public AkPembekal AkPembekal { get; set; }
         public ICollection<AkBelian1> AkBelian1 { get; set; }
         public ICollection<AkBelian2> AkBelian2 { get; set; }
