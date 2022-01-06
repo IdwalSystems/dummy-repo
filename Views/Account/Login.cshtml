@@ -6,13 +6,17 @@
 }
 <div class="limiter">
     <div class="container-login100">
-        <div class="wrap-login100">
-            <div class="login100-pic js-tilt" data-tilt="" style="will-change: transform; transform: perspective(300px) rotateX(0deg) rotateY(0deg);">
+        <div class="wrap-login100 animate__bounceIn">
+            <div class="login100-pic">
                 <img src="~/img/MainLogo_Syarikat.png" alt="IMG">
             </div>
 
-            <form class="login100-form validate-form" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" role="form">
-                <span class="login100-form-title">
+            <form class="login100-form validate-form animate__bounceIn" asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" role="form">
+                <h6 class="login100-form-big-title">
+                    SPMB MSNK
+                </h6>
+                <hr>
+                <span class="login100-form-title text-info">
                     Log Masuk Pengguna
                 </span>
                 <div asp-validation-summary="All" class="text-danger mb-3"></div>
@@ -24,7 +28,7 @@
                         <i class="fa fa-envelope" aria-hidden="true"></i>
                     </span>
                 </div>
-                
+
 
                 <div class="wrap-input100">
                     <input class="input100" type="password" asp-for="Katalaluan" placeholder="Katalaluan">
@@ -33,7 +37,7 @@
                         <i class="fa fa-lock" aria-hidden="true"></i>
                     </span>
                 </div>
-                
+
 
                 <div class="container-login100-form-btn">
                     <button class="login100-form-btn" type="submit">

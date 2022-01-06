@@ -5,16 +5,10 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.ViewModel
 {
-    public class AkBelianViewModel
+    public class AkBelianViewModel: AkBelian
     {
-        public int Id { get; set; }
-        public string Tahun { get; set; }
-        public string NoInbois { get; set; }
-        public DateTime Tarikh { get; set; }
-        public decimal Jumlah { get; set; }
         public string NamaSykt { get; set; }
         public string Alamat1 { get; set; }
-        public int FlPosting { get; set; }
-        public int FlBatal { get; set; }
+        public decimal JumlahPerihal { get; set; }
     }
 }

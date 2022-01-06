@@ -139,8 +139,7 @@ namespace MSNK.Migrations
 
                     b.Property<string>("NoInbois")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tahun")
                         .IsRequired()
@@ -647,6 +646,9 @@ namespace MSNK.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("FlCetak")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FlJenisBaucer")
                         .HasColumnType("int");
 
                     b.Property<int>("FlPosting")

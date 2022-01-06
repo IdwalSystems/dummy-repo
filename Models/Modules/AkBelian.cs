@@ -22,7 +22,6 @@ namespace MSNK.Models.Modules
         public DateTime? TarikhPosting { get; set; }
         [DisplayName("No Rujukan")]
         [Required(ErrorMessage = "No Rujukan Diperlukan")]
-        [MaxLength(20)]
         public string NoInbois { get; set; }
         [BindProperty]
         public decimal Jumlah { get; set; }

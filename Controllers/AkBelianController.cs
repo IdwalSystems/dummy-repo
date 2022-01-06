@@ -139,6 +139,11 @@ namespace MSNK.Controllers
                     alamat1 = item.AkPO.AkPembekal.Alamat1;
                 }
 
+                decimal jumlahPerihal = 0;
+                foreach (AkBelian2 item2 in item.AkBelian2)
+                {
+                    jumlahPerihal += item2.Amaun;
+                }
                 viewModel.Add( new AkBelianViewModel
                     {
                         Id = item.Id,
@@ -149,8 +154,9 @@ namespace MSNK.Controllers
                         NamaSykt = namaSykt,
                         Alamat1 = alamat1,
                         FlBatal = item.FlBatal,
-                        FlPosting = item.FlPosting
-                    }
+                        FlPosting = item.FlPosting,
+                        JumlahPerihal = jumlahPerihal
+                }
                 );    
             }
 
@@ -167,6 +173,7 @@ namespace MSNK.Controllers
                 .Include(b => b.JKW)
                 .Include(b => b.AkPO1).ThenInclude(b=> b.AkCarta)
                 .Include(b => b.AkPO2)
+                .Where(b => b.FlPosting == '1')
                 .OrderBy(b => b.Tarikh).ToList();
             ViewBag.AkPO = akPOList;
 
@@ -1067,7 +1074,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkBelian akBelian, int JKWId, int AkBankId)
+        public async Task<IActionResult> Edit(int id, AkBelian akBelian, int JKWId, int AkBankId, decimal JumlahPerihal)
         {
             if (id != akBelian.Id)
             {
@@ -1111,7 +1118,15 @@ namespace MSNK.Controllers
                     }
                 }
                 CartEmpty();
-                TempData[SD.Success] = "Data berjaya diubah..!";
+                // checking for jumlah objek & jumlah perihal
+                if (akBelian.Jumlah != JumlahPerihal)
+                {
+                    TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Perihal";
+                }
+                else
+                {
+                    TempData[SD.Success] = "Data berjaya diubah..!";
+                }
                 return RedirectToAction(nameof(Index));
             }
             PopulateList();

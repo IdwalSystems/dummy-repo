@@ -15,6 +15,7 @@ using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
 using Rotativa.AspNetCore;
 using MSNK.Infrastructure;
+using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
@@ -116,7 +117,30 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = "Tarikh";
             }
 
-            return View(akTerima);
+            List<AkTerimaViewModel> viewModel = new List<AkTerimaViewModel>();
+            foreach (AkTerima item in akTerima)
+            {
+                decimal jumlahUrusniaga = 0;
+                foreach (AkTerima2 item2 in item.AkTerima2)
+                {
+                    jumlahUrusniaga += item2.Amaun;
+                }
+                viewModel.Add(new AkTerimaViewModel
+                {
+                    Id = item.Id,
+                    Tahun = item.Tahun,
+                    NoRujukan = item.NoRujukan,
+                    Tarikh = item.Tarikh,
+                    Jumlah = item.Jumlah,
+                    Nama = item.Nama,
+                    FlBatal = item.FlBatal,
+                    FlPosting = item.FlPosting,
+                    FlCetak = item.FlCetak,
+                    JumlahUrusniaga = jumlahUrusniaga
+                }
+                );
+            }
+            return View(viewModel);
         }
 
         // GET: AkTerima/Details/5
@@ -552,7 +576,6 @@ namespace MSNK.Controllers
                 }
             }
 
-            PopulateCart();
             PopulateList();
             return View(akTerima);
         }
@@ -604,16 +627,6 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            // checking for jumlah objek & jumlah perihal
-            if (akTerima.Jumlah != JumlahUrusniaga)
-            {
-                TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Perihal";             
-                CartEmpty();
-                PopulateCartFromDb(akTerima);
-                PopulateList();
-                return View(akTerima);
-            }
-
             if (ModelState.IsValid)
             {
                 try
@@ -651,7 +664,16 @@ namespace MSNK.Controllers
                     }
                 }
                 CartEmpty();
-                TempData[SD.Success] = "Data berjaya diubah..!";
+                // checking for jumlah objek & jumlah perihal
+                if (akTerima.Jumlah != JumlahUrusniaga)
+                {
+                    TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Urusniaga";
+                }
+                else
+                {
+                    TempData[SD.Success] = "Data berjaya diubah..!";
+                }  
+                
                 return RedirectToAction(nameof(Index));
             }
 
