@@ -56,13 +56,39 @@
                             </div>
 
                         </div>
-
-                        <div class="form-row">
-                            <div class="col-md-12">
-                                <label class="control-label">Penerima</label>
-                                <input class="form-control form-control-sm text-uppercase" value="@Model.KodPenerima - @Model.Penerima" readonly />
+                        @if (Model.AkPembekalId != null)
+                        {
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                    <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" disabled>
+                                        <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
+                                        @foreach (var s in ViewBag.AkPembekal)
+                                        {
+                                            <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="AkPembekalId" class="text-danger"></span>
+                                </div>
                             </div>
-                        </div>
+                        }
+
+                        @if (Model.SuPekerjaId != null)
+                        {
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <label asp-for="SuPekerjaId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                    <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPembekal" disabled>
+                                        <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
+                                        @foreach (var s in ViewBag.SuPekerja)
+                                        {
+                                            <option value="@s.Id">@s.NoGaji - @s.Nama</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        }
                         <div class="form-row">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -131,6 +157,25 @@
                         </div>
                     </div>
                     <div class="col-lg-2 pb-3">
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+                                <div class="form-group col-sm">
+                                    <label class="control-label">Jenis Baucer</label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlCetak" type="radio" id="FlCetak1" name="FlCetak" class="custom-control-input" value="0" checked>
+                                        <label class="custom-control-label" for="FlCetak1">Belum</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlCetak" type="radio" id="FlCetak2" name="FlCetak" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="FlCetak">Sudah</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlCetak" type="radio" id="FlCetak1" name="FlCetak" class="custom-control-input" value="2" checked>
+                                        <label class="custom-control-label" for="FlCetak1">Belum</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card mb-2">
                             <div class="card-body p-1">
                                 <div class="form-group col-sm">

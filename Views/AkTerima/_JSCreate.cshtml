@@ -21,7 +21,7 @@
                 data: { data: id },
                 dataType: "json",
                 success: function (msg) {
-                    if (msg.record.perihal == "CEK") {
+                    if (msg.record.kod == "C") {
                         // enable fields
                         $("#txtJenisCek").prop('disabled', false);
                         $("#txtKodBankCek").prop('disabled', false);

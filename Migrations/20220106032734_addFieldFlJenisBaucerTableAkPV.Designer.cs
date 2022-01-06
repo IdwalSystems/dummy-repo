@@ -4,93 +4,22 @@ using MSNK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220106032734_addFieldFlJenisBaucerTableAkPV")]
+    partial class addFieldFlJenisBaucerTableAkPV
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("MSNK.Models.Modules.AbBukuVot", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AkCartaId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Baki")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Debit")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("JKWId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Kod")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Kredit")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Liabiliti")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Penerima")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Rizab")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Rujukan")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tahun")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Tanggungan")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("TarKemaskini")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TarMasuk")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Tarikh")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Tbs")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserIdKemaskini")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Vot")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AkCartaId");
-
-                    b.HasIndex("JKWId");
-
-                    b.ToTable("AbBukuVot");
-                });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkAkaun", b =>
                 {
@@ -1846,25 +1775,6 @@ namespace MSNK.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
-            modelBuilder.Entity("MSNK.Models.Modules.AbBukuVot", b =>
-                {
-                    b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
-                        .WithMany("AbBukuVot")
-                        .HasForeignKey("AkCartaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MSNK.Models.Modules.JKW", "JKW")
-                        .WithMany("AbBukuVot")
-                        .HasForeignKey("JKWId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AkCarta");
-
-                    b.Navigation("JKW");
-                });
-
             modelBuilder.Entity("MSNK.Models.Modules.AkAkaun", b =>
                 {
                     b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta1")
@@ -2350,8 +2260,6 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkCarta", b =>
                 {
-                    b.Navigation("AbBukuVot");
-
                     b.Navigation("AkAkaun1");
 
                     b.Navigation("AkAkaun2");
@@ -2444,8 +2352,6 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.JKW", b =>
                 {
-                    b.Navigation("AbBukuVot");
-
                     b.Navigation("AkAkaun");
 
                     b.Navigation("AkBank");

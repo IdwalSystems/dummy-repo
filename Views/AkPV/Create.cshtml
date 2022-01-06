@@ -71,7 +71,7 @@
                         <div class="col-md-12">
                             <label asp-for="AkPembekalId" class="control-label"></label>
                             <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal">
-                                <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
+                                <option value="0" selected>-- Pilih Kod Pembekal --</option>
                                 @foreach (var s in ViewBag.AkPembekal)
                                 {
                                     <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
@@ -85,7 +85,7 @@
                         <div class="col-md-12">
                             <label asp-for="SuPekerjaId" class="control-label"></label>
                             <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPekerja">
-                                <option value="0" disabled selected>-- Pilih Kod Pekerja --</option>
+                                <option value="0" selected>-- Pilih Kod Pekerja --</option>
                                 @foreach (var s in ViewBag.SuPekerja)
                                 {
                                     <option value="@s.Id">@s.NoGaji - @s.Nama</option>
@@ -104,8 +104,8 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label asp-for="Nama" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" id="txtNamaPembekal" required />
-                                <span asp-validation-for="Nama" class="text-danger"></span>
+                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" required/>
+                                <span class="text-danger">Nama Diperlukan</span>
                             </div>
                         </div>
                     </div>
@@ -147,8 +147,8 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-4">
-                            <label asp-for="JCaraBayarId" class="control-label"></label><span class="text-danger control-label">*</span>
-                            <select class="form-control form-control-sm" asp-for="JCaraBayarId" required>
+                            <label asp-for="JCaraBayarId" class="control-label" ></label><span class="text-danger control-label">*</span>
+                            <select class="form-control form-control-sm" asp-for="JCaraBayarId" id="ddlJCaraBayar" required>
                                 <option value="0" disabled selected>-- Pilih Cara Bayaran --</option>
                                 @foreach (var s in ViewBag.JCaraBayar)
                                 {
@@ -160,14 +160,14 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="NoCekAtauEFT" class="control-label"></label>
-                                <input asp-for="NoCekAtauEFT" class="form-control form-control-sm form-control-sm" />
+                                <input asp-for="NoCekAtauEFT" class="form-control form-control-sm form-control-sm" id="txtNoCekAtauEFT"/>
                                 <span asp-validation-for="NoCekAtauEFT" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="TarCekAtauEFT" class="control-label"></label>
-                                <input asp-for="TarCekAtauEFT" class="form-control form-control-sm" />
+                                <input asp-for="TarCekAtauEFT" class="form-control form-control-sm" id="txtTarCekAtauEFT" />
                                 <span asp-validation-for="TarCekAtauEFT" class="text-danger"></span>
                             </div>
                         </div>
@@ -270,7 +270,7 @@
                         <div class="card-footer">
                             <div class="form-group">
                                 <label class="control-label">Jumlah Inbois</label>
-                                <input class="form-control form-control-sm" id="jumlahInbois" value="0.00" readonly />
+                                <input class="form-control form-control-sm" id="jumlahInbois" name="JumlahInbois" value="0.00" readonly />
                             </div>
                         </div>
                     </div>
