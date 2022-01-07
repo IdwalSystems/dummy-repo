@@ -4,14 +4,16 @@ using MSNK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220107023557_tambah_table_spPermohonanAktiviti_jSukan_jTahapAktiviti")]
+    partial class tambah_table_spPermohonanAktiviti_jSukan_jTahapAktiviti
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,6 +27,9 @@ namespace MSNK.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AkCartaId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Baki")
                         .HasColumnType("decimal(18,2)");
@@ -77,14 +82,14 @@ namespace MSNK.Migrations
                     b.Property<string>("UserIdKemaskini")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VotId")
-                        .HasColumnType("int");
+                    b.Property<string>("Vot")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("JKWId");
+                    b.HasIndex("AkCartaId");
 
-                    b.HasIndex("VotId");
+                    b.HasIndex("JKWId");
 
                     b.ToTable("AbBukuVot");
                 });
@@ -2167,21 +2172,21 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AbBukuVot", b =>
                 {
+                    b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
+                        .WithMany("AbBukuVot")
+                        .HasForeignKey("AkCartaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MSNK.Models.Modules.JKW", "JKW")
                         .WithMany("AbBukuVot")
                         .HasForeignKey("JKWId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MSNK.Models.Modules.AkCarta", "Vot")
-                        .WithMany("Vot")
-                        .HasForeignKey("VotId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("AkCarta");
 
                     b.Navigation("JKW");
-
-                    b.Navigation("Vot");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkAkaun", b =>
@@ -2724,6 +2729,8 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkCarta", b =>
                 {
+                    b.Navigation("AbBukuVot");
+
                     b.Navigation("AkAkaun1");
 
                     b.Navigation("AkAkaun2");
@@ -2743,8 +2750,6 @@ namespace MSNK.Migrations
                     b.Navigation("KodObjekAP");
 
                     b.Navigation("SpPermohonanAktiviti1");
-
-                    b.Navigation("Vot");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkJurnal", b =>

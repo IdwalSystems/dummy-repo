@@ -13,8 +13,7 @@ namespace MSNK.Models.Modules
         public DateTime Tarikh { get; set; }
         public string Kod { get; set; }
         public string Penerima { get; set; }
-        public string Vot { get; set; }
-        public int AkCartaId { get; set; }
+        public int VotId { get; set; }
         public string Rujukan { get; set; }
         public decimal Debit { get; set; }
         public decimal Kredit { get; set; }
@@ -26,7 +25,7 @@ namespace MSNK.Models.Modules
 
         //relationship
         public JKW JKW { get; set; }
-        public AkCarta AkCarta { get; set; }
+        public AkCarta Vot { get; set; }
 
         // log
         public string UserId { get; set; }

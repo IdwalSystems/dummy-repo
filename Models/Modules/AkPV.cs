@@ -44,6 +44,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Cek / EFT")]
         public DateTime? TarCekAtauEFT { get; set; }
         [MaxLength(400)]
+        [DefaultValue("")]
         public string Perihal { get; set; }
         //field end
 

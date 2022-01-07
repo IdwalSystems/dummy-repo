@@ -4,14 +4,16 @@ using MSNK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220106210123_AddFieldJbankSuPekerja")]
+    partial class AddFieldJbankSuPekerja
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,6 +27,9 @@ namespace MSNK.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AkCartaId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Baki")
                         .HasColumnType("decimal(18,2)");
@@ -77,14 +82,14 @@ namespace MSNK.Migrations
                     b.Property<string>("UserIdKemaskini")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VotId")
-                        .HasColumnType("int");
+                    b.Property<string>("Vot")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("JKWId");
+                    b.HasIndex("AkCartaId");
 
-                    b.HasIndex("VotId");
+                    b.HasIndex("JKWId");
 
                     b.ToTable("AbBukuVot");
                 });
@@ -565,9 +570,6 @@ namespace MSNK.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("FlBatal")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FlCetak")
                         .HasColumnType("int");
 
                     b.Property<int>("FlPosting")
@@ -1497,60 +1499,6 @@ namespace MSNK.Migrations
                     b.ToTable("JParas");
                 });
 
-            modelBuilder.Entity("MSNK.Models.Modules.JSukan", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Perihal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TarKemaskini")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TarMasuk")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserIdKemaskini")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("JSukan");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.JTahapAktiviti", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Perihal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TarKemaskini")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TarMasuk")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserIdKemaskini")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("JTahapAktiviti");
-                });
-
             modelBuilder.Entity("MSNK.Models.Modules.SiModul", b =>
                 {
                     b.Property<int>("Id")
@@ -1571,239 +1519,6 @@ namespace MSNK.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SiModul");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.SpPermohonanAktiviti", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Aktiviti")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FlCetak")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FlPosting")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JNegeriId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JSukanId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("JTahapAktivitiId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JTahapId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("JumKeseluruhan")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("JumLulus")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("JumSokong")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Pelulus")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Pengelolaan")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Penyedia")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Penyertaan")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Penyokong")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Pertandingan")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Ppn")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProgramBinaan")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusLulus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StatusSokong")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TarKemaskini")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TarLulus")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TarMasuk")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TarSedia")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TarSokong")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Tarikh")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Tempat")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserIdKemaskini")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JNegeriId");
-
-                    b.HasIndex("JSukanId");
-
-                    b.HasIndex("JTahapAktivitiId");
-
-                    b.ToTable("SpPermohonanAktiviti");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.SpPermohonanAktiviti1", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AkCartaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Bil")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Bln")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Kadar")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Perihal")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SpPermohonanAktivitiId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TarKemaskini")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TarMasuk")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserIdKemaskini")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AkCartaId");
-
-                    b.HasIndex("SpPermohonanAktivitiId")
-                        .IsUnique();
-
-                    b.ToTable("SpPermohonanAktiviti1");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.SpPermohonanAktiviti2", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BilAtlL")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BilAtlP")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BilJulL")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BilJulP")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BilPegL")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BilPegP")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BilTekL")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BilTekP")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BilUruL")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BilUruP")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JumAtl")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JumJul")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JumL")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JumP")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JumPeg")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JumTek")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JumUru")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SpPermohonanAktivitiId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TarKemaskini")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("TarMasuk")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserIdKemaskini")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SpPermohonanAktivitiId")
-                        .IsUnique();
-
-                    b.ToTable("SpPermohonanAktiviti2");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.SuPekerja", b =>
@@ -2167,21 +1882,21 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AbBukuVot", b =>
                 {
+                    b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
+                        .WithMany("AbBukuVot")
+                        .HasForeignKey("AkCartaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MSNK.Models.Modules.JKW", "JKW")
                         .WithMany("AbBukuVot")
                         .HasForeignKey("JKWId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MSNK.Models.Modules.AkCarta", "Vot")
-                        .WithMany("Vot")
-                        .HasForeignKey("VotId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("AkCarta");
 
                     b.Navigation("JKW");
-
-                    b.Navigation("Vot");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkAkaun", b =>
@@ -2552,57 +2267,6 @@ namespace MSNK.Migrations
                     b.Navigation("JCaraBayar");
                 });
 
-            modelBuilder.Entity("MSNK.Models.Modules.SpPermohonanAktiviti", b =>
-                {
-                    b.HasOne("MSNK.Models.Modules.JNegeri", "JNegeri")
-                        .WithMany("SpPermohonanAktiviti")
-                        .HasForeignKey("JNegeriId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MSNK.Models.Modules.JSukan", "JSukan")
-                        .WithMany("SpPermohonanAktiviti")
-                        .HasForeignKey("JSukanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MSNK.Models.Modules.JTahapAktiviti", "JTahapAktiviti")
-                        .WithMany("SpPermohonanAktiviti")
-                        .HasForeignKey("JTahapAktivitiId");
-
-                    b.Navigation("JNegeri");
-
-                    b.Navigation("JSukan");
-
-                    b.Navigation("JTahapAktiviti");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.SpPermohonanAktiviti1", b =>
-                {
-                    b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
-                        .WithMany("SpPermohonanAktiviti1")
-                        .HasForeignKey("AkCartaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MSNK.Models.Modules.SpPermohonanAktiviti", null)
-                        .WithOne("SpPermohonanAktiviti1")
-                        .HasForeignKey("MSNK.Models.Modules.SpPermohonanAktiviti1", "SpPermohonanAktivitiId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AkCarta");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.SpPermohonanAktiviti2", b =>
-                {
-                    b.HasOne("MSNK.Models.Modules.SpPermohonanAktiviti", null)
-                        .WithOne("SpPermohonanAktiviti2")
-                        .HasForeignKey("MSNK.Models.Modules.SpPermohonanAktiviti2", "SpPermohonanAktivitiId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MSNK.Models.Modules.SuPekerja", b =>
                 {
                     b.HasOne("MSNK.Models.Modules.JAgama", "JAgama")
@@ -2724,6 +2388,8 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkCarta", b =>
                 {
+                    b.Navigation("AbBukuVot");
+
                     b.Navigation("AkAkaun1");
 
                     b.Navigation("AkAkaun2");
@@ -2741,10 +2407,6 @@ namespace MSNK.Migrations
                     b.Navigation("AkTerima1");
 
                     b.Navigation("KodObjekAP");
-
-                    b.Navigation("SpPermohonanAktiviti1");
-
-                    b.Navigation("Vot");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkJurnal", b =>
@@ -2847,31 +2509,12 @@ namespace MSNK.Migrations
 
                     b.Navigation("AkTerima");
 
-                    b.Navigation("SpPermohonanAktiviti");
-
                     b.Navigation("SuPekerja");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.JParas", b =>
                 {
                     b.Navigation("AkCarta");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.JSukan", b =>
-                {
-                    b.Navigation("SpPermohonanAktiviti");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.JTahapAktiviti", b =>
-                {
-                    b.Navigation("SpPermohonanAktiviti");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.SpPermohonanAktiviti", b =>
-                {
-                    b.Navigation("SpPermohonanAktiviti1");
-
-                    b.Navigation("SpPermohonanAktiviti2");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.SuPekerja", b =>

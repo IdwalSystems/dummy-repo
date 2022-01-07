@@ -1482,6 +1482,12 @@ namespace MSNK.Controllers
 
             await _context.SaveChangesAsync();
 
+            var actionPDF = new ViewAsPdf("htmlpage")
+            {
+                FileName = "abc" + ".pdf",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+
             return new ViewAsPdf("ResitPrintPdf",data)
             {
                 PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },

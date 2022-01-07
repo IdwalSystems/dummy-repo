@@ -48,6 +48,11 @@ namespace MSNK.Data
         public DbSet<JBangsa> JBangsa { get; set; }
         public DbSet<JAgama> JAgama { get; set; }
         public DbSet<AbBukuVot> AbBukuVot { get; set; }
+        public DbSet<JSukan> JSukan { get; set; }
+        public DbSet<JTahapAktiviti> JTahapAktiviti { get; set; }
+        public DbSet<SpPermohonanAktiviti> SpPermohonanAktiviti { get; set; }
+        public DbSet<SpPermohonanAktiviti1> SpPermohonanAktiviti1 { get; set; }
+        public DbSet<SpPermohonanAktiviti2> SpPermohonanAktiviti2 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

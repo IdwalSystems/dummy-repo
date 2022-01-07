@@ -8,10 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
+using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
 using MSNK.Models.Modules.ViewModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -154,7 +158,7 @@ namespace MSNK.Controllers
 
             List<AkBelian> aBelianList = _context.AkBelian
                 .Include(b => b.AkPO)
-                .Where(b=> b.FlPosting == '1')
+                .Where(b=> b.FlPosting == 1)
                 .OrderBy(b => b.Tarikh).ToList();
             ViewBag.AkBelian = aBelianList;
 
@@ -826,7 +830,14 @@ namespace MSNK.Controllers
                     m.JCaraBayarId = JCaraBayarId;
                     m.NoCekAtauEFT = akPV.NoCekAtauEFT;
                     m.TarCekAtauEFT = akPV.TarCekAtauEFT;
-                    m.Perihal = akPV.Perihal;
+                    if(akPV.Perihal == null)
+                    {
+                        m.Perihal = "";
+                    } 
+                    else
+                    {
+                        m.Perihal = akPV.Perihal;
+                    }
                     m.Jumlah = akPV.Jumlah;
                     m.FlPosting = 0;
                     m.FlBatal = 0;
@@ -1165,6 +1176,10 @@ namespace MSNK.Controllers
                     var user = await _userManager.GetUserAsync(User);
                     akPV.UserIdKemaskini = user.UserName;
                     akPV.TarKemaskini = DateTime.Now;
+                    if (akPV.Perihal == null)
+                    {
+                        akPV.Perihal = "";
+                    }
                     _context.Update(akPV);
 
                     //insert applog
@@ -1254,6 +1269,90 @@ namespace MSNK.Controllers
         private bool AkPVExists(int id)
         {
             return _context.AkPV.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> PrintPdf(int id)
+        {
+            AkPV akPV = await _context.AkPV
+                .Include(x => x.JKW)
+                .Include(x => x.AkBank)
+                .Include(x=> x.JCaraBayar)
+                .Include(x => x.AkPembekal).ThenInclude(x=> x.JBank)
+                .Include(x => x.SuPekerja).ThenInclude(x=> x.JBank)
+                .Include(x => x.AkPV1).ThenInclude(x => x.AkCarta)
+                .Include(x=> x.AkPV2).ThenInclude(x=> x.AkBelian).ThenInclude(x=> x.AkPO)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            PVPrintModel data = new PVPrintModel();
+            var user = await _userManager.GetUserAsync(User);
+            var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
+            var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPV.Jumlah)).ToUpper();
+            var noAkaunBank = "";
+            var namaBankPenerima = "";
+
+            decimal jumlahInbois = 0;
+            decimal jumlahPO = 0;
+
+            CompanyDetails company = new CompanyDetails();
+            data.Username = namaUser.Nama;
+            data.AkPV = akPV;
+            data.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            data.AkPV2 = akPV.AkPV2;
+
+            if (akPV.AkPembekal != null)
+            {
+                data.KodPenerima = akPV.AkPembekal.KodSykt;
+                namaBankPenerima = akPV.AkPembekal.JBank.Nama;
+                noAkaunBank = akPV.AkPembekal.AkaunBank;
+                data.JenisBaucer = "1";
+                foreach (AkPV2 item in data.AkPV2)
+                {
+                    jumlahInbois += item.Amaun;
+                    if (item.AkBelian.AkPO != null)
+                    {
+                        jumlahPO += item.AkBelian.AkPO.Jumlah;
+                    }
+                }
+                data.jumlahInbois = jumlahInbois;
+                data.jumlahPO = jumlahPO;
+            }
+
+            if (akPV.SuPekerja != null)
+            {
+                data.KodPenerima = akPV.SuPekerja.NoGaji;
+                namaBankPenerima = akPV.SuPekerja.JBank.Nama;
+                noAkaunBank = akPV.SuPekerja.NoAkaunBank;
+                data.JenisBaucer = "2";
+            }
+
+            if(akPV.AkPembekal== null && akPV.SuPekerja == null)
+            {
+                data.KodPenerima = "";            
+                data.JenisBaucer = "2";
+                noAkaunBank = akPV.NoAkaunBank;
+            }
+
+            data.Penerima = akPV.Nama;
+            data.NoAkaunBankPenerima = noAkaunBank;
+            data.NamaBankPenerima = namaBankPenerima;
+            data.NoAkaunBank = akPV.AkBank.NoAkaun;
+            data.NoKP = akPV.NoKP;
+            data.CompanyDetail = company;
+
+            //update cetak -> 1
+            akPV.FlCetak = 1;
+            await _akPVRepo.Update(akPV);
+            await _context.SaveChangesAsync();
+
+            return new ViewAsPdf("PVPrintPdf", data)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                //CustomSwitches = "--footer-center \"  Tarikh: " +
+                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
         }
     }
 }

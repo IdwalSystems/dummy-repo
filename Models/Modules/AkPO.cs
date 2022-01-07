@@ -34,6 +34,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Posting")]
         [DefaultValue("0")]
         public int FlPosting { get; set; }
+        public int FlCetak { get; set; }
         //flag end
 
         //relationship
