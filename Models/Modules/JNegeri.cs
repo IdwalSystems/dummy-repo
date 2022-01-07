@@ -21,6 +21,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkTerima> AkTerima { get; set; }
         public ICollection<AkPembekal> AkPembekal { get; set; }
         public ICollection<SuPekerja> SuPekerja { get; set; }
+        public ICollection<SpPermohonanAktiviti> SpPermohonanAktiviti { get; set; }
         //relationship end
 
         // log
