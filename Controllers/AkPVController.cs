@@ -1275,6 +1275,7 @@ namespace MSNK.Controllers
         {
             AkPV akPV = await _context.AkPV
                 .Include(x => x.JKW)
+                .Include(x => x.AkBank)
                 .Include(x=> x.JCaraBayar)
                 .Include(x => x.AkPembekal).ThenInclude(x=> x.JBank)
                 .Include(x => x.SuPekerja).ThenInclude(x=> x.JBank)
@@ -1286,6 +1287,8 @@ namespace MSNK.Controllers
             var user = await _userManager.GetUserAsync(User);
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
             var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPV.Jumlah)).ToUpper();
+            var noAkaunBank = "";
+            var namaBankPenerima = "";
 
             decimal jumlahInbois = 0;
             decimal jumlahPO = 0;
@@ -1299,7 +1302,8 @@ namespace MSNK.Controllers
             if (akPV.AkPembekal != null)
             {
                 data.KodPenerima = akPV.AkPembekal.KodSykt;
-                data.NamaBank = akPV.AkPembekal.JBank.Nama;
+                namaBankPenerima = akPV.AkPembekal.JBank.Nama;
+                noAkaunBank = akPV.AkPembekal.AkaunBank;
                 data.JenisBaucer = "1";
                 foreach (AkPV2 item in data.AkPV2)
                 {
@@ -1316,7 +1320,8 @@ namespace MSNK.Controllers
             if (akPV.SuPekerja != null)
             {
                 data.KodPenerima = akPV.SuPekerja.NoGaji;
-                data.NamaBank = akPV.SuPekerja.JBank.Nama;
+                namaBankPenerima = akPV.SuPekerja.JBank.Nama;
+                noAkaunBank = akPV.SuPekerja.NoAkaunBank;
                 data.JenisBaucer = "2";
             }
 
@@ -1324,10 +1329,13 @@ namespace MSNK.Controllers
             {
                 data.KodPenerima = "";            
                 data.JenisBaucer = "2";
+                noAkaunBank = akPV.NoAkaunBank;
             }
 
             data.Penerima = akPV.Nama;
-            data.NoAkaunBank = akPV.NoAkaunBank;
+            data.NoAkaunBankPenerima = noAkaunBank;
+            data.NamaBankPenerima = namaBankPenerima;
+            data.NoAkaunBank = akPV.AkBank.NoAkaun;
             data.NoKP = akPV.NoKP;
             data.CompanyDetail = company;
 

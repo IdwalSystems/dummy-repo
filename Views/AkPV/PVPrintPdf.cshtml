@@ -68,6 +68,17 @@
     .notbold {
         font-weight: normal
     }
+
+    table tbody tr td {
+        font-size: 0.8rem;
+        line-height: 1.0rem;
+    }
+
+    table thead tr th {
+        font-size: 0.8rem;
+        line-height: 1.0rem;
+    }
+
 </style>
 <div class="row flexrow mb-1 ml-1">
     <div class="col-2 image-container">
@@ -81,12 +92,12 @@
     </div>
 
     <div class="col-2 text-right">
-        <h6 class="mb-0"><strong>ASAL</strong></h6>
+        <h6 class="mb-0"><strong>SALINAN PENERIMA</strong></h6>
         <h6 class="mb-0"><strong>Baucer Pembayaran</strong></h6>
         <h6 class="mb-0">NO BAUCER:</h6>
         <h6 class="mb-0 ">@Model.AkPV.NoPV.Substring(3)</h6>
         <h6 class="mb-0">TARIKH BAUCER: @Html.DisplayFor(x => x.AkPV.Tarikh, "{0:dd/MM/yyyy}")</h6>
-        
+
     </div>
 </div>
 <div class="row flexrow mb-1">
@@ -116,11 +127,11 @@
 <div class="table-responsive-sm">
     <table class="table table-sm topic table-bordered">
         <thead class="table-dark">
-            
+
         </thead>
         <tbody>
-            <tr class="bg-dark text-white">
-                <td class="text-center" colspan="2">BAYARAN KEPADA</td>
+            <tr class="bg-dark text-white font-weight-bold">
+                <td class="text-center" style="font-size:0.8rem;" colspan="2"><strong>BAYARAN KEPADA</strong></td>
             </tr>
             <tr>
                 <td class="text-left" width="15%">Nombor ID</td>
@@ -141,11 +152,11 @@
             </tr>
             <tr>
                 <td class="text-left">Nama Bank</td>
-                <td class="text-left">@Model.NamaBank</td>
+                <td class="text-left">@Model.NamaBankPenerima</td>
             </tr>
             <tr>
                 <td class="text-left">No Akaun Bank</td>
-                <td class="text-left">@Model.AkPV.NoAkaunBank</td>
+                <td class="text-left">@Model.NoAkaunBankPenerima</td>
             </tr>
             <tr>
                 <td class="text-left">Perihalan Bayaran</td>
@@ -220,40 +231,81 @@
                 <td class="text-right">@Convert.ToDecimal(Model.AkPV.Jumlah).ToString("#,##0.00")</td>
             </tr>
             <tr class="font-weight-bold">
-                <td class="text-right" style="line-height:0.8rem;">AMAUN DALAM PERKATAAN</td>
+                <td class="text-right" style="line-height:1.0rem;">AMAUN DALAM PERKATAAN</td>
                 <td class="text-left" colspan="5" style="line-height:0.8rem;">@Model.JumlahDalamPerkataan</td>
             </tr>
         </tbody>
         <tfoot>
-            
+
         </tfoot>
     </table>
 </div>
 
-<div class="table-responsive-sm mb-0">
-    <table class="table table-bordered table-sm">
+
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <thead class="table-dark">
+
+        </thead>
         <tbody>
-            <tr>
-                <td class="text-right" width="15%">Catatan : </td>
-                <td height="60px">@Model.AkPV.Perihal.ToUpper()</td>
+            <tr class="bg-dark text-white font-weight-bold">
+
+                <td class="text-center" colspan="4"><strong>MAKLUMAT PEMBAYARAN</strong></td>
             </tr>
+            <tr>
+                <td class="text-left" width="20%">Nombor Cek/EFT</td>
+                <td class="text-center" width="30%">@Model.AkPV.NoCekAtauEFT</td>
+                <td class="text-left" width="20%">Nama Bank Pembayar</td>
+                <td class="text-center" width="30%">@Model.NamaBankPenerima</td>
+            </tr>
+            <tr>
+                <td class="text-left">Tarikh Bayaran</td>
+                <td class="text-center">@Model.AkPV.NoCekAtauEFT</td>
+                <td class="text-left">No Akaun Bank Pembayar</td>
+                <td class="text-center">@Model.NoAkaunBank</td>
+            </tr>
+
         </tbody>
     </table>
 </div>
-<div class="table-responsive-sm mb-0">
-    <table class="table table-bordered table-sm topic">
+
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <thead class="table-dark">
+
+        </thead>
         <tbody>
-            <tr>
-                <td width="50%" height="60px">Disediakan Oleh : </td>
-                <td width="50%" height="60px">Diluluskan Oleh : </td>
+            <tr class="bg-dark text-white font-weight-bold">
+
+                <td class="text-center" colspan="3"><h6 class="mb-0"><strong>UNTUK KEGUNAAN BAHAGIAN KEWANGAN</strong></h6></td>
             </tr>
             <tr>
-                <td class="text-uppercase">@Model.Username</td>
-                <td><label></label></td>
+                <td class="text-center">Disedia </td>
+                <td class="text-center">Disemak </td>
+                <td class="text-center">Diluluskan </td>
             </tr>
             <tr>
-                <td><label></label></td>
-                <td><label></label></td>
+                <td class="text-center">@Model.Username</td>
+                <td class="text-center">@Model.Username</td>
+                <td class="text-center">@Model.Username</td>
+
+            </tr>
+            <tr>
+                <td class="text-center">Administrator</td>
+                <td class="text-center">Administrator</td>
+                <td class="text-center">Administrator</td>
+
+            </tr>
+            <tr>
+                <td class="text-center" height="30px"></td>
+                <td class="text-center" height="30px"></td>
+                <td class="text-center" height="30px"></td>
+
+            </tr>
+            <tr>
+                <td class="text-center">@DateTime.Now</td>
+                <td class="text-center">@DateTime.Now</td>
+                <td class="text-center">@DateTime.Now</td>
             </tr>
         </tbody>
     </table>

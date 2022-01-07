@@ -13,7 +13,9 @@ namespace MSNK.Models.Modules.PrintModel
         public string JenisBaucer { get; set; }
         public string KodPenerima { get; set; }
         public string Penerima { get; set; }
-        public string NamaBank { get; set; }
+        public string NamaBankPenerima { get; set; }
+        public string NoAkaunBank { get; set; }
+        public string NoAkaunBankPenerima { get; set; }
         public decimal jumlahPO { get; set; }
         public decimal jumlahInbois { get; set; }
         public AkPV AkPV { get; set; }
