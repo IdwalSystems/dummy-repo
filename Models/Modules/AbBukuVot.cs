@@ -13,7 +13,7 @@ namespace MSNK.Models.Modules
         public DateTime Tarikh { get; set; }
         public string Kod { get; set; }
         public string Penerima { get; set; }
-        public string Vot { get; set; }
+        public string VotId { get; set; }
         public int AkCartaId { get; set; }
         public string Rujukan { get; set; }
         public decimal Debit { get; set; }
