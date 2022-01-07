@@ -173,7 +173,7 @@ namespace MSNK.Controllers
                 .Include(b => b.JKW)
                 .Include(b => b.AkPO1).ThenInclude(b=> b.AkCarta)
                 .Include(b => b.AkPO2)
-                .Where(b => b.FlPosting == '1')
+                .Where(b => b.FlPosting == 1)
                 .OrderBy(b => b.Tarikh).ToList();
             ViewBag.AkPO = akPOList;
 

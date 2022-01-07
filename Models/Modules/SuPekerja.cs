@@ -41,6 +41,8 @@ namespace MSNK.Models.Modules
         public DateTime? TarikhBerhentiKerja { get; set; }
         [DisplayName("Tarikh Pencen")]
         public DateTime? TarikhPencen { get; set; }
+        [DisplayName("Nama Bank")]
+        public int? JBankId { get; set; }
         [DisplayName("Agama")]
         public int? JAgamaId { get; set; }
         [DisplayName("Bangsa")]
@@ -57,6 +59,8 @@ namespace MSNK.Models.Modules
         public JNegeri JNegeri { get; set; }
         [DisplayName("Agama")]
         public JAgama JAgama { get; set; }
+        [DisplayName("Nama Bank")]
+        public JBank JBank { get; set; }
         [DisplayName("Bangsa")]
         public JBangsa JBangsa { get; set; }
         [DisplayName("Jawatan")]

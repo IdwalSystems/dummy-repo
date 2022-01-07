@@ -1,0 +1,260 @@
+﻿@model MSNK.Models.Modules.PrintModel.PVPrintModel
+
+@{
+    ViewData["Title"] = "Cetakan Baucer Pembayaran";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+<style>
+    .flexrow {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex !important;
+    }
+
+        .flexrow > div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+    .image-container {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    h6 {
+        font-size: 0.8rem;
+    }
+
+    p {
+        font-size: 0.6rem;
+    }
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+</style>
+<div class="row flexrow mb-1 ml-1">
+    <div class="col-2 image-container">
+        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1</p>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat2</p>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat3</p>
+    </div>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0"><strong>ASAL</strong></h6>
+        <h6 class="mb-0"><strong>Baucer Pembayaran</strong></h6>
+        <h6 class="mb-0">NO BAUCER:</h6>
+        <h6 class="mb-0 ">@Model.AkPV.NoPV.Substring(3)</h6>
+        <h6 class="mb-0">TARIKH BAUCER: @Html.DisplayFor(x => x.AkPV.Tarikh, "{0:dd/MM/yyyy}")</h6>
+        
+    </div>
+</div>
+<div class="row flexrow mb-1">
+    <div class="col text-center">
+        <h6><strong>Tahun Kewangan @Model.AkPV.Tahun</strong></h6>
+    </div>
+</div>
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr>
+                <td class="text-center font-weight-bold" width="15%">No Baucer  </td>
+                <td class="text-center font-weight-bold" width="15%">Tarikh Baucer</td>
+                <td class="text-center font-weight-bold" width="15%">Kump Wang </td>
+                <td class="text-center font-weight-bold" width="15%">Cara Bayaran</td>
+            </tr>
+            <tr>
+                <td class="text-center">@Model.AkPV.JKW.Kod - @Model.AkPV.JKW.Perihal</td>
+                <td class="text-center">@Model.AkPV.NoPV</td>
+                <td class="text-center" width="15%">@Convert.ToDateTime(Model.AkPV.Tarikh).ToString("dd/MM/yyyy")</td>
+                <td class="text-center">@Model.AkPV.JCaraBayar.Perihal</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <thead class="table-dark">
+            
+        </thead>
+        <tbody>
+            <tr class="bg-dark text-white">
+                <td class="text-center" colspan="2">BAYARAN KEPADA</td>
+            </tr>
+            <tr>
+                <td class="text-left" width="15%">Nombor ID</td>
+                <td class="text-left">@Model.Penerima</td>
+            </tr>
+            <tr>
+                <td class="text-left" width="15%" rowspan="4">Penerima Bayaran</td>
+                <td class="text-left">@Model.Penerima</td>
+            </tr>
+            <tr>
+                <td class="text-left">@Model.AkPV.Alamat1</td>
+            </tr>
+            <tr>
+                <td class="text-left">@Model.AkPV.Alamat2</td>
+            </tr>
+            <tr>
+                <td class="text-left">@Model.AkPV.Alamat3</td>
+            </tr>
+            <tr>
+                <td class="text-left">Nama Bank</td>
+                <td class="text-left">@Model.NamaBank</td>
+            </tr>
+            <tr>
+                <td class="text-left">No Akaun Bank</td>
+                <td class="text-left">@Model.AkPV.NoAkaunBank</td>
+            </tr>
+            <tr>
+                <td class="text-left">Perihalan Bayaran</td>
+                <td class="text-left">@Model.AkPV.Perihal</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <thead class="text-center">
+            <tr>
+                <th colspan="3">PESANAN / KEBENARAN MAJLIS</th>
+                <th colspan="3">INVOIS / BIL PEMBEKAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center" width="15%">TARIKH</td>
+                <td class="text-center">RUJUKAN</td>
+                <td class="text-center">AMAUN RM</td>
+                <td class="text-center">TARIKH</td>
+                <td class="text-center">RUJUKAN</td>
+                <td class="text-center">AMAUN RM</td>
+            </tr>
+            @foreach (var item in Model.AkPV2)
+            {
+
+                <tr>
+                    @if (item.AkBelian.AkPO != null)
+                    {
+                        <td class="text-center">@Convert.ToDateTime(item.AkBelian.AkPO.Tarikh).ToString("dd/MM/yyyy")</td>
+                        <td>@item.AkBelian.AkPO.NoPO</td>
+                        <td class="text-right">@Convert.ToDecimal(item.AkBelian.AkPO.Jumlah).ToString("#,##0.00")</td>
+                    }
+                    else
+                    {
+                        <td class="text-center"></td>
+                        <td></td>
+                        <td class="text-right"></td>
+                    }
+
+                    <td class="text-center">@Convert.ToDateTime(item.AkBelian.Tarikh).ToString("dd/MM/yyyy")</td>
+                    <td>@item.AkBelian.NoInbois</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                </tr>
+            }
+            <tr class="font-weight-bold">
+                <td class="text-right" colspan="2">Jumlah RM</td>
+                <td class="text-right">@Convert.ToDecimal(Model.jumlahPO).ToString("#,##0.00")</td>
+                <td class="text-right" colspan="2">Jumlah RM</td>
+                <td class="text-right">@Convert.ToDecimal(Model.jumlahInbois).ToString("#,##0.00")</td>
+            </tr>
+            <tr class="font-weight-bold">
+                <td class="text-center" colspan="6">PERBELANJAAN TELAH DIMASUKKAN KE DALAM PERUNTUKAN-PERUNTUKAN DI BAWAH</td>
+            </tr>
+            <tr>
+                <td class="text-center">OBJEK</td>
+                <td class="text-center" colspan="4">PERIHAL</td>
+                <td class="text-center">AMAUN RM</td>
+            </tr>
+            @foreach (var item in Model.AkPV.AkPV1)
+            {
+                <tr>
+                    <td class="text-center">@item.AkCarta.Kod</td>
+                    <td class="text-center" colspan="4">@item.AkCarta.Perihal</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                </tr>
+            }
+            <tr class="font-weight-bold">
+                <td class="text-right" colspan="5">Jumlah RM</td>
+                <td class="text-right">@Convert.ToDecimal(Model.AkPV.Jumlah).ToString("#,##0.00")</td>
+            </tr>
+            <tr class="font-weight-bold">
+                <td class="text-right" style="line-height:0.8rem;">AMAUN DALAM PERKATAAN</td>
+                <td class="text-left" colspan="5" style="line-height:0.8rem;">@Model.JumlahDalamPerkataan</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            
+        </tfoot>
+    </table>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm">
+        <tbody>
+            <tr>
+                <td class="text-right" width="15%">Catatan : </td>
+                <td height="60px">@Model.AkPV.Perihal.ToUpper()</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr>
+                <td width="50%" height="60px">Disediakan Oleh : </td>
+                <td width="50%" height="60px">Diluluskan Oleh : </td>
+            </tr>
+            <tr>
+                <td class="text-uppercase">@Model.Username</td>
+                <td><label></label></td>
+            </tr>
+            <tr>
+                <td><label></label></td>
+                <td><label></label></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
