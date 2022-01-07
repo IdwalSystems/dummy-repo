@@ -27,7 +27,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AbBukuVot
                 .Include(b => b.JKW)
-                .Include(b => b.AkCarta)
+                .Include(b => b.Vot)
                 .ToListAsync();
         }
 
