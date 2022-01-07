@@ -10,7 +10,7 @@
 <div class="col-md-12">
 
     <form asp-action="Create" class="needs-validation">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="card box-shadow border-success mb-3" id="denganPesananTempatan">
             <div class="card-header bg-success text-white">
                 <h5>Invois Pembekal - @ViewData["Title"]</h5>
@@ -80,9 +80,8 @@
                 <div class="form-row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label asp-for="KodObjekAPId" class="control-label">Kod Bank</label><span class="text-danger control-label">*</span>
+                            <label asp-for="KodObjekAPId" class="control-label"></label><span class="text-danger control-label">*</span>
                             <select class="form-control form-control-sm select2" asp-for="KodObjekAPId" required>
-                                <option value="" disabled selected>-- Pilih Bank --</option>
                                 @foreach (var s in ViewBag.KodObjekAP)
                                 {
                                     <option value="@s.Id">@s.Kod - @s.Perihal</option>
