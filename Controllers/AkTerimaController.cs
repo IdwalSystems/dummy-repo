@@ -252,11 +252,7 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem1(akTerima1.AkTerimaId,
                                akTerima1.Amaun,
-                               akTerima1.AkCartaId,
-                               akTerima1.UserId,
-                               akTerima1.TarMasuk,
-                               akTerima1.UserIdKemaskini,
-                               akTerima1.TarKemaskini);
+                               akTerima1.AkCartaId);
             }
 
             ViewBag.akTerima1 = akTerima1Table;
@@ -276,11 +272,7 @@ namespace MSNK.Controllers
                                akTerima2.KodBankCek,
                                akTerima2.TempatCek,
                                akTerima2.NoSlip,
-                               akTerima2.TarSlip,
-                               akTerima2.UserId,
-                               akTerima2.TarMasuk,
-                               akTerima2.UserIdKemaskini,
-                               akTerima2.TarKemaskini);
+                               akTerima2.TarSlip);
             }
 
             ViewBag.akTerima2 = akTerima2Table;
@@ -342,16 +334,9 @@ namespace MSNK.Controllers
                 {
                     _cart.RemoveItem1(akTerima1.AkCartaId);
 
-                    akTerima1.UserId = user;
-                    akTerima1.TarMasuk = DateTime.Now;
-
                     _cart.AddItem1(akTerima1.AkTerimaId,
                                     akTerima1.Amaun,
-                                    akTerima1.AkCartaId,
-                                   akTerima1.UserId,
-                                   akTerima1.TarMasuk,
-                                   akTerima1.UserIdKemaskini,
-                                   akTerima1.TarKemaskini);
+                                    akTerima1.AkCartaId);
                 }
 
                 return Json(new { result = "OK" });
@@ -419,8 +404,6 @@ namespace MSNK.Controllers
                 {
                     _cart.RemoveItem2(akTerima2.JCaraBayarId);
 
-                    akTerima2.UserId = user;
-                    akTerima2.TarMasuk = DateTime.Now;
 
                     _cart.AddItem2(akTerima2.AkTerimaId,
                                    akTerima2.JCaraBayarId,
@@ -430,11 +413,7 @@ namespace MSNK.Controllers
                                    akTerima2.KodBankCek,
                                    akTerima2.TempatCek,
                                    akTerima2.NoSlip,
-                                   akTerima2.TarSlip,
-                                   akTerima2.UserId,
-                                   akTerima2.TarMasuk,
-                                   akTerima2.UserIdKemaskini,
-                                   akTerima2.TarKemaskini);
+                                   akTerima2.TarSlip);
                 }
 
                 return Json(new { result = "OK" });
@@ -803,16 +782,10 @@ namespace MSNK.Controllers
                 {
                     var user = await _userManager.GetUserAsync(User);
 
-                    akTerima1.UserId = user.UserName;
-                    akTerima1.TarMasuk = DateTime.Now;
 
                     _cart.AddItem1(akTerima1.AkTerimaId,
                                    akTerima1.Amaun,
-                                   akTerima1.AkCartaId,
-                                   akTerima1.UserId,
-                                   akTerima1.TarMasuk,
-                                   akTerima1.UserIdKemaskini,
-                                   akTerima1.TarKemaskini);    
+                                   akTerima1.AkCartaId);    
                 }
 
 
@@ -834,8 +807,6 @@ namespace MSNK.Controllers
                 {
                     var user = await _userManager.GetUserAsync(User);
 
-                    akTerima2.UserId = user.UserName;
-                    akTerima2.TarMasuk = DateTime.Now;
 
                     _cart.AddItem2(akTerima2.AkTerimaId,
                                    akTerima2.JCaraBayarId,
@@ -845,11 +816,7 @@ namespace MSNK.Controllers
                                    akTerima2.KodBankCek,
                                    akTerima2.TempatCek,
                                    akTerima2.NoSlip,
-                                   akTerima2.TarSlip,
-                                   akTerima2.UserId,
-                                   akTerima2.TarMasuk,
-                                   akTerima2.UserIdKemaskini,
-                                   akTerima2.TarKemaskini);
+                                   akTerima2.TarSlip);
                 }
 
                 return Json(new { result = "OK" });
@@ -924,8 +891,6 @@ namespace MSNK.Controllers
                     var user = await _userManager.GetUserAsync(User);
                     var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akTerima1.AkCartaId);
                     akTerima1.AkCarta = akCarta;
-                    akTerima1.UserId = user.UserName;
-                    akTerima1.TarMasuk = DateTime.Now;
 
                     await _akTerima1Repo.Insert(akTerima1);
 
@@ -958,11 +923,7 @@ namespace MSNK.Controllers
 
                     _cart.AddItem1(akTerima1.AkTerimaId,
                                    akTerima1.Amaun,
-                                   akTerima1.AkCartaId,
-                                   akTerima1.UserId,
-                                   akTerima1.TarMasuk,
-                                   akTerima1.UserIdKemaskini,
-                                   akTerima1.TarKemaskini);
+                                   akTerima1.AkCartaId);
 
                 }
 
@@ -1040,8 +1001,6 @@ namespace MSNK.Controllers
                 var user = await _userManager.GetUserAsync(User);
 
                 akT1.Amaun = akTerima1.Amaun;
-                akT1.UserIdKemaskini = user.UserName;
-                akT1.TarKemaskini = DateTime.Now;
                 _context.AkTerima1.Update(akT1);
 
                 // update total akTerima with date updated and userUpdated
@@ -1095,11 +1054,7 @@ namespace MSNK.Controllers
                 {
                     _cart.AddItem1(item.AkTerimaId,
                                    item.Amaun,
-                                   item.AkCartaId,
-                                   item.UserId,
-                                   item.TarMasuk,
-                                   item.UserIdKemaskini,
-                                   item.TarKemaskini);
+                                   item.AkCartaId);
                 }
 
                 return Json(new { result = "OK", data = data });
@@ -1138,8 +1093,6 @@ namespace MSNK.Controllers
                     var user = await _userManager.GetUserAsync(User);
 
                     akTerima2.JCaraBayar = jCaraBayar;
-                    akTerima2.UserId = user.UserName;
-                    akTerima2.TarMasuk = DateTime.Now;
                     await _akTerima2Repo.Insert(akTerima2);
 
                     await _context.SaveChangesAsync();
@@ -1214,9 +1167,7 @@ namespace MSNK.Controllers
                 akT2.KodBankCek = akTerima2.KodBankCek;
                 akT2.TempatCek = akTerima2.TempatCek;
                 akT2.NoSlip = akTerima2.NoSlip;
-                akT2.TarSlip = akTerima2.TarSlip;
-                akT2.UserIdKemaskini = user.UserName;
-                akT2.TarKemaskini = DateTime.Now;
+                akT2.TarSlip = akTerima2.TarSlip;;
 
                 _context.AkTerima2.Update(akT2);
 
@@ -1266,11 +1217,7 @@ namespace MSNK.Controllers
                                    item.KodBankCek,
                                    item.TempatCek,
                                    item.NoSlip,
-                                   item.TarSlip,
-                                   item.UserId,
-                                   item.TarMasuk,
-                                   item.UserIdKemaskini,
-                                   item.TarKemaskini);
+                                   item.TarSlip);
                 }
 
                 return Json(new { result = "OK", data = data });
@@ -1481,12 +1428,6 @@ namespace MSNK.Controllers
             //insert applog end
 
             await _context.SaveChangesAsync();
-
-            var actionPDF = new ViewAsPdf("htmlpage")
-            {
-                FileName = "abc" + ".pdf",
-                PageSize = Rotativa.AspNetCore.Options.Size.A4,
-            };
 
             return new ViewAsPdf("ResitPrintPdf",data)
             {
