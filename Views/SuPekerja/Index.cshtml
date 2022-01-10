@@ -4,6 +4,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<partial name="_JSIndex" />
 
 <div class="row mb-2">
     <div class="col-8">
@@ -13,130 +14,153 @@
         <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
     </div>
 </div>
+<div class="card mb-2">
+    <div class="card-body pl-3 pb-2">
+        <label class="form-control-plaintext" for="columnSearch">Carian : </label>
+        <div class="form-actions no-color mb-2">
+            <div class="form-row">
+                <div class="col-sm mb-2">
+                    <select class="custom-select form-control-sm" id="columnSearch">
+                        <option value="" selected>Semua</option>
+                        <option value=".noGaji">No Gaji</option>
+                        <option value=".nama">Nama</option>
+                        <option value=".noKp">No KP</option>
+                    </select>
+                </div>
+                <div class="col-sm mb-2">
+                    <input class="form-control form-control-sm" type="text" id="myInput" style="text-transform:uppercase" />
+                </div>
+                <div class="col-sm mb-2">
+                    <button class="btn btn-warning btn-sm" id="batalCari" value="Batal Carian"><i class="fas fa-backspace"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="table-responsive">
     <table class="table table-bordered table-hover text-nowrap table-sm nowrap" width="100%">
         <thead>
             <tr>
-                <th>
+                <th class="noGaji">
                     @Html.DisplayNameFor(model => model.NoGaji)
                 </th>
-                <th>
+                <th class="nama">
                     @Html.DisplayNameFor(model => model.Nama)
                 </th>
-                <th>
+                <th class="noKp">
                     @Html.DisplayNameFor(model => model.NoKp)
                 </th>
                 @*<th>
-            @Html.DisplayNameFor(model => model.Alamat1)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Poskod)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Bandar)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TelefonBimbit)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Emel)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StatusKahwin)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BilAnak)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TarikhMasukKerja)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TarikhBerhentiKerja)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TarikhPencen)
-        </th>*@
+                        @Html.DisplayNameFor(model => model.Alamat1)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Poskod)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Bandar)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TelefonBimbit)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Emel)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StatusKahwin)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BilAnak)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TarikhMasukKerja)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TarikhBerhentiKerja)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TarikhPencen)
+                    </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.NoAkaunBank)
                 </th>
                 @*<th>
-            @Html.DisplayNameFor(model => model.JNegeri)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.JAgama)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.JBangsa)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.JJawatanPekerja)
-        </th>*@
+                        @Html.DisplayNameFor(model => model.JNegeri)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.JAgama)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.JBangsa)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.JJawatanPekerja)
+                    </th>*@
                 <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NoGaji)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nama)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NoKp)
-                </td>
-                @*<td>
-            @Html.DisplayFor(modelItem => item.Alamat1)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Poskod)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Bandar)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TelefonBimbit)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Emel)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StatusKahwin)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.BilAnak)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TarikhMasukKerja)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TarikhBerhentiKerja)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TarikhPencen)
-        </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.NoAkaunBank)
-                </td>
-                @*<td>
-            @Html.DisplayFor(modelItem => item.JNegeri.Kod)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.JAgama.Id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.JBangsa.Id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.JJawatanPekerja.Id)
-        </td>*@
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoGaji)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nama)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoKp)
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.Alamat1)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Poskod)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Bandar)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TelefonBimbit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Emel)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StatusKahwin)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BilAnak)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TarikhMasukKerja)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TarikhBerhentiKerja)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TarikhPencen)
+                        </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoAkaunBank)
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.JNegeri.Kod)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.JAgama.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.JBangsa.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.JJawatanPekerja.Id)
+                        </td>*@
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
