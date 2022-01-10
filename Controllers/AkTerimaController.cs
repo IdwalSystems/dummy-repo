@@ -611,6 +611,30 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+                    AkTerima akTerimaAsal = await _akTerimaRepo.GetById(id);
+
+                    foreach (AkTerima1 item in akTerimaAsal.AkTerima1)
+                    {
+                        var model = _context.AkTerima1.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+
+                    foreach (AkTerima2 item in akTerimaAsal.AkTerima2)
+                    {
+                        var model = _context.AkTerima2.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+                    _context.Entry(akTerimaAsal).State = EntityState.Detached;
+
+                    akTerima.AkTerima1 = _cart.Lines1.ToList();
+                    akTerima.AkTerima2 = _cart.Lines2.ToList();
+
                     akTerima.UserIdKemaskini = user.UserName;
                     akTerima.TarKemaskini = DateTime.Now;
 
@@ -1097,9 +1121,6 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
                 }
-
-                
-                
 
                 return Json(new { result = "OK" });
             }
