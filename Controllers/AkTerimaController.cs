@@ -745,6 +745,40 @@ namespace MSNK.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: AkTerima/Cancel/5
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var akTerima = await _context.AkTerima.FindAsync(id);
+            // check if already posting redirect back
+            if (akTerima.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            akTerima.FlBatal = 1;
+
+            _context.AkTerima.Update(akTerima);
+
+            //insert applog
+            var user = await _userManager.GetUserAsync(User);
+
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "B";
+            appLog.LgOperation = "Batal";
+            appLog.LgNote = modul + " Penerimaan - Batal";
+            appLog.NoRujukan = akTerima.NoRujukan;
+            appLog.Jumlah = akTerima.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dibatalkan..!";
+            return RedirectToAction(nameof(Index));
+        }
+
         private bool AkTerimaExists(int id)
         {
             return _context.AkTerima.Any(e => e.Id == id);
