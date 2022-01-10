@@ -95,7 +95,6 @@ namespace MSNK.Controllers
         public async Task<IActionResult> Create(AkCarta akCarta, int JKWId, int JJenisId, int JParasId)
         {
             string paras = _context.JParas.FirstOrDefault(q => q.Id == JParasId).Kod;
-            int kodCarta = Convert.ToInt32(akCarta.Kod.Substring(1));
             int kodman = Convert.ToInt32(akCarta.Kod.Substring(1, 1));
             int kodsen = Convert.ToInt32(akCarta.Kod.Substring(2, 1));
             int kodhyaku = Convert.ToInt32(akCarta.Kod.Substring(3, 1));
@@ -181,8 +180,27 @@ namespace MSNK.Controllers
                         akC.Baki = akCarta.Baki;
                         akC.Catatan1 = akCarta.Catatan1;
                         akC.Catatan2 = akCarta.Catatan2;
-                        await _akCartaRepo.Insert(akC);
-                        await _akCartaRepo.Save();
+                        try {
+                            await _akCartaRepo.Insert(akC);
+                            await _akCartaRepo.Save();
+                        }
+                        catch { }
+                        finally
+                        {
+                            if (akCarta.Baki != 0)
+                            {
+                                AkAkaun aka = new AkAkaun()
+                                {
+                                    JKWId = JKWId,
+                                    AkCartaId1 = _context.AkCarta.FirstOrDefault(x => x.Kod == akCarta.Kod).Id,
+                                    Tarikh = DateTime.Now,
+                                    NoRujukan = "BAKI AWAL",
+                                    Debit = (akCarta.Baki>0)? akCarta.Baki:0,
+                                    Kredit = (akCarta.Baki < 0) ? akCarta.Baki : 0
+                                };
+                                _context.AkAkaun.Add(aka);
+                            }
+                        }
                         TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Carta adalah " + akCarta.Kod;
 
                         return RedirectToAction(nameof(Index));
@@ -223,7 +241,6 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkCarta akCarta, int JKWId, int JJenisId, int JParasId)
         {
-
             if (id != akCarta.Id)
             {
                 return NotFound();
@@ -231,38 +248,137 @@ namespace MSNK.Controllers
 
             AkCarta akC = new AkCarta();
 
-            if (ModelState.IsValid)
+            string paras = _context.JParas.FirstOrDefault(q => q.Id == JParasId).Kod;
+            int kodman = Convert.ToInt32(akCarta.Kod.Substring(1, 1));
+            int kodsen = Convert.ToInt32(akCarta.Kod.Substring(2, 1));
+            int kodhyaku = Convert.ToInt32(akCarta.Kod.Substring(3, 1));
+            int kodju = Convert.ToInt32(akCarta.Kod.Substring(4));
+            string prefix = akCarta.Kod.Substring(0, 1);
+            bool check = false;
+            bool check2 = false;
+
+            if (paras == "1")
             {
-                try
+                if (kodman > 0 && kodsen == 0 && kodhyaku == 0 && kodju == 0)
                 {
-                    akC.JKWId = JKWId;
-                    akC.Kod = akCarta.Kod;
-                    akC.JJenisId = JJenisId;
-                    akC.Perihal = akCarta.Perihal;
-                    akC.JParasId = JParasId;
-                    akC.UmumDetail = akCarta.UmumDetail;
-                    akC.DebitKredit = akCarta.DebitKredit;
-                    akC.Baki = akCarta.Baki;
-                    akC.Catatan1 = akCarta.Catatan1;
-                    akC.Catatan2 = akCarta.Catatan2;
-                    await _akCartaRepo.Update(akCarta);
-                    TempData[SD.Success] = "Data berjaya diubah..!";
+                    check = true;
                 }
-                catch (DbUpdateConcurrencyException)
+            }
+            else if (paras == "2")
+            {
+                if (kodman > 0 && kodsen > 0 && kodhyaku == 0 && kodju == 0)
                 {
-                    if (!AkCartaExists(akCarta.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    check = true;
                 }
-                PopulateList();
-                return RedirectToAction(nameof(Index));
+            }
+            else if (paras == "3")
+            {
+                if (kodman > 0 && kodsen > 0 && kodhyaku > 0 && kodju == 0)
+                {
+                    check = true;
+                }
+            }
+            else if (paras == "4")
+            {
+                if (kodman > 0 && kodsen > 0 && kodhyaku > 0 && kodju > 0)
+                {
+                    check = true;
+                }
             }
 
+            if (paras == "4")
+            {
+                check2 = CheckKod(prefix + (kodman * 10000 + kodsen * 1000 + kodhyaku * 100));
+            }
+            else if (paras == "3")
+            {
+                check2 = CheckKod(prefix + (kodman * 10000 + kodsen * 1000));
+            }
+            else if (paras == "2")
+            {
+                check2 = CheckKod(prefix + (kodman * 10000));
+            }
+            else if (paras == "1")
+            {
+                check2 = true;
+            }
+
+            ///////---------------------------------------------------
+            if (!check)
+            {
+                TempData[SD.Error] = "Maklumat gagal ditambah. Kod Carta " + akCarta.Kod + " tidak sesuai untuk Paras " + paras + ". ";
+            }
+            else if (!check2)
+            {
+                int parasatas = Convert.ToInt32(paras) - 1;
+                TempData[SD.Error] = "Maklumat gagal ditambah. Pastikan Paras " + parasatas + " telah wujud. ";
+            }
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        akC.JKWId = JKWId;
+                        akC.JJenisId = JJenisId;
+                        akC.Perihal = akCarta.Perihal;
+                        akC.JParasId = JParasId;
+                        akC.UmumDetail = akCarta.UmumDetail;
+                        akC.DebitKredit = akCarta.DebitKredit;
+                        akC.Baki = akCarta.Baki;
+                        akC.Catatan1 = akCarta.Catatan1;
+                        akC.Catatan2 = akCarta.Catatan2;
+                        try
+                        {
+                            await _akCartaRepo.Update(akC);
+                        }
+                        catch { }
+                        finally
+                        {
+                            if (akCarta.Baki != 0)
+                            {
+                                var checkAka = _context.AkAkaun.Where(x => x.AkCarta1.Kod == akC.Kod && x.NoRujukan == "BAKI AWAL").FirstOrDefault();
+                                if (checkAka != null)
+                                {
+                                    checkAka.Debit = (akCarta.Baki > 0) ? akCarta.Baki : 0;
+                                    checkAka.Kredit = (akCarta.Baki < 0) ? akCarta.Baki : 0;
+                                    _context.AkAkaun.Update(checkAka);
+                                }
+                                else
+                                {
+                                    AkAkaun aka = new AkAkaun()
+                                    {
+                                        JKWId = JKWId,
+                                        AkCartaId1 = _context.AkCarta.FirstOrDefault(x => x.Kod == akCarta.Kod).Id,
+                                        Tarikh = DateTime.Now,
+                                        NoRujukan = "BAKI AWAL",
+                                        Debit = (akCarta.Baki > 0) ? akCarta.Baki : 0,
+                                        Kredit = (akCarta.Baki < 0) ? akCarta.Baki : 0
+                                    };
+                                    _context.AkAkaun.Add(aka);
+                                }
+                            }
+                        }
+                        await _context.SaveChangesAsync();
+                        TempData[SD.Success] = "Data berjaya diubah..!";
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!AkCartaExists(akCarta.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    PopulateList();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            PopulateList();
             return View(akCarta);
         }
 

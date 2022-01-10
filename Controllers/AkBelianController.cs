@@ -1356,20 +1356,20 @@ namespace MSNK.Controllers
                     foreach (AkBelian1 item in akB1)
                     {
                         //insert into AbBukuVot
-                        //AbBukuVot abBukuVot = new AbBukuVot()
-                        //{
-                        //    Tahun = akBelian.Tahun,
-                        //    JKWId = akBelian.JKWId,
-                        //    Tarikh = akBelian.Tarikh,
-                        //    Kod = kodPembekal,
-                        //    Penerima = penerima,
-                        //    AkCartaId = item.AkCartaId,
-                        //    Rujukan = akBelian.NoInbois,
-                        //    Liabiliti = item.Amaun,
-                        //    UserId = user.UserName
-                        //};
+                        AbBukuVot abBukuVot = new AbBukuVot()
+                        {
+                            Tahun = akBelian.Tahun,
+                            JKWId = akBelian.JKWId,
+                            Tarikh = akBelian.Tarikh,
+                            Kod = kodPembekal,
+                            Penerima = penerima,
+                            VotId = item.AkCartaId,
+                            Rujukan = akBelian.NoInbois,
+                            Liabiliti = item.Amaun,
+                            UserId = user.UserName
+                        };
 
-                        //await _abBukuVotRepo.Insert(abBukuVot);
+                        await _abBukuVotRepo.Insert(abBukuVot);
                         // insert into AbBukuVot end
 
                         //insert into akAkaun
@@ -1464,10 +1464,10 @@ namespace MSNK.Controllers
                     }
 
                     //delete data from abBukuVot
-                    //foreach (AbBukuVot item in abBukuVot)
-                    //{
-                    //    await _abBukuVotRepo.Delete(item.Id);
-                    //}
+                    foreach (AbBukuVot item in abBukuVot)
+                    {
+                        await _abBukuVotRepo.Delete(item.Id);
+                    }
                     //delete data from abBukuVot
 
                     //update posting status in akTerima
