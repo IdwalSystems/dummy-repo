@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Laporan Penerimaan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <form asp-action="PRINT">
+        <div class="card box-shadow border-info mb-3">
+            <div class="card-header bg-info text-white">
+                <h5>Penerimaan - @ViewData["Title"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="kodLaporan" id="rdLPR0011" value="LPR0011">
+                            <label class="form-check-label" for="LPR0011">
+                                Laporan Penyata Pemungut
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="kodLaporan" id="rdLPR0012" value="LPR0012" checked>
+                            <label class="form-check-label" for="LPR0012">
+                                Laporan Penyata Pemungut Terperinci
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group form-row">
+                            <label for="Tarikh" class="col-sm-2 col-form-label">Tarikh</label>
+                            <div class="col-sm-5">
+                                <input type="date" class="form-control form-control-sm" id="tarikhDari" name="tarikhDari">
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="date" class="form-control form-control-sm" id="tarikhHingga" name="tarikhHingga">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="form-group text-right">
+                    <input type="submit" value="Cetak" formtarget="_blank" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+        
+    </form>
+
+</div>
