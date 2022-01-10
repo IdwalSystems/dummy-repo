@@ -246,8 +246,6 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            AkCarta akC = new AkCarta();
-
             string paras = _context.JParas.FirstOrDefault(q => q.Id == JParasId).Kod;
             int kodman = Convert.ToInt32(akCarta.Kod.Substring(1, 1));
             int kodsen = Convert.ToInt32(akCarta.Kod.Substring(2, 1));
@@ -319,29 +317,41 @@ namespace MSNK.Controllers
                 {
                     try
                     {
-                        akC.JKWId = JKWId;
-                        akC.JJenisId = JJenisId;
-                        akC.Perihal = akCarta.Perihal;
-                        akC.JParasId = JParasId;
-                        akC.UmumDetail = akCarta.UmumDetail;
-                        akC.DebitKredit = akCarta.DebitKredit;
-                        akC.Baki = akCarta.Baki;
-                        akC.Catatan1 = akCarta.Catatan1;
-                        akC.Catatan2 = akCarta.Catatan2;
+                        //AkJurnal akJurnal = await _akJurnalRepo.GetById(akJurnal1.AkJurnalId);
+
+                        //debit = akJurnal.JumDebit + akJurnal1.Debit;
+                        //kredit = akJurnal.JumKredit + akJurnal1.Kredit;
+                        //akJurnal.JumDebit = debit;
+                        //akJurnal.JumKredit = kredit;
+
+                        //await _akJurnalRepo.Update(akJurnal);
+                        //await _context.SaveChangesAsync();
+
+                        AkCarta carta = await _akCartaRepo.GetById(akCarta.Id);
+
+                        carta.JKWId = JKWId;
+                        carta.JJenisId = JJenisId;
+                        carta.Perihal = akCarta.Perihal;
+                        carta.JParasId = JParasId;
+                        carta.UmumDetail = akCarta.UmumDetail;
+                        carta.DebitKredit = akCarta.DebitKredit;
+                        carta.Baki = akCarta.Baki;
+                        carta.Catatan1 = akCarta.Catatan1;
+                        carta.Catatan2 = akCarta.Catatan2;
                         try
                         {
-                            await _akCartaRepo.Update(akC);
+                            await _akCartaRepo.Update(carta);
                         }
                         catch { }
                         finally
                         {
                             if (akCarta.Baki != 0)
                             {
-                                var checkAka = _context.AkAkaun.Where(x => x.AkCarta1.Kod == akC.Kod && x.NoRujukan == "BAKI AWAL").FirstOrDefault();
+                                var checkAka = _context.AkAkaun.Where(x => x.AkCarta1.Kod == carta.Kod && x.NoRujukan == "BAKI AWAL").FirstOrDefault();
                                 if (checkAka != null)
                                 {
                                     checkAka.Debit = (akCarta.Baki > 0) ? akCarta.Baki : 0;
-                                    checkAka.Kredit = (akCarta.Baki < 0) ? akCarta.Baki : 0;
+                                    checkAka.Kredit = (akCarta.Baki < 0) ? (akCarta.Baki*-1) : 0;
                                     _context.AkAkaun.Update(checkAka);
                                 }
                                 else
@@ -350,10 +360,11 @@ namespace MSNK.Controllers
                                     {
                                         JKWId = JKWId,
                                         AkCartaId1 = _context.AkCarta.FirstOrDefault(x => x.Kod == akCarta.Kod).Id,
+                                        AkCartaId2 = null,
                                         Tarikh = DateTime.Now,
                                         NoRujukan = "BAKI AWAL",
                                         Debit = (akCarta.Baki > 0) ? akCarta.Baki : 0,
-                                        Kredit = (akCarta.Baki < 0) ? akCarta.Baki : 0
+                                        Kredit = (akCarta.Baki < 0) ? (akCarta.Baki * -1) : 0
                                     };
                                     _context.AkAkaun.Add(aka);
                                 }

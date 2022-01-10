@@ -90,11 +90,10 @@ namespace MSNK.Data
                     .IsRequired();
 
             modelBuilder.Entity<AkAkaun>()
-                    .HasOne(m => m.AkCarta2)
+                    .HasOne(m => m.AkCarta2!)
                     .WithMany(t => t.AkAkaun2)
                     .HasForeignKey(m => m.AkCartaId2)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .IsRequired();
+                    .OnDelete(DeleteBehavior.Restrict);
             //AkTerima
             modelBuilder.Entity<AkTerima>()
                     .HasOne(m => m.JKW)
