@@ -547,6 +547,7 @@ namespace MSNK.Controllers
                                    akBelian2.Amaun);
                 }
 
+
                 return Json(new { result = "OK" });
             }
             catch (Exception ex)
@@ -562,7 +563,7 @@ namespace MSNK.Controllers
 
             try
             {
-                List<AkBelian2> data = _cart.Lines2.ToList();
+                List<AkBelian2> data = _cart.Lines2.OrderBy(b=> b.Indek).ToList();
 
                 return Json(new { result = "OK", record = data });
             }
@@ -593,8 +594,8 @@ namespace MSNK.Controllers
             {
                 TempData[SD.Error] = "Maklumat gagal disimpan. No rujukan pendaftaran " + akBelian.NoInbois + " telah wujud";
                 //PopulateCart();
-                CartEmpty();
                 PopulateList();
+                CartEmpty();
                 return View(akBelian);
             }
 
@@ -602,7 +603,6 @@ namespace MSNK.Controllers
             if ( akBelian.Jumlah != JumlahPerihal)
             {
                 TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Perihal";
-                //PopulateCart();
                 CartEmpty();
                 PopulateList();
                 return View(akBelian);
@@ -661,7 +661,7 @@ namespace MSNK.Controllers
                 }
             }
 
-            PopulateCart();
+            CartEmpty();
             PopulateList();
             return View(akBelian);
         }
@@ -702,8 +702,10 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
+            CartEmpty();
             PopulateList();
             PopulateTable(id);
+            PopulateCartFromDb(akBelian);
             return View(akBelian);
         }
 
@@ -1046,54 +1048,84 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (akBelian.Jumlah == JumlahPerihal)
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    var user = await _userManager.GetUserAsync(User);
-                    akBelian.UserIdKemaskini = user.UserName;
-                    akBelian.TarKemaskini = DateTime.Now;
-
-                    _context.Update(akBelian);
-
-                    //insert applog
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "E";
-                    appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Inbois Pembekal - Ubah";
-                    appLog.NoRujukan = akBelian.NoInbois;
-                    appLog.Jumlah = akBelian.Jumlah;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AkBelianExists(akBelian.Id))
+                    try
                     {
-                        return NotFound();
+                        var user = await _userManager.GetUserAsync(User);
+
+                        AkBelian akBelianAsal = await _akBelianRepo.GetById(id);
+
+                        foreach (AkBelian1 item in akBelianAsal.AkBelian1)
+                        {
+                            var model = _context.AkBelian1.FirstOrDefault(b => b.Id == item.Id);
+                            if (model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+
+                        foreach (AkBelian2 item in akBelianAsal.AkBelian2)
+                        {
+                            var model = _context.AkBelian2.FirstOrDefault(b => b.Id == item.Id);
+                            if (model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+                        _context.Entry(akBelianAsal).State = EntityState.Detached;
+
+                        akBelian.AkBelian1 = _cart.Lines1.ToList();
+                        akBelian.AkBelian2 = _cart.Lines2.ToList();
+
+                        akBelian.UserIdKemaskini = user.UserName;
+                        akBelian.TarKemaskini = DateTime.Now;
+
+                        _context.Update(akBelian);
+
+                        //insert applog
+                        AppLog appLog = new AppLog();
+
+                        appLog.UserId = user.UserName;
+                        appLog.LgModule = modul + "E";
+                        appLog.LgOperation = "Ubah";
+                        appLog.LgNote = modul + " Inbois Pembekal - Ubah";
+                        appLog.NoRujukan = akBelian.NoInbois;
+                        appLog.Jumlah = akBelian.Jumlah;
+
+                        await _appLog.Insert(appLog);
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!AkBelianExists(akBelian.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    CartEmpty();
+                    // checking for jumlah objek & jumlah perihal
+                    if (akBelian.Jumlah != JumlahPerihal)
+                    {
+                        TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Perihal";
                     }
                     else
                     {
-                        throw;
+                        TempData[SD.Success] = "Data berjaya diubah..!";
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                CartEmpty();
-                // checking for jumlah objek & jumlah perihal
-                if (akBelian.Jumlah != JumlahPerihal)
-                {
-                    TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Perihal";
-                }
-                else
-                {
-                    TempData[SD.Success] = "Data berjaya diubah..!";
-                }
-                return RedirectToAction(nameof(Index));
             }
+
+            TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Perihal";
             PopulateList();
             PopulateTable(id);
             return View(akBelian);

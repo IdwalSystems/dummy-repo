@@ -222,11 +222,7 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem1(akPV1.AkPVId,
                                akPV1.Amaun,
-                               akPV1.AkCartaId,
-                               akPV1.UserId,
-                               akPV1.TarMasuk,
-                               akPV1.UserIdKemaskini,
-                               akPV1.TarKemaskini);
+                               akPV1.AkCartaId);
             }
 
             ViewBag.akPV1 = akPV1Table;
@@ -240,11 +236,7 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem2(akPV2.AkPVId,
                                akPV2.AkBelianId,
-                               akPV2.Amaun,
-                               akPV2.UserId,
-                               akPV2.TarMasuk,
-                               akPV2.UserIdKemaskini,
-                               akPV2.TarKemaskini);
+                               akPV2.Amaun);
             }
 
             ViewBag.akPV2 = akPV2Table;
@@ -275,16 +267,9 @@ namespace MSNK.Controllers
                 {
                     var user = await _userManager.GetUserAsync(User);
 
-                    akPV1.UserId = user.UserName;
-                    akPV1.TarMasuk = DateTime.Now;
-
                     _cart.AddItem1(akPV1.AkPVId,
                                    akPV1.Amaun,
-                                   akPV1.AkCartaId,
-                                   akPV1.UserId,
-                                   akPV1.TarMasuk,
-                                   akPV1.UserIdKemaskini,
-                                   akPV1.TarKemaskini);
+                                   akPV1.AkCartaId);
                 }
 
                 return Json(new { result = "OK" });
@@ -346,16 +331,9 @@ namespace MSNK.Controllers
                 {
                     _cart.RemoveItem1(akPV1.AkCartaId);
 
-                    akPV1.UserId = user;
-                    akPV1.TarMasuk = DateTime.Now;
-
                     _cart.AddItem1(akPV1.AkPVId,
                                    akPV1.Amaun,
-                                   akPV1.AkCartaId,
-                                   akPV1.UserId,
-                                   akPV1.TarMasuk,
-                                   akPV1.UserIdKemaskini,
-                                   akPV1.TarKemaskini);
+                                   akPV1.AkCartaId);
                 }
 
                 return Json(new { result = "OK" });
@@ -421,16 +399,9 @@ namespace MSNK.Controllers
                 {
                     var user = await _userManager.GetUserAsync(User);
 
-                    akPV2.UserId = user.UserName;
-                    akPV2.TarMasuk = DateTime.Now;
-
                     _cart.AddItem2(akPV2.AkPVId,
                                    akPV2.AkBelianId,
-                                   akPV2.Amaun,
-                                   akPV2.UserId,
-                                   akPV2.TarMasuk,
-                                   akPV2.UserIdKemaskini,
-                                   akPV2.TarKemaskini);
+                                   akPV2.Amaun);
                 }
 
                 return Json(new { result = "OK" });
@@ -492,16 +463,9 @@ namespace MSNK.Controllers
                 {
                     _cart.RemoveItem2(akPV2.AkBelianId);
 
-                    akPV2.UserId = user;
-                    akPV2.TarMasuk = DateTime.Now;
-
                     _cart.AddItem2(akPV2.AkPVId,
                                    akPV2.AkBelianId,
-                                   akPV2.Amaun,
-                                   akPV2.UserId,
-                                   akPV2.TarMasuk,
-                                   akPV2.UserIdKemaskini,
-                                   akPV2.TarKemaskini);
+                                   akPV2.Amaun);
                 }
 
                 return Json(new { result = "OK" });
@@ -912,8 +876,6 @@ namespace MSNK.Controllers
                     var user = await _userManager.GetUserAsync(User);
                     var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akPV1.AkCartaId);
                     akPV1.AkCarta = akCarta;
-                    akPV1.UserId = user.UserName;
-                    akPV1.TarMasuk = DateTime.Now;
 
                     await _akPV1Repo.Insert(akPV1);
 
@@ -1021,8 +983,6 @@ namespace MSNK.Controllers
                 var user = await _userManager.GetUserAsync(User);
 
                 akB1.Amaun = akPV1.Amaun;
-                akB1.UserIdKemaskini = user.UserName;
-                akB1.TarKemaskini = DateTime.Now;
                 _context.AkPV1.Update(akB1);
 
                 // update total akBelian with date updated and userUpdated
@@ -1095,8 +1055,6 @@ namespace MSNK.Controllers
                     var user = await _userManager.GetUserAsync(User);
 
                     akPV2.AkBelian = akBelian;
-                    akPV2.UserId = user.UserName;
-                    akPV2.TarMasuk = DateTime.Now;
                     await _akPV2Repo.Insert(akPV2);
 
                     await _context.SaveChangesAsync();
@@ -1241,18 +1199,69 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPV = await _context.AkPV
-                .Include(a => a.AkBank)
-                .Include(a => a.AkPembekal)
-                .Include(a => a.JCaraBayar)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akPV = await _akPVRepo.GetById((int)id);
+
+
             if (akPV == null)
             {
                 return NotFound();
             }
+            AkPVViewModel akPVView = new AkPVViewModel();
 
-            return View(akPV);
+            //fill in view model AkPVViewModel from akPV
+            akPVView.Id = akPV.Id;
+            akPVView.Tahun = akPV.Tahun;
+            akPVView.NoPV = akPV.NoPV;
+            akPVView.Tarikh = akPV.Tarikh;
+            akPVView.TarikhTerima = akPV.TarikhTerima;
+            akPVView.JKW = akPV.JKW;
+            akPVView.AkBank = akPV.AkBank;
+            akPVView.Jumlah = akPV.Jumlah;
+            akPVView.TarikhPosting = akPV.TarikhPosting;
+
+
+            if (akPV.AkPembekalId == null)
+            {
+                akPVView.denganTanggungan = false;
+                akPVView.KodPenerima = "-";
+                akPVView.NoKP = akPV.NoKP;
+                akPVView.Penerima = akPV.Nama;
+                akPVView.Alamat1 = akPV.Alamat1;
+                akPVView.Alamat2 = akPV.Alamat2;
+                akPVView.Alamat3 = akPV.Alamat3;
+                akPVView.NoAkaunBank = akPV.NoAkaunBank;
+                akPVView.Telefon = akPV.Telefon;
+                akPVView.Emel = akPV.Emel;
+            }
+            else
+            {
+                akPVView.denganTanggungan = true;
+                akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
+                akPVView.NoKP = "-";
+                akPVView.Penerima = akPV.AkPembekal.NamaSykt;
+                akPVView.Alamat1 = akPV.AkPembekal.Alamat1;
+                akPVView.Alamat2 = akPV.AkPembekal.Alamat2;
+                akPVView.Alamat3 = akPV.AkPembekal.Alamat3;
+                akPVView.NoAkaunBank = akPV.AkPembekal.AkaunBank;
+                akPVView.Telefon = akPV.AkPembekal.Telefon1;
+                akPVView.Emel = akPV.AkPembekal.Emel;
+            }
+            akPVView.NoCekAtauEFT = akPV.NoCekAtauEFT;
+            akPVView.TarCekAtauEFT = akPV.TarCekAtauEFT;
+            akPVView.Perihal = akPV.Perihal;
+            akPVView.CaraBayar = akPV.JCaraBayar.Perihal;
+            akPVView.FlPosting = akPV.FlPosting;
+            akPVView.FlCetak = akPV.FlCetak;
+            akPVView.FlBatal = akPV.FlBatal;
+            akPVView.AkPV1 = akPV.AkPV1;
+            foreach (AkPV2 item in akPV.AkPV2)
+            {
+                akPVView.JumlahInbois += item.Amaun;
+            }
+            akPVView.AkPV2 = akPV.AkPV2;
+
+            PopulateTable(id);
+            return View(akPVView);
         }
 
         // POST: AkPV/Delete/5

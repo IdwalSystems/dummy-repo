@@ -59,6 +59,7 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int FlBatal { get; set; }
         [DisplayName("Jenis Baucer")]
+        // Am = 1; Pembekal = 2; Pekerja = 3;
         public int FlJenisBaucer { get; set; }
         public bool denganTanggungan { get; set; }
         //flag end

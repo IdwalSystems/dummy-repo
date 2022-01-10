@@ -101,8 +101,8 @@
                             <table id="tblObjek" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th style="width:40%">Kod</th>
-                                        <th style="width:50%">Amaun</th>
+                                        <th style="width:70%">Kod</th>
+                                        <th style="width:30%">Amaun</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -113,7 +113,7 @@
                                         <tr id="@item.Id">
                                             <td id="akCartaId" hidden>@item.AkCartaId</td>
                                             <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                            <td id="td1Amaun">@item.Amaun</td>
+                                            <td id="td1Amaun" class="text-right">@item.Amaun</td>
                                             <td>
                                                 <button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
                                                     <i class="fa fa-edit"></i>
@@ -131,7 +131,7 @@
                                 <tfoot>
                                     <tr>
                                         <td id="akCartaId" hidden></td>
-                                        <td hidden><input id="txtAkBelian1" value="@Model.Id" /></td>
+                                        <td hidden>@Model.Id"</td>
                                         <td style="width:40%">
                                             <select class="form-control form-control-sm select2" id="txtKodAkaun">
                                                 <option value="" disabled selected>-- Pilih Kod Akaun --</option>
@@ -181,13 +181,13 @@
                                         @foreach (var item in ViewBag.AkBelian2)
                                         {
                                             <tr id="@item.Id">
-                                                <td hidden><input id="txtIndek" value="@item.Indek" /></td>
+                                                <td hidden>@item.Indek</td>
                                                 <td class="text-left" hidden>@item.Baris</td>
                                                 <td class="text-left">@item.Bil</td>
                                                 <td class="text-left text-uppercase">@item.NoStok</td>
                                                 <td class="text-left text-uppercase">@item.Perihal</td>
                                                 <td class="text-right">@item.Kuantiti</td>
-                                                <td class="text-center text-uppercase">@item.Unit</td>
+                                                <td class="text-uppercase">@item.Unit</td>
                                                 <td class="text-right">@item.Harga</td>
                                                 <td class="text-right amaunPerihal">@item.Amaun</td>
                                                 <td>
@@ -266,7 +266,7 @@
                     <span asp-validation-for="FlBatal" class="text-danger"></span>
                 </div>*@
             <div class="form-group ">
-                <input type="submit" value="Simpan" class="btn btn-primary" />
+                <input type="submit" value="Simpan"  class="btn btn-primary" />
             </div>
         </form>
     </div>

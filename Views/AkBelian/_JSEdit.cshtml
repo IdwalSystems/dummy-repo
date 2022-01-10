@@ -22,7 +22,7 @@
                 dataType: "json",
                 success: function (r) {
                     //Reference the TextBoxes.
-                    var txtAkBelian = $("#txtAkBelian1");
+                    var txtAkBelian = $("#Id");
                     var txtKodAkaun = $("#txtKodAkaun");
                     var txtAmaunObjek = $("#txtAmaunObjek");
                     var txtJumlah = $("#jumlahObjek");
@@ -48,8 +48,9 @@
 
                     //Add amaun cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtAmaunObjek.val());
+                    cell.html(parseFloat(txtAmaunObjek.val()).toFixed(2));
                     cell.attr("id", "td1Amaun_" + r.record.Id);
+                    cell.addClass('text-right');
 
                     //Add Edit Button cell.
                     cell = $(row.insertCell(-1));
@@ -71,13 +72,14 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "/AkBelian/InsertUpdateAkBelian1",
+                        url: "/AkBelian/SaveAkBelian1",
                         data: AkBelian1,
                         dataType: "json",
                         success: function (r) {
                             //Clear the TextBoxes.
-                            txtKodAkaun.val("");
+                            txtKodAkaun.val("").trigger('change');
                             txtAmaunObjek.val("");
+                            checkJumlah();
                         }
                     });
 
@@ -131,6 +133,7 @@
         //Add Baris cell.
         var cell = $(row.insertCell(-1));
         cell.html(txtBaris.val());
+        cell.prop("hidden", !this.checked);
 
         //Add Bil cell.
         var cell = $(row.insertCell(-1));
@@ -148,7 +151,8 @@
 
         //Add Kuantiti cell.
         var cell = $(row.insertCell(-1));
-        cell.html(txtKuantiti.val());
+        cell.html(parseFloat(txtKuantiti.val()).toFixed(2));
+        cell.addClass('text-right');
 
         //Add Unit cell.
         var cell = $(row.insertCell(-1));
@@ -158,10 +162,12 @@
         //Add Harga cell.
         var cell = $(row.insertCell(-1));
         cell.html(txtHargaUnit.val());
+        cell.addClass('text-right');
 
         //Add Amaun cell.
         var cell = $(row.insertCell(-1));
-        cell.html(txtAmaun.val());
+        cell.html(parseFloat(txtAmaun.val()).toFixed(2));
+        cell.addClass('text-right');
 
         //Add Edit Button cell.
         cell = $(row.insertCell(-1));
@@ -189,7 +195,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/AkBelian/InsertUpdateAkBelian2",
+            url: "/AkBelian/SaveAkBelian2",
             data: AkBelian2,
             dataType: "json",
             success: function (r) {
@@ -233,12 +239,13 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkBelian/RemoveUpdateAkBelian1",
+                    url: "/AkBelian/RemoveAkBelian1",
                     data: AkBelian1,
                     dataType: "json",
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
+                        checkJumlah();
                     }
                 });
             }
@@ -253,7 +260,7 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var akBelianId = $("#Id").val();
-        var indek = $("TD", row).eq(1).html();
+        var indek = $("TD", row).eq(0).html();
         var amaun = $("TD", row).eq(8).html();
         var txtJumlah = $("#jumlahPerihal");
         if (confirm("Hapus : " + indek + " ?")) {
@@ -272,12 +279,13 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkBelian/RemoveUpdateAkBelian2",
+                    url: "/AkBelian/RemoveAkBelian2",
                     data: AkBelian2,
                     dataType: "json",
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
+                        checkJumlah();
                     }
                 });
             }
@@ -292,15 +300,14 @@
         var akBelianId = $('#Id').val();
         var akCartaId = $("TD", row).eq(0).html();
 
-
         var AkBelian1 = {
             AkBelianId: akBelianId,
             AkCartaId: akCartaId
         }
-        if (name != null) {
+        if (akCartaId != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkBelian/UpdateAkBelian1",
+                url: "/AkBelian/GetAnItemCartAkBelian1",
                 data: AkBelian1,
                 dataType: "json",
                 success: function (r) {
@@ -318,19 +325,19 @@
     };
 
     function modalUpdate1() {
-        var id = $("#moId1").val();
         var amaun = $("#moAmaun1").val();
         var akBelianId = $("#Id").val();
+        var akCartaId = $("#moKodAkaun").val();
         var jumlah = $("#jumlahObjek");
 
         var AkBelian1 = {
-            Id: id,
             AkBelianId: akBelianId,
+            AkCartaId: akCartaId,
             Amaun: amaun
         }
         $.ajax({
             type: "POST",
-            url: "/AkBelian/SaveUpdateAkBelian1",
+            url: "/AkBelian/SaveCartAkBelian1",
             data: AkBelian1,
             dataType: "json",
             success: function (r) {
@@ -338,17 +345,16 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkBelian/GetAkBelian1",
-                    data: AkBelian1,
+                    url: "/AkBelian/GetAllItemCartAkBelian1",
                     dataType: "json",
                     success: function (r) {
 
                         //refresh updated table objek
                         $("table tbody#tbodyObjek").empty();
                         var sum = 0;
-                        if (r.data.akBelian1.length > 0) {
-                            for (var i = 0; i < r.data.akBelian1.length; i++) {
-                                var item1 = r.data.akBelian1[i];
+                        if (r.record.length > 0) {
+                            for (var i = 0; i < r.record.length; i++) {
+                                var item1 = r.record[i];
                                 var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
                                     "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
                                     "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
@@ -363,6 +369,7 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }
@@ -375,7 +382,7 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var akBelianId = $('#Id').val();
-        var IndekId = $("TD", row).eq(1).html();
+        var IndekId = $("TD", row).eq(0).html();
 
         var AkBelian2 = {
             AkBelianId: akBelianId,
@@ -383,7 +390,7 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkBelian/UpdateAkBelian2",
+            url: "/AkBelian/GetAnItemCartAkBelian2",
             data: AkBelian2,
             dataType: "json",
             success: function (r) {
@@ -406,7 +413,6 @@
     };
 
     function modalUpdate2() {
-        var id = $("#moId2").val();
         var akBelianId = $("#Id").val();
         var indek = $("#moIndek").val();
         var baris = $("#moBaris").val();
@@ -420,7 +426,6 @@
         var jumlah = $("#jumlahPerihal");
 
         var AkBelian2 = {
-            Id: id,
             AkBelianId: akBelianId,
             Indek: indek,
             Baris: baris,
@@ -434,7 +439,7 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkBelian/SaveUpdateAkBelian2",
+            url: "/AkBelian/SaveCartAkBelian2",
             data: AkBelian2,
             dataType: "json",
             success: function (r) {
@@ -442,24 +447,23 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkBelian/GetAkBelian2",
-                    data: AkBelian2,
+                    url: "/AkBelian/GetAllItemCartAkBelian2",
                     dataType: "json",
                     success: function (r) {
 
                         //refresh updated table urusniaga
                         $("table tbody#tbodyPerihal").empty();
                         var sum = 0;
-                        if (r.data.akBelian2.length > 0) {
-                            for (var i = 0; i < r.data.akBelian2.length; i++) {
-                                var item1 = r.data.akBelian2[i];
+                        if (r.record.length > 0) {
+                            for (var i = 0; i < r.record.length; i++) {
+                                var item1 = r.record[i];
                                 var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
-                                    "</td><td class='text-left'>" + item1.baris +
+                                    "</td><td class='text-left' hidden>" + item1.baris +
                                     "</td><td class='text-left'>" + item1.bil +
                                     "</td><td class='text-left'>" + item1.noStok +
                                     "</td><td class='text-left'>" + item1.perihal +
-                                    "</td><td class='text-right'>" + item1.kuantiti +
-                                    "</td><td class='text-center'>" + item1.unit +
+                                    "</td><td class='text-right'>" + (item1.kuantiti).toFixed(2) +
+                                    "</td><td class='text-uppercase'>" + item1.unit +
                                     "</td><td class='text-right'>" + (item1.harga).toFixed(2) +
                                     "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" +
@@ -472,6 +476,7 @@
                             }
                         }
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }
@@ -585,4 +590,22 @@
         });
     });
     //validation form end
+
+    // check if jumlahObjek is equal to jumlahUrusniaga
+    function checkJumlah() {
+        var jumlahObjek = $("#jumlahObjek").val();
+        var jumlahPerihal = $("#jumlahPerihal").val();
+
+        if (jumlahObjek == 0.00 && jumlahPerihal == 0.00) {
+            $("#btnSave").show();
+        } else {
+            if (jumlahObjek == jumlahPerihal) {
+                $("#btnSave").show();
+            }
+            else {
+                $("#btnSave").hide();
+            }
+        }
+    }
+    // check end
 </script>

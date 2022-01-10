@@ -68,7 +68,7 @@
     <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
         <thead>
             <tr>
-                <th>
+                <th style="width:2%">
                     @Html.DisplayNameFor(model => model.Tahun)
                 </th>
                 <th>
@@ -109,7 +109,7 @@
                     @item.NoPV.Substring(3)
                 </td>
                 <td>
-                    @item.Tarikh.ToString("dd-M-yyyy")
+                    @item.Tarikh.ToString("dd/MM/yyyy")
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Jumlah)
