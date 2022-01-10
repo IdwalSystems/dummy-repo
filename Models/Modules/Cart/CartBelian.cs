@@ -14,11 +14,7 @@ namespace MSNK.Models.Modules.Cart
         public virtual void AddItem1(
             int akBelianId,
             decimal amaun,
-            int akCartaId,
-            string userId,
-            DateTime tarMasuk,
-            string userIdKemasikini,
-            DateTime tarKemaskini
+            int akCartaId
             )
         {
             AkBelian1 line = collection1
@@ -31,11 +27,7 @@ namespace MSNK.Models.Modules.Cart
                 {
                     AkBelianId = akBelianId,
                     Amaun = amaun,
-                    AkCartaId = akCartaId,
-                    UserId = userId,
-                    TarMasuk = tarMasuk,
-                    UserIdKemaskini = userIdKemasikini,
-                    TarKemaskini = tarKemaskini
+                    AkCartaId = akCartaId
                 });
             }
         }
@@ -62,11 +54,7 @@ namespace MSNK.Models.Modules.Cart
             decimal Kuantiti,
             string Unit,
             decimal Harga,
-            decimal Amaun,
-            string userId,
-            DateTime tarMasuk,
-            string userIdKemasikini,
-            DateTime tarKemaskini
+            decimal Amaun
             )
         {
             collection2.Add(new AkBelian2
@@ -80,11 +68,7 @@ namespace MSNK.Models.Modules.Cart
                 Kuantiti = Kuantiti,
                 Unit = Unit,
                 Harga = Harga,
-                Amaun = Amaun,
-                UserId = userId,
-                TarMasuk = tarMasuk,
-                UserIdKemaskini = userIdKemasikini,
-                TarKemaskini = tarKemaskini
+                Amaun = Amaun
             });
         }
 
