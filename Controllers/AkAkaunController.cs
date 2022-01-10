@@ -45,6 +45,14 @@ namespace MSNK.Controllers
             PopulateList(!String.IsNullOrEmpty(searchKW) ? searchKW : "", !String.IsNullOrEmpty(searchCarta) ? searchCarta : "");
             ViewData["searchFrom"] = searchFrom;
             ViewData["searchUntil"] = searchUntil;
+            if (string.IsNullOrEmpty(searchKW) 
+                && string.IsNullOrEmpty(searchCarta) 
+                && string.IsNullOrEmpty(searchFrom) 
+                && string.IsNullOrEmpty(searchUntil))
+            {
+                List<AkAkaun> aka = new();
+                return View(aka);
+            }
             var akAkaun = await _akAkaunRepo.GetAll();
             List<AkAkaun> akAkBakiAwal = new();
             decimal bakiawalDebit = 0;
