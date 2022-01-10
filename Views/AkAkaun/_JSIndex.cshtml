@@ -20,6 +20,20 @@
             });
             $('.total', this).html(sum.toFixed(2));
         });
+
+        var now = new Date();
+        var date = new Date($('#tarDari').val());
+        if (!Date.parse(date)) {
+            $('#tarDari').val(now.getFullYear() + "-01-01");
+        }
+
+        var date = new Date($('#tarHingga').val());
+        if (!Date.parse(date)) {
+            $('#tarHingga').val(now.getFullYear() + "-12-31");
+        }
+
+        $('#ddlKW').val("100");
+
     });
 </script>
 

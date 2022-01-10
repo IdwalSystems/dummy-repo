@@ -1,0 +1,50 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        var scol = $('#searchColumn').val();
+
+        $("#myInput").hide();
+        $("#myInputDate1").hide();
+        $("#myInputDate2").hide();
+        $("#myInputKw").hide();
+
+        if (scol === "Tarikh") {
+            $("#myInput").hide();
+            $("#myInputDate1").show();
+            $("#myInputDate2").show();
+            $("#myInputKw").hide();
+        }
+        if (scol === "NoJurnal") {
+            $("#myInput").show();
+            $("#myInputDate1").hide();
+            $("#myInputDate2").hide();
+            $("#myInputKw").hide();
+        }
+        if (scol === "KW") {
+            $("#myInput").hide();
+            $("#myInputDate1").hide();
+            $("#myInputDate2").hide();
+            $("#myInputKw").show();
+        }
+
+        $("#searchColumn").change(function () {
+            if (this.value === "Tarikh") {
+                $("#myInput").hide();
+                $("#myInputDate1").show();
+                $("#myInputDate2").show();
+                $("#myInputKw").hide();
+            }
+            if (this.value === "NoJurnal") {
+                $("#myInput").show();
+                $("#myInputDate1").hide();
+                $("#myInputDate2").hide();
+                $("#myInputKw").hide();
+            }
+            if (this.value === "KW") {
+                $("#myInput").hide();
+                $("#myInputDate1").hide();
+                $("#myInputDate2").hide();
+                $("#myInputKw").show();
+            }
+        });
+    });
+</script>
