@@ -17,7 +17,7 @@ namespace MSNK.Models.Modules
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm tt}")]
         public DateTime Tarikh { get; set; }
         [Display(Name = "Carta 2")]
-        public int AkCartaId2 { get; set; }
+        public int? AkCartaId2 { get; set; }
         public int Id { get; set; }
         [Display(Name = "No Rujukan")]
         [MaxLength(40)]

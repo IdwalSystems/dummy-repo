@@ -103,7 +103,7 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
-            List<AkCarta> cartaList = _context.AkCarta.OrderBy(b => b.Kod).ToList();
+            List<AkCarta> cartaList = _context.AkCarta.Where(x=>x.JParas.Kod=="4").OrderBy(b => b.Kod).ToList();
             ViewBag.AkCarta = cartaList;
 
         }
