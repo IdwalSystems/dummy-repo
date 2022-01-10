@@ -135,9 +135,89 @@ namespace MSNK.Controllers
             }
         }
         // GET: AkJurnal
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string searchString,
+            string searchDate1,
+            string searchDate2,
+            string searchKw,
+            string searchColumn)
         {
+            //populate search option
+
+            List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
+            List<SelectListItem> kwSelect = new();
+            kwSelect.Add(new SelectListItem() { Text = "-- Pilih Kumpulan Wang --", Value = "" });
+            foreach (var q in kwList)
+            {
+                kwSelect.Add(new SelectListItem() { Text = q.Kod + " - " + q.Perihal, Value = q.Kod });
+            }
+            if (!String.IsNullOrEmpty(searchKw))
+            {
+                ViewBag.SearchKw = new SelectList(kwSelect, "Value", "Text", searchKw);
+            }
+            else
+            {
+                ViewBag.SearchKw = new SelectList(kwSelect, "Value", "Text", "");
+            }
+
+            List<SelectListItem> columnList = new();
+            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
+            columnList.Add(new SelectListItem() { Text = "No Jurnal", Value = "NoJurnal" });
+            columnList.Add(new SelectListItem() { Text = "Kumpulan Wang", Value = "KW" });
+            if (!String.IsNullOrEmpty(searchColumn))
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
+            }
+            else
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
+            }
+
             var akJurnal = await _akJurnalRepo.GetAll();
+
+            if (!String.IsNullOrEmpty(searchString) || !String.IsNullOrEmpty(searchKw)||
+                (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            {
+                // searching with '%like%' condition
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    if (searchColumn == "NoJurnal")
+                    {
+                        akJurnal = akJurnal.Where(s => s.NoJurnal.ToUpper().Contains(searchString.ToUpper()));
+                    }
+                    ViewBag.SearchData1 = searchString;
+                }
+                // searching with '%like%' condition end
+
+                // searching with date range condition
+                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+                {
+                    if (searchColumn == "Tarikh")
+                    {
+                        DateTime date1 = DateTime.Parse(searchDate1);
+                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
+                        akJurnal = akJurnal.Where(x => x.Tarikh >= date1
+                            && x.Tarikh <= date2).ToList();
+                    }
+                    ViewBag.SearchData1 = searchDate1;
+                    ViewBag.SearchData2 = searchDate2;
+                }
+
+                if (!String.IsNullOrEmpty(searchKw))
+                {
+                    if (searchColumn == "KW")
+                    {
+                        akJurnal = akJurnal.Where(s => s.JKW.Kod == searchKw);
+                    }
+                    ViewBag.SearchKw = new SelectList(kwSelect, "Value", "Text", searchKw);
+                }
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
+            }
+            // searching with date range condition end
+            else
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
+            }
             return View(akJurnal);
         }
 

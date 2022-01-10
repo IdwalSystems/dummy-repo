@@ -240,11 +240,7 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem1(item.AkBelianId,
                                item.Amaun,
-                               item.AkCartaId,
-                               item.UserId,
-                               item.TarMasuk,
-                               item.UserIdKemaskini,
-                               item.TarKemaskini);
+                               item.AkCartaId);
             }
 
             List<AkBelian2> akBelian2Table = _context.AkBelian2
@@ -262,11 +258,7 @@ namespace MSNK.Controllers
                                item.Kuantiti,
                                item.Unit,
                                item.Harga,
-                               item.Amaun,
-                               item.UserId,
-                               item.TarMasuk,
-                               item.UserIdKemaskini,
-                               item.TarKemaskini);
+                               item.Amaun);
             }                  
         }
 
@@ -410,11 +402,7 @@ namespace MSNK.Controllers
 
                 _cart.AddItem1(item.AkPOId,
                                item.Amaun,
-                               item.AkCartaId,
-                               item.UserId,
-                               item.TarMasuk,
-                               item.UserIdKemaskini,
-                               item.TarKemaskini);
+                               item.AkCartaId);
             }
 
             List<AkPO2> akPO2Table = _context.AkPO2
@@ -438,11 +426,7 @@ namespace MSNK.Controllers
                                item.Kuantiti,
                                item.Unit,
                                item.Harga,
-                               item.Amaun,
-                               item.UserId,
-                               item.TarMasuk,
-                               item.UserIdKemaskini,
-                               item.TarKemaskini);
+                               item.Amaun);
             }
 
             
@@ -481,16 +465,9 @@ namespace MSNK.Controllers
                 {
                     _cart.RemoveItem1(akBelian1.AkCartaId);
 
-                    akBelian1.UserId = user;
-                    akBelian1.TarMasuk = DateTime.Now;
-
                     _cart.AddItem1(akBelian1.AkBelianId,
                                     akBelian1.Amaun,
-                                    akBelian1.AkCartaId,
-                                   akBelian1.UserId,
-                                   akBelian1.TarMasuk,
-                                   akBelian1.UserIdKemaskini,
-                                   akBelian1.TarKemaskini);
+                                    akBelian1.AkCartaId);
                 }
 
                 return Json(new { result = "OK" });
@@ -558,9 +535,6 @@ namespace MSNK.Controllers
                 {
                     _cart.RemoveItem2(akBelian2.Indek);
 
-                    akBelian2.UserId = user;
-                    akBelian2.TarMasuk = DateTime.Now;
-
                     _cart.AddItem2(akBelian2.AkBelianId,
                                    akBelian2.Indek,
                                    akBelian2.Baris,
@@ -570,11 +544,7 @@ namespace MSNK.Controllers
                                    akBelian2.Kuantiti,
                                    akBelian2.Unit,
                                    akBelian2.Harga,
-                                   akBelian2.Amaun,
-                                   akBelian2.UserId,
-                                   akBelian2.TarMasuk,
-                                   akBelian2.UserIdKemaskini,
-                                   akBelian2.TarKemaskini);
+                                   akBelian2.Amaun);
                 }
 
                 return Json(new { result = "OK" });
@@ -748,8 +718,6 @@ namespace MSNK.Controllers
                     var user = await _userManager.GetUserAsync(User);
                     var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akBelian1.AkCartaId);
                     akBelian1.AkCarta = akCarta;
-                    akBelian1.UserId = user.UserName;
-                    akBelian1.TarMasuk = DateTime.Now;
 
                     await _akBelian1Repo.Insert(akBelian1);
 
@@ -787,9 +755,6 @@ namespace MSNK.Controllers
                 if (akBelian2 != null || akBelian2.Amaun != 0)
                 {
                     var user = await _userManager.GetUserAsync(User);
-
-                    akBelian2.UserId = user.UserName;
-                    akBelian2.TarMasuk = DateTime.Now;
 
                     await _akBelian2Repo.Insert(akBelian2);
 
@@ -925,8 +890,6 @@ namespace MSNK.Controllers
                 var user = await _userManager.GetUserAsync(User);
 
                 akB1.Amaun = akBelian1.Amaun;
-                akB1.UserIdKemaskini = user.UserName;
-                akB1.TarKemaskini = DateTime.Now;
                 _context.AkBelian1.Update(akB1);
 
                 // update total akBelian with date updated and userUpdated
@@ -1022,8 +985,6 @@ namespace MSNK.Controllers
                 akB2.Unit = akBelian2.Unit;
                 akB2.Harga = akBelian2.Harga;
                 akB2.Amaun = akBelian2.Amaun;
-                akB2.UserIdKemaskini = user.UserName;
-                akB2.TarKemaskini = DateTime.Now;
                 _context.Update(akB2);
 
                 var akBelian = await _akBelianRepo.GetById(akBelian2.AkBelianId);
@@ -1217,16 +1178,9 @@ namespace MSNK.Controllers
                 {
                     var user = await _userManager.GetUserAsync(User);
 
-                    akBelian1.UserId = user.UserName;
-                    akBelian1.TarMasuk = DateTime.Now;
-
                     _cart.AddItem1(akBelian1.AkBelianId,
                                     akBelian1.Amaun,
-                                    akBelian1.AkCartaId,
-                                   akBelian1.UserId,
-                                   akBelian1.TarMasuk,
-                                   akBelian1.UserIdKemaskini,
-                                   akBelian1.TarKemaskini);
+                                    akBelian1.AkCartaId);
 
                 }
 
@@ -1266,9 +1220,6 @@ namespace MSNK.Controllers
                 {
                     var user = await _userManager.GetUserAsync(User);
 
-                    akBelian2.UserId = user.UserName;
-                    akBelian2.TarMasuk = DateTime.Now;
-
                     _cart.AddItem2(akBelian2.AkBelianId,
                                    akBelian2.Indek,
                                    akBelian2.Baris,
@@ -1278,11 +1229,7 @@ namespace MSNK.Controllers
                                    akBelian2.Kuantiti,
                                    akBelian2.Unit,
                                    akBelian2.Harga,
-                                   akBelian2.Amaun,
-                                   akBelian2.UserId,
-                                   akBelian2.TarMasuk,
-                                   akBelian2.UserIdKemaskini,
-                                   akBelian2.TarKemaskini);
+                                   akBelian2.Amaun);
                 }
 
                 return Json(new { result = "OK" });

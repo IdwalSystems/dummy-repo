@@ -32,7 +32,7 @@
                     <div class="form-row">
                         <div class="col-md">
                             <div class="input-group mb-2 input-group-sm ">
-                                <select class="custom-select" name="searchKW" asp-items="@ViewBag.Kw" required></select>
+                                <select class="custom-select" name="searchKW" asp-items="@ViewBag.Kw" required id="ddlKW"></select>
                                 <label class="invalid-feedback">Kumpulan Wang Diperlukan.</label>
                             </div>
                             <div class="input-group mb-2 input-group-sm ">
@@ -45,14 +45,14 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">Daripada</span>
                                 </div>
-                                <input class="form-control" type="date" name="searchFrom" value="@ViewData["searchFrom"]" required />
+                                <input class="form-control" type="date" name="searchFrom" value="@ViewData["searchFrom"]" required id="tarDari" />
                                 <label class="invalid-feedback">Tarikh Diperlukan.</label>
                             </div>
                             <div class="input-group mb- input-group-sm ">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">Sehingga</span>
                                 </div>
-                                <input class="form-control" type="date" name="searchUntil" value="@ViewData["searchUntil"]" required />
+                                <input class="form-control" type="date" name="searchUntil" value="@ViewData["searchUntil"]" required id="tarHingga" />
                                 <label class="invalid-feedback">Tarikh Diperlukan.</label>
                             </div>
                         </div>

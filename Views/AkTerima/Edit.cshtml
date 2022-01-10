@@ -169,7 +169,6 @@
                                         @foreach (var item in ViewBag.AkTerima1)
                                         {
                                             <tr id="@item.Id">
-                                                @*<td id="akTerima1Id" hidden>@item.Id</td>*@
                                                 <td id="akCartaId" hidden>@item.AkCartaId</td>
                                                 <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
                                                 <td id="td1Amaun" class="text-right">@item.Amaun</td>
@@ -190,7 +189,6 @@
                                     <tfoot>
                                         <tr>
                                             <td id="akCartaId" hidden></td>
-                                            <td hidden><input id="txtAkTerima1" value="@Model.Id" /></td>
                                             <td style="width:40%">
                                                 <select class="form-control form-control-sm select2" id="txtKodAkaun">
                                                     <option value="" disabled selected>-- Pilih Kod Akaun --</option>
@@ -244,7 +242,6 @@
                                     <tr>
                                         @*<td id="@item.Id"hidden>@item.AkTerimaId</td>*@
                                         <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
-                                        <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
                                         <td>@item.JCaraBayar.Perihal</td>
                                         <td class="text-right amaunUrusniaga">@item.Amaun</td>
                                         <td>@item.NoCek</td>
@@ -293,7 +290,6 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
                                         <td id="jCaraBayarId" hidden></td>
                                         <td>
                                             <select class="form-control form-control-sm" id="ddlCaraBayar">
@@ -331,7 +327,7 @@
                     <div class="card-footer">
                         <div class="form-group">
                             <label class="control-label">Jumlah Urusniaga</label>
-                            <input class="form-control form-control-sm" id="jumlahUrusniaga"  name="JumlahUrusniaga" readonly />
+                            <input class="form-control form-control-sm" id="jumlahUrusniaga"  name="JumlahUrusniaga" value="0.00" readonly />
                         </div>
                     </div>
 
@@ -395,7 +391,7 @@
             </div>
             @*hidden type input end*@
             <div class="form-group">
-                <input type="submit" value="Simpan" class="btn btn-primary" />
+                <input type="submit" value="Simpan" id="btnSave" class="btn btn-primary" />
             </div>
         </form>
     </div>

@@ -131,6 +131,7 @@
                             //Clear the TextBoxes.
                             txtKodAkaun.val("").trigger('change');
                             txtAmaunObjek.val("");
+                            checkJumlah();
                         }
                     });
 
@@ -269,6 +270,7 @@
                             txtTempatCek.val("");
                             txtNoSlip.val("");
                             txtTarSlip.val("");
+                            checkJumlah();
                         }
                     });
                     $("#ddlCaraBayar option[value=" + ddlCaraBayar.val() + "]").prop('disabled', true);
@@ -307,6 +309,7 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
+                        checkJumlah();
                     }
                 });
             }
@@ -323,6 +326,7 @@
         var name = $("TD", row).eq(0).html();
         var amaun = $("TD", row).eq(2).html();
         var txtJumlah = $("#jumlahUrusniaga");
+        alert(amaun);
 
         if (confirm("Hapus : " + name + " ?")) {
             //Get the reference of the Table.
@@ -433,6 +437,7 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }
