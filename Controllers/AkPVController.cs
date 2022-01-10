@@ -181,7 +181,7 @@ namespace MSNK.Controllers
             List<AkBank> akBankList = _context.AkBank.Include(b => b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
 
-            List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.ToList();
+            List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.Where(b=> b.Kod == "C" || b.Kod == "E").ToList();
             ViewBag.JCaraBayar = jCaraBayarList;
 
         }
@@ -1304,6 +1304,9 @@ namespace MSNK.Controllers
                 data.KodPenerima = akPV.AkPembekal.KodSykt;
                 namaBankPenerima = akPV.AkPembekal.JBank.Nama;
                 noAkaunBank = akPV.AkPembekal.AkaunBank;
+                //Note:
+                //JenisBaucer = 1 'dengan tanggungan'
+                //JenisBaucer = 2 'tanpa tanggungan'
                 data.JenisBaucer = "1";
                 foreach (AkPV2 item in data.AkPV2)
                 {

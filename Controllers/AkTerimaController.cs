@@ -611,6 +611,30 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+                    AkTerima akTerimaAsal = await _akTerimaRepo.GetById(id);
+
+                    foreach (AkTerima1 item in akTerimaAsal.AkTerima1)
+                    {
+                        var model = _context.AkTerima1.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+
+                    foreach (AkTerima2 item in akTerimaAsal.AkTerima2)
+                    {
+                        var model = _context.AkTerima2.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+                    _context.Entry(akTerimaAsal).State = EntityState.Detached;
+
+                    akTerima.AkTerima1 = _cart.Lines1.ToList();
+                    akTerima.AkTerima2 = _cart.Lines2.ToList();
+
                     akTerima.UserIdKemaskini = user.UserName;
                     akTerima.TarKemaskini = DateTime.Now;
 
@@ -718,6 +742,40 @@ namespace MSNK.Controllers
 
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: AkTerima/Cancel/5
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var akTerima = await _context.AkTerima.FindAsync(id);
+            // check if already posting redirect back
+            if (akTerima.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            akTerima.FlBatal = 1;
+
+            _context.AkTerima.Update(akTerima);
+
+            //insert applog
+            var user = await _userManager.GetUserAsync(User);
+
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "B";
+            appLog.LgOperation = "Batal";
+            appLog.LgNote = modul + " Penerimaan - Batal";
+            appLog.NoRujukan = akTerima.NoRujukan;
+            appLog.Jumlah = akTerima.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dibatalkan..!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -1097,9 +1155,6 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
                 }
-
-                
-                
 
                 return Json(new { result = "OK" });
             }

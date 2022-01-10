@@ -288,7 +288,8 @@
     }
     else
     {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a> 
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
+        <a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Batal</a>
     }
     <a asp-action="Index">Kembali ke Indeks</a>
 </div>
