@@ -160,8 +160,8 @@
                                 <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
-                                            <th style="width:40%">Kod</th>
-                                            <th style="width:50%">Amaun</th>
+                                            <th style="width:70%">Kod</th>
+                                            <th style="width:30%" >Amaun</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -172,7 +172,7 @@
                                                 @*<td id="akTerima1Id" hidden>@item.Id</td>*@
                                                 <td id="akCartaId" hidden>@item.AkCartaId</td>
                                                 <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                                <td id="td1Amaun">@item.Amaun</td>
+                                                <td id="td1Amaun" class="text-right">@item.Amaun</td>
                                                 <td>
                                                     <button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
                                                         <i class="fa fa-edit"></i>
@@ -227,14 +227,14 @@
                             <table id="tblUrusniaga" class="table table-sm " cellpadding="0" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>CaraBayar</th>
-                                        <th>Amaun</th>
-                                        <th>No Cek</th>
-                                        <th>Jenis Cek</th>
-                                        <th>Kod Bank Cek</th>
-                                        <th>Tempat Cek</th>
-                                        <th>No Slip</th>
-                                        <th>Tarikh Slip</th>
+                                        <th >CaraBayar</th>
+                                        <th >Amaun</th>
+                                        <th >No Cek</th>
+                                        <th >Jenis Cek</th>
+                                        <th >Kod Bank Cek</th>
+                                        <th >Tempat Cek</th>
+                                        <th >No Slip</th>
+                                        <th >Tarikh Slip</th>
                                         <th class="action-button"></th>
                                     </tr>
                                 </thead>
@@ -245,29 +245,29 @@
                                         @*<td id="@item.Id"hidden>@item.AkTerimaId</td>*@
                                         <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
                                         <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
-                                        <td>@item.JCaraBayar.Kod</td>
+                                        <td>@item.JCaraBayar.Perihal</td>
                                         <td class="text-right amaunUrusniaga">@item.Amaun</td>
                                         <td>@item.NoCek</td>
                                         @switch (@item.JenisCek)
                                         {
                                             case "1":
-                                                <td>Cek Cawangan Ini</td>
+                                                <td>CEK CAWANGAN INI</td>
                                                 break;
                                             case "2":
-                                                <td>Cek Tempatan</td>
+                                                <td>CEK TEMPATAN</td>
                                                 break;
                                             case "3":
-                                                <td>Cek Luar</td>
+                                                <td>CEK LUAR</td>
                                                 break;
                                             case "4":
-                                                <td>Cek Antarabangsa</td>
+                                                <td>CEK ANTARABANGSA</td>
                                                 break;
                                             default:
                                                 <td></td>
                                                 break;
                                         }
-                                        <td>@item.KodBankCek</td>
-                                        <td>@item.TempatCek</td>
+                                        <td class="text-uppercase">@item.KodBankCek</td>
+                                        <td class="text-uppercase">@item.TempatCek</td>
                                         <td>@item.NoSlip</td>
                                         @if (@item.TarSlip == null)
                                         {
@@ -296,7 +296,7 @@
                                         <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
                                         <td id="jCaraBayarId" hidden></td>
                                         <td>
-                                            <select class="form-control form-control-sm" id="txtCaraBayar">
+                                            <select class="form-control form-control-sm" id="ddlCaraBayar">
                                                 <option value="" disabled selected>-- Pilih Cara Bayar --</option>
                                                 @foreach (var s in ViewBag.JCaraBayar)
                                                 {
@@ -304,7 +304,7 @@
                                                 }
                                             </select>
                                         </td>
-                                        <td><input class="form-control form-control-sm" type="number" id="txtAmaunUrusniaga" step="0.01"></td>
+                                        <td><input class="form-control form-control-sm amaunUrusniaga" type="number" id="txtAmaunUrusniaga" step="0.01"></td>
                                         <td><input class="form-control form-control-sm" type="text" id="txtNoCek" maxlength="10"></td>
                                         <td>
                                             <select class="form-control form-control-sm" id="txtJenisCek">
@@ -455,7 +455,7 @@
             </div>
             <div class="modal-body">
                 <form>
-                    <input id="moId2" hidden />
+                    <input id="moId2"  />
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
@@ -464,7 +464,7 @@
                                     <option value="" disabled selected>-- Pilih Cara Bayar --</option>
                                     @foreach (var s in ViewBag.JCaraBayar)
                                     {
-                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                        <option value="@s.Id">@s.Perihal </option>
                                     }
                                 </select>
                             </div>
@@ -489,17 +489,17 @@
                                 <label class="col-form-label">Jenis Cek</label>
                                 <select class="form-control form-control-sm" id="moJenisCek">
                                     <option value="" disabled selected>-- Pilih Jenis Cek --</option>
-                                    <option value="1">Cek Cawangan Ini</option>
-                                    <option value="2">Cek Tempatan</option>
-                                    <option value="3">Cek Luar</option>
-                                    <option value="4">Cek Antarabangsa</option>
+                                    <option value="1">CEK CAWANGAN INI</option>
+                                    <option value="2">CEK TEMPATAN</option>
+                                    <option value="3">CEK LUAR</option>
+                                    <option value="4">CEK ANTARABANGSA</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group">
                                 <label class="col-form-label">Kod Bank Cek</label>
-                                <input type="text" class="form-control form-control-sm" id="moKodBankCek">
+                                <input type="text" class="form-control form-control-sm text-uppercase" id="moKodBankCek">
                             </div>
                         </div>
 
@@ -508,7 +508,7 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label class="col-form-label">Tempat Cek</label>
-                                <input type="text" class="form-control form-control-sm" id="moTempatCek">
+                                <input type="text" class="form-control form-control-sm text-uppercase" id="moTempatCek">
                             </div>
                         </div>
                         <div class="col-4">
