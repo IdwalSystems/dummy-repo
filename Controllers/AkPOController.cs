@@ -39,6 +39,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JNegeri, int> _negeriRepo;
         private readonly IRepository<JKW, int> _kwRepo;
         private readonly IRepository<AkAkaun, int> _akAkaunRepo;
+        private readonly IRepository<AbBukuVot, int> _abBukuVotRepo;
         private CartPO _cart;
 
         public AkPOController(ApplicationDbContext context,
@@ -54,6 +55,7 @@ namespace MSNK.Controllers
             IRepository<JNegeri, int> negeriRepository,
             IRepository<JKW, int> kwRepository,
             IRepository<AkAkaun, int> akAkaunRepository,
+            IRepository<AbBukuVot, int> abBukuVotRepository,
             CartPO cart
             )
         {
@@ -70,6 +72,7 @@ namespace MSNK.Controllers
             _akBankRepo = akBankRepository;
             _jbankRepo = JBankRepository;
             _akAkaunRepo = akAkaunRepository;
+            _abBukuVotRepo = abBukuVotRepository;
             _cart = cart;
         }
 
@@ -992,7 +995,7 @@ namespace MSNK.Controllers
 
         }
 
-        // Fungsi Posting
+        // posting function
         public async Task<IActionResult> Posting(int? id)
         {
             if (id == null)
@@ -1001,12 +1004,18 @@ namespace MSNK.Controllers
             }
             else
             {
-                AkPO akPO = await _context.AkPO.Include(x => x.AkPO1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == id);
+                var user = await _userManager.GetUserAsync(User);
 
-                List<AkPO1> akT1 = akPO.AkPO1.ToList();
+                AkPO akPO = await _context.AkPO
+                    .Include(x => x.AkPembekal)
+                    .Include(x => x.AkPO1).ThenInclude(x => x.AkCarta)
+                    .Include(x => x.AkPO2)
+                    .FirstOrDefaultAsync(x => x.Id == id);
 
-                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akPO.NoPO).FirstOrDefaultAsync();
-                if (akAkaun != null)
+                List<AkPO1> akPO1 = akPO.AkPO1.ToList();
+
+                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan == akPO.NoPO).FirstOrDefaultAsync();
+                if (abBukuVot != null)
                 {
 
                     //duplicate id error
@@ -1016,20 +1025,25 @@ namespace MSNK.Controllers
                 else
                 {
                     //posting operation start here
-                    //insert into akAkaun
 
-                    foreach (AkPO1 item in akT1)
+                    foreach (AkPO1 item in akPO1)
                     {
-                        AkAkaun akADebit = new AkAkaun()
+                        //insert into AbBukuVot
+                        AbBukuVot abBukuVotPosting = new AbBukuVot()
                         {
-                            NoRujukan = akPO.NoPO,
-                            JKWId = -akPO.JKWId,
-                            //AkCartaId1 = akPO.AkBank.AkCartaId,
-                            AkCartaId2 = item.AkCartaId,
+                            Tahun = akPO.Tahun,
+                            JKWId = akPO.JKWId,
                             Tarikh = akPO.Tarikh,
-                            Debit = item.Amaun
+                            Kod = akPO.AkPembekal.KodSykt,
+                            Penerima = akPO.AkPembekal.NamaSykt,
+                            VotId = item.AkCartaId,
+                            Rujukan = "PO/"+akPO.NoPO,
+                            Tanggungan = item.Amaun,
+                            UserId = user.UserName
                         };
-                        await _akAkaunRepo.Insert(akADebit);
+
+                        await _abBukuVotRepo.Insert(abBukuVotPosting);
+                        // insert into AbBukuVot end
                     }
 
                     //update posting status in akPO
@@ -1037,10 +1051,7 @@ namespace MSNK.Controllers
                     akPO.TarikhPosting = DateTime.Now;
                     await _akPORepo.Update(akPO);
 
-
                     //insert applog
-                    var user = await _userManager.GetUserAsync(User);
-
                     AppLog appLog = new AppLog();
 
                     appLog.UserId = user.UserName;
@@ -1066,6 +1077,7 @@ namespace MSNK.Controllers
 
         }
         // posting function end
+
         // unposting function
         public async Task<IActionResult> UnPosting(int? id)
         {
@@ -1075,10 +1087,14 @@ namespace MSNK.Controllers
             }
             else
             {
-                AkPO akPO = await _context.AkPO.Include(x => x.AkPO1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == id);
+                AkPO akPO = await _context.AkPO
+                    .Include(x => x.AkPembekal)
+                    .Include(x => x.AkPO1).ThenInclude(x => x.AkCarta)
+                    .Include(x => x.AkPO2)
+                    .FirstOrDefaultAsync(x => x.Id == id);
 
-                List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akPO.NoPO).ToList();
-                if (akAkaun == null)
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan == akPO.NoPO).ToList();
+                if (abBukuVot == null)
                 {
 
                     //duplicate id error
@@ -1089,15 +1105,21 @@ namespace MSNK.Controllers
                 {
                     //unposting operation start here
                     //delete data from akAkaun
-                    foreach (AkAkaun item in akAkaun)
+                    foreach (AbBukuVot item in abBukuVot)
                     {
-                        await _akAkaunRepo.Delete(item.Id);
+                        await _abBukuVotRepo.Delete(item.Id);
                     }
+
+                    //delete data from abBukuVot
+                    //foreach (AbBukuVot item in abBukuVot)
+                    //{
+                    //    await _abBukuVotRepo.Delete(item.Id);
+                    //}
+                    //delete data from abBukuVot
 
                     //update posting status in akPO
                     akPO.FlPosting = 0;
                     akPO.TarikhPosting = null;
-                    //akPO.TarikhPosting = null;
                     await _akPORepo.Update(akPO);
 
                     //insert applog
@@ -1128,5 +1150,67 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
+        // printing resit rasmi by akPO.Id
+        public async Task<IActionResult> PrintPdf(int id)
+        {
+            AkPO akPO = await _context.AkPO
+                .Include(x => x.JKW)
+                .Include(x => x.AkPembekal)
+                .Include(x => x.AkPO1).ThenInclude(x => x.AkCarta)
+                .Include(x => x.AkPO2)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            JNegeri negeri = await _context.JNegeri.FirstOrDefaultAsync(x => x.Kod == "02");
+
+            var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPO.Jumlah)).ToUpper();
+
+            var user = await _userManager.GetUserAsync(User);
+
+            POPrintModel data = new POPrintModel();
+
+            CompanyDetails company = new CompanyDetails();
+            data.CompanyDetail = company;
+            data.AkPO = akPO;
+            //data.AkPO.JNegeri = negeri;
+            data.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            data.Username = user.UserName;
+
+            //update cetak -> 1
+            akPO.FlCetak = 1;
+            await _akPORepo.Update(akPO);
+
+            //insert applog
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "P";
+            appLog.LgOperation = "Cetak";
+            appLog.LgNote = modul + " Pesanan Tempatan - Cetak";
+            appLog.NoRujukan = akPO.NoPO;
+            appLog.Jumlah = akPO.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+
+            var actionPDF = new ViewAsPdf("htmlpage")
+            {
+                FileName = "abc" + ".pdf",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+
+            return new ViewAsPdf("POPrintPdf", data)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                //CustomSwitches = "--footer-center \"  Tarikh: " +
+                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+        // printing resit rasmi end
+
     }
 }
