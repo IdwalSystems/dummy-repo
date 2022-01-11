@@ -15,6 +15,9 @@ namespace MSNK.Models.Modules
         public decimal Amaun { get; set; }
         //field end
 
+        //flag
+        public bool HavePO { get; set; }
+        //flage end
 
         //Relationship
         [DisplayName("No Inbois Pembekal")]

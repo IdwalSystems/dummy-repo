@@ -402,6 +402,37 @@ namespace MSNK.Controllers
                     _cart.AddItem2(akPV2.AkPVId,
                                    akPV2.AkBelianId,
                                    akPV2.Amaun);
+
+                    ////get akBelian1
+                    //List<AkBelian1> akBelian1Table = _context.AkBelian1
+                    //.Include(b => b.AkCarta)
+                    //.Where(b => b.AkBelianId == akPV2.AkBelianId)
+                    //.OrderBy(b => b.Id)
+                    //.ToList();
+
+                    ////initialize list of AkPV1
+                    //List<AkPV1> akPV1Table = new List<AkPV1>();
+
+                    ////populate data from AkBelian1 into AkPV1
+                    //foreach (AkBelian1 item in akBelian1Table)
+                    //{
+                    //    akPV1Table.Add(
+                    //        new AkPV1
+                    //        {
+                    //            AkCartaId = item.AkCartaId,
+                    //            Amaun = item.Amaun
+                    //        });
+                    //}
+
+                    ////populate cart AkPV1
+                    //foreach (AkPV1 akPV1 in akPV1Table)
+                    //{
+                    //    _cart.AddItem1(akPV1.AkPVId,
+                    //                   akPV1.Amaun,
+                    //                   akPV1.AkCartaId);
+                    //}
+
+                    //ViewBag.akPV1 = akPV1Table;
                 }
 
                 return Json(new { result = "OK" });
@@ -644,6 +675,7 @@ namespace MSNK.Controllers
             {
                 var result = await _akBelianRepo.GetById(data);
 
+
                 return Json(new { result = "OK", record = result });
             }
             catch (Exception ex)
@@ -651,6 +683,7 @@ namespace MSNK.Controllers
                 return Json(new { result = "Error", message = ex.Message });
             }
         }
+
         //on change inbois controller end
 
         // on change kod Pekerja controller
@@ -730,6 +763,19 @@ namespace MSNK.Controllers
                 akPV.Telefon = pembekal.Telefon1;
                 akPV.Emel = pembekal.Emel;
                 akPV.NoAkaunBank = pembekal.AkaunBank;
+                akPV.FlJenisBaucer = 1;
+
+                //check if PV dengan tanggungan or tanpa tanggungan
+                List<AkPV2> akPV2CartList = _cart.Lines2.ToList();
+
+                foreach (AkPV2 item in akPV2CartList)
+                {
+                    if (item.HavePO == true)
+                    {
+                        akPV.denganTanggungan = true;
+                    }
+                }
+                //check if PV dengan tanggungan or tanpa tanggungan end
             }
 
             var pekerja = new SuPekerja();
@@ -743,6 +789,7 @@ namespace MSNK.Controllers
                 akPV.Telefon = pekerja.TelefonBimbit;
                 akPV.Emel = pekerja.Emel;
                 akPV.NoAkaunBank = pekerja.NoAkaunBank;
+                akPV.FlJenisBaucer = 2;
             }
 
             // get latest no rujukan running number  
@@ -806,6 +853,8 @@ namespace MSNK.Controllers
                     m.FlPosting = 0;
                     m.FlBatal = 0;
                     m.FlCetak = 0;
+                    m.FlJenisBaucer = akPV.FlJenisBaucer;
+                    m.denganTanggungan = akPV.denganTanggungan;
 
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
@@ -1270,8 +1319,31 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akPV = await _context.AkPV.FindAsync(id);
+            // check if already posting redirect back
+            if (akPV.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
             _context.AkPV.Remove(akPV);
+
+            //insert applog
+            var user = await _userManager.GetUserAsync(User);
+
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "D";
+            appLog.LgOperation = "Hapus";
+            appLog.LgNote = modul + " Baucer Pembayaran - Hapus";
+            appLog.NoRujukan = akPV.NoPV;
+            appLog.Jumlah = akPV.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 
