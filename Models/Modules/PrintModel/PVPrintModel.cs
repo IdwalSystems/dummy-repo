@@ -10,7 +10,6 @@ namespace MSNK.Models.Modules.PrintModel
     {
         public string JumlahDalamPerkataan { get; set; }
         public string Username { get; set; }
-        public string JenisBaucer { get; set; }
         public string KodPenerima { get; set; }
         public string Penerima { get; set; }
         public string NamaBankPenerima { get; set; }

@@ -137,8 +137,7 @@ namespace MSNK.Controllers
                     FlPosting = item.FlPosting,
                     FlCetak = item.FlCetak,
                     JumlahUrusniaga = jumlahUrusniaga
-                }
-                );
+                });
             }
             return View(viewModel);
         }
@@ -606,82 +605,87 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (akTerima.Jumlah == JumlahUrusniaga)
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    var user = await _userManager.GetUserAsync(User);
-                    AkTerima akTerimaAsal = await _akTerimaRepo.GetById(id);
-
-                    foreach (AkTerima1 item in akTerimaAsal.AkTerima1)
+                    try
                     {
-                        var model = _context.AkTerima1.FirstOrDefault(b => b.Id == item.Id);
-                        if (model != null)
+                        var user = await _userManager.GetUserAsync(User);
+                        AkTerima akTerimaAsal = await _akTerimaRepo.GetById(id);
+
+                        foreach (AkTerima1 item in akTerimaAsal.AkTerima1)
                         {
-                            _context.Remove(model);
+                            var model = _context.AkTerima1.FirstOrDefault(b => b.Id == item.Id);
+                            if (model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+
+                        foreach (AkTerima2 item in akTerimaAsal.AkTerima2)
+                        {
+                            var model = _context.AkTerima2.FirstOrDefault(b => b.Id == item.Id);
+                            if (model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+                        _context.Entry(akTerimaAsal).State = EntityState.Detached;
+
+                        akTerima.AkTerima1 = _cart.Lines1.ToList();
+                        akTerima.AkTerima2 = _cart.Lines2.ToList();
+
+                        akTerima.UserIdKemaskini = user.UserName;
+                        akTerima.TarKemaskini = DateTime.Now;
+
+                        _context.Update(akTerima);
+
+                        //insert applog
+                        AppLog appLog = new AppLog();
+
+                        appLog.UserId = user.UserName;
+                        appLog.LgModule = modul + "E";
+                        appLog.LgOperation = "Ubah";
+                        appLog.LgNote = modul + " Penerimaan - Ubah";
+                        appLog.NoRujukan = akTerima.NoRujukan;
+                        appLog.Jumlah = akTerima.Jumlah;
+
+                        await _appLog.Insert(appLog);
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!AkTerimaExists(akTerima.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
                         }
                     }
-
-                    foreach (AkTerima2 item in akTerimaAsal.AkTerima2)
+                    CartEmpty();
+                    // checking for jumlah objek & jumlah perihal
+                    if (akTerima.Jumlah != JumlahUrusniaga)
                     {
-                        var model = _context.AkTerima2.FirstOrDefault(b => b.Id == item.Id);
-                        if (model != null)
-                        {
-                            _context.Remove(model);
-                        }
-                    }
-                    _context.Entry(akTerimaAsal).State = EntityState.Detached;
-
-                    akTerima.AkTerima1 = _cart.Lines1.ToList();
-                    akTerima.AkTerima2 = _cart.Lines2.ToList();
-
-                    akTerima.UserIdKemaskini = user.UserName;
-                    akTerima.TarKemaskini = DateTime.Now;
-
-                    _context.Update(akTerima);
-
-                    //insert applog
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule =  modul + "E";
-                    appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Penerimaan - Ubah";
-                    appLog.NoRujukan = akTerima.NoRujukan;
-                    appLog.Jumlah = akTerima.Jumlah;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AkTerimaExists(akTerima.Id))
-                    {
-                        return NotFound();
+                        TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Urusniaga";
                     }
                     else
                     {
-                        throw;
+                        TempData[SD.Success] = "Data berjaya diubah..!";
                     }
+
+                    return RedirectToAction(nameof(Index));
                 }
-                CartEmpty();
-                // checking for jumlah objek & jumlah perihal
-                if (akTerima.Jumlah != JumlahUrusniaga)
-                {
-                    TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Urusniaga";
-                }
-                else
-                {
-                    TempData[SD.Success] = "Data berjaya diubah..!";
-                }  
-                
-                return RedirectToAction(nameof(Index));
             }
 
+            TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Urusniaga";
             PopulateList();
             PopulateTable(id);
+            //PopulateCart();
             return View(akTerima);
         }
 

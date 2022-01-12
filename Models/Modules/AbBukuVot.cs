@@ -22,6 +22,7 @@ namespace MSNK.Models.Modules
         public decimal Baki { get; set; }
         public decimal Rizab { get; set; }
         public decimal Liabiliti { get; set; }
+        public decimal Belanja { get; set; }
 
         //relationship
         public JKW JKW { get; set; }

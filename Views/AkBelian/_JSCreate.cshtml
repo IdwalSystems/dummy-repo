@@ -59,6 +59,7 @@
                     $("#ddlKodPembekal").val(msg?.record?.akPembekal?.id).change();
                     displayObjekList(msg.record.akPO1);
                     displayPerihalList(msg.record.akPO2);
+                    checkJumlah();
                 },
                 error: function (req, status, error) {
                     alert(error);
@@ -76,7 +77,7 @@
 
             var str = "<tr><td id='akCartaId' hidden>" + item.akCartaId +
                 "</td><td>" + item.akCarta.kod + " - " + item.akCarta.perihal +
-                "</td><td>" + (item.amaun).toFixed(2) +
+                "</td><td class='text-right'>" + (item.amaun).toFixed(2) +
                 "</td><td>" +
                 "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                 "</td><td>" +
@@ -104,8 +105,8 @@
                 "</td><td class='text-uppercase'>" + item.perihal +
                 "</td><td>" + item.kuantiti +
                 "</td><td class='text-uppercase'>" + item.unit +
-                "</td><td>" + (item.harga).toFixed(2) +
-                "</td><td>" + (item.amaun).toFixed(2) +
+                "</td><td class='text-right'>" + (item.harga).toFixed(2) +
+                "</td><td class='text-right'>" + (item.amaun).toFixed(2) +
                 "</td><td>" +
                 "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                 "</td><td>" +
@@ -164,7 +165,8 @@
 
                     //Add amaun cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtAmaunObjek.val());
+                    cell.html(parseFloat(txtAmaunObjek.val()).toFixed(2));
+                    cell.addClass('text-right');
 
                     //Add Edit Button cell.
                     cell = $(row.insertCell(-1));
@@ -191,6 +193,7 @@
                             //Clear the TextBoxes.
                             txtKodAkaun.val("").trigger('change');
                             txtAmaunObjek.val("0.00");
+                            checkJumlah();
                         }
                     });
 
@@ -273,11 +276,13 @@
 
         //Add Harga cell.
         var cell = $(row.insertCell(-1));
-        cell.html(txtHargaUnit.val());
+        cell.html(parseFloat(txtHargaUnit.val()).toFixed(2));
+        cell.addClass('text-right');
 
         //Add Amaun cell.
         var cell = $(row.insertCell(-1));
-        cell.html(txtAmaun.val());
+        cell.html(parseFloat(txtAmaun.val()).toFixed(2));
+        cell.addClass('text-right');
 
         //Add Edit Button cell.
         cell = $(row.insertCell(-1));
@@ -318,6 +323,7 @@
                 txtHargaUnit.val("0.00");
                 txtAmaun.val("0.00");
                 bil++;
+                checkJumlah();
             }
         });
     }
@@ -351,6 +357,7 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
+                        checkJumlah();
                     }
                 });
             }
@@ -387,6 +394,7 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
+                        checkJumlah();
                     }
                 });
             }
@@ -422,13 +430,11 @@
     };
 
     function modalUpdate1() {
-        var id = $("#moId1").val();
         var amaun = $("#moAmaun1").val();
         var akCartaId = $("#moKodAkaun").val();
         var jumlah = $("#jumlahObjek");
 
         var AkBelian1 = {
-            Id: id,
             akCartaId: akCartaId,
             Amaun: amaun
         }
@@ -443,7 +449,6 @@
                 $.ajax({
                     type: "POST",
                     url: "/AkBelian/GetAllItemCartAkBelian1",
-                    data: AkBelian1,
                     dataType: "json",
                     success: function (r) {
 
@@ -455,7 +460,7 @@
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
                                     "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
-                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" +
                                     "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
@@ -467,6 +472,7 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }
@@ -490,7 +496,6 @@
             dataType: "json",
             success: function (r) {
                 //insert data in modal perihal
-                $("#moId2").val(r.record.id);
                 $("#moIndek").val(r.record.indek);
                 $("#moBaris").val(r.record.baris);
                 $("#moBil").val(r.record.bil);
@@ -509,7 +514,6 @@
 
     function modalUpdate2() {
 
-        var id = $("#moId2").val();
         var indek = $("#moIndek").val();
         var baris = $("#moBaris").val();
         var bil = $("#moBil").val();
@@ -522,7 +526,6 @@
         var jumlah = $("#jumlahPerihal");
 
         var AkBelian2 = {
-            Id: id,
             Indek: indek,
             Baris: baris,
             Bil: bil,
@@ -572,6 +575,7 @@
                             }
                         }
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }
@@ -648,5 +652,22 @@
         });
     });
     //validation form end
-    
+
+    // check if jumlahObjek is equal to jumlahUrusniaga
+    function checkJumlah() {
+        var jumlahObjek = $("#jumlahObjek").val();
+        var jumlahPerihal = $("#jumlahPerihal").val();
+
+        if (jumlahObjek == 0.00 && jumlahPerihal == 0.00) {
+            $("#btnSave").show();
+        } else {
+            if (jumlahObjek == jumlahPerihal) {
+                $("#btnSave").show();
+            }
+            else {
+                $("#btnSave").hide();
+            }
+        }
+    }
+    // check end
 </script>

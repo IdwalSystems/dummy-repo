@@ -192,6 +192,8 @@
         var noInbois = $("#txtAkBelian").val();
         
         JsonNoInbois(noInbois);
+        var sum = 0;
+        
     });
 
     function JsonNoInbois(id) {
@@ -214,6 +216,8 @@
                         $("#txtAmaunPO").val(msg.record.akPO.jumlah);
                     }
 
+                    
+
                 },
                 error: function (req, status, error) {
                     alert(error);
@@ -222,8 +226,47 @@
         }
 
     }
+
     //on change no Inbois pembekal end
 
+    //populate tbl objek based on cart
+    function PopulateTblObjekBasedOnCart() {
+        //populate table objek
+        $.ajax({
+            type: "POST",
+            url: "/AkPV/GetAllItemCartAkPV1",
+            dataType: "json",
+            success: function (r) {
+
+                //refresh updated table objek
+                $("table tbody#tbodyObjek").empty();
+                var sum = 0;
+                if (r.record.length > 0) {
+                    for (var i = 0; i < r.record.length; i++) {
+                        var item1 = r.record[i];
+                        var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
+                            "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
+                            "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                            "</td><td>" +
+                            "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                            "</td><td>" +
+                            "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                            "</td><tr>";
+                        $("table tbody#tbodyObjek").append(str);
+                        sum += item1.amaun;
+                    }
+                }
+
+                jumlah.val(sum.toFixed(2));
+                if ($('#ddlKodPembekal').val() != 0) {
+                    checkJumlah();
+                } else {
+
+                }
+            }
+        });
+    }
+    //populate tbl objek based on cart end
     //validation form
     (function () {
         'use strict';
@@ -315,7 +358,8 @@
 
                     //Add amaun cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtAmaunObjek.val());
+                    cell.html(parseFloat(txtAmaunObjek.val()).toFixed(2));
+                    cell.addClass('text-right');
 
                     //Add Edit Button cell.
                     cell = $(row.insertCell(-1));
@@ -344,8 +388,6 @@
                             txtAmaunObjek.val("0.00");
                             if ($('#ddlKodPembekal').val() != 0) {
                                 checkJumlah();
-                            } else {
-
                             }
                             
                         }
@@ -465,7 +507,7 @@
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
                                     "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
-                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" +
                                     "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
@@ -547,7 +589,8 @@
 
                     //Add amaun inbois cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtAmaunInbois.val());
+                    cell.html(parseFloat(txtAmaunInbois.val()).toFixed(2));
+                    cell.addClass('text-right');
 
                     //Add NoPO cell.
                     var cell = $(row.insertCell(-1));
@@ -564,7 +607,8 @@
 
                     //Add amaun PO cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtAmaunPO.val());
+                    cell.html(parseFloat(txtAmaunPO.val()).toFixed(2));
+                    cell.addClass('text-right');
 
                     //Add Edit Button cell.
                     cell = $(row.insertCell(-1));
@@ -706,10 +750,10 @@
                                 var str = "<tr><td id='akBelianId' hidden>" + item1.akBelianId +
                                     "</td><td>" + item1.akBelian.noInbois +
                                     "</td><td>" + showDate(item1.akBelian.tarikh) +
-                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" + item1.akBelian.akPO.noPO +
                                     "</td><td>" + showDate(item1.akBelian.akPO.tarikh) +
-                                    "</td><td>" + (item1.akBelian.akPO.jumlah).toFixed(2) +
+                                    "</td><td class='text-right'>" + (item1.akBelian.akPO.jumlah).toFixed(2) +
                                     "</td><td>" +
                                     "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalInbois' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +

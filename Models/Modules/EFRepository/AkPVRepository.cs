@@ -28,6 +28,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkPV
                 .Include(b => b.JKW)
                 .Include(b => b.AkPembekal)
+                .Include(b => b.SuPekerja)
                 .Include(b => b.AkBank)
                 .Include(b => b.JCaraBayar)
                 .Include(b => b.AkPV1)
@@ -41,6 +42,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkPV
                 .Include(b => b.JKW)
                 .Include(b => b.AkPembekal)
+                .Include(b => b.SuPekerja)
                 .Include(b => b.AkBank).ThenInclude(b => b.JBank)
                 .Include(b => b.JCaraBayar)
                 .Include(b => b.AkPV1)

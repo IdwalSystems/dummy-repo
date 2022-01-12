@@ -81,56 +81,60 @@
         </tbody>
     </table>
 </div>
+@*invois pembekal*@
+
 <div class="table-responsive-sm mb-0">
     <table class="table table-bordered table-sm topic">
-        <thead class="text-center">
-            <tr>
-                <th colspan="3">PESANAN TEMPATAN</th>
-                <th colspan="3">INVOIS / BIL PEMBEKAL</th>
-            </tr>
-        </thead>
+
         <tbody>
-            <tr>
-                <td class="text-center" width="15%">TARIKH</td>
-                <td class="text-center">RUJUKAN</td>
-                <td class="text-center">AMAUN RM</td>
-                <td class="text-center">TARIKH</td>
-                <td class="text-center">RUJUKAN</td>
-                <td class="text-center">AMAUN RM</td>
-            </tr>
-            @foreach (var item in Model.AkPV2)
+            @if (Model.FlJenisBaucer == 1)
             {
-
                 <tr>
-                    @if (item.AkBelian.AkPO != null)
-                    {
-                        <td class="text-center">@Convert.ToDateTime(item.AkBelian.AkPO.Tarikh).ToString("dd/MM/yyyy")</td>
-                        <td>@item.AkBelian.AkPO.NoPO</td>
-                        <td class="text-right">@Convert.ToDecimal(item.AkBelian.AkPO.Jumlah).ToString("#,##0.00")</td>
-                    }
-                    else
-                    {
-                        <td class="text-center">-</td>
-                        <td class="text-center">-</td>
-                        <td class="text-right">0.00</td>
-                    }
+                    <td colspan="3" class="text-center"><strong>PESANAN TEMPATAN</strong></td>
+                    <td colspan="3" class="text-center"><strong>INVOIS / BIL PEMBEKAL</strong></td>
+                </tr>
+                <tr>
+                    <td class="text-center" width="15%">TARIKH</td>
+                    <td class="text-center">RUJUKAN</td>
+                    <td class="text-center">AMAUN RM</td>
+                    <td class="text-center">TARIKH</td>
+                    <td class="text-center">RUJUKAN</td>
+                    <td class="text-center">AMAUN RM</td>
+                </tr>
+                @foreach (var item in Model.AkPV2)
+                {
 
-                    <td class="text-center">@Convert.ToDateTime(item.AkBelian.Tarikh).ToString("dd/MM/yyyy")</td>
-                    <td>@item.AkBelian.NoInbois</td>
-                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                    <tr>
+                        @if (item.AkBelian.AkPO != null)
+                        {
+                            <td class="text-center">@Convert.ToDateTime(item.AkBelian.AkPO.Tarikh).ToString("dd/MM/yyyy")</td>
+                            <td>@item.AkBelian.AkPO.NoPO</td>
+                            <td class="text-right">@Convert.ToDecimal(item.AkBelian.AkPO.Jumlah).ToString("#,##0.00")</td>
+                        }
+                        else
+                        {
+                            <td class="text-center">-</td>
+                            <td class="text-center">-</td>
+                            <td class="text-right">0.00</td>
+                        }
+
+                        <td class="text-center">@Convert.ToDateTime(item.AkBelian.Tarikh).ToString("dd/MM/yyyy")</td>
+                        <td>@item.AkBelian.NoInbois.Substring(3)</td>
+                        <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                    </tr>
+                }
+                <tr class="font-weight-bold">
+                    <td class="text-right" colspan="2">Jumlah RM</td>
+                    <td class="text-right">@Convert.ToDecimal(Model.jumlahPO).ToString("#,##0.00")</td>
+                    <td class="text-right" colspan="2">Jumlah RM</td>
+                    <td class="text-right">@Convert.ToDecimal(Model.jumlahInbois).ToString("#,##0.00")</td>
                 </tr>
             }
-            <tr class="font-weight-bold">
-                <td class="text-right" colspan="2">Jumlah RM</td>
-                <td class="text-right">@Convert.ToDecimal(Model.jumlahPO).ToString("#,##0.00")</td>
-                <td class="text-right" colspan="2">Jumlah RM</td>
-                <td class="text-right">@Convert.ToDecimal(Model.jumlahInbois).ToString("#,##0.00")</td>
-            </tr>
             <tr class="font-weight-bold">
                 <td class="text-center" colspan="6">PERBELANJAAN TELAH DIMASUKKAN KE DALAM PERUNTUKAN-PERUNTUKAN DI BAWAH</td>
             </tr>
             <tr>
-                <td class="text-center">OBJEK</td>
+                <td class="text-center" style="width:15%">OBJEK</td>
                 <td class="text-center" colspan="4">PERIHAL</td>
                 <td class="text-center">AMAUN RM</td>
             </tr>
@@ -156,7 +160,6 @@
         </tfoot>
     </table>
 </div>
-
 
 <div class="table-responsive-sm">
     <table class="table table-sm topic table-bordered">

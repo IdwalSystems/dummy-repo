@@ -68,8 +68,11 @@
     <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
         <thead>
             <tr>
-                <th>
+                <th style="width:2%">
                     @Html.DisplayNameFor(model => model.Tahun)
+                </th>
+                <th>
+                    Jenis Baucer
                 </th>
                 <th>
                     No Rujukan
@@ -105,11 +108,23 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Tahun)
                 </td>
+                @switch (item.FlJenisBaucer)
+                {
+                    case 1:
+                        <td>Pembekal</td>
+                        break;
+                    case 2:
+                        <td>Pekerja</td>
+                        break;
+                    default:
+                        <td>Am</td>
+                        break;
+                }
                 <td>
                     @item.NoPV.Substring(3)
                 </td>
                 <td>
-                    @item.Tarikh.ToString("dd-M-yyyy")
+                    @item.Tarikh.ToString("dd/MM/yyyy")
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Jumlah)
@@ -157,12 +172,22 @@
                     {
                         @if (item.Jumlah != 0)
                         {
-                            @if (item.Jumlah == item.JumlahInbois)
+                            @if (item.FlJenisBaucer == 1)
+                            {
+                                @if (item.Jumlah == item.JumlahInbois)
+                                {
+                                    <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                        <i class="fas fa-sync"></i>
+                                    </a>
+                                }
+                            }
+                            else
                             {
                                 <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
                                     <i class="fas fa-sync"></i>
                                 </a>
                             }
+
                         }
 
                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>

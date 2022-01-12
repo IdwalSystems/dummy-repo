@@ -15,6 +15,9 @@ namespace MSNK.Models.Modules
         public decimal Amaun { get; set; }
         //field end
 
+        //flag
+        public bool HavePO { get; set; }
+        //flage end
 
         //Relationship
         [DisplayName("No Inbois Pembekal")]
@@ -22,15 +25,5 @@ namespace MSNK.Models.Modules
         public AkBelian AkBelian { get; set; }
         //relationship end
 
-        // log
-        public string UserId { get; set; }
-        [DisplayName("Tarikh Masuk")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TarMasuk { get; set; }
-        public string UserIdKemaskini { get; set; }
-        [DisplayName("Tarikh Kemaskini")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TarKemaskini { get; set; } = DateTime.Now;
-        //log end
     }
 }
