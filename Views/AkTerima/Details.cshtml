@@ -13,9 +13,6 @@
                     <div class="col-md-6">
                         <h5 class="text-left">Resit Rasmi - @ViewData["Title"]</h5>
                     </div>
-                    <div class="col-md-6">
-                        <p class="text-right">No Resit: @Model.NoRujukan.Substring(3)</p>
-                    </div>
                 </div>
                 
             </div>
@@ -49,7 +46,13 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="col-md-4">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">No Rujukan</label>
+                                    <input value="@Model.NoRujukan.Substring(3)" class="form-control form-control-sm" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="control-label">No Kad Pengenalan</label>
                                     <input class="form-control form-control-sm" value="@Model.NoKp" readonly />

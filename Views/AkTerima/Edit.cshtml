@@ -16,13 +16,10 @@
                         <div class="col-md-6">
                             <h5 class="text-left">Resit Rasmi - @ViewData["Title"]</h5>
                         </div>
-                        <div class="col-md-6">
-                            <p class="text-right">No Resit: @Model.NoRujukan.Substring(3)</p>
-                        </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Tarikh" class="control-label"></label><span class="text-danger control-label">*</span>
@@ -65,8 +62,14 @@
                         </div>
 
                     </div>
-                    <div class="row">
-                        <div class="col-md-4">
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="NoRujukan" class="control-label"></label>
+                                <input value="@Model.NoRujukan.Substring(3)" class="form-control form-control-sm" readonly />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="NoKp" class="control-label"></label>
                                 <input asp-for="NoKp" class="form-control form-control-sm" />
@@ -96,7 +99,7 @@
                         <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" />
                         <span asp-validation-for="Alamat3" class="text-danger"></span>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="Poskod" class="control-label"></label>
@@ -125,7 +128,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="Tel" class="control-label"></label>

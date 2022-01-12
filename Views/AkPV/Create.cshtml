@@ -27,14 +27,14 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="Tahun" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Tahun" class="form-control form-control-sm form-control-sm-custom" required />
+                                <input asp-for="Tahun" id="txtTahun" class="form-control form-control-sm form-control-sm-custom" required />
                                 <span asp-validation-for="Tahun" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm" asp-for="JKWId" required>
+                                <select class="form-control form-control-sm" asp-for="JKWId" required id="ddlKW">
                                     <option value="" hidden>-- Pilih Kumpulan Wang --</option>
                                     @foreach (var s in ViewBag.JKW)
                                     {
@@ -95,7 +95,13 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-4">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="NoPV" class="control-label"></label>
+                                <input id="txtNoRujukan" asp-for="NoPV" class="form-control form-control-sm" readonly />
+                            </div>
+                        </div>
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="NoKP" class="control-label">No Kad Pengenalan</label>
                                 <input asp-for="NoKP" class="form-control form-control-sm" id="txtNoKP" />
@@ -104,7 +110,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label asp-for="Nama" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" required/>
+                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" required />
                                 <span class="text-danger">Nama Diperlukan</span>
                             </div>
                         </div>
@@ -140,7 +146,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="Emel" class="control-label"></label>
-                                <input asp-for="Emel" class="form-control form-control-sm text-uppercase" id="txtEmel" />
+                                <input asp-for="Emel" class="form-control form-control-sm" id="txtEmel" />
                                 <span asp-validation-for="Emel" class="text-danger"></span>
                             </div>
                         </div>

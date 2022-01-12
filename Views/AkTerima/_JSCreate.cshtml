@@ -1,4 +1,29 @@
 ﻿<script type="text/javascript">
+    // onchange no Rujukan
+    $("body").on('change', "#ddlKW , #txtTahun", function () {
+        var kodkw = $("#ddlKW").val();
+        var year = $("#txtTahun").val();
+        if (kodkw != 0) {
+            JsonKod(kodkw, year);
+        }
+        
+    });
+
+    function JsonKod(id, year) {
+        $.ajax({
+            type: "POST",
+            url: "/AkTerima/JsonGetKod",
+            data: { data: id, year: year },
+            dataType: "json",
+            success: function (msg) {
+                $("#txtNoRujukan").val(msg.record);
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    // onchange no Rujukan end
 
     // onchange CaraBayar
     $("body").on('change', "#ddlCaraBayar", function () {
@@ -49,7 +74,10 @@
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
         var txtKodAkaun = $("#txtKodAkaun");
-        GetCarta(txtKodAkaun.val());
+        if (txtKodAkaun.val() != null) {
+            GetCarta(txtKodAkaun.val());
+        } 
+        
     });
 
     function GetCarta(id) {
@@ -133,7 +161,10 @@
     $("body").on("click", "#btnAdd2", function () {
         //Reference the Name and Country TextBoxes.
         var ddlCaraBayar = $("#ddlCaraBayar");
-        GetCaraBayar(ddlCaraBayar.val());
+        if (ddlCaraBayar.val() != null) {
+            GetCaraBayar(ddlCaraBayar.val());
+        } 
+        
     });
 
     function GetCaraBayar(id) {

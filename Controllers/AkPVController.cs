@@ -243,7 +243,53 @@ namespace MSNK.Controllers
 
             ViewBag.akPV2 = akPV2Table;
         }
+        // function json get no rujukan (running number)
+        [HttpPost]
+        public JsonResult JsonGetKod(int data, string year)
+        {
+            try
+            {
+                var result = "";
+                if (data == 0)
+                {
+                    result = "";
+                }
+                else
+                {
+                    // get latest no rujukan running number  
+                    var kw = _context.JKW.FirstOrDefault(x => x.Id == data);
 
+                    var kumpulanWang = kw.Kod;
+                    string prefix =  kumpulanWang + year;
+                    int x = 1;
+                    string noRujukan = prefix + "000000";
+
+                    var LatestNoRujukan = _context.AkPV
+                        .Where(x => x.Tahun == year)
+                        .Max(x => x.NoPV);
+                    if (LatestNoRujukan == null)
+                    {
+                        noRujukan = string.Format("{0:" + prefix + "000000}", x);
+                    }
+                    else
+                    {
+                        x = int.Parse(LatestNoRujukan.Substring(10));
+                        x++;
+                        noRujukan = string.Format("{0:" + prefix + "000000}", x);
+                    }
+
+                    result = noRujukan;
+
+                    // get latest no rujukan running number end
+                }
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        // function json get no rujukan (running number) end
         // function  json Create akPV1
         public JsonResult GetCarta(AkCarta akCarta)
         {
@@ -537,6 +583,7 @@ namespace MSNK.Controllers
                         .FirstOrDefault();
 
                     item.AkBelian = akBelian;
+                    
                 }
 
                 return Json(new { result = "OK", record = data });
@@ -759,19 +806,23 @@ namespace MSNK.Controllers
         public async Task<IActionResult> Create(AkPV akPV, int JKWId, int? AkPembekalId, int? SuPekerjaId, int AkBankId, int JCaraBayarId, decimal JumlahInbois)
         {
             AkPV m = new AkPV();
-
+            var pembekal = _context.AkPembekal.Find(AkPembekalId);
+            var pekerja = _context.SuPekerja.Find(SuPekerjaId);
             //check if user fil in both pekerja and pembekal
-            if (AkPembekalId != null && SuPekerjaId != null)
+            if (pembekal != null && pekerja != null)
             {
                 TempData[SD.Error] = "Maklumat gagal disimpan. Sila isi salah satu kod pekerja atau kod pembekal";
                 //PopulateCart();
                 CartEmpty();
                 PopulateList();
                 return View(akPV);
-            }
-            // checking for jumlah objek & jumlah perihal
-            if (AkPembekalId != null)
+            }            
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (pembekal != null)
             {
+                // checking for jumlah objek & jumlah perihal
                 if (akPV.Jumlah != JumlahInbois)
                 {
                     TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Inbois";
@@ -780,13 +831,7 @@ namespace MSNK.Controllers
                     PopulateList();
                     return View(akPV);
                 }
-            }   
 
-            var user = await _userManager.GetUserAsync(User);
-            var pembekal = new AkPembekal();
-            pembekal = _context.AkPembekal.Find(AkPembekalId);
-            if (pembekal != null)
-            {
                 akPV.Nama = pembekal.NamaSykt;
                 akPV.Alamat1 = pembekal.Alamat1;
                 akPV.Alamat2 = pembekal.Alamat2;
@@ -809,8 +854,6 @@ namespace MSNK.Controllers
                 //check if PV dengan tanggungan or tanpa tanggungan end
             }
 
-            var pekerja = new SuPekerja();
-            pekerja = _context.SuPekerja.Find(SuPekerjaId);
             if (pekerja != null)
             {
                 akPV.Nama = pekerja.Nama;
@@ -827,13 +870,15 @@ namespace MSNK.Controllers
             var kw = _context.JKW.FirstOrDefault(x => x.Id == akPV.JKWId);
 
             var kumpulanWang = kw.Kod;
-            var year = DateTime.Now.Year.ToString();
-            var month = DateTime.Now.Month.ToString();
+            var year = akPV.Tahun;
             string prefix = "PV/" + kumpulanWang + year;
             int x = 1;
             string noRujukan = prefix + "000000";
 
-            var LatestNoRujukan = _context.AkPV.Max(x => x.NoPV);
+            var LatestNoRujukan = _context.AkPV
+                        .Where(x => x.Tahun == year)
+                        .Max(x => x.NoPV);
+
             if (LatestNoRujukan == null)
             {
                 noRujukan = string.Format("{0:" + prefix + "000000}", x);
@@ -854,8 +899,16 @@ namespace MSNK.Controllers
                 {
                     m.AkBankId = AkBankId;
                     m.JKWId = JKWId;
-                    m.AkPembekalId = AkPembekalId;
-                    m.SuPekerjaId = SuPekerjaId;
+
+                    if (AkPembekalId != 0)
+                    {
+                        m.AkPembekalId = AkPembekalId;
+                    }
+                    
+                    if (SuPekerjaId != 0)
+                    {
+                        m.SuPekerjaId = SuPekerjaId;
+                    }
 
                     m.Tahun = akPV.Tahun;
                     m.NoPV = noRujukan;
@@ -960,7 +1013,7 @@ namespace MSNK.Controllers
                 case 1:
                     akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
                     akPVView.NoKP = "-";
-                    akPVView.Penerima = akPV.AkPembekal.NamaSykt;
+                    akPVView.Nama = akPV.AkPembekal.NamaSykt;
                     akPVView.Alamat1 = akPV.AkPembekal.Alamat1;
                     akPVView.Alamat2 = akPV.AkPembekal.Alamat2;
                     akPVView.Alamat3 = akPV.AkPembekal.Alamat3;
@@ -972,7 +1025,7 @@ namespace MSNK.Controllers
                 case 2:
                     akPVView.KodPenerima = akPV.SuPekerja.NoGaji;
                     akPVView.NoKP = akPV.SuPekerja.NoKp;
-                    akPVView.Penerima = akPV.SuPekerja.Nama;
+                    akPVView.Nama = akPV.SuPekerja.Nama;
                     akPVView.Alamat1 = akPV.SuPekerja.Alamat1;
                     akPVView.Alamat2 = akPV.SuPekerja.Alamat2;
                     akPVView.Alamat3 = akPV.SuPekerja.Alamat3;
@@ -985,7 +1038,7 @@ namespace MSNK.Controllers
                     akPVView.denganTanggungan = akPV.denganTanggungan;
                     akPVView.KodPenerima = "-";
                     akPVView.NoKP = akPV.NoKP;
-                    akPVView.Penerima = akPV.Nama;
+                    akPVView.Nama = akPV.Nama;
                     akPVView.Alamat1 = akPV.Alamat1;
                     akPVView.Alamat2 = akPV.Alamat2;
                     akPVView.Alamat3 = akPV.Alamat3;
@@ -1011,8 +1064,10 @@ namespace MSNK.Controllers
             }
             akPVView.AkPV2 = akPV.AkPV2;
 
+            CartEmpty();
             PopulateTable(id);
             PopulateList();
+            PopulateCartFromDb(akPV);
             return View(akPVView);
         }
 
@@ -1309,7 +1364,7 @@ namespace MSNK.Controllers
                             akPV.NoAkaunBank = pekerja.NoAkaunBank;
                             break;
                         default:
-                            akPV.Nama = Penerima;
+                            akPV.Nama = akPVAsal.Nama;
                             break;
                     }
 
@@ -1317,8 +1372,29 @@ namespace MSNK.Controllers
                     akPV.AkPembekalId = akPVAsal.AkPembekalId;
                     akPV.TarMasuk = akPVAsal.TarMasuk;
                     akPV.UserId = akPVAsal.UserId;
-                    
+
+                    foreach (AkPV1 item in akPVAsal.AkPV1)
+                    {
+                        var model = _context.AkPV1.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+
+                    foreach (AkPV2 item in akPVAsal.AkPV2)
+                    {
+                        var model = _context.AkPV2.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+
                     _context.Entry(akPVAsal).State = EntityState.Detached;
+
+                    akPV.AkPV1 = _cart.Lines1.ToList();
+                    akPV.AkPV2 = _cart.Lines2.ToList();
 
                     akPV.UserIdKemaskini = user.UserName;
                     akPV.TarKemaskini = DateTime.Now;

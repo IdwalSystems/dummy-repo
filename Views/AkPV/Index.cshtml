@@ -68,6 +68,9 @@
     <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
         <thead>
             <tr>
+                <th>
+                    Bil
+                </th>
                 <th style="width:2%">
                     @Html.DisplayNameFor(model => model.Tahun)
                 </th>
@@ -105,6 +108,8 @@
             @foreach (var item in Model)
             {
             <tr>
+                <td>
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Tahun)
                 </td>

@@ -17,9 +17,6 @@
                     <div class="col-md-6">
                         <h5 class="text-left">Inbois Pembekal - @ViewData["Title"]</h5>
                     </div>
-                    <div class="col-md-6">
-                        <p class="text-right">No Inbois: @Model.NoInbois.Substring(3)</p>
-                    </div>
                 </div>
             </div>
             <div class="card-body">
@@ -35,7 +32,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label asp-for="NoInbois" class="control-label"></label>
-                                    <input class="form-control form-control-sm text-uppercase" value="@Model.NoInbois" readonly />
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.NoInbois.Substring(3)" readonly />
                                 </div>
                             </div>
                             <div class="col-md-3">

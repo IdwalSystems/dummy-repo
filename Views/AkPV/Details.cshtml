@@ -13,9 +13,6 @@
                     <div class="col-md-6">
                         <h5 class="text-left">Baucer Pembayaran - @ViewData["Title"]</h5>
                     </div>
-                    <div class="col-md-6">
-                        <p class="text-right">No Baucer: @Model.NoPV.Substring(3)</p>
-                    </div>
                 </div>
 
             </div>
@@ -60,7 +57,13 @@
                         {
                             case 1:
                                 <div class="form-row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label asp-for="NoPV" class="control-label"></label>
+                                            <input id="txtNoRujukan" value="@Model.NoPV.Substring(3)" class="form-control form-control-sm" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
                                         <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
                                         <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" disabled>
                                             <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
@@ -75,7 +78,13 @@
                                 break;
                             case 2:
                                 <div class="form-row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label asp-for="NoPV" class="control-label"></label>
+                                            <input id="txtNoRujukan" value="@Model.NoPV.Substring(3)" class="form-control form-control-sm" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
                                         <label asp-for="SuPekerjaId" class="control-label"></label><span class="text-danger control-label">*</span>
                                         <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPembekal" disabled>
                                             <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
@@ -90,7 +99,13 @@
                                 break;
                             default:
                                 <div class="form-row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label asp-for="NoPV" class="control-label"></label>
+                                            <input id="txtNoRujukan" value="@Model.NoPV.Substring(3)" class="form-control form-control-sm" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label class="control-label">No Kad Pengenalan</label>
                                             <input class="form-control form-control-sm text-uppercase" value="@Model.NoKP" readonly />
@@ -106,7 +121,7 @@
                                 break;
                         }
 
-                        
+
                         <div class="form-group">
                             <label class="control-label">Alamat</label>
                             <input class="form-control form-control-sm text-uppercase" value="@Model.Alamat1" readonly />
@@ -163,7 +178,7 @@
                     <div class="col-lg-2 pb-3">
                         <div class="card mb-2">
                             <div class="card-body p-1">
-                                
+
                                 <div class="form-group col-sm">
                                     <label class="control-label">Jenis Baucer</label>
                                     <div class="custom-control custom-radio">
@@ -171,11 +186,11 @@
                                         <label class="custom-control-label" for="FlJenisBaucer1">Am</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer2" name="FlJenisBaucer" class="custom-control-input" value="1" >
+                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer2" name="FlJenisBaucer" class="custom-control-input" value="1">
                                         <label class="custom-control-label" for="FlJenisBaucer">Pembekal</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="2" >
+                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="2">
                                         <label class="custom-control-label" for="FlCetak3">Pekerja</label>
                                     </div>
                                 </div>
@@ -230,46 +245,46 @@
                     </div>
                 </div>
                 @*table Objek*@
-            <div class="card box-shadow mb-3">
-                <div class="card-header">
-                    <h6>Objek</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
+                <div class="card box-shadow mb-3">
+                    <div class="card-header">
+                        <h6>Objek</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
 
-                        <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th style="width:70%">Kod</th>
-                                    <th style="width:30%" class="text-right">Amaun</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyObjek">
-                                @foreach (var item in ViewBag.akPV1)
-                                {
-                                    <tr id="@item.Id">
-                                        <td id="akCartaId" hidden>@item.AkCartaId</td>
-                                        <td class="text-left">@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                        <td class="text-right" id="td1Amaun">@item.Amaun</td>
+                            <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th style="width:70%">Kod</th>
+                                        <th style="width:30%" class="text-right">Amaun</th>
                                     </tr>
+                                </thead>
+                                <tbody id="tbodyObjek">
+                                    @foreach (var item in ViewBag.akPV1)
+                                    {
+                                        <tr id="@item.Id">
+                                            <td id="akCartaId" hidden>@item.AkCartaId</td>
+                                            <td class="text-left">@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
+                                            <td class="text-right" id="td1Amaun">@item.Amaun</td>
+                                        </tr>
 
-                                }
-                            </tbody>
-                            <tfoot>
+                                    }
+                                </tbody>
+                                <tfoot>
 
-                            </tfoot>
-                        </table>
+                                </tfoot>
+                            </table>
 
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <div class="form-group">
-                        <label class="control-label">Jumlah Objek</label>
-                        <input class="form-control form-control-sm" id="jumlahObjek" value="@Model.Jumlah" readonly />
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <label class="control-label">Jumlah Objek</label>
+                            <input class="form-control form-control-sm" id="jumlahObjek" value="@Model.Jumlah" readonly />
+                        </div>
                     </div>
-                </div>
 
-            </div>
+                </div>
                 @*table Objek end*@
 
                 @*table Inbois*@
@@ -296,27 +311,24 @@
                                     <tbody id="tbodyInbois">
                                         @foreach (var item in ViewBag.AkPV2)
                                         {
-                                        <tr id="@item.Id">
-                                            <td id="akBelianId" hidden>@item.AkBelianId</td>
-                                            <td class="text-left">@item.AkBelian.NoInbois.Substring(3)</td>
-                                            <td>@item.AkBelian.Tarikh.ToString("dd/MM/yyyy")</td>
-                                            <td class="text-right">@item.Amaun</td>
-                                            @if (item.AkBelian.AkPO != null)
-                                            {
-                                                <td class="text-left">@item.AkBelian.AkPO.NoPO</td>
-                                                <td>@item.AkBelian.AkPO.Tarikh.ToString("dd/MM/yyyy")</td>
-                                                <td class="text-right">@item.AkBelian.AkPO.Jumlah</td>
-                                            }
-                                            else
-                                            {
-                                                <td class="text-left">-</td>
-                                                <td></td>
-                                                <td class="text-right">0.00</td>
-                                            }
-
-
-                                        </tr>
-
+                                            <tr id="@item.Id">
+                                                <td id="akBelianId" hidden>@item.AkBelianId</td>
+                                                <td class="text-left">@item.AkBelian.NoInbois.Substring(3)</td>
+                                                <td>@item.AkBelian.Tarikh.ToString("dd/MM/yyyy")</td>
+                                                <td class="text-right">@item.Amaun</td>
+                                                @if (item.AkBelian.AkPO != null)
+                                                {
+                                                    <td class="text-left">@item.AkBelian.AkPO.NoPO</td>
+                                                    <td>@item.AkBelian.AkPO.Tarikh.ToString("dd/MM/yyyy")</td>
+                                                    <td class="text-right">@item.AkBelian.AkPO.Jumlah</td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="text-left">-</td>
+                                                    <td></td>
+                                                    <td class="text-right">0.00</td>
+                                                }
+                                            </tr>
                                         }
                                     </tbody>
                                     <tfoot>

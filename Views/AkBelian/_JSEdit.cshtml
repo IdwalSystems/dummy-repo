@@ -6,7 +6,9 @@
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
         var txtKodAkaun = $("#txtKodAkaun");
-        GetCarta(txtKodAkaun.val());
+        if (txtKodAkaun.val() != null) {
+            GetCarta(txtKodAkaun.val());
+        } 
     });
 
     function GetCarta(id) {

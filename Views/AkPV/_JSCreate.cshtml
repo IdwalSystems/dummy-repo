@@ -1,4 +1,30 @@
 ﻿<script type="text/javascript">
+    // onchange no Rujukan
+    $("body").on('change', "#ddlKW , #txtTahun", function () {
+        var kodkw = $("#ddlKW").val();
+        var year = $("#txtTahun").val();
+        if (kodkw != 0) {
+            JsonKod(kodkw, year);
+        }
+
+    });
+
+    function JsonKod(id, year) {
+        $.ajax({
+            type: "POST",
+            url: "/AkPV/JsonGetKod",
+            data: { data: id, year: year },
+            dataType: "json",
+            success: function (msg) {
+                $("#txtNoRujukan").val(msg.record);
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    // onchange no Rujukan end
+
     //empty cart
     function EmptyCart() {
         $.ajax({
@@ -6,7 +32,12 @@
             url: "/AkPV/JsonEmptyCart",
             dataType: "json",
             success: function (msg) {
-
+                $("table tbody#tbodyObjek").empty();
+                $("table tbody#tbodyInbois").empty();
+                $("#jumlahObjek").val("0.00");
+                $("#jumlahInbois").val("0.00");
+                $("#txtKodAkaun option").prop('disabled', false);
+                $("#txtKodAkaun option:selected").prop('disabled', true);
             },
             error: function (req, status, error) {
                 alert(error);
@@ -95,6 +126,7 @@
                     $("#txtTelefon").prop('disabled', true);
                     $("#txtEmel").prop('disabled', true);
                     $("#ddlKodPekerja").prop('disabled', true);
+                    $("#ddlKodPekerja").val(0);
                 },
                 error: function (req, status, error) {
                     alert(error);
@@ -178,6 +210,7 @@
                     $("#txtTelefon").prop('disabled', true);
                     $("#txtEmel").prop('disabled', true);
                     $("#ddlKodPembekal").prop('disabled', true);
+                    $("#ddlKodPembekal").val(0);
                 },
                 error: function (req, status, error) {
                     alert(error);
@@ -192,7 +225,6 @@
         var noInbois = $("#txtAkBelian").val();
         
         JsonNoInbois(noInbois);
-        var sum = 0;
         
     });
 
@@ -229,44 +261,6 @@
 
     //on change no Inbois pembekal end
 
-    //populate tbl objek based on cart
-    function PopulateTblObjekBasedOnCart() {
-        //populate table objek
-        $.ajax({
-            type: "POST",
-            url: "/AkPV/GetAllItemCartAkPV1",
-            dataType: "json",
-            success: function (r) {
-
-                //refresh updated table objek
-                $("table tbody#tbodyObjek").empty();
-                var sum = 0;
-                if (r.record.length > 0) {
-                    for (var i = 0; i < r.record.length; i++) {
-                        var item1 = r.record[i];
-                        var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
-                            "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
-                            "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
-                            "</td><td>" +
-                            "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
-                            "</td><td>" +
-                            "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
-                            "</td><tr>";
-                        $("table tbody#tbodyObjek").append(str);
-                        sum += item1.amaun;
-                    }
-                }
-
-                jumlah.val(sum.toFixed(2));
-                if ($('#ddlKodPembekal').val() != 0) {
-                    checkJumlah();
-                } else {
-
-                }
-            }
-        });
-    }
-    //populate tbl objek based on cart end
     //validation form
     (function () {
         'use strict';
@@ -317,7 +311,9 @@
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
         var txtKodAkaun = $("#txtKodAkaun");
-        GetCarta(txtKodAkaun.val());
+        if (txtKodAkaun.val() != null) {
+            GetCarta(txtKodAkaun.val());
+        } 
     });
 
     function GetCarta(id) {
@@ -453,7 +449,7 @@
         var AkPV1 = {
             AkCartaId: akCartaId
         }
-        if (name != null) {
+        if (akCartaId != null) {
             $.ajax({
                 type: "POST",
                 url: "/AkPV/GetAnItemCartAkPV1",
@@ -461,7 +457,7 @@
                 dataType: "json",
                 success: function (r) {
                     //insert data in modal objek
-                    $("#moId1").val(r.record.id);
+                    $("#moId1").val(r.record.akCartaId);
                     $("#moKodAkaun").val(r.record.akCartaId);
                     $("#moAmaun1").val(r.record.amaun);
 
@@ -476,12 +472,10 @@
     function modalUpdate1() {
         var id = $("#moId1").val();
         var amaun = $("#moAmaun1").val();
-        var akCartaId = $("#moKodAkaun").val();
         var jumlah = $("#jumlahObjek");
 
         var AkPV1 = {
-            Id: id,
-            akCartaId: akCartaId,
+            akCartaId: id,
             Amaun: amaun
         }
         $.ajax({
@@ -495,7 +489,6 @@
                 $.ajax({
                     type: "POST",
                     url: "/AkPV/GetAllItemCartAkPV1",
-                    data: AkPV1,
                     dataType: "json",
                     success: function (r) {
 
@@ -535,7 +528,10 @@
     $("body").on("click", "#btnAdd2", function () {
         //Reference the Name and Country TextBoxes.
         var ddlAkBelian = $("#txtAkBelian");
-        GetInbois(ddlAkBelian.val());
+        if (ddlAkBelian.val() != null) {
+            GetInbois(ddlAkBelian.val());
+        } 
+        
     });
 
     function GetInbois(id) {
@@ -557,7 +553,6 @@
                     var txtNoPO = $("#txtNoPO");
                     var txtTarPO = $("#txtTarPO");
                     var txtAmaunPO = $("#txtAmaunPO");
-
                     var txtJumlah = $("#jumlahInbois");
 
                     //Sum value to Total text field
@@ -670,7 +665,7 @@
             txtJumlah.val(sum.toFixed(2));
 
             var AkPV2 = {
-                AkBelianId: name,
+                AkBelianId: name
             }
             if (name != null) {
                 $.ajax({

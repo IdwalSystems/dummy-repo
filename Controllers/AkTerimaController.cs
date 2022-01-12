@@ -284,6 +284,55 @@ namespace MSNK.Controllers
             CartEmpty();
             return View();
         }
+        // function json get no rujukan (running number)
+        [HttpPost]
+        public JsonResult JsonGetKod(int data, string year)
+        {
+            try
+            {
+                var result = "";
+                if (data == 0)
+                {
+                    result = "";
+                }
+                else
+                {
+                    // get latest no rujukan running number  
+                    var kw = _context.JKW.FirstOrDefault(x => x.Id == data);
+
+                    var kumpulanWang = kw.Kod;
+                    string prefix = "IB" + kumpulanWang + year;
+                    int x = 1;
+                    string noRujukan = prefix + "000000";
+
+                    var LatestNoRujukan = _context.AkTerima
+                        .Where(x=> x.Tahun == year)
+                        .Max(x => x.NoRujukan);
+
+                    if (LatestNoRujukan == null)
+                    {
+                        noRujukan = string.Format("{0:" + prefix + "000000}", x);
+                    }
+                    else
+                    {
+                        x = int.Parse(LatestNoRujukan.Substring(12));
+                        x++;
+                        noRujukan = string.Format("{0:" + prefix + "000000}", x);
+                    }
+
+                    result = noRujukan;
+
+                    // get latest no rujukan running number end
+                }
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        // function json get no rujukan (running number) end
+
         // on change CaraBayar controller
         [HttpPost]
         public async Task<JsonResult> JsonGetCaraBayar(int data)
@@ -477,13 +526,15 @@ namespace MSNK.Controllers
             var kw = _context.JKW.FirstOrDefault(x => x.Id == akTerima.JKWId);
 
             var kumpulanWang = kw.Kod;
-            var year = DateTime.Now.Year.ToString();
-            var month = DateTime.Now.Month.ToString();
+            var year = akTerima.Tahun;
             string prefix = "RR/IB" + kumpulanWang + year;
             int x = 1;
             string noRujukan = prefix + "000000";
 
-            var LatestNoRujukan = _context.AkTerima.Max(x => x.NoRujukan);
+            var LatestNoRujukan = _context.AkTerima
+                        .Where(x => x.Tahun == year)
+                        .Max(x => x.NoRujukan);
+
             if (LatestNoRujukan == null)
             {
                 noRujukan = string.Format("{0:" + prefix + "000000}", x);

@@ -28,14 +28,14 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Tahun" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Tahun" class="form-control form-control-sm form-control-sm-custom" required/>
+                                <input asp-for="Tahun" class="form-control form-control-sm form-control-sm-custom" id="txtTahun" required/>
                                 <span asp-validation-for="Tahun" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm" asp-for="JKWId" required>
+                                <select class="form-control form-control-sm" asp-for="JKWId" required id="ddlKW">
                                     <option value="" hidden>-- Pilih Kumpulan Wang --</option>
                                     @foreach (var s in ViewBag.JKW)
                                     {
@@ -62,7 +62,14 @@
                     </div>
 
                     <div class="form-row">
-                        <div class="col-md-4">
+                        <div class="col-md-2">
+                            <div class="form-group" >
+                                <label asp-for="NoRujukan" class="control-label"></label>
+                                <input id="txtNoRujukan" asp-for="NoRujukan" class="form-control form-control-sm" readonly />
+                                <span asp-validation-for="NoRujukan" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="NoKp" class="control-label">No Kad Pengenalan</label>
                                 <input asp-for="NoKp" class="form-control form-control-sm" />
