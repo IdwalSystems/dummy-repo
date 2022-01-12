@@ -53,6 +53,7 @@ namespace MSNK.Data
         public DbSet<SpPermohonanAktiviti> SpPermohonanAktiviti { get; set; }
         public DbSet<SpPermohonanAktiviti1> SpPermohonanAktiviti1 { get; set; }
         public DbSet<SpPermohonanAktiviti2> SpPermohonanAktiviti2 { get; set; }
+        public DbSet<JJantina> JJantina { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

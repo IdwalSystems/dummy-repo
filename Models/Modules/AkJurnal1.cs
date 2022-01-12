@@ -24,14 +24,5 @@ namespace MSNK.Models.Modules
         public AkCarta AkCarta { get; set; }
         //public AkJurnal AkJurnal { get; set; }
 
-        // log
-        public string UserId { get; set; }
-        [DisplayName("Tarikh Masuk")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TarMasuk { get; set; }
-        public string UserIdKemaskini { get; set; }
-        [DisplayName("Tarikh Kemaskini")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TarKemaskini { get; set; } = DateTime.Now;
     }
 }
