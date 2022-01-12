@@ -144,7 +144,8 @@ namespace MSNK.Controllers
                     FlBatal = item.FlBatal,
                     FlPosting = item.FlPosting,
                     FlCetak = item.FlCetak,
-                    JumlahInbois = jumlahInbois
+                    JumlahInbois = jumlahInbois,
+                    FlJenisBaucer = item.FlJenisBaucer
                 }
                 );
             }
@@ -236,7 +237,8 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem2(akPV2.AkPVId,
                                akPV2.AkBelianId,
-                               akPV2.Amaun);
+                               akPV2.Amaun,
+                               akPV2.HavePO);
             }
 
             ViewBag.akPV2 = akPV2Table;
@@ -399,9 +401,19 @@ namespace MSNK.Controllers
                 {
                     var user = await _userManager.GetUserAsync(User);
 
+                    // check if Inbois has PO or not
+                    var po = _context.AkBelian.Where(b => b.Id == akPV2.AkBelianId).FirstOrDefault();
+
+                    if (po.AkPOId != null)
+                    {
+                        akPV2.HavePO = true;
+                    }
+
+                    // add AkPV2 into cart lines2
                     _cart.AddItem2(akPV2.AkPVId,
                                    akPV2.AkBelianId,
-                                   akPV2.Amaun);
+                                   akPV2.Amaun,
+                                   akPV2.HavePO);
 
                     ////get akBelian1
                     //List<AkBelian1> akBelian1Table = _context.AkBelian1
@@ -496,7 +508,8 @@ namespace MSNK.Controllers
 
                     _cart.AddItem2(akPV2.AkPVId,
                                    akPV2.AkBelianId,
-                                   akPV2.Amaun);
+                                   akPV2.Amaun,
+                                   akPV2.HavePO);
                 }
 
                 return Json(new { result = "OK" });
@@ -555,6 +568,8 @@ namespace MSNK.Controllers
             AkPVViewModel akPVView = new AkPVViewModel();
 
             //fill in view model AkPVViewModel from akPV
+            akPVView.AkPembekalId = akPV.AkPembekalId;
+            akPVView.SuPekerjaId = akPV.SuPekerjaId;
             akPVView.Id = akPV.Id;
             akPVView.Tahun = akPV.Tahun;
             akPVView.NoPV = akPV.NoPV;
@@ -565,33 +580,47 @@ namespace MSNK.Controllers
             akPVView.Jumlah = akPV.Jumlah;
             akPVView.TarikhPosting = akPV.TarikhPosting;
 
-            
-            if (akPV.AkPembekalId == null)
+            switch (akPV.FlJenisBaucer)
             {
-                akPVView.denganTanggungan = false;
-                akPVView.KodPenerima = "-";
-                akPVView.NoKP = akPV.NoKP;
-                akPVView.Penerima = akPV.Nama;
-                akPVView.Alamat1 = akPV.Alamat1;
-                akPVView.Alamat2 = akPV.Alamat2;
-                akPVView.Alamat3 = akPV.Alamat3;
-                akPVView.NoAkaunBank = akPV.NoAkaunBank;
-                akPVView.Telefon = akPV.Telefon;
-                akPVView.Emel = akPV.Emel;
+                //pembekal
+                case 1:
+                    akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
+                    akPVView.NoKP = "-";
+                    akPVView.Penerima = akPV.AkPembekal.NamaSykt;
+                    akPVView.Alamat1 = akPV.AkPembekal.Alamat1;
+                    akPVView.Alamat2 = akPV.AkPembekal.Alamat2;
+                    akPVView.Alamat3 = akPV.AkPembekal.Alamat3;
+                    akPVView.NoAkaunBank = akPV.AkPembekal.AkaunBank;
+                    akPVView.Telefon = akPV.AkPembekal.Telefon1;
+                    akPVView.Emel = akPV.AkPembekal.Emel;
+                    break;
+                //pekerja
+                case 2:
+                    akPVView.KodPenerima = akPV.SuPekerja.NoGaji;
+                    akPVView.NoKP = akPV.SuPekerja.NoKp;
+                    akPVView.Penerima = akPV.SuPekerja.Nama;
+                    akPVView.Alamat1 = akPV.SuPekerja.Alamat1;
+                    akPVView.Alamat2 = akPV.SuPekerja.Alamat2;
+                    akPVView.Alamat3 = akPV.SuPekerja.Alamat3;
+                    akPVView.NoAkaunBank = akPV.SuPekerja.NoAkaunBank;
+                    akPVView.Telefon = akPV.SuPekerja.TelefonBimbit;
+                    akPVView.Emel = akPV.SuPekerja.Emel;
+                    break;
+                //Am
+                default:
+                    akPVView.denganTanggungan = akPV.denganTanggungan;
+                    akPVView.KodPenerima = "-";
+                    akPVView.NoKP = akPV.NoKP;
+                    akPVView.Penerima = akPV.Nama;
+                    akPVView.Alamat1 = akPV.Alamat1;
+                    akPVView.Alamat2 = akPV.Alamat2;
+                    akPVView.Alamat3 = akPV.Alamat3;
+                    akPVView.NoAkaunBank = akPV.NoAkaunBank;
+                    akPVView.Telefon = akPV.Telefon;
+                    akPVView.Emel = akPV.Emel;
+                    break;
             }
-            else
-            {
-                akPVView.denganTanggungan = true;
-                akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
-                akPVView.NoKP = "-";
-                akPVView.Penerima = akPV.AkPembekal.NamaSykt;
-                akPVView.Alamat1 = akPV.AkPembekal.Alamat1;
-                akPVView.Alamat2 = akPV.AkPembekal.Alamat2;
-                akPVView.Alamat3 = akPV.AkPembekal.Alamat3;
-                akPVView.NoAkaunBank = akPV.AkPembekal.AkaunBank;
-                akPVView.Telefon = akPV.AkPembekal.Telefon1;
-                akPVView.Emel = akPV.AkPembekal.Emel;
-            }
+
             akPVView.NoCekAtauEFT = akPV.NoCekAtauEFT;
             akPVView.TarCekAtauEFT = akPV.TarCekAtauEFT;
             akPVView.Perihal = akPV.Perihal;
@@ -599,6 +628,8 @@ namespace MSNK.Controllers
             akPVView.FlPosting = akPV.FlPosting;
             akPVView.FlCetak = akPV.FlCetak;
             akPVView.FlBatal = akPV.FlBatal;
+            akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
+
             akPVView.AkPV1 = akPV.AkPV1;
             foreach(AkPV2 item in akPV.AkPV2)
             {
@@ -607,6 +638,7 @@ namespace MSNK.Controllers
             akPVView.AkPV2 = akPV.AkPV2;
 
             PopulateTable(id);
+            PopulateList();
             return View(akPVView);
         }
 
@@ -824,6 +856,7 @@ namespace MSNK.Controllers
                     m.AkBankId = AkBankId;
                     m.JKWId = JKWId;
                     m.AkPembekalId = AkPembekalId;
+                    m.SuPekerjaId = SuPekerjaId;
 
                     m.Tahun = akPV.Tahun;
                     m.NoPV = noRujukan;
@@ -1302,6 +1335,8 @@ namespace MSNK.Controllers
             akPVView.FlPosting = akPV.FlPosting;
             akPVView.FlCetak = akPV.FlCetak;
             akPVView.FlBatal = akPV.FlBatal;
+            akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
+
             akPVView.AkPV1 = akPV.AkPV1;
             foreach (AkPV2 item in akPV.AkPV2)
             {

@@ -47,7 +47,8 @@ namespace MSNK.Models.Modules.Cart
         public virtual void AddItem2(
             int akPVId,
             int? akBelianId,
-            decimal amaun
+            decimal amaun,
+            bool havePO
             )
         {
             AkPV2 line = collection2
@@ -58,7 +59,8 @@ namespace MSNK.Models.Modules.Cart
             {
                 AkPVId = akPVId,
                 AkBelianId = akBelianId,
-                Amaun = amaun
+                Amaun = amaun,
+                HavePO = havePO
             });
         }
 

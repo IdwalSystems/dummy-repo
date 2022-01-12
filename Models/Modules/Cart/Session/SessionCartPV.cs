@@ -53,13 +53,15 @@ namespace MSNK.Models.Modules.Cart.Session
         public override void AddItem2(
             int akPVId,
             int? akBelianId,
-            decimal amaun
+            decimal amaun,
+            bool havePO
             )
         {
             base.AddItem2(
                     akPVId,
                     akBelianId,
-                    amaun);
+                    amaun,
+                    havePO);
 
             Session.SetJson("CartPV", this);
         }
