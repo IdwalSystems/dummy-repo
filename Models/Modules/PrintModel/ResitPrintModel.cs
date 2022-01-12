@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.PrintModel
 {
-    public class ResitPrintModel
+    public class ResitPrintModel: AkTerima
     {
         public string JumlahDalamPerkataan { get; set; }
         public string username { get; set; }

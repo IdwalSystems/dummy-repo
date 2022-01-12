@@ -67,86 +67,89 @@
                         </div>
 
                     </div>
-                    @if (Model.AkPembekalId != null)
+                    @switch (Model.FlJenisBaucer)
                     {
-                        <div class="form-row">
-                            <div class="col-md-12">
-                                <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" disabled>
-                                    <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
-                                    @foreach (var s in ViewBag.AkPembekal)
-                                    {
-                                        <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
-                                    }
-                                </select>
-                                <span asp-validation-for="AkPembekalId" class="text-danger"></span>
+                        case 1:
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                    <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" disabled>
+                                        <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
+                                        @foreach (var s in ViewBag.AkPembekal)
+                                        {
+                                            <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="AkPembekalId" class="text-danger"></span>
+                                </div>
                             </div>
-                        </div>
+                            break;
+                        case 2:
+                            <div class="form-row">
+                                <div class="col-md-12">
+                                    <label asp-for="SuPekerjaId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                    <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPembekal" disabled>
+                                        <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
+                                        @foreach (var s in ViewBag.SuPekerja)
+                                        {
+                                            <option value="@s.Id">@s.NoGaji - @s.Nama</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            break;
+                        default:
+                            <div class="form-row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="NoKP" class="control-label">No Kad Pengenalan</label>
+                                        <input asp-for="NoKP" class="form-control form-control-sm" id="txtNoKP" />
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label asp-for="Nama" class="control-label"></label><span class="text-danger control-label">*</span>
+                                        <input asp-for="Nama" class="form-control form-control-sm text-uppercase" id="txtNamaPembekal" required readonly />
+                                        <span asp-validation-for="Nama" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Alamat1" class="control-label">Alamat</label>
+                                <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" id="txtAlamat1" />
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase" id="txtAlamat2" />
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" id="txtAlamat3" />
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="NoAkaunBank" class="control-label"></label>
+                                        <input asp-for="NoAkaunBank" class="form-control form-control-sm text-uppercase" id="txtNoAkaunBank" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="Telefon" class="control-label"></label>
+                                        <input asp-for="Telefon" class="form-control form-control-sm text-uppercase" id="txtTelefon" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="Emel" class="control-label"></label>
+                                        <input asp-for="Emel" class="form-control form-control-sm" id="txtEmel" />
+                                        <span asp-validation-for="Emel" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            break;
                     }
 
-                    @if (Model.SuPekerjaId != null)
-                    {
-                        <div class="form-row">
-                            <div class="col-md-12">
-                                <label asp-for="SuPekerjaId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPembekal" disabled>
-                                    <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
-                                    @foreach (var s in ViewBag.SuPekerja)
-                                    {
-                                        <option value="@s.Id">@s.NoGaji - @s.Nama</option>
-                                    }
-                                </select>
-                                <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
-                            </div>
-                        </div>
-                    }
 
-                    <div class="form-row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label asp-for="NoKP" class="control-label">No Kad Pengenalan</label>
-                                <input asp-for="NoKP" class="form-control form-control-sm" id="txtNoKP" />
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label asp-for="Nama" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" id="txtNamaPembekal" required readonly />
-                                <span asp-validation-for="Nama" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Alamat1" class="control-label">Alamat</label>
-                        <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" id="txtAlamat1" />
-                    </div>
-                    <div class="form-group">
-                        <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase" id="txtAlamat2" />
-                    </div>
-                    <div class="form-group">
-                        <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" id="txtAlamat3" />
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label asp-for="NoAkaunBank" class="control-label"></label>
-                                <input asp-for="NoAkaunBank" class="form-control form-control-sm text-uppercase" id="txtNoAkaunBank" />
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label asp-for="Telefon" class="control-label"></label>
-                                <input asp-for="Telefon" class="form-control form-control-sm text-uppercase" id="txtTelefon" />
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label asp-for="Emel" class="control-label"></label>
-                                <input asp-for="Emel" class="form-control form-control-sm" id="txtEmel" />
-                                <span asp-validation-for="Emel" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
                     <div class="form-row">
                         <div class="col-md-4">
                             <label asp-for="JCaraBayarId" class="control-label"></label><span class="text-danger control-label">*</span>
@@ -179,6 +182,84 @@
                         <textarea asp-for="Perihal" class="form-control form-control-sm text-uppercase" rows="2"></textarea>
                         <span asp-validation-for="Perihal" class="text-danger"></span>
                     </div>
+                    @*hidden values*@
+                <div hidden>
+                    @*hidden type input*@
+                    <div class="form-group" >
+                        <label asp-for="NoPV" class="control-label"></label>
+                        <input id="noRujukan" asp-for="NoPV" class="form-control form-control-sm" readonly />
+                        <span asp-validation-for="NoPV" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-lg-2 pb-3">
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+
+                                <div class="form-group col-sm">
+                                    <label class="control-label">Jenis Baucer</label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer1" name="FlJenisBaucer" class="custom-control-input" value="0" checked>
+                                        <label class="custom-control-label" for="FlJenisBaucer1">Am</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer2" name="FlJenisBaucer" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="FlJenisBaucer">Pembekal</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="2">
+                                        <label class="custom-control-label" for="FlCetak3">Pekerja</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+                                <div class="form-group col-sm">
+                                    <label class="control-label">Cetak</label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlCetak" type="radio" id="FlCetak1" name="FlCetak" class="custom-control-input" value="0" checked>
+                                        <label class="custom-control-label" for="FlCetak1">Belum</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlCetak" type="radio" id="FlCetak2" name="FlCetak" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="FlCetak">Sudah</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+                                <div class="form-group col-sm">
+                                    <label class="control-label">Posting</label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlPosting" type="radio" id="FlPosting1" name="FlPosting" class="custom-control-input" value="0" checked>
+                                        <label class="custom-control-label" for="FlPosting">Belum</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlPosting" type="radio" id="FlPosting2" name="FlPosting" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="FlPosting">Sudah</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+                                <div class="form-group col-sm">
+                                    <label class="control-label">Batal</label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal1" class="custom-control-input" value="0" checked>
+                                        <label class="custom-control-label" for="FlBatal">Belum</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="FlBatal">Sudah</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                     <br />
                     @*table Objek*@
                     <div class="card box-shadow mb-3 mt-2">
@@ -189,8 +270,8 @@
                             <table id="tblObjek" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th style="width:40%">Kod</th>
-                                        <th style="width:50%">Amaun</th>
+                                        <th style="width:70%">Kod</th>
+                                        <th style="width:30%">Amaun</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -245,7 +326,7 @@
                     @*table Objek end*@
 
                     @*table Inbois*@
-                    @if (Model.AkPembekalId != 0)
+                    @if (Model.FlJenisBaucer == 1)
                     {
                         <div class="card box-shadow mb-3" id="cardInbois">
                             <div class="card-header">
@@ -270,7 +351,7 @@
                                             {
                                                 <tr id="@item.Id">
                                                     <td id="akBelianId" hidden>@item.AkBelianId</td>
-                                                    <td class="text-left">@item.AkBelian.NoInbois</td>
+                                                    <td class="text-left">@item.AkBelian.NoInbois.Substring(3)</td>
                                                     <td>@item.AkBelian.Tarikh.ToString("dd/MM/yyyy")</td>
                                                     <td class="text-right amaunInbois">@item.Amaun</td>
                                                     @if (item.AkBelian.AkPO != null)
@@ -331,10 +412,6 @@
                                 </div>
                             </div>
                         </div>
-                    }
-                    else
-                    {
-
                     }
 
                     @*table Inbois end*@

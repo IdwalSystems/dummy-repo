@@ -559,7 +559,6 @@ namespace MSNK.Controllers
             }
 
             var akPV = await _akPVRepo.GetById((int)id);
-            
 
             if (akPV == null)
             {
@@ -932,19 +931,89 @@ namespace MSNK.Controllers
             }
 
             var akPV = await _akPVRepo.GetById((int)id);
+
             if (akPV == null)
             {
                 return NotFound();
             }
+            AkPVViewModel akPVView = new AkPVViewModel();
 
-            if(akPV.AkPV2.Any())
+            //fill in view model AkPVViewModel from akPV
+            akPVView.AkPembekalId = akPV.AkPembekalId;
+            akPVView.SuPekerjaId = akPV.SuPekerjaId;
+            akPVView.Id = akPV.Id;
+            akPVView.Tahun = akPV.Tahun;
+            akPVView.NoPV = akPV.NoPV;
+            akPVView.Tarikh = akPV.Tarikh;
+            akPVView.TarikhTerima = akPV.TarikhTerima;
+            akPVView.JKW = akPV.JKW;
+            akPVView.AkBank = akPV.AkBank;
+            akPVView.Jumlah = akPV.Jumlah;
+            akPVView.TarikhPosting = akPV.TarikhPosting;
+            akPVView.JCaraBayarId = akPV.JCaraBayarId;
+            akPVView.AkBankId = akPV.AkBankId;
+            akPVView.JKWId = akPV.JKWId;
+
+            switch (akPV.FlJenisBaucer)
             {
-                akPV.denganTanggungan = true;
+                //pembekal
+                case 1:
+                    akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
+                    akPVView.NoKP = "-";
+                    akPVView.Penerima = akPV.AkPembekal.NamaSykt;
+                    akPVView.Alamat1 = akPV.AkPembekal.Alamat1;
+                    akPVView.Alamat2 = akPV.AkPembekal.Alamat2;
+                    akPVView.Alamat3 = akPV.AkPembekal.Alamat3;
+                    akPVView.NoAkaunBank = akPV.AkPembekal.AkaunBank;
+                    akPVView.Telefon = akPV.AkPembekal.Telefon1;
+                    akPVView.Emel = akPV.AkPembekal.Emel;
+                    break;
+                //pekerja
+                case 2:
+                    akPVView.KodPenerima = akPV.SuPekerja.NoGaji;
+                    akPVView.NoKP = akPV.SuPekerja.NoKp;
+                    akPVView.Penerima = akPV.SuPekerja.Nama;
+                    akPVView.Alamat1 = akPV.SuPekerja.Alamat1;
+                    akPVView.Alamat2 = akPV.SuPekerja.Alamat2;
+                    akPVView.Alamat3 = akPV.SuPekerja.Alamat3;
+                    akPVView.NoAkaunBank = akPV.SuPekerja.NoAkaunBank;
+                    akPVView.Telefon = akPV.SuPekerja.TelefonBimbit;
+                    akPVView.Emel = akPV.SuPekerja.Emel;
+                    break;
+                //Am
+                default:
+                    akPVView.denganTanggungan = akPV.denganTanggungan;
+                    akPVView.KodPenerima = "-";
+                    akPVView.NoKP = akPV.NoKP;
+                    akPVView.Penerima = akPV.Nama;
+                    akPVView.Alamat1 = akPV.Alamat1;
+                    akPVView.Alamat2 = akPV.Alamat2;
+                    akPVView.Alamat3 = akPV.Alamat3;
+                    akPVView.NoAkaunBank = akPV.NoAkaunBank;
+                    akPVView.Telefon = akPV.Telefon;
+                    akPVView.Emel = akPV.Emel;
+                    break;
             }
 
-            PopulateList();
+            akPVView.NoCekAtauEFT = akPV.NoCekAtauEFT;
+            akPVView.TarCekAtauEFT = akPV.TarCekAtauEFT;
+            akPVView.Perihal = akPV.Perihal;
+            akPVView.CaraBayar = akPV.JCaraBayar.Perihal;
+            akPVView.FlPosting = akPV.FlPosting;
+            akPVView.FlCetak = akPV.FlCetak;
+            akPVView.FlBatal = akPV.FlBatal;
+            akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
+
+            akPVView.AkPV1 = akPV.AkPV1;
+            foreach (AkPV2 item in akPV.AkPV2)
+            {
+                akPVView.JumlahInbois += item.Amaun;
+            }
+            akPVView.AkPV2 = akPV.AkPV2;
+
             PopulateTable(id);
-            return View(akPV);
+            PopulateList();
+            return View(akPVView);
         }
 
         // update add akPV1
@@ -1202,7 +1271,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkPV akPV, int JKWId, int AkPembekalId, int AkBankId, int JCaraBayarId, decimal JumlahInbois)
+        public async Task<IActionResult> Edit(int id, AkPV akPV, int JKWId,string Penerima, int AkBankId, int JCaraBayarId, decimal JumlahInbois)
         {
             if (id != akPV.Id)
             {
@@ -1214,6 +1283,43 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+                    var akPVAsal = await _akPVRepo.GetById(id);
+                    var jumlah = akPVAsal.Jumlah;
+
+                    switch (akPV.FlJenisBaucer)
+                    {
+                        case 1:
+                            var pembekal = akPVAsal.AkPembekal;
+                            akPV.Nama = pembekal.NamaSykt;
+                            akPV.Alamat1 = pembekal.Alamat1;
+                            akPV.Alamat2 = pembekal.Alamat2;
+                            akPV.Alamat3 = pembekal.Alamat3;
+                            akPV.Emel = pembekal.Emel;
+                            akPV.Telefon = pembekal.Telefon1;
+                            akPV.NoAkaunBank = pembekal.AkaunBank;
+                            break;
+                        case 2:
+                            var pekerja = akPVAsal.SuPekerja;
+                            akPV.Nama = pekerja.Nama;
+                            akPV.Alamat1 = pekerja.Alamat1;
+                            akPV.Alamat2 = pekerja.Alamat2;
+                            akPV.Alamat3 = pekerja.Alamat3;
+                            akPV.Emel = pekerja.Emel;
+                            akPV.Telefon = pekerja.TelefonBimbit;
+                            akPV.NoAkaunBank = pekerja.NoAkaunBank;
+                            break;
+                        default:
+                            akPV.Nama = Penerima;
+                            break;
+                    }
+
+                    akPV.SuPekerjaId = akPVAsal.SuPekerjaId;
+                    akPV.AkPembekalId = akPVAsal.AkPembekalId;
+                    akPV.TarMasuk = akPVAsal.TarMasuk;
+                    akPV.UserId = akPVAsal.UserId;
+                    
+                    _context.Entry(akPVAsal).State = EntityState.Detached;
+
                     akPV.UserIdKemaskini = user.UserName;
                     akPV.TarKemaskini = DateTime.Now;
                     if (akPV.Perihal == null)
@@ -1228,7 +1334,15 @@ namespace MSNK.Controllers
                     appLog.UserId = user.UserName;
                     appLog.LgModule = modul + "E";
                     appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Baucer Pembayaran - Ubah";
+                    if (jumlah != akPV.Jumlah)
+                    {
+                        appLog.LgNote = modul + " Baucer Pembayaran - Ubah Jumlah dari RM" + jumlah + " ke RM" + akPV.Jumlah;
+                    }
+                    else
+                    {
+                        appLog.LgNote = modul + " Baucer Pembayaran - Ubah";
+                    }
+                    
                     appLog.NoRujukan = akPV.NoPV;
                     appLog.Jumlah = akPV.Jumlah;
 
@@ -1415,42 +1529,41 @@ namespace MSNK.Controllers
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
             data.AkPV2 = akPV.AkPV2;
 
-            if (akPV.AkPembekal != null)
+            switch (akPV.FlJenisBaucer)
             {
-                data.KodPenerima = akPV.AkPembekal.KodSykt;
-                namaBankPenerima = akPV.AkPembekal.JBank.Nama;
-                noAkaunBank = akPV.AkPembekal.AkaunBank;
-                //Note:
-                //JenisBaucer = 1 'dengan tanggungan'
-                //JenisBaucer = 2 'tanpa tanggungan'
-                data.JenisBaucer = "1";
-                foreach (AkPV2 item in data.AkPV2)
-                {
-                    jumlahInbois += item.Amaun;
-                    if (item.AkBelian.AkPO != null)
+                //pembekal
+                case 1:
+                    data.KodPenerima = akPV.AkPembekal.KodSykt;
+                    namaBankPenerima = akPV.AkPembekal.JBank.Nama;
+                    noAkaunBank = akPV.AkPembekal.AkaunBank;
+
+                    foreach (AkPV2 item in data.AkPV2)
                     {
-                        jumlahPO += item.AkBelian.AkPO.Jumlah;
+                        jumlahInbois += item.Amaun;
+                        if (item.AkBelian.AkPO != null)
+                        {
+                            jumlahPO += item.AkBelian.AkPO.Jumlah;
+                        }
                     }
-                }
-                data.jumlahInbois = jumlahInbois;
-                data.jumlahPO = jumlahPO;
+                    data.jumlahInbois = jumlahInbois;
+                    data.jumlahPO = jumlahPO;
+                    break;
+                //pekerja
+                case 2:
+                    data.KodPenerima = akPV.SuPekerja.NoGaji;
+                    namaBankPenerima = akPV.SuPekerja.JBank.Nama;
+                    noAkaunBank = akPV.SuPekerja.NoAkaunBank;
+
+                    break;
+                //am
+                default:
+                    data.KodPenerima = "";
+                    noAkaunBank = akPV.NoAkaunBank;
+                    break;
             }
 
-            if (akPV.SuPekerja != null)
-            {
-                data.KodPenerima = akPV.SuPekerja.NoGaji;
-                namaBankPenerima = akPV.SuPekerja.JBank.Nama;
-                noAkaunBank = akPV.SuPekerja.NoAkaunBank;
-                data.JenisBaucer = "2";
-            }
-
-            if(akPV.AkPembekal== null && akPV.SuPekerja == null)
-            {
-                data.KodPenerima = "";            
-                data.JenisBaucer = "2";
-                noAkaunBank = akPV.NoAkaunBank;
-            }
-
+            data.denganTanggungan = akPV.denganTanggungan;
+            data.FlJenisBaucer = akPV.FlJenisBaucer;
             data.Penerima = akPV.Nama;
             data.NoAkaunBankPenerima = noAkaunBank;
             data.NamaBankPenerima = namaBankPenerima;
