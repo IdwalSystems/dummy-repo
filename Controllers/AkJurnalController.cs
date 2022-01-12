@@ -830,40 +830,43 @@ namespace MSNK.Controllers
                     //insert into akAkaun
                     int currentIdx = 0;
                     decimal currentDebit = 0;
-                    //foreach(AkJurnal1 debit1 in akJ1.Where(z => z.Debit > 0)) 
-                    //{
-                    //    foreach (AkJurnal1 kredit1 in akJ1.Where(z=>z.Kredit>0))
-                    //    {
-                    //        AkAkaun akADebit = new AkAkaun();
-                    //        akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
-                    //        akADebit.JKWId = akJurnal.JKWId;
-                    //        akADebit.Tarikh = akJurnal.Tarikh;
-                    //        akADebit.AkCartaId1 = debit1.AkCartaId;
-                    //        akADebit.Debit = kredit1.Kredit;
-                    //        akADebit.AkCartaId2 = kredit1.AkCartaId;
-                    //        akADebit.Kredit = 0;
-                    //        try
-                    //        {
-                    //            await _akAkaunRepo.Insert(akADebit);
-                    //        }
-                    //        catch
-                    //        {
-                    //            TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
-                    //        }
-                    //        finally
-                    //        {
-                    //            akADebit = new AkAkaun();
-                    //            akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
-                    //            akADebit.JKWId = akJurnal.JKWId;
-                    //            akADebit.Tarikh = akJurnal.Tarikh;
-                    //            akADebit.AkCartaId1 = kredit1.AkCartaId;
-                    //            akADebit.Debit = 0;
-                    //            akADebit.AkCartaId2 = debit1.AkCartaId;
-                    //            akADebit.Kredit = kredit1.Kredit;
-                    //            await _akAkaunRepo.Insert(akADebit);
-                    //        }
-                    //    };
-                    //};
+                    foreach (AkJurnal1 debit1 in akJ1.Where(z => z.Debit > 0))
+                    {
+                        currentDebit = debit1.Debit;
+                        foreach (AkJurnal1 kredit1 in akJ1.Where(z => z.Kredit > 0&&z.Indeks>currentIdx&&currentDebit>0))
+                        {
+                            AkAkaun akADebit = new AkAkaun();
+                            akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
+                            akADebit.JKWId = akJurnal.JKWId;
+                            akADebit.Tarikh = akJurnal.Tarikh;
+                            akADebit.AkCartaId1 = debit1.AkCartaId;
+                            akADebit.Debit = kredit1.Kredit;
+                            akADebit.AkCartaId2 = kredit1.AkCartaId;
+                            akADebit.Kredit = 0;
+                            try
+                            {
+                                await _akAkaunRepo.Insert(akADebit);
+                                currentDebit -= kredit1.Kredit;
+                            }
+                            catch
+                            {
+                                TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+                            }
+                            finally
+                            {
+                                akADebit = new AkAkaun();
+                                akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
+                                akADebit.JKWId = akJurnal.JKWId;
+                                akADebit.Tarikh = akJurnal.Tarikh;
+                                akADebit.AkCartaId1 = kredit1.AkCartaId;
+                                akADebit.Debit = 0;
+                                akADebit.AkCartaId2 = debit1.AkCartaId;
+                                akADebit.Kredit = kredit1.Kredit;
+                                await _akAkaunRepo.Insert(akADebit);
+                                currentIdx = kredit1.Indeks;
+                            }
+                        };
+                    };
 
                     //update posting status in akTerima
                     akJurnal.Posting = 1;
