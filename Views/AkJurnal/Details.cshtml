@@ -114,6 +114,7 @@
                             <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
                                 <thead>
                                     <tr>
+                                        <th>Indeks</th>
                                         <th style="width:60%">Kod</th>
                                         <th class="text-right">Debit RM</th>
                                         <th class="text-right">Kredit RM</th>
@@ -124,6 +125,7 @@
                                     @foreach (var item in ViewBag.akJurnal1)
                                     {
                                     <tr id="@item.Id">
+                                        <td>@(item.Indeks.ToString().Length<2?"0"+ item.Indeks.ToString(): item.Indeks.ToString())</td>
                                         <td id="akCartaId" hidden>@item.AkCartaId</td>
                                         <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
                                         <td class="editable-txt text-right" id="td1Amaun">@item.Debit</td>

@@ -6,6 +6,10 @@
         GetCarta(txtKodAkaun.val());
     });
 
+    $(document).ready(function () {
+        getNextIdx();
+    });
+
     function GetCarta(id) {
         var Objek = {
             Id: id
@@ -19,27 +23,34 @@
                 dataType: "json",
                 success: function (r) {
                     //Reference the TextBoxes.
-                    var txtAkJurnal1 = $("#txtAkJurnal1");
                     var txtKodAkaun = $("#txtKodAkaun");
+                    var txtKodAkaunText = $("#txtKodAkaun option:selected");
                     var txtDebitObjek = $("#txtDebitObjek");
                     var txtKreditObjek = $("#txtKreditObjek");
                     var jumDebit = $("#JumDebit");
                     var jumKredit = $("#JumKredit");
-                    var txtKodAkaunText = $("#txtKodAkaun option:selected");
+                    var indeks = $("#txtIndeksObjek");
 
                     //Get the reference of the Table's TBODY element.
                     var tBody = $("#tblObjek > TBODY")[0];
+                    //Add Row.
                     var check = false;
+                    var check2 = false;
                     var table = $("#tblObjek tbody");
                     table.find('tr').each(function (i, el) {
                         var $tds = $(this).find('td');
-                        var loop = $tds.eq(1).text();
+                        var loop = $tds.eq(2).text();
+                        var loopidx = $tds.eq(1).text();
                         if (txtKodAkaunText.text().trim() === loop.trim()) {
                             check = true;
+                            $(".errKodAkaun").css({ "display": "block" });
+                        };
+                        if (indeks.val() === parseInt(loopidx).toString()) {
+                            check2 = true;
+                            $(".errIndeks").css({ "display": "block" });
                         };
                     });
-                    if (!check) {
-                        //Add Row.
+                    if (!check && !check2) {
                         var row = tBody.insertRow(-1);
 
                         //Add akCartaId cell.
@@ -47,9 +58,13 @@
                         cell.html(r.record.id);
                         cell.prop("hidden", !this.checked);
 
+                        //Add indeks cell.
+                        var cell = $(row.insertCell(-1));
+                        cell.html(indeks.val().length < 2 ? "0" + indeks.val() : indeks.val());
+
                         //Add kod cell.
                         var cell = $(row.insertCell(-1));
-                        cell.html(r.record.kod + ' - ' + r.record.perihal);
+                        cell.html(r.record.kod + " - " + r.record.perihal);
 
                         //Add debit cell.
                         var cell = $(row.insertCell(-1));
@@ -59,7 +74,6 @@
                             cell.html("0.00");
                         }
                         cell.attr("class", "editable-txt text-right");
-                        cell.attr("id", "td1Debit_" + r.record.Id);
 
                         //Add kredit cell.
                         var cell = $(row.insertCell(-1));
@@ -69,44 +83,55 @@
                             cell.html("0.00");
                         }
                         cell.attr("class", "editable-txt text-right");
-                        cell.attr("id", "td1Kredit_" + r.record.Id);
 
-                        //Add Edit Button cell.
                         cell = $(row.insertCell(-1));
-
                         var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
                         cell.append(btnUpdate1);
 
-                        //Add Remove Button cell.
+                        //Add Button cell.
                         cell = $(row.insertCell(-1));
-
                         var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                         cell.append(btnRemove1);
 
                         var AkJurnal1 = {
-                            AkJurnalId: txtAkJurnal1.val(),
                             AkCartaId: txtKodAkaun.val(),
                             Debit: txtDebitObjek.val(),
-                            Kredit: txtKreditObjek.val()
+                            Kredit: txtKreditObjek.val(),
+                            Indeks: indeks.val()
                         }
 
-                        if (txtKodAkaun.val) {
+                        if (txtKodAkaun.val()) {
                             $.ajax({
                                 type: "POST",
-                                url: "/AkJurnal/InsertUpdateAkJurnal1",
+                                url: "/AkJurnal/SaveAkJurnal1",
                                 data: AkJurnal1,
                                 dataType: "json",
                                 success: function (r) {
                                     //Clear the TextBoxes.
-                                    txtKodAkaun.val("");
                                     txtDebitObjek.val("0.00");
                                     txtKreditObjek.val("0.00");
                                     jumDebit.val(r.record.value.debit);
                                     jumKredit.val(r.record.value.kredit);
+
+                                    $(".errKodAkaun").css({ "display": "none" });
+                                    $(".errIndeks").css({ "display": "none" });
+
+                                    var nextIdx = 0;
+                                    var table = $("#tblObjek tbody");
+                                    table.find('tr').each(function (i, el) {
+                                        var $tds = $(this).find('td');
+                                        var idx = $tds.eq(1).text();
+                                        var intidx = parseInt(idx);
+                                        nextIdx = nextIdx < intidx ? intidx : nextIdx;
+                                    });
+                                    indeks.val(round5(nextIdx));
+                                },
+                                error: function (req, status, error) {
+                                    alert(error);
                                 }
                             });
                         }
-                    }
+                    };
                 }
             });
         }
@@ -119,6 +144,7 @@
         var akJurnalId = $('#Id').val();
         var akCartaId = $("TD", row).eq(0).html();
         var idJurnal1 = row.attr('id');
+        var name = $("TD", row).eq(2).html();
 
         var AkJurnal1 = {
             AkJurnalId: akJurnalId,
@@ -128,15 +154,17 @@
         if (name != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkJurnal/UpdateAkJurnal1",
+                url: "/AkJurnal/GetAnItemCartAkJurnal1",
                 data: AkJurnal1,
                 dataType: "json",
                 success: function (r) {
-                    //Delete the Table row using it's Index.
+                    console.log(r);
                     $("#moId1").val(r.record.id);
+                    $("#moIndeks").val((r.record.indeks).toString().length < 2 ? "0" + (r.record.indeks).toString() : r.record.indeks);
                     $("#moKodAkaun").val(r.record.akCartaId);
                     $("#moDebit").val(r.record.debit.toFixed(2));
                     $("#moKredit").val(r.record.kredit.toFixed(2));
+                    $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
                 }
             });
         }
@@ -145,6 +173,9 @@
         var id = $("#moId1").val();
         var debit = $("#moDebit").val();
         var kredit = $("#moKredit").val();
+        var akCartaId = $("#moKodAkaun").val();
+        var indeks = $("#moIndeks").val();
+        var txtCarta = $("#moKodAkaun option:selected").text();
         var akJurnalId = $("#Id").val();
         var jumDebit = $("#JumDebit");
         var jumKredit = $("#JumKredit");
@@ -152,63 +183,86 @@
         var AkJurnal1 = {
             Id: id,
             AkJurnalId: akJurnalId,
+            AkCartaId: akCartaId,
             Debit: debit,
-            Kredit: kredit
+            Kredit: kredit,
+            Indeks: indeks
         }
 
+        var check = false;
+        var table = $("#tblObjek tbody");
+        table.find('tr').each(function (i, el) {
+            var $tds = $(this).find('td');
+            var idx = $tds.eq(1).text();
+            var carta = $tds.eq(2).text();
+            var intidx = parseInt(idx);
 
-        $("table tbody#tbodyObjek").empty();
-        
-        $.ajax({
-            type: "POST",
-            url: "/AkJurnal/SaveUpdateAkJurnal1",
-            data: AkJurnal1,
-            dataType: "json",
-            beforeSend: function () {
-                $('#tblObjek').addClass('d-none');
-                $('#loader').removeClass('d-none');
-            },
-            success: function (r) {
-                //insert notification here
-
-                $.ajax({
-                    type: "POST",
-                    url: "/AkJurnal/GetCart1",
-                    data: AkJurnal1,
-                    dataType: "json",
-                    success: function (r) {
-
-                        //refresh updated table objek
-                        var sumdebit = 0;
-                        var sumkredit = 0;
-                        if (r.data.akJurnal1.length > 0) {
-                            for (var i = 0; i < r.data.akJurnal1.length; i++) {
-                                var item1 = r.data.akJurnal1[i];
-                                var str =
-                                    "<tr id='" + item1.id + "'><td id='akCartaId' hidden>" + item1.akCartaId +
-                                    "</td><td>" + item1.akCarta.kod + ' - ' + item1.akCarta.perihal +
-                                    "</td><td class='editable-txt text-right'>" + (item1.debit).toFixed(2) +
-                                    "</td><td class='editable-txt text-right'>" + (item1.kredit).toFixed(2) +
-                                    "</td><td>" +
-                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
-                                    "</td><td>" +
-                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
-                                    "</td><tr>";
-                                $("table tbody#tbodyObjek").append(str);
-                                sumdebit += item1.debit;
-                                sumkredit += item1.kredit;
-                            }
-                        }
-                        jumDebit.val(sumdebit.toFixed(2));
-                        jumKredit.val(sumkredit.toFixed(2));
-                    }
-                });
-            },
-            complete: function () {
-                $('#tblObjek').removeClass('d-none');
-                $('#loader').addClass('d-none');
-            },
+            if (indeks === parseInt(intidx).toString()) {
+                if (txtCarta.trim() === carta.trim()) {
+                    check = false;
+                } else {
+                    check = true;
+                    $(".errModelIndeks").css({ "display": "block" });
+                }
+            };
         });
+
+        if (!check) {
+            $.ajax({
+                type: "POST",
+                url: "/AkJurnal/SaveCartAkJurnal1",
+                data: AkJurnal1,
+                dataType: "json",
+                beforeSend: function () {
+                    $('#tblObjek').addClass('d-none');
+                    $('#loader').removeClass('d-none');
+                },
+                success: function (r) {
+                    //insert notification here
+                    $("table tbody#tbodyObjek").empty();
+                    $.ajax({
+                        type: "POST",
+                        url: "/AkJurnal/GetAllItemCartAkJurnal1",
+                        data: AkJurnal1,
+                        dataType: "json",
+                        success: function (r) {
+
+                            //refresh updated table objek
+                            var sumdebit = 0;
+                            var sumkredit = 0;
+                            if (r.record.length > 0) {
+                                for (var i = 0; i < r.record.length; i++) {
+                                    var item1 = r.record[i];
+                                    var str =
+                                        "<tr id='" + item1.id + "'><td id='akCartaId' hidden>" + item1.akCartaId +
+                                        "</td><td>" + (((item1.indeks.toString()).length < 2) ? ("0" + (item1.indeks).toString()) : item1.indeks) +
+                                        "</td><td>" + item1.akCarta.kod + ' - ' + item1.akCarta.perihal +
+                                        "</td><td class='editable-txt text-right'>" + (item1.debit).toFixed(2) +
+                                        "</td><td class='editable-txt text-right'>" + (item1.kredit).toFixed(2) +
+                                        "</td><td>" +
+                                        "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                        "</td><td>" +
+                                        "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                        "</td><tr>";
+                                    $("table tbody#tbodyObjek").append(str);
+                                    sumdebit += item1.debit;
+                                    sumkredit += item1.kredit;
+                                }
+                            }
+                            jumDebit.val(sumdebit.toFixed(2));
+                            jumKredit.val(sumkredit.toFixed(2));
+                            getNextIdx();
+                            $('#modalObjek').modal('hide');
+                            $(".errModelIndeks").css({ "display": "none" });
+                        }
+                    });
+                },
+                complete: function () {
+                    $('#tblObjek').removeClass('d-none');
+                    $('#loader').addClass('d-none');
+                },
+            });
+        };
     };
 
 
@@ -220,7 +274,7 @@
         var akCartaId = $("TD", row).eq(0).html();
         var jumDebit = $("#JumDebit");
         var jumKredit = $("#JumKredit");
-        var name = $("TD", row).eq(1).html();
+        var name = $("TD", row).eq(2).html();
         var idJurnal1 = row.attr('id');
 
 
@@ -235,7 +289,7 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkJurnal/RemoveUpdateAkJurnal1",
+                    url: "/AkJurnal/RemoveAkJurnal1",
                     data: AkJurnal1,
                     dataType: "json",
                     success: function (r) {
@@ -249,5 +303,25 @@
         }
     };
     //remove tbl objek end
+
+    function getNextIdx() {
+        var nextIdx = 0;
+        var table = $("#tblObjek tbody");
+        table.find('tr').each(function (i, el) {
+            var $tds = $(this).find('td');
+            var idx = $tds.eq(1).text();
+            var intidx = parseInt(idx);
+            nextIdx = nextIdx < intidx ? intidx : nextIdx;
+        });
+        $("#txtIndeksObjek").val(round5(nextIdx));
+    };
+
+    function round5(x) {
+        if (Math.ceil(x / 5) * 5 === x) {
+            return (Math.ceil(x / 5) * 5) + 5;
+        } else {
+            return Math.ceil(x / 5) * 5;
+        }
+    };
 
 </script>

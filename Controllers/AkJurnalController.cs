@@ -255,7 +255,7 @@ namespace MSNK.Controllers
         public async Task<IActionResult> Create(AkJurnal akJurnal, int JKWId, decimal JumDebit, decimal JumKredit)
         {
             AkJurnal m = new AkJurnal();
-            var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
+            var user = await _userManager.GetUserAsync(User);
 
             decimal debit = 0;
             decimal kredit = 0;
@@ -284,9 +284,9 @@ namespace MSNK.Controllers
                         m.Posting = akJurnal.Posting;
                         m.Cetak = akJurnal.Cetak;
                         m.Batal = akJurnal.Batal;
-                        m.UserId = username;
+                        m.AkJurnal1 = _cart.Lines1.OrderBy(x=>x.Indeks).ToList();
+                        m.UserId = user.UserName;
                         m.TarMasuk = DateTime.Now;
-                        m.AkJurnal1 = _cart.Lines1.ToArray();
 
                         await _akJurnalRepo.Insert(m);
                         await AddLogAsync("Tambah", noRujukan, kredit);
@@ -337,8 +337,6 @@ namespace MSNK.Controllers
         }
 
         // POST: AkJurnal/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkJurnal akJurnal)
@@ -349,9 +347,8 @@ namespace MSNK.Controllers
             }
 
             decimal debit = 0, kredit = 0;
-            var akj1 = _akJurnal1Repo.GetAll(akJurnal.Id);
-            _ = akj1.Result.ToArray();
-            foreach (var q in akj1.Result.ToArray())
+            var akj1 = _cart.Lines1;
+            foreach (var q in akj1)
             {
                 debit += q.Debit;
                 kredit += q.Kredit;
@@ -362,6 +359,23 @@ namespace MSNK.Controllers
                 {
                     try
                     {
+                        var user = await _userManager.GetUserAsync(User);
+                        AkJurnal akJurnalAsal = await _akJurnalRepo.GetById(id);
+                        akJurnalAsal.AkJurnal1 = _akJurnal1Repo.GetAll(id).Result.ToList();
+                        foreach(AkJurnal1 item in akJurnalAsal.AkJurnal1)
+                        {
+                            var model = _context.AkJurnal1.FirstOrDefault(q => q.Id == item.Id);
+                            if(model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+                        _context.Entry(akJurnalAsal).State = EntityState.Detached;
+
+                        akJurnal.AkJurnal1 = _cart.Lines1.OrderBy(q => q.Indeks).ToList();
+                        akJurnal.UserIdKemaskini = user.UserName;
+                        akJurnal.TarKemaskini = DateTime.Now;
+
                         _context.Update(akJurnal);
                         await _context.SaveChangesAsync();
                     }
@@ -650,6 +664,65 @@ namespace MSNK.Controllers
             }
         }
 
+        public JsonResult GetAnItemCartAkJurnal1(AkJurnal1 akJurnal1)
+        {
+            try
+            {
+                AkJurnal1 data = _cart.Lines1.Where(x => x.AkCartaId == akJurnal1.AkCartaId).FirstOrDefault();
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public JsonResult SaveCartAkJurnal1(AkJurnal1 akJurnal1)
+        {
+            try
+            {
+                var akJ1 = _cart.Lines1.Where(x=>x.AkCartaId == akJurnal1.AkCartaId).FirstOrDefault();
+                var user = _userManager.GetUserName(User);
+
+                if (akJ1 != null)
+                {
+                    _cart.RemoveItem1(akJurnal1.AkCartaId);
+                    _cart.AddItem1(
+                        akJurnal1.AkJurnalId,
+                        akJurnal1.Indeks,
+                        akJurnal1.AkCartaId,
+                        akJurnal1.Debit,
+                        akJurnal1.Kredit
+                        );
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public JsonResult GetAllItemCartAkJurnal1(AkJurnal1 akJurnal1)
+        {
+            try
+            {
+                List<AkJurnal1> data = _cart.Lines1.ToList();
+                foreach (AkJurnal1 item in data)
+                {
+                    var akCarta = _context.AkCarta.Find(item.AkCartaId);
+                    item.AkCarta = akCarta;
+                }
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+
         private async Task AddLogAsync(string operasi, string rujukan, decimal jumlah)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -743,9 +816,9 @@ namespace MSNK.Controllers
             else
             {
                 AkJurnal akJurnal = await _context.AkJurnal.Include(x => x.AkJurnal1).FirstOrDefaultAsync(x => x.Id == id);
-                List<AkJurnal1> akJ1 = akJurnal.AkJurnal1.ToList();
+                List<AkJurnal1> akJ1 = akJurnal.AkJurnal1.OrderBy(x=>x.Indeks).ToList();
 
-                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akJurnal.NoJurnal).FirstOrDefaultAsync();
+                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == "JR/"+akJurnal.NoJurnal).FirstOrDefaultAsync();
                 if (akAkaun != null)
                 {
                     //duplicate id error
@@ -755,40 +828,43 @@ namespace MSNK.Controllers
                 {
                     //posting operation start here
                     //insert into akAkaun
-                    foreach(AkJurnal1 debit1 in akJ1.Where(z => z.Debit > 0)) 
-                    {
-                        foreach (AkJurnal1 kredit1 in akJ1.Where(z=>z.Kredit>0))
-                        {
-                            AkAkaun akADebit = new AkAkaun();
-                            akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
-                            akADebit.JKWId = akJurnal.JKWId;
-                            akADebit.Tarikh = akJurnal.Tarikh;
-                            akADebit.AkCartaId1 = debit1.AkCartaId;
-                            akADebit.Debit = kredit1.Kredit;
-                            akADebit.AkCartaId2 = kredit1.AkCartaId;
-                            akADebit.Kredit = 0;
-                            try
-                            {
-                                await _akAkaunRepo.Insert(akADebit);
-                            }
-                            catch
-                            {
-                                TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
-                            }
-                            finally
-                            {
-                                akADebit = new AkAkaun();
-                                akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
-                                akADebit.JKWId = akJurnal.JKWId;
-                                akADebit.Tarikh = akJurnal.Tarikh;
-                                akADebit.AkCartaId1 = kredit1.AkCartaId;
-                                akADebit.Debit = 0;
-                                akADebit.AkCartaId2 = debit1.AkCartaId;
-                                akADebit.Kredit = kredit1.Kredit;
-                                await _akAkaunRepo.Insert(akADebit);
-                            }
-                        };
-                    };
+                    int currentIdx = 0;
+                    decimal currentDebit = 0;
+                    //foreach(AkJurnal1 debit1 in akJ1.Where(z => z.Debit > 0)) 
+                    //{
+                    //    foreach (AkJurnal1 kredit1 in akJ1.Where(z=>z.Kredit>0))
+                    //    {
+                    //        AkAkaun akADebit = new AkAkaun();
+                    //        akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
+                    //        akADebit.JKWId = akJurnal.JKWId;
+                    //        akADebit.Tarikh = akJurnal.Tarikh;
+                    //        akADebit.AkCartaId1 = debit1.AkCartaId;
+                    //        akADebit.Debit = kredit1.Kredit;
+                    //        akADebit.AkCartaId2 = kredit1.AkCartaId;
+                    //        akADebit.Kredit = 0;
+                    //        try
+                    //        {
+                    //            await _akAkaunRepo.Insert(akADebit);
+                    //        }
+                    //        catch
+                    //        {
+                    //            TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+                    //        }
+                    //        finally
+                    //        {
+                    //            akADebit = new AkAkaun();
+                    //            akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
+                    //            akADebit.JKWId = akJurnal.JKWId;
+                    //            akADebit.Tarikh = akJurnal.Tarikh;
+                    //            akADebit.AkCartaId1 = kredit1.AkCartaId;
+                    //            akADebit.Debit = 0;
+                    //            akADebit.AkCartaId2 = debit1.AkCartaId;
+                    //            akADebit.Kredit = kredit1.Kredit;
+                    //            await _akAkaunRepo.Insert(akADebit);
+                    //        }
+                    //    };
+                    //};
+
                     //update posting status in akTerima
                     akJurnal.Posting = 1;
                     await _akJurnalRepo.Update(akJurnal);
