@@ -563,7 +563,7 @@
         var sum = 0;
         $('#tbodyPerihal tr').each(function () {
             var amaun = $(this).find(".amaunPerihal").html();
-            sum =+ amaun
+            sum += parseFloat(amaun);
         });
         $('#jumlahPerihal').val(sum.toFixed(2));
 

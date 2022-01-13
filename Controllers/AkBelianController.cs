@@ -73,6 +73,20 @@ namespace MSNK.Controllers
             string searchDate2,
             string searchColumn)
         {
+            List<SelectListItem> columnList = new();
+            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
+            columnList.Add(new SelectListItem() { Text = "No Inbois", Value = "NoRujukan" });
+            columnList.Add(new SelectListItem() { Text = "Nama", Value = "Nama" });
+
+            if (!String.IsNullOrEmpty(searchColumn))
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
+            }
+            else
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
+            }
+
             var akBelian = await _akBelianRepo.GetAll();
 
             //var akBelian = await _context.AkBelian.ToListAsync();
@@ -88,11 +102,11 @@ namespace MSNK.Controllers
                     }
                     else if (searchColumn == "Nama")
                     {
-                        akBelian = akBelian.Where(s => s.AkPO.AkPembekal.NamaSykt.ToUpper().Contains(searchString.ToUpper())).ToList();
+                        akBelian = akBelian.Where(s => s.AkPembekal.NamaSykt.ToUpper().Contains(searchString.ToUpper())).ToList();
                     }
 
 
-                    ViewBag.SearchString = searchString;
+                    ViewBag.SearchData1 = searchString;
 
                 }
 
@@ -112,12 +126,12 @@ namespace MSNK.Controllers
                     ViewBag.SearchData2 = searchDate2;
                 }
 
-                ViewBag.SearchColumn = searchColumn;
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
             // searching with date range condition end
             else
             {
-                ViewBag.SearchColumn = "Tarikh";
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
             }
 
             List<AkBelianViewModel> viewModel = new List<AkBelianViewModel>();
@@ -271,9 +285,9 @@ namespace MSNK.Controllers
 
             var akBelian = await _akBelianRepo.GetById((int)id);
             var kw = await _kwRepo.GetById(akBelian.JKWId);
-            akBelian.JKW = kw;
+
             var kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
-            akBelian.KodObjekAP = kodObjekAkaunPemiutang;
+
             var akPO = new AkPO();
             if (akBelian.AkPOId != null)
             {
@@ -286,18 +300,39 @@ namespace MSNK.Controllers
                 };     
             }
 
-            akBelian.AkPO = akPO;
-
             var pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
-            akBelian.AkPembekal = pembekal;
 
             if (akBelian == null)
             {
                 return NotFound();
             }
-                
+
+            AkBelianViewModel akBelianView = new AkBelianViewModel();
+
+            //fill in view model AkPVViewModel from akPV
+            akBelianView.AkPembekalId = akBelian.AkPembekalId;
+            akBelianView.AkPO = akPO;
+            akBelianView.AkPembekal = pembekal;
+            akBelianView.JKW = kw;
+            akBelianView.Id = akBelian.Id;
+            akBelianView.Tahun = akBelian.Tahun;
+            akBelianView.NoInbois = akBelian.NoInbois;
+            akBelianView.Tarikh = akBelian.Tarikh;
+            akBelianView.JKW = akBelian.JKW;
+            akBelianView.KodObjekAP = kodObjekAkaunPemiutang;
+            akBelianView.Jumlah = akBelian.Jumlah;
+            akBelianView.TarikhPosting = akBelian.TarikhPosting;
+            akBelianView.FlPosting = akBelian.FlPosting;
+            akBelianView.FlBatal = akBelian.FlBatal;
+
+            foreach (AkBelian2 item in akBelian.AkBelian2)
+            {
+                akBelianView.JumlahPerihal += item.Amaun;
+            }
+            akBelianView.AkBelian2 = akBelian.AkBelian2;
+
             PopulateTable(id);
-            return View(akBelian);
+            return View(akBelianView);
         }
 
         // GET: AkBelian/Create
@@ -1040,7 +1075,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkBelian akBelian, int JKWId, int AkBankId, decimal JumlahPerihal)
+        public async Task<IActionResult> Edit(int id, AkBelian akBelian, int JKWId, int AkBankId, int KodObjekAPId, decimal JumlahPerihal)
         {
             if (id != akBelian.Id)
             {
@@ -1056,6 +1091,16 @@ namespace MSNK.Controllers
                         var user = await _userManager.GetUserAsync(User);
 
                         AkBelian akBelianAsal = await _akBelianRepo.GetById(id);
+
+                        // list of input that cannot be change
+                        akBelian.Tahun = akBelianAsal.Tahun;
+                        akBelian.JKWId = akBelianAsal.JKWId;
+                        akBelian.NoInbois = akBelianAsal.NoInbois;
+                        akBelian.AkPembekalId = akBelianAsal.AkPembekalId;
+                        akBelian.TarMasuk = akBelianAsal.TarMasuk;
+                        akBelian.UserId = akBelianAsal.UserId;
+                        akBelian.KodObjekAPId = akBelianAsal.KodObjekAPId;
+                        // list of input that cannot be change end
 
                         foreach (AkBelian1 item in akBelianAsal.AkBelian1)
                         {
@@ -1140,7 +1185,9 @@ namespace MSNK.Controllers
 
             var akBelian = await _akBelianRepo.GetById((int)id);
             var kw = await _kwRepo.GetById(akBelian.JKWId);
-            akBelian.JKW = kw;
+
+            var kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
+
             var akPO = new AkPO();
             if (akBelian.AkPOId != null)
             {
@@ -1154,18 +1201,39 @@ namespace MSNK.Controllers
                 };
             }
 
-            akBelian.AkPO = akPO;
-
             var pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
-            akBelian.AkPembekal = pembekal;
 
             if (akBelian == null)
             {
                 return NotFound();
             }
 
+            AkBelianViewModel akBelianView = new AkBelianViewModel();
+
+            //fill in view model AkPVViewModel from akPV
+            akBelianView.AkPembekalId = akBelian.AkPembekalId;
+            akBelianView.AkPO = akPO;
+            akBelianView.AkPembekal = pembekal;
+            akBelianView.JKW = kw;
+            akBelianView.Id = akBelian.Id;
+            akBelianView.Tahun = akBelian.Tahun;
+            akBelianView.NoInbois = akBelian.NoInbois;
+            akBelianView.Tarikh = akBelian.Tarikh;
+            akBelianView.JKW = akBelian.JKW;
+            akBelianView.KodObjekAP = kodObjekAkaunPemiutang;
+            akBelianView.Jumlah = akBelian.Jumlah;
+            akBelianView.TarikhPosting = akBelian.TarikhPosting;
+            akBelianView.FlPosting = akBelian.FlPosting;
+            akBelianView.FlBatal = akBelian.FlBatal;
+
+            foreach (AkBelian2 item in akBelian.AkBelian2)
+            {
+                akBelianView.JumlahPerihal += item.Amaun;
+            }
+            akBelianView.AkBelian2 = akBelian.AkBelian2;
+
             PopulateTable(id);
-            return View(akBelian);
+            return View(akBelianView);
         }
 
         // POST: AkBelian/Delete/5
@@ -1343,8 +1411,7 @@ namespace MSNK.Controllers
                             Penerima = penerima,
                             VotId = item.AkCartaId,
                             Rujukan = akBelian.NoInbois,
-                            Liabiliti = item.Amaun,
-                            UserId = user.UserName
+                            Liabiliti = item.Amaun
                         };
 
                         await _abBukuVotRepo.Insert(abBukuVot);

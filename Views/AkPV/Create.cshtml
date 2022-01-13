@@ -27,7 +27,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="Tahun" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Tahun" id="txtTahun" class="form-control form-control-sm form-control-sm-custom" required />
+                                <input asp-for="Tahun" id="txtTahun" class="form-control form-control-sm form-control-sm-custom" value="@DateTime.Now.Year.ToString()" required />
                                 <span asp-validation-for="Tahun" class="text-danger"></span>
                             </div>
                         </div>
@@ -35,7 +35,6 @@
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
                                 <select class="form-control form-control-sm" asp-for="JKWId" required id="ddlKW">
-                                    <option value="" hidden>-- Pilih Kumpulan Wang --</option>
                                     @foreach (var s in ViewBag.JKW)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -48,7 +47,6 @@
                             <div class="form-group">
                                 <label asp-for="AkBankId" class="control-label"></label><span class="text-danger control-label">*</span>
                                 <select class="form-control select2 input-group-sm" asp-for="AkBankId" required>
-                                    <option value="" disabled selected>-- Pilih Bank --</option>
                                     @foreach (var s in ViewBag.AkBank)
                                     {
                                         <option value="@s.Id">@s.NoAkaun - @s.JBank.Nama</option>
@@ -98,7 +96,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="NoPV" class="control-label"></label>
-                                <input id="txtNoRujukan" asp-for="NoPV" class="form-control form-control-sm" readonly />
+                                <input id="txtNoRujukan" asp-for="NoPV" value="@ViewBag.NoRujukan" class="form-control form-control-sm" readonly />
                             </div>
                         </div>
                         <div class="col-md-2">

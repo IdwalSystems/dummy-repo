@@ -9,20 +9,26 @@
             <div class="card-header bg-info text-white">
                 <h5>Penerimaan - @ViewData["Title"]</h5>
             </div>
+            
             <div class="card-body">
                 <div class="card mb-2">
                     <div class="card-body">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="kodLaporan" id="rdLPR0011" value="LPR0011">
-                            <label class="form-check-label" for="LPR0011">
-                                Laporan Penyata Pemungut
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="kodLaporan" id="rdLPR0012" value="LPR0012" checked>
-                            <label class="form-check-label" for="LPR0012">
-                                Laporan Penyata Pemungut Terperinci
-                            </label>
+                        <div class="form-group col-sm">
+                            <div class="custom-control custom-radio">
+
+                                <input class="custom-control-input" type="radio" id="LPR0011" name="kodLaporan" value="LPR0011">
+                                <label class="custom-control-label" for="LPR0011">
+                                    Laporan Penyata Pemungut
+                                </label>
+
+                            </div>
+                            <div class="custom-control custom-radio">
+
+                                <input class="custom-control-input" type="radio" name="kodLaporan" id="LPR0012" value="LPR0012" checked>
+                                <label class="custom-control-label" for="LPR0012">
+                                    Laporan Penyata Pemungut Terperinci
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>

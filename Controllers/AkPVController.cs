@@ -79,6 +79,20 @@ namespace MSNK.Controllers
             string searchDate2,
             string searchColumn)
         {
+            List<SelectListItem> columnList = new();
+            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
+            columnList.Add(new SelectListItem() { Text = "No PV", Value = "NoRujukan" });
+            columnList.Add(new SelectListItem() { Text = "Nama", Value = "Nama" });
+
+            if (!String.IsNullOrEmpty(searchColumn))
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
+            }
+            else
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
+            }
+
             var akPV = await _akPVRepo.GetAll();
 
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
@@ -92,11 +106,11 @@ namespace MSNK.Controllers
                     }
                     else if (searchColumn == "Nama")
                     {
-                        akPV = akPV.Where(s => s.AkPembekal.NamaSykt.ToUpper().Contains(searchString.ToUpper())).ToList();
+                        akPV = akPV.Where(s => s.Nama.ToUpper().Contains(searchString.ToUpper())).ToList();
                     }
 
 
-                    ViewBag.SearchString = searchString;
+                    ViewBag.SearchData1 = searchString;
 
                 }
 
@@ -116,12 +130,12 @@ namespace MSNK.Controllers
                     ViewBag.SearchData2 = searchDate2;
                 }
 
-                ViewBag.SearchColumn = searchColumn;
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
             // searching with date range condition end
             else
             {
-                ViewBag.SearchColumn = "Tarikh";
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
             }
 
             List<AkPVViewModel> viewModel = new List<AkPVViewModel>();
@@ -265,7 +279,7 @@ namespace MSNK.Controllers
                     string noRujukan = prefix + "000000";
 
                     var LatestNoRujukan = _context.AkPV
-                        .Where(x => x.Tahun == year)
+                        .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
                         .Max(x => x.NoPV);
                     if (LatestNoRujukan == null)
                     {
@@ -708,6 +722,33 @@ namespace MSNK.Controllers
         // GET: AkPV/Create
         public IActionResult Create()
         {
+            // get latest no rujukan running number  
+            var kw = _context.JKW.FirstOrDefault(x => x.Kod == "100");
+
+            var kumpulanWang = kw.Kod;
+            var year = DateTime.Now.Year.ToString();
+            string prefix = kumpulanWang + year;
+            int x = 1;
+            string noRujukan = prefix + "000000";
+
+            var LatestNoRujukan = _context.AkPV
+                        .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
+                        .Max(x => x.NoPV);
+
+            if (LatestNoRujukan == null)
+            {
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            else
+            {
+                x = int.Parse(LatestNoRujukan.Substring(10));
+                x++;
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+
+            // get latest no rujukan running number end
+            ViewBag.NoRujukan = noRujukan;
+
             PopulateList();
             CartEmpty();
             return View();
@@ -876,7 +917,7 @@ namespace MSNK.Controllers
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkPV
-                        .Where(x => x.Tahun == year)
+                        .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
                         .Max(x => x.NoPV);
 
             if (LatestNoRujukan == null)
@@ -1368,10 +1409,15 @@ namespace MSNK.Controllers
                             break;
                     }
 
+                    // list of input that cannot be change
+                    akPV.Tahun = akPVAsal.Tahun;
+                    akPV.JKWId = akPVAsal.JKWId;
+                    akPV.NoPV = akPVAsal.NoPV;
                     akPV.SuPekerjaId = akPVAsal.SuPekerjaId;
                     akPV.AkPembekalId = akPVAsal.AkPembekalId;
                     akPV.TarMasuk = akPVAsal.TarMasuk;
                     akPV.UserId = akPVAsal.UserId;
+                    // list of input that cannot be change end
 
                     foreach (AkPV1 item in akPVAsal.AkPV1)
                     {

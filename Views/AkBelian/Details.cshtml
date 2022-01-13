@@ -1,4 +1,4 @@
-﻿@model MSNK.Models.Modules.AkBelian
+﻿@model MSNK.Models.Modules.ViewModel.AkBelianViewModel
 
 @{
     ViewData["Title"] = "Papar";
@@ -112,64 +112,71 @@
                     </div>
                 </div>
                 @*table Objek*@
-                <div class="card box-shadow mb-3">
-                    <div class="card-header">
-                        <h6>Objek</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-
-                            <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th style="width:40%">Kod</th>
-                                        <th style="width:50%" class="text-right">Amaun</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyObjek">
-                                    @foreach (var item in ViewBag.akBelian1)
-                                    {
-                                        <tr id="@item.Id">
-                                            <td id="akCartaId" hidden>@item.AkCartaId</td>
-                                            <td class="text-left">@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                            <td class="text-right" id="td1Amaun">@item.Amaun</td>
-                                        </tr>
-
-                                    }
-                                </tbody>
-                                <tfoot>
-
-                                </tfoot>
-                            </table>
-
-                        </div>
-                    </div>
-
+            <div class="card box-shadow mb-3">
+                <div class="card-header">
+                    <h6>Objek</h6>
                 </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+
+                        <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th style="width:40%">Kod</th>
+                                    <th style="width:50%" class="text-right">Amaun</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyObjek">
+                                @foreach (var item in ViewBag.akBelian1)
+                                {
+                                    <tr id="@item.Id">
+                                        <td id="akCartaId" hidden>@item.AkCartaId</td>
+                                        <td class="text-left">@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
+                                        <td class="text-right" id="td1Amaun">@item.Amaun</td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                            <tfoot>
+
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="form-group pb-2">
+                        <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
+                        <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly />
+                        <span asp-validation-for="Jumlah" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
                 @*table Objek end*@
 
                 @*table perihal*@
-                <div class="card box-shadow mb-3 mt-2">
-                    <div class="card-header">
-                        <h6>Perihal</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive-md">
-                            <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th class="text-left">Bil</th>
-                                        <th class="text-left">No Stok</th>
-                                        <th class="text-left">Perihal</th>
-                                        <th class="text-right">Kuantiti</th>
-                                        <th class="text-center">Unit</th>
-                                        <th class="text-right">Harga/Unit</th>
-                                        <th class="text-right">Amaun</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyPerihal">
-                                    @foreach (var item in ViewBag.AkBelian2)
-                                    {
+            <div class="card box-shadow mb-3 mt-2">
+                <div class="card-header">
+                    <h6>Perihal</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive-md">
+                        <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Bil</th>
+                                    <th class="text-left">No Stok</th>
+                                    <th class="text-left">Perihal</th>
+                                    <th class="text-right">Kuantiti</th>
+                                    <th class="text-center">Unit</th>
+                                    <th class="text-right">Harga/Unit</th>
+                                    <th class="text-right">Amaun</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyPerihal">
+                                @foreach (var item in ViewBag.AkBelian2)
+                                {
                                     <tr>
                                         <td class="text-left">@item.Bil</td>
                                         <td class="text-left">@item.NoStok</td>
@@ -180,16 +187,23 @@
                                         <td class="text-right">@item.Amaun</td>
                                     </tr>
 
-                                    }
-                                </tbody>
-                                <tfoot>
-                                </tfoot>
-                            </table>
+                                }
+                            </tbody>
+                            <tfoot>
 
-                        </div>
+                            </tfoot>
+                        </table>
+
                     </div>
-
                 </div>
+                <div class="card-footer">
+                    <div class="form-group">
+                        <label class="control-label">Jumlah Perihal</label>
+                        <input class="form-control form-control-sm" id="jumlahPerihal" value="@Model.JumlahPerihal" name="JumlahPerihal" readonly />
+                    </div>
+                </div>
+
+            </div>
 
 
 
