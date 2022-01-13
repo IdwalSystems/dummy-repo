@@ -13,6 +13,7 @@ using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
+using MSNK.Models.Modules.ViewModel;
 using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
@@ -54,17 +55,20 @@ namespace MSNK.Controllers
             _akAkaunRepo = akAkaunRepository;
             _cart = cart;
         }
-        private string GetKod(int kod)
+        private string GetKod(AkJurnal data)
         {
-            var kw = _context.JKW.FirstOrDefault(x => x.Id == kod);
+            var kw = _context.JKW.FirstOrDefault(x => x.Id == data.JKWId);
 
             var kumpulanWang = kw.Kod;
-            var year = DateTime.Now.Year.ToString();
+            //var year = DateTime.Now.Year.ToString();
+            var year = data.Tarikh.Year;
             string prefix = year +"/"+ kumpulanWang+"/";
             int x = 1;
             string noRujukan = prefix + "000000";
 
-            var LatestNoRujukan = _context.AkJurnal.Max(x => x.NoJurnal);
+            var LatestNoRujukan = _context.AkJurnal
+                .Where(x => x.NoJurnal.Substring(0,9) == prefix)
+                .Max(x => x.NoJurnal);
             if (LatestNoRujukan == null)
             {
                 noRujukan = string.Format("{0:" + prefix + "000000}", x);
@@ -78,18 +82,18 @@ namespace MSNK.Controllers
             return noRujukan;
         }
         [HttpPost]
-        public JsonResult JsonGetKod(string data)
+        public JsonResult JsonGetKod(AkJurnal data)
         {
             try
             {
                 var result = "";
-                if (data == null || data == "")
+                if (data == null)
                 {
                     result = "";
                 }
                 else
                 {
-                    result = GetKod(int.Parse(data));
+                    result = GetKod(data);
                 }
                 return Json(new { result = "OK", record = result });
             }
@@ -269,7 +273,7 @@ namespace MSNK.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    string noRujukan = GetKod(akJurnal.JKWId);
+                    string noRujukan = GetKod(akJurnal);
                     if (akJurnal != null && JKWId != 0)
                     {
                         m.JKWId = akJurnal.JKWId;
@@ -345,6 +349,11 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
+            if (akJurnal.Posting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
 
             decimal debit = 0, kredit = 0;
             var akj1 = _cart.Lines1;
@@ -377,7 +386,9 @@ namespace MSNK.Controllers
                         akJurnal.TarKemaskini = DateTime.Now;
 
                         _context.Update(akJurnal);
+                        await AddLogAsync("Ubah", akJurnal.NoJurnal, kredit);
                         await _context.SaveChangesAsync();
+                        TempData[SD.Success] = "Maklumat berjaya diubah. No jurnal - " + akJurnal.NoJurnal;
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -429,8 +440,15 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akJurnal = await _context.AkJurnal.FindAsync(id);
+            if (akJurnal.Posting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
             _context.AkJurnal.Remove(akJurnal);
+            await AddLogAsync("Hapus", akJurnal.NoJurnal, akJurnal.JumKredit);
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -508,7 +526,7 @@ namespace MSNK.Controllers
                 var data = Json(new { });
                 if (akJurnal1 != null)
                 {
-                    _cart.RemoveItem1(akJurnal1.AkCartaId);
+                    _cart.RemoveItem1(akJurnal1.AkCartaId,akJurnal1.Indeks);
                 }
                 List<AkJurnal1> list = new();
                 list = _cart.Lines1.ToList();
@@ -668,7 +686,7 @@ namespace MSNK.Controllers
         {
             try
             {
-                AkJurnal1 data = _cart.Lines1.Where(x => x.AkCartaId == akJurnal1.AkCartaId).FirstOrDefault();
+                AkJurnal1 data = _cart.Lines1.Where(x => x.AkCartaId == akJurnal1.AkCartaId&& x.Indeks == akJurnal1.Indeks).FirstOrDefault();
                 return Json(new { result = "OK", record = data });
             }
             catch (Exception ex)
@@ -677,19 +695,18 @@ namespace MSNK.Controllers
             }
         }
 
-        public JsonResult SaveCartAkJurnal1(AkJurnal1 akJurnal1)
+        public JsonResult SaveCartAkJurnal1(AkJurnal1ViewModel akJurnal1)
         {
             try
             {
-                var akJ1 = _cart.Lines1.Where(x=>x.AkCartaId == akJurnal1.AkCartaId).FirstOrDefault();
-                var user = _userManager.GetUserName(User);
+                var akJ1 = _cart.Lines1.Where(x => x.AkCartaId == akJurnal1.AkCartaId).FirstOrDefault();
 
                 if (akJ1 != null)
                 {
-                    _cart.RemoveItem1(akJurnal1.AkCartaId);
+                    _cart.RemoveItem1(akJurnal1.AkCartaId, akJurnal1.IndeksLama);
                     _cart.AddItem1(
                         akJurnal1.AkJurnalId,
-                        akJurnal1.Indeks,
+                        akJurnal1.IndeksBaru,
                         akJurnal1.AkCartaId,
                         akJurnal1.Debit,
                         akJurnal1.Kredit
@@ -708,7 +725,7 @@ namespace MSNK.Controllers
         {
             try
             {
-                List<AkJurnal1> data = _cart.Lines1.ToList();
+                List<AkJurnal1> data = _cart.Lines1.OrderBy(x=>x.Indeks).ToList();
                 foreach (AkJurnal1 item in data)
                 {
                     var akCarta = _context.AkCarta.Find(item.AkCartaId);
@@ -749,42 +766,6 @@ namespace MSNK.Controllers
                 appLog.LgModule = modul + "E";
                 appLog.LgOperation = "Ubah";
                 appLog.LgNote = modul + " " + namamodul + " - Ubah";
-            }
-            else if (operasi == "TambahObjek")
-            {
-                appLog.LgModule = modul + "EC";
-                appLog.LgOperation = "Tambah";
-                appLog.LgNote = modul + " " + namamodul + " - Tambah Objek";
-            }
-            else if (operasi == "HapusObjek")
-            {
-                appLog.LgModule = modul + "ED";
-                appLog.LgOperation = "Hapus";
-                appLog.LgNote = modul + " " + namamodul + " - Hapus Objek";
-            }
-            else if (operasi == "UbahObjek")
-            {
-                appLog.LgModule = modul + "EE";
-                appLog.LgOperation = "Ubah";
-                appLog.LgNote = modul + " " + namamodul + " - Ubah Objek";
-            }
-            else if (operasi == "TambahPerihal")
-            {
-                appLog.LgModule = modul + "EC";
-                appLog.LgOperation = "Tambah";
-                appLog.LgNote = modul + " " + namamodul + " - Tambah Perihal";
-            }
-            else if (operasi == "HapusPerihal")
-            {
-                appLog.LgModule = modul + "ED";
-                appLog.LgOperation = "Hapus";
-                appLog.LgNote = modul + " " + namamodul + " - Hapus Perihal";
-            }
-            else if (operasi == "UbahPerihal")
-            {
-                appLog.LgModule = modul + "EE";
-                appLog.LgOperation = "Ubah";
-                appLog.LgNote = modul + " " + namamodul + " - Ubah Perihal";
             }
             else if (operasi == "Posting")
             {
@@ -871,6 +852,7 @@ namespace MSNK.Controllers
                     //update posting status in akTerima
                     akJurnal.Posting = 1;
                     await _akJurnalRepo.Update(akJurnal);
+                    await AddLogAsync("Posting", akJurnal.NoJurnal, akJurnal.JumKredit);
 
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
@@ -927,6 +909,7 @@ namespace MSNK.Controllers
                     //await _appLog.Insert(appLog);
                     //insert applog end
 
+                    await AddLogAsync("UnPosting", akJurnal.NoJurnal, akJurnal.JumKredit);
                     await _context.SaveChangesAsync();
 
                     TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
@@ -954,6 +937,7 @@ namespace MSNK.Controllers
             //update cetak -> 1
             akJurnal.Cetak = 1;
             await _akJurnalRepo.Update(akJurnal);
+            await AddLogAsync("Cetak", akJurnal.NoJurnal, akJurnal.JumKredit);
             await _context.SaveChangesAsync();
 
             return new ViewAsPdf("JurnalPrintPdf", data)

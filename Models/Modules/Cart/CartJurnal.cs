@@ -17,7 +17,7 @@ namespace MSNK.Models.Modules.Cart
             )
         {
             AkJurnal1 line = collection1
-            .Where(p => p.AkCartaId == AkCartaId)
+            .Where(p => p.AkCartaId == AkCartaId && p.Indeks == Indeks)
             .FirstOrDefault();
 
             if (line == null)
@@ -33,8 +33,10 @@ namespace MSNK.Models.Modules.Cart
             }
         }
 
-        public virtual void RemoveItem1(int id) =>
-            collection1.RemoveAll(l => l.AkCartaId == id);
+        public virtual void RemoveItem1(int AkCartaId, int IndeksLama) =>
+            collection1.RemoveAll(l => l.AkCartaId == AkCartaId&& l.Indeks==IndeksLama);    
+        //public virtual void RemoveItem1(int id) =>
+        //    collection1.RemoveAll(l => l.AkCartaId == id);
 
         public virtual void Clear1() => collection1.Clear();
 

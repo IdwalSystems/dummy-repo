@@ -1,4 +1,5 @@
 ﻿<script type="text/javascript">
+    var varIndeksLama = 0;
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
@@ -42,8 +43,8 @@
                         var loop = $tds.eq(2).text();
                         var loopidx = $tds.eq(1).text();
                         if (txtKodAkaunText.text().trim() === loop.trim()) {
-                            check = true;
-                            $(".errKodAkaun").css({ "display": "block" });
+                            //check = true;
+                            //$(".errKodAkaun").css({ "display": "block" });
                         };
                         if (indeks.val() === parseInt(loopidx).toString()) {
                             check2 = true;
@@ -125,6 +126,45 @@
                                         nextIdx = nextIdx < intidx ? intidx : nextIdx;
                                     });
                                     indeks.val(round5(nextIdx));
+
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/AkJurnal/GetAllItemCartAkJurnal1",
+                                        dataType: "json",
+                                        success: function (r) {
+                                            //refresh updated table objek
+                                            $("table tbody#tbodyObjek").empty();
+                                            var sumdebit = 0;
+                                            var sumkredit = 0;
+                                            var nextIdx = 0;
+                                            if (r.record.length > 0) {
+                                                for (var i = 0; i < r.record.length; i++) {
+                                                    var item1 = r.record[i];
+                                                    var str =
+                                                        "<tr id='" + item1.id + "'><td id='akCartaId' hidden>" + item1.akCartaId +
+                                                        "</td><td>" + (((item1.indeks.toString()).length < 2) ? ("0" + (item1.indeks).toString()) : item1.indeks) +
+                                                        "</td><td>" + item1.akCarta.kod + ' - ' + item1.akCarta.perihal +
+                                                        "</td><td class='editable-txt text-right'>" + (item1.debit).toFixed(2) +
+                                                        "</td><td class='editable-txt text-right'>" + (item1.kredit).toFixed(2) +
+                                                        "</td><td>" +
+                                                        "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                                        "</td><td>" +
+                                                        "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                                        "</td><tr>";
+                                                    $("table tbody#tbodyObjek").append(str);
+                                                    console.log("test :" + str);
+                                                    sumdebit += item1.debit;
+                                                    sumkredit += item1.kredit;
+                                                    nextIdx = nextIdx < item1.indeks ? item1.indeks : nextIdx;
+                                                }
+                                            }
+                                            jumDebit.val(sumdebit.toFixed(2));
+                                            jumKredit.val(sumkredit.toFixed(2));
+                                            $("#txtIndeksObjek").val(round5(nextIdx));
+                                            $('#modalObjek').modal('hide');
+                                            $(".errModelIndeks").css({ "display": "none" });
+                                        }
+                                    });
                                 },
                                 error: function (req, status, error) {
                                     alert(error);
@@ -145,11 +185,13 @@
         var akCartaId = $("TD", row).eq(0).html();
         var idJurnal1 = row.attr('id');
         var name = $("TD", row).eq(2).html();
+        var indeks = $("TD", row).eq(1).html();
 
         var AkJurnal1 = {
             AkJurnalId: akJurnalId,
             AkCartaId: akCartaId,
-            Id: idJurnal1
+            Id: idJurnal1,
+            Indeks: indeks
         }
         if (name != null) {
             $.ajax({
@@ -163,6 +205,7 @@
                     $("#moIndeks").val((r.record.indeks).toString().length < 2 ? "0" + (r.record.indeks).toString() : r.record.indeks);
                     $("#moKodAkaun").val(r.record.akCartaId);
                     $("#moDebit").val(r.record.debit.toFixed(2));
+                    varIndeksLama = r.record.indeks;
                     $("#moKredit").val(r.record.kredit.toFixed(2));
                     $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
                 }
@@ -186,7 +229,8 @@
             AkCartaId: akCartaId,
             Debit: debit,
             Kredit: kredit,
-            Indeks: indeks
+            IndeksLama: varIndeksLama,
+            IndeksBaru: indeks
         }
 
         var check = false;
@@ -276,15 +320,17 @@
         var jumKredit = $("#JumKredit");
         var name = $("TD", row).eq(2).html();
         var idJurnal1 = row.attr('id');
+        var indeks = $("TD", row).eq(1).html();
+        var idxStr = indeks.toString().length < 2 ? "0" + indeks.toString() : indeks.toString();
 
-
-        if (confirm("Hapus kod Akaun : " + name + " ?")) {
+        if (confirm("Hapus kod Akaun : " + name + " pada indeks : " + idxStr + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblObjek")[0];
             var AkJurnal1 = {
                 AkJurnalId: akJurnalId,
                 AkCartaId: akCartaId,
-                Id : idJurnal1
+                Id: idJurnal1,
+                Indeks: indeks
             }
             if (name != null) {
                 $.ajax({
@@ -297,6 +343,7 @@
                         table.deleteRow(row[0].rowIndex);
                         jumDebit.val(r.record.value.debit);
                         jumKredit.val(r.record.value.kredit);
+                        getNextIdx();
                     }
                 });
             }

@@ -30,9 +30,9 @@ namespace MSNK.Models.Modules.Cart.Session
             base.AddItem1(AkJurnalId, Indeks, AkCartaId, Debit, Kredit);
             Session.SetJson("CartJurnal", this);
         }
-        public override void RemoveItem1(int id)
+        public override void RemoveItem1(int id, int id2)
         {
-            base.RemoveItem1(id);
+            base.RemoveItem1(id,id2);
             Session.SetJson("CartJurnal", this);
         }
         public override void Clear1()

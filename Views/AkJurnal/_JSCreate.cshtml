@@ -1,5 +1,5 @@
 ﻿<script type="text/javascript">
-
+    var varIndeksLama = 0;
     var rowno = 0;
     var debit = 0;
     var kredit = 0;
@@ -42,8 +42,8 @@
                         var loop = $tds.eq(2).text();
                         var loopidx = $tds.eq(1).text();
                         if (txtKodAkaunText.text().trim() === loop.trim()) {
-                            check = true;
-                            $(".errKodAkaun").css({ "display": "block" });
+                            //check = true;
+                            //$(".errKodAkaun").css({ "display": "block" });
                         };
                         if (indeks.val() === parseInt(loopidx).toString()) {
                             check2 = true;
@@ -125,6 +125,46 @@
                                         nextIdx = nextIdx < intidx ? intidx : nextIdx;
                                     });
                                     indeks.val(round5(nextIdx));
+
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/AkJurnal/GetAllItemCartAkJurnal1",
+                                        dataType: "json",
+                                        success: function (r) {
+                                            //refresh updated table objek
+                                            $("table tbody#tbodyObjek").empty();
+                                            var sumdebit = 0;
+                                            var sumkredit = 0;
+                                            var nextIdx = 0;
+                                            if (r.record.length > 0) {
+                                                for (var i = 0; i < r.record.length; i++) {
+                                                    var item1 = r.record[i];
+                                                    var str =
+                                                        "<tr id='" + item1.id + "'><td id='akCartaId' hidden>" + item1.akCartaId +
+                                                        "</td><td>" + (((item1.indeks.toString()).length < 2) ? ("0" + (item1.indeks).toString()) : item1.indeks) +
+                                                        "</td><td>" + item1.akCarta.kod + ' - ' + item1.akCarta.perihal +
+                                                        "</td><td class='editable-txt text-right'>" + (item1.debit).toFixed(2) +
+                                                        "</td><td class='editable-txt text-right'>" + (item1.kredit).toFixed(2) +
+                                                        "</td><td>" +
+                                                        "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                                        "</td><td>" +
+                                                        "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                                        "</td><tr>";
+                                                    $("table tbody#tbodyObjek").append(str);
+                                                    console.log("test :" + str);
+                                                    sumdebit += item1.debit;
+                                                    sumkredit += item1.kredit;
+                                                    nextIdx = nextIdx < item1.indeks ? item1.indeks : nextIdx;
+                                                }
+                                            }
+                                            jumDebit.val(sumdebit.toFixed(2));
+                                            jumKredit.val(sumkredit.toFixed(2));
+                                            $("#txtIndeksObjek").val(round5(nextIdx));
+                                            $('#modalObjek').modal('hide');
+                                            $(".errModelIndeks").css({ "display": "none" });
+                                        }
+                                    });
+
                                 },
                                 error: function (req, status, error) {
                                     alert(error);
@@ -144,12 +184,15 @@
         var jumDebit = $("#JumDebit");
         var jumKredit = $("#JumKredit");
         var cartaId = $("TD", row).eq(0).html();
-        if (confirm("Hapus kod Akaun : " + name + " ?")) {
+        var indeks = $("TD", row).eq(1).html();
+        var idxStr = indeks.toString().length < 2 ? "0" + indeks.toString() : indeks.toString();
+
+        if (confirm("Hapus kod Akaun : " + name + " pada indeks : " + idxStr + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblObjek")[0];
-
             var AkJurnal1 = {
                 AkCartaId: cartaId,
+                Indeks: indeks
             }
             if (name != null) {
                 $.ajax({
@@ -162,17 +205,9 @@
                         table.deleteRow(row[0].rowIndex);
                         jumDebit.val(r.record.value.debit);
                         jumKredit.val(r.record.value.kredit);
+                        getNextIdx();
                     }
                 });
-                var nextIdx = 0;
-                var table = $("#tblObjek tbody");
-                table.find('tr').each(function (i, el) {
-                    var $tds = $(this).find('td');
-                    var idx = $tds.eq(1).text();
-                    var intidx = parseInt(idx);
-                    nextIdx = nextIdx < intidx ? intidx : nextIdx;
-                });
-                $("#txtIndeksObjek").val(round5(nextIdx));
             }
         }
     };
@@ -196,6 +231,7 @@
                 success: function (r) {
                     $("#moId1").val(r.record.id);
                     $("#moIndeks").val(r.record.indeks);
+                    varIndeksLama = r.record.indeks;
                     $("#moKodAkaun").val(r.record.akCartaId);
                     $("#moDebit").val(r.record.debit.toFixed(2));
                     $("#moKredit").val(r.record.kredit.toFixed(2));
@@ -237,7 +273,8 @@
             AkCartaId: akCartaId,
             Debit: debit,
             Kredit: kredit,
-            Indeks: indeks
+            IndeksLama: varIndeksLama,
+            IndeksBaru: indeks
         }
         if (!check) {
             $.ajax({
@@ -298,24 +335,51 @@
     });
 
     $("body").on('change', "#ddlKW", function () {
-        var kodkw = $("#ddlKW").val();
-        JsonKod(kodkw);
+        JsonKod();
     });
 
-    function JsonKod(id) {
-        $.ajax({
-            type: "POST",
-            url: "/AkJurnal/JsonGetKod",
-            data: { data: id},
-            dataType: "json",
-            success: function (msg) {
-                $("#txtNoJurnal").val(msg.record);
-            },
-            error: function (req, status, error) {
-                alert(error);
-            }
-        });
+    $("body").on('change', "#txtTarikh", function () {
+        JsonKod();
+    });
+
+    function JsonKod() {
+
+        var tar = $("#txtTarikh").val();
+        var kw = $("#ddlKW").val();
+
+        if (tar && kw) {
+            var AkJurnal = {
+                Tarikh: tar,
+                JKWId: kw
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/AkJurnal/JsonGetKod",
+                data: AkJurnal,
+                dataType: "json",
+                success: function (msg) {
+                    $("#txtNoJurnal").val(msg.record);
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
     }
+
+
+    function getNextIdx() {
+        var nextIdx = 0;
+        var table = $("#tblObjek tbody");
+        table.find('tr').each(function (i, el) {
+            var $tds = $(this).find('td');
+            var idx = $tds.eq(1).text();
+            var intidx = parseInt(idx);
+            nextIdx = nextIdx < intidx ? intidx : nextIdx;
+        });
+        $("#txtIndeksObjek").val(round5(nextIdx));
+    };
 
     function round5(x) {
         if (Math.ceil(x / 5) * 5 === x) {
@@ -323,5 +387,5 @@
         } else {
             return Math.ceil(x / 5) * 5;
         }
-    }
+    };
 </script>
