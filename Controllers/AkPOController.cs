@@ -164,23 +164,19 @@ namespace MSNK.Controllers
             List<AkBank> akBankList = _context.AkBank.Include(b => b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
 
-            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
+            List<AkCarta> akCartaList = _context.AkCarta
+                .Include(b => b.JKW)
                 .Include(b => b.JParas)
-                .Where(b => b.JParas.Kod == "4" && b.Kod.Substring(0, 1) == "B")
+                .Where(b => b.JParas.Kod == "4")
                 .OrderBy(b => b.Kod)
                 .ToList();
+
             ViewBag.AkCarta = akCartaList;
 
         }
 
         private void PopulateTable(int? id)
         {
-            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
-                .Include(b => b.JParas)
-                .Where(b => b.JParas.Kod == "4" && b.Kod.Substring(0, 1) == "B")
-                .OrderBy(b => b.Kod)
-                .ToList();
-            ViewBag.AkCarta = akCartaList;
 
             List<AkPO1> akPO1Table = _context.AkPO1
                 .Include(b => b.AkCarta)
@@ -207,11 +203,7 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem1(akPO1.AkPOId,
                                 akPO1.AkCartaId,
-                                akPO1.Amaun,
-                                akPO1.UserId,
-                                akPO1.TarMasuk,
-                                akPO1.UserIdKemaskini,
-                                akPO1.TarKemaskini);
+                                akPO1.Amaun);
             }
 
             List<AkPO2> akPO2Table = _context.AkPO2
@@ -230,11 +222,7 @@ namespace MSNK.Controllers
                                akPO2.Kuantiti,
                                akPO2.Unit,
                                akPO2.Harga,
-                               akPO2.Amaun,
-                               akPO2.UserId,
-                               akPO2.TarMasuk,
-                               akPO2.UserIdKemaskini,
-                               akPO2.TarKemaskini);
+                               akPO2.Amaun);
             }
         }
 
@@ -247,6 +235,145 @@ namespace MSNK.Controllers
             return View();
         }
 
+        public JsonResult GetAnItemCartAkPO1(AkPO1 akPO1)
+        {
+
+            try
+            {
+                AkPO1 data = _cart.Lines1.Where(x => x.AkCartaId == akPO1.AkCartaId).FirstOrDefault();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get an item from cart akPO1 end
+
+        //save cart akPO1
+        public JsonResult SaveCartAkPO1(AkPO1 akPO1)
+        {
+
+            try
+            {
+
+                var akP1 = _cart.Lines1.Where(x => x.AkCartaId == akPO1.AkCartaId).FirstOrDefault();
+
+                var user = _userManager.GetUserName(User);
+
+                if (akP1 != null)
+                {
+                    _cart.RemoveItem1(akPO1.AkCartaId);
+
+                    _cart.AddItem1(akPO1.AkPOId,
+                                    akPO1.AkCartaId,
+                                    akPO1.Amaun);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //save cart akPO1 end
+
+        // get all item from cart akPO1
+        public JsonResult GetAllItemCartAkPO1(AkPO1 akPO1)
+        {
+
+            try
+            {
+                List<AkPO1> data = _cart.Lines1.ToList();
+
+                foreach (AkPO1 item in data)
+                {
+                    var akCarta = _context.AkCarta.Find(item.AkCartaId);
+
+                    item.AkCarta = akCarta;
+                }
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart akPO1 end
+
+        // get an item from cart akPO2
+        public JsonResult GetAnItemCartAkPO2(AkPO2 akPO2)
+        {
+
+            try
+            {
+                AkPO2 data = _cart.Lines2.Where(x => x.Indek == akPO2.Indek).FirstOrDefault();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get an item from cart akPO2 end
+
+        //save cart akPO2
+        public JsonResult SaveCartAkPO2(AkPO2 akPO2)
+        {
+
+            try
+            {
+
+                var akT2 = _cart.Lines2.Where(x => x.Indek == akPO2.Indek).FirstOrDefault();
+
+                var user = _userManager.GetUserName(User);
+
+                if (akT2 != null)
+                {
+                    _cart.RemoveItem2(akPO2.Indek);
+
+                    _cart.AddItem2(akPO2.AkPOId,
+                               akPO2.Indek,
+                               akPO2.Baris,
+                               akPO2.Bil,
+                               akPO2.NoStok,
+                               akPO2.Perihal,
+                               akPO2.Kuantiti,
+                               akPO2.Unit,
+                               akPO2.Harga,
+                               akPO2.Amaun);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //save cart akPO2 end
+
+        // get all item from cart akPO2
+        public JsonResult GetAllItemCartAkPO2()
+        {
+
+            try
+            {
+                List<AkPO2> data = _cart.Lines2.OrderBy(b => b.Indek).ToList();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart akPO2 end
+
         // POST: AkPO/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -256,7 +383,7 @@ namespace MSNK.Controllers
         {
 
             AkPO m = new AkPO();
-            var user = await _userManager.GetUserAsync(User);
+            //var user = await _userManager.GetUserAsync(User);
             var pembekal = _context.AkPembekal.FirstOrDefault(x => x.Id == akPO.AkPembekalId);
 
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
@@ -267,7 +394,7 @@ namespace MSNK.Controllers
             var kumpulanWang = kw.Kod;
             var year = DateTime.Now.Year.ToString();
             var month = DateTime.Now.Month.ToString();
-            string prefix = year;
+            string prefix = year + "/" + kumpulanWang + "/";
             int x = 1;
             string noRujukan = prefix + "000000";
 
@@ -278,7 +405,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                x = int.Parse(LatestNoRujukan.Substring(12));
+                x = int.Parse(LatestNoRujukan.Substring(10));
                 x++;
                 noRujukan = string.Format("{0:" + prefix + "000000}", x);
             }
@@ -291,15 +418,16 @@ namespace MSNK.Controllers
                 {
 
                     m.JKWId = JKWId;
-                    m.NoPO = akPO.NoPO;
+                    m.NoPO = noRujukan;
                     m.Tarikh = akPO.Tarikh;
                     m.TarikhPosting = akPO.TarikhPosting;
                     m.AkPembekal = pembekal;
                     m.Jumlah = akPO.Jumlah;
-                    m.FlPosting = akPO.FlPosting;
+                    m.FlPosting = 0;
+                    m.FlBatal = 0;
+                    m.FlCetak = 0;
                     m.Tahun = akPO.Tahun;
-                    m.FlBatal = akPO.FlBatal;
-                    m.UserId = user.UserName;
+                    //m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
 
                     m.AkPO1 = _cart.Lines1.ToArray();
@@ -309,16 +437,16 @@ namespace MSNK.Controllers
 
                     //insert applog
 
-                    AppLog appLog = new AppLog();
+                    //AppLog appLog = new AppLog();
 
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "C";
-                    appLog.LgOperation = "Tambah";
-                    appLog.LgNote = modul + " Penerimaan - Tambah";
-                    appLog.NoRujukan = noRujukan;
-                    appLog.Jumlah = akPO.Jumlah;
+                    //appLog.UserId = user.UserName;
+                    //appLog.LgModule = modul + "C";
+                    //appLog.LgOperation = "Tambah";
+                    //appLog.LgNote = modul + " Penerimaan - Tambah";
+                    //appLog.NoRujukan = noRujukan;
+                    //appLog.Jumlah = akPO.Jumlah;
 
-                    await _appLog.Insert(appLog);
+                    //await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -364,79 +492,94 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NoPO,Tarikh,TarikhPosting,AkPembekalId,Jumlah,Posting,JKWId,Tahun,Batal")] AkPO akPO)
+        public async Task<IActionResult> Edit(int id, AkPO akPO, int JKWId, int JNegeriId, int AkBankId, decimal JumlahPerihal)
         {
             if (id != akPO.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (akPO.Jumlah == JumlahPerihal)
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    var user = await _userManager.GetUserAsync(User);
-                    akPO.UserIdKemaskini = user.UserName;
-                    akPO.TarKemaskini = DateTime.Now;
-
-                    _context.Update(akPO);
-
-                    //insert applog
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "E";
-                    appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Penerimaan - Ubah";
-                    appLog.NoRujukan = akPO.NoPO;
-                    appLog.Jumlah = akPO.Jumlah;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AkPOExists(akPO.Id))
+                    try
                     {
-                        return NotFound();
+                        var user = await _userManager.GetUserAsync(User);
+                        AkPO akPOAsal = await _akPORepo.GetById(id);
+
+                        foreach (AkPO1 item in akPOAsal.AkPO1)
+                        {
+                            var model = _context.AkPO1.FirstOrDefault(b => b.Id == item.Id);
+                            if (model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+
+                        foreach (AkPO2 item in akPOAsal.AkPO2)
+                        {
+                            var model = _context.AkPO2.FirstOrDefault(b => b.Id == item.Id);
+                            if (model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+                        _context.Entry(akPOAsal).State = EntityState.Detached;
+
+                        akPO.AkPO1 = _cart.Lines1.ToList();
+                        akPO.AkPO2 = _cart.Lines2.ToList();
+
+                        akPO.UserIdKemaskini = user.UserName;
+                        akPO.TarKemaskini = DateTime.Now;
+
+                        _context.Update(akPO);
+
+                        //insert applog
+                        AppLog appLog = new AppLog();
+
+                        appLog.UserId = user.UserName;
+                        appLog.LgModule = modul + "E";
+                        appLog.LgOperation = "Ubah";
+                        appLog.LgNote = modul + " Pesanan Tempatan - Ubah";
+                        appLog.NoRujukan = akPO.NoPO;
+                        appLog.Jumlah = akPO.Jumlah;
+
+                        await _appLog.Insert(appLog);
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!AkPOExists(akPO.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    CartEmpty();
+                    // checking for jumlah objek & jumlah perihal
+                    if (akPO.Jumlah != JumlahPerihal)
+                    {
+                        TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Perihal";
                     }
                     else
                     {
-                        throw;
+                        TempData[SD.Success] = "Data berjaya diubah..!";
                     }
+
+                    return RedirectToAction(nameof(Index));
                 }
-                CartEmpty();
-                TempData[SD.Success] = "Data berjaya diubah..!";
-                return RedirectToAction(nameof(Index));
             }
+
+            TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Perihal";
             PopulateList();
             PopulateTable(id);
-            return View(akPO);
-        }
-
-        // GET: AkPO/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var akPO = await _context.AkPO
-                .Include(a => a.AkPembekal)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (akPO == null)
-            {
-                return NotFound();
-            }
-
-            CartEmpty();
-            PopulateList();
-            PopulateTable(id);
-            PopulateCart(akPO);
+            //PopulateCart();
             return View(akPO);
         }
 
@@ -475,6 +618,8 @@ namespace MSNK.Controllers
         {
             try
             {
+                ViewBag.akPO1 = new List<int>();
+                ViewBag.akPO2 = new List<int>();
                 _cart.Clear1();
                 _cart.Clear2();
 
@@ -495,16 +640,10 @@ namespace MSNK.Controllers
                 {
                     var user = await _userManager.GetUserAsync(User);
 
-                    akPO1.UserId = user.UserName;
-                    akPO1.TarMasuk = DateTime.Now;
 
                     _cart.AddItem1(akPO1.AkPOId,
                                    akPO1.AkCartaId,
-                                   akPO1.Amaun,
-                                   akPO1.UserId,
-                                   akPO1.TarMasuk,
-                                   akPO1.UserIdKemaskini,
-                                   akPO1.TarKemaskini);
+                                   akPO1.Amaun);
 
                 }
 
@@ -527,9 +666,6 @@ namespace MSNK.Controllers
                 {
                     var user = await _userManager.GetUserAsync(User);
 
-                    akPO2.UserId = user.UserName;
-                    akPO2.TarMasuk = DateTime.Now;
-
                     _cart.AddItem2(akPO2.AkPOId,
                          akPO2.Indek,
                          akPO2.Baris,
@@ -539,11 +675,7 @@ namespace MSNK.Controllers
                          akPO2.Kuantiti,
                          akPO2.Unit,
                          akPO2.Harga,
-                         akPO2.Amaun,
-                         akPO2.UserId,
-                         akPO2.TarMasuk,
-                         akPO2.UserIdKemaskini,
-                         akPO2.TarKemaskini);
+                         akPO2.Amaun);
                 }
 
                 return Json(new { result = "OK" });
@@ -591,120 +723,6 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // Ubah PO1
-        public async Task<JsonResult> UpdateAkPO1(AkPO1 akPO1)
-        {
-
-            try
-            {
-                AkPO1 data = await _akPO1Repo.GetBy2Id(akPO1.AkPOId, akPO1.AkCartaId);
-
-                return Json(new { result = "OK", record = data });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> InsertUpdateAkPO1(AkPO1 akPO1)
-        {
-
-            try
-            {
-                if (akPO1 != null || akPO1.Amaun != 0)
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akPO1.AkCartaId);
-                    akPO1.AkCarta = akCarta;
-                    akPO1.UserId = user.UserName;
-                    akPO1.TarMasuk = DateTime.Now;
-
-                    await _akPO1Repo.Insert(akPO1);
-
-                    decimal total = 0;
-
-                    AkPO akPO = await _akPORepo.GetById(akPO1.AkPOId);
-
-                    total = akPO.Jumlah + akPO1.Amaun;
-
-                    akPO.Jumlah = total;
-                    akPO.UserIdKemaskini = user.UserName;
-
-                    await _akPORepo.Update(akPO);
-                    await _context.SaveChangesAsync();
-
-                    _cart.AddItem1(akPO1.AkPOId,
-                                   akPO1.AkCartaId,
-                                   akPO1.Amaun,
-                                   akPO1.UserId,
-                                   akPO1.TarMasuk,
-                                   akPO1.UserIdKemaskini,
-                                   akPO1.TarKemaskini);
-
-
-                }
-
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> RemoveUpdateAkPO1(AkPO1 akPO1)
-        {
-
-            try
-            {
-                if (akPO1 != null)
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    var akT1 = await _context.AkPO1.FirstOrDefaultAsync(x => x.AkCartaId == akPO1.AkCartaId && x.AkPOId == akPO1.AkPOId);
-                    _context.AkPO1.Remove(akT1);
-
-                    decimal total = 0;
-
-                    AkPO akPO = await _akPORepo.GetById(akPO1.AkPOId);
-
-                    total = akPO.Jumlah - akT1.Amaun;
-
-                    akPO.Jumlah = total;
-                    akPO.UserIdKemaskini = user.UserName;
-                    akPO.TarKemaskini = DateTime.Now;
-                    await _akPORepo.Update(akPO);
-
-                    //insert applog
-                    var akCarta = await _akCartaRepo.GetById(akT1.AkCartaId);
-
-                    AppLog appLog = new AppLog();
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "ED";
-                    appLog.LgOperation = "Hapus";
-                    appLog.LgNote = modul + " Penerimaan - Hapus Objek";
-                    appLog.NoRujukan = akPO.NoPO + "/" + akCarta.Kod;
-                    appLog.Jumlah = akT1.Amaun;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
-                    await _context.SaveChangesAsync();
-
-                    _cart.RemoveItem1(akPO1.AkCartaId);
-
-                }
-
-
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
 
         public async Task<JsonResult> SaveUpdateAkPO1(AkPO1 akPO1)
         {
@@ -720,8 +738,6 @@ namespace MSNK.Controllers
                 var user = await _userManager.GetUserAsync(User);
 
                 akT1.Amaun = akPO1.Amaun;
-                akT1.UserIdKemaskini = user.UserName;
-                akT1.TarKemaskini = DateTime.Now;
                 _context.AkPO1.Update(akT1);
 
                 // update total akPO with date updated and userUpdated
@@ -754,136 +770,6 @@ namespace MSNK.Controllers
                 //insert applog end
 
                 await _context.SaveChangesAsync();
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> GetCart1(AkPO1 akPO1)
-        {
-            try
-            {
-                AkPO data = await _context.AkPO.Include(x => x.AkPO1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == akPO1.AkPOId);
-
-                List<AkPO1> akT1 = data.AkPO1.ToList();
-
-                foreach (AkPO1 item in akT1)
-                {
-
-                    _cart.AddItem1(item.AkPOId,
-                                item.AkCartaId,
-                                item.Amaun,
-                                item.UserId,
-                                item.TarMasuk,
-                                item.UserIdKemaskini,
-                                item.TarKemaskini);
-
-                }
-
-
-                decimal total = 0;
-                foreach (var item in akT1)
-                {
-                    total += item.Amaun;
-                }
-                AkPO akPO = await _akPORepo.GetById(akPO1.AkPOId);
-
-                akPO.Jumlah = total;
-
-                await _akPORepo.Update(akPO);
-                await _context.SaveChangesAsync();
-
-
-                return Json(new { result = "OK", data = data });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-        // Ubah AkPO1 End
-
-        // Ubah AkPO2
-        public async Task<JsonResult> UpdateAkPO2(AkPO2 akPO2)
-        {
-
-            try
-            {
-                AkPO2 data = await _akPO2Repo.GetById(akPO2.AkPOId);
-
-                return Json(new { result = "OK", record = data });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> InsertUpdateAkPO2(AkPO2 akPO2)
-        {
-
-            try
-            {
-                if (akPO2 != null || akPO2.Amaun != 0)
-                {
-                    //var jPerihal = _context.Indek.FirstOrDefault(x => x.Id == akPO2.Indek);
-                    var user = await _userManager.GetUserAsync(User);
-
-                    //akPO2.Indek = jPerihal;
-                    akPO2.UserId = user.UserName;
-                    akPO2.TarMasuk = DateTime.Now;
-                    await _akPO2Repo.Insert(akPO2);
-
-                    await _context.SaveChangesAsync();
-                }
-
-
-
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> RemoveUpdateAkPO2(AkPO2 akPO2)
-        {
-
-            try
-            {
-                if (akPO2 != null)
-                {
-                    var akT2 = await _context.AkPO2.FirstOrDefaultAsync(x => x.Indek == akPO2.Indek && x.AkPOId == akPO2.AkPOId);
-                    var user = await _userManager.GetUserAsync(User);
-
-                    _context.AkPO2.Remove(akT2);
-
-                    //insert applog
-                    var akPO = await _akPORepo.GetById(akPO2.AkPOId);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "ED";
-                    appLog.LgOperation = "Hapus";
-                    appLog.LgNote = modul + " Pesanan Tempatan - Hapus Perihal";
-                    appLog.NoRujukan = akPO.NoPO + "/" + akPO2.Indek;
-                    appLog.Jumlah = akPO2.Amaun;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
-                    await _context.SaveChangesAsync();
-
-                }
-
-
 
                 return Json(new { result = "OK" });
             }
@@ -944,6 +830,30 @@ namespace MSNK.Controllers
             }
         }
 
+        public async Task<JsonResult> GetCart1(AkPO1 akPO1)
+        {
+            try
+            {
+                AkPO data = await _context.AkPO.Include(x => x.AkPO1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == akPO1.AkPOId);
+
+                List<AkPO1> akT1 = data.AkPO1.ToList();
+
+                foreach (AkPO1 item in akT1)
+                {
+
+                    _cart.AddItem1(item.AkPOId,
+                                item.AkCartaId,
+                                item.Amaun);
+
+                }
+
+                return Json(new { result = "OK", data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
         public async Task<JsonResult> GetCart2(AkPO2 akPO2)
         {
             try
@@ -963,11 +873,7 @@ namespace MSNK.Controllers
                          akPO2.Kuantiti,
                          akPO2.Unit,
                          akPO2.Harga,
-                         akPO2.Amaun,
-                         akPO2.UserId,
-                         akPO2.TarMasuk,
-                         akPO2.UserIdKemaskini,
-                         akPO2.TarKemaskini);
+                         akPO2.Amaun);
                 }
 
                 return Json(new { result = "OK", data = data });
@@ -977,7 +883,187 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        //Ubah AkPO2 end
+
+        public async Task<JsonResult> UpdateAkPO1(AkPO1 akPO1)
+        {
+
+            try
+            {
+                AkPO1 data = await _akPO1Repo.GetBy2Id(akPO1.AkPOId, akPO1.AkCartaId);
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> UpdateAkPO2(AkPO2 akPO2)
+        {
+
+            try
+            {
+                AkPO2 data = await _akPO2Repo.GetBy2Id(akPO2.AkPOId, akPO2.Indek);
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> InsertUpdateAkPO1(AkPO1 akPO1)
+        {
+
+            try
+            {
+                if (akPO1 != null || akPO1.Amaun != 0)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akPO1.AkCartaId);
+                    akPO1.AkCarta = akCarta;
+
+                    await _akPO1Repo.Insert(akPO1);
+
+                    decimal total = 0;
+
+                    AkPO akPO = await _akPORepo.GetById(akPO1.AkPOId);
+
+                    total = akPO.Jumlah + akPO1.Amaun;
+
+                    akPO.Jumlah = total;
+                    akPO.UserIdKemaskini = user.UserName;
+
+                    await _akPORepo.Update(akPO);
+                    await _context.SaveChangesAsync();
+
+                    _cart.AddItem1(akPO1.AkPOId,
+                                   akPO1.AkCartaId,
+                                   akPO1.Amaun);
+
+
+                }
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> InsertUpdateAkPO2(AkPO2 akPO2)
+        {
+
+            try
+            {
+                if (akPO2 != null || akPO2.Amaun != 0)
+                {
+                 
+                    var user = await _userManager.GetUserAsync(User);
+
+                    await _akPO2Repo.Insert(akPO2);
+
+                    await _context.SaveChangesAsync();
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        public async Task<JsonResult> RemoveUpdateAkPO1(AkPO1 akPO1)
+        {
+
+            try
+            {
+                if (akPO1 != null)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    var akT1 = await _context.AkPO1.FirstOrDefaultAsync(x => x.AkCartaId == akPO1.AkCartaId && x.AkPOId == akPO1.AkPOId);
+                    _context.AkPO1.Remove(akT1);
+
+                    decimal total = 0;
+
+                    AkPO akPO = await _akPORepo.GetById(akPO1.AkPOId);
+
+                    total = akPO.Jumlah - akT1.Amaun;
+
+                    akPO.Jumlah = total;
+                    akPO.UserIdKemaskini = user.UserName;
+                    akPO.TarKemaskini = DateTime.Now;
+                    await _akPORepo.Update(akPO);
+
+                    //insert applog
+                    var akCarta = await _akCartaRepo.GetById(akT1.AkCartaId);
+
+                    AppLog appLog = new AppLog();
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "ED";
+                    appLog.LgOperation = "Hapus";
+                    appLog.LgNote = modul + " Penerimaan - Hapus Objek";
+                    appLog.NoRujukan = akPO.NoPO + "/" + akCarta.Kod;
+                    appLog.Jumlah = akT1.Amaun;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    _cart.RemoveItem1(akPO1.AkCartaId);
+
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> RemoveUpdateAkPO2(AkPO2 akPO2)
+        {
+
+            try
+            {
+                if (akPO2 != null)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    var akP2 = await _context.AkPO2.FirstOrDefaultAsync(x => x.Indek == akPO2.Indek && x.AkPOId == akPO2.AkPOId);
+                    _context.AkPO2.Remove(akP2);
+
+                    //insert applog
+                    var akPO = await _akPORepo.GetById(akPO2.AkPOId);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "ED";
+                    appLog.LgOperation = "Hapus";
+                    appLog.LgNote = modul + " Pesanan Tempatan - Hapus Perihal";
+                    appLog.NoRujukan = akPO.NoPO + "/" + akPO2.Indek;
+                    appLog.Jumlah = akPO2.Amaun;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
 
         [HttpPost]
         public JsonResult GetMaklumat(AkPembekal akPembekal)
@@ -1038,8 +1124,7 @@ namespace MSNK.Controllers
                             Penerima = akPO.AkPembekal.NamaSykt,
                             VotId = item.AkCartaId,
                             Rujukan = "PO/"+akPO.NoPO,
-                            Tanggungan = item.Amaun,
-                            UserId = user.UserName
+                            Tanggungan = item.Amaun
                         };
 
                         await _abBukuVotRepo.Insert(abBukuVotPosting);
@@ -1161,6 +1246,8 @@ namespace MSNK.Controllers
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             JNegeri negeri = await _context.JNegeri.FirstOrDefaultAsync(x => x.Kod == "02");
+
+            JBank bank = await _context.JBank.FirstOrDefaultAsync(x => x.Kod == "02");
 
             var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPO.Jumlah)).ToUpper();
 
