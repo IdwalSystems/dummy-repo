@@ -22,11 +22,9 @@
             <form asp-action="Index" method="get">
                 <div class="form-row">
                     <div class="col-sm-3 mb-2">
-                        <select name="searchColumn" class="custom-select form-control-sm" id="searchColumn">
-                            <option value="NoRujukan">No Resit</option>
-                            <option value="Nama">Nama</option>
-                            <option selected value="@ViewBag.SearchColumn">Tarikh</option>
-                        </select>
+                        <select class="custom-select form-control-sm"
+                                name="searchColumn"
+                                asp-items="@ViewBag.SearchColumn" id="searchColumn"></select>
                     </div>
                     <div class="col-sm-9 mb-2">
                         <div class="form-row">

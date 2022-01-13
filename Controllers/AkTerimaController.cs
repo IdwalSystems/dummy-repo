@@ -16,6 +16,7 @@ using MSNK.Models.Modules.PrintModel;
 using Rotativa.AspNetCore;
 using MSNK.Infrastructure;
 using MSNK.Models.Modules.ViewModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MSNK.Controllers
 {
@@ -73,6 +74,21 @@ namespace MSNK.Controllers
             string searchDate2,
             string searchColumn)
         {
+
+            List<SelectListItem> columnList = new();
+            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
+            columnList.Add(new SelectListItem() { Text = "No Rujukan", Value = "NoRujukan" });
+            columnList.Add(new SelectListItem() { Text = "Nama", Value = "Nama" });
+
+            if (!String.IsNullOrEmpty(searchColumn))
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
+            }
+            else
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
+            }
+
             var akTerima = await _akTerimaRepo.GetAll();
 
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
@@ -109,12 +125,12 @@ namespace MSNK.Controllers
                     ViewBag.SearchData2 = searchDate2;
                 }
 
-                ViewBag.SearchColumn = searchColumn;
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
             // searching with date range condition end
             else
             {
-                ViewBag.SearchColumn = "Tarikh";
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
             }
 
             List<AkTerimaViewModel> viewModel = new List<AkTerimaViewModel>();
@@ -280,6 +296,32 @@ namespace MSNK.Controllers
         // GET: AkTerima/Create
         public IActionResult Create()
         {
+            // get latest no rujukan running number  
+            var kw = _context.JKW.FirstOrDefault(x => x.Kod == "100");
+
+            var kumpulanWang = kw.Kod;
+            var year = DateTime.Now.Year.ToString();
+            string prefix = "IB" + kumpulanWang + year;
+            int x = 1;
+            string noRujukan = prefix + "000000";
+
+            var LatestNoRujukan = _context.AkTerima
+                        .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
+                        .Max(x => x.NoRujukan);
+
+            if (LatestNoRujukan == null)
+            {
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            else
+            {
+                x = int.Parse(LatestNoRujukan.Substring(12));
+                x++;
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+
+            // get latest no rujukan running number end
+            ViewBag.NoRujukan = noRujukan;
             PopulateList();
             CartEmpty();
             return View();
@@ -306,7 +348,7 @@ namespace MSNK.Controllers
                     string noRujukan = prefix + "000000";
 
                     var LatestNoRujukan = _context.AkTerima
-                        .Where(x=> x.Tahun == year)
+                        .Where(x=> x.Tahun == year && x.JKW.Kod == kw.Kod)
                         .Max(x => x.NoRujukan);
 
                     if (LatestNoRujukan == null)
@@ -532,7 +574,7 @@ namespace MSNK.Controllers
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkTerima
-                        .Where(x => x.Tahun == year)
+                        .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
                         .Max(x => x.NoRujukan);
 
             if (LatestNoRujukan == null)
@@ -664,6 +706,15 @@ namespace MSNK.Controllers
                     {
                         var user = await _userManager.GetUserAsync(User);
                         AkTerima akTerimaAsal = await _akTerimaRepo.GetById(id);
+
+                        // list of input that cannot be change
+                        akTerima.Tahun = akTerimaAsal.Tahun;
+                        akTerima.JKWId = akTerimaAsal.JKWId;
+                        akTerima.NoRujukan = akTerimaAsal.NoRujukan;
+                        akTerima.Nama = akTerimaAsal.Nama;
+                        akTerima.TarMasuk = akTerimaAsal.TarMasuk;
+                        akTerima.UserId = akTerimaAsal.UserId;
+                        // list of input that cannot be change end
 
                         foreach (AkTerima1 item in akTerimaAsal.AkTerima1)
                         {
@@ -1499,13 +1550,7 @@ namespace MSNK.Controllers
         // printing resit rasmi by akTerima.Id
         public async Task<IActionResult> PrintPdf(int id)
         {
-            AkTerima akTerima = await _context.AkTerima
-                .Include(x=> x.JKW)
-                .Include(x => x.AkTerima2).ThenInclude(x => x.JCaraBayar)
-                .Include(x=> x.AkTerima1).ThenInclude(x=> x.AkCarta)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            JNegeri negeri = await _context.JNegeri.FirstOrDefaultAsync(x => x.Kod == "02");
+            AkTerima akTerima = await _akTerimaRepo.GetById(id);
 
             var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akTerima.Jumlah)).ToUpper();
 
@@ -1516,7 +1561,6 @@ namespace MSNK.Controllers
             CompanyDetails company = new CompanyDetails();
             data.CompanyDetail = company;
             data.AkTerima = akTerima;
-            data.AkTerima.JNegeri = negeri;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
             data.username = user.UserName;
 

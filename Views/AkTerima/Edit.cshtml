@@ -30,14 +30,14 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Tahun" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Tahun" class="form-control form-control-sm" required/>
+                                <input asp-for="Tahun" class="form-control form-control-sm" readonly required/>
                                 <span asp-validation-for="Tahun" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm" asp-for="JKWId" required>
+                                <select class="form-control form-control-sm" asp-for="JKWId" disabled required>
                                     <option value="" hidden>-- Pilih Kumpulan Wang --</option>
                                     @foreach (var s in ViewBag.JKW)
                                     {
@@ -79,7 +79,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label asp-for="Nama" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" required/>
+                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" readonly required/>
                                 <span asp-validation-for="Nama" class="text-danger"></span>
                             </div>
                         </div>

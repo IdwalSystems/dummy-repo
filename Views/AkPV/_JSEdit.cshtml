@@ -90,7 +90,7 @@
         var sum = 0;
         $('#tbodyInbois tr').each(function () {
             var amaun = $(this).find(".amaunInbois").html();
-            sum = + parseFloat(amaun);
+            sum += parseFloat(amaun);
         });
         $('#jumlahInbois').val(sum.toFixed(2));
 
