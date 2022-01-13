@@ -1343,8 +1343,7 @@ namespace MSNK.Controllers
                             Penerima = penerima,
                             VotId = item.AkCartaId,
                             Rujukan = akBelian.NoInbois,
-                            Liabiliti = item.Amaun,
-                            UserId = user.UserName
+                            Liabiliti = item.Amaun
                         };
 
                         await _abBukuVotRepo.Insert(abBukuVot);
