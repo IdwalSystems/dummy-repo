@@ -431,8 +431,6 @@ namespace MSNK.Controllers
             {
 
                 item.AkPOId = 0;
-                item.UserId = user;
-                item.TarMasuk = DateTime.Now;
 
                 _cart.AddItem1(item.AkPOId,
                                item.Amaun,
@@ -448,8 +446,6 @@ namespace MSNK.Controllers
             foreach (AkPO2 item in akPO2Table)
             {
                 item.AkPOId = 0;
-                item.UserId = user;
-                item.TarMasuk = DateTime.Now;
 
                 _cart.AddItem2(item.AkPOId,
                                item.Indek,

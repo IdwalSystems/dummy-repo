@@ -634,7 +634,6 @@ namespace MSNK.Controllers
             akPVView.Tahun = akPV.Tahun;
             akPVView.NoPV = akPV.NoPV;
             akPVView.Tarikh = akPV.Tarikh;
-            akPVView.TarikhTerima = akPV.TarikhTerima;
             akPVView.JKW = akPV.JKW;
             akPVView.AkBank = akPV.AkBank;
             akPVView.Jumlah = akPV.Jumlah;
@@ -954,7 +953,6 @@ namespace MSNK.Controllers
                     m.Tahun = akPV.Tahun;
                     m.NoPV = noRujukan;
                     m.Tarikh = akPV.Tarikh;
-                    m.TarikhTerima = akPV.TarikhTerima;
                     m.NoKP = akPV.NoKP;
                     m.Nama = akPV.Nama;
                     m.Alamat1 = akPV.Alamat1;
@@ -1039,7 +1037,6 @@ namespace MSNK.Controllers
             akPVView.Tahun = akPV.Tahun;
             akPVView.NoPV = akPV.NoPV;
             akPVView.Tarikh = akPV.Tarikh;
-            akPVView.TarikhTerima = akPV.TarikhTerima;
             akPVView.JKW = akPV.JKW;
             akPVView.AkBank = akPV.AkBank;
             akPVView.Jumlah = akPV.Jumlah;
@@ -1531,7 +1528,6 @@ namespace MSNK.Controllers
             akPVView.Tahun = akPV.Tahun;
             akPVView.NoPV = akPV.NoPV;
             akPVView.Tarikh = akPV.Tarikh;
-            akPVView.TarikhTerima = akPV.TarikhTerima;
             akPVView.JKW = akPV.JKW;
             akPVView.AkBank = akPV.AkBank;
             akPVView.Jumlah = akPV.Jumlah;

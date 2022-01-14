@@ -19,6 +19,12 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Tarikh Diperlukan")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Tarikh { get; set; }
+        [DisplayName("Tarikh Terima")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime? TarikhTerima { get; set; }
+        [DisplayName("Tarikh Kewangan Terima")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime? TarikhKewanganTerima { get; set; }
         public DateTime? TarikhPosting { get; set; }
         [DisplayName("No Rujukan")]
         [Required(ErrorMessage = "No Rujukan Diperlukan")]
