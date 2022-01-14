@@ -60,26 +60,6 @@
             },
 
         });
-
-        ////Sum value to Total text field
-        //$("#txtHargaUnit").on('change', function () {
-        //    var sum = 0;
-        //    var txtKuantiti = $("#txtKuantiti");
-        //    var txtHargaUnit = $("#txtHargaUnit");
-        //    var txtAmaun = $("#txtAmaun");
-        //    sum = parseFloat(txtKuantiti.val()) * parseFloat(txtHargaUnit.val());
-        //    txtAmaun.val(sum);
-        //});
-
-        ////Sum value to Total text field
-        //$("#txtKuantiti").on('change', function () {
-        //    var sum = 0;
-        //    var txtKuantiti = $("#txtKuantiti");
-        //    var txtHargaUnit = $("#txtHargaUnit");
-        //    var txtAmaun = $("#txtAmaun");
-        //    sum = parseFloat(txtKuantiti.val()) * parseFloat(txtHargaUnit.val());
-        //    txtAmaun.val(sum);
-        //});
     });
 
     // check if jumlahObjek is equal to jumlahUrusniaga
@@ -295,6 +275,7 @@
         //Add Baris cell.
         var cell = $(row.insertCell(-1));
         cell.html(txtBaris.val());
+        cell.prop("hidden", !this.checked);
 
         //Add Bil cell.
         var cell = $(row.insertCell(-1));
@@ -420,7 +401,6 @@
         if (confirm("Hapus : " + name + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblPerihal")[0];
-            var txtJumlah = $("#jumlahPerihal");
 
             //Sum value to Total text field
             var sum = 0;
@@ -456,7 +436,6 @@
         var AkPO1 = {
             AkCartaId: akCartaId
         }
-        if (name != null) {
             $.ajax({
                 type: "POST",
                 url: "/AkPO/GetAnItemCartAkPO1",
@@ -473,8 +452,8 @@
 
                 }
             });
-        }
     };
+
 
     function modalUpdate1() {
         var id = $("#moId1").val();
@@ -610,7 +589,7 @@
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
-                                    "</td><td class='text-left'>" + item1.baris +
+                                    "</td><td class='text-left' hidden>" + item1.baris +
                                     "</td><td class='text-left'>" + item1.bil +
                                     "</td><td class='text-left'>" + item1.noStok +
                                     "</td><td class='text-left'>" + item1.perihal +
@@ -628,6 +607,7 @@
                             }
                         }
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }

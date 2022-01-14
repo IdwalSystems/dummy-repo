@@ -160,41 +160,40 @@
                 </div>
 
                 @*table Objek*@
-                <div class="card box-shadow mb-3">
-                    <div class="card-header">
-                        <h6>Objek</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-
-                            <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th style="width:40%">Kod</th>
-                                        <th style="width:50%" class="text-right">Amaun</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyObjek">
-                                    @foreach (var item in ViewBag.akPO1)
-                                    {
-                                        <tr id="@item.Id">
-                                            <td id="akCartaId" hidden>@item.AkCartaId</td>
-                                            <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                            <td class="editable-txt text-right" id="td1Amaun">@item.Amaun</td>
-                                        </tr>
-
-                                    }
-                                </tbody>
-                                <tfoot>
-
-                                </tfoot>
-                            </table>
-
-                        </div>
-                    </div>
-
+            <div class="card box-shadow mb-3">
+                <div class="card-header">
+                    <h6>Objek</h6>
                 </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+
+                        <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th style="width:40%">Kod</th>
+                                    <th style="width:50%" class="text-right">Amaun</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyObjek">
+                                @foreach (var item in ViewBag.akPO1)
+                                {
+                                    <tr id="@item.Id">
+                                        <td id="akCartaId" hidden>@item.AkCartaId</td>
+                                        <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
+                                        <td class="editable-txt text-right" id="td1Amaun">@item.Amaun</td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                            <tfoot>
+
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
                 @*table Objek end*@
 
                 @*table urusniaga*@
@@ -207,10 +206,9 @@
                             <table id="tblUrusniaga" class="table table-sm" cellpadding="0" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Baris</th>
                                         <th>Bil</th>
                                         <th>No Stok</th>
-                                        <th>Perihal</th>
+                                        <th width="30%">Perihal</th>
                                         <th>Kuantiti</th>
                                         <th>Unit</th>
                                         <th>Harga/Unit</th>
@@ -223,7 +221,7 @@
                                     {
                                     <tr>
                                         <td hidden><input id="txtAkPO2" value="@Model.Id" /></td>
-                                        <td class="editable-txt">@item.Baris</td>
+                                        <td hidden>@item.Baris</td>
                                         <td class="editable-txt">@item.Bil</td>
                                         <td class="editable-txt">@item.NoStok</td>
                                         <td class="editable-txt">@item.Perihal</td>
