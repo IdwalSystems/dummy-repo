@@ -174,7 +174,7 @@
 
             {
                 <tr>
-                    <td>@item.AkCarta.Perihal</td>
+                    <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
                     <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
                 </tr>
             }
@@ -197,12 +197,11 @@
     <table class="table table-bordered table-sm topic">
         <thead class="text-center">
             <tr>
-                <th colspan="8">PERIHAL</th>
+                <th colspan="7">PERIHAL</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="text-center">BARIS</td>
                 <td class="text-center">BIL</td>
                 <td class="text-center">NO STOK</td>
                 <td class="text-center">PERIHAL</td>
@@ -215,7 +214,6 @@
             {
 
                 <tr>
-                    <td>@item.Baris</td>
                     <td>@item.Bil</td>
                     <td>@item.NoStok</td>
                     <td>@item.Perihal</td>
@@ -227,7 +225,7 @@
 
             }
             <tr class="font-weight-bold">
-                <td class="text-right" colspan="7">Jumlah RM</td>
+                <td class="text-right" colspan="6">Jumlah RM</td>
                 <td class="text-right">@Convert.ToDecimal(Model.AkPO.Jumlah).ToString("#,##0.00")</td>
             </tr>
         </tbody>
@@ -268,14 +266,14 @@
             </tr>
             <tr>
                 <td class="text-center">@Model.Username</td>
-                <td class="text-center">@Model.Username</td>
-                <td class="text-center">@Model.Username</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
 
             </tr>
             <tr>
                 <td class="text-center">Administrator</td>
-                <td class="text-center">Administrator</td>
-                <td class="text-center">Administrator</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
 
             </tr>
             <tr>
@@ -286,8 +284,8 @@
             </tr>
             <tr>
                 <td class="text-center">@DateTime.Now</td>
-                <td class="text-center">@DateTime.Now</td>
-                <td class="text-center">@DateTime.Now</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
             </tr>
         </tbody>
     </table>

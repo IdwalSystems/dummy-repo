@@ -75,6 +75,54 @@ namespace MSNK.Controllers
             _abBukuVotRepo = abBukuVotRepository;
             _cart = cart;
         }
+        //Function Running Number
+        private string RunningNumber(AkPO data)
+        {
+            var kw = _context.JKW.FirstOrDefault(x => x.Id == data.JKWId);
+
+            var kumpulanWang = kw.Kod;
+            //var year = DateTime.Now.Year.ToString();
+            var year = data.Tahun;
+            string prefix = year + "/" + kumpulanWang + "/";
+            int x = 1;
+            string noRujukan = prefix + "000000";
+
+            var LatestNoRujukan = _context.AkPO
+                .Where(x => x.NoPO.Substring(0, 9) == prefix)
+                .Max(x => x.NoPO);
+            if (LatestNoRujukan == null)
+            {
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            else
+            {
+                x = int.Parse(LatestNoRujukan.Substring(12));
+                x++;
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            return noRujukan;
+        }
+        [HttpPost]
+        public JsonResult JsonGetKod(AkPO data)
+        {
+            try
+            {
+                var result = "";
+                if (data == null)
+                {
+                    result = "";
+                }
+                else
+                {
+                    result = RunningNumber(data);
+                }
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
 
         // GET: AkPO
         public async Task<IActionResult> Index(
@@ -132,6 +180,25 @@ namespace MSNK.Controllers
 
         // GET: AkPO/Details/5
         public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var akPO = await _akPORepo.GetById((int)id);
+            var kw = await _kwRepo.GetById(akPO.JKWId);
+            akPO.JKW = kw;
+            if (akPO == null)
+            {
+                return NotFound();
+            }
+            PopulateList();
+            PopulateTable(id);
+            return View(akPO);
+        }
+
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -387,28 +454,28 @@ namespace MSNK.Controllers
             var pembekal = _context.AkPembekal.FirstOrDefault(x => x.Id == akPO.AkPembekalId);
 
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
-
+            
             // get latest no rujukan running number  
-            var kw = _context.JKW.FirstOrDefault(x => x.Id == akPO.JKWId);
+            //var kw = _context.JKW.FirstOrDefault(x => x.Id == akPO.JKWId);
 
-            var kumpulanWang = kw.Kod;
-            var year = DateTime.Now.Year.ToString();
-            var month = DateTime.Now.Month.ToString();
-            string prefix = year + "/" + kumpulanWang + "/";
-            int x = 1;
-            string noRujukan = prefix + "000000";
+            //var kumpulanWang = kw.Kod;
+            //var year = DateTime.Now.Year.ToString();
+            //var month = DateTime.Now.Month.ToString();
+            //string prefix = year + "/" + kumpulanWang + "/";
+            //int x = 1;
+            //string noRujukan = prefix + "000000";
 
-            var LatestNoRujukan = _context.AkPO.Max(x => x.NoPO);
-            if (LatestNoRujukan == null)
-            {
-                noRujukan = string.Format("{0:" + prefix + "000000}", x);
-            }
-            else
-            {
-                x = int.Parse(LatestNoRujukan.Substring(10));
-                x++;
-                noRujukan = string.Format("{0:" + prefix + "000000}", x);
-            }
+            //var LatestNoRujukan = _context.AkPO.Max(x => x.NoPO);
+            //if (LatestNoRujukan == null)
+            //{
+            //    noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            //}
+            //else
+            //{
+            //    x = int.Parse(LatestNoRujukan.Substring(10));
+            //    x++;
+            //    noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            //}
 
             // get latest no rujukan running number end
 
@@ -418,7 +485,7 @@ namespace MSNK.Controllers
                 {
 
                     m.JKWId = JKWId;
-                    m.NoPO = noRujukan;
+                    m.NoPO = RunningNumber(akPO);
                     m.Tarikh = akPO.Tarikh;
                     m.TarikhPosting = akPO.TarikhPosting;
                     m.AkPembekal = pembekal;
@@ -1238,16 +1305,7 @@ namespace MSNK.Controllers
         // printing resit rasmi by akPO.Id
         public async Task<IActionResult> PrintPdf(int id)
         {
-            AkPO akPO = await _context.AkPO
-                .Include(x => x.JKW)
-                .Include(x => x.AkPembekal)
-                .Include(x => x.AkPO1).ThenInclude(x => x.AkCarta)
-                .Include(x => x.AkPO2)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            JNegeri negeri = await _context.JNegeri.FirstOrDefaultAsync(x => x.Kod == "02");
-
-            JBank bank = await _context.JBank.FirstOrDefaultAsync(x => x.Kod == "02");
+            AkPO akPO = await _akPORepo.GetById(id);
 
             var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPO.Jumlah)).ToUpper();
 
