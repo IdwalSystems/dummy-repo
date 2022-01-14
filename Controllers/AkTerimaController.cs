@@ -532,6 +532,25 @@ namespace MSNK.Controllers
                     {
                         item.JenisCek = "";
                     }
+                    else
+                    {
+                        switch (item.JenisCek)
+                        {
+                            case "1":
+                                item.JenisCek = "Cek Cawangan Ini";
+                                break;
+                            case "2":
+                                item.JenisCek = "Cek Tempatan";
+                                break;
+                            case "3":
+                                item.JenisCek = "Cek Luar";
+                                break;
+                            case "4":
+                                item.JenisCek = "Cek Antarabangsa";
+                                break;
+
+                        }
+                    }
                 }
 
                 return Json(new { result = "OK", record = data });

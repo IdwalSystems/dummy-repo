@@ -42,6 +42,8 @@ namespace MSNK
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+
+
                 });
     }
 }
