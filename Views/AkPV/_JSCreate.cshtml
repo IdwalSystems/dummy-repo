@@ -12,7 +12,8 @@
     function JsonKod(id, year) {
         $.ajax({
             type: "POST",
-            url: "/AkPV/JsonGetKod",
+            //url: "/AkPV/JsonGetKod",
+            url: '@Url.Action("JsonGetKod", "AkPV")',
             data: { data: id, year: year },
             dataType: "json",
             success: function (msg) {
@@ -29,7 +30,8 @@
     function EmptyCart() {
         $.ajax({
             type: "POST",
-            url: "/AkPV/JsonEmptyCart",
+            //url: "/AkPV/JsonEmptyCart",
+            url: '@Url.Action("JsonEmptyCart", "AkPV")',
             dataType: "json",
             success: function (msg) {
                 $("table tbody#tbodyObjek").empty();
@@ -98,14 +100,15 @@
             card.prop('hidden', true);
             EmptyCart();
         }
-        
+
     });
 
     function JsonKodPembekal(id) {
         if (id != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkPV/JsonGetPembekal",
+                //url: "/AkPV/JsonGetPembekal",
+                url: '@Url.Action("JsonGetPembekal", "AkPV")',
                 data: { data: id },
                 dataType: "json",
                 success: function (msg) {
@@ -148,7 +151,7 @@
             $("#txtNoCekAtauEFT").prop('disabled', true);
             $("#txtTarCekAtauEFT").prop('disabled', true);
         }
-        
+
 
     });
     //onchange Cara Bayaran end
@@ -188,7 +191,8 @@
         if (id != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkPV/JsonGetPekerja",
+                //url: "/AkPV/JsonGetPekerja",
+                url: '@Url.Action("JsonGetPekerja", "AkPV")',
                 data: { data: id },
                 dataType: "json",
                 success: function (msg) {
@@ -223,16 +227,17 @@
     // onchange no Inbois pembekal
     $("body").on('change', "#txtAkBelian", function () {
         var noInbois = $("#txtAkBelian").val();
-        
+
         JsonNoInbois(noInbois);
-        
+
     });
 
     function JsonNoInbois(id) {
         if (id != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkPV/JsonGetAkBelian",
+                //url: "/AkPV/JsonGetAkBelian",
+                url: '@Url.Action("JsonGetAkBelian", "AkPV")',
                 data: { data: id },
                 dataType: "json",
                 success: function (msg) {
@@ -248,7 +253,7 @@
                         $("#txtAmaunPO").val(msg.record.akPO.jumlah);
                     }
 
-                    
+
 
                 },
                 error: function (req, status, error) {
@@ -313,7 +318,7 @@
         var txtKodAkaun = $("#txtKodAkaun");
         if (txtKodAkaun.val() != null) {
             GetCarta(txtKodAkaun.val());
-        } 
+        }
     });
 
     function GetCarta(id) {
@@ -324,7 +329,8 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                url: "/AkPV/GetCarta",
+                //url: "/AkPV/GetCarta",
+                url: '@Url.Action("GetCarta", "AkPV")',
                 data: Objek,
                 dataType: "json",
                 success: function (r) {
@@ -375,7 +381,8 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "/AkPV/SaveAkPV1",
+                        //url: "/AkPV/SaveAkPV1",
+                        url: '@Url.Action("SaveAkPV1", "AkPV")',
                         data: AkBelian1,
                         dataType: "json",
                         success: function (r) {
@@ -385,7 +392,7 @@
                             if ($('#ddlKodPembekal').val() != 0) {
                                 checkJumlah();
                             }
-                            
+
                         }
                     });
 
@@ -420,7 +427,8 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkPV/RemoveAkPV1",
+                    //url: "/AkPV/RemoveAkPV1",
+                    url: '@Url.Action("RemoveAkPV1", "AkPV")',
                     data: AkPV1,
                     dataType: "json",
                     success: function (r) {
@@ -452,7 +460,8 @@
         if (akCartaId != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkPV/GetAnItemCartAkPV1",
+                //url: "/AkPV/GetAnItemCartAkPV1",
+                url: '@Url.Action("GetAnItemCartAkPV1", "AkPV")',
                 data: AkPV1,
                 dataType: "json",
                 success: function (r) {
@@ -480,7 +489,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkPV/SaveCartAkPV1",
+            //url: "/AkPV/SaveCartAkPV1",
+            url: '@Url.Action("SaveCartAkPV1", "AkPV")',
             data: AkPV1,
             dataType: "json",
             success: function (r) {
@@ -488,7 +498,8 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkPV/GetAllItemCartAkPV1",
+                    //url: "/AkPV/GetAllItemCartAkPV1",
+                    url: '@Url.Action("GetAllItemCartAkPV1", "AkPV")',
                     dataType: "json",
                     success: function (r) {
 
@@ -530,8 +541,8 @@
         var ddlAkBelian = $("#txtAkBelian");
         if (ddlAkBelian.val() != null) {
             GetInbois(ddlAkBelian.val());
-        } 
-        
+        }
+
     });
 
     function GetInbois(id) {
@@ -542,7 +553,8 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                url: "/AkPV/GetAkBelian",
+                //url: "/AkPV/GetAkBelian",
+                url: '@Url.Action("GetAkBelian", "AkPV")',
                 data: AkBelian,
                 dataType: "json",
                 success: function (r) {
@@ -622,7 +634,8 @@
                     }
                     $.ajax({
                         type: "POST",
-                        url: "/AkPV/SaveAkPV2",
+                        //url: "/AkPV/SaveAkPV2",
+                        url: '@Url.Action("SaveAkPV2", "AkPV")',
                         data: AkPV2,
                         dataType: "json",
                         success: function (r) {
@@ -634,11 +647,11 @@
                             txtTarPO.val("");
                             txtAmaunPO.val("0.00");
                             checkJumlah();
-                            
+
                         }
                     });
                     $("#txtAkBelian option[value=" + ddlAkBelian.val() + "]").prop('disabled', true);
-                
+
 
                 }
             });
@@ -670,7 +683,8 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkPV/RemoveAkPV2",
+                    //url: "/AkPV/RemoveAkPV2",
+                    url: '@Url.Action("RemoveAkPV2", "AkPV")',
                     data: AkPV2,
                     dataType: "json",
                     success: function (r) {
@@ -695,7 +709,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkPV/GetAnItemCartAkPV2",
+            //url: "/AkPV/GetAnItemCartAkPV2",
+            url: '@Url.Action("GetAnItemCartAkPV2", "AkPV")',
             data: AkPV2,
             dataType: "json",
             success: function (r) {
@@ -724,7 +739,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkPV/SaveCartAkPV2",
+            //url: "/AkPV/SaveCartAkPV2",
+            url: '@Url.Action("SaveCartAkPV2", "AkPV")',
             data: AkPV2,
             dataType: "json",
             success: function (r) {
@@ -732,7 +748,8 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkPV/GetAllItemCartAkPV2",
+                    //url: "/AkPV/GetAllItemCartAkPV2",
+                    url: '@Url.Action("GetAllItemCartAkPV2", "AkPV")',
                     dataType: "json",
                     success: function (r) {
 

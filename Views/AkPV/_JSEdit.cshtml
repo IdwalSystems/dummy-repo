@@ -47,7 +47,8 @@
         if (id != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkPV/JsonGetAkBelian",
+                //url: "/AkPV/JsonGetAkBelian",
+                url: '@Url.Action("JsonGetAkBelian", "AkPV")',
                 data: { data: id },
                 dataType: "json",
                 success: function (msg) {
@@ -136,7 +137,8 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                url: "/AkPV/GetCarta",
+                //url: "/AkPV/GetCarta",
+                url: '@Url.Action("GetCarta", "AkPV")',
                 data: Objek,
                 dataType: "json",
                 success: function (r) {
@@ -189,7 +191,8 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "/AkPV/SaveAkPV1",
+                        //url: "/AkPV/SaveAkPV1",
+                        url: '@Url.Action("SaveAkPV1", "AkPV")',
                         data: AkPV1,
                         dataType: "json",
                         success: function (r) {
@@ -234,7 +237,8 @@
             if (akCartaId != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkPV/RemoveAkPV1",
+                    //url: "/AkPV/RemoveAkPV1",
+                    url: '@Url.Action("RemoveAkPV1", "AkPV")',
                     data: AkPV1,
                     dataType: "json",
                     success: function (r) {
@@ -267,7 +271,8 @@
         if (akCartaId != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkPV/GetAnItemCartAkPV1",
+                //url: "/AkPV/GetAnItemCartAkPV1",
+                url: '@Url.Action("GetAnItemCartAkPV1", "AkPV")',
                 data: AkPV1,
                 dataType: "json",
                 success: function (r) {
@@ -295,7 +300,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkPV/SaveCartAkPV1",
+            //url: "/AkPV/SaveCartAkPV1",
+            url: '@Url.Action("SaveCartAkPV1", "AkPV")',
             data: AkPV1,
             dataType: "json",
             success: function (r) {
@@ -303,7 +309,8 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkPV/GetAllItemCartAkPV1",
+                    //url: "/AkPV/GetAllItemCartAkPV1",
+                    url: '@Url.Action("GetAllItemCartAkPV1", "AkPV")',
                     dataType: "json",
                     success: function (r) {
 
@@ -345,7 +352,7 @@
         var ddlAkBelian = $("#txtAkBelian");
         if (ddlAkBelian.val() != null) {
             GetInbois(ddlAkBelian.val());
-        } 
+        }
     });
 
     function GetInbois(id) {
@@ -356,7 +363,8 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                url: "/AkPV/GetAkBelian",
+                //url: "/AkPV/GetAkBelian",
+                url: '@Url.Action("GetAkBelian", "AkPV")',
                 data: AkBelian,
                 dataType: "json",
                 success: function (r) {
@@ -436,7 +444,8 @@
                     }
                     $.ajax({
                         type: "POST",
-                        url: "/AkPV/SaveAkPV2",
+                        //url: "/AkPV/SaveAkPV2",
+                        url: '@Url.Action("SaveAkPV2", "AkPV")',
                         data: AkPV2,
                         dataType: "json",
                         success: function (r) {
@@ -481,7 +490,8 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkPV/RemoveAkPV2",
+                    //url: "/AkPV/RemoveAkPV2",
+                    url: '@Url.Action("RemoveAkPV2", "AkPV")',
                     data: AkPV2,
                     dataType: "json",
                     success: function (r) {
@@ -506,7 +516,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkPV/GetAnItemCartAkPV2",
+            //url: "/AkPV/GetAnItemCartAkPV2",
+            url: '@Url.Action("GetAnItemCartAkPV2", "AkPV")',
             data: AkPV2,
             dataType: "json",
             success: function (r) {
@@ -535,7 +546,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkPV/SaveCartAkPV2",
+            //url: "/AkPV/SaveCartAkPV2",
+            url: '@Url.Action("SaveCartAkPV2", "AkPV")',
             data: AkPV2,
             dataType: "json",
             success: function (r) {
@@ -543,7 +555,8 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkPV/GetAllItemCartAkPV2",
+                    //url: "/AkPV/GetAllItemCartAkPV2",
+                    url: '@Url.Action("GetAllItemCartAkPV2", "AkPV")',
                     dataType: "json",
                     success: function (r) {
 
@@ -560,8 +573,8 @@
                                     noPO = item1.akBelian.akPO.noPO;
                                     tarPO = showDate(item1.akBelian.akPO.tarikh);
                                     jumlahPO = item1.akBelian.akPO.jumlah;
-                                } 
-                                
+                                }
+
                                 var str = "<tr><td id='akBelianId' hidden>" + item1.akBelianId +
                                     "</td><td>" + item1.akBelian.noInbois +
                                     "</td><td>" + showDate(item1.akBelian.tarikh) +

@@ -37,6 +37,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkCarta, int> _akCartaRepo;
         private readonly IRepository<AkBank, int> _akBankRepo;
         private readonly IRepository<AkAkaun, int> _akAkaunRepo;
+        private readonly IRepository<AbBukuVot, int> _abBukuVotRepo;
         private CartPV _cart;
 
         public AkPVController(
@@ -53,6 +54,7 @@ namespace MSNK.Controllers
             IRepository<AkCarta, int> akCartaRepository,
             IRepository<AkBank, int> akBankRepository,
             IRepository<AkAkaun, int> akAkaunRepository,
+            IRepository<AbBukuVot, int> abBukuVotRepository,
             CartPV cart
             )
         {
@@ -69,6 +71,7 @@ namespace MSNK.Controllers
             _akCartaRepo = akCartaRepository;
             _akBankRepo = akBankRepository;
             _akAkaunRepo = akAkaunRepository;
+            _abBukuVotRepo = abBukuVotRepository;
             _cart = cart;
         }
 
@@ -1516,7 +1519,6 @@ namespace MSNK.Controllers
 
             var akPV = await _akPVRepo.GetById((int)id);
 
-
             if (akPV == null)
             {
                 return NotFound();
@@ -1524,6 +1526,8 @@ namespace MSNK.Controllers
             AkPVViewModel akPVView = new AkPVViewModel();
 
             //fill in view model AkPVViewModel from akPV
+            akPVView.AkPembekalId = akPV.AkPembekalId;
+            akPVView.SuPekerjaId = akPV.SuPekerjaId;
             akPVView.Id = akPV.Id;
             akPVView.Tahun = akPV.Tahun;
             akPVView.NoPV = akPV.NoPV;
@@ -1532,34 +1536,51 @@ namespace MSNK.Controllers
             akPVView.AkBank = akPV.AkBank;
             akPVView.Jumlah = akPV.Jumlah;
             akPVView.TarikhPosting = akPV.TarikhPosting;
+            akPVView.JCaraBayarId = akPV.JCaraBayarId;
+            akPVView.AkBankId = akPV.AkBankId;
+            akPVView.JKWId = akPV.JKWId;
 
+            switch (akPV.FlJenisBaucer)
+            {
+                //pembekal
+                case 1:
+                    akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
+                    akPVView.NoKP = "-";
+                    akPVView.Nama = akPV.AkPembekal.NamaSykt;
+                    akPVView.Alamat1 = akPV.AkPembekal.Alamat1;
+                    akPVView.Alamat2 = akPV.AkPembekal.Alamat2;
+                    akPVView.Alamat3 = akPV.AkPembekal.Alamat3;
+                    akPVView.NoAkaunBank = akPV.AkPembekal.AkaunBank;
+                    akPVView.Telefon = akPV.AkPembekal.Telefon1;
+                    akPVView.Emel = akPV.AkPembekal.Emel;
+                    break;
+                //pekerja
+                case 2:
+                    akPVView.KodPenerima = akPV.SuPekerja.NoGaji;
+                    akPVView.NoKP = akPV.SuPekerja.NoKp;
+                    akPVView.Nama = akPV.SuPekerja.Nama;
+                    akPVView.Alamat1 = akPV.SuPekerja.Alamat1;
+                    akPVView.Alamat2 = akPV.SuPekerja.Alamat2;
+                    akPVView.Alamat3 = akPV.SuPekerja.Alamat3;
+                    akPVView.NoAkaunBank = akPV.SuPekerja.NoAkaunBank;
+                    akPVView.Telefon = akPV.SuPekerja.TelefonBimbit;
+                    akPVView.Emel = akPV.SuPekerja.Emel;
+                    break;
+                //Am
+                default:
+                    akPVView.denganTanggungan = akPV.denganTanggungan;
+                    akPVView.KodPenerima = "-";
+                    akPVView.NoKP = akPV.NoKP;
+                    akPVView.Nama = akPV.Nama;
+                    akPVView.Alamat1 = akPV.Alamat1;
+                    akPVView.Alamat2 = akPV.Alamat2;
+                    akPVView.Alamat3 = akPV.Alamat3;
+                    akPVView.NoAkaunBank = akPV.NoAkaunBank;
+                    akPVView.Telefon = akPV.Telefon;
+                    akPVView.Emel = akPV.Emel;
+                    break;
+            }
 
-            if (akPV.AkPembekalId == null)
-            {
-                akPVView.denganTanggungan = false;
-                akPVView.KodPenerima = "-";
-                akPVView.NoKP = akPV.NoKP;
-                akPVView.Penerima = akPV.Nama;
-                akPVView.Alamat1 = akPV.Alamat1;
-                akPVView.Alamat2 = akPV.Alamat2;
-                akPVView.Alamat3 = akPV.Alamat3;
-                akPVView.NoAkaunBank = akPV.NoAkaunBank;
-                akPVView.Telefon = akPV.Telefon;
-                akPVView.Emel = akPV.Emel;
-            }
-            else
-            {
-                akPVView.denganTanggungan = true;
-                akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
-                akPVView.NoKP = "-";
-                akPVView.Penerima = akPV.AkPembekal.NamaSykt;
-                akPVView.Alamat1 = akPV.AkPembekal.Alamat1;
-                akPVView.Alamat2 = akPV.AkPembekal.Alamat2;
-                akPVView.Alamat3 = akPV.AkPembekal.Alamat3;
-                akPVView.NoAkaunBank = akPV.AkPembekal.AkaunBank;
-                akPVView.Telefon = akPV.AkPembekal.Telefon1;
-                akPVView.Emel = akPV.AkPembekal.Emel;
-            }
             akPVView.NoCekAtauEFT = akPV.NoCekAtauEFT;
             akPVView.TarCekAtauEFT = akPV.TarCekAtauEFT;
             akPVView.Perihal = akPV.Perihal;
@@ -1576,7 +1597,10 @@ namespace MSNK.Controllers
             }
             akPVView.AkPV2 = akPV.AkPV2;
 
+            CartEmpty();
             PopulateTable(id);
+            PopulateList();
+            PopulateCartFromDb(akPV);
             return View(akPVView);
         }
 
@@ -1704,5 +1728,226 @@ namespace MSNK.Controllers
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
         }
+
+        // posting function
+        public async Task<IActionResult> Posting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                AkPV akPV = await _akPVRepo.GetById((int)id);
+
+                List<AkPV1> akPV1 = akPV.AkPV1.ToList();
+
+                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akPV.NoPV).FirstOrDefaultAsync();
+                if (akAkaun != null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //posting operation start here
+
+                    var kod = "";
+                    var penerima = "";
+                    switch (akPV.FlJenisBaucer)
+                    {
+                        //pembekal
+                        case 1:
+                            kod = akPV.AkPembekal.KodSykt;
+                            penerima = akPV.AkPembekal.NamaSykt;
+                            break;
+                        //pekerja
+                        case 2:
+                            kod = akPV.SuPekerja.NoGaji;
+                            penerima = akPV.SuPekerja.Nama;
+
+                            break;
+                        //am
+                        default:
+                            kod = akPV.NoKP;
+                            penerima = akPV.Nama;
+                            break;
+                    }
+
+
+                    foreach (AkPV1 item in akPV1)
+                    {
+                        //insert into AbBukuVot
+                        AbBukuVot abBukuVot = new AbBukuVot();
+                        if (akPV.FlJenisBaucer == 1)
+                        {
+                            //dengan tanggungan
+                            abBukuVot = new AbBukuVot()
+                            {
+                                Tahun = akPV.Tahun,
+                                JKWId = akPV.JKWId,
+                                Tarikh = akPV.Tarikh,
+                                Kod = kod,
+                                Penerima = penerima,
+                                VotId = item.AkCartaId,
+                                Rujukan = akPV.NoPV,
+                                Debit = item.Amaun,
+                                Liabiliti = 0 - item.Amaun
+
+                            };
+                        }
+                        else
+                        {
+                            //tanpa tanggungan
+                            abBukuVot = new AbBukuVot()
+                            {
+                                Tahun = akPV.Tahun,
+                                JKWId = akPV.JKWId,
+                                Tarikh = akPV.Tarikh,
+                                Kod = kod,
+                                Penerima = penerima,
+                                VotId = item.AkCartaId,
+                                Rujukan = akPV.NoPV,
+                                Debit = item.Amaun
+                            };
+
+                        }
+
+                        await _abBukuVotRepo.Insert(abBukuVot);
+
+                        // insert into AbBukuVot end
+
+                        //insert into akAkaun
+                        AkAkaun akAKodBank = new AkAkaun()
+                        {
+                            NoRujukan = akPV.NoPV,
+                            JKWId = akPV.JKWId,
+                            AkCartaId1 = akPV.AkBank.AkCartaId,
+                            AkCartaId2 = item.AkCartaId,
+                            Tarikh = akPV.Tarikh,
+                            Kredit = item.Amaun
+                        };
+
+                        await _akAkaunRepo.Insert(akAKodBank);
+
+                        AkAkaun akAObjek = new AkAkaun()
+                        {
+                            NoRujukan = akPV.NoPV,
+                            JKWId = akPV.JKWId,
+                            AkCartaId1 = item.AkCartaId,
+                            AkCartaId2 = akPV.AkBank.AkCartaId,
+                            Tarikh = akPV.Tarikh,
+                            Debit = item.Amaun
+                        };
+
+                        await _akAkaunRepo.Insert(akAObjek);
+                    }
+
+                    //update posting status in akTerima
+                    akPV.FlPosting = 1;
+                    akPV.TarikhPosting = DateTime.Now;
+                    await _akPVRepo.Update(akPV);
+
+                    //insert applog
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "T";
+                    appLog.LgOperation = "Posting";
+                    appLog.LgNote = modul + " Baucer Pembayaran - Posting";
+                    appLog.NoRujukan = akPV.NoPV;
+                    appLog.Jumlah = akPV.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+
+                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // posting function end
+
+        // unposting function
+        public async Task<IActionResult> UnPosting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkPV akPV = await _akPVRepo.GetById((int)id);
+
+                List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akPV.NoPV).ToList();
+
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan == akPV.NoPV).ToList();
+                if (akAkaun == null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //unposting operation start here
+                    //delete data from akAkaun
+                    foreach (AkAkaun item in akAkaun)
+                    {
+                        await _akAkaunRepo.Delete(item.Id);
+                    }
+
+                    //delete data from abBukuVot
+                    foreach (AbBukuVot item in abBukuVot)
+                    {
+                        await _abBukuVotRepo.Delete(item.Id);
+                    }
+                    //delete data from abBukuVot
+
+                    //update posting status in akTerima
+                    akPV.FlPosting = 0;
+                    akPV.TarikhPosting = null;
+                    await _akPVRepo.Update(akPV);
+
+                    //insert applog
+                    var user = await _userManager.GetUserAsync(User);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "UT";
+                    appLog.LgOperation = "UnPosting";
+                    appLog.LgNote = modul + " Baucer Pembayaran - UnPosting";
+                    appLog.NoRujukan = akPV.NoPV;
+                    appLog.Jumlah = akPV.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                    //unposting operation end
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // unposting function end
     }
 }

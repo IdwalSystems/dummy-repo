@@ -301,7 +301,7 @@ namespace MSNK.Controllers
 
             var kumpulanWang = kw.Kod;
             var year = DateTime.Now.Year.ToString();
-            string prefix = "IB" + kumpulanWang + year;
+            string prefix = kumpulanWang + year;
             int x = 1;
             string noRujukan = prefix + "000000";
 
@@ -343,7 +343,7 @@ namespace MSNK.Controllers
                     var kw = _context.JKW.FirstOrDefault(x => x.Id == data);
 
                     var kumpulanWang = kw.Kod;
-                    string prefix = "IB" + kumpulanWang + year;
+                    string prefix = kumpulanWang + year;
                     int x = 1;
                     string noRujukan = prefix + "000000";
 
@@ -588,7 +588,7 @@ namespace MSNK.Controllers
 
             var kumpulanWang = kw.Kod;
             var year = akTerima.Tahun;
-            string prefix = "RR/IB" + kumpulanWang + year;
+            string prefix = "RR/" + kumpulanWang + year;
             int x = 1;
             string noRujukan = prefix + "000000";
 
@@ -1457,7 +1457,7 @@ namespace MSNK.Controllers
                     
                     foreach(AkTerima1 item in akT1)
                     {
-                        AkAkaun akADebit = new AkAkaun() 
+                        AkAkaun akAKodBank = new AkAkaun() 
                         {
                             NoRujukan = akTerima.NoRujukan,
                             JKWId = akTerima.JKWId,
@@ -1466,7 +1466,19 @@ namespace MSNK.Controllers
                             Tarikh = akTerima.Tarikh,
                             Debit = item.Amaun
                         };
-                        await _akAkaunRepo.Insert(akADebit);
+                        await _akAkaunRepo.Insert(akAKodBank);
+
+                        AkAkaun akAObjek = new AkAkaun()
+                        {
+                            NoRujukan = akTerima.NoRujukan,
+                            JKWId = akTerima.JKWId,
+                            AkCartaId1 = item.AkCartaId,
+                            AkCartaId2 = akTerima.AkBank.AkCartaId,
+                            Tarikh = akTerima.Tarikh,
+                            Kredit = item.Amaun
+                        };
+
+                        await _akAkaunRepo.Insert(akAObjek);
                     }
                     
                     //update posting status in akTerima

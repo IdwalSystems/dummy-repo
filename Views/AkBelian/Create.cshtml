@@ -90,6 +90,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="TarikhTerima" class="control-label"></label>
+                            <input asp-for="TarikhTerima" class="form-control form-control-sm" />
+                            <span asp-validation-for="TarikhTerima" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="TarikhKewanganTerima" class="control-label"></label>
+                            <input asp-for="TarikhKewanganTerima" class="form-control form-control-sm" />
+                            <span asp-validation-for="TarikhKewanganTerima" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
                 @*table Objek*@
                 <div class="card box-shadow mb-3 mt-2">
                     <div class="card-header">
@@ -105,7 +121,6 @@
                                 </tr>
                             </thead>
                             <tbody id="tbodyObjek">
-                               
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -157,7 +172,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyPerihal">
-                                   
                                 </tbody>
                                 <tfoot>
                                     <tr>

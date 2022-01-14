@@ -66,6 +66,14 @@
         font-weight: normal
     }
 
+    .max-lines {
+        display: block; /* or inline-block */
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 5.8em;
+    }
+
 </style>
 @*Asal*@
 <div class="row flexrow mb-1 ml-1">
@@ -177,7 +185,7 @@
     </div>
 
     <div class="col-6 text-left">
-        <h6 class="mb-0 text-uppercase">@Html.DisplayFor(x => x.AkTerima.Sebab)</h6>
+        <h6 class="mb-0 text-uppercase max-lines">@Html.DisplayFor(x => x.AkTerima.Sebab)</h6>
     </div>
 </div>
 <hr class="bg-dark mb-0" />
@@ -276,7 +284,7 @@
 <div class="table-responsive-sm">
     
 </div>
-<div class="row flexrow mb-1">
+<div class="row flexrow mb-2">
     <div class="col-6 text-left">
         <div class="table-responsive-sm">
             <table class="table table-striped table-sm topic">
@@ -295,7 +303,7 @@
     </div>
 
     <div class="col-6 text-left">
-        <h6 class="mb-0 text-uppercase">@Html.DisplayFor(x => x.AkTerima.Sebab)</h6>
+        <h6 class="mb-0 text-uppercase max-lines" >@Html.DisplayFor(x => x.AkTerima.Sebab)</h6>
     </div>
 </div>
 <div class="table-responsive-sm">
