@@ -29,9 +29,9 @@ namespace MSNK.Controllers
         private readonly IRepository<AkJurnal, int, string> _akJurnalRepo;
         private readonly IRepository<JKW, int, string> _jKWRepo;
         private readonly ListViewIRepository<AkJurnal1, int> _akJurnal1Repo;
-        private readonly IRepository<AkCarta, int> _akCartaRepo;
-        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
-        private readonly IRepository<AbBukuVot, int> _abBukuVot;
+        private readonly IRepository<AkCarta, int, string> _akCartaRepo;
+        private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
+        private readonly IRepository<AbBukuVot, int, string> _abBukuVot;
         private CartJurnal _cart;
 
         public AkJurnalController(
@@ -41,9 +41,9 @@ namespace MSNK.Controllers
             IRepository<AkJurnal, int, string> akJurnalRepository,
             IRepository<JKW, int, string> jKWRepository,
             ListViewIRepository<AkJurnal1, int> akJurnal1Repository,
-            IRepository<AkCarta, int> akCartaRepository,
-            IRepository<AkAkaun, int> akAkaunRepository,
-            IRepository<AbBukuVot, int> abBukuVotRepository,
+            IRepository<AkCarta, int, string> akCartaRepository,
+            IRepository<AkAkaun, int, string> akAkaunRepository,
+            IRepository<AbBukuVot, int, string> abBukuVotRepository,
             CartJurnal cart
             )
         {

@@ -66,6 +66,8 @@ namespace MSNK.Controllers
                 RoleList = listItems
             };
 
+            ViewBag.SuPekerja = await _suPekerjaRepo.GetAll();
+
             return View(registerViewModel);
         }
 
@@ -79,21 +81,23 @@ namespace MSNK.Controllers
             ViewData["ReturnUrl"] = returnurl;
             returnurl = returnurl ?? Url.Content("~/");
 
-            if(model.NoKP != null)
+            if(model.SuPekerjaId != 0)
             {
                 //check if user already exist in SuPekerja or not
                 //if true then form is valid
-                var pekerja = _suPekerjaRepo.GetByString(model.NoKP);
-                if (pekerja.Result != null)
+                var pekerja = await _suPekerjaRepo.GetById(model.SuPekerjaId);
+                if (pekerja != null)
                 {
+                    model.Nama = pekerja.Nama;
+
                     if (ModelState.IsValid)
                     {
                         var user = new ApplicationUser
                         {
                             UserName = model.Email,
                             Email = model.Email,
-                            Nama = model.Nama,
-                            NoKP = model.NoKP
+                            Nama = pekerja.Nama,
+                            SuPekerjaId = model.SuPekerjaId
                         };
                         var result = await _userManager.CreateAsync(user, model.Password);
                         if (result.Succeeded)
@@ -148,6 +152,8 @@ namespace MSNK.Controllers
             });
 
             model.RoleList = listItems;
+
+            ViewBag.SuPekerja = await _suPekerjaRepo.GetAll();
 
             return View(model);
         }
