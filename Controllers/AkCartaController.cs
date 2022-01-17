@@ -193,7 +193,7 @@ namespace MSNK.Controllers
                                 {
                                     JKWId = JKWId,
                                     AkCartaId1 = _context.AkCarta.FirstOrDefault(x => x.Kod == akCarta.Kod).Id,
-                                    Tarikh = DateTime.Now,
+                                    Tarikh = DateTime.Parse("2021-12-31"),
                                     NoRujukan = "BAKI AWAL",
                                     Debit = (akCarta.Baki>0)? akCarta.Baki:0,
                                     Kredit = (akCarta.Baki < 0) ? akCarta.Baki : 0
@@ -361,7 +361,7 @@ namespace MSNK.Controllers
                                         JKWId = JKWId,
                                         AkCartaId1 = _context.AkCarta.FirstOrDefault(x => x.Kod == akCarta.Kod).Id,
                                         AkCartaId2 = null,
-                                        Tarikh = DateTime.Now,
+                                        Tarikh = DateTime.Parse("2021-12-31"),
                                         NoRujukan = "BAKI AWAL",
                                         Debit = (akCarta.Baki > 0) ? akCarta.Baki : 0,
                                         Kredit = (akCarta.Baki < 0) ? (akCarta.Baki * -1) : 0
