@@ -26,22 +26,22 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IRepository<AkJurnal, int> _akJurnalRepo;
-        private readonly IRepository<JKW, int> _jKWRepo;
+        private readonly IRepository<AkJurnal, int, string> _akJurnalRepo;
+        private readonly IRepository<JKW, int, string> _jKWRepo;
         private readonly ListViewIRepository<AkJurnal1, int> _akJurnal1Repo;
-        private readonly IRepository<AkCarta, int> _akCartaRepo;
-        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
+        private readonly IRepository<AkCarta, int, string> _akCartaRepo;
+        private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private CartJurnal _cart;
 
         public AkJurnalController(
             ApplicationDbContext context,
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
-            IRepository<AkJurnal, int> akJurnalRepository,
-            IRepository<JKW, int> jKWRepository,
+            IRepository<AkJurnal, int, string> akJurnalRepository,
+            IRepository<JKW, int, string> jKWRepository,
             ListViewIRepository<AkJurnal1, int> akJurnal1Repository,
-            IRepository<AkCarta, int> akCartaRepository,
-            IRepository<AkAkaun, int> akAkaunRepository,
+            IRepository<AkCarta, int, string> akCartaRepository,
+            IRepository<AkAkaun, int, string> akAkaunRepository,
             CartJurnal cart
             )
         {

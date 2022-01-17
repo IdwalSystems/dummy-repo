@@ -22,15 +22,15 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IRepository<AkCarta, int> _akCartaRepo;
-        private readonly IRepository<JKW, int> _kwRepo;
+        private readonly IRepository<AkCarta, int, string> _akCartaRepo;
+        private readonly IRepository<JKW, int, string> _kwRepo;
 
         public AkCartaController(
             ApplicationDbContext context,
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
-            IRepository<JKW, int> kwRepository,
-            IRepository<AkCarta, int> akCartaRepository)
+            IRepository<JKW, int, string> kwRepository,
+            IRepository<AkCarta, int, string> akCartaRepository)
         {
             _context = context;
             _appLog = appLog;

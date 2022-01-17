@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace MSNK.Models.Modules.EFRepository
 {
     [Authorize]
-    public class JJantinaRepository : IRepository<JJantina, int>
+    public class JJantinaRepository : IRepository<JJantina, int, string>
     {
         private readonly ApplicationDbContext context;
         public JJantinaRepository(ApplicationDbContext context) => this.context = context;
@@ -31,6 +31,11 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<JJantina> GetById(int id)
         {
             return await context.JJantina.FindAsync(id);
+        }
+
+        public Task<JJantina> GetByString(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<JJantina> Insert(JJantina entity)

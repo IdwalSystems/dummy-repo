@@ -11,8 +11,14 @@ namespace MSNK.Models.Administration
 {
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+            NoKP = "";
+        }
+
         [Required]
         public string Nama { get; set; }
+        public string NoKP { get; set; }
         [NotMapped]
         public string RoleId { get; set; }
         [NotMapped]

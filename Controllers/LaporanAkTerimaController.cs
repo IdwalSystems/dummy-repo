@@ -21,27 +21,27 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IRepository<AkTerima, int> _akTerimaRepo;
-        private readonly IRepository<AkBank, int> _akBankRepo;
-        private readonly IRepository<JKW, int> _kwRepo;
-        private readonly IRepository<JNegeri, int> _negeriRepo;
+        private readonly IRepository<AkTerima, int, string> _akTerimaRepo;
+        private readonly IRepository<AkBank, int, string> _akBankRepo;
+        private readonly IRepository<JKW, int, string> _kwRepo;
+        private readonly IRepository<JNegeri, int, string> _negeriRepo;
         private readonly ListViewIRepository<AkTerima1, int> _akTerima1Repo;
-        private readonly IRepository<AkCarta, int> _akCartaRepo;
+        private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly ListViewIRepository<AkTerima2, int> _akTerima2Repo;
-        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
+        private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
 
         public LaporanAkTerimaController(
             ApplicationDbContext context,
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
-            IRepository<AkTerima, int> akTerimaRepository,
+            IRepository<AkTerima, int, string> akTerimaRepository,
             ListViewIRepository<AkTerima1, int> akTerima1Repository,
             ListViewIRepository<AkTerima2, int> akTerima2Repository,
-            IRepository<AkBank, int> akBankRepository,
-            IRepository<JKW, int> kwRepository,
-            IRepository<JNegeri, int> negeriRepository,
-            IRepository<AkCarta, int> akCartaRepository,
-            IRepository<AkAkaun, int> akAkaunRepository
+            IRepository<AkBank, int, string> akBankRepository,
+            IRepository<JKW, int, string> kwRepository,
+            IRepository<JNegeri, int, string> negeriRepository,
+            IRepository<AkCarta, int, string> akCartaRepository,
+            IRepository<AkAkaun, int, string> akAkaunRepository
             )
         {
             _context = context;

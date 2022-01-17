@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class SuPekerjaRepository : IRepository<SuPekerja, int>
+    public class SuPekerjaRepository : IRepository<SuPekerja, int, string>
     {
         public readonly ApplicationDbContext context;
         public SuPekerjaRepository(ApplicationDbContext context) => this.context = context;
@@ -36,6 +36,11 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<SuPekerja> GetById(int id)
         {
             return await context.SuPekerja.FindAsync(id);
+        }
+
+        public async Task<SuPekerja> GetByString(string noKP)
+        {
+            return await context.SuPekerja.Where(x=>x.NoKp == noKP).FirstOrDefaultAsync();
         }
 
         public async Task<SuPekerja> Insert(SuPekerja entity)

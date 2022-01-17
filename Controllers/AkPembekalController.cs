@@ -17,15 +17,15 @@ namespace MSNK.Controllers
     public class AkPembekalController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IRepository<AkPembekal, int> _akpembekalRepo;
-        private readonly IRepository<JBank, int> _jbankRepo;
-        private readonly IRepository<JNegeri, int> _jnegeriRepo;
+        private readonly IRepository<AkPembekal, int, string> _akpembekalRepo;
+        private readonly IRepository<JBank, int, string> _jbankRepo;
+        private readonly IRepository<JNegeri, int, string> _jnegeriRepo;
 
         public AkPembekalController(
             ApplicationDbContext context,
-            IRepository<AkPembekal, int> AkPembekalRepository,
-            IRepository<JBank, int> JBankRepository,
-            IRepository<JNegeri, int> JNegeriRepository)
+            IRepository<AkPembekal, int, string> AkPembekalRepository,
+            IRepository<JBank, int, string> JBankRepository,
+            IRepository<JNegeri, int, string> JNegeriRepository)
         {
             _context = context;
             _akpembekalRepo = AkPembekalRepository;

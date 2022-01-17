@@ -9,12 +9,12 @@ namespace MSNK.Models.Login.ViewModel
 {
     public class RegisterViewModel
     {
-         [Required]
+         [Required(ErrorMessage = "Emel Diperlukan.")]
         [EmailAddress]
         [Display(Name = "Emel")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Katalaluan Diperlukan.")]
         [StringLength(100, ErrorMessage = "{0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Katalaluan")]
@@ -25,10 +25,15 @@ namespace MSNK.Models.Login.ViewModel
         [Compare("Password", ErrorMessage = "Katalaluan dan pengesahan katalaluan tidak sama")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Nama Diperlukan.")]
+        [Display(Name = "Nama Penuh")]
         public string Nama { get; set; }
+        [Required(ErrorMessage = "No Kad Pengenalan Diperlukan."), MaxLength(12)]
+        [Display(Name = "No Kad Pengenalan")]
+        public string NoKP { get; set; }
 
         public IEnumerable<SelectListItem> RoleList { get; set; }
+        [Display(Name = "Peranan")]
         public string RoleSelected { get; set; }
 
     }

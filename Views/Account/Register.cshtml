@@ -20,6 +20,13 @@
         </div>
     </div>
     <div class="form-group">
+        <label asp-for="NoKP" class="col-md-5"></label>
+        <div class="col-md-10">
+            <input asp-for="NoKP" class="form-control form-control-sm" placeholder="xxxxxxxxxxxx"/>
+            <span asp-validation-for="NoKP" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
         <label asp-for="Password" class="col-md-5"></label>
         <div class="col-md-10">
             <input asp-for="Password" class="form-control form-control-sm" />

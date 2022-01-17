@@ -29,33 +29,33 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IRepository<AkPO, int> _akPORepo;
+        private readonly IRepository<AkPO, int, string> _akPORepo;
         private readonly ListViewIRepository<AkPO1, int> _akPO1Repo;
         private readonly ListViewIRepository<AkPO2, int> _akPO2Repo;
-        private readonly IRepository<AkCarta, int> _akCartaRepo;
-        private readonly IRepository<AkPembekal, int> _akpembekalRepo;
-        private readonly IRepository<AkBank, int> _akBankRepo;
-        private readonly IRepository<JBank, int> _jbankRepo;
-        private readonly IRepository<JNegeri, int> _negeriRepo;
-        private readonly IRepository<JKW, int> _kwRepo;
-        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
-        private readonly IRepository<AbBukuVot, int> _abBukuVotRepo;
+        private readonly IRepository<AkCarta, int, string> _akCartaRepo;
+        private readonly IRepository<AkPembekal, int, string> _akpembekalRepo;
+        private readonly IRepository<AkBank, int, string> _akBankRepo;
+        private readonly IRepository<JBank, int, string> _jbankRepo;
+        private readonly IRepository<JNegeri, int, string> _negeriRepo;
+        private readonly IRepository<JKW, int, string> _kwRepo;
+        private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
+        private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private CartPO _cart;
 
         public AkPOController(ApplicationDbContext context,
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
-            IRepository<AkPO, int> AkPORepository,
+            IRepository<AkPO, int, string> AkPORepository,
             ListViewIRepository<AkPO1, int> AkPO1Repository,
             ListViewIRepository<AkPO2, int> AkPO2Repository,
-            IRepository<AkCarta, int> akCartaRepository,
-            IRepository<AkPembekal, int> AkPembekalRepository,
-            IRepository<AkBank, int> akBankRepository,
-            IRepository<JBank, int> JBankRepository,
-            IRepository<JNegeri, int> negeriRepository,
-            IRepository<JKW, int> kwRepository,
-            IRepository<AkAkaun, int> akAkaunRepository,
-            IRepository<AbBukuVot, int> abBukuVotRepository,
+            IRepository<AkCarta, int, string> akCartaRepository,
+            IRepository<AkPembekal, int, string> AkPembekalRepository,
+            IRepository<AkBank, int, string> akBankRepository,
+            IRepository<JBank, int, string> JBankRepository,
+            IRepository<JNegeri, int, string> negeriRepository,
+            IRepository<JKW, int, string> kwRepository,
+            IRepository<AkAkaun, int, string> akAkaunRepository,
+            IRepository<AbBukuVot, int, string> abBukuVotRepository,
             CartPO cart
             )
         {

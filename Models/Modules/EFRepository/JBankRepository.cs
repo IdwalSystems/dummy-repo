@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class JBankRepository : IRepository<JBank, int>
+    public class JBankRepository : IRepository<JBank, int, string>
     {
         public readonly ApplicationDbContext context;
 
@@ -31,6 +31,11 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<JBank> GetById(int id)
         {
             return await context.JBank.FindAsync(id);
+        }
+
+        public Task<JBank> GetByString(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<JBank> Insert(JBank entity)
