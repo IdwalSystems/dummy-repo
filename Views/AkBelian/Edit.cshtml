@@ -54,7 +54,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="AkPOId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm select2" asp-for="AkPOId" id="ddlAkPOId" disabled>
+                                <select class="form-control form-control-sm select2" asp-for="AkPOId" id="ddlAkPOId">
                                     <option value="" disabled selected>-- Pilih No PO --</option>
                                     @foreach (var s in ViewBag.AkPO)
                                     {
@@ -89,6 +89,22 @@
                                     }
                                 </select>
                                 <span asp-validation-for="KodObjekAPId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="TarikhTerima" class="control-label"></label>
+                                <input asp-for="TarikhTerima" class="form-control form-control-sm" />
+                                <span asp-validation-for="TarikhTerima" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="TarikhKewanganTerima" class="control-label"></label>
+                                <input asp-for="TarikhKewanganTerima" class="form-control form-control-sm" />
+                                <span asp-validation-for="TarikhKewanganTerima" class="text-danger"></span>
                             </div>
                         </div>
                     </div>

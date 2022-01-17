@@ -318,6 +318,8 @@ namespace MSNK.Controllers
             akBelianView.Tahun = akBelian.Tahun;
             akBelianView.NoInbois = akBelian.NoInbois;
             akBelianView.Tarikh = akBelian.Tarikh;
+            akBelianView.TarikhTerima = akBelian.TarikhTerima;
+            akBelianView.TarikhKewanganTerima = akBelian.TarikhKewanganTerima;
             akBelianView.JKW = akBelian.JKW;
             akBelianView.KodObjekAP = kodObjekAkaunPemiutang;
             akBelianView.Jumlah = akBelian.Jumlah;
@@ -431,8 +433,6 @@ namespace MSNK.Controllers
             {
 
                 item.AkPOId = 0;
-                item.UserId = user;
-                item.TarMasuk = DateTime.Now;
 
                 _cart.AddItem1(item.AkPOId,
                                item.Amaun,
@@ -448,8 +448,6 @@ namespace MSNK.Controllers
             foreach (AkPO2 item in akPO2Table)
             {
                 item.AkPOId = 0;
-                item.UserId = user;
-                item.TarMasuk = DateTime.Now;
 
                 _cart.AddItem2(item.AkPOId,
                                item.Indek,
@@ -1219,6 +1217,8 @@ namespace MSNK.Controllers
             akBelianView.Tahun = akBelian.Tahun;
             akBelianView.NoInbois = akBelian.NoInbois;
             akBelianView.Tarikh = akBelian.Tarikh;
+            akBelianView.TarikhTerima = akBelian.TarikhTerima;
+            akBelianView.TarikhKewanganTerima = akBelian.TarikhKewanganTerima;
             akBelianView.JKW = akBelian.JKW;
             akBelianView.KodObjekAP = kodObjekAkaunPemiutang;
             akBelianView.Jumlah = akBelian.Jumlah;
@@ -1370,11 +1370,7 @@ namespace MSNK.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
 
-                AkBelian akBelian = await _context.AkBelian
-                    .Include(x=> x.KodObjekAP)
-                    .Include(x=> x.AkPembekal)
-                    .Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta)
-                    .FirstOrDefaultAsync(x => x.Id == id);
+                AkBelian akBelian = await _akBelianRepo.GetById((int)id);
 
                 List<AkBelian1> akB1 = akBelian.AkBelian1.ToList();
 
@@ -1402,23 +1398,47 @@ namespace MSNK.Controllers
                     foreach (AkBelian1 item in akB1)
                     {
                         //insert into AbBukuVot
-                        AbBukuVot abBukuVot = new AbBukuVot()
+                        AbBukuVot abBukuVot = new AbBukuVot();
+                        if (akBelian.AkPO != null)
                         {
-                            Tahun = akBelian.Tahun,
-                            JKWId = akBelian.JKWId,
-                            Tarikh = akBelian.Tarikh,
-                            Kod = kodPembekal,
-                            Penerima = penerima,
-                            VotId = item.AkCartaId,
-                            Rujukan = akBelian.NoInbois,
-                            Liabiliti = item.Amaun
-                        };
+                            //dengan tanggungan
+                            abBukuVot = new AbBukuVot()
+                            {
+                                Tahun = akBelian.Tahun,
+                                JKWId = akBelian.JKWId,
+                                Tarikh = akBelian.Tarikh,
+                                Kod = kodPembekal,
+                                Penerima = penerima,
+                                VotId = item.AkCartaId,
+                                Rujukan = akBelian.NoInbois,
+                                Tanggungan = 0 - item.Amaun,
+                                Liabiliti = item.Amaun
+
+                            };
+                        }
+                        else
+                        {
+                            //tanpa tanggungan
+                            abBukuVot = new AbBukuVot()
+                            {
+                                Tahun = akBelian.Tahun,
+                                JKWId = akBelian.JKWId,
+                                Tarikh = akBelian.Tarikh,
+                                Kod = kodPembekal,
+                                Penerima = penerima,
+                                VotId = item.AkCartaId,
+                                Rujukan = akBelian.NoInbois,
+                                Liabiliti = item.Amaun
+                            };
+
+                        }
 
                         await _abBukuVotRepo.Insert(abBukuVot);
+
                         // insert into AbBukuVot end
 
                         //insert into akAkaun
-                        AkAkaun akAKredit = new AkAkaun()
+                        AkAkaun akALiabiliti = new AkAkaun()
                         {
                             NoRujukan = akBelian.NoInbois,
                             JKWId = akBelian.JKWId,
@@ -1428,9 +1448,9 @@ namespace MSNK.Controllers
                             Kredit = item.Amaun
                         };
 
-                        await _akAkaunRepo.Insert(akAKredit);
+                        await _akAkaunRepo.Insert(akALiabiliti);
 
-                        AkAkaun akADebit = new AkAkaun()
+                        AkAkaun akAObjek = new AkAkaun()
                         {
                             NoRujukan = akBelian.NoInbois,
                             JKWId = akBelian.JKWId,
@@ -1440,7 +1460,7 @@ namespace MSNK.Controllers
                             Debit = item.Amaun
                         };
 
-                        await _akAkaunRepo.Insert(akADebit);
+                        await _akAkaunRepo.Insert(akAObjek);
                     }
                     
                     //update posting status in akTerima

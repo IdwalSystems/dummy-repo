@@ -14,8 +14,8 @@
         //    //$("#inputTarikh2").val('');
         //});
 
-    //}); 
-    
+    //});
+
 
     // onchange kod pembekal
     $("body").on('change', "#ddlKodPembekal", function () {
@@ -27,7 +27,8 @@
         if (id != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkBelian/JsonGetPembekal",
+                //url: "/AkBelian/JsonGetPembekal",
+                url: '@Url.Action("JsonGetPembekal", "AkBelian")',
                 data: { data: id },
                 dataType: "json",
                 success: function (msg) {
@@ -52,7 +53,8 @@
         if (id != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkBelian/JsonGetNoPO",
+                //url: "/AkBelian/JsonGetNoPO",
+                url: '@Url.Action("JsonGetNoPO", "AkBelian")',
                 data: { id: id },
                 dataType: "json",
                 success: function (msg) {
@@ -65,7 +67,7 @@
                     alert(error);
                 }
             });
-        } 
+        }
     }
 
     function displayObjekList(data) {
@@ -126,7 +128,7 @@
         var txtKodAkaun = $("#txtKodAkaun");
         if (txtKodAkaun.val() != null) {
             GetCarta(txtKodAkaun.val());
-        } 
+        }
     });
 
     function GetCarta(id) {
@@ -137,7 +139,8 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                url: "/AkBelian/GetCarta",
+                //url: "/AkBelian/GetCarta",
+                url: '@Url.Action("GetCarta", "AkBelian")',
                 data: Objek,
                 dataType: "json",
                 success: function (r) {
@@ -188,7 +191,8 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "/AkBelian/SaveAkBelian1",
+                        //url: "/AkBelian/SaveAkBelian1",
+                        url: '@Url.Action("SaveAkBelian1", "AkBelian")',
                         data: AkBelian1,
                         dataType: "json",
                         success: function (r) {
@@ -311,7 +315,8 @@
 
         $.ajax({
             type: "POST",
-            url: "/AkBelian/SaveAkBelian2",
+            //url: "/AkBelian/SaveAkBelian2",
+            url: '@Url.Action("SaveAkBelian2", "AkBelian")',
             data: AkBelian2,
             dataType: "json",
             success: function (r) {
@@ -353,7 +358,8 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkBelian/RemoveAkBelian1",
+                    //url: "/AkBelian/RemoveAkBelian1",
+                    url: '@Url.Action("RemoveAkBelian1", "AkBelian")',
                     data: AkBelian1,
                     dataType: "json",
                     success: function (r) {
@@ -390,7 +396,8 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkBelian/RemoveAkBelian2",
+                    //url: "/AkBelian/RemoveAkBelian2",
+                    url: '@Url.Action("RemoveAkBelian2", "AkBelian")',
                     data: AkBelian2,
                     dataType: "json",
                     success: function (r) {
@@ -415,7 +422,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkBelian/GetAnItemCartAkBelian1",
+            //url: "/AkBelian/GetAnItemCartAkBelian1",
+            url: '@Url.Action("GetAnItemCartAkBelian1", "AkBelian")',
             data: AkBelian1,
             dataType: "json",
             success: function (r) {
@@ -442,7 +450,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkBelian/SaveCartAkBelian1",
+            //url: "/AkBelian/SaveCartAkBelian1",
+            url: '@Url.Action("SaveCartAkBelian1", "AkBelian")',
             data: AkBelian1,
             dataType: "json",
             success: function (r) {
@@ -450,7 +459,8 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkBelian/GetAllItemCartAkBelian1",
+                    //url: "/AkBelian/GetAllItemCartAkBelian1",
+                    url: '@Url.Action("GetAllItemCartAkBelian1", "AkBelian")',
                     dataType: "json",
                     success: function (r) {
 
@@ -493,7 +503,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkBelian/GetAnItemCartAkBelian2",
+            //url: "/AkBelian/GetAnItemCartAkBelian2",
+            url: '@Url.Action("GetAnItemCartAkBelian2", "AkBelian")',
             data: AkBelian2,
             dataType: "json",
             success: function (r) {
@@ -540,7 +551,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkBelian/SaveCartAkBelian2",
+            //url: "/AkBelian/SaveCartAkBelian2",
+            url: '@Url.Action("SaveCartAkBelian2", "AkBelian")',
             data: AkBelian2,
             dataType: "json",
             success: function (r) {
@@ -548,7 +560,8 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkBelian/GetAllItemCartAkBelian2",
+                    //url: "/AkBelian/GetAllItemCartAkBelian2",
+                    url: '@Url.Action("GetAllItemCartAkBelian2", "AkBelian")',
                     dataType: "json",
                     success: function (r) {
 
@@ -585,7 +598,7 @@
     };
     //update tbl perihal end
 
-    // onchange harga/unit and kuantiti 
+    // onchange harga/unit and kuantiti
     $("body").on('change', ".hargaUnit, .kuantiti", function () {
         //main body
         var amount = $("#txtHargaUnit").val();

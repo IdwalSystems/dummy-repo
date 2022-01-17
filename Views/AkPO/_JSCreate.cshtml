@@ -62,6 +62,41 @@
         });
     });
 
+    //Tukar running number berdasarkan Tahun Belanjawan
+    $("body").on('change', "#txtTahun", function () {
+        RunningNumber();
+    });
+
+    $("body").on('change', "#ddlKW", function () {
+        RunningNumber();
+    });
+
+    function RunningNumber() {
+
+        var tahun = $("#txtTahun").val();
+        var kw = $("#ddlKW").val();
+
+        if (tahun && kw != 0) {
+            var AkPO = {
+                Tahun: tahun,
+                JKWId: kw
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/AkPO/JsonGetKod",
+                data: AkPO,
+                dataType: "json",
+                success: function (msg) {
+                    $("#txtNoPO").val(msg.record);
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+
     // check if jumlahObjek is equal to jumlahUrusniaga
     function checkJumlah() {
         var jumlahObjek = $("#jumlahObjek").val();

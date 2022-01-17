@@ -26,7 +26,8 @@
         if (id != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkTerima/JsonGetCaraBayar",
+                //url: "/AkTerima/JsonGetCaraBayar",
+                url: '@Url.Action("JsonGetCaraBayar", "AkTerima")',
                 data: { data: id },
                 dataType: "json",
                 success: function (msg) {
@@ -61,8 +62,8 @@
         var txtKodAkaun = $("#txtKodAkaun");
         if (txtKodAkaun.val() != null) {
             GetCarta(txtKodAkaun.val(), Id.val());
-        } 
-        
+        }
+
     });
 
     function GetCarta(id,akTerimaId) {
@@ -73,7 +74,8 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                url: "/AkTerima/GetCarta",
+                //url: "/AkTerima/GetCarta",
+                url: '@Url.Action("GetCarta", "AkTerima")',
                 data: Objek,
                 dataType: "json",
                 success: function (r) {
@@ -99,7 +101,7 @@
 
                     //Add kod cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(r.record.kod + ' - ' + r.record.perihal);            
+                    cell.html(r.record.kod + ' - ' + r.record.perihal);
 
                     //Add amaun cell.
                     var cell = $(row.insertCell(-1));
@@ -115,7 +117,7 @@
 
                     //Add Remove Button cell.
                     cell = $(row.insertCell(-1));
-                    
+
                     var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                     cell.append(btnRemove1);
 
@@ -127,7 +129,8 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "/AkTerima/SaveAkTerima1",
+                        //url: "/AkTerima/SaveAkTerima1",
+                        url: '@Url.Action("SaveAkTerima1", "AkTerima")',
                         data: AkTerima1,
                         dataType: "json",
                         success: function (r) {
@@ -154,7 +157,7 @@
         var ddlCaraBayar = $("#ddlCaraBayar");
         if (ddlCaraBayar.val() != null) {
             GetCaraBayar(ddlCaraBayar.val());
-        } 
+        }
     });
 
     function GetCaraBayar(id) {
@@ -165,7 +168,8 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                url: "/AkTerima/GetCaraBayar",
+                //url: "/AkTerima/GetCaraBayar",
+                url: '@Url.Action("GetCaraBayar", "AkTerima")',
                 data: JCaraBayar,
                 dataType: "json",
                 success: function (r) {
@@ -262,7 +266,8 @@
                     }
                     $.ajax({
                         type: "POST",
-                        url: "/AkTerima/SaveAkTerima2",
+                        //url: "/AkTerima/SaveAkTerima2",
+                        url: '@Url.Action("SaveAkTerima2", "AkTerima")',
                         data: AkTerima2,
                         dataType: "json",
                         success: function (r) {
@@ -308,7 +313,8 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkTerima/RemoveAkTerima1",
+                    //url: "/AkTerima/RemoveAkTerima1",
+                    url: '@Url.Action("RemoveAkTerima1", "AkTerima")',
                     data: AkTerima1,
                     dataType: "json",
                     success: function (r) {
@@ -349,7 +355,8 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkTerima/RemoveAkTerima2",
+                    //url: "/AkTerima/RemoveAkTerima2",
+                    url: '@Url.Action("RemoveAkTerima2", "AkTerima")',
                     data: AkTerima2,
                     dataType: "json",
                     success: function (r) {
@@ -376,7 +383,8 @@
         if (name != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkTerima/GetAnItemCartAkTerima1",
+                //url: "/AkTerima/GetAnItemCartAkTerima1",
+                url: '@Url.Action("GetAnItemCartAkTerima1", "AkTerima")',
                 data: AkTerima1,
                 dataType: "json",
                 success: function (r) {
@@ -409,15 +417,17 @@
 
         $.ajax({
             type: "POST",
-            url: "/AkTerima/SaveCartAkTerima1",
+            //url: "/AkTerima/SaveCartAkTerima1",
+            url: '@Url.Action("SaveCartAkTerima1", "AkTerima")',
             data: AkTerima1,
             dataType: "json",
             success: function (r) {
                 //insert notification here
- 
+
                 $.ajax({
                     type: "POST",
-                    url: "/AkTerima/GetAllItemCartAkTerima1",
+                    //url: "/AkTerima/GetAllItemCartAkTerima1",
+                    url: '@Url.Action("GetAllItemCartAkTerima1", "AkTerima")',
                     data: AkTerima1,
                     dataType: "json",
                     success: function (r) {
@@ -446,7 +456,7 @@
                     }
                 });
             }
-        }); 
+        });
     };
     //update tbl objek end
 
@@ -464,7 +474,8 @@
         if (name != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkTerima/GetAnItemCartAkTerima2",
+                //url: "/AkTerima/GetAnItemCartAkTerima2",
+                url: '@Url.Action("GetAnItemCartAkTerima2", "AkTerima")',
                 data: AkTerima2,
                 dataType: "json",
                 success: function (r) {
@@ -528,7 +539,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkTerima/SaveCartAkTerima2",
+            //url: "/AkTerima/SaveCartAkTerima2",
+            url: '@Url.Action("SaveCartAkTerima2", "AkTerima")',
             data: AkTerima2,
             dataType: "json",
             success: function (r) {
@@ -536,7 +548,8 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkTerima/GetAllItemCartAkTerima2",
+                    //url: "/AkTerima/GetAllItemCartAkTerima2",
+                    url: '@Url.Action("GetAllItemCartAkTerima2", "AkTerima")',
                     dataType: "json",
                     success: function (r) {
 
