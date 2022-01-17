@@ -18,7 +18,8 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                url: "/AkJurnal/GetCarta",
+                //url: "/AkJurnal/GetCarta",
+                url: '@Url.Action("GetCarta", "AkJurnal")',
                 data: Objek,
                 dataType: "json",
                 success: function (r) {
@@ -103,7 +104,8 @@
                         if (txtKodAkaun.val()) {
                             $.ajax({
                                 type: "POST",
-                                url: "/AkJurnal/SaveAkJurnal1",
+                                //url: "/AkJurnal/SaveAkJurnal1",
+                                url: '@Url.Action("SaveAkJurnal1", "AkJurnal")',
                                 data: AkJurnal1,
                                 dataType: "json",
                                 success: function (r) {
@@ -128,7 +130,8 @@
 
                                     $.ajax({
                                         type: "POST",
-                                        url: "/AkJurnal/GetAllItemCartAkJurnal1",
+                                        //url: "/AkJurnal/GetAllItemCartAkJurnal1",
+                                        url: '@Url.Action("GetAllItemCartAkJurnal1", "AkJurnal")',
                                         dataType: "json",
                                         success: function (r) {
                                             //refresh updated table objek
@@ -197,7 +200,8 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkJurnal/RemoveAkJurnal1",
+                   // url: "/AkJurnal/RemoveAkJurnal1",
+                    url: '@Url.Action("RemoveAkJurnal1", "AkJurnal")',
                     data: AkJurnal1,
                     dataType: "json",
                     success: function (r) {

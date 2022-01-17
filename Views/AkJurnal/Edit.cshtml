@@ -12,6 +12,8 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="NoJurnal" />
+            <input type="hidden" asp-for="Tarikh" />
+            <input type="hidden" asp-for="JKWId" />
             <div class="card box-shadow border-primary mb-3">
                 <div class="card-header bg-primary text-white ">
                     <div class="row">
@@ -54,7 +56,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Catatan1" class="control-label">Catatan</label>
-                        <textarea class="form-control form-control-sm text-uppercase" maxlength="400" rows="4" asp-for="Catatan1"></textarea>
+                        <textarea class="form-control form-control-sm text-uppercase" maxlength="400" rows="4" asp-for="Catatan1" required></textarea>
                         <span asp-validation-for="Catatan1" class="text-danger"></span>
                     </div>
                     @*<div class="form-group">

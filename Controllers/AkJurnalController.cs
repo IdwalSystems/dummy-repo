@@ -29,8 +29,9 @@ namespace MSNK.Controllers
         private readonly IRepository<AkJurnal, int, string> _akJurnalRepo;
         private readonly IRepository<JKW, int, string> _jKWRepo;
         private readonly ListViewIRepository<AkJurnal1, int> _akJurnal1Repo;
-        private readonly IRepository<AkCarta, int, string> _akCartaRepo;
-        private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
+        private readonly IRepository<AkCarta, int> _akCartaRepo;
+        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
+        private readonly IRepository<AbBukuVot, int> _abBukuVot;
         private CartJurnal _cart;
 
         public AkJurnalController(
@@ -40,8 +41,9 @@ namespace MSNK.Controllers
             IRepository<AkJurnal, int, string> akJurnalRepository,
             IRepository<JKW, int, string> jKWRepository,
             ListViewIRepository<AkJurnal1, int> akJurnal1Repository,
-            IRepository<AkCarta, int, string> akCartaRepository,
-            IRepository<AkAkaun, int, string> akAkaunRepository,
+            IRepository<AkCarta, int> akCartaRepository,
+            IRepository<AkAkaun, int> akAkaunRepository,
+            IRepository<AbBukuVot, int> abBukuVotRepository,
             CartJurnal cart
             )
         {
@@ -53,6 +55,7 @@ namespace MSNK.Controllers
             _akJurnal1Repo = akJurnal1Repository;
             _akCartaRepo = akCartaRepository;
             _akAkaunRepo = akAkaunRepository;
+            _abBukuVot = abBukuVotRepository;
             _cart = cart;
         }
         private string GetKod(AkJurnal data)
@@ -849,6 +852,25 @@ namespace MSNK.Controllers
                         };
                     };
 
+                    foreach(AkJurnal1 keVot in akJ1)
+                    {
+                        if (GetJenisObjek(keVot.AkCartaId) == "B")
+                        {
+                            AbBukuVot vot = new()
+                            {
+                                Rujukan = "JR/" + akJurnal.NoJurnal,
+                                JKWId = akJurnal.JKWId,
+                                Tarikh = akJurnal.Tarikh,
+                                VotId = keVot.AkCartaId,
+                                Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length<200? akJurnal.Catatan1.Length:200),
+                                Debit = keVot.Debit,
+                                Kredit = keVot.Kredit,
+                                Tahun = akJurnal.Tarikh.Year.ToString()
+                            };
+                            await _abBukuVot.Insert(vot);
+                        }
+                    }
+
                     //update posting status in akTerima
                     akJurnal.Posting = 1;
                     await _akJurnalRepo.Update(akJurnal);
@@ -873,6 +895,8 @@ namespace MSNK.Controllers
                     .Include(x => x.AkJurnal1)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
+                //AbBukuVot abBukuVot = await _context.AbBukuVot.Include(x=>x.)
+
                 List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == "JR/"+akJurnal.NoJurnal).ToList();
                 if (akAkaun == null)
                 {
@@ -893,21 +917,6 @@ namespace MSNK.Controllers
                     //akJurnal.TarikhPosting = null;
                     //akTerima.TarikhPosting = null;
                     await _akJurnalRepo.Update(akJurnal);
-
-                    //insert applog
-                    //var user = await _userManager.GetUserAsync(User);
-
-                    //AppLog appLog = new AppLog();
-
-                    //appLog.UserId = user.UserName;
-                    //appLog.LgModule = modul + "UT";
-                    //appLog.LgOperation = "UnPosting";
-                    //appLog.LgNote = modul + " Penerimaan - UnPosting";
-                    //appLog.NoRujukan = akTerima.NoRujukan;
-                    //appLog.Jumlah = akTerima.Jumlah;
-
-                    //await _appLog.Insert(appLog);
-                    //insert applog end
 
                     await AddLogAsync("UnPosting", akJurnal.NoJurnal, akJurnal.JumKredit);
                     await _context.SaveChangesAsync();
@@ -949,6 +958,11 @@ namespace MSNK.Controllers
                 //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
+        }
+
+        private string GetJenisObjek(int id)
+        {
+            return _context.AkCarta.Include(x => x.JJenis).FirstOrDefault(x => x.Id == id).JJenis.Kod;
         }
     }
 }

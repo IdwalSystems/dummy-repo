@@ -94,11 +94,22 @@
                             </div>
                             <span asp-validation-for="UmumDetail" class="text-danger"></span>
                         </div>
-                        <div class="form-group col-sm">
-                            <label asp-for="Baki" class="control-label"></label>
-                            <input asp-for="Baki" class="form-control form-control-sm" type="number" step="0.01" />
-                            <span asp-validation-for="Baki" class="text-danger"></span>
-                        </div>
+                        @if (Model.JParas.Kod == "4")
+                        {
+                            <div class="form-group col-sm">
+                                <label asp-for="Baki" class="control-label"></label>
+                                <input asp-for="Baki" class="form-control form-control-sm" type="number" step="0.01" />
+                                <span asp-validation-for="Baki" class="text-danger"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group col-sm">
+                                <label asp-for="Baki" class="control-label"></label>
+                                <input value="@Model.Baki" class="form-control form-control-sm" readonly />
+                                <input type="hidden" asp-for="Baki" />
+                            </div>
+                        }
                     </div>
                     <div class="form-group">
                         <label asp-for="Catatan1" class="control-label">Catatan</label>
