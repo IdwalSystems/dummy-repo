@@ -218,9 +218,9 @@ namespace MSNK.Data
                 .IsRequired();
 
             modelBuilder.Entity<AkTunaiPanjar>()
-                    .HasOne(m => m.AkCarta)
+                    .HasOne(m => m.AkBank)
                     .WithMany(t => t.AkTunaiPanjar)
-                    .HasForeignKey(m => m.AkCartaId)
+                    .HasForeignKey(m => m.AkBankId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
             //AkTunaiPanjar end

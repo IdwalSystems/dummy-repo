@@ -20,7 +20,7 @@ namespace MSNK.Migrations
                     KaunterPanjar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Catatan = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     JKWId = table.Column<int>(type: "int", nullable: false),
-                    AkCartaId = table.Column<int>(type: "int", nullable: false),
+                    AkBankId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -30,9 +30,9 @@ namespace MSNK.Migrations
                 {
                     table.PrimaryKey("PK_AkTunaiPanjar", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AkTunaiPanjar_AkCarta_AkCartaId",
-                        column: x => x.AkCartaId,
-                        principalTable: "AkCarta",
+                        name: "FK_AkTunaiPanjar_AkBank_AkBankId",
+                        column: x => x.AkBankId,
+                        principalTable: "AkBank",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -70,9 +70,9 @@ namespace MSNK.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AkTunaiPanjar_AkCartaId",
+                name: "IX_AkTunaiPanjar_AkBankId",
                 table: "AkTunaiPanjar",
-                column: "AkCartaId");
+                column: "AkBankId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkTunaiPanjar_JKWId",

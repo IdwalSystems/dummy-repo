@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220118072421_addTblAkTunaiPanjarAkTunaiPemegang")]
+    [Migration("20220118082201_addTblAkTunaiPanjarAkTunaiPemegang")]
     partial class addTblAkTunaiPanjarAkTunaiPemegang
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1115,7 +1115,7 @@ namespace MSNK.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AkCartaId")
+                    b.Property<int>("AkBankId")
                         .HasColumnType("int");
 
                     b.Property<string>("Catatan")
@@ -1141,7 +1141,7 @@ namespace MSNK.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AkCartaId");
+                    b.HasIndex("AkBankId");
 
                     b.HasIndex("JKWId");
 
@@ -2549,9 +2549,9 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkTunaiPanjar", b =>
                 {
-                    b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
+                    b.HasOne("MSNK.Models.Modules.AkBank", "AkBank")
                         .WithMany("AkTunaiPanjar")
-                        .HasForeignKey("AkCartaId")
+                        .HasForeignKey("AkBankId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -2561,7 +2561,7 @@ namespace MSNK.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("AkCarta");
+                    b.Navigation("AkBank");
 
                     b.Navigation("JKW");
                 });
@@ -2749,6 +2749,8 @@ namespace MSNK.Migrations
                     b.Navigation("AkPV");
 
                     b.Navigation("AkTerima");
+
+                    b.Navigation("AkTunaiPanjar");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkBelian", b =>
@@ -2777,8 +2779,6 @@ namespace MSNK.Migrations
                     b.Navigation("AkPV1");
 
                     b.Navigation("AkTerima1");
-
-                    b.Navigation("AkTunaiPanjar");
 
                     b.Navigation("KodObjekAP");
 

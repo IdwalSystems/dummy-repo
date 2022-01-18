@@ -16,8 +16,8 @@ namespace MSNK.Models.Modules
         //relationship
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
-        public int AkCartaId { get; set; }
-        public AkCarta AkCarta { get; set; }
+        public int AkBankId { get; set; }
+        public AkBank AkBank { get; set; }
         public ICollection<AkTunaiPemegang> AkTunaiPemegang { get; set; }
 
         // log
