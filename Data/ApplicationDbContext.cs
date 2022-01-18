@@ -54,6 +54,8 @@ namespace MSNK.Data
         public DbSet<SpPermohonanAktiviti1> SpPermohonanAktiviti1 { get; set; }
         public DbSet<SpPermohonanAktiviti2> SpPermohonanAktiviti2 { get; set; }
         public DbSet<JJantina> JJantina { get; set; }
+        public DbSet<AkTunaiPanjar> AkTunaiPanjar { get; set; }
+        public DbSet<AkTunaiPemegang> AkTunaiPemegang { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -207,6 +209,21 @@ namespace MSNK.Data
                 .HasForeignKey(m => m.SuPekerjaId)
                 .OnDelete(DeleteBehavior.NoAction);
             //AKPV end
+            //AkTunaiPanjar
+            modelBuilder.Entity<AkTunaiPanjar>()
+                .HasOne(m => m.JKW)
+                .WithMany(t => t.AkTunaiPanjar)
+                .HasForeignKey(m => m.JKWId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<AkTunaiPanjar>()
+                    .HasOne(m => m.AkCarta)
+                    .WithMany(t => t.AkTunaiPanjar)
+                    .HasForeignKey(m => m.AkCartaId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+            //AkTunaiPanjar end
         }
     }
 }

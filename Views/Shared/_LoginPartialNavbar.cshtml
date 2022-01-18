@@ -1,10 +1,13 @@
-﻿
+﻿@{ 
+    var user = UserManager.GetUserAsync(User);
+    var namaUser = _context.applicationUsers.FirstOrDefault(x => x.Email == user.Result.Email);
 
+}
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link" href="#">Selamat Datang, @UserManager.GetUserName(User)</a>
+            <a class="nav-link" href="#">Selamat Datang, @namaUser.Nama</a>
         </li>
         <li class="nav-item">
             <form id="logOutForm" method="post" class="form-inline" asp-controller="Account" asp-action="LogOff">

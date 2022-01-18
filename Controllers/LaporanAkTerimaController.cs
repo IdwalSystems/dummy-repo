@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Controllers
 {
+    [Authorize]
     public class LaporanAkTerimaController : Controller
     {
         public const string modul = "LPR001";
@@ -63,7 +65,7 @@ namespace MSNK.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Print(string kodLaporan, string tarikhDari, string tarikhHingga)
+        public async Task<IActionResult> Print(string kodLaporan, string tarikhDari, string tarikhHingga, int status)
         {
             var pdfName = kodLaporan;
             JKW kW = _context.JKW.Where(x => x.Kod == "100").FirstOrDefault();
@@ -81,12 +83,31 @@ namespace MSNK.Controllers
                 .Include(b => b.AkTerima2).ThenInclude(b => b.JCaraBayar)
                 .ToList();
 
+                // date condition
                 DateTime date1 = DateTime.Parse(tarikhDari);
                 DateTime date2 = DateTime.Parse(tarikhHingga).AddHours(23.99);
-                akT.Where(x => x.Tarikh >= date1
-                    && x.Tarikh <= date2)
+                akT = akT.Where(x => x.Tarikh >= date1
+                      && x.Tarikh <= date2)
                     .OrderBy(x => x.Tarikh)
                     .ToList();
+                //date condition end
+
+                //status condition
+                switch (status)
+                {
+                    // belum posting
+                    case 1:
+                        akT = akT.Where(x => x.FlPosting == 0).ToList();
+                        break;
+                    // sudah posting
+                    case 2:
+                        akT = akT.Where(x => x.FlPosting == 1).ToList();
+                        break;
+                    // semua
+                    default:
+                        break;
+                }
+                //status condition end
 
                 decimal debit = 0;
                 decimal kredit = 0;
@@ -105,59 +126,58 @@ namespace MSNK.Controllers
                 reportModel.Kredit = kredit;
                 reportModel.Debit = debit;
 
-                
-            } else
+                //Ringkasan Debit group by kod Bank AkTerima
+                var DebitLines = (from tbl in _context.AkTerima.Include(x => x.AkBank).ThenInclude(x => x.AkCarta).ToList()
+                                  select new
+                                  {
+                                      kodAkaun = tbl.AkBank.AkCarta.Kod,
+                                      Perihal = tbl.AkBank.AkCarta.Perihal,
+                                      Debit = tbl.Jumlah
+
+                                  }).GroupBy(x => x.kodAkaun).ToList();
+
+                IEnumerable<LPR0012_1PrintModel> debitResult = DebitLines.Select(l => new LPR0012_1PrintModel
+                {
+                    KodAkaun = l.First().kodAkaun,
+                    Perihal = l.Select(x => x.Perihal).FirstOrDefault(),
+                    Debit = l.Sum(c => c.Debit).ToString(),
+                    Kredit = "0.00"
+                }).ToList();
+
+                //Ringkasan Debit group by kod Bank AkTerima end
+                // Ringkasan kredit group by Kod Objek AkTerima1
+                var kreditLines = (from tbl1 in _context.AkTerima1.Include(x => x.AkCarta).ToList()
+                                   join tbl in _context.AkTerima.ToList()
+                                   on tbl1.AkTerimaId equals tbl.Id into tbl1Tbl
+                                   from tbl1_tbl in tbl1Tbl.DefaultIfEmpty()
+                                   select new
+                                   {
+                                       kodAkaun = tbl1.AkCarta.Kod,
+                                       Perihal = tbl1.AkCarta.Perihal,
+                                       Kredit = tbl1.Amaun
+
+                                   }).GroupBy(x => x.kodAkaun).ToList();
+
+                IEnumerable<LPR0012_1PrintModel> kreditResult = kreditLines.Select(l => new LPR0012_1PrintModel
+                {
+                    KodAkaun = l.First().kodAkaun,
+                    Perihal = l.Select(x => x.Perihal).FirstOrDefault(),
+                    Debit = "0.00",
+                    Kredit = l.Sum(c => c.Kredit).ToString()
+                }).ToList();
+
+                IEnumerable<LPR0012_1PrintModel> result = debitResult.Concat(kreditResult);
+
+                reportModel.LPR0012_1 = result;
+
+                // ringkasan kredit group by Kod Objek AkTerima1 end
+
+            }
+            else
             {
             }
 
-
-
-            //KIV
-            //Ringkasan Debit group by kod Bank AkTerima
-            var DebitLines = (from tbl in _context.AkTerima.Include(x => x.AkBank).ThenInclude(x=> x.AkCarta).ToList()
-                               select new
-                               {
-                                   kodAkaun = tbl.AkBank.AkCarta.Kod,
-                                   Perihal = tbl.AkBank.AkCarta.Perihal,
-                                   Debit = tbl.Jumlah
-
-                               }).GroupBy(x => x.kodAkaun).ToList();
-
-            IEnumerable<LPR0012_1PrintModel> debitResult = DebitLines.Select(l => new LPR0012_1PrintModel
-                                                {
-                                                    KodAkaun = l.First().kodAkaun,
-                                                    Perihal = l.Select(x => x.Perihal).FirstOrDefault(),
-                                                    Debit = l.Sum(c => c.Debit).ToString(),
-                                                    Kredit = "0.00"
-                                                }).ToList();
-            
-            //Ringkasan Debit group by kod Bank AkTerima end
-            // Ringkasan kredit group by Kod Objek AkTerima1
-            var kreditLines = (from tbl1 in _context.AkTerima1.Include(x => x.AkCarta).ToList()
-                               join tbl in _context.AkTerima.ToList()
-                               on tbl1.AkTerimaId equals tbl.Id into tbl1Tbl
-                               from tbl1_tbl in tbl1Tbl.DefaultIfEmpty()
-                               select new
-                               {
-                                   kodAkaun = tbl1.AkCarta.Kod,
-                                   Perihal = tbl1.AkCarta.Perihal,
-                                   Kredit = tbl1.Amaun
-
-                               }).GroupBy(x => x.kodAkaun).ToList();
-
-            IEnumerable<LPR0012_1PrintModel> kreditResult = kreditLines.Select(l => new LPR0012_1PrintModel
-                                                {
-                                                    KodAkaun = l.First().kodAkaun,
-                                                    Perihal = l.Select(x=> x.Perihal).FirstOrDefault(),
-                                                    Debit = "0.00",
-                                                    Kredit = l.Sum(c=>c.Kredit).ToString()
-                                                }).ToList();
-
-            IEnumerable<LPR0012_1PrintModel> result = debitResult.Concat(kreditResult);
-
-            reportModel.LPR0012_1 = result;
-
-            // ringkasan kredit group by Kod Objek AkTerima1 end
+           
 
             var user = await _userManager.GetUserAsync(User);
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
