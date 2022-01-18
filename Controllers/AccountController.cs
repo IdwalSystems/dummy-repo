@@ -85,7 +85,7 @@ namespace MSNK.Controllers
             {
                 //check if user already exist in SuPekerja or not
                 //if true then form is valid
-                var pekerja = await _suPekerjaRepo.GetById(model.SuPekerjaId);
+                var pekerja = await _suPekerjaRepo.GetById((int)model.SuPekerjaId);
                 if (pekerja != null)
                 {
                     model.Nama = pekerja.Nama;

@@ -33,9 +33,8 @@ namespace MSNK.Models.Login.ViewModel
         public IEnumerable<SelectListItem> RoleList { get; set; }
         [Display(Name = "Peranan")]
         public string RoleSelected { get; set; }
-        [Required(ErrorMessage = "Anggota Diperlukan.")]
         [DisplayName("Anggota")]
-        public int SuPekerjaId { get; set; }
+        public int? SuPekerjaId { get; set; }
         public SuPekerja SuPekerja { get; set; }
     }
 }

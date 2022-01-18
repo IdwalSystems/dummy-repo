@@ -67,6 +67,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkBelian
+        [Authorize(Policy = "TG002")]
         public async Task<IActionResult> Index(
             string searchString,
             string searchDate1,
@@ -338,6 +339,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkBelian/Create
+        [Authorize(Policy = "TG002C")]
         public IActionResult Create()
         {
             
@@ -610,6 +612,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "TG002C")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int KodObjekAPId, string NamaPembekal, decimal JumlahPerihal)
         {
@@ -699,6 +702,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkBelian/Edit/5
+        [Authorize(Policy = "TG002E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -1072,6 +1076,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "TG002E")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkBelian akBelian, int JKWId, int AkBankId, int KodObjekAPId, decimal JumlahPerihal)
         {
@@ -1174,6 +1179,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkBelian/Delete/5
+        [Authorize(Policy = "TG002D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -1238,6 +1244,7 @@ namespace MSNK.Controllers
 
         // POST: AkBelian/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "TG002D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -1360,6 +1367,7 @@ namespace MSNK.Controllers
         // function  json Create end
 
         // posting function
+        [Authorize(Policy = "TG002T")]
         public async Task<IActionResult> Posting(int? id)
         {
             if (id == null)
@@ -1496,6 +1504,7 @@ namespace MSNK.Controllers
         // posting function end
 
         // unposting function
+        [Authorize(Policy = "TG002UT")]
         public async Task<IActionResult> UnPosting(int? id)
         {
             if (id == null)

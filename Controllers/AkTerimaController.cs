@@ -67,6 +67,7 @@ namespace MSNK.Controllers
             _cart = cart;
         }
 
+        [Authorize(Policy = "PR001")]
         // GET: AkTerima
         public async Task<IActionResult> Index(
             string searchString,
@@ -294,6 +295,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTerima/Create
+        [Authorize(Policy = "PR001C")]
         public IActionResult Create()
         {
             // get latest no rujukan running number  
@@ -567,6 +569,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "PR001C")]
         public async Task<IActionResult> Create(AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId, decimal JumlahUrusniaga)
         {
             
@@ -671,6 +674,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTerima/Edit/5
+        [Authorize(Policy = "PR001E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -710,6 +714,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "PR001E")]
         public async Task<IActionResult> Edit(int id, AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId, decimal JumlahUrusniaga)
         {
             if (id != akTerima.Id)
@@ -811,6 +816,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTerima/Delete/5
+        [Authorize(Policy = "PR001D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -839,6 +845,7 @@ namespace MSNK.Controllers
         // POST: AkTerima/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "PR001D")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akTerima = await _context.AkTerima.FindAsync(id);
@@ -871,6 +878,7 @@ namespace MSNK.Controllers
         }
 
         // POST: AkTerima/Cancel/5
+        [Authorize(Policy = "PR001B")]
         public async Task<IActionResult> Cancel(int id)
         {
             var akTerima = await _context.AkTerima.FindAsync(id);
@@ -1410,6 +1418,7 @@ namespace MSNK.Controllers
         //Ubah AkTerima2 end
 
         // posting function
+        [Authorize(Policy = "PR001T")]
         public async Task<IActionResult> Posting(int? id)
         {
             if (id == null)
@@ -1516,6 +1525,7 @@ namespace MSNK.Controllers
         // posting function end
 
         // unposting function
+        [Authorize(Policy = "PR001UT")]
         public async Task<IActionResult> UnPosting(int? id)
         {
             if (id == null)
@@ -1579,6 +1589,7 @@ namespace MSNK.Controllers
         // unposting function end
 
         // printing resit rasmi by akTerima.Id
+        [Authorize(Policy = "PR001P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
             AkTerima akTerima = await _akTerimaRepo.GetById(id);

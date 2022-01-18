@@ -1,26 +1,47 @@
 ﻿@model MSNK.Models.Modules.ViewModel.UserClaimsViewModel
 
+<script type="text/javascript">
+    function check_uncheck_checkbox(isChecked) {
+        if (isChecked) {
+            $('input[class="form-check-input"]').each(function () {
+                this.checked = true;
+            });
+        } else {
+            $('input[class="form-check-input"]').each(function () {
+                this.checked = false;
+            });
+        }
+    }
+</script>
 <form method="post">
     <input asp-for="@Model.UserId" hidden/>
     <div class="card">
         <div class="card-header">
-            <h2>Ubah Capaian Pengguna</h2>
+            <h6>Ubah Capaian Pengguna</h6>
         </div>
+        
         <div class="card-body">
-            @for(int i=0; i<Model.Claims.Count; i++)
-            {
-                <div class="m-2 form-check">
-                    <input asp-for="@Model.Claims[i].ClaimType" hidden/>
-                    <input asp-for="@Model.Claims[i].IsSelected" class="form-check-input"/>
-                    <label class="form-check-label" asp-for="@Model.Claims[i].IsSelected">
-                        @Model.Claims[i].ClaimValue
-                    </label>
-                </div>
-            }
+            <div id="divCheckAll" class="m-2 form-check">
+                <input type="checkbox" name="checkall" id="checkall" onClick="check_uncheck_checkbox(this.checked);" />
+                <label>Pilih / Batal Semua</label>
+            </div>
+            <div style="overflow-y:scroll;max-height:500px;">
+                @for (int i = 0; i < Model.Claims.Count; i++)
+                {
+                    <div class="m-2 form-check">
+                        <input asp-for="@Model.Claims[i].ClaimType" hidden />
+                        <input asp-for="@Model.Claims[i].IsSelected" class="form-check-input" />
+                        <label class="form-check-label" asp-for="@Model.Claims[i].IsSelected">
+                            @Model.Claims[i].ClaimValue
+                        </label>
+                    </div>
+                }
+            </div>
+            
             <div asp-validation-summary="All" class="text-danger"></div>
         </div>
         <div class="card-footer">
-            <input type="submit" value="Simpan" class="btn btn-success"/>
+            <input type="submit" value="Simpan" class="btn btn-primary" />
             <a asp-action="Index" class="btn btn-warning">Kembali ke Indeks</a>
 
         </div>

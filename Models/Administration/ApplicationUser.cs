@@ -23,8 +23,7 @@ namespace MSNK.Models.Administration
         public IEnumerable<SelectListItem> RoleList { get; set; }
 
         //relationship
-        [Required]
-        public int SuPekerjaId { get; set; }
+        public int? SuPekerjaId { get; set; }
         public SuPekerja SuPekerja { get; set; }
         
     }
