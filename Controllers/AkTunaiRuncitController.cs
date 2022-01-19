@@ -78,14 +78,15 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akTunaiRuncit = await _context.AkTunaiRuncit
-                .Include(a => a.AkCarta)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akTunaiRuncit = await _akTunaiRuncitRepo.GetById((int)id);
+
             if (akTunaiRuncit == null)
             {
                 return NotFound();
             }
+
+            PopulateList();
+            PopulateTable(id);
 
             return View(akTunaiRuncit);
         }
@@ -110,6 +111,26 @@ namespace MSNK.Controllers
 
 
         }
+
+        private void PopulateTable(int? id)
+        {
+            List<AkTunaiPemegang> akTunaiPemegangTable = _context.AkTunaiPemegang
+                .Include(b => b.SuPekerja)
+                .Where(b => b.AkTunaiRuncitId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            ViewBag.akTunaiPemegang = akTunaiPemegangTable;
+
+            List<AkTunaiLejar> akTunaiLejarTable = _context.AkTunaiLejar
+                .Include(b => b.AkTunaiRuncit)
+                .Where(b=> b.AkTunaiRuncit.Id == id)
+                .OrderBy(b=> b.Tarikh)
+                .ToList();
+
+            ViewBag.akTunaiLejar = akTunaiLejarTable;
+
+        }
+
         public JsonResult CartEmpty()
         {
             try
@@ -147,7 +168,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                x = int.Parse(LatestNoRujukan.Substring(12));
+                x = int.Parse(LatestNoRujukan.Substring(3));
                 x++;
                 noRujukan = string.Format("{0:" + prefix + "00}", x);
             }
@@ -157,6 +178,110 @@ namespace MSNK.Controllers
             PopulateList();
             CartEmpty();
             return View();
+        }
+
+        // function json get no rujukan (running number)
+        [HttpPost]
+        public JsonResult JsonGetKod(int data)
+        {
+            try
+            {
+                var result = "";
+                if (data == 0)
+                {
+                    result = "";
+                }
+                else
+                {
+                    // get latest no rujukan running number  
+                    var kw = _context.JKW.FirstOrDefault(x => x.Id == data);
+
+                    var kumpulanWang = kw.Kod;
+                    string prefix = kumpulanWang;
+                    int x = 1;
+                    string noRujukan = prefix + "00";
+
+                    var LatestNoRujukan = _context.AkTunaiRuncit
+                                .Where(x => x.JKW.Kod == kw.Kod)
+                                .Max(x => x.KaunterPanjar);
+
+                    if (LatestNoRujukan == null)
+                    {
+                        noRujukan = string.Format("{0:" + prefix + "00}", x);
+                    }
+                    else
+                    {
+                        x = int.Parse(LatestNoRujukan.Substring(3));
+                        x++;
+                        noRujukan = string.Format("{0:" + prefix + "00}", x);
+                    }
+
+                    result = noRujukan;
+
+                    // get latest no rujukan running number end
+                }
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        // function json get no rujukan (running number) end
+
+        public JsonResult GetSuPekerja(SuPekerja suPekerja)
+        {
+            try
+            {
+                var result = _context.SuPekerja.Where(b => b.Id == suPekerja.Id).FirstOrDefault();
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+
+        public JsonResult SaveAkTunaiPemegang(AkTunaiPemegang akTunaiPemegang)
+        {
+
+            try
+            {
+                if (akTunaiPemegang != null)
+                {
+                    _cart.AddItem1(akTunaiPemegang.AkTunaiRuncitId,
+                                   akTunaiPemegang.SuPekerjaId);
+                }
+
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public JsonResult RemoveAkTunaiPemegang(AkTunaiPemegang akTunaiPemegang)
+        {
+
+            try
+            {
+                if (akTunaiPemegang != null)
+                {
+
+                    _cart.RemoveItem1(akTunaiPemegang.SuPekerjaId);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
         }
 
         // POST: AkTunaiRuncit/Create
@@ -171,7 +296,7 @@ namespace MSNK.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             // get latest no rujukan running number  
-            var kw = _context.JKW.FirstOrDefault(x => x.Kod == "100");
+            var kw = _context.JKW.FirstOrDefault(x => x.Id == JKWId);
 
             var kumpulanWang = kw.Kod;
             string prefix = kumpulanWang;
@@ -188,7 +313,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                x = int.Parse(LatestNoRujukan.Substring(12));
+                x = int.Parse(LatestNoRujukan.Substring(3));
                 x++;
                 noRujukan = string.Format("{0:" + prefix + "00}", x);
             }

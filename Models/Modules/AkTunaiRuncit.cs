@@ -19,6 +19,7 @@ namespace MSNK.Models.Modules
         public int AkCartaId { get; set; }
         public AkCarta AkCarta { get; set; }
         public ICollection<AkTunaiPemegang> AkTunaiPemegang { get; set; }
+        public ICollection<AkTunaiLejar> AkTunaiLejar { get; set; }
 
         // log
         public string UserId { get; set; }
