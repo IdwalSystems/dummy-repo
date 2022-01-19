@@ -17,7 +17,8 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                url: "/AkPO/GetCarta",
+               //url: "/AkPO/GetCarta",
+                url: '@Url.Action("GetCarta", "AkPO")',
                 data: Objek,
                 dataType: "json",
                 success: function (r) {
@@ -72,7 +73,8 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "/AkPO/SaveAkPO1",
+                        //url: "/AkPO/SaveAkPO1",
+                        url: '@Url.Action("SaveAkPO1", "AkPO")',
                         data: AkPO1,
                         dataType: "json",
                         success: function (r) {
@@ -195,7 +197,8 @@
 
         $.ajax({
             type: "POST",
-            url: "/AkPO/SaveAkPO2",
+            //url: "/AkPO/SaveAkPO2",
+            url: '@Url.Action("SaveAkPO2", "AkPO")',
             data: AkPO2,
             dataType: "json",
             success: function (r) {
@@ -239,7 +242,8 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkPO/RemoveAkPO1",
+                    //url: "/AkPO/RemoveAkPO1",
+                    url: '@Url.Action("RemoveAkPO1", "AkPO")',
                     data: AkPO1,
                     dataType: "json",
                     success: function (r) {
@@ -279,7 +283,8 @@
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    url: "/AkPO/RemoveAkPO2",
+                    //url: "/AkPO/RemoveAkPO2",
+                    url: '@Url.Action("RemoveAkPO2", "AkPO")',
                     data: AkPO2,
                     dataType: "json",
                     success: function (r) {
@@ -307,7 +312,8 @@
         if (akCartaId != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkPO/GetAnItemCartAkPO1",
+                //url: "/AkPO/GetAnItemCartAkPO1",
+                url: '@Url.Action("GetAnItemCartAkPO1", "AkPO")',
                 data: AkPO1,
                 dataType: "json",
                 success: function (r) {
@@ -337,7 +343,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkPO/SaveCartAkPO1",
+            //url: "/AkPO/SaveCartAkPO1",
+            url: '@Url.Action("SaveCartAkPO1", "AkPO")',
             data: AkPO1,
             dataType: "json",
             success: function (r) {
@@ -345,7 +352,8 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkPO/GetAllItemCartAkPO1",
+                    //url: "/AkPO/GetAllItemCartAkPO1",
+                    url: '@Url.Action("GetAllItemCartAkPO1", "AkPO")',
                     dataType: "json",
                     success: function (r) {
 
@@ -390,7 +398,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkPO/GetAnItemCartAkPO2",
+            //url: "/AkPO/GetAnItemCartAkPO2",
+            url: '@Url.Action("GetAnItemCartAkPO2", "AkPO")',
             data: AkPO2,
             dataType: "json",
             success: function (r) {
@@ -439,7 +448,8 @@
         }
         $.ajax({
             type: "POST",
-            url: "/AkPO/SaveCartAkPO2",
+            //url: "/AkPO/SaveCartAkPO2",
+            url: '@Url.Action("SaveCartAkPO2", "AkPO")',
             data: AkPO2,
             dataType: "json",
             success: function (r) {
@@ -492,7 +502,8 @@
     function JsonKodPembekal(id) {
         $.ajax({
             type: "POST",
-            url: "/AkPO/JsonGetPembekal",
+            //url: "/AkPO/JsonGetPembekal",
+            url: '@Url.Action("JsonGetPembekal", "AkPO")',
             data: { data: id },
             dataType: "json",
             success: function (msg) {
