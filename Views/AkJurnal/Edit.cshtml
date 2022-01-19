@@ -14,6 +14,10 @@
             <input type="hidden" asp-for="NoJurnal" />
             <input type="hidden" asp-for="Tarikh" />
             <input type="hidden" asp-for="JKWId" />
+
+            <input type="hidden" asp-for="Catatan2" />
+            <input type="hidden" asp-for="Catatan3" />
+            <input type="hidden" asp-for="Catatan4" />
             <div class="card box-shadow border-primary mb-3">
                 <div class="card-header bg-primary text-white ">
                     <div class="row">
@@ -35,42 +39,42 @@
                         <div class="form-group col-md">
                             <label asp-for="JKWId" class="control-label"></label>
                             <span class="text-danger control-label">*</span>
-                                <input class="form-control form-control-sm" id="jkwtxt"
-                                       value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
+                            <input class="form-control form-control-sm" id="jkwtxt"
+                                   value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
                             @*<select class="form-control form-control-sm" asp-for="JKWId">
-                                <option value="" hidden>-- Pilih Kumpulan Wang --</option>
-                                @foreach (var s in ViewBag.JKW)
-                                {
-                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                }
-                            </select>
-                            <span asp-validation-for="JKWId" class="text-danger"></span>*@
+                            <option value="" hidden>-- Pilih Kumpulan Wang --</option>
+                            @foreach (var s in ViewBag.JKW)
+                            {
+                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                            }
+                        </select>
+                        <span asp-validation-for="JKWId" class="text-danger"></span>*@
                         </div>
                         <div class="form-group col-md">
                             <label asp-for="Tarikh" class="control-label"></label>
                             <span class="text-danger control-label">*</span>
                             <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Tarikh)" readonly />
                             @*<input asp-for="Tarikh" class="form-control form-control-sm" />
-        <span asp-validation-for="Tarikh" class="text-danger"></span>*@
+                        <span asp-validation-for="Tarikh" class="text-danger"></span>*@
                         </div>
                     </div>
                     <div class="form-group">
                         <label asp-for="Catatan1" class="control-label">Catatan</label>
-                        <textarea class="form-control form-control-sm text-uppercase" maxlength="400" rows="4" asp-for="Catatan1" required></textarea>
+                        <textarea class="form-control form-control-sm" maxlength="400" rows="4" asp-for="Catatan1"></textarea>
                         <span asp-validation-for="Catatan1" class="text-danger"></span>
                     </div>
                     @*<div class="form-group">
-                        <input asp-for="Catatan2" class="form-control form-control-sm" />
-                        <span asp-validation-for="Catatan2" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <input asp-for="Catatan3" class="form-control form-control-sm" />
-                        <span asp-validation-for="Catatan3" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <input asp-for="Catatan4" class="form-control form-control-sm" />
-                        <span asp-validation-for="Catatan4" class="text-danger"></span>
-                    </div>*@
+                    <input asp-for="Catatan2" class="form-control form-control-sm" />
+                    <span asp-validation-for="Catatan2" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input asp-for="Catatan3" class="form-control form-control-sm" />
+                    <span asp-validation-for="Catatan3" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input asp-for="Catatan4" class="form-control form-control-sm" />
+                    <span asp-validation-for="Catatan4" class="text-danger"></span>
+                </div>*@
                     <br />
                     @*table Objek*@
                     <div class="card box-shadow mb-3">
