@@ -1106,7 +1106,7 @@ namespace MSNK.Migrations
                     b.ToTable("AkTerima2");
                 });
 
-            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiPanjar", b =>
+            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiCV", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1114,6 +1114,136 @@ namespace MSNK.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AkBankId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AkPembekalId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Alamat1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Alamat2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Almat3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Catatan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FlBatal")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FlCetak")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FlPosting")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JKWId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Jumlah")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("KategoriPenerima")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NoCV")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Penerima")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SuPekerjaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tahun")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TarKemaskini")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Tarikh")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdKemaskini")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AkBankId");
+
+                    b.HasIndex("AkPembekalId");
+
+                    b.HasIndex("JKWId");
+
+                    b.HasIndex("SuPekerjaId");
+
+                    b.ToTable("AkTunaiCV");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiCV1", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AkCartaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AkTunaiCVId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amaun")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AkCartaId");
+
+                    b.HasIndex("AkTunaiCVId");
+
+                    b.ToTable("AkTunaiCV1");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiPemegang", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AkTunaiRuncitId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SuPekerjaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AkTunaiRuncitId");
+
+                    b.HasIndex("SuPekerjaId");
+
+                    b.ToTable("AkTunaiPemegang");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiRuncit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AkCartaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Catatan")
@@ -1139,33 +1269,11 @@ namespace MSNK.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AkBankId");
+                    b.HasIndex("AkCartaId");
 
                     b.HasIndex("JKWId");
 
-                    b.ToTable("AkTunaiPanjar");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiPemegang", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("AkTunaiPanjarId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SuPekerjaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AkTunaiPanjarId");
-
-                    b.HasIndex("SuPekerjaId");
-
-                    b.ToTable("AkTunaiPemegang");
+                    b.ToTable("AkTunaiRuncit");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AppLog", b =>
@@ -2545,30 +2653,63 @@ namespace MSNK.Migrations
                     b.Navigation("JCaraBayar");
                 });
 
-            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiPanjar", b =>
+            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiCV", b =>
                 {
                     b.HasOne("MSNK.Models.Modules.AkBank", "AkBank")
-                        .WithMany("AkTunaiPanjar")
+                        .WithMany("AkTunaiCV")
                         .HasForeignKey("AkBankId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MSNK.Models.Modules.AkPembekal", "AkPembekal")
+                        .WithMany("AkTunaiCV")
+                        .HasForeignKey("AkPembekalId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("MSNK.Models.Modules.JKW", "JKW")
-                        .WithMany("AkTunaiPanjar")
+                        .WithMany("AkTunaiCV")
                         .HasForeignKey("JKWId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MSNK.Models.Modules.SuPekerja", "SuPekerja")
+                        .WithMany("AkTunaiCV")
+                        .HasForeignKey("SuPekerjaId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.Navigation("AkBank");
 
+                    b.Navigation("AkPembekal");
+
                     b.Navigation("JKW");
+
+                    b.Navigation("SuPekerja");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiCV1", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
+                        .WithMany("AkTunaiCV1")
+                        .HasForeignKey("AkCartaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.AkTunaiCV", null)
+                        .WithMany("AkTunaiCV1")
+                        .HasForeignKey("AkTunaiCVId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AkCarta");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkTunaiPemegang", b =>
                 {
-                    b.HasOne("MSNK.Models.Modules.AkTunaiPanjar", null)
+                    b.HasOne("MSNK.Models.Modules.AkTunaiRuncit", null)
                         .WithMany("AkTunaiPemegang")
-                        .HasForeignKey("AkTunaiPanjarId");
+                        .HasForeignKey("AkTunaiRuncitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MSNK.Models.Modules.SuPekerja", "SuPekerja")
                         .WithMany()
@@ -2577,6 +2718,25 @@ namespace MSNK.Migrations
                         .IsRequired();
 
                     b.Navigation("SuPekerja");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiRuncit", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
+                        .WithMany("AkTunaiRuncit")
+                        .HasForeignKey("AkCartaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MSNK.Models.Modules.JKW", "JKW")
+                        .WithMany("AkTunaiRuncit")
+                        .HasForeignKey("JKWId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AkCarta");
+
+                    b.Navigation("JKW");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.SpPermohonanAktiviti", b =>
@@ -2748,7 +2908,7 @@ namespace MSNK.Migrations
 
                     b.Navigation("AkTerima");
 
-                    b.Navigation("AkTunaiPanjar");
+                    b.Navigation("AkTunaiCV");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkBelian", b =>
@@ -2777,6 +2937,10 @@ namespace MSNK.Migrations
                     b.Navigation("AkPV1");
 
                     b.Navigation("AkTerima1");
+
+                    b.Navigation("AkTunaiCV1");
+
+                    b.Navigation("AkTunaiRuncit");
 
                     b.Navigation("KodObjekAP");
 
@@ -2813,6 +2977,8 @@ namespace MSNK.Migrations
                     b.Navigation("AkPO");
 
                     b.Navigation("AkPV");
+
+                    b.Navigation("AkTunaiCV");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkTerima", b =>
@@ -2822,7 +2988,12 @@ namespace MSNK.Migrations
                     b.Navigation("AkTerima2");
                 });
 
-            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiPanjar", b =>
+            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiCV", b =>
+                {
+                    b.Navigation("AkTunaiCV1");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.AkTunaiRuncit", b =>
                 {
                     b.Navigation("AkTunaiPemegang");
                 });
@@ -2883,7 +3054,9 @@ namespace MSNK.Migrations
 
                     b.Navigation("AkTerima");
 
-                    b.Navigation("AkTunaiPanjar");
+                    b.Navigation("AkTunaiCV");
+
+                    b.Navigation("AkTunaiRuncit");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.JNegeri", b =>
@@ -2922,6 +3095,8 @@ namespace MSNK.Migrations
             modelBuilder.Entity("MSNK.Models.Modules.SuPekerja", b =>
                 {
                     b.Navigation("AkPV");
+
+                    b.Navigation("AkTunaiCV");
 
                     b.Navigation("SuTanggungan");
                 });

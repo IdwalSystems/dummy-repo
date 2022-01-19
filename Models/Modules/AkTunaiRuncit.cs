@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkTunaiPanjar
+    public class AkTunaiRuncit
     {
         public int Id { get; set; }
         public string KaunterPanjar { get; set; }
@@ -16,8 +16,8 @@ namespace MSNK.Models.Modules
         //relationship
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
-        public int AkBankId { get; set; }
-        public AkBank AkBank { get; set; }
+        public int AkCartaId { get; set; }
+        public AkCarta AkCarta { get; set; }
         public ICollection<AkTunaiPemegang> AkTunaiPemegang { get; set; }
 
         // log

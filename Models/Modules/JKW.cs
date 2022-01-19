@@ -28,7 +28,8 @@ namespace MSNK.Models.Modules
         public ICollection<AkBelian> AkBelian { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
         public ICollection<AbBukuVot> AbBukuVot { get; set; }
-        public ICollection<AkTunaiPanjar> AkTunaiPanjar { get; set; }
+        public ICollection<AkTunaiRuncit> AkTunaiRuncit { get; set; }
+        public ICollection<AkTunaiCV> AkTunaiCV { get; set; }
         //relationship end
 
         // log
