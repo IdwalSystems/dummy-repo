@@ -10,6 +10,8 @@ namespace MSNK.Models.Modules
     public class AkTunaiCV
     {
         public int Id { get; set; }
+        public int AkTunaiRuncitId { get; set; }
+        public AkTunaiRuncit AkTunaiRuncit { get; set; }
         public int KategoriPenerima { get; set; }
         public string Tahun { get; set; }
         public int JKWId { get; set; }

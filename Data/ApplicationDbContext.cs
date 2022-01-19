@@ -58,6 +58,7 @@ namespace MSNK.Data
         public DbSet<AkTunaiPemegang> AkTunaiPemegang { get; set; }
         public DbSet<AkTunaiCV> AkTunaiCV { get; set; }
         public DbSet<AkTunaiCV1> AkTunaiCV1 { get; set; }
+        public DbSet<AkTunaiLejar> AkTunaiLejar { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
