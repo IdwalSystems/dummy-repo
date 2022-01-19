@@ -35,7 +35,7 @@
                         <div class="form-group col-md">
                             <label asp-for="JKWId" class="control-label"></label>
                             <span class="text-danger control-label">*</span>
-                                <input class="form-control form-control-sm"
+                                <input class="form-control form-control-sm" id="jkwtxt"
                                        value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
                             @*<select class="form-control form-control-sm" asp-for="JKWId">
                                 <option value="" hidden>-- Pilih Kumpulan Wang --</option>
@@ -130,7 +130,7 @@
                                                     <option value="" disabled selected>-- Pilih Kod Akaun --</option>
                                                     @foreach (var s in ViewBag.AkCarta)
                                                     {
-                                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                                        <option class="@s.JKW.Kod" value="@s.Id">@s.Kod - @s.Perihal </option>
                                                     }
                                                 </select>
                                             </td>
@@ -206,7 +206,7 @@
                             <option value="" disabled selected>-- Pilih Kod Akaun --</option>
                             @foreach (var s in ViewBag.AkCarta)
                             {
-                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                <option class="@s.JKW.Kod" value="@s.Id">@s.Kod - @s.Perihal </option>
                             }
                         </select>
                     </div>

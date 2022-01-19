@@ -12,6 +12,8 @@ namespace MSNK.Models.Modules.PrintModel
         public SuPekerja SuPekerja { get; set; }
         public AkJurnal AkJurnal { get; set; }
         public CompanyDetails CompanyDetail { get; set; }
+        public string JumlahDebitDalamPerkataan { get; set; }
+        public string JumlahKreditDalamPerkataan { get; set; }
 
     }
 }

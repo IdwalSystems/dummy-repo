@@ -1,0 +1,16 @@
+﻿<script>
+    $(document).ready(function () {
+        $('#txtBaki').prop('readonly', true);
+
+        $('#ddlParas').change(function () {
+            var paras = $("#ddlParas option:selected").text().trim();
+            if (paras === "Paras 4") {
+                $('#txtBaki').prop('readonly', false);
+            }
+            else {
+                $('#txtBaki').prop('readonly', true);
+                $('#txtBaki').val("0.00");
+            }
+        });
+    });
+</script>

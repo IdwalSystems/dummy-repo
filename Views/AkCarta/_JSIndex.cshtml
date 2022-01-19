@@ -28,10 +28,17 @@
                     .draw();
             }
             $('#myInput').val('');
+            alert("batalcari triggered");
         });
 
         $('#columnSearch').change(function () {
             columnSearchVar = $(this).val();
+
+            $('#myInput').val('');
+            table
+                .search('')
+                .columns().search('')
+                .draw();
         });
 
         table.on('order.dt search.dt', function () {

@@ -136,8 +136,16 @@
 <div class="table-responsive-sm mb-0">
     <table class="table table-bordered table-sm">
         <tbody>
+            <tr class="font-weight-bold" style="line-height: 0.5rem;">
+                <td class="text-right" width="15%">Jumlah Debit : </td>
+                <td>@Model.JumlahDebitDalamPerkataan</td>
+            </tr>
+            <tr class="font-weight-bold" style="line-height:0.5rem;">
+                <td class="text-right" width="15%">Jumlah Kredit : </td>
+                <td>@Model.JumlahKreditDalamPerkataan</td>
+            </tr>
             <tr>
-                <td class="text-right" width="15%">Catatan : </td>
+                <td class="text-right font-weight-bold" width="15%">Catatan : </td>
                 <td height="60px">@Model.AkJurnal.Catatan1.ToUpper()</td>
             </tr>
         </tbody>
@@ -146,7 +154,7 @@
 <div class="table-responsive-sm mb-0">
     <table class="table table-bordered table-sm topic">
         <tbody>
-            <tr>
+            <tr class="font-weight-bold">
                 <td width="50%" height="60px">Disediakan Oleh : </td>
                 <td width="50%" height="60px">Diluluskan Oleh : </td>
             </tr>
