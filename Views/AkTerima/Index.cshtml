@@ -56,39 +56,18 @@
 
 <div class="table-responsive">
     <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
-        <thead>
+        <thead class="table-secondary">
             <tr>
-                <th>
-                    Bil
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tahun)
-                </th>
-                <th>
-                    No Rujukan
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tarikh)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Jumlah)
-                </th>
-
-                <th>
-                    No KP
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nama)
-                </th>
-                <th>
-                    Cetak
-                </th>
-                <th>
-                    Posting
-                </th>
-                <th>
-                    Batal
-                </th>
+                <th>Bil</th>
+                <th>Tahun</th>
+                <th>No Rujukan</th>
+                <th>Tarikh</th>
+                <th>Jumlah</th>
+                <th>No KP</th>
+                <th>Nama</th>
+                <th>Cetak</th>
+                <th>Posting</th>
+                <th>Batal</th>
                 <th class="action-button"></th>
             </tr>
         </thead>
@@ -99,7 +78,7 @@
                     <td>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Tahun)
+                        @item.Tahun
                     </td>
                     <td>
                         @item.NoRujukan.Substring(3)
@@ -107,11 +86,9 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Tarikh, "{0:dd/MM/yyyy}")
                     </td>
+                    <td align="right">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Jumlah)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NoKp)
+                        @item.NoKp
                     </td>
                     <td>
                         @item.Nama.ToUpper()

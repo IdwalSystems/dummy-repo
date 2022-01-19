@@ -81,6 +81,7 @@ namespace MSNK
             services.AddTransient<IRepository<AbBukuVot, int, string>, AbBukuVotRepository>();
             services.AddTransient<IRepository<JJantina, int, string>, JJantinaRepository>();
             services.AddTransient<IRepository<AkTunaiRuncit, int, string>, AkTunaiRuncitRepository>();
+            services.AddTransient<IRepository<AkTunaiCV, int, string>, AkTunaiCVRepository>();
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
@@ -88,6 +89,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartPV.GetCart(ss));
             services.AddScoped(ss => SessionCartPekerja.GetCart(ss));
             services.AddScoped(ss => SessionCartTunaiRuncit.GetCart(ss));
+            services.AddScoped(ss => SessionCartTunaiCV.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

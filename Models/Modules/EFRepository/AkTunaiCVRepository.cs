@@ -29,7 +29,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.SuPekerja)
                 .Include(b => b.AkPembekal)
                 .Include(b=> b.AkTunaiRuncit).ThenInclude(b=> b.AkTunaiPemegang).ThenInclude(b=> b.SuPekerja)
-                
+                .Include(b=> b.AkTunaiRuncit).ThenInclude(b=> b.JKW)
                 .Include(b => b.AkTunaiCV1).ThenInclude(b=> b.AkCarta)
                 .ToListAsync();
         }

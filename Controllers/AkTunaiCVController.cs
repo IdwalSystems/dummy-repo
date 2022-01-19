@@ -11,6 +11,7 @@ using MSNK.Data;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
@@ -53,12 +54,89 @@ namespace MSNK.Controllers
             _akBankRepo = akBankRepository;
             _cart = cart;
         }
-
         // GET: AkTunaiCV
-        public async Task<IActionResult> Index()
+        [Authorize(Policy ="TR001")]
+        public async Task<IActionResult> Index(
+            string searchString,
+            string searchDate1,
+            string searchDate2,
+            string searchColumn)
         {
-            var applicationDbContext = _context.AkTunaiCV.Include(a => a.AkPembekal).Include(a => a.AkTunaiRuncit).Include(a => a.SuPekerja);
-            return View(await applicationDbContext.ToListAsync());
+            List<SelectListItem> columnList = new();
+            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
+            columnList.Add(new SelectListItem() { Text = "No CV", Value = "NoRujukan" });
+            columnList.Add(new SelectListItem() { Text = "Penerima", Value = "Nama" });
+
+            if (!String.IsNullOrEmpty(searchColumn))
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
+            }
+            else
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
+            }
+
+            var akTunaiCV = await _akTunaiCVRepo.GetAll();
+
+            if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            {
+                // searching with '%like%' condition
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    if (searchColumn == "NoRujukan")
+                    {
+                        akTunaiCV = akTunaiCV.Where(s => s.NoCV.ToUpper().Contains(searchString.ToUpper())).ToList();
+                    }
+                    else if (searchColumn == "Nama")
+                    {
+                        akTunaiCV = akTunaiCV.Where(s => s.Penerima.ToUpper().Contains(searchString.ToUpper())).ToList();
+                    }
+
+                    ViewBag.SearchData1 = searchString;
+
+                }
+
+                // searching with '%like%' condition end
+
+                // searching with date range condition
+                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+                {
+                    if (searchColumn == "Tarikh")
+                    {
+                        DateTime date1 = DateTime.Parse(searchDate1);
+                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
+                        akTunaiCV = akTunaiCV.Where(x => x.Tarikh >= date1
+                            && x.Tarikh <= date2).ToList();
+                    }
+                    ViewBag.SearchData1 = searchDate1;
+                    ViewBag.SearchData2 = searchDate2;
+                }
+
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
+            }
+            // searching with date range condition end
+            else
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
+            }
+
+            List<AkTunaiCVViewModel> viewModel = new List<AkTunaiCVViewModel>();
+
+            foreach (AkTunaiCV item in akTunaiCV)
+            {
+                viewModel.Add(new AkTunaiCVViewModel
+                {
+                    Id = item.Id,
+                    KW = item.AkTunaiRuncit.JKW.Kod,
+                    AkTunaiRuncit = item.AkTunaiRuncit,
+                    NoCV = item.NoCV,
+                    Tarikh = item.Tarikh,
+                    Jumlah = item.Jumlah,
+                    Penerima = item.Penerima,
+                    Catatan = item.Catatan
+                });
+            }
+            return View(viewModel);
         }
 
         // GET: AkTunaiCV/Details/5

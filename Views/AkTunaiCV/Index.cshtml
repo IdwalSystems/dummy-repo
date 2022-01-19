@@ -1,150 +1,154 @@
-﻿@model IEnumerable<MSNK.Models.Modules.AkTunaiCV>
+﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.AkTunaiCVViewModel>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<partial name="_JSIndex" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.AkTunaiRuncit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KategoriPenerima)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tahun)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NoCV)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tarikh)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SuPekerja)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AkPembekal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Penerima)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alamat1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alamat2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Almat3)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Catatan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Jumlah)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlPosting)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlCetak)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlBatal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarMasuk)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserIdKemaskini)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarKemaskini)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AkTunaiRuncit.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.KategoriPenerima)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tahun)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoCV)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tarikh)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SuPekerja.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AkPembekal.AkaunBank)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Penerima)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alamat1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alamat2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Almat3)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Catatan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Jumlah)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlPosting)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlCetak)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlBatal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarMasuk)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserIdKemaskini)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarKemaskini)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row mb-2">
+    <div class="col-8">
+        <h3 class="text-left">Tunai Keluar</h3>
+    </div>
+    <div class="col-4 text-right">
+        <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
+    </div>
+</div>
+<div class="card mb-2">
+    <div class="card-body pl-3 pb-2 ">
+        <label class="form-control-plaintext" for="searchselect">Carian : </label>
+
+        <div class="form-actions no-color mb-2">
+            <form asp-action="Index" method="get">
+                <div class="form-row">
+                    <div class="col-sm-3 mb-2">
+                        <select class="custom-select form-control-sm"
+                                name="searchColumn"
+                                asp-items="@ViewBag.SearchColumn" id="searchColumn"></select>
+                    </div>
+                    <div class="col-sm-9 mb-2">
+                        <div class="form-row">
+                            <div class="col-10">
+                                <div class="form-row">
+                                    <div class="col-12">
+                                        <input class="form-control form-control-sm" type="text" name="searchString" id="myInput" value="@ViewBag.SearchData1" />
+                                    </div>
+                                    <div class="col-6" id="myInputDate1">
+                                        <input class="form-control form-control-sm mb-2" type="date" name="searchDate1" id="inputTarikh1" value="@ViewBag.SearchData1" />
+                                    </div>
+                                    <div class="col-6" id="myInputDate2">
+                                        <input class="form-control form-control-sm" type="date" name="searchDate2" id="inputTarikh2" value="@ViewBag.SearchData2" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
+        <thead class="table-secondary">
+            <tr>
+                <th>Bil</th>
+                <th width="5%">Kod Kaunter</th>
+                <th>No CV</th>
+                <th>Tarikh</th>
+                <th>Jumlah RM</th>
+                <th>Penerima</th>
+                <th>Catatan</th>
+                <th>Cetak</th>
+                <th>Posting</th>
+                <th>Batal</th>
+                <th class="action-button"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        @item.AkTunaiRuncit.KaunterPanjar
+                    </td>
+                    <td>
+                        @item.NoCV
+                    </td>
+                    <td>
+                        @item.Tarikh.ToString("dd/MM/yyyy")
+                    </td>
+                    <td align="right">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+                    <td>
+                        @item.Penerima.ToUpper()
+                    </td>
+                    <td>
+                        @item.Catatan.ToUpper()
+                    </td>
+                    <td>
+                        @if (item.FlCetak == 0)
+                        {
+                            <label class="mb-0">BELUM</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">SUDAH</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.FlPosting == 0)
+                        {
+                            <label class="mb-0">BELUM</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">SUDAH</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.FlBatal == 0)
+                        {
+                            <label class="mb-0">TIDAK</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">YA</label>
+                        }
+                    </td>
+                    <td class="action-button">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                        @if (item.FlPosting == 0)
+                        {
+
+                            <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                <i class="fas fa-sync"></i>
+                            </a>
+
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+
+
+                        }
+                        else
+                        {
+                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
+                                <i class="fas fa-sync"></i>
+                            </a>
+                        }
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
