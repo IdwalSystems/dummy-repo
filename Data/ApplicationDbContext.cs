@@ -254,6 +254,12 @@ namespace MSNK.Data
                 .HasForeignKey(m => m.SuPekerjaId)
                 .OnDelete(DeleteBehavior.NoAction);
             //AkTunaiCV end
+
+            //set default value
+            modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan1).HasDefaultValue("");
+            modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan2).HasDefaultValue("");
+            modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan3).HasDefaultValue("");
+            modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan4).HasDefaultValue("");
         }
     }
 }
