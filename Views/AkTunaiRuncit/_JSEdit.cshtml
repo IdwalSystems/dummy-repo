@@ -1,41 +1,16 @@
 ﻿<script type="text/javascript">
-    // onchange no Rujukan
-    $("body").on('change', "#ddlKW", function () {
-        var kodkw = $("#ddlKW").val();
-        if (kodkw != 0) {
-            JsonKod(kodkw);
-        }
-
-    });
-
-    function JsonKod(id) {
-        $.ajax({
-            type: "POST",
-            //url: "/AkTerima/JsonGetKod", // asal
-            url: '@Url.Action("JsonGetKod", "AkTunaiRuncit")', //baru
-            data: { data: id },
-            dataType: "json",
-            success: function (msg) {
-                $("#txtNoRujukan").val(msg.record);
-            },
-            error: function (req, status, error) {
-                alert(error);
-            }
-        });
-    }
-    // onchange no Rujukan end
-
-    //add tbl Tunai Pemegang
+    //add tbl TunaiPemegang
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
+        var Id = $("#Id");
         var txtSuPekerja = $("#txtSuPekerja");
         if (txtSuPekerja.val() != null) {
-            GetSuPekerja(txtSuPekerja.val());
+            GetSuPekerja(txtSuPekerja.val(), Id.val());
         }
 
     });
 
-    function GetSuPekerja(id) {
+    function GetSuPekerja(id,akTunaiRuncitId) {
         var SuPekerja = {
             Id: id
         }
@@ -65,12 +40,14 @@
                     var cell = $(row.insertCell(-1));
                     cell.html(r.record.noGaji + ' - ' + r.record.nama);
 
-                    //Add Button cell.
+                    //Add Remove Button cell.
                     cell = $(row.insertCell(-1));
+
                     var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                     cell.append(btnRemove1);
 
                     var AkTunaiPemegang = {
+                        AkTunaiRuncitId: akTunaiRuncitId,
                         SuPekerjaId: txtSuPekerja.val()
                     }
 
@@ -85,7 +62,9 @@
                             txtSuPekerja.val("").trigger('change');
                         }
                     });
+
                     $("#txtSuPekerja option[value=" + txtSuPekerja.val() + "]").prop('disabled', true);
+
 
                 }
             });
@@ -98,14 +77,14 @@
     function Remove1(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var name = $("TD", row).eq(0).html();
-        var pemegang = $("TD", row).eq(1).html();
-        if (confirm("Hapus Pemegang : " + pemegang + " ?")) {
+        var suPekerjaId = $("TD", row).eq(0).html();
+        var nama = $("TD", row).eq(1).html();
+        if (confirm("Hapus kod Akaun : " + nama + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblTunaiPemegang")[0];
 
             var AkTunaiPemegang = {
-                SuPekerjaId: name,
+                SuPekerjaId: suPekerjaId
             }
             if (name != null) {
                 $.ajax({
@@ -120,10 +99,41 @@
                     }
                 });
             }
-            $("#txtSuPekerja option[value=" + name + "]").prop('disabled', false);
-
+            $("#txtSuPekerja option[value=" + suPekerjaId + "]").prop('disabled', false);
         }
     };
     //remove tbl Tunai Pemegang end
 
+    $(document).ready(function () {
+        // disable each kod akaun that has been picked
+        $('#tbodyTunaiPemegang tr').each(function () {
+            var suPekerjaId = $(this).find("#suPekerjaId").html();
+            $("#txtSuPekerja option[value=" + suPekerjaId + "]").prop('disabled', true);
+        });
+
+        $.validator.setDefaults({
+            errorElement: "span",
+            errorClass: "help-block",
+            //	validClass: 'stay',
+            highlight: function (element, errorClass) {
+                $(element).addClass(errorClass); //.removeClass(errorClass);
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            unhighlight: function (element, errorClass) {
+                $(element).removeClass(errorClass); //.addClass(validClass);
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+            },
+
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+
+            },
+
+        });
+    });
+    //validation form end
 </script>

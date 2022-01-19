@@ -359,6 +359,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiRuncit/Edit/5
+        [Authorize(Policy = "TR001E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -366,22 +367,44 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akTunaiRuncit = await _context.AkTunaiRuncit.FindAsync(id);
+            var akTunaiRuncit = await _akTunaiRuncitRepo.GetById((int)id);
+
             if (akTunaiRuncit == null)
             {
                 return NotFound();
             }
-            ViewData["AkCartaId"] = new SelectList(_context.AkCarta, "Id", "DebitKredit", akTunaiRuncit.AkCartaId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", akTunaiRuncit.JKWId);
+
+            PopulateList();
+            PopulateTable(id);
+            PopulateCartFromDb(akTunaiRuncit);
+
             return View(akTunaiRuncit);
+        }
+
+        private void PopulateCartFromDb(AkTunaiRuncit akTunaiRuncit)
+        {
+            List<AkTunaiPemegang> akTunaiPemegangTable = _context.AkTunaiPemegang
+                .Include(b => b.SuPekerja)
+                .Where(b => b.AkTunaiRuncitId == akTunaiRuncit.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            foreach (AkTunaiPemegang akTunaiPemegang in akTunaiPemegangTable)
+            {
+                _cart.AddItem1(akTunaiPemegang.AkTunaiRuncitId,
+                               akTunaiPemegang.SuPekerjaId);
+            }
+
+            ViewBag.akTunaiPemegang = akTunaiPemegangTable;
+
         }
 
         // POST: AkTunaiRuncit/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "TR001E")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,KaunterPanjar,Catatan,JKWId,AkCartaId,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] AkTunaiRuncit akTunaiRuncit)
+        public async Task<IActionResult> Edit(int id, AkTunaiRuncit akTunaiRuncit, int JKWId, int AkCartaId, decimal Baki, DateTime? TarikhBaki)
         {
             if (id != akTunaiRuncit.Id)
             {
@@ -392,7 +415,46 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(User);
+                    AkTunaiRuncit akTunaiRuncitAsal = await _akTunaiRuncitRepo.GetById(id);
+
+                    // list of input that cannot be change
+                    akTunaiRuncit.JKWId = akTunaiRuncitAsal.JKWId;
+                    akTunaiRuncit.KaunterPanjar = akTunaiRuncitAsal.KaunterPanjar;
+                    akTunaiRuncit.AkCartaId = akTunaiRuncitAsal.AkCartaId;
+                    akTunaiRuncit.TarMasuk = akTunaiRuncitAsal.TarMasuk;
+                    akTunaiRuncit.UserId = akTunaiRuncitAsal.UserId;
+                    // list of input that cannot be change end
+
+                    foreach (AkTunaiPemegang item in akTunaiRuncitAsal.AkTunaiPemegang)
+                    {
+                        var model = _context.AkTunaiPemegang.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+                    _context.Entry(akTunaiRuncitAsal).State = EntityState.Detached;
+
+                    akTunaiRuncit.AkTunaiPemegang = _cart.Lines1.ToList();
+
+                    akTunaiRuncit.UserIdKemaskini = user.UserName;
+                    akTunaiRuncit.TarKemaskini = DateTime.Now;
+
                     _context.Update(akTunaiRuncit);
+                    //insert applog
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "E";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Pemegang Tunai Runcit - Ubah";
+                    appLog.NoRujukan = akTunaiRuncit.KaunterPanjar;
+                    appLog.Jumlah = 0;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -406,10 +468,15 @@ namespace MSNK.Controllers
                         throw;
                     }
                 }
+                CartEmpty();
+
+                TempData[SD.Success] = "Data berjaya diubah..!";
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AkCartaId"] = new SelectList(_context.AkCarta, "Id", "DebitKredit", akTunaiRuncit.AkCartaId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", akTunaiRuncit.JKWId);
+            TempData[SD.Warning] = "Data tidak lengkap. Sila cuba sekali lagi.";
+            PopulateList();
+            PopulateTable(id);
             return View(akTunaiRuncit);
         }
 
