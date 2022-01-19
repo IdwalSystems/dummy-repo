@@ -1,0 +1,150 @@
+﻿@model IEnumerable<MSNK.Models.Modules.AkTunaiCV>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AkTunaiRuncit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KategoriPenerima)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tahun)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoCV)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tarikh)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SuPekerja)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AkPembekal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Penerima)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alamat1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alamat2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Almat3)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Catatan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jumlah)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlPosting)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlCetak)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlBatal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarMasuk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserIdKemaskini)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarKemaskini)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AkTunaiRuncit.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KategoriPenerima)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tahun)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoCV)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tarikh)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SuPekerja.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AkPembekal.AkaunBank)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Penerima)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alamat1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Alamat2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Almat3)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Catatan)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Jumlah)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlPosting)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlCetak)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlBatal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TarMasuk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserIdKemaskini)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TarKemaskini)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

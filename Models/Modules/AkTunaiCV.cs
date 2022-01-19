@@ -14,8 +14,6 @@ namespace MSNK.Models.Modules
         public AkTunaiRuncit AkTunaiRuncit { get; set; }
         public int KategoriPenerima { get; set; }
         public string Tahun { get; set; }
-        public int JKWId { get; set; }
-        public JKW JKW { get; set; }
         public string NoCV { get; set; }
         public DateTime Tarikh { get; set; }
         public int? SuPekerjaId { get; set; }
@@ -27,8 +25,6 @@ namespace MSNK.Models.Modules
         public string Alamat2 { get; set; }
         public string Almat3 { get; set; }
         public string Catatan { get; set; }
-        public int AkBankId { get; set; }
-        public AkBank AkBank { get; set; }
         public decimal Jumlah { get; set; }
         public ICollection<AkTunaiCV1> AkTunaiCV1 { get; set; }
         public int FlPosting { get; set; }

@@ -1,70 +1,108 @@
 ﻿@model MSNK.Models.Modules.AkTunaiRuncit
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Hapus";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<h1>Hapus</h1>
 
-<h1>Delete</h1>
+<h3 class="text-danger">Anda pasti?</h3>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>AkTunaiRuncit</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.KaunterPanjar)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.KaunterPanjar)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Catatan)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Catatan)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JKW)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JKW.Kod)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AkCarta)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AkCarta.DebitKredit)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TarMasuk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TarMasuk)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserIdKemaskini)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserIdKemaskini)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TarKemaskini)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TarKemaskini)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card box-shadow border-danger mb-3">
+            <div class="card-header bg-danger text-white">
+                <h5>Pemegang Tunai Runcit - @ViewData["Title"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col-md-6 pr-md-3">
+                        <div class="form-row">
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                    <select class="form-control form-control-sm" asp-for="JKWId" disabled id="ddlKW">
+                                        @foreach (var s in ViewBag.JKW)
+                                        {
+                                            <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="KaunterPanjar" class="control-label"></label>
+                                    <input id="txtNoRujukan" asp-for="KaunterPanjar" class="form-control form-control-sm" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="AkCartaId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                    <select class="form-control select2 form-control-sm" asp-for="AkCartaId" disabled id="ddlAkCarta">
+                                        @foreach (var s in ViewBag.AkCarta)
+                                        {
+                                            <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Catatan</label>
+                            <textarea asp-for="Catatan" class="form-control form-control-sm" rows="2" readonly></textarea>
+                        </div>
+
+                        <div class="form-row" hidden>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Baki</label>
+                                    <input name="Baki" class="form-control form-control-sm" value="0.00" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Pada</label>
+                                    <input name="TarikhBaki" class="form-control form-control-sm" type="date" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        @*table Tunai Pemegang*@
+                        <div class="card box-shadow mb-3">
+                            <div class="card-header">
+                                <h6>Pemegang Tunai</h6>
+                            </div>
+                            <div class="card-body">
+                                <table id="tblTunaiPemegang" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
+                                    <tbody id="tbodyTunaiPemegang">
+                                        @foreach (var item in ViewBag.akTunaiPemegang)
+                                        {
+                                            <tr id="@item.Id">
+                                                <td id="suPekerjaId" hidden>@item.SuPekerjaId</td>
+                                                <td class="text-uppercase">@item.SuPekerja.NoGaji - @item.SuPekerja.Nama</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        @*table Tunai Pemegang end*@
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </div>
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Hapus" class="btn btn-danger" /> |
+    <a asp-action="Index">Kembali ke Indeks</a>
+</form>

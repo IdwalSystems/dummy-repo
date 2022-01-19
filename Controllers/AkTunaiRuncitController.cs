@@ -481,6 +481,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiRuncit/Delete/5
+        [Authorize(Policy ="TR001D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -488,26 +489,45 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akTunaiRuncit = await _context.AkTunaiRuncit
-                .Include(a => a.AkCarta)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akTunaiRuncit = await _akTunaiRuncitRepo.GetById((int)id);
+
             if (akTunaiRuncit == null)
             {
                 return NotFound();
             }
+
+            PopulateList();
+            PopulateTable(id);
 
             return View(akTunaiRuncit);
         }
 
         // POST: AkTunaiRuncit/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "TR001D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akTunaiRuncit = await _context.AkTunaiRuncit.FindAsync(id);
             _context.AkTunaiRuncit.Remove(akTunaiRuncit);
+
+            //insert applog
+            var user = await _userManager.GetUserAsync(User);
+
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "D";
+            appLog.LgOperation = "Hapus";
+            appLog.LgNote = modul + " Pemegang Tunai Runcit - Hapus";
+            appLog.NoRujukan = akTunaiRuncit.KaunterPanjar;
+            appLog.Jumlah = 0;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 

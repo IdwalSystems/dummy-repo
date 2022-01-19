@@ -229,20 +229,6 @@ namespace MSNK.Data
             //AkTunaiRuncit end
             //AkTunaiCV
             modelBuilder.Entity<AkTunaiCV>()
-                .HasOne(m => m.JKW)
-                .WithMany(t => t.AkTunaiCV)
-                .HasForeignKey(m => m.JKWId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired();
-
-            modelBuilder.Entity<AkTunaiCV>()
-                    .HasOne(m => m.AkBank)
-                    .WithMany(t => t.AkTunaiCV)
-                    .HasForeignKey(m => m.AkBankId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .IsRequired();
-
-            modelBuilder.Entity<AkTunaiCV>()
                 .HasOne(m => m.AkPembekal!)
                 .WithMany(t => t.AkTunaiCV)
                 .HasForeignKey(m => m.AkPembekalId)

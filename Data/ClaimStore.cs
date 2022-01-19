@@ -70,7 +70,7 @@ namespace MSNK.Data
             new Claim("TR001E","TR001 Pemegang Tunai Runcit - Ubah"),
             new Claim("TR001D","TR001 Pemegang Tunai Runcit - Hapus"),
             new Claim("TR001P","TR001 Pemegang Tunai Runcit - Cetak"),
-            new Claim("TR001B","TR001 Pemegang Tunai Runcit - Batal"),
+            //new Claim("TR001B","TR001 Pemegang Tunai Runcit - Batal"),
             //new Claim("TR001T","TR001 Pemegang Tunai Runcit - Posting"),
             //new Claim("TR001UT","TR001 Pemegang Tunai Runcit - UnPosting"),
             //Pemegang Tunai Runcit end

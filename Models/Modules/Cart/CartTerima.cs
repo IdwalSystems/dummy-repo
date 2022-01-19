@@ -6,7 +6,7 @@ namespace MSNK.Models.Modules.Cart
 {
     public class CartTerima
     {
-        //Terima 1
+        //Terima1
         
         private List<AkTerima1> collection1 = new List<AkTerima1>();
 
@@ -41,7 +41,7 @@ namespace MSNK.Models.Modules.Cart
         public virtual IEnumerable<AkTerima1> Lines1 => collection1;
         // Terima1 End
 
-        //Terima 2
+        //Terima2
         private List<AkTerima2> collection2 = new List<AkTerima2>();
 
         public virtual void AddItem2(
