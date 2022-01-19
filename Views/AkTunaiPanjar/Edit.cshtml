@@ -1,0 +1,67 @@
+﻿@model MSNK.Models.Modules.AkTunaiPanjar
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>AkTunaiPanjar</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="KaunterPanjar" class="control-label"></label>
+                <input asp-for="KaunterPanjar" class="form-control" />
+                <span asp-validation-for="KaunterPanjar" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Catatan" class="control-label"></label>
+                <input asp-for="Catatan" class="form-control" />
+                <span asp-validation-for="Catatan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JKWId" class="control-label"></label>
+                <select asp-for="JKWId" class="form-control" asp-items="ViewBag.JKWId"></select>
+                <span asp-validation-for="JKWId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AkBankId" class="control-label"></label>
+                <select asp-for="AkBankId" class="form-control" asp-items="ViewBag.AkBankId"></select>
+                <span asp-validation-for="AkBankId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TarMasuk" class="control-label"></label>
+                <input asp-for="TarMasuk" class="form-control" />
+                <span asp-validation-for="TarMasuk" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserIdKemaskini" class="control-label"></label>
+                <input asp-for="UserIdKemaskini" class="form-control" />
+                <span asp-validation-for="UserIdKemaskini" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TarKemaskini" class="control-label"></label>
+                <input asp-for="TarKemaskini" class="form-control" />
+                <span asp-validation-for="TarKemaskini" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
