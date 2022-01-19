@@ -24,30 +24,30 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IRepository<AkBelian, int> _akBelianRepo;
-        private readonly IRepository<AkPembekal, int> _akPembekalRepo;
-        private readonly IRepository<JKW, int> _kwRepo;
-        private readonly IRepository<AkPO, int> _akPORepo;
+        private readonly IRepository<AkBelian, int, string> _akBelianRepo;
+        private readonly IRepository<AkPembekal, int, string> _akPembekalRepo;
+        private readonly IRepository<JKW, int, string> _kwRepo;
+        private readonly IRepository<AkPO, int, string> _akPORepo;
         private readonly ListViewIRepository<AkBelian1, int> _akBelian1Repo;
         private readonly ListViewIRepository<AkBelian2, int> _akBelian2Repo;
-        private readonly IRepository<AkCarta, int> _akCartaRepo;
-        private readonly IRepository<AbBukuVot, int> _abBukuVotRepo;
-        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
+        private readonly IRepository<AkCarta, int, string> _akCartaRepo;
+        private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
+        private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private CartBelian _cart;
 
         public AkBelianController(
             ApplicationDbContext context,
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
-            IRepository<AkBelian, int> akBelian,
-            IRepository<AkPembekal, int> akPembekal,
-            IRepository<JKW, int> kwRepo,
-            IRepository<AkPO, int> akPORepo,
+            IRepository<AkBelian, int, string> akBelian,
+            IRepository<AkPembekal, int, string> akPembekal,
+            IRepository<JKW, int, string> kwRepo,
+            IRepository<AkPO, int, string> akPORepo,
             ListViewIRepository<AkBelian1, int> akBelian1Repository,
             ListViewIRepository<AkBelian2, int> akBelian2Repository,
-            IRepository<AkCarta, int> akCartaRepository,
-            IRepository<AbBukuVot, int> abBukuVotRepository,
-            IRepository<AkAkaun, int> akAkaunRepository,
+            IRepository<AkCarta, int, string> akCartaRepository,
+            IRepository<AbBukuVot, int, string> abBukuVotRepository,
+            IRepository<AkAkaun, int, string> akAkaunRepository,
             CartBelian cart
             )
         {
@@ -67,6 +67,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkBelian
+        [Authorize(Policy = "TG002")]
         public async Task<IActionResult> Index(
             string searchString,
             string searchDate1,
@@ -338,6 +339,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkBelian/Create
+        [Authorize(Policy = "TG002C")]
         public IActionResult Create()
         {
             
@@ -610,6 +612,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "TG002C")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int KodObjekAPId, string NamaPembekal, decimal JumlahPerihal)
         {
@@ -699,6 +702,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkBelian/Edit/5
+        [Authorize(Policy = "TG002E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -1072,6 +1076,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "TG002E")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkBelian akBelian, int JKWId, int AkBankId, int KodObjekAPId, decimal JumlahPerihal)
         {
@@ -1174,6 +1179,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkBelian/Delete/5
+        [Authorize(Policy = "TG002D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -1238,6 +1244,7 @@ namespace MSNK.Controllers
 
         // POST: AkBelian/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "TG002D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -1360,6 +1367,7 @@ namespace MSNK.Controllers
         // function  json Create end
 
         // posting function
+        [Authorize(Policy = "TG002T")]
         public async Task<IActionResult> Posting(int? id)
         {
             if (id == null)
@@ -1496,6 +1504,7 @@ namespace MSNK.Controllers
         // posting function end
 
         // unposting function
+        [Authorize(Policy = "TG002UT")]
         public async Task<IActionResult> UnPosting(int? id)
         {
             if (id == null)

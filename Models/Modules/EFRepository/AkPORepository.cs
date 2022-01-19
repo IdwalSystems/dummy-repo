@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MSNK.Models.Modules.EFRepository
 {
     
-    public class AkPORepository : IRepository<AkPO, int>
+    public class AkPORepository : IRepository<AkPO, int, string>
     {
         public readonly ApplicationDbContext context;
 
@@ -43,6 +43,11 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(d => d.AkPembekal).ThenInclude(d => d.JNegeri)
                 .Include(d => d.AkPembekal).ThenInclude(d => d.JBank)
                 .FirstOrDefaultAsync();
+        }
+
+        public Task<AkPO> GetByString(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<AkPO> Insert(AkPO entity)

@@ -1,6 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Laporan Penerimaan";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    int year = DateTime.Now.Year;
+    DateTime firstDay = new DateTime(year, 1, 1);
+    DateTime lastDay = new DateTime(year, 12, 31);
 }
 
 <div class="container">
@@ -37,10 +41,20 @@
                         <div class="form-group form-row">
                             <label for="Tarikh" class="col-sm-2 col-form-label">Tarikh</label>
                             <div class="col-sm-5">
-                                <input type="date" class="form-control form-control-sm" id="tarikhDari" name="tarikhDari">
+                                <input type="date" class="form-control form-control-sm" id="tarikhDari" name="tarikhDari" value="@firstDay.ToString("yyyy-MM-dd")">
                             </div>
                             <div class="col-sm-5">
-                                <input type="date" class="form-control form-control-sm" id="tarikhHingga" name="tarikhHingga">
+                                <input type="date" class="form-control form-control-sm" id="tarikhHingga" name="tarikhHingga" value="@lastDay.ToString("yyy-MM-dd")">
+                            </div>
+                        </div>
+                        <div class="form-group form-row">
+                            <label for="Status" class="col-sm-2 col-form-label">Status</label>
+                            <div class="col-sm-5">
+                                <select class="form-control form-control-sm input-group-sm" name="status" required>
+                                    <option value="0">SEMUA</option>
+                                    <option value="1">BELUM POSTING</option>
+                                    <option value="2">SUDAH POSTING</option>
+                                </select>
                             </div>
                         </div>
                     </div>

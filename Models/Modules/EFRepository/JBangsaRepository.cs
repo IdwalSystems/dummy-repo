@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace MSNK.Models.Modules.EFRepository
 {
     [Authorize]
-    public class JBangsaRepository : IRepository<JBangsa, int>
+    public class JBangsaRepository : IRepository<JBangsa, int, string>
     {
         private readonly ApplicationDbContext context;
         public JBangsaRepository(ApplicationDbContext context) => this.context = context;
@@ -31,6 +31,11 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<JBangsa> GetById(int id)
         {
             return await context.JBangsa.FindAsync(id);
+        }
+
+        public Task<JBangsa> GetByString(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<JBangsa> Insert(JBangsa entity)

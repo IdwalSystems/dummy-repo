@@ -27,34 +27,34 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IRepository<AkPV, int> _akPVRepo;
+        private readonly IRepository<AkPV, int, string> _akPVRepo;
         private readonly ListViewIRepository<AkPV1, int> _akPV1Repo;
         private readonly ListViewIRepository<AkPV2, int> _akPV2Repo;
-        private readonly IRepository<AkBelian, int> _akBelianRepo;
-        private readonly IRepository<AkPembekal, int> _akPembekalRepo;
-        private readonly IRepository<SuPekerja, int> _suPekerjaRepo;
-        private readonly IRepository<JKW, int> _kwRepo;
-        private readonly IRepository<AkCarta, int> _akCartaRepo;
-        private readonly IRepository<AkBank, int> _akBankRepo;
-        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
-        private readonly IRepository<AbBukuVot, int> _abBukuVotRepo;
+        private readonly IRepository<AkBelian, int, string> _akBelianRepo;
+        private readonly IRepository<AkPembekal, int, string> _akPembekalRepo;
+        private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
+        private readonly IRepository<JKW, int, string> _kwRepo;
+        private readonly IRepository<AkCarta, int, string> _akCartaRepo;
+        private readonly IRepository<AkBank, int, string> _akBankRepo;
+        private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
+        private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private CartPV _cart;
 
         public AkPVController(
             ApplicationDbContext context,
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
-            IRepository<AkPV, int> akPVRepository,
+            IRepository<AkPV, int, string> akPVRepository,
             ListViewIRepository<AkPV1, int> akPV1Repository,
             ListViewIRepository<AkPV2, int> akPV2Repository,
-            IRepository<AkBelian, int> akBelian,
-            IRepository<AkPembekal, int> akPembekal,
-            IRepository<SuPekerja, int> suPekerja,
-            IRepository<JKW, int> kwRepo,
-            IRepository<AkCarta, int> akCartaRepository,
-            IRepository<AkBank, int> akBankRepository,
-            IRepository<AkAkaun, int> akAkaunRepository,
-            IRepository<AbBukuVot, int> abBukuVotRepository,
+            IRepository<AkBelian, int, string> akBelian,
+            IRepository<AkPembekal, int, string> akPembekal,
+            IRepository<SuPekerja, int, string> suPekerja,
+            IRepository<JKW, int, string> kwRepo,
+            IRepository<AkCarta, int, string> akCartaRepository,
+            IRepository<AkBank, int, string> akBankRepository,
+            IRepository<AkAkaun, int, string> akAkaunRepository,
+            IRepository<AbBukuVot, int, string> abBukuVotRepository,
             CartPV cart
             )
         {
@@ -76,6 +76,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPV
+        [Authorize(Policy = "PV001")]
         public async Task<IActionResult> Index(
             string searchString,
             string searchDate1,
@@ -722,6 +723,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPV/Create
+        [Authorize(Policy = "PV001C")]
         public IActionResult Create()
         {
             // get latest no rujukan running number  
@@ -845,6 +847,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "PV001C")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkPV akPV, int JKWId, int? AkPembekalId, int? SuPekerjaId, int AkBankId, int JCaraBayarId, decimal JumlahInbois)
         {
@@ -1018,6 +1021,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPV/Edit/5
+        [Authorize(Policy = "PV001E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -1366,6 +1370,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "PV001E")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkPV akPV, int JKWId,string Penerima, int AkBankId, int JCaraBayarId, decimal JumlahInbois)
         {
@@ -1510,6 +1515,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPV/Delete/5
+        [Authorize(Policy = "PV001D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -1606,6 +1612,7 @@ namespace MSNK.Controllers
 
         // POST: AkPV/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "PV001D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -1643,6 +1650,7 @@ namespace MSNK.Controllers
             return _context.AkPV.Any(e => e.Id == id);
         }
 
+        [Authorize(Policy = "PV001P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
             AkPV akPV = await _context.AkPV
@@ -1730,6 +1738,7 @@ namespace MSNK.Controllers
         }
 
         // posting function
+        [Authorize(Policy = "PV001T")]
         public async Task<IActionResult> Posting(int? id)
         {
             if (id == null)
@@ -1880,6 +1889,7 @@ namespace MSNK.Controllers
         // posting function end
 
         // unposting function
+        [Authorize(Policy = "PV001UT")]
         public async Task<IActionResult> UnPosting(int? id)
         {
             if (id == null)

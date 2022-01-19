@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class JNegeriRepository : IRepository<JNegeri, int>
+    public class JNegeriRepository : IRepository<JNegeri, int, string>
     {
         public readonly ApplicationDbContext context;
 
@@ -31,6 +31,11 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.JNegeri.FindAsync(id);
 
+        }
+
+        public Task<JNegeri> GetByString(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<JNegeri> Insert(JNegeri entity)

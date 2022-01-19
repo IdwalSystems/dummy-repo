@@ -16,15 +16,15 @@ namespace MSNK.Controllers
     public class AbBukuVotController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IRepository<AbBukuVot, int> _abBukuVotRepo;
-        private readonly IRepository<JKW, int> _kwRepo;
-        private readonly IRepository<AkCarta, int> _akCartaRepo;
+        private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
+        private readonly IRepository<JKW, int, string> _kwRepo;
+        private readonly IRepository<AkCarta, int, string> _akCartaRepo;
 
         public AbBukuVotController(
             ApplicationDbContext context,
-            IRepository<AbBukuVot, int> akBukuVotRepository,
-            IRepository<JKW, int> kwRepository,
-            IRepository<AkCarta, int> akCartaRepository
+            IRepository<AbBukuVot, int, string> akBukuVotRepository,
+            IRepository<JKW, int, string> kwRepository,
+            IRepository<AkCarta, int, string> akCartaRepository
             )
         {
             _context = context;

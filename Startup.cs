@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
@@ -9,17 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSNK.Data;
-using MSNK.Models.Administration;
 using MSNK.Models.Modules;
-using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.Cart.Session;
 using MSNK.Models.Modules.EFRepository;
 using MSNK.Models.Modules.IRepository;
 using Rotativa.AspNetCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MSNK
 {
@@ -51,38 +45,41 @@ namespace MSNK
             services.ConfigureApplicationCookie(opt =>
             {
                 opt.AccessDeniedPath = new PathString("/Home/Accessdenied");
+                opt.ExpireTimeSpan = TimeSpan.FromSeconds(300);
+                opt.LoginPath = "/Account/Login";
+                opt.SlidingExpiration = true;
             });
 
-            services.AddTransient<IRepository<AkBank, int>, AkBankRepository>();
-            services.AddTransient<IRepository<JKW, int>, JKWRepository>();
-            services.AddTransient<IRepository<JBank, int>, JBankRepository>();
-            services.AddTransient<IRepository<JNegeri, int>, JNegeriRepository>();
-            services.AddTransient<IRepository<AkCarta, int>, AkCartaRepository>();
-            services.AddTransient<IRepository<AkAkaun, int>, AkAkaunRepository>();
-            services.AddTransient<IRepository<AkTerima, int>, AkTerimaRepository>();
+            services.AddTransient<IRepository<AkBank, int, string>, AkBankRepository>();
+            services.AddTransient<IRepository<JKW, int, string>, JKWRepository>();
+            services.AddTransient<IRepository<JBank, int, string>, JBankRepository>();
+            services.AddTransient<IRepository<JNegeri, int, string>, JNegeriRepository>();
+            services.AddTransient<IRepository<AkCarta, int, string>, AkCartaRepository>();
+            services.AddTransient<IRepository<AkAkaun, int, string>, AkAkaunRepository>();
+            services.AddTransient<IRepository<AkTerima, int, string>, AkTerimaRepository>();
             services.AddTransient<ListViewIRepository<AkTerima1, int>, AkTerima1Repository>();
             services.AddTransient<ListViewIRepository<AkTerima2, int>, AkTerima2Repository>();
-            services.AddTransient<IRepository<AkPO, int>, AkPORepository>();
+            services.AddTransient<IRepository<AkPO, int, string>, AkPORepository>();
             services.AddTransient<ListViewIRepository<AkPO1, int>, AkPO1Repository>();
             services.AddTransient<ListViewIRepository<AkPO2, int>, AkPO2Repository>();
-            services.AddTransient<IRepository<AkPembekal, int>, AkPembekalRepository>();
-            services.AddTransient<IRepository<AkJurnal, int>, AkJurnalRepository>();
+            services.AddTransient<IRepository<AkPembekal, int, string>, AkPembekalRepository>();
+            services.AddTransient<IRepository<AkJurnal, int, string>, AkJurnalRepository>();
             services.AddTransient<ListViewIRepository<AkJurnal1, int>, AkJurnal1Repository>();
-            services.AddTransient<IRepository<AkBelian, int>, AkBelianRepository>();
+            services.AddTransient<IRepository<AkBelian, int, string>, AkBelianRepository>();
             services.AddTransient<ListViewIRepository<AkBelian1, int>, AkBelian1Repository>();
             services.AddTransient<ListViewIRepository<AkBelian2, int>, AkBelian2Repository>();
             services.AddTransient<AppLogIRepository<AppLog, int>, AppLogRepository>();
-            services.AddTransient<IRepository<AkPV, int>, AkPVRepository>();
+            services.AddTransient<IRepository<AkPV, int, string>, AkPVRepository>();
             services.AddTransient<ListViewIRepository<AkPV1, int>, AkPV1Repository>();
             services.AddTransient<ListViewIRepository<AkPV2, int>, AkPV2Repository>();
-            services.AddTransient<IRepository<SuPekerja, int>, SuPekerjaRepository>();
+            services.AddTransient<IRepository<SuPekerja, int, string>, SuPekerjaRepository>();
             services.AddTransient<ListViewIRepository<SuTanggunganPekerja, int>, SuTanggunganPekerjaRepository>();
-            services.AddTransient<IRepository<JAgama, int>, JAgamaRepository>();
-            services.AddTransient<IRepository<JBangsa, int>, JBangsaRepository>();
-            services.AddTransient<IRepository<JJawatanPekerja, int>, JJawatanPekerjaRepository>();
-            services.AddTransient<IRepository<JCaraBayar, int>, JCaraBayarRepository>();
-            services.AddTransient<IRepository<AbBukuVot, int>, AbBukuVotRepository>();
-            services.AddTransient<IRepository<JJantina, int>, JJantinaRepository>();
+            services.AddTransient<IRepository<JAgama, int, string>, JAgamaRepository>();
+            services.AddTransient<IRepository<JBangsa, int, string>, JBangsaRepository>();
+            services.AddTransient<IRepository<JJawatanPekerja, int, string>, JJawatanPekerjaRepository>();
+            services.AddTransient<IRepository<JCaraBayar, int, string>, JCaraBayarRepository>();
+            services.AddTransient<IRepository<AbBukuVot, int, string>, AbBukuVotRepository>();
+            services.AddTransient<IRepository<JJantina, int, string>, JJantinaRepository>();
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
@@ -99,7 +96,59 @@ namespace MSNK
 
             services.AddAuthorization(options=>
             {
-                options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+                //Menu Terimaan
+                //Resit Rasmi
+                options.AddPolicy("PR001", policy => policy.RequireClaim("PR001"));
+                options.AddPolicy("PR001C", policy => policy.RequireClaim("PR001C"));
+                options.AddPolicy("PR001E", policy => policy.RequireClaim("PR001E"));
+                options.AddPolicy("PR001D", policy => policy.RequireClaim("PR001D"));
+                options.AddPolicy("PR001P", policy => policy.RequireClaim("PR001P"));
+                options.AddPolicy("PR001B", policy => policy.RequireClaim("PR001B"));
+                options.AddPolicy("PR001T", policy => policy.RequireClaim("PR001T"));
+                options.AddPolicy("PR001UT", policy => policy.RequireClaim("PR001UT"));
+                //Resit Rasmi end
+                //Menu Tanggungan
+                //Pesanan Tempatan
+                options.AddPolicy("TG001", policy => policy.RequireClaim("TG001"));
+                options.AddPolicy("TG001C", policy => policy.RequireClaim("TG001C"));
+                options.AddPolicy("TG001E", policy => policy.RequireClaim("TG001E"));
+                options.AddPolicy("TG001D", policy => policy.RequireClaim("TG001D"));
+                options.AddPolicy("TG001P", policy => policy.RequireClaim("TG001P"));
+                options.AddPolicy("TG001B", policy => policy.RequireClaim("TG001B"));
+                options.AddPolicy("TG001T", policy => policy.RequireClaim("TG001T"));
+                options.AddPolicy("TG001UT", policy => policy.RequireClaim("TG001UT"));
+                //Pesanan Tempatan End
+                //Invois Pembekal
+                options.AddPolicy("TG002", policy => policy.RequireClaim("TG002"));
+                options.AddPolicy("TG002C", policy => policy.RequireClaim("TG002C"));
+                options.AddPolicy("TG002E", policy => policy.RequireClaim("TG002E"));
+                options.AddPolicy("TG002D", policy => policy.RequireClaim("TG002D"));
+                //options.AddPolicy("TG002P", policy => policy.RequireClaim("TG002P"));
+                options.AddPolicy("TG002B", policy => policy.RequireClaim("TG002B"));
+                options.AddPolicy("TG002T", policy => policy.RequireClaim("TG002T"));
+                options.AddPolicy("TG002UT", policy => policy.RequireClaim("TG002UT"));
+                //Invois Pembekal End
+                //Menu Baucer
+                //Baucer Pembayaran
+                options.AddPolicy("PV001", policy => policy.RequireClaim("PV001"));
+                options.AddPolicy("PV001C", policy => policy.RequireClaim("PV001C"));
+                options.AddPolicy("PV001E", policy => policy.RequireClaim("PV001E"));
+                options.AddPolicy("PV001D", policy => policy.RequireClaim("PV001D"));
+                options.AddPolicy("PV001P", policy => policy.RequireClaim("PV001P"));
+                options.AddPolicy("PV001B", policy => policy.RequireClaim("PV001B"));
+                options.AddPolicy("PV001T", policy => policy.RequireClaim("PV001T"));
+                options.AddPolicy("PV001UT", policy => policy.RequireClaim("PV001UT"));
+                //Baucer Pembayaran End
+                //Baucer Jurnal
+                options.AddPolicy("JU001", policy => policy.RequireClaim("JU001"));
+                options.AddPolicy("JU001C", policy => policy.RequireClaim("JU001C"));
+                options.AddPolicy("JU001E", policy => policy.RequireClaim("JU001E"));
+                options.AddPolicy("JU001D", policy => policy.RequireClaim("JU001D"));
+                options.AddPolicy("JU001P", policy => policy.RequireClaim("JU001P"));
+                options.AddPolicy("JU001B", policy => policy.RequireClaim("JU001B"));
+                options.AddPolicy("JU001T", policy => policy.RequireClaim("JU001T"));
+                options.AddPolicy("JU001UT", policy => policy.RequireClaim("JU001UT"));
+                //Baucer Jurnal End
             });
 
             services.AddMvc(f =>

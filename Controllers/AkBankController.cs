@@ -22,16 +22,16 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IRepository<JKW, int> _kwRepo;
-        private readonly IRepository<JBank, int> _bankRepo;
-        private readonly IRepository<AkBank, int> _akBankRepo;
+        private readonly IRepository<JKW, int, string> _kwRepo;
+        private readonly IRepository<JBank, int, string> _bankRepo;
+        private readonly IRepository<AkBank, int, string> _akBankRepo;
 
         public AkBankController(ApplicationDbContext context,
                                 AppLogIRepository<AppLog, int> appLog,
                                 UserManager<IdentityUser> userManager,
-                                IRepository<JKW, int> kwRepository,
-                                IRepository<JBank, int> bankRepository,
-                                IRepository<AkBank, int> akBankRepository)
+                                IRepository<JKW, int, string> kwRepository,
+                                IRepository<JBank, int, string> bankRepository,
+                                IRepository<AkBank, int, string> akBankRepository)
         {
             _context = context;
             _appLog = appLog;

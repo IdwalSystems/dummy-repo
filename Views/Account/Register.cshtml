@@ -13,10 +13,16 @@
         </div>
     </div>
     <div class="form-group">
-        <label asp-for="Nama" class="col-md-5"></label>
+        <label asp-for="SuPekerjaId" class="control-label col-md-5"></label><span class="text-danger control-label"></span>
         <div class="col-md-10">
-            <input asp-for="Nama" class="form-control form-control-sm" />
-            <span asp-validation-for="Nama" class="text-danger"></span>
+            <select class="form-control select2 form-control-sm" asp-for="SuPekerjaId" required id="ddlKW">
+                <option value="0" selected disabled>-- Sila Pilih Anggota -- </option>
+                @foreach (var s in ViewBag.SuPekerja)
+                {
+                    <option value="@s.Id">@s.NoGaji - @s.Nama </option>
+                }
+            </select>
+            <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">

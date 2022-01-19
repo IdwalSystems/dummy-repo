@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class AkCartaRepository : IRepository<AkCarta, int>
+    public class AkCartaRepository : IRepository<AkCarta, int, string>
     {
         public readonly ApplicationDbContext context;
 
@@ -30,6 +30,11 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<AkCarta> GetById(int id)
         {
             return await context.AkCarta.FindAsync(id);
+        }
+
+        public Task<AkCarta> GetByString(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<AkCarta> Insert(AkCarta entity)

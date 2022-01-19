@@ -8,6 +8,7 @@ namespace MSNK.Models.Modules.PrintModel.Reporting
 {
     public class LPR0012PrintModel : AkTerima
     {
+        public string Username { get; set; }
         public IEnumerable<AkTerima> AkTerima { get; set; }
         public string KodLaporan { get; set; }
         public string RingkasanKodObjek { get; set; }
@@ -17,5 +18,6 @@ namespace MSNK.Models.Modules.PrintModel.Reporting
         public decimal Debit { get; set; }
         public decimal Kredit { get; set; }
         public CompanyDetails CompanyDetail { get; set; }
+        public IEnumerable<LPR0012_1PrintModel> LPR0012_1 { get; set; }
     }
 }

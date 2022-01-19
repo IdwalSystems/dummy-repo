@@ -24,26 +24,26 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IRepository<SuPekerja, int> _suPekerjaRepo;
-        private readonly IRepository<JNegeri, int> _jNegeriRepo;
-        private readonly IRepository<JAgama, int> _jAgamaRepo;
-        private readonly IRepository<JBangsa, int> _jBangsaRepo;
-        private readonly IRepository<JJawatanPekerja, int> _jJawatanPekerjaRepo;
+        private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
+        private readonly IRepository<JNegeri, int, string> _jNegeriRepo;
+        private readonly IRepository<JAgama, int, string> _jAgamaRepo;
+        private readonly IRepository<JBangsa, int, string> _jBangsaRepo;
+        private readonly IRepository<JJawatanPekerja, int, string> _jJawatanPekerjaRepo;
         private readonly ListViewIRepository<SuTanggunganPekerja, int> _suTanggunganRepo;
-        private readonly IRepository<JCaraBayar, int> _jCaraBayarRepo;
+        private readonly IRepository<JCaraBayar, int, string> _jCaraBayarRepo;
         private CartPekerja _cart;
 
         public SuPekerjaController(
             ApplicationDbContext context,
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
-            IRepository<SuPekerja, int> suPekerjaRepo,
-            IRepository<JNegeri, int> jNegeriRepo,
-            IRepository<JAgama, int> jAgamaRepo,
-            IRepository<JBangsa, int> jBangsaRepo,
-            IRepository<JJawatanPekerja, int> jJawatanPekerjaRepo,
+            IRepository<SuPekerja, int, string> suPekerjaRepo,
+            IRepository<JNegeri, int, string> jNegeriRepo,
+            IRepository<JAgama, int, string> jAgamaRepo,
+            IRepository<JBangsa, int, string> jBangsaRepo,
+            IRepository<JJawatanPekerja, int, string> jJawatanPekerjaRepo,
             ListViewIRepository<SuTanggunganPekerja, int> suTanggunganRepo,
-            IRepository<JCaraBayar, int> jCaraBayarRepo,
+            IRepository<JCaraBayar, int, string> jCaraBayarRepo,
             CartPekerja cart
             )
         {

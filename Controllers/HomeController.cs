@@ -49,6 +49,12 @@ namespace MSNK.Controllers
             return View();
         }
 
+        public IActionResult UnderMaintainance()
+        {
+            //test
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -54,6 +54,10 @@ namespace MSNK.Data
         public DbSet<SpPermohonanAktiviti1> SpPermohonanAktiviti1 { get; set; }
         public DbSet<SpPermohonanAktiviti2> SpPermohonanAktiviti2 { get; set; }
         public DbSet<JJantina> JJantina { get; set; }
+        public DbSet<AkTunaiRuncit> AkTunaiRuncit { get; set; }
+        public DbSet<AkTunaiPemegang> AkTunaiPemegang { get; set; }
+        public DbSet<AkTunaiCV> AkTunaiCV { get; set; }
+        public DbSet<AkTunaiCV1> AkTunaiCV1 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -207,6 +211,48 @@ namespace MSNK.Data
                 .HasForeignKey(m => m.SuPekerjaId)
                 .OnDelete(DeleteBehavior.NoAction);
             //AKPV end
+            //AkTunaiRuncit
+            modelBuilder.Entity<AkTunaiRuncit>()
+                .HasOne(m => m.JKW)
+                .WithMany(t => t.AkTunaiRuncit)
+                .HasForeignKey(m => m.JKWId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<AkTunaiRuncit>()
+                    .HasOne(m => m.AkCarta)
+                    .WithMany(t => t.AkTunaiRuncit)
+                    .HasForeignKey(m => m.AkCartaId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+            //AkTunaiRuncit end
+            //AkTunaiCV
+            modelBuilder.Entity<AkTunaiCV>()
+                .HasOne(m => m.JKW)
+                .WithMany(t => t.AkTunaiCV)
+                .HasForeignKey(m => m.JKWId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<AkTunaiCV>()
+                    .HasOne(m => m.AkBank)
+                    .WithMany(t => t.AkTunaiCV)
+                    .HasForeignKey(m => m.AkBankId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+            modelBuilder.Entity<AkTunaiCV>()
+                .HasOne(m => m.AkPembekal!)
+                .WithMany(t => t.AkTunaiCV)
+                .HasForeignKey(m => m.AkPembekalId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkTunaiCV>()
+                .HasOne(m => m.SuPekerja!)
+                .WithMany(t => t.AkTunaiCV)
+                .HasForeignKey(m => m.SuPekerjaId)
+                .OnDelete(DeleteBehavior.NoAction);
+            //AkTunaiCV end
         }
     }
 }

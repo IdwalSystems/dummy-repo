@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace MSNK.Models.Modules.EFRepository
 {
     [Authorize]
-    public class JKWRepository : IRepository<JKW, int>
+    public class JKWRepository : IRepository<JKW, int, string>
     {
         private readonly ApplicationDbContext context;
         public JKWRepository(ApplicationDbContext context) => this.context = context;
@@ -31,6 +31,11 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<JKW> GetById(int id)
         {
             return await context.JKW.FindAsync(id);
+        }
+
+        public Task<JKW> GetByString(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<JKW> Insert(JKW entity)

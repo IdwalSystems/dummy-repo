@@ -16,17 +16,17 @@ namespace MSNK.Controllers
     public class AkAkaunController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IRepository<AkAkaun, int> _akAkaunRepo;
-        private readonly IRepository<JKW, int> _kwRepo;
-        private readonly IRepository<AkCarta, int> _akCarta1Repo;
-        private readonly IRepository<AkCarta, int> _akCarta2Repo;
+        private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
+        private readonly IRepository<JKW, int, string> _kwRepo;
+        private readonly IRepository<AkCarta, int, string> _akCarta1Repo;
+        private readonly IRepository<AkCarta, int, string> _akCarta2Repo;
 
         public AkAkaunController(
             ApplicationDbContext context,
-            IRepository<AkAkaun, int> akAkaunRepository,
-            IRepository<JKW, int> kwRepository,
-            IRepository<AkCarta, int> akCarta1Repository,
-            IRepository<AkCarta, int> akCarta2Repository)
+            IRepository<AkAkaun, int, string> akAkaunRepository,
+            IRepository<JKW, int, string> kwRepository,
+            IRepository<AkCarta, int, string> akCarta1Repository,
+            IRepository<AkCarta, int, string> akCarta2Repository)
         {
             _context = context;
             _akAkaunRepo = akAkaunRepository;

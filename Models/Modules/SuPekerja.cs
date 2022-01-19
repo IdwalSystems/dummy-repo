@@ -69,6 +69,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Cara Bayar")]
         public JCaraBayar JCaraBayar { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
+        public ICollection<AkTunaiCV> AkTunaiCV { get; set; }
         //relationship end
 
         // log

@@ -1,8 +1,11 @@
 ﻿@using MSNK
 @using MSNK.Models
 @using Microsoft.AspNetCore.Identity
+@using MSNK.Data
+@using System.Threading.Tasks
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject ApplicationDbContext _context;
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

@@ -177,6 +177,166 @@ namespace MSNK.Models.Modules
                     {
                         FuncId = "PR001B",
                         FuncName = "PR001 Penerimaan – Batal"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JU001",
+                        FuncName = "JU001 Jurnal"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JU001C",
+                        FuncName = "JU001 Jurnal - Tambah"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JU001D",
+                        FuncName = "JU001 Jurnal - Hapus"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JU001E",
+                        FuncName = "JU001 Jurnal - Ubah"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JU001P",
+                        FuncName = "JU001 Jurnal - Cetak"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JU001T",
+                        FuncName = "JU001 Jurnal - Posting"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JU001UT",
+                        FuncName = "JU001 Jurnal – UnPosting"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JU001B",
+                        FuncName = "JU001 Jurnal – Batal"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG001",
+                        FuncName = "TG001 Pesanan Tempatan"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG001C",
+                        FuncName = "TG001 Pesanan Tempatan - Tambah"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG001D",
+                        FuncName = "TG001 Pesanan Tempatan - Hapus"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG001E",
+                        FuncName = "TG001 Pesanan Tempatan - Ubah"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG001P",
+                        FuncName = "TG001 Pesanan Tempatan - Cetak"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG001T",
+                        FuncName = "TG001 Pesanan Tempatan - Posting"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG001UT",
+                        FuncName = "TG001 Pesanan Tempatan – UnPosting"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG001B",
+                        FuncName = "TG001 Pesanan Tempatan – Batal"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG002",
+                        FuncName = "TG002 Invois Pembekal"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG002C",
+                        FuncName = "TG002 Invois Pembekal - Tambah"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG002D",
+                        FuncName = "TG002 Invois Pembekal - Hapus"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG002E",
+                        FuncName = "TG002 Invois Pembekal - Ubah"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG002P",
+                        FuncName = "TG002 Invois Pembekal - Cetak"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG002T",
+                        FuncName = "TG002 Invois Pembekal - Posting"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG002UT",
+                        FuncName = "TG002 Invois Pembekal – UnPosting"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG002B",
+                        FuncName = "TG002 Invois Pembekal – Batal"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "PV001",
+                        FuncName = "PV001 Baucer Pembayaran"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "PV001C",
+                        FuncName = "PV001 Baucer Pembayaran - Tambah"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "PV001D",
+                        FuncName = "PV001 Baucer Pembayaran - Hapus"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "PV001E",
+                        FuncName = "PV001 Baucer Pembayaran - Ubah"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "PV001P",
+                        FuncName = "PV001 Baucer Pembayaran - Cetak"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "PV001T",
+                        FuncName = "PV001 Baucer Pembayaran - Posting"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "PV001UT",
+                        FuncName = "PV001 Baucer Pembayaran – UnPosting"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG002B",
+                        FuncName = "TG002 Baucer Pembayaran – Batal"
                     }
                 );
             }

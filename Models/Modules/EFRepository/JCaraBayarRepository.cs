@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class JCaraBayarRepository : IRepository<JCaraBayar, int>
+    public class JCaraBayarRepository : IRepository<JCaraBayar, int, string>
     {
         public readonly ApplicationDbContext context;
         public JCaraBayarRepository(ApplicationDbContext context) => this.context = context;
@@ -29,6 +29,11 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<JCaraBayar> GetById(int id)
         {
             return await context.JCaraBayar.FindAsync(id);
+        }
+
+        public Task<JCaraBayar> GetByString(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<JCaraBayar> Insert(JCaraBayar entity)

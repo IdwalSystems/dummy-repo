@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using MSNK.Data;
 using MSNK.Models.Administration;
 using MSNK.Models.Login.ViewModel;
+using MSNK.Models.Modules;
+using MSNK.Models.Modules.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +19,18 @@ namespace MSNK.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AccountController(ApplicationDbContext db, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
+        private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
+        public AccountController(
+            ApplicationDbContext db, 
+            UserManager<IdentityUser> userManager, 
+            SignInManager<IdentityUser> signInManager, 
+            RoleManager<IdentityRole> roleManager,
+            IRepository<SuPekerja, int, string> suPekerja)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _suPekerjaRepo = suPekerja;
         }
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
@@ -57,6 +66,8 @@ namespace MSNK.Controllers
                 RoleList = listItems
             };
 
+            ViewBag.SuPekerja = await _suPekerjaRepo.GetAll();
+
             return View(registerViewModel);
         }
 
@@ -70,40 +81,57 @@ namespace MSNK.Controllers
             ViewData["ReturnUrl"] = returnurl;
             returnurl = returnurl ?? Url.Content("~/");
 
-            if (ModelState.IsValid)
+            if(model.SuPekerjaId != 0)
             {
-                var user = new ApplicationUser
+                //check if user already exist in SuPekerja or not
+                //if true then form is valid
+                var pekerja = await _suPekerjaRepo.GetById((int)model.SuPekerjaId);
+                if (pekerja != null)
                 {
-                    UserName = model.Email,
-                    Email = model.Email,
-                    Nama = model.Nama
-                };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    if(model.RoleSelected!=null && model.RoleSelected.Length>0 && model.RoleSelected == "Admin")
-                    {
-                        await _userManager.AddToRoleAsync(user, "Admin");
-                    }
-                    else
-                    {
-                        await _userManager.AddToRoleAsync(user, "User");
-                    }
-                    if (!User.IsInRole("Admin"))
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnurl);
-                    }
-                    else
-                    {
-                        TempData[SD.Success] = "Data pengguna berjaya ditambah.";
-                        return RedirectToAction(nameof(UserController.Index), "User");
-                    }
-                    
-                    
-                }
-                AddErrors(result);
+                    model.Nama = pekerja.Nama;
 
+                    if (ModelState.IsValid)
+                    {
+                        var user = new ApplicationUser
+                        {
+                            UserName = model.Email,
+                            Email = model.Email,
+                            Nama = pekerja.Nama,
+                            SuPekerjaId = model.SuPekerjaId
+                        };
+                        var result = await _userManager.CreateAsync(user, model.Password);
+                        if (result.Succeeded)
+                        {
+                            if (model.RoleSelected != null && model.RoleSelected.Length > 0 && model.RoleSelected == "Admin")
+                            {
+                                await _userManager.AddToRoleAsync(user, "Admin");
+                            }
+                            else
+                            {
+                                await _userManager.AddToRoleAsync(user, "User");
+                            }
+                            if (!User.IsInRole("Admin"))
+                            {
+                                await _signInManager.SignInAsync(user, isPersistent: false);
+                                return LocalRedirect(returnurl);
+                            }
+                            else
+                            {
+                                TempData[SD.Success] = "Data pengguna berjaya ditambah.";
+                                return RedirectToAction(nameof(UserController.Index), "User");
+                            }
+
+
+                        }
+                        AddErrors(result);
+
+                    }
+                }
+                else
+                {
+                    TempData[SD.Error] = "Pengguna belum didaftar pada Jadual Anggota.";
+                }
+                
             }
 
             List<SelectListItem> listItems = new List<SelectListItem>();
@@ -124,6 +152,8 @@ namespace MSNK.Controllers
             });
 
             model.RoleList = listItems;
+
+            ViewBag.SuPekerja = await _suPekerjaRepo.GetAll();
 
             return View(model);
         }
