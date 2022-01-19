@@ -2,8 +2,22 @@
     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Tunai Runcit
     </a>
-    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-        <a class="dropdown-item" asp-area="" asp-controller="AkTunaiPanjar" asp-action="Index">Pemegang Tunai Runcit</a>
-        <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="UnderMaintainance">Tunai Keluar</a>
-    </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+
+        @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
+        {
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" asp-area="" asp-controller="AkTunaiRuncit" asp-action="Index">Pemegang Tunai Runcit</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="UnderMaintainance">Tunai Keluar</a>
+            </div>
+        }
+        else
+        {
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="UnderMaintainance">Tunai Keluar</a>
+            </div>
+        }
+    }
+
 </li>

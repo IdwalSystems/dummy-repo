@@ -63,7 +63,27 @@ namespace MSNK.Data
             new Claim("JU001T","JU001 Baucer Jurnal - Posting"),
             new Claim("JU001UT","JU001 Baucer Jurnal - UnPosting"),
             //Baucer Jurnal end
-            //new Claim("Delete","Hapus")
+            //Menu Tunai Runcit
+            //Pemegang Tunai Runcit
+            new Claim("TR001","TR001 Pemegang Tunai Runcit"),
+            new Claim("TR001C","TR001 Pemegang Tunai Runcit - Tambah"),
+            new Claim("TR001E","TR001 Pemegang Tunai Runcit - Ubah"),
+            new Claim("TR001D","TR001 Pemegang Tunai Runcit - Hapus"),
+            new Claim("TR001P","TR001 Pemegang Tunai Runcit - Cetak"),
+            new Claim("TR001B","TR001 Pemegang Tunai Runcit - Batal"),
+            //new Claim("TR001T","TR001 Pemegang Tunai Runcit - Posting"),
+            //new Claim("TR001UT","TR001 Pemegang Tunai Runcit - UnPosting"),
+            //Pemegang Tunai Runcit end
+            //Tunai Keluar
+            new Claim("TR002","TR002 Tunai Keluar"),
+            new Claim("TR002C","TR002 Tunai Keluar - Tambah"),
+            new Claim("TR002E","TR002 Tunai Keluar - Ubah"),
+            new Claim("TR002D","TR002 Tunai Keluar - Hapus"),
+            new Claim("TR002P","TR002 Tunai Keluar - Cetak"),
+            new Claim("TR002B","TR002 Tunai Keluar - Batal"),
+            new Claim("TR002T","TR002 Tunai Keluar - Posting"),
+            new Claim("TR002UT","TR002 Tunai Keluar - UnPosting"),
+            //Tunai Keluar end
         };
     }
 }

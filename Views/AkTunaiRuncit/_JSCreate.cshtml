@@ -1,0 +1,129 @@
+﻿<script type="text/javascript">
+    // onchange no Rujukan
+    $("body").on('change', "#ddlKW", function () {
+        var kodkw = $("#ddlKW").val();
+        if (kodkw != 0) {
+            JsonKod(kodkw);
+        }
+
+    });
+
+    function JsonKod(id) {
+        $.ajax({
+            type: "POST",
+            //url: "/AkTerima/JsonGetKod", // asal
+            url: '@Url.Action("JsonGetKod", "AkTunaiRuncit")', //baru
+            data: { data: id },
+            dataType: "json",
+            success: function (msg) {
+                $("#txtNoRujukan").val(msg.record);
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    // onchange no Rujukan end
+
+    //add tbl Tunai Pemegang
+    $("body").on("click", "#btnAdd1", function () {
+        //Reference the Name and Country TextBoxes.
+        var txtSuPekerja = $("#txtSuPekerja");
+        if (txtSuPekerja.val() != null) {
+            GetSuPekerja(txtSuPekerja.val());
+        }
+
+    });
+
+    function GetSuPekerja(id) {
+        var SuPekerja = {
+            Id: id
+        }
+        if (id != "") {
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                //url: "/AkTerima/GetCarta",
+                url: '@Url.Action("GetSuPekerja", "AkTunaiRuncit")',
+                data: SuPekerja,
+                dataType: "json",
+                success: function (r) {
+                    //Reference the TextBoxes.
+                    var txtSuPekerja = $("#txtSuPekerja");
+
+                    //Get the reference of the Table's TBODY element.
+                    var tBody = $("#tblTunaiPemegang > TBODY")[0];
+                    //Add Row.
+                    var row = tBody.insertRow(-1);
+
+                    //Add akCartaId cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.id);
+                    cell.prop("hidden", !this.checked);
+
+                    //Add kod cell.
+                    var cell = $(row.insertCell(-1));
+                    cell.html(r.record.noGaji + ' - ' + r.record.nama);
+
+                    //Add Button cell.
+                    cell = $(row.insertCell(-1));
+                    var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                    cell.append(btnRemove1);
+
+                    var AkTunaiPemegang = {
+                        SuPekerjaId: txtSuPekerja.val()
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        //url: "/AkTerima/SaveAkTerima1",
+                        url: '@Url.Action("SaveAkTunaiPemegang", "AkTunaiRuncit")',
+                        data: AkTunaiPemegang,
+                        dataType: "json",
+                        success: function (r) {
+                            //Clear the TextBoxes.
+                            txtSuPekerja.val("").trigger('change');
+                        }
+                    });
+                    $("#txtSuPekerja option[value=" + txtSuPekerja.val() + "]").prop('disabled', true);
+
+                }
+            });
+        }
+
+    }
+    //add tbl Tunai Pemegang end
+
+    //remove tbl Tunai Pemegang
+    function Remove1(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var name = $("TD", row).eq(0).html();
+        var pemegang = $("TD", row).eq(1).html();
+        if (confirm("Hapus Pemegang : " + pemegang + " ?")) {
+            //Get the reference of the Table.
+            var table = $("#tblTunaiPemegang")[0];
+
+            var AkTunaiPemegang = {
+                SuPekerjaId: name,
+            }
+            if (name != null) {
+                $.ajax({
+                    type: "POST",
+                    //url: "/AkTerima/RemoveAkTerima1",
+                    url: '@Url.Action("RemoveAkTunaiPemegang", "AkTunaiRuncit")',
+                    data: AkTunaiPemegang,
+                    dataType: "json",
+                    success: function (r) {
+                        //Delete the Table row using it's Index.
+                        table.deleteRow(row[0].rowIndex);
+                    }
+                });
+            }
+            $("#txtSuPekerja option[value=" + name + "]").prop('disabled', false);
+
+        }
+    };
+    //remove tbl Tunai Pemegang end
+
+</script>

@@ -964,16 +964,13 @@ namespace MSNK.Controllers
             }
         }
 
-        public async Task<JsonResult> SaveAkTerima1(AkTerima1 akTerima1)
+        public JsonResult SaveAkTerima1(AkTerima1 akTerima1)
         {
 
             try
             {
                 if (akTerima1 != null )
                 {
-                    var user = await _userManager.GetUserAsync(User);
-
-
                     _cart.AddItem1(akTerima1.AkTerimaId,
                                    akTerima1.Amaun,
                                    akTerima1.AkCartaId);    

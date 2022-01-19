@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class AkTunaiPanjarRepository : IRepository<AkTunaiRuncit, int, string>
+    public class AkTunaiRuncitRepository : IRepository<AkTunaiRuncit, int, string>
     {
         public readonly ApplicationDbContext context;
-        public AkTunaiPanjarRepository(ApplicationDbContext context) => this.context = context;
+        public AkTunaiRuncitRepository(ApplicationDbContext context) => this.context = context;
         public async Task Delete(int id)
         {
             var model = await context.AkTunaiRuncit.FirstOrDefaultAsync(b => b.Id == id);
@@ -30,9 +30,14 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
-        public Task<AkTunaiRuncit> GetById(int id)
+        public async Task<AkTunaiRuncit> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await context.AkTunaiRuncit
+                .Include(b => b.JKW)
+                .Include(b => b.AkCarta)
+                .Include(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
+                .Where(b => b.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public Task<AkTunaiRuncit> GetByString(string id)
@@ -40,19 +45,21 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public Task<AkTunaiRuncit> Insert(AkTunaiRuncit entity)
+        public async Task<AkTunaiRuncit> Insert(AkTunaiRuncit entity)
         {
-            throw new NotImplementedException();
+            await context.AkTunaiRuncit.AddAsync(entity);
+            return entity;
         }
 
-        public Task Save()
+        public async Task Save()
         {
-            throw new NotImplementedException();
+            await context.SaveChangesAsync();
         }
 
-        public Task Update(AkTunaiRuncit entity)
+        public async Task Update(AkTunaiRuncit entity)
         {
-            throw new NotImplementedException();
+            context.Update(entity);
+            await context.SaveChangesAsync();
         }
     }
 }
