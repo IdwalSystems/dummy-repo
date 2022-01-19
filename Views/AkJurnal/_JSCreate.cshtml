@@ -154,7 +154,6 @@
                                                         "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                                         "</td><tr>";
                                                     $("table tbody#tbodyObjek").append(str);
-                                                    console.log("test :" + str);
                                                     sumdebit += item1.debit;
                                                     sumkredit += item1.kredit;
                                                     nextIdx = nextIdx < item1.indeks ? item1.indeks : nextIdx;
@@ -229,7 +228,8 @@
         if (name != null) {
             $.ajax({
                 type: "POST",
-                url: "/AkJurnal/GetAnItemCartAkJurnal1",
+                //url: "/AkJurnal/GetAnItemCartAkJurnal1",
+                url: '@Url.Action("GetAnItemCartAkJurnal1", "AkJurnal")',
                 data: AkJurnal1,
                 dataType: "json",
                 success: function (r) {
@@ -283,7 +283,8 @@
         if (!check) {
             $.ajax({
                 type: "POST",
-                url: "/AkJurnal/SaveCartAkJurnal1",
+                //url: "/AkJurnal/SaveCartAkJurnal1",
+                url: '@Url.Action("SaveCartAkJurnal1", "AkJurnal")',
                 data: AkJurnal1,
                 dataType: "json",
                 success: function (r) {
@@ -291,7 +292,8 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "/AkJurnal/GetAllItemCartAkJurnal1",
+                        //url: "/AkJurnal/GetAllItemCartAkJurnal1",
+                        url: '@Url.Action("GetAllItemCartAkJurnal1", "AkJurnal")',
                         dataType: "json",
                         success: function (r) {
                             //refresh updated table objek
@@ -314,7 +316,6 @@
                                         "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                         "</td><tr>";
                                     $("table tbody#tbodyObjek").append(str);
-                                    console.log("test :" + str);
                                     sumdebit += item1.debit;
                                     sumkredit += item1.kredit;
                                     nextIdx = nextIdx < item1.indeks ? item1.indeks : nextIdx;
@@ -340,11 +341,38 @@
 
     $("body").on('change', "#ddlKW", function () {
         JsonKod();
+        RemoveUnrelated();
     });
 
     $("body").on('change', "#txtTarikh", function () {
         JsonKod();
     });
+
+    function RemoveUnrelated() {
+        var kwText = $("#ddlKW option:selected").text().trim().substring(0, 3);
+
+        $("#txtKodAkaun > option").each(function () {
+            $(this).prop('disabled', false);
+        });
+        $("#moKodAkaun > option").each(function () {
+            $(this).prop('disabled', false);
+        });
+        //txtKodAkaun, moKodAkaun
+        $("#txtKodAkaun > option").each(function () {
+            if (this.className === kwText) {
+                $(this).prop('disabled', false);
+            } else {
+                $(this).prop('disabled', true);
+            }
+        });
+        $("#moKodAkaun > option").each(function () {
+            if (this.className === kwText) {
+                $(this).prop('disabled', false);
+            } else {
+                $(this).prop('disabled', true);
+            }
+        });
+    };
 
     function JsonKod() {
 
@@ -359,7 +387,8 @@
 
             $.ajax({
                 type: "POST",
-                url: "/AkJurnal/JsonGetKod",
+                //url: "/AkJurnal/JsonGetKod",
+                url: '@Url.Action("JsonGetKod", "AkJurnal")',
                 data: AkJurnal,
                 dataType: "json",
                 success: function (msg) {

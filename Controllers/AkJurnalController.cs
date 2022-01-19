@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
 using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
@@ -110,9 +111,12 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
-            List<AkCarta> cartaList = _context.AkCarta.Where(x=>x.JParas.Kod=="4").OrderBy(b => b.Kod).ToList();
+            List<AkCarta> cartaList = _context.AkCarta
+                .Include(z=>z.JKW)
+                .Where(x=>x.JParas.Kod=="4")
+                .OrderBy(b => b.Kod)
+                .ToList();
             ViewBag.AkCarta = cartaList;
-
         }
         private void PopulateTable(int? id)
         {
@@ -385,6 +389,8 @@ namespace MSNK.Controllers
                         _context.Entry(akJurnalAsal).State = EntityState.Detached;
 
                         akJurnal.AkJurnal1 = _cart.Lines1.OrderBy(q => q.Indeks).ToList();
+                        akJurnal.UserId = akJurnalAsal.UserId;
+                        akJurnal.TarMasuk = akJurnalAsal.TarMasuk;
                         akJurnal.UserIdKemaskini = user.UserName;
                         akJurnal.TarKemaskini = DateTime.Now;
 
@@ -873,6 +879,7 @@ namespace MSNK.Controllers
 
                     //update posting status in akTerima
                     akJurnal.Posting = 1;
+                    akJurnal.TarikhPosting = DateTime.Now;
                     await _akJurnalRepo.Update(akJurnal);
                     await AddLogAsync("Posting", akJurnal.NoJurnal, akJurnal.JumKredit);
 
@@ -895,7 +902,7 @@ namespace MSNK.Controllers
                     .Include(x => x.AkJurnal1)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                //AbBukuVot abBukuVot = await _context.AbBukuVot.Include(x=>x.)
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x=>x.Rujukan == "JR/" + akJurnal.NoJurnal).ToList();
 
                 List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == "JR/"+akJurnal.NoJurnal).ToList();
                 if (akAkaun == null)
@@ -912,10 +919,14 @@ namespace MSNK.Controllers
                         await _akAkaunRepo.Delete(item.Id);
                     }
 
+                    foreach(AbBukuVot vot in abBukuVot)
+                    {
+                        await _abBukuVot.Delete(vot.Id);
+                    }
+
                     //update posting status in akTerima
                     akJurnal.Posting = 0;
-                    //akJurnal.TarikhPosting = null;
-                    //akTerima.TarikhPosting = null;
+                    akJurnal.TarikhPosting = null;
                     await _akJurnalRepo.Update(akJurnal);
 
                     await AddLogAsync("UnPosting", akJurnal.NoJurnal, akJurnal.JumKredit);
@@ -934,14 +945,28 @@ namespace MSNK.Controllers
                 .Include(x=>x.JKW)
                 .Include(x=>x.AkJurnal1).ThenInclude(x=>x.AkCarta)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            JurnalPrintModel data = new JurnalPrintModel();
-            var user = await _userManager.GetUserAsync(User);
-            var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
 
+            JurnalPrintModel data = new JurnalPrintModel();
+            var user = "";
+            if (akJurnal.UserIdKemaskini == ""||akJurnal.UserIdKemaskini == null)
+            {
+                user = akJurnal.UserId;
+            }
+            else
+            {
+                user = akJurnal.UserIdKemaskini;
+            }
+
+            var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email.ToUpper() == user.ToUpper());
+            var jumDebitPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akJurnal.JumDebit)).ToUpper();
+            var jumKreditPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akJurnal.JumKredit)).ToUpper();
             CompanyDetails company = new CompanyDetails();
+
             data.Username = namaUser.Nama;
             data.AkJurnal = akJurnal;
             data.CompanyDetail = company;
+            data.JumlahDebitDalamPerkataan = jumDebitPerkataan;
+            data.JumlahKreditDalamPerkataan = jumDebitPerkataan;
 
             //update cetak -> 1
             akJurnal.Cetak = 1;
