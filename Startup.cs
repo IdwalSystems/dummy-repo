@@ -80,12 +80,14 @@ namespace MSNK
             services.AddTransient<IRepository<JCaraBayar, int, string>, JCaraBayarRepository>();
             services.AddTransient<IRepository<AbBukuVot, int, string>, AbBukuVotRepository>();
             services.AddTransient<IRepository<JJantina, int, string>, JJantinaRepository>();
+            services.AddTransient<IRepository<AkTunaiRuncit, int, string>, AkTunaiRuncitRepository>();
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
             services.AddScoped(ss => SessionCartBelian.GetCart(ss));
             services.AddScoped(ss => SessionCartPV.GetCart(ss));
             services.AddScoped(ss => SessionCartPekerja.GetCart(ss));
+            services.AddScoped(ss => SessionCartTunaiRuncit.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -149,6 +151,27 @@ namespace MSNK
                 options.AddPolicy("JU001T", policy => policy.RequireClaim("JU001T"));
                 options.AddPolicy("JU001UT", policy => policy.RequireClaim("JU001UT"));
                 //Baucer Jurnal End
+                //Menu Tunai Runcit
+                //Pemegang Tunai Runcit
+                options.AddPolicy("TR001", policy => policy.RequireClaim("TR001"));
+                options.AddPolicy("TR001C", policy => policy.RequireClaim("TR001C"));
+                options.AddPolicy("TR001E", policy => policy.RequireClaim("TR001E"));
+                options.AddPolicy("TR001D", policy => policy.RequireClaim("TR001D"));
+                options.AddPolicy("TR001P", policy => policy.RequireClaim("TR001P"));
+                options.AddPolicy("TR001B", policy => policy.RequireClaim("TR001B"));
+                //options.AddPolicy("TR001T", policy => policy.RequireClaim("TR001T"));
+                //options.AddPolicy("TR001UT", policy => policy.RequireClaim("TR001UT"));
+                //Pemegang Tunai Runcit End
+                //Tunai Keluar
+                options.AddPolicy("TR002", policy => policy.RequireClaim("TR002"));
+                options.AddPolicy("TR002C", policy => policy.RequireClaim("TR002C"));
+                options.AddPolicy("TR002E", policy => policy.RequireClaim("TR002E"));
+                options.AddPolicy("TR002D", policy => policy.RequireClaim("TR002D"));
+                options.AddPolicy("TR002P", policy => policy.RequireClaim("TR002P"));
+                options.AddPolicy("TR002B", policy => policy.RequireClaim("TR002B"));
+                options.AddPolicy("TR002T", policy => policy.RequireClaim("TR002T"));
+                options.AddPolicy("TR002UT", policy => policy.RequireClaim("TR002UT"));
+                //Tunai Keluar End
             });
 
             services.AddMvc(f =>
