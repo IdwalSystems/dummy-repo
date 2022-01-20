@@ -125,11 +125,14 @@
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
+        var Id = $("#Id");
         var txtKodAkaun = $("#txtKodAkaun");
-        GetCarta(txtKodAkaun.val());
+        if (txtKodAkaun.val() != null) {
+            GetCarta(txtKodAkaun.val(), Id.val());
+        }
     });
 
-    function GetCarta(id) {
+    function GetCarta(id, akPVId) {
         var Objek = {
             Id: id
         }
@@ -185,6 +188,7 @@
                     cell.append(btnRemove1);
 
                     var AkPV1 = {
+                        AkPVId: akPVId,
                         AkCartaId: txtKodAkaun.val(),
                         Amaun: txtAmaunObjek.val()
                     }
@@ -220,9 +224,10 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var akCartaId = $("TD", row).eq(0).html();
+        var namaAkaun = $("TD", row).eq(1).html();
         var amaun = $("TD", row).eq(2).html();
         var txtJumlah = $("#jumlahObjek");
-        if (confirm("Hapus kod Akaun : " + akCartaId + " ?")) {
+        if (confirm("Hapus kod Akaun : " + namaAkaun + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblObjek")[0];
 
@@ -291,11 +296,13 @@
 
     function modalUpdate1() {
         var id = $("#moId1").val();
+        var akPVId = $("#Id").val();
         var amaun = $("#moAmaun1").val();
         var jumlah = $("#jumlahObjek");
 
         var AkPV1 = {
-            akCartaId: id,
+            AkPVId: akPVId,
+            AkCartaId: id,
             Amaun: amaun
         }
         $.ajax({

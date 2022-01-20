@@ -147,17 +147,27 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akTunaiCV = await _context.AkTunaiCV
-                .Include(a => a.AkPembekal)
-                .Include(a => a.AkTunaiRuncit)
-                .Include(a => a.SuPekerja)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
+
+
             if (akTunaiCV == null)
             {
                 return NotFound();
             }
 
+            PopulateList();
+            PopulateTable(id);
             return View(akTunaiCV);
+        }
+
+        private void PopulateTable(int? id)
+        {
+            List<AkTunaiCV1> akTunaiCV1Table = _context.AkTunaiCV1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkTunaiCVId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            ViewBag.akTunaiCV1 = akTunaiCV1Table;
         }
 
         // GET: AkTunaiCV/Create
@@ -321,23 +331,6 @@ namespace MSNK.Controllers
             }
         }
         //on change kod Pekerja controller end
-
-        // json empty Cart controller
-        [HttpPost]
-        public JsonResult JsonEmptyCart()
-        {
-            try
-            {
-                CartEmpty();
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "Error", message = ex.Message });
-            }
-        }
-        // json empty cart end
 
         // function  json Create akPV1
         public JsonResult GetCarta(AkCarta akCarta)
@@ -616,15 +609,36 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akTunaiCV = await _context.AkTunaiCV.FindAsync(id);
+            var akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
+
             if (akTunaiCV == null)
             {
                 return NotFound();
             }
-            ViewData["AkPembekalId"] = new SelectList(_context.AkPembekal, "Id", "AkaunBank", akTunaiCV.AkPembekalId);
-            ViewData["AkTunaiRuncitId"] = new SelectList(_context.AkTunaiRuncit, "Id", "Id", akTunaiCV.AkTunaiRuncitId);
-            ViewData["SuPekerjaId"] = new SelectList(_context.SuPekerja, "Id", "Id", akTunaiCV.SuPekerjaId);
+
+            CartEmpty();
+            PopulateList();
+            PopulateTable(id);
+            PopulateCartFromDb(akTunaiCV);
             return View(akTunaiCV);
+        }
+
+        private void PopulateCartFromDb(AkTunaiCV akTunaiCV)
+        {
+            List<AkTunaiCV1> akTunaiCV1Table = _context.AkTunaiCV1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkTunaiCVId == akTunaiCV.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            foreach (AkTunaiCV1 akTunaiCV1 in akTunaiCV1Table)
+            {
+                _cart.AddItem1(akTunaiCV1.AkTunaiCVId,
+                               akTunaiCV1.Amaun,
+                               akTunaiCV1.AkCartaId);
+            }
+
+            ViewBag.akTunaiCV1 = akTunaiCV1Table;
+
         }
 
         // POST: AkTunaiCV/Edit/5
@@ -632,7 +646,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AkTunaiRuncitId,KategoriPenerima,Tahun,NoCV,Tarikh,SuPekerjaId,AkPembekalId,Penerima,Alamat1,Alamat2,Almat3,Catatan,Jumlah,FlPosting,FlCetak,FlBatal,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] AkTunaiCV akTunaiCV)
+        public async Task<IActionResult> Edit(int id,AkTunaiCV akTunaiCV, int AkTunaiRuncitId, int? AkPembekalId, int? SuPekerjaId)
         {
             if (id != akTunaiCV.Id)
             {
@@ -643,7 +657,82 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(User);
+                    var akTunaiCVAsal = await _akTunaiCVRepo.GetById(id);
+                    var jumlah = akTunaiCVAsal.Jumlah;
+
+                    switch (akTunaiCV.KategoriPenerima)
+                    {
+                        case 1:
+                            var pembekal = akTunaiCV.AkPembekal;
+                            akTunaiCV.Penerima = pembekal.NamaSykt;
+                            akTunaiCV.Alamat1 = pembekal.Alamat1;
+                            akTunaiCV.Alamat2 = pembekal.Alamat2;
+                            akTunaiCV.Alamat3 = pembekal.Alamat3;
+                            break;
+                        case 2:
+                            var pekerja = akTunaiCV.SuPekerja;
+                            akTunaiCV.Penerima = pekerja.Nama;
+                            akTunaiCV.Alamat1 = pekerja.Alamat1;
+                            akTunaiCV.Alamat2 = pekerja.Alamat2;
+                            akTunaiCV.Alamat3 = pekerja.Alamat3;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    // list of input that cannot be change
+                    akTunaiCV.Tahun = akTunaiCVAsal.Tahun;
+                    akTunaiCV.AkTunaiRuncitId = akTunaiCVAsal.AkTunaiRuncitId;
+                    akTunaiCV.NoCV = akTunaiCVAsal.NoCV;
+                    akTunaiCV.Tarikh = akTunaiCVAsal.Tarikh;
+                    akTunaiCV.TarMasuk = akTunaiCVAsal.TarMasuk;
+                    akTunaiCV.UserId = akTunaiCVAsal.UserId;
+                    // list of input that cannot be change end
+
+                    foreach (AkTunaiCV1 item in akTunaiCVAsal.AkTunaiCV1)
+                    {
+                        var model = _context.AkTunaiCV1.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+
+                    _context.Entry(akTunaiCVAsal).State = EntityState.Detached;
+
+                    akTunaiCV.AkTunaiCV1 = _cart.Lines1.ToList();
+
+                    akTunaiCV.UserIdKemaskini = user.UserName;
+                    akTunaiCV.TarKemaskini = DateTime.Now;
+                    if (akTunaiCV.Catatan == null)
+                    {
+                        akTunaiCV.Catatan = "";
+                    }
+
                     _context.Update(akTunaiCV);
+
+                    //insert applog
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "E";
+                    appLog.LgOperation = "Ubah";
+                    if (jumlah != akTunaiCV.Jumlah)
+                    {
+                        appLog.LgNote = modul + " Tunai Keluar - Ubah Jumlah dari RM" + jumlah + " ke RM" + akTunaiCV.Jumlah;
+                    }
+                    else
+                    {
+                        appLog.LgNote = modul + " Tunai Keluar - Ubah";
+                    }
+
+                    appLog.NoRujukan = akTunaiCV.NoCV;
+                    appLog.Jumlah = akTunaiCV.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -657,11 +746,12 @@ namespace MSNK.Controllers
                         throw;
                     }
                 }
+                CartEmpty();
+                TempData[SD.Success] = "Data berjaya diubah..!";
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AkPembekalId"] = new SelectList(_context.AkPembekal, "Id", "AkaunBank", akTunaiCV.AkPembekalId);
-            ViewData["AkTunaiRuncitId"] = new SelectList(_context.AkTunaiRuncit, "Id", "Id", akTunaiCV.AkTunaiRuncitId);
-            ViewData["SuPekerjaId"] = new SelectList(_context.SuPekerja, "Id", "Id", akTunaiCV.SuPekerjaId);
+            PopulateList();
+            PopulateTable(id);
             return View(akTunaiCV);
         }
 

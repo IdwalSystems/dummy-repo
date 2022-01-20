@@ -15,6 +15,7 @@ namespace MSNK.Models.Modules.ViewModel
         public string Perihal { get; set; }
         public decimal BakiLejarPanjar { get; set; }
         public string Pemegang1 { get; set; }
+        public bool IsPemegang { get; set; }
         public string Pemegang2 { get; set; }
         public string Pemegang3 { get; set; }
     }

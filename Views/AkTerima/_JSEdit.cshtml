@@ -296,9 +296,10 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var akCartaId = $("TD", row).eq(0).html();
+        var namaAkaun = $("TD", row).eq(1).html();
         var amaun = $("TD", row).eq(2).html();
         var txtJumlah = $("#jumlahObjek");
-        if (confirm("Hapus kod Akaun : " + akCartaId + " ?")) {
+        if (confirm("Hapus kod Akaun : " + namaAkaun + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblObjek")[0];
 

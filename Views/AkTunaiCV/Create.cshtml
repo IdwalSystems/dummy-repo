@@ -36,7 +36,7 @@
                                 <select class="form-control form-control-sm" asp-for="AkTunaiRuncitId" required id="ddlTunaiRuncit">
                                     @foreach (var s in ViewBag.AkTunaiRuncit)
                                     {
-                                        <option value="@s.Id">@s.KaunterPanjar (@s.AkCarta.Kod - @s.</option>
+                                        <option value="@s.Id">@s.KaunterPanjar (@s.AkCarta.Kod - @s.AkCarta.Perihal )</option>
                                     }
                                 </select>
                                 <span asp-validation-for="AkTunaiRuncitId" class="text-danger"></span>
