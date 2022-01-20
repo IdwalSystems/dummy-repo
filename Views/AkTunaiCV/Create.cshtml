@@ -1,123 +1,172 @@
 ﻿@model MSNK.Models.Modules.AkTunaiCV
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Tambah";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
-
-<h4>AkTunaiCV</h4>
-<hr />
+<partial name="_JSCreate" />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-12">
+        <form asp-action="Create" class="needs-validation">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="AkTunaiRuncitId" class="control-label"></label>
-                <select asp-for="AkTunaiRuncitId" class ="form-control" asp-items="ViewBag.AkTunaiRuncitId"></select>
+            <div class="card box-shadow border-success mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5>Tunai Keluar - @ViewData["Title"]</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Tarikh" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <input asp-for="Tarikh" class="form-control form-control-sm" value="@DateTime.Now.ToString("s")" required />
+                                <span asp-validation-for="Tarikh" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Tahun" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <input asp-for="Tahun" value="@DateTime.Now.Year.ToString()" class="form-control form-control-sm form-control-sm-custom" id="txtTahun" required />
+                                <span asp-validation-for="Tahun" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="AkTunaiRuncitId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm" asp-for="AkTunaiRuncitId" required id="ddlTunaiRuncit">
+                                    @foreach (var s in ViewBag.AkTunaiRuncit)
+                                    {
+                                        <option value="@s.Id">@s.JKW.Kod - @s.KaunterPanjar </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="AkTunaiRuncitId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="NoCV" class="control-label"></label>
+                                <input id="txtNoRujukan" asp-for="NoCV" value="@ViewBag.NoRujukan" class="form-control form-control-sm" readonly />
+                                <span asp-validation-for="NoCV" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <label asp-for="AkPembekalId" class="control-label"></label>
+                            <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal">
+                                <option value="0" selected>-- Pilih Kod Pembekal --</option>
+                                @foreach (var s in ViewBag.AkPembekal)
+                                {
+                                    <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
+                                }
+                            </select>
+                            <span asp-validation-for="AkPembekalId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <label asp-for="SuPekerjaId" class="control-label"></label>
+                            <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPekerja">
+                                <option value="0" selected>-- Pilih Kod Pekerja --</option>
+                                @foreach (var s in ViewBag.SuPekerja)
+                                {
+                                    <option value="@s.Id">@s.NoGaji - @s.Nama</option>
+                                }
+                            </select>
+                            <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <label asp-for="AkPembekalId" class="control-label"></label>
+                            <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal">
+                                <option value="0" selected>-- Pilih Kod Pembekal --</option>
+                                @foreach (var s in ViewBag.AkPembekal)
+                                {
+                                    <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
+                                }
+                            </select>
+                            <span asp-validation-for="AkPembekalId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <label asp-for="Penerima" class="control-label"></label><span class="text-danger control-label">*</span>
+                            <input asp-for="Penerima" class="form-control form-control-sm text-uppercase" required />
+                            <span class="text-danger">Nama Diperlukan</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Alamat1" class="control-label">Alamat</label>
+                        <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" id="txtAlamat1" />
+                        <span asp-validation-for="Alamat1" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase" id="txtAlamat2" />
+                        <span asp-validation-for="Alamat2" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" id="txtAlamat3" />
+                        <span asp-validation-for="Alamat3" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Catatan" class="control-label"></label>
+                        <textarea asp-for="Catatan" class="form-control form-control-sm text-uppercase" rows="2"></textarea>
+                        <span asp-validation-for="Catatan" class="text-danger"></span>
+                    </div>
+                    <div hidden>
+                        <div class="form-group">
+                            <label asp-for="Jumlah" class="control-label"></label>
+                            <input asp-for="Jumlah" class="form-control" />
+                            <span asp-validation-for="Jumlah" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="FlPosting" class="control-label"></label>
+                            <input asp-for="FlPosting" class="form-control" />
+                            <span asp-validation-for="FlPosting" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="FlCetak" class="control-label"></label>
+                            <input asp-for="FlCetak" class="form-control" />
+                            <span asp-validation-for="FlCetak" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="FlBatal" class="control-label"></label>
+                            <input asp-for="FlBatal" class="form-control" />
+                            <span asp-validation-for="FlBatal" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="UserId" class="control-label"></label>
+                            <input asp-for="UserId" class="form-control" />
+                            <span asp-validation-for="UserId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="TarMasuk" class="control-label"></label>
+                            <input asp-for="TarMasuk" class="form-control" />
+                            <span asp-validation-for="TarMasuk" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="UserIdKemaskini" class="control-label"></label>
+                            <input asp-for="UserIdKemaskini" class="form-control" />
+                            <span asp-validation-for="UserIdKemaskini" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="TarKemaskini" class="control-label"></label>
+                            <input asp-for="TarKemaskini" class="form-control" />
+                            <span asp-validation-for="TarKemaskini" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label asp-for="KategoriPenerima" class="control-label"></label>
-                <input asp-for="KategoriPenerima" class="form-control" />
-                <span asp-validation-for="KategoriPenerima" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Tahun" class="control-label"></label>
-                <input asp-for="Tahun" class="form-control" />
-                <span asp-validation-for="Tahun" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NoCV" class="control-label"></label>
-                <input asp-for="NoCV" class="form-control" />
-                <span asp-validation-for="NoCV" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Tarikh" class="control-label"></label>
-                <input asp-for="Tarikh" class="form-control" />
-                <span asp-validation-for="Tarikh" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SuPekerjaId" class="control-label"></label>
-                <select asp-for="SuPekerjaId" class ="form-control" asp-items="ViewBag.SuPekerjaId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="AkPembekalId" class="control-label"></label>
-                <select asp-for="AkPembekalId" class ="form-control" asp-items="ViewBag.AkPembekalId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Penerima" class="control-label"></label>
-                <input asp-for="Penerima" class="form-control" />
-                <span asp-validation-for="Penerima" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Alamat1" class="control-label"></label>
-                <input asp-for="Alamat1" class="form-control" />
-                <span asp-validation-for="Alamat1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Alamat2" class="control-label"></label>
-                <input asp-for="Alamat2" class="form-control" />
-                <span asp-validation-for="Alamat2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Almat3" class="control-label"></label>
-                <input asp-for="Almat3" class="form-control" />
-                <span asp-validation-for="Almat3" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Catatan" class="control-label"></label>
-                <input asp-for="Catatan" class="form-control" />
-                <span asp-validation-for="Catatan" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Jumlah" class="control-label"></label>
-                <input asp-for="Jumlah" class="form-control" />
-                <span asp-validation-for="Jumlah" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FlPosting" class="control-label"></label>
-                <input asp-for="FlPosting" class="form-control" />
-                <span asp-validation-for="FlPosting" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FlCetak" class="control-label"></label>
-                <input asp-for="FlCetak" class="form-control" />
-                <span asp-validation-for="FlCetak" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FlBatal" class="control-label"></label>
-                <input asp-for="FlBatal" class="form-control" />
-                <span asp-validation-for="FlBatal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TarMasuk" class="control-label"></label>
-                <input asp-for="TarMasuk" class="form-control" />
-                <span asp-validation-for="TarMasuk" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserIdKemaskini" class="control-label"></label>
-                <input asp-for="UserIdKemaskini" class="form-control" />
-                <span asp-validation-for="UserIdKemaskini" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TarKemaskini" class="control-label"></label>
-                <input asp-for="TarKemaskini" class="form-control" />
-                <span asp-validation-for="TarKemaskini" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Simpan" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
