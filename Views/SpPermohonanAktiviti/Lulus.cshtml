@@ -1,0 +1,369 @@
+﻿@model MSNK.Models.Modules.SpPermohonanAktiviti
+
+@{
+    ViewData["Title"] = "Lulus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card box-shadow border-dark mb-3">
+            <div class="card-header bg-dark text-white">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <h5 class="text-left">Permohonan Aktiviti - @ViewData["Title"]</h5>
+                    </div>
+                </div>
+                </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col-lg-10">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">No Rujukan</label>
+                                    <input class="form-control form-control-sm" value="@Model.Id" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Nama Pemohon</label>
+                                    <input class="form-control form-control-sm" value="@Model.Ppn" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="Tarikh" class="control-label"></label>
+                                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Tarikh)" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Negeri</label>
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JNegeri.Id - @Model.JNegeri.Perihal" readonly />
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Sukan</label>
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JSukan.Id - @Model.JSukan.Perihal" readonly />
+                                </div>
+                            </div>
+</div>
+                            <div class="form-row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Aktiviti</label>
+                                        <input class="form-control form-control-sm text-uppercase" value="@Model.Aktiviti" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Tempat</label>
+                                        <input class="form-control form-control-sm text-uppercase" value="@Model.Tempat" readonly />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="card mb-2">
+
+                                    <div class="form-row">
+                                        <div class="card-body p-1">
+                                            <div class="form-group col-sm">
+                                                <label>Penyertaan</label>
+                                                <div class="custom-control custom-radio">
+                                                    <input type="checkbox" checked="checked">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <div class="form-group col-sm">
+                                                <label>Pengelolaan</label>
+                                                <div class="custom-control custom-radio">
+                                                    <input type="checkbox" checked="checked">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <div class="form-group col-sm">
+                                                <label>Pertandingan</label>
+                                                <div class="custom-control custom-radio">
+                                                    <input type="checkbox" checked="checked">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="card-body p-1">
+                                            <div class="form-group col-sm">
+                                                <label>Program Binaan</label>
+                                                <div class="custom-control custom-radio">
+                                                    <input type="checkbox" checked="checked">
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Tahap</label>
+                                        <input class="form-control form-control-sm text-uppercase" value="@Model.JTahapAktiviti.Id - @Model.JTahapAktiviti.Perihal" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="card mb-2">
+                                <div class="card-body p-1">
+                                    <div class="form-group col-sm">
+                                        <label asp-for="FlCetak" class="control-label">Cetak</label>
+                                        <div class="custom-control custom-radio">
+                                            <input asp-for="FlCetak" type="radio" id="FlCetak1" name="FlCetak" class="custom-control-input" value="0" checked>
+                                            <label class="custom-control-label" for="FlCetak1">Belum</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input asp-for="FlCetak" type="radio" id="FlCetak2" name="FlCetak" class="custom-control-input" value="1">
+                                            <label class="custom-control-label" for="FlCetak">Sudah</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-2">
+                                <div class="card-body p-1">
+                                    <div class="form-group col-sm">
+                                        <label asp-for="FlPosting" class="control-label">Posting</label>
+                                        <div class="custom-control custom-radio">
+                                            <input asp-for="FlPosting" type="radio" id="FlPosting1" name="FlPosting" class="custom-control-input" value="0" checked>
+                                            <label class="custom-control-label" for="FlPosting">Belum</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input asp-for="FlPosting" type="radio" id="FlPosting2" name="FlPosting" class="custom-control-input" value="1">
+                                            <label class="custom-control-label" for="FlPosting">Sudah</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="card mb-2">
+                                <div class="card-body p-1">
+                                    <div class="form-group col-sm">
+                                        <label asp-for="FlPosting" class="control-label">Batal</label>
+                                        <div class="custom-control custom-radio">
+                                            <input asp-for="FlPosting" type="radio" id="FlBatal1" name="FlBatal1" class="custom-control-input" value="0" checked>
+                                            <label class="custom-control-label" for="FlBatal">Belum</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input asp-for="FlPosting" type="radio" id="FlBatal1" name="FlBatal" class="custom-control-input" value="1">
+                                            <label class="custom-control-label" for="FlBatal">Sudah</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+             
+            
+          </div>
+        </div></div>
+
+            @*<div>
+               
+                <hr />
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Ppn)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Ppn)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Penyertaan)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Penyertaan)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Pertandingan)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Pertandingan)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Pengelolaan)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Pengelolaan)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.ProgramBinaan)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.ProgramBinaan)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Tarikh)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Tarikh)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Aktiviti)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Aktiviti)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Tempat)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Tempat)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.JTahapId)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.JTahapId)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Penyedia)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Penyedia)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.TarSedia)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.TarSedia)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.JumKeseluruhan)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.JumKeseluruhan)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Penyokong)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Penyokong)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.StatusSokong)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.StatusSokong)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.TarSokong)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.TarSokong)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.JumSokong)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.JumSokong)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Pelulus)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Pelulus)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.StatusLulus)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.StatusLulus)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.TarLulus)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.TarLulus)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.JumLulus)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.JumLulus)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.FlPosting)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.FlPosting)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.FlCetak)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.FlCetak)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.JNegeri)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.JNegeri.Kod)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.JSukan)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.JSukan.Id)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.UserId)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.UserId)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.TarMasuk)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.TarMasuk)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.UserIdKemaskini)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.UserIdKemaskini)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.TarKemaskini)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.TarKemaskini)
+                    </dd>
+                </dl>
+            </div>*@
+    </div>
+<div>
+    @if (Model.FlPosting == 1)
+    {
+    }
+    else
+    {
+        @*<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>*@
+        <a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Batal</a>
+        <a asp-action="Lulus" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Lulus</a>
+    }
+    <a asp-action="Index">Kembali ke Indeks</a>
+</div>

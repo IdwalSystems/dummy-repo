@@ -197,7 +197,7 @@ namespace MSNK.Controllers
             PopulateTable(id);
             return View(akPO);
         }
-
+        // GET: AkPO/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -215,6 +215,17 @@ namespace MSNK.Controllers
             PopulateList();
             PopulateTable(id);
             return View(akPO);
+        }
+
+        // POST: AkPO/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var akPO = await _context.AkPO.FindAsync(id);
+            _context.AkPO.Remove(akPO);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         private void PopulateList()
@@ -648,17 +659,6 @@ namespace MSNK.Controllers
             PopulateTable(id);
             //PopulateCart();
             return View(akPO);
-        }
-
-        // POST: AkPO/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var akPO = await _context.AkPO.FindAsync(id);
-            _context.AkPO.Remove(akPO);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool AkPOExists(int id)

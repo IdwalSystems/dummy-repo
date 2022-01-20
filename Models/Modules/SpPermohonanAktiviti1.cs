@@ -13,17 +13,10 @@ namespace MSNK.Models.Modules
         public decimal Kadar { get; set; }
         public int Bil { get; set; }
         public decimal Bln { get; set; }
+        public decimal Jumlah { get; set; }
         public int SpPermohonanAktivitiId { get; set; }
 
         //relationship
         public AkCarta AkCarta { get; set; }
-
-
-        // log
-        public string UserId { get; set; }
-        public DateTime TarMasuk { get; set; }
-        public string UserIdKemaskini { get; set; }
-        public DateTime TarKemaskini { get; set; } = DateTime.Now;
-        // log end
     }
 }
