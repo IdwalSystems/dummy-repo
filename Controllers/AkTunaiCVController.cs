@@ -55,7 +55,7 @@ namespace MSNK.Controllers
             _cart = cart;
         }
         // GET: AkTunaiCV
-        [Authorize(Policy ="TR001")]
+        [Authorize(Policy = "TR001")]
         public async Task<IActionResult> Index(
             string searchString,
             string searchDate1,
@@ -161,12 +161,83 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiCV/Create
+        [Authorize(Policy ="TR001C")]
         public IActionResult Create()
         {
-            ViewData["AkPembekalId"] = new SelectList(_context.AkPembekal, "Id", "AkaunBank");
-            ViewData["AkTunaiRuncitId"] = new SelectList(_context.AkTunaiRuncit, "Id", "Id");
-            ViewData["SuPekerjaId"] = new SelectList(_context.SuPekerja, "Id", "Id");
+            // get latest no rujukan running number  
+            var kodKaunter = _context.AkTunaiRuncit.FirstOrDefault(x => x.KaunterPanjar == "10001");
+
+            if (kodKaunter == null)
+            {
+                TempData[SD.Error] = "Tiada kaunter panjar yang berdaftar lagi. Sila berbuat demikian pada modul Pemegang Tunai Runcit";
+                return RedirectToAction(nameof(Index));
+            }
+            var kaunter = kodKaunter.KaunterPanjar;
+            var year = DateTime.Now.Year.ToString();
+            string prefix = year + kaunter;
+            int x = 1;
+            string noRujukan = prefix + "000000";
+
+            var LatestNoRujukan = _context.AkTunaiCV
+                        .Where(x => x.Tahun == year && x.AkTunaiRuncit.KaunterPanjar == kodKaunter.KaunterPanjar)
+                        .Max(x => x.NoCV);
+
+            if (LatestNoRujukan == null)
+            {
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            else
+            {
+                x = int.Parse(LatestNoRujukan.Substring(14));
+                x++;
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+
+            // get latest no rujukan running number end
+            ViewBag.NoRujukan = noRujukan;
+            PopulateList();
+            CartEmpty();
             return View();
+        }
+
+        private void PopulateList()
+        {
+            List<AkTunaiRuncit> akTunaiRuncitList = _context.AkTunaiRuncit.OrderBy(b => b.KaunterPanjar).ToList();
+            ViewBag.akTunaiRuncit = akTunaiRuncitList;
+
+            List<AkPembekal> akPembekalList = _context.AkPembekal
+                .Include(b => b.JBank)
+                .OrderBy(b => b.KodSykt).ToList();
+            ViewBag.AkPembekal = akPembekalList;
+
+            List<SuPekerja> suPekerjaList = _context.SuPekerja
+                .OrderBy(b => b.NoGaji).ToList();
+            ViewBag.SuPekerja = suPekerjaList;
+
+            List<AkCarta> akCartaList = _context.AkCarta
+                .Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Where(b => b.JParas.Kod == "4")
+                .OrderBy(b => b.Kod)
+                .ToList();
+
+            ViewBag.AkCarta = akCartaList;
+
+        }
+
+        public JsonResult CartEmpty()
+        {
+            try
+            {
+                ViewBag.akTunaiCV1 = new List<int>();
+                _cart.Clear1();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
         }
 
         // POST: AkTunaiCV/Create
