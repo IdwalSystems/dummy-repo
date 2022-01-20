@@ -1,0 +1,27 @@
+﻿@model MSNK.Models.Modules.JTahapAktiviti
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Hapus</h1>
+
+<h3>Anda pasti untuk menghapuskan maklumat berikut?</h3>
+<div>
+    <h4>Tahap</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Perihal)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Perihal)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Kembali ke Senarai</a>
+    </form>
+</div>

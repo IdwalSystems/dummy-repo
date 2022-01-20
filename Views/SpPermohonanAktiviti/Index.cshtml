@@ -25,8 +25,8 @@
                 <div class="form-row">
                     <div class="col-sm-3 mb-2">
                         <select name="searchColumn" class="custom-select form-control-sm" id="searchColumn">
-                            <option value="NoPO">No Permohonan</option>
-                            <option value="NamaSykt">Nama Pemohon</option>
+                            <option value="NoPermohonan">No Permohonan</option>
+                            <option value="Ppn">Nama Pemohon</option>
                             <option selected value="@ViewBag.SearchColumn">Tarikh</option>
                         </select>
                     </div>
@@ -60,9 +60,12 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+               No Permohonan
+            </th>
 
             <th>
-               Nama Pemohon
+                Nama Pemohon
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Tarikh)
@@ -77,10 +80,7 @@
                 Cetak
             </th>
             <th>
-                Posting
-            </th>
-            <th>
-                Batal
+                Lulus
             </th>
         </tr>
     </thead>
@@ -88,6 +88,11 @@
         @foreach (var item in Model)
         {
         <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.NoPermohonan)
+            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.Ppn)
             </td>
@@ -124,7 +129,7 @@
             </td>
             <td>
             </td>
-           
+
             <td class="action-button">
                 <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
                 <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>

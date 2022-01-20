@@ -16,11 +16,21 @@
                     <div class="form-row">
                         <div class="col-md-4">
 
-                            @*<div class="form-group">
-                                <label asp-for="Ppn" class="control-label">No Rujukan</label><span class="text-danger control-label">*</span>
-                                <input asp-for="Ppn" class="form-control form-control-sm form-control-sm-custom" required />
-                                <span asp-validation-for="Ppn" class="text-danger"></span>
-                            </div>*@
+                            <div class="form-group">
+                                <label asp-for="JKWId" class="control-label">Kumpulan Wang</label>
+                                <select class="form-control form-control-sm" asp-for="JKWId" id="ddlKW">
+                                   <option value="" hidden>-- Pilih Kumpulan Wang --</option>
+                                    @foreach (var s in ViewBag.JKW)
+                                   {
+                                    <option value="@s.Id">@s.Perihal </option>
+                                   }
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="NoPermohonan" class="control-label">No Permohonan</label><span class="text-danger control-label">*</span>
+                                <input asp-for="NoPermohonan" class="form-control form-control-sm form-control-sm-custom" required id="txtNoPermohonan"/>
+                            </div>
 
                         </div>
                         <div class="col-md-12">
@@ -36,9 +46,8 @@
                     <div class="form-row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label asp-for="Tarikh" class="control-label">Tarikh</label><span class="text-danger control-label">*</span>
+                                <label asp-for="Tarikh" class="control-label">Tarikh Aktiviti</label><span class="text-danger control-label">*</span>
                                 <input asp-for="Tarikh" class="form-control form-control-sm" required />
-                                <span asp-validation-for="Tarikh" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -48,7 +57,7 @@
                                     <option value="" disabled selected>-- Pilih Negeri --</option>
                                     @foreach (var s in ViewBag.JNegeri)
                                     {
-                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                        <option value="@s.Id">@s.Perihal </option>
                                     }
                                 </select>
                                 <span asp-validation-for="JNegeriId" class="text-danger"></span>
@@ -58,10 +67,10 @@
                             <div class="form-group">
                                 <label asp-for="JSukanId" class="control-label">Sukan</label><span class="text-danger control-label">*</span>
                                 <select class="form-control form-control-sm select2" asp-for="JSukanId" required>
-                                    <option value="" disabled selected>-- Pilih Negeri --</option>
+                                    <option value="" disabled selected>-- Pilih Sukan --</option>
                                     @foreach (var s in ViewBag.JSukan)
                                     {
-                                        <option value="@s.Id">@s.Id - @s.Perihal </option>
+                                        <option value="@s.Id">@s.Perihal </option>
                                     }
                                 </select>
                                 <span asp-validation-for="JSukanId" class="text-danger"></span>
@@ -96,7 +105,8 @@
                                         <div class="form-group col-sm">
                                             <label>Penyertaan</label>
                                             <div class="custom-control custom-radio">
-                                                <input type="checkbox" checked="checked">
+                                                <input type="checkbox" data-val="true" id="Penyertaan" name="Penyertaan" value="true">
+                                                <input name="Penyertaan" type="hidden" value="false">
                                             </div>
 
                                         </div>
@@ -105,7 +115,8 @@
                                         <div class="form-group col-sm">
                                             <label>Pengelolaan</label>
                                             <div class="custom-control custom-radio">
-                                                <input type="checkbox" checked="checked">
+                                                <input type="checkbox" data-val="true" id="Pengelolaan" name="Pengelolaan" value="true">
+                                                <input name="Pengelolaan" type="hidden" value="false">
                                             </div>
 
                                         </div>
@@ -114,7 +125,8 @@
                                         <div class="form-group col-sm">
                                             <label>Pertandingan</label>
                                             <div class="custom-control custom-radio">
-                                                <input type="checkbox" checked="checked">
+                                                <input type="checkbox" data-val="true" id="Pertandingan" name="Pertandingan" value="true">
+                                                <input name="Pertandingan" type="hidden" value="false">
                                             </div>
 
                                         </div>
@@ -123,7 +135,8 @@
                                         <div class="form-group col-sm">
                                             <label>Program Binaan</label>
                                             <div class="custom-control custom-radio">
-                                                <input type="checkbox" checked="checked">
+                                                <input type="checkbox" data-val="true" id="ProgramBinaan" name="ProgramBinaan" value="true">
+                                                <input name="ProgramBinaan" type="hidden" value="false">
                                             </div>
 
                                         </div>
@@ -139,7 +152,7 @@
                                         <option value="" disabled selected>-- Pilih Tahap --</option>
                                         @foreach (var s in ViewBag.JTahapAktiviti)
                                         {
-                                            <option value="@s.Id">@s.Id - @s.Perihal </option>
+                                            <option value="@s.Id">@s.Perihal </option>
                                         }
                                     </select>
                                     <span asp-validation-for="JTahapId" class="text-danger"></span>

@@ -21,10 +21,13 @@ using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
+    [Authorize]
     public class SpPermohonanAktivitiController : Controller
 
 
     {
+
+        public const string modul = "SP001";
         private readonly IRepository<SpPermohonanAktiviti, int, string> _spPermohonanAktivitiRepo;
         private readonly ListViewIRepository<SpPermohonanAktiviti1, int> _spPermohonanAktiviti1Repo;
         private readonly ListViewIRepository<SpPermohonanAktiviti2, int> _spPermohonanAktiviti2Repo;
@@ -61,6 +64,56 @@ namespace MSNK.Controllers
             _tahapAktivitiRepo = tahapAktivitiRepository;
             //   _cart = cart;
         }
+
+        //Function Running Number
+        private string RunningNumber(SpPermohonanAktiviti data)
+        {
+            var kw = _context.JKW.FirstOrDefault(x => x.Id == data.JKWId);
+
+            var kumpulanWang = kw.Kod;
+            var year = DateTime.Now.Year.ToString();
+            //var year = data.Tahun;
+            string prefix = year + "/" + kumpulanWang + "/";
+            int x = 1;
+            string noRujukan = prefix + "000000";
+
+            var LatestNoRujukan = _context.SpPermohonanAktiviti
+                .Where(x => x.NoPermohonan.Substring(0, 9) == prefix)
+                .Max(x => x.NoPermohonan);
+            if (LatestNoRujukan == null)
+            {
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            else
+            {
+                x = int.Parse(LatestNoRujukan.Substring(12));
+                x++;
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            return noRujukan;
+        }
+        [HttpPost]
+        public JsonResult JsonGetKod(SpPermohonanAktiviti data)
+        {
+            try
+            {
+                var result = "";
+                if (data == null)
+                {
+                    result = "";
+                }
+                else
+                {
+                    result = RunningNumber(data);
+                }
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //End Function Running Number
 
         // GET: SpPermohonanAktiviti
         public async Task<IActionResult> Index(
@@ -136,35 +189,36 @@ namespace MSNK.Controllers
             return View(spPermohonanAktiviti);
         }
 
-        public async Task<IActionResult> Lulus(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var negeri = await _negeriRepo.GetById((int)id);
-            //var spPermohonanAktiviti = await _context.SpPermohonanAktiviti
-            //    .Include(s => s.JNegeri)
-            //    .Include(s => s.JSukan)
-            //    .Include(s => s.JTahapAktiviti)
-            //    .FirstOrDefaultAsync(m => m.Id == id);
-            var spPermohonanAktiviti = await _context.SpPermohonanAktiviti
-                .Include(s => s.JNegeri)
-                .Include(s => s.JSukan)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            spPermohonanAktiviti.JTahapAktiviti = await _tahapAktivitiRepo.GetById(spPermohonanAktiviti.JTahapId);
-            if (spPermohonanAktiviti == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Lulus(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var negeri = await _negeriRepo.GetById((int)id);
+        //    var spPermohonanAktiviti = await _context.SpPermohonanAktiviti
+        //        .Include(s => s.JNegeri)
+        //        .Include(s => s.JSukan)
+        //        .Include(s => s.JTahapAktiviti)
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    var spPermohonanAktiviti = await _context.SpPermohonanAktiviti
+        //        .Include(s => s.JNegeri)
+        //        .Include(s => s.JSukan)
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    spPermohonanAktiviti.JTahapAktiviti = await _tahapAktivitiRepo.GetById(spPermohonanAktiviti.JTahapId);
+        //    if (spPermohonanAktiviti == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(spPermohonanAktiviti);
-        }
+        //    return View(spPermohonanAktiviti);
+        //}
 
         // GET: SpPermohonanAktiviti/Create
         public IActionResult Create()
         {
             PopulateList();
+            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod");
             ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod");
             ViewData["JSukanId"] = new SelectList(_context.JSukan, "Id", "Id");
             ViewData["JTahapId"] = new SelectList(_context.JTahapAktiviti, "Id", "Id");
@@ -176,17 +230,53 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Ppn,Penyertaan,Pertandingan,Pengelolaan,ProgramBinaan,JNegeriId,JSukanId,Tarikh,Aktiviti,Tempat,JTahapId,Penyedia,TarSedia,JumKeseluruhan,Penyokong,StatusSokong,TarSokong,JumSokong,Pelulus,StatusLulus,TarLulus,JumLulus,FlPosting,FlCetak,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] SpPermohonanAktiviti spPermohonanAktiviti)
+        public async Task<IActionResult> Create(SpPermohonanAktiviti spPermohonanAktiviti, int JKWId)
         {
+
+            SpPermohonanAktiviti m = new SpPermohonanAktiviti();
+            var tahap = _context.JTahapAktiviti.FirstOrDefault(x => x.Id == spPermohonanAktiviti.JTahapId);
+            var sukan = _context.JSukan.FirstOrDefault(x => x.Id == spPermohonanAktiviti.JSukanId);
+            var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
+
             if (ModelState.IsValid)
             {
-                _context.Add(spPermohonanAktiviti);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (spPermohonanAktiviti != null && JKWId != 0)
+                {
+
+                    m.JKWId = JKWId;
+                    m.NoPermohonan = RunningNumber(spPermohonanAktiviti);
+                    m.Ppn = spPermohonanAktiviti.Ppn;
+                    m.Tarikh = spPermohonanAktiviti.Tarikh;
+                    m.Penyertaan = spPermohonanAktiviti.Penyertaan;
+                    m.Pertandingan = spPermohonanAktiviti.Pertandingan;
+                    m.Pengelolaan = spPermohonanAktiviti.Pengelolaan;
+                    m.ProgramBinaan = spPermohonanAktiviti.ProgramBinaan;
+                    m.JNegeriId = spPermohonanAktiviti.JNegeriId;
+                    m.JSukan = sukan;
+                    m.Tarikh = spPermohonanAktiviti.Tarikh;
+                    m.Aktiviti = spPermohonanAktiviti.Aktiviti;
+                    m.Tempat = spPermohonanAktiviti.Tempat;
+                    m.JTahapAktiviti = tahap;
+                    m.FlPosting = 0;
+                    //m.TarikhPosting = spPermohonanAktiviti.TarikhPosting;
+                    //m.FlBatal = 0;
+                    m.FlCetak = 0;
+                    //m.UserId = user.UserName;
+                    m.TarMasuk = DateTime.Now;
+
+                    //m.AkPO1 = _cart.Lines1.ToArray();
+                    //m.AkPO2 = _cart.Lines2.ToArray();
+
+                    await _spPermohonanAktivitiRepo.Insert(m);
+
+                    await _context.SaveChangesAsync();
+
+                    //CartEmpty();
+                    TempData[SD.Success] = "Maklumat Borang Permohonan berjaya ditambah";
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", spPermohonanAktiviti.JNegeriId);
-            ViewData["JSukanId"] = new SelectList(_context.JSukan, "Id", "Id", spPermohonanAktiviti.JSukanId);
-            ViewData["JTahapId"] = new SelectList(_context.JTahapAktiviti, "Id", "Id", spPermohonanAktiviti.JTahapId);
+
             PopulateList();
             return View(spPermohonanAktiviti);
         }
@@ -296,6 +386,15 @@ namespace MSNK.Controllers
 
             List<JTahapAktiviti> tahapAktivitiList = _context.JTahapAktiviti.OrderBy(b => b.Id).ToList();
             ViewBag.JTahapAktiviti = tahapAktivitiList;
+
+            List<AkCarta> akCartaList = _context.AkCarta
+                .Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Where(b => b.JParas.Kod == "4")
+                .OrderBy(b => b.Kod)
+                .ToList();
+
+            ViewBag.AkCarta = akCartaList;
         }
 
         private void PopulateTable(int? id)

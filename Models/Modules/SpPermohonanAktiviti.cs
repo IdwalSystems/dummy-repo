@@ -12,10 +12,10 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         public string NoPermohonan { get; set; }
         public string Ppn { get; set; }
-        public int Penyertaan { get; set; }
-        public int Pertandingan { get; set; }
-        public int Pengelolaan { get; set; }
-        public int ProgramBinaan { get; set; }
+        public bool Penyertaan { get; set; }
+        public bool Pertandingan { get; set; }
+        public bool Pengelolaan { get; set; }
+        public bool ProgramBinaan { get; set; }
         public int JNegeriId { get; set; }
         public int JSukanId { get; set; }
         public string Tarikh { get; set; }

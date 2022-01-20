@@ -1,5 +1,66 @@
 ﻿<script type="text/javascript">
 
+    $(document).ready(function () {
+        $.validator.setDefaults({
+            errorElement: "span",
+            errorClass: "help-block",
+            //	validClass: 'stay',
+            highlight: function (element, errorClass) {
+                $(element).addClass(errorClass); //.removeClass(errorClass);
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            unhighlight: function (element, errorClass) {
+                $(element).removeClass(errorClass); //.addClass(validClass);
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+            },
+
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+
+            },
+
+        });
+    });
+    //Tukar running number berdasarkan KW
+    //$("body").on('change', "#txtTahun", function () {
+    //    RunningNumber();
+    //});
+
+    $("body").on('change', "#ddlKW", function () {
+        RunningNumber();
+    });
+
+    function RunningNumber() {
+
+        //var tahun = $("#txtTahun").val();
+        var kw = $("#ddlKW").val();
+
+        if (kw != 0) {
+            var SpPermohonaAktiviti = {
+                //Tahun: tahun,
+                JKWId: kw
+            };
+
+            $.ajax({
+                type: "POST",
+                //url: "/AkPO/JsonGetKod",
+                url: '@Url.Action("JsonGetKod", "SpPermohonanAktiviti")',
+                data: SpPermohonaAktiviti,
+                dataType: "json",
+                success: function (msg) {
+                    $("#txtNoPermohonan").val(msg.record);
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+
     // onchange CaraBayar
     $("body").on('change', "#ddlCaraBayar", function () {
         var caraBayar = $("#ddlCaraBayar").val();
@@ -486,31 +547,7 @@
         }, false);
     })();
 
-    $(document).ready(function () {
-        $.validator.setDefaults({
-            errorElement: "span",
-            errorClass: "help-block",
-            //	validClass: 'stay',
-            highlight: function (element, errorClass) {
-                $(element).addClass(errorClass); //.removeClass(errorClass);
-                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-            },
-            unhighlight: function (element, errorClass) {
-                $(element).removeClass(errorClass); //.addClass(validClass);
-                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-            },
 
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-
-            },
-
-        });
-    });
     //validation form end
 
     // check if jumlahObjek is equal to jumlahUrusniaga
