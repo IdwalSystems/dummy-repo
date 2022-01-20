@@ -391,8 +391,6 @@ namespace MSNK.Controllers
 
                 var akT1 = _cart.Lines1.Where(x => x.AkCartaId == akPV1.AkCartaId).FirstOrDefault();
 
-                var user = _userManager.GetUserName(User);
-
                 if (akT1 != null)
                 {
                     _cart.RemoveItem1(akPV1.AkCartaId);
@@ -826,7 +824,7 @@ namespace MSNK.Controllers
         }
         //on change kod Pekerja controller end
 
-        // on change kod Pekerja controller
+        // json empty Cart controller
         [HttpPost]
         public JsonResult JsonEmptyCart()
         {
@@ -841,7 +839,7 @@ namespace MSNK.Controllers
                 return Json(new { result = "Error", message = ex.Message });
             }
         }
-        //on change kod Pekerja controller end
+        // json empty cart end
 
         // POST: AkPV/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

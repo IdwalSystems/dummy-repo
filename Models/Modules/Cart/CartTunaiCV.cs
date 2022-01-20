@@ -9,23 +9,23 @@ namespace MSNK.Models.Modules.Cart
     {
         //TunaiCV1
 
-        private List<AkTerima1> collection1 = new List<AkTerima1>();
+        private List<AkTunaiCV1> collection1 = new List<AkTunaiCV1>();
 
         public virtual void AddItem1(
-            int akTerimaId,
+            int akTunaiCVId,
             decimal amaun,
             int akCartaId
             )
         {
-            AkTerima1 line = collection1
+            AkTunaiCV1 line = collection1
             .Where(p => p.AkCartaId == akCartaId)
             .FirstOrDefault();
 
             if (line == null)
             {
-                collection1.Add(new AkTerima1
+                collection1.Add(new AkTunaiCV1
                 {
-                    AkTerimaId = akTerimaId,
+                    AkTunaiCVId = akTunaiCVId,
                     Amaun = amaun,
                     AkCartaId = akCartaId
 
@@ -39,7 +39,7 @@ namespace MSNK.Models.Modules.Cart
 
         public virtual void Clear1() => collection1.Clear();
 
-        public virtual IEnumerable<AkTerima1> Lines1 => collection1;
+        public virtual IEnumerable<AkTunaiCV1> Lines1 => collection1;
         // TunaiCV1 End
     }
 }

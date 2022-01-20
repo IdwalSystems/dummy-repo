@@ -34,9 +34,16 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
-        public Task<AkTunaiCV> GetById(int id)
+        public async Task<AkTunaiCV> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await context.AkTunaiCV
+                .Include(b => b.SuPekerja)
+                .Include(b => b.AkPembekal)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
+                .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
+                .Where(b => b.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public Task<AkTunaiCV> GetByString(string id)
@@ -44,19 +51,21 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public Task<AkTunaiCV> Insert(AkTunaiCV entity)
+        public async Task<AkTunaiCV> Insert(AkTunaiCV entity)
         {
-            throw new NotImplementedException();
+            await context.AkTunaiCV.AddAsync(entity);
+            return entity;
         }
 
-        public Task Save()
+        public async Task Save()
         {
-            throw new NotImplementedException();
+            await context.SaveChangesAsync();
         }
 
-        public Task Update(AkTunaiCV entity)
+        public async Task Update(AkTunaiCV entity)
         {
-            throw new NotImplementedException();
+            context.Update(entity);
+            await context.SaveChangesAsync();
         }
     }
 }

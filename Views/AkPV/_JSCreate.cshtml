@@ -175,7 +175,6 @@
             $("#ddlKodPembekal").prop('disabled', false);
 
             //empty field
-            //empty field
             $("#txtNoKP").val('');
             $("#Nama").val('');
             $("#txtAlamat1").val('');
@@ -184,6 +183,9 @@
             $("#txtNoAkaunBank").val('');
             $("#txtTelefon").val('');
             $("#txtEmel").val('');
+
+            $("#btnSave").show();
+            EmptyCart();
         }
     });
 
@@ -222,7 +224,7 @@
             });
         }
     }
-    //on change Kod Pembekal end
+    //on change Kod Pekerja end
 
     // onchange no Inbois pembekal
     $("body").on('change', "#txtAkBelian", function () {
@@ -374,7 +376,7 @@
                     var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                     cell.append(btnRemove1);
 
-                    var AkBelian1 = {
+                    var AkPV1 = {
                         AkCartaId: txtKodAkaun.val(),
                         Amaun: txtAmaunObjek.val()
                     }
@@ -383,7 +385,7 @@
                         type: "POST",
                         //url: "/AkPV/SaveAkPV1",
                         url: '@Url.Action("SaveAkPV1", "AkPV")',
-                        data: AkBelian1,
+                        data: AkPV1,
                         dataType: "json",
                         success: function (r) {
                             //Clear the TextBoxes.
@@ -410,9 +412,10 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var name = $("TD", row).eq(0).html();
+        var namaAkaun = $("TD", row).eq(1).html();
         var amaun = $("TD", row).eq(2).html();
         var txtJumlah = $("#jumlahObjek");
-        if (confirm("Hapus kod Akaun : " + name + " ?")) {
+        if (confirm("Hapus kod Akaun : " + namaAkaun + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblObjek")[0];
 

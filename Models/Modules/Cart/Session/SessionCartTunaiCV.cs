@@ -23,26 +23,26 @@ namespace MSNK.Models.Modules.Cart.Session
 
         //Terima1
         public override void AddItem1(
-            int akTerimaId,
+            int akTunaiCVId,
             decimal amaun,
             int akCartaId
            )
         {
-            base.AddItem1(akTerimaId,
+            base.AddItem1(akTunaiCVId,
                           amaun,
                           akCartaId);
 
-            Session.SetJson("CartTerima", this);
+            Session.SetJson("CartTunaiCV", this);
         }
         public override void RemoveItem1(int id)
         {
             base.RemoveItem1(id);
-            Session.SetJson("CartTerima", this);
+            Session.SetJson("CartTunaiCV", this);
         }
         public override void Clear1()
         {
             base.Clear1();
-            Session.Remove("CartTerima");
+            Session.Remove("CartTunaiCV");
         }
         //Terima1 End
     }
