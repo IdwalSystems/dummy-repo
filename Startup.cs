@@ -80,8 +80,11 @@ namespace MSNK
             services.AddTransient<IRepository<JCaraBayar, int, string>, JCaraBayarRepository>();
             services.AddTransient<IRepository<AbBukuVot, int, string>, AbBukuVotRepository>();
             services.AddTransient<IRepository<JJantina, int, string>, JJantinaRepository>();
+            //TUNAI RUNCIT
             services.AddTransient<IRepository<AkTunaiRuncit, int, string>, AkTunaiRuncitRepository>();
             services.AddTransient<IRepository<AkTunaiCV, int, string>, AkTunaiCVRepository>();
+            services.AddTransient<IRepository<AkTunaiLejar, int, string>, AkTunaiLejarRepository>();
+            //TUNAI RUNCIT END
             //PERMOHONAN AKTIVITI
             services.AddTransient<IRepository<JTahapAktiviti, int, string>, JTahapAktivitiRepository>();
             services.AddTransient<IRepository<JSukan, int, string>, JSukanRepository>();

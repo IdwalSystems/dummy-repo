@@ -51,7 +51,7 @@
                     Kod Akaun
                 </th>
                 <th>
-                    Baki Awal
+                    Baki
                 </th>
                 <th width="5%"></th>
             </tr>
@@ -71,7 +71,7 @@
                     @item.KodAkaun - @item.Perihal
                 </td>
                 <td class="text-right">
-                    @Convert.ToDecimal(item.BakiAwal).ToString("#,##0.00")
+                    @Convert.ToDecimal(item.BakiLejarPanjar).ToString("#,##0.00")
                 </td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id"

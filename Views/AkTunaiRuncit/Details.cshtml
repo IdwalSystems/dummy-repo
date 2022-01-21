@@ -98,9 +98,10 @@
                         <h6>Lejar Tunai Runcit</h6>
                     </div>
                     <div class="card-body">
-                        <table id="tblTunaiLejar" class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%">
+                        <table id="tblTunaiLejar" class="table table-bordered table-hover text-nowrap table-sm nowrap compact table-responsive" width="100%">
                             <thead class="table-secondary">
                                 <tr>
+                                    <th>Bil</th>
                                     <th>Tarikh</th>
                                     <th>KW</th>
                                     <th>Akaun</th>
@@ -115,6 +116,7 @@
                                 @foreach (var item in ViewBag.akTunaiLejar)
                                 {
                                 <tr id="@item.Id">
+                                    <td></td>
                                     <td>@item.Tarikh.ToString("dd/MM/yyyy")</td>
                                     <td>@item.JKW.Kod</td>
                                     <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>

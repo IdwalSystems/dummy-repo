@@ -207,9 +207,9 @@ namespace MSNK.Data
                     .IsRequired();
 
             modelBuilder.Entity<AkPV>()
-                .HasOne(m => m.SuPekerja!)
+                .HasOne(m => m.AkTunaiRuncit!)
                 .WithMany(t => t.AkPV)
-                .HasForeignKey(m => m.SuPekerjaId)
+                .HasForeignKey(m => m.AkTunaiRuncitId)
                 .OnDelete(DeleteBehavior.NoAction);
             //AKPV end
             //AkTunaiRuncit

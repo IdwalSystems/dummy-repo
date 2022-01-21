@@ -26,6 +26,7 @@ namespace MSNK.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkTunaiCV, int, string> _akTunaiCVRepo;
         private readonly IRepository<AkTunaiRuncit, int, string> _akTunaiRuncitRepo;
+        private readonly IRepository<AkTunaiLejar, int, string> _akTunaiLejarRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;
         private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
         private readonly IRepository<AkPembekal, int, string> _akPembekalRepo;
@@ -37,6 +38,8 @@ namespace MSNK.Controllers
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
             IRepository<AkTunaiCV, int, string> akTunaiCVRepository,
+            IRepository<AkTunaiRuncit, int, string> akTunaiRuncitRepository,
+            IRepository<AkTunaiLejar, int, string> akTunaiLejarRepository,
             IRepository<SuPekerja, int, string> suPekerjaRepository,
             IRepository<JKW, int, string> kwRepository,
             IRepository<AkPembekal, int, string> akPembekalRepository,
@@ -48,6 +51,8 @@ namespace MSNK.Controllers
             _appLog = appLog;
             _userManager = userManager;
             _akTunaiCVRepo = akTunaiCVRepository;
+            _akTunaiRuncitRepo = akTunaiRuncitRepository;
+            _akTunaiLejarRepo = akTunaiLejarRepository;
             _suPekerjaRepo = suPekerjaRepository;
             _kwRepo = kwRepository;
             _akPembekalRepo = akPembekalRepository;
@@ -55,7 +60,7 @@ namespace MSNK.Controllers
             _cart = cart;
         }
         // GET: AkTunaiCV
-        [Authorize(Policy = "TR001")]
+        [Authorize(Policy = "TR002")]
         public async Task<IActionResult> Index(
             string searchString,
             string searchDate1,
@@ -133,7 +138,10 @@ namespace MSNK.Controllers
                     Tarikh = item.Tarikh,
                     Jumlah = item.Jumlah,
                     Penerima = item.Penerima,
-                    Catatan = item.Catatan
+                    Catatan = item.Catatan,
+                    FlPosting = item.FlPosting,
+                    FlCetak = item.FlCetak,
+                    FlBatal = item.FlBatal
                 });
             }
             return View(viewModel);
@@ -148,7 +156,6 @@ namespace MSNK.Controllers
             }
 
             var akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
-
 
             if (akTunaiCV == null)
             {
@@ -602,6 +609,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiCV/Edit/5
+        [Authorize(Policy = "TR002E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -645,6 +653,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "TR002E")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,AkTunaiCV akTunaiCV, int AkTunaiRuncitId, int? AkPembekalId, int? SuPekerjaId)
         {
@@ -664,20 +673,24 @@ namespace MSNK.Controllers
                     switch (akTunaiCV.KategoriPenerima)
                     {
                         case 1:
-                            var pembekal = akTunaiCV.AkPembekal;
+                            var pembekal = _context.AkPembekal.Find(akTunaiCV.AkPembekalId);
+                            akTunaiCV.SuPekerjaId = null;
                             akTunaiCV.Penerima = pembekal.NamaSykt;
                             akTunaiCV.Alamat1 = pembekal.Alamat1;
                             akTunaiCV.Alamat2 = pembekal.Alamat2;
                             akTunaiCV.Alamat3 = pembekal.Alamat3;
                             break;
                         case 2:
-                            var pekerja = akTunaiCV.SuPekerja;
+                            var pekerja = _context.SuPekerja.Find(akTunaiCV.SuPekerjaId);
+                            akTunaiCV.AkPembekalId = null;
                             akTunaiCV.Penerima = pekerja.Nama;
                             akTunaiCV.Alamat1 = pekerja.Alamat1;
                             akTunaiCV.Alamat2 = pekerja.Alamat2;
                             akTunaiCV.Alamat3 = pekerja.Alamat3;
                             break;
                         default:
+                            akTunaiCV.AkPembekalId = null;
+                            akTunaiCV.SuPekerjaId = null; 
                             break;
                     }
 
@@ -756,6 +769,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiCV/Delete/5
+        [Authorize(Policy = "TR002D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -763,21 +777,21 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akTunaiCV = await _context.AkTunaiCV
-                .Include(a => a.AkPembekal)
-                .Include(a => a.AkTunaiRuncit)
-                .Include(a => a.SuPekerja)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
+
             if (akTunaiCV == null)
             {
                 return NotFound();
             }
 
+            PopulateList();
+            PopulateTable(id);
             return View(akTunaiCV);
         }
 
         // POST: AkTunaiCV/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "TR002D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -791,5 +805,166 @@ namespace MSNK.Controllers
         {
             return _context.AkTunaiCV.Any(e => e.Id == id);
         }
+
+        // posting function
+        [Authorize(Policy = "TR002T")]
+        public async Task<IActionResult> Posting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                AkTunaiCV akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
+
+                List<AkTunaiCV1> akTunaiCV1 = akTunaiCV.AkTunaiCV1.ToList();
+
+                var akTunaiLejarDuplicate = await _context.AkTunaiLejar.Where(x => x.NoRujukan == akTunaiCV.NoCV).FirstOrDefaultAsync();
+                if (akTunaiLejarDuplicate != null)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+                }
+                else
+                {
+                    //find latest baki
+                    AkTunaiLejar akT = _context.AkTunaiLejar
+                    .Where(x => x.AkTunaiRuncitId == akTunaiCV.AkTunaiRuncitId)
+                    .OrderByDescending(x => x.NoRujukan)
+                    .ThenByDescending(x => x.Tarikh)
+                    .ThenByDescending(x => x.Id)
+                    .FirstOrDefault();
+
+                    decimal bakiAkhir = 0;
+
+                    if (akT != null)
+                    {
+                        bakiAkhir = akT.Baki;
+                    }
+                    else
+                    {
+                        TempData[SD.Warning] = "Baki awal belum dimasukkan ke dalam lejar tunai bagi kod kaunter panjar " + akTunaiCV.AkTunaiRuncit.KaunterPanjar+ ". Anda diminta untuk membuat baucer pembayaran melalui paparan ini.";
+                        return RedirectToAction(nameof(AkPVController.Create), "AkPV");
+                    }
+                    
+                    //posting operation start here
+                    foreach (AkTunaiCV1 item in akTunaiCV1)
+                    {
+
+                        //insert into AkTunaiLejar
+                        AkTunaiLejar akTunaiLejar = new AkTunaiLejar()
+                        {
+                            JKWId = akTunaiCV.AkTunaiRuncit.JKWId,
+                            AkTunaiRuncitId = akTunaiCV.AkTunaiRuncitId,
+                            Tarikh = akTunaiCV.Tarikh,
+                            AkCartaId = item.AkCartaId,
+                            NoRujukan = akTunaiCV.NoCV,
+                            Debit = 0,
+                            Kredit = item.Amaun,
+                            Baki = bakiAkhir - item.Amaun
+                        }; 
+                        // insert into AkTunaiLejar end
+
+                        await _akTunaiLejarRepo.Insert(akTunaiLejar);
+                    }
+
+                    //update posting status in akTerima
+                    akTunaiCV.FlPosting = 1;
+                    akTunaiCV.TarikhPosting = DateTime.Now;
+                    await _akTunaiCVRepo.Update(akTunaiCV);
+
+                    //insert applog
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "T";
+                    appLog.LgOperation = "Posting";
+                    appLog.LgNote = modul + " Tunai Keluar - Posting";
+                    appLog.NoRujukan = akTunaiCV.NoCV;
+                    appLog.Jumlah = akTunaiCV.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+
+                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // posting function end
+
+        // unposting function
+        [Authorize(Policy = "TR002UT")]
+        public async Task<IActionResult> UnPosting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkTunaiCV akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
+
+                List<AkTunaiLejar> akTunaiLejar = _context.AkTunaiLejar.Where(x => x.NoRujukan == akTunaiCV.NoCV).ToList();
+
+                if (akTunaiLejar == null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //unposting operation start here
+                    //delete data from akTunaiLejar
+                    foreach (AkTunaiLejar item in akTunaiLejar)
+                    {
+                        await _akTunaiLejarRepo.Delete(item.Id);
+                    }
+
+                    //update posting status in akTerima
+                    akTunaiCV.FlPosting = 0;
+                    akTunaiCV.TarikhPosting = null;
+                    await _akTunaiCVRepo.Update(akTunaiCV);
+
+                    //insert applog
+                    var user = await _userManager.GetUserAsync(User);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "UT";
+                    appLog.LgOperation = "UnPosting";
+                    appLog.LgNote = modul + " Tunai Keluar - UnPosting";
+                    appLog.NoRujukan = akTunaiCV.NoCV;
+                    appLog.Jumlah = akTunaiCV.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                    //unposting operation end
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // unposting function end
     }
 }

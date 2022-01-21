@@ -12,7 +12,7 @@
                 <h5 class="text-left">Baucer Pembayaran - @ViewData["Title"]</h5>
             </div>
             <div class="card-body">
-                <div class="form-row">
+                <div class="form-row ">
                     <div class="col-lg-10">
                         <div class="form-row">
 
@@ -42,7 +42,7 @@
                             </div>
 
                         </div>
-                        @switch (Model.FlJenisBaucer)
+                        @switch (Model.FlKategoriPenerima)
                         {
                             case 1:
                                 <div class="form-row">
@@ -163,6 +163,33 @@
                             <label asp-for="Perihal" class="control-label"></label>
                             <textarea asp-for="Perihal" class="form-control form-control-sm text-uppercase" rows="2" readonly> @Model.Perihal</textarea>
                         </div>
+                        <div class="card box-shadow mb-3 mt-2">
+                            <div class="card-header">
+                                <h6>Maklumat Panjar</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-md-6">
+
+                                        <label asp-for="AkTunaiRuncitId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                        <select class="form-control form-control-sm" asp-for="AkTunaiRuncitId" disabled id="ddlTunaiRuncit">
+                                            <option value="0" selected>-- Pilih Kaunter Panjar --</option>
+                                            @foreach (var s in ViewBag.AkTunaiRuncit)
+                                            {
+                                                <option value="@s.Id">@s.KaunterPanjar (@s.AkCarta.Kod - @s.AkCarta.Perihal )</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="NoRekup" class="control-label"></label>
+                                            <input asp-for="NoRekup" class="form-control form-control-sm text-uppercase" id="txtNoRekup" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-2 pb-3">
                         <div class="card mb-2">
@@ -176,11 +203,31 @@
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer2" name="FlJenisBaucer" class="custom-control-input" value="1">
-                                        <label class="custom-control-label" for="FlJenisBaucer2">Pembekal</label>
+                                        <label class="custom-control-label" for="FlJenisBaucer2">Rekupan</label>
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="2">
-                                        <label class="custom-control-label" for="FlJenisBaucer3">Pekerja</label>
+                                        <label class="custom-control-label" for="FlJenisBaucer3">Akruan/AP/AKB</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+
+                                <div class="form-group col-sm">
+                                    <label class="control-label">Kategori Penerima</label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlKategoriPenerima" type="radio" id="FlKategoriPenerima1" name="FlKategoriPenerima" class="custom-control-input" value="0" checked>
+                                        <label class="custom-control-label" for="FlKategoriPenerima1">Am</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlKategoriPenerima" type="radio" id="FlKategoriPenerima2" name="FlKategoriPenerima" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="FlKategoriPenerima2">Pembekal</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlKategoriPenerima" type="radio" id="FlKategoriPenerima3" name="FlKategoriPenerima" class="custom-control-input" value="2">
+                                        <label class="custom-control-label" for="FlKategoriPenerima3">Pekerja</label>
                                     </div>
                                 </div>
                             </div>
@@ -277,7 +324,7 @@
                 @*table Objek end*@
 
                 @*table Inbois*@
-                @if (Model.FlJenisBaucer == 1)
+                @if (Model.FlKategoriPenerima == 1)
                 {
                     <div class="card box-shadow mb-3" id="cardInbois">
                         <div class="card-header">

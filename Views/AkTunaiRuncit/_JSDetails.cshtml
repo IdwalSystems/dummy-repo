@@ -1,9 +1,12 @@
 ﻿<script type="text/javascript">
     $(document).ready(function () {
 
-        var table = $('.table').DataTable({
+        var table = $('#tblTunaiLejar').DataTable({
             "paging": false,
-            rowReorder: false,
+            rowReorder: true,
+            columnDefs: [
+                { orderable: false, targets: '_all' }
+            ],
             "language": {
                 "emptyTable": "Tiada data wujud buat masa ini"
             },

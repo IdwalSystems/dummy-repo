@@ -57,6 +57,20 @@ namespace MSNK.Controllers
 
             foreach (AkTunaiRuncit item in akTunaiRuncit)
             {
+                AkTunaiLejar akTunaiLejar = _context.AkTunaiLejar
+                    .Where(x => x.AkTunaiRuncitId == item.Id)
+                    .OrderByDescending(x => x.NoRujukan)
+                    .ThenByDescending(x=> x.Tarikh)
+                    .ThenByDescending(x=> x.Id)
+                    .FirstOrDefault();
+
+                decimal baki = 0;
+
+                if (akTunaiLejar != null)
+                {
+                    baki = akTunaiLejar.Baki;
+                }
+
                 viewModel.Add(new AkTunaiRuncitViewModel
                 {
                     Id = item.Id,
@@ -64,7 +78,7 @@ namespace MSNK.Controllers
                     KodRujukan = item.KaunterPanjar,
                     KodAkaun = item.AkCarta.Kod,
                     Perihal = item.AkCarta.Perihal,
-                    BakiLejarPanjar = 0 
+                    BakiLejarPanjar = baki
                 });
             }
             return View(viewModel);

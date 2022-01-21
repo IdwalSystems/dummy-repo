@@ -33,6 +33,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkBelian, int, string> _akBelianRepo;
         private readonly IRepository<AkPembekal, int, string> _akPembekalRepo;
         private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
+        private readonly IRepository<AkTunaiRuncit, int, string> _akTunaiRuncitRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<AkBank, int, string> _akBankRepo;
@@ -50,6 +51,7 @@ namespace MSNK.Controllers
             IRepository<AkBelian, int, string> akBelian,
             IRepository<AkPembekal, int, string> akPembekal,
             IRepository<SuPekerja, int, string> suPekerja,
+            IRepository<AkTunaiRuncit, int, string> akTunaiRuncitRepository,
             IRepository<JKW, int, string> kwRepo,
             IRepository<AkCarta, int, string> akCartaRepository,
             IRepository<AkBank, int, string> akBankRepository,
@@ -67,6 +69,7 @@ namespace MSNK.Controllers
             _akBelianRepo = akBelian;
             _akPembekalRepo = akPembekal;
             _suPekerjaRepo = suPekerja;
+            _akTunaiRuncitRepo = akTunaiRuncitRepository;
             _kwRepo = kwRepo;
             _akCartaRepo = akCartaRepository;
             _akBankRepo = akBankRepository;
@@ -163,7 +166,7 @@ namespace MSNK.Controllers
                     FlPosting = item.FlPosting,
                     FlCetak = item.FlCetak,
                     JumlahInbois = jumlahInbois,
-                    FlJenisBaucer = item.FlJenisBaucer
+                    FlKategoriPenerima = item.FlKategoriPenerima
                 }
                 );
             }
@@ -196,6 +199,9 @@ namespace MSNK.Controllers
                 .OrderBy(b => b.Kod)
                 .ToList();
             ViewBag.AkCarta = akCartaList;
+
+            List<AkTunaiRuncit> akTunaiRuncitList = _context.AkTunaiRuncit.ToList();
+            ViewBag.AkTunaiRuncit = akTunaiRuncitList;
 
             List<AkBank> akBankList = _context.AkBank.Include(b => b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
@@ -641,7 +647,7 @@ namespace MSNK.Controllers
             akPVView.Jumlah = akPV.Jumlah;
             akPVView.TarikhPosting = akPV.TarikhPosting;
 
-            switch (akPV.FlJenisBaucer)
+            switch (akPV.FlKategoriPenerima)
             {
                 //pembekal
                 case 1:
@@ -689,7 +695,9 @@ namespace MSNK.Controllers
             akPVView.FlPosting = akPV.FlPosting;
             akPVView.FlCetak = akPV.FlCetak;
             akPVView.FlBatal = akPV.FlBatal;
+            akPVView.FlKategoriPenerima = akPV.FlKategoriPenerima;
             akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
+            akPVView.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
 
             akPVView.AkPV1 = akPV.AkPV1;
             foreach(AkPV2 item in akPV.AkPV2)
@@ -847,11 +855,12 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "PV001C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkPV akPV, int JKWId, int? AkPembekalId, int? SuPekerjaId, int AkBankId, int JCaraBayarId, decimal JumlahInbois)
+        public async Task<IActionResult> Create(AkPV akPV, int JKWId, int? AkPembekalId, int? SuPekerjaId, int AkBankId, int JCaraBayarId, decimal JumlahInbois, int? AkTunaiRuncitId)
         {
             AkPV m = new AkPV();
             var pembekal = _context.AkPembekal.Find(AkPembekalId);
             var pekerja = _context.SuPekerja.Find(SuPekerjaId);
+            var tunaiRuncit = _context.AkTunaiRuncit.Find(AkTunaiRuncitId);
             //check if user fil in both pekerja and pembekal
             if (pembekal != null && pekerja != null)
             {
@@ -863,6 +872,12 @@ namespace MSNK.Controllers
             }            
 
             var user = await _userManager.GetUserAsync(User);
+
+            if (tunaiRuncit != null)
+            {
+                akPV.FlJenisBaucer = 1;
+                akPV.AkTunaiRuncitId = AkTunaiRuncitId;
+            }
 
             if (pembekal != null)
             {
@@ -883,7 +898,7 @@ namespace MSNK.Controllers
                 akPV.Telefon = pembekal.Telefon1;
                 akPV.Emel = pembekal.Emel;
                 akPV.NoAkaunBank = pembekal.AkaunBank;
-                akPV.FlJenisBaucer = 1;
+                akPV.FlKategoriPenerima = 1;
 
                 //check if PV dengan tanggungan or tanpa tanggungan
                 List<AkPV2> akPV2CartList = _cart.Lines2.ToList();
@@ -907,7 +922,7 @@ namespace MSNK.Controllers
                 akPV.Telefon = pekerja.TelefonBimbit;
                 akPV.Emel = pekerja.Emel;
                 akPV.NoAkaunBank = pekerja.NoAkaunBank;
-                akPV.FlJenisBaucer = 2;
+                akPV.FlKategoriPenerima = 2;
             }
 
             // get latest no rujukan running number  
@@ -981,8 +996,11 @@ namespace MSNK.Controllers
                     m.FlPosting = 0;
                     m.FlBatal = 0;
                     m.FlCetak = 0;
+                    m.FlKategoriPenerima = akPV.FlKategoriPenerima;
                     m.FlJenisBaucer = akPV.FlJenisBaucer;
+                    m.NoRekup = akPV.NoRekup;
                     m.denganTanggungan = akPV.denganTanggungan;
+                    m.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
 
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
@@ -1050,7 +1068,7 @@ namespace MSNK.Controllers
             akPVView.AkBankId = akPV.AkBankId;
             akPVView.JKWId = akPV.JKWId;
 
-            switch (akPV.FlJenisBaucer)
+            switch (akPV.FlKategoriPenerima)
             {
                 //pembekal
                 case 1:
@@ -1098,6 +1116,7 @@ namespace MSNK.Controllers
             akPVView.FlPosting = akPV.FlPosting;
             akPVView.FlCetak = akPV.FlCetak;
             akPVView.FlBatal = akPV.FlBatal;
+            akPVView.FlKategoriPenerima = akPV.FlKategoriPenerima;
             akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
 
             akPVView.AkPV1 = akPV.AkPV1;
@@ -1385,10 +1404,11 @@ namespace MSNK.Controllers
                     var akPVAsal = await _akPVRepo.GetById(id);
                     var jumlah = akPVAsal.Jumlah;
 
-                    switch (akPV.FlJenisBaucer)
+                    switch (akPV.FlKategoriPenerima)
                     {
                         case 1:
                             var pembekal = akPVAsal.AkPembekal;
+                            akPV.SuPekerjaId = null;
                             akPV.Nama = pembekal.NamaSykt;
                             akPV.Alamat1 = pembekal.Alamat1;
                             akPV.Alamat2 = pembekal.Alamat2;
@@ -1399,6 +1419,7 @@ namespace MSNK.Controllers
                             break;
                         case 2:
                             var pekerja = akPVAsal.SuPekerja;
+                            akPV.AkPembekalId = null;
                             akPV.Nama = pekerja.Nama;
                             akPV.Alamat1 = pekerja.Alamat1;
                             akPV.Alamat2 = pekerja.Alamat2;
@@ -1409,6 +1430,8 @@ namespace MSNK.Controllers
                             break;
                         default:
                             akPV.Nama = akPVAsal.Nama;
+                            akPV.AkPembekalId = null;
+                            akPV.SuPekerjaId = null;
                             break;
                     }
 
@@ -1418,6 +1441,9 @@ namespace MSNK.Controllers
                     akPV.NoPV = akPVAsal.NoPV;
                     akPV.SuPekerjaId = akPVAsal.SuPekerjaId;
                     akPV.AkPembekalId = akPVAsal.AkPembekalId;
+                    akPV.FlJenisBaucer = akPVAsal.FlJenisBaucer;
+                    akPV.AkTunaiRuncitId = akPVAsal.AkTunaiRuncitId;
+                    akPV.NoRekup = akPVAsal.NoRekup;
                     akPV.TarMasuk = akPVAsal.TarMasuk;
                     akPV.UserId = akPVAsal.UserId;
                     // list of input that cannot be change end
@@ -1544,7 +1570,7 @@ namespace MSNK.Controllers
             akPVView.AkBankId = akPV.AkBankId;
             akPVView.JKWId = akPV.JKWId;
 
-            switch (akPV.FlJenisBaucer)
+            switch (akPV.FlKategoriPenerima)
             {
                 //pembekal
                 case 1:
@@ -1592,7 +1618,9 @@ namespace MSNK.Controllers
             akPVView.FlPosting = akPV.FlPosting;
             akPVView.FlCetak = akPV.FlCetak;
             akPVView.FlBatal = akPV.FlBatal;
+            akPVView.FlKategoriPenerima = akPV.FlKategoriPenerima;
             akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
+            akPVView.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
 
             akPVView.AkPV1 = akPV.AkPV1;
             foreach (AkPV2 item in akPV.AkPV2)
@@ -1677,7 +1705,7 @@ namespace MSNK.Controllers
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
             data.AkPV2 = akPV.AkPV2;
 
-            switch (akPV.FlJenisBaucer)
+            switch (akPV.FlKategoriPenerima)
             {
                 //pembekal
                 case 1:
@@ -1711,7 +1739,7 @@ namespace MSNK.Controllers
             }
 
             data.denganTanggungan = akPV.denganTanggungan;
-            data.FlJenisBaucer = akPV.FlJenisBaucer;
+            data.FlKategoriPenerima = akPV.FlKategoriPenerima;
             data.Penerima = akPV.Nama;
             data.NoAkaunBankPenerima = noAkaunBank;
             data.NamaBankPenerima = namaBankPenerima;
@@ -1765,7 +1793,7 @@ namespace MSNK.Controllers
 
                     var kod = "";
                     var penerima = "";
-                    switch (akPV.FlJenisBaucer)
+                    switch (akPV.FlKategoriPenerima)
                     {
                         //pembekal
                         case 1:
@@ -1790,7 +1818,7 @@ namespace MSNK.Controllers
                     {
                         //insert into AbBukuVot
                         AbBukuVot abBukuVot = new AbBukuVot();
-                        if (akPV.FlJenisBaucer == 1)
+                        if (akPV.FlKategoriPenerima == 1)
                         {
                             //dengan tanggungan
                             abBukuVot = new AbBukuVot()

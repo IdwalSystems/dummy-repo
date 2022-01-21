@@ -33,6 +33,7 @@ namespace MSNK.Models.Modules
         public decimal Jumlah { get; set; }
         public ICollection<AkTunaiCV1> AkTunaiCV1 { get; set; }
         public int FlPosting { get; set; }
+        public DateTime? TarikhPosting { get; set; }
         public int FlCetak { get; set; }
         public int FlBatal { get; set; }
         // log

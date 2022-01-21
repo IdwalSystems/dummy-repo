@@ -32,7 +32,7 @@
                                 <span asp-validation-for="Tahun" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
                                 <select class="form-control form-control-sm" asp-for="JKWId" disabled required>
@@ -45,7 +45,7 @@
                                 <span asp-validation-for="JKWId" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="AkBankId" class="control-label"></label><span class="text-danger control-label">*</span>
                                 <select class="form-control select2 input-group-sm" asp-for="AkBankId" required>
@@ -60,7 +60,7 @@
                         </div>
 
                     </div>
-                    @switch (Model.FlJenisBaucer)
+                    @switch (Model.FlKategoriPenerima)
                     {
                         case 1:
                             <div class="form-row">
@@ -207,18 +207,18 @@
                                 <div class="card-body p-1">
 
                                     <div class="form-group col-sm">
-                                        <label class="control-label">Jenis Baucer</label>
+                                        <label class="control-label">Kategori Penerima</label>
                                         <div class="custom-control custom-radio">
-                                            <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer1" name="FlJenisBaucer" class="custom-control-input" value="0" checked>
-                                            <label class="custom-control-label" for="FlJenisBaucer1">Am</label>
+                                            <input asp-for="FlKategoriPenerima" type="radio" id="FlKategoriPenerima1" name="FlKategoriPenerima" class="custom-control-input" value="0" checked>
+                                            <label class="custom-control-label" for="FlKategoriPenerima1">Am</label>
                                         </div>
                                         <div class="custom-control custom-radio">
-                                            <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer2" name="FlJenisBaucer" class="custom-control-input" value="1">
-                                            <label class="custom-control-label" for="FlJenisBaucer2">Pembekal</label>
+                                            <input asp-for="FlKategoriPenerima" type="radio" id="FlKategoriPenerima2" name="FlKategoriPenerima" class="custom-control-input" value="1">
+                                            <label class="custom-control-label" for="FlKategoriPenerima2">Pembekal</label>
                                         </div>
                                         <div class="custom-control custom-radio">
-                                            <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="2">
-                                            <label class="custom-control-label" for="FlJenisBaucer3">Pekerja</label>
+                                            <input asp-for="FlKategoriPenerima" type="radio" id="FlKategoriPenerima3" name="FlKategoriPenerima" class="custom-control-input" value="2">
+                                            <label class="custom-control-label" for="FlKategoriPenerima3">Pekerja</label>
                                         </div>
                                     </div>
                                 </div>
@@ -337,7 +337,7 @@
                     @*table Objek end*@
 
                     @*table Inbois*@
-                    @if (Model.FlJenisBaucer == 1)
+                    @if (Model.FlKategoriPenerima == 1)
                     {
                         <div class="card box-shadow mb-3" id="cardInbois">
                             <div class="card-header">

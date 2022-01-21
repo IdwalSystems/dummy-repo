@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="form-row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label asp-for="AkPembekalId" class="control-label"></label>
                             <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal">
                                 <option value="0" selected>-- Pilih Kod Pembekal --</option>
@@ -70,10 +70,7 @@
                             </select>
                             <span asp-validation-for="AkPembekalId" class="text-danger"></span>
                         </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label asp-for="SuPekerjaId" class="control-label"></label>
                             <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPekerja">
                                 <option value="0" selected>-- Pilih Kod Pekerja --</option>
@@ -85,6 +82,7 @@
                             <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
                         </div>
                     </div>
+
                     <div class="form-row">
                         <div class="col-md-2">
                             <div class="form-group">
@@ -102,7 +100,6 @@
                             <div class="form-group">
                                 <label asp-for="Nama" class="control-label"></label><span class="text-danger control-label">*</span>
                                 <input asp-for="Nama" class="form-control form-control-sm text-uppercase" required />
-                                <span class="text-danger">Nama Diperlukan</span>
                             </div>
                         </div>
                     </div>
@@ -144,7 +141,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-4">
-                            <label asp-for="JCaraBayarId" class="control-label" ></label><span class="text-danger control-label">*</span>
+                            <label asp-for="JCaraBayarId" class="control-label"></label><span class="text-danger control-label">*</span>
                             <select class="form-control form-control-sm" asp-for="JCaraBayarId" id="ddlJCaraBayar" required>
                                 <option value="0" disabled selected>-- Pilih Cara Bayaran --</option>
                                 @foreach (var s in ViewBag.JCaraBayar)
@@ -157,7 +154,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="NoCekAtauEFT" class="control-label"></label>
-                                <input asp-for="NoCekAtauEFT" class="form-control form-control-sm form-control-sm" id="txtNoCekAtauEFT"/>
+                                <input asp-for="NoCekAtauEFT" class="form-control form-control-sm form-control-sm" id="txtNoCekAtauEFT" />
                                 <span asp-validation-for="NoCekAtauEFT" class="text-danger"></span>
                             </div>
                         </div>
@@ -171,8 +168,36 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Perihal" class="control-label"></label>
-                        <textarea asp-for="Perihal" class="form-control form-control-sm text-uppercase" rows="2"></textarea>
+                        <textarea asp-for="Perihal" class="form-control form-control-sm text-uppercase" rows="2" id="txtPerihal"></textarea>
                         <span asp-validation-for="Perihal" class="text-danger"></span>
+                    </div>
+                    <div class="card box-shadow mb-3 mt-2">
+                        <div class="card-header">
+                            <h6>Maklumat Panjar</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="col-md-6">
+
+                                    <label asp-for="AkTunaiRuncitId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                    <select class="form-control form-control-sm" asp-for="AkTunaiRuncitId" required id="ddlTunaiRuncit">
+                                        <option value="0" selected>-- Pilih Kaunter Panjar --</option>
+                                        @foreach (var s in ViewBag.AkTunaiRuncit)
+                                        {
+                                            <option value="@s.Id">@s.KaunterPanjar (@s.AkCarta.Kod - @s.AkCarta.Perihal )</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="NoRekup" class="control-label"></label>
+                                        <input asp-for="NoRekup" class="form-control form-control-sm text-uppercase" id="txtNoRekup" disabled/>
+                                        <span asp-validation-for="NoRekup" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
                     </div>
                     <br />
                     @*table Objek*@
@@ -194,7 +219,7 @@
                                 <tfoot>
                                     <tr>
                                         <td id="akCartaId" hidden></td>
-                                        <td >
+                                        <td>
                                             <select class="form-control form-control-sm select2" id="txtKodAkaun">
                                                 <option value="" disabled selected>-- Pilih Kod Akaun --</option>
                                                 @foreach (var s in ViewBag.AkCarta)
@@ -203,7 +228,7 @@
                                                 }
                                             </select>
                                         </td>
-                                        <td ><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" value="0.00"></td>
+                                        <td><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" value="0.00"></td>
                                         <td><button class="btn btn-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
                                     </tr>
                                 </tfoot>
@@ -379,7 +404,7 @@
             </div>
             <div class="modal-body">
                 <form>
-                    <input id="moId2" hidden/>
+                    <input id="moId2" hidden />
                     <div class="form-row">
                         <div class="col-6">
                             <div class="form-group">

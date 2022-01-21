@@ -26,6 +26,22 @@
     }
     // onchange no Rujukan end
 
+     // onchange no Rujukan
+    $("body").on('change', "#ddlTunaiRuncit", function () {
+        var kodKaunter = $("#ddlTunaiRuncit").val();
+        if (kodKaunter != 0) {
+            $("#txtPerihal").val("WANG PANJAR");
+            $("#txtNoRekup").prop('disabled', false);
+        }
+        else {
+            $("#txtPerihal").val("");
+            $("#txtNoRekup").prop('disabled', true);
+        }
+
+    });
+
+    // onchange no Rujukan end
+
     //empty cart
     function EmptyCart() {
         $.ajax({

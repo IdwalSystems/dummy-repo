@@ -43,6 +43,8 @@ namespace MSNK.Models.Modules
         [MaxLength(400)]
         [DefaultValue("")]
         public string Perihal { get; set; }
+        [DisplayName("No Rekup")]
+        public string NoRekup { get; set; }
         //field end
 
         //flag
@@ -56,8 +58,10 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int FlBatal { get; set; }
         [DisplayName("Jenis Baucer")]
-        // Am = 0; Pembekal = 1; Pekerja = 2;
+        // Am = 0; Rekupan = 1; Akruan = 2;
         public int FlJenisBaucer { get; set; }
+        // Am = 0; Pembekal = 1; Pekerja = 2;
+        public int FlKategoriPenerima { get; set; }
         public bool denganTanggungan { get; set; }
         //flag end
 
@@ -76,12 +80,15 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Cara Bayaran Diperlukan.")]
         [DisplayName("Cara Bayaran")]
         public int JCaraBayarId { get; set; }
+        [DisplayName("Kod Kaunter Panjar")]
+        public int? AkTunaiRuncitId { get; set; }
         public JKW JKW { get; set; }
         
         public AkBank AkBank { get; set; }
         public AkPembekal AkPembekal { get; set; }
         public SuPekerja SuPekerja { get; set; }
         public JCaraBayar JCaraBayar { get; set; }
+        public AkTunaiRuncit AkTunaiRuncit { get; set; }
         public ICollection<AkPV1> AkPV1 { get; set; }
         public ICollection<AkPV2> AkPV2 { get; set; }
         //relationship end

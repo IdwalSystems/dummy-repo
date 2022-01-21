@@ -70,10 +70,10 @@
                     Bil
                 </th>
                 <th style="width:2%">
-                    @Html.DisplayNameFor(model => model.Tahun)
+                    Tahun
                 </th>
                 <th>
-                    Jenis Baucer
+                    Kategori
                 </th>
                 <th>
                     No Rujukan
@@ -111,7 +111,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Tahun)
                 </td>
-                @switch (item.FlJenisBaucer)
+                @switch (item.FlKategoriPenerima)
                 {
                     case 1:
                         <td>Pembekal</td>
@@ -175,7 +175,7 @@
                     {
                         @if (item.Jumlah != 0)
                         {
-                            @if (item.FlJenisBaucer == 1)
+                            @if (item.FlKategoriPenerima == 1)
                             {
                                 @if (item.Jumlah == item.JumlahInbois)
                                 {
