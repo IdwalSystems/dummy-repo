@@ -1,24 +1,23 @@
 ﻿@model MSNK.Models.Modules.JTahapAktiviti
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Papar";
 }
 
-<h1>Papar</h1>
+<h4>Tahap Aktiviti - Papar</h4>
 
 <div>
-    <h4>Tahap</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Perihal)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Perihal)
+            @Model.Perihal.ToUpper()
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Ubah</a> |
-    <a asp-action="Index">Kembali ke Senarai</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a> |
+    <a asp-action="Index">Kembali ke Indeks</a>
 </div>

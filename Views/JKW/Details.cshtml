@@ -1,14 +1,13 @@
 ﻿@model MSNK.Models.Modules.JKW
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Papar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<h4>Kumpulan Wang - Papar</h4>
 
 <div>
-    <h4>KW</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -21,11 +20,11 @@
             @Html.DisplayNameFor(model => model.Perihal)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Perihal)
+            @Model.Perihal.ToUpper()
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@Model.Id">Ubah</a> |
+    <a asp-action="Index">Kembali ke Indeks</a>
 </div>

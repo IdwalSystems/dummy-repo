@@ -1,13 +1,11 @@
 ﻿@model MSNK.Models.Modules.JBank
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Ubah";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
-
-<h4>Bank</h4>
+<h4>Nama Bank - Ubah</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -16,28 +14,28 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Kod" class="control-label"></label>
-                <input asp-for="Kod" class="form-control" />
+                <input asp-for="Kod" class="form-control form-control-sm"/>
                 <span asp-validation-for="Kod" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Nama" class="control-label"></label>
-                <input asp-for="Nama" class="form-control" />
+                <input asp-for="Nama" class="form-control form-control-sm" />
                 <span asp-validation-for="Nama" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="KodEFT" class="control-label"></label>
-                <input asp-for="KodEFT" class="form-control" />
+                <input asp-for="KodEFT" class="form-control form-control-sm" />
                 <span asp-validation-for="KodEFT" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Simpan" class="btn btn-primary btn-sm" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
 @section Scripts {

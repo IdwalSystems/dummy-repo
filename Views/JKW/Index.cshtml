@@ -41,14 +41,14 @@
     <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%">
         <thead>
             <tr>
-                <th>Bil</th>
-                <th class="kod">
+                <th width="5%">Bil</th>
+                <th class="kod" width="5%">
                     @Html.DisplayNameFor(model => model.Kod)
                 </th>
                 <th class="perihal">
                     @Html.DisplayNameFor(model => model.Perihal)
                 </th>
-                <th></th>
+                <th width="5%"></th>
             </tr>
         </thead>
         <tbody>
@@ -60,7 +60,7 @@
                     @Html.DisplayFor(modelItem => item.Kod)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Perihal)
+                    @item.Perihal.ToUpper()
                 </td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id"

@@ -1,31 +1,28 @@
 ﻿@model MSNK.Models.Modules.JNegeri
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Papar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>Negeri</h4>
+    <h4>Negeri - Papar</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Kod)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Kod)
+        <dd class="col-sm-10">
+            @Model.Kod.ToUpper()
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Perihal)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Perihal)
+        <dd class="col-sm-10">
+            @Model.Perihal.ToUpper()
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a> |
+    <a asp-action="Index">Kembali ke Indeks</a>
 </div>

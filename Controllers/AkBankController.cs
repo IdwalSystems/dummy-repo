@@ -80,7 +80,7 @@ namespace MSNK.Controllers
                 .Where(b => b.JParas.Kod == "4" && b.Kod.Substring(0, 2) == "A1")
                 .OrderBy(b => b.Kod)
                 .ToList();
-            akCartaList.Insert(0, new AkCarta { Id = 0, Perihal = "-- Pilih Kumpulan Wang --" });
+            akCartaList.Insert(0, new AkCarta { Id = 0, Perihal = "-- Pilih Kod Akaun --" });
             ViewBag.AkCarta = akCartaList;
         }
 

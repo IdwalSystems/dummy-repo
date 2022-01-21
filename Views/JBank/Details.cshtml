@@ -1,14 +1,13 @@
 ﻿@model MSNK.Models.Modules.JBank
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Papar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
 
 <div>
-    <h4>Bank</h4>
+    <h4>Nama Bank - Papar</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -32,6 +31,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a> |
+    <a asp-action="Index">Kembali ke Indeks</a>
 </div>

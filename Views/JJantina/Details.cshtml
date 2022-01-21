@@ -1,13 +1,11 @@
 ﻿@model MSNK.Models.Modules.JJantina
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Papar";
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>JJantina</h4>
+    <h4>Jantina - Papar</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -19,6 +17,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a> |
+    <a asp-action="Index">Kembali ke Indeks</a>
 </div>

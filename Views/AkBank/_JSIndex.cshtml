@@ -6,16 +6,21 @@
             "paging": false,
             rowReorder: true,
             columnDefs: [
-                { orderable: true, className: 'reorder', targets: 1 },
-                { orderable: true, className: 'reorder', targets: 2 },
+                { orderable: true, className: 'reorder', targets: 3 },
+                { orderable: true, className: 'reorder', targets: 4 },
                 { orderable: false, targets: '_all' }
             ],
-            "order": [[1, "asc"]],
+            "order": [[2, "asc"]],
+            "language": {
+                "emptyTable": "Tiada data wujud buat masa ini",
+                "zeroRecords": "Tiada data bagi carian ini"
+            },
             dom: 'lrt'
         });
 
         $('#columnSearch').change(function () {
             columnSearchVar = $(this).val();
+            // refresh table
             $('#myInput').val('');
             table.destroy();
 
@@ -27,9 +32,10 @@
                     { orderable: true, className: 'reorder', targets: 2 },
                     { orderable: false, targets: '_all' }
                 ],
-                "order": [[1, "asc"]],
+                "order": [[2, "asc"]],
                 dom: 'lrt'
             });
+            // refresh table end
         });
 
         table.on('order.dt search.dt', function () {

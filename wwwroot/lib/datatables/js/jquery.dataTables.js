@@ -11474,7 +11474,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "No data available in table",
+			"sEmptyTable": "Tiada data wujud buat masa ini",
 	
 	
 			/**
@@ -11805,7 +11805,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sZeroRecords": "No matching records found"
+			"sZeroRecords": "Tiada data bagi carian ini"
 		},
 	
 	
