@@ -184,15 +184,15 @@ namespace MSNK.Controllers
                     m.NoGaji = GetNoGaji();
                     m.Nama = suPekerja.Nama;
                     m.NoKp = suPekerja.NoKp;
-                    //m.Alamat1 = suPekerja.Alamat1;
-                    //m.Alamat2 = suPekerja.Alamat2;
-                    //m.Alamat3 = suPekerja.Alamat3;
-                    //m.Poskod = suPekerja.Poskod;
-                    //m.Bandar = suPekerja.Bandar;
+                    m.Alamat1 = suPekerja.Alamat1;
+                    m.Alamat2 = suPekerja.Alamat2;
+                    m.Alamat3 = suPekerja.Alamat3;
+                    m.Poskod = suPekerja.Poskod;
+                    m.Bandar = suPekerja.Bandar;
                     m.JNegeriId = suPekerja.JNegeriId;
                     //m.TelefonRumah = suPekerja.TelefonRumah;
                     //m.TelefonBimbit = suPekerja.TelefonBimbit;
-                    //m.Emel = suPekerja.Emel;
+                    m.Emel = suPekerja.Emel;
                     //m.StatusKahwin = suPekerja.StatusKahwin;
                     //m.BilAnak = suPekerja.BilAnak;
                     //m.GajiPokok = suPekerja.GajiPokok;
@@ -213,7 +213,7 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
-                    //TempData[SD.Success] = "Maklumat berjaya ditambah. No Gaji adalah " + noRujukan;
+                    TempData[SD.Success] = "Maklumat berjaya ditambah. No Gaji yang didaftar adalah " + m.NoGaji;
                     return RedirectToAction(nameof(Index));
                 }
                 //_context.Add(suPekerja);
@@ -274,6 +274,7 @@ namespace MSNK.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
+                TempData[SD.Success] = "Data berjaya diubah..!";
             }
             PopulateList();
             return View(suPekerja);
@@ -312,6 +313,7 @@ namespace MSNK.Controllers
             _context.SuPekerja.Remove(suPekerja);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
         }
 
         private bool SuPekerjaExists(int id)

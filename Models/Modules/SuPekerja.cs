@@ -26,6 +26,7 @@ namespace MSNK.Models.Modules
         public string TelefonRumah { get; set; }
         [DisplayName("No Telefon Bimbit")]
         public string TelefonBimbit { get; set; }
+        [EmailAddress(ErrorMessage = "Emel Tidak Sah."), MaxLength(100)]
         public string Emel { get; set; }
         [DefaultValue("0")]
         [DisplayName("Status Perkahwinan")]

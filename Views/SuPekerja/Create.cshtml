@@ -34,39 +34,39 @@
                         </div>
                         <div class="form-group col-md">
                             <label asp-for="Nama" class="control-label"></label>
-                            <input asp-for="Nama" class="form-control form-control-sm" />
+                            <input asp-for="Nama" class="form-control form-control-sm text-uppercase" />
                             <span asp-validation-for="Nama" class="text-danger"></span>
                         </div>
                     </div>
-                    @*<div class="form-row sorok">
+                    <div class="form-row ">
                         <div class="form-group col-md">
                             <label asp-for="Alamat1" class="control-label"></label>
-                            <input asp-for="Alamat1" class="form-control form-control-sm" />
+                            <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" />
                         </div>
                     </div>
-                    <div class="form-row sorok">
+                    <div class="form-row ">
                         <div class="form-group col-md">
-                            <input asp-for="Alamat2" class="form-control form-control-sm" />
+                            <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase" />
                         </div>
                     </div>
-                    <div class="form-row sorok">
+                    <div class="form-row ">
                         <div class="form-group col-md">
-                            <input asp-for="Alamat3" class="form-control form-control-sm" />
+                            <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" />
                             <span asp-validation-for="Alamat1" class="text-danger"></span>
                         </div>
-                    </div>*@
+                    </div>
                     <div class="form-row">
-                        @*<div class="form-group col-md sorok">
+                        <div class="form-group col-md-4">
                             <label asp-for="Poskod" class="control-label"></label>
                             <input asp-for="Poskod" class="form-control form-control-sm" />
                             <span asp-validation-for="Poskod" class="text-danger"></span>
                         </div>
-                        <div class="form-group col-md sorok">
+                        <div class="form-group col-md-4">
                             <label asp-for="Bandar" class="control-label"></label>
-                            <input asp-for="Bandar" class="form-control form-control-sm" />
+                            <input asp-for="Bandar" class="form-control form-control-sm text-uppercase" />
                             <span asp-validation-for="Bandar" class="text-danger"></span>
-                        </div>*@
-                        <div class="form-group col-md">
+                        </div>
+                        <div class="form-group col-md-4">
                             <label asp-for="JNegeriId" class="control-label"></label>
                             <select asp-for="JNegeriId" class="form-control form-control-sm">
                                 <option value="" hidden>-- Pilih Negeri --</option>
@@ -150,28 +150,33 @@
                             </select>
                         </div>
                     </div>*@
-                    <div class="form-row">
-                        @*<div class="form-group col-md sorok">
-                            <label asp-for="GajiPokok" class="control-label"></label>
-                            <input asp-for="GajiPokok" class="form-control form-control-sm" type="number" step="0.01" value="0.00" />
-                            <span asp-validation-for="GajiPokok" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-md sorok">
-                            <label asp-for="JCaraBayarId" class="control-label"></label>
-                            <select asp-for="JCaraBayarId" class="form-control form-control-sm">
-                                <option value="" hidden>-- Pilih Cara Bayar --</option>
-                                @foreach (var s in ViewBag.JCaraBayar)
-                                {
-                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                }
-                            </select>
-                        </div>*@
-                        <div class="form-group col-md">
-                            <label asp-for="NoAkaunBank" class="control-label"></label>
-                            <input asp-for="NoAkaunBank" class="form-control form-control-sm" />
-                            <span asp-validation-for="NoAkaunBank" class="text-danger"></span>
-                        </div>
+                <div class="form-row">
+                    @*<div class="form-group col-md sorok">
+            <label asp-for="GajiPokok" class="control-label"></label>
+            <input asp-for="GajiPokok" class="form-control form-control-sm" type="number" step="0.01" value="0.00" />
+            <span asp-validation-for="GajiPokok" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md sorok">
+            <label asp-for="JCaraBayarId" class="control-label"></label>
+            <select asp-for="JCaraBayarId" class="form-control form-control-sm">
+                <option value="" hidden>-- Pilih Cara Bayar --</option>
+                @foreach (var s in ViewBag.JCaraBayar)
+                {
+                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                }
+            </select>
+        </div>*@
+                    <div class="form-group col-md-6">
+                        <label asp-for="NoAkaunBank" class="control-label"></label>
+                        <input asp-for="NoAkaunBank" class="form-control form-control-sm" />
+                        <span asp-validation-for="NoAkaunBank" class="text-danger"></span>
                     </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Emel" class="control-label"></label>
+                        <input asp-for="Emel" class="form-control form-control-sm" type="email" />
+                        <span asp-validation-for="Emel" class="text-danger"></span>
+                    </div>
+                </div>
                     <br />
 
                     @*table Objek*@
@@ -208,7 +213,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Tambah" class="btn btn-primary" />
+                <input type="submit" value="Tambah" class="btn btn-primary btn-sm" />
             </div>
         </form>
     </div>

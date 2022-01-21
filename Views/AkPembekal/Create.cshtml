@@ -29,20 +29,20 @@
                         </div>
                         <div class="form-group col-sm">
                             <label asp-for="NamaSykt" class="control-label"></label>
-                            <input asp-for="NamaSykt" class="form-control form-control-sm" id="txtboxNamaSykt" />
+                            <input asp-for="NamaSykt" class="form-control form-control-sm text-uppercase" id="txtboxNamaSykt" />
                             <span asp-validation-for="NamaSykt" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label asp-for="Alamat1" class="control-label">Alamat</label>
-                        <input asp-for="Alamat1" class="form-control form-control-sm" />
+                        <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" />
                     </div>
                     <div class="form-group">
-                        <input asp-for="Alamat2" class="form-control form-control-sm" />
+                        <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase" />
                     </div>
                     <div class="form-group">
-                        <input asp-for="Alamat3" class="form-control form-control-sm" />
+                        <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" />
                         <span asp-validation-for="Alamat1" class="text-danger"></span>
                     </div>
 
@@ -54,7 +54,7 @@
                         </div>
                         <div class="form-group col-sm">
                             <label asp-for="Bandar" class="control-label"></label>
-                            <input asp-for="Bandar" class="form-control form-control-sm" />
+                            <input asp-for="Bandar" class="form-control form-control-sm text-uppercase" />
                             <span asp-validation-for="Bandar" class="text-danger"></span>
                         </div>
                         <div class="form-group col-sm">
@@ -104,14 +104,14 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Tambah" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
 @section Scripts {
