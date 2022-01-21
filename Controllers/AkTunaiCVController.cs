@@ -933,7 +933,7 @@ namespace MSNK.Controllers
                         await _akTunaiLejarRepo.Delete(item.Id);
                     }
 
-                    //update posting status in akTerima
+                    //update posting status in akTunaiCV
                     akTunaiCV.FlPosting = 0;
                     akTunaiCV.TarikhPosting = null;
                     await _akTunaiCVRepo.Update(akTunaiCV);

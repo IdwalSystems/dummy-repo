@@ -34,6 +34,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkPembekal, int, string> _akPembekalRepo;
         private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
         private readonly IRepository<AkTunaiRuncit, int, string> _akTunaiRuncitRepo;
+        private readonly IRepository<AkTunaiLejar, int, string> _akTunaiLejarRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<AkBank, int, string> _akBankRepo;
@@ -52,6 +53,7 @@ namespace MSNK.Controllers
             IRepository<AkPembekal, int, string> akPembekal,
             IRepository<SuPekerja, int, string> suPekerja,
             IRepository<AkTunaiRuncit, int, string> akTunaiRuncitRepository,
+            IRepository<AkTunaiLejar, int, string> akTunaiLejarRepository,
             IRepository<JKW, int, string> kwRepo,
             IRepository<AkCarta, int, string> akCartaRepository,
             IRepository<AkBank, int, string> akBankRepository,
@@ -70,6 +72,7 @@ namespace MSNK.Controllers
             _akPembekalRepo = akPembekal;
             _suPekerjaRepo = suPekerja;
             _akTunaiRuncitRepo = akTunaiRuncitRepository;
+            _akTunaiLejarRepo = akTunaiLejarRepository;
             _kwRepo = kwRepo;
             _akCartaRepo = akCartaRepository;
             _akBankRepo = akBankRepository;
@@ -1880,6 +1883,42 @@ namespace MSNK.Controllers
                         };
 
                         await _akAkaunRepo.Insert(akAObjek);
+
+                        //insert akTunaiLejar
+                        if(akPV.FlJenisBaucer == 1)
+                        {
+                            //find latest baki
+                            AkTunaiLejar akT = _context.AkTunaiLejar
+                            .Where(x => x.AkTunaiRuncitId == akPV.AkTunaiRuncitId)
+                            .OrderByDescending(x => x.NoRujukan)
+                            .ThenByDescending(x => x.Tarikh)
+                            .ThenByDescending(x => x.Id)
+                            .FirstOrDefault();
+
+                            decimal bakiAkhir = 0;
+
+                            if (akT != null)
+                            {
+                                bakiAkhir = akT.Baki;
+                            }
+
+                            //insert into AkTunaiLejar
+                            AkTunaiLejar akTunaiLejar = new AkTunaiLejar()
+                            {
+                                JKWId = akPV.JKWId,
+                                AkTunaiRuncitId = (int)akPV.AkTunaiRuncitId,
+                                Tarikh = akPV.Tarikh,
+                                AkCartaId = item.AkCartaId,
+                                NoRujukan = akPV.NoPV,
+                                Debit = item.Amaun,
+                                Kredit = 0,
+                                Baki = bakiAkhir + item.Amaun,
+                                Rekup = akPV.NoRekup
+                            };
+                            // insert into AkTunaiLejar end
+
+                            await _akTunaiLejarRepo.Insert(akTunaiLejar);
+                        }
                     }
 
                     //update posting status in akTerima
@@ -1929,6 +1968,9 @@ namespace MSNK.Controllers
                 List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akPV.NoPV).ToList();
 
                 List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan == akPV.NoPV).ToList();
+
+                List<AkTunaiLejar> akTunaiLejar = _context.AkTunaiLejar.Where(x => x.NoRujukan == akPV.NoPV).ToList();
+
                 if (akAkaun == null)
                 {
 
@@ -1951,6 +1993,13 @@ namespace MSNK.Controllers
                         await _abBukuVotRepo.Delete(item.Id);
                     }
                     //delete data from abBukuVot
+
+                    //delete data from akTunaiLejar
+                    foreach (AkTunaiLejar item in akTunaiLejar)
+                    {
+                        await _akTunaiLejarRepo.Delete(item.Id);
+                    }
+                    //delete data from akTunaiLejar
 
                     //update posting status in akTerima
                     akPV.FlPosting = 0;
