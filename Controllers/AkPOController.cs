@@ -125,12 +125,27 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPO
+        [Authorize(Policy = "TG001")]
         public async Task<IActionResult> Index(
             string searchString,
             string searchDate1,
             string searchDate2,
             string searchColumn)
         {
+            List<SelectListItem> columnList = new();
+            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
+            columnList.Add(new SelectListItem() { Text = "No PO", Value = "NoRujukan" });
+            columnList.Add(new SelectListItem() { Text = "Nama", Value = "Nama" });
+
+            if (!String.IsNullOrEmpty(searchColumn))
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
+            }
+            else
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
+            }
+
             var akPO = await _akPORepo.GetAll();
 
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
@@ -138,7 +153,7 @@ namespace MSNK.Controllers
                 // searching with '%like%' condition
                 if (!String.IsNullOrEmpty(searchString))
                 {
-                    if (searchColumn == "NoPO")
+                    if (searchColumn == "NoRujukan")
                     {
                         akPO = akPO.Where(s => s.NoPO.ToUpper().Contains(searchString.ToUpper())).ToList();
                     }
@@ -167,12 +182,12 @@ namespace MSNK.Controllers
                     ViewBag.SearchData2 = searchDate2;
                 }
 
-                ViewBag.SearchColumn = searchColumn;
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
             // searching with date range condition end
             else
             {
-                ViewBag.SearchColumn = "Tarikh";
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
             }
 
             return View(akPO);

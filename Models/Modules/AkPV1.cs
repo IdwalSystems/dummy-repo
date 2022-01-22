@@ -12,12 +12,13 @@ namespace MSNK.Models.Modules
         //field
         public int Id { get; set; }
         public int AkPVId { get; set; }
-        
+        [DisplayName("Amaun RM")]
+
         public decimal Amaun { get; set; }
         //field end
 
         //relationship
-        [DisplayName("Kod Akaun")]
+        [DisplayName("Kod Objek")]
         public int AkCartaId { get; set; }
         public AkCarta AkCarta { get; set; }
         //relationship end

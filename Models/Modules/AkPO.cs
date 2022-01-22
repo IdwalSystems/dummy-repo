@@ -18,7 +18,7 @@ namespace MSNK.Models.Modules
         public DateTime Tarikh { get; set; }
         [DisplayName("Tarikh Posting")]
         public DateTime? TarikhPosting { get; set; }
-        [DisplayName("Jumlah")]
+        [DisplayName("Jumlah RM")]
         public decimal Jumlah { get; set; }
         [MaxLength(4)]
         [DisplayName("Tahun Belanjawan")]

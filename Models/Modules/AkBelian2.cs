@@ -23,7 +23,9 @@ namespace MSNK.Models.Modules
         public decimal Kuantiti { get; set; }
         [MaxLength(100)]
         public string Unit { get; set; }
+        [DisplayName("Harga RM")]
         public decimal Harga { get; set; }
+        [DisplayName("Amaun RM")]
         public decimal Amaun { get; set; }
         //field end
 

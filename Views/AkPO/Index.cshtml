@@ -16,6 +16,7 @@
         <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
     </div>
 </div>
+@*div carian*@
 <div class="card mb-2">
     <div class="card-body pl-3 pb-2 ">
         <label class="form-control-plaintext" for="searchselect">Carian : </label>
@@ -24,11 +25,9 @@
             <form asp-action="Index" method="get">
                 <div class="form-row">
                     <div class="col-sm-3 mb-2">
-                        <select name="searchColumn" class="custom-select form-control-sm" id="searchColumn">
-                            <option value="NoPO">No PO</option>
-                            <option value="NamaSykt">Syarikat</option>
-                            <option selected value="@ViewBag.SearchColumn">Tarikh</option>
-                        </select>
+                        <select class="custom-select form-control-sm"
+                                name="searchColumn"
+                                asp-items="@ViewBag.SearchColumn" id="searchColumn"></select>
                     </div>
                     <div class="col-sm-9 mb-2">
                         <div class="form-row">
@@ -57,11 +56,13 @@
         </div>
     </div>
 </div>
+@*div carian end*@
 
-<div class="table-responsive">
-    <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
+<div class="table-responsive table-sm">
+    <table class="table table-bordered table-hover display compact nowrap" width="100%">
         <thead>
             <tr>
+                <th width="5%">Bil</th>
                 <th>
                     No PO
                 </th>
@@ -80,21 +81,22 @@
                 <th>
                     Batal
                 </th>
-                <th class="action-button"></th>
+                <th width="5%"></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
+                    <td></td>
                     <td>
                         @Html.DisplayFor(modelItem => item.NoPO)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Tarikh, "{0:dd/MM/yyyy}")
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Jumlah)
+                    <td class="text-right">
+                        @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.AkPembekal.KodSykt) @Html.DisplayFor(modelItem => item.AkPembekal.NamaSykt)

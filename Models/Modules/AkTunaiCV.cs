@@ -10,7 +10,7 @@ namespace MSNK.Models.Modules
     public class AkTunaiCV
     {
         public int Id { get; set; }
-        [DisplayName("Kod Kaunter")]
+        [DisplayName("Kod Kaunter Panjar")]
         public int AkTunaiRuncitId { get; set; }
         public AkTunaiRuncit AkTunaiRuncit { get; set; }
         public int KategoriPenerima { get; set; }
@@ -18,7 +18,7 @@ namespace MSNK.Models.Modules
         [DisplayName("No CV")]
         public string NoCV { get; set; }
         public DateTime Tarikh { get; set; }
-        [DisplayName("Kod Pekerja")]
+        [DisplayName("Kod Anggota")]
         public int? SuPekerjaId { get; set; }
         public SuPekerja SuPekerja { get; set; }
         [DisplayName("Kod Pembekal")]
@@ -30,6 +30,7 @@ namespace MSNK.Models.Modules
         public string Alamat2 { get; set; }
         public string Alamat3 { get; set; }
         public string Catatan { get; set; }
+        [DisplayName("Jumlah RM")]
         public decimal Jumlah { get; set; }
         public ICollection<AkTunaiCV1> AkTunaiCV1 { get; set; }
         public int FlPosting { get; set; }

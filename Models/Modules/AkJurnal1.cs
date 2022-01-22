@@ -14,6 +14,7 @@ namespace MSNK.Models.Modules
         [Display(Name = "No Rujukan")]
         public int AkJurnalId { get; set; }
         public int Indeks { get; set; }
+        [DisplayName("Kod Objek")]
         public int AkCartaId { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Debit { get; set; }

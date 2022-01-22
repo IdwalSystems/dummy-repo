@@ -30,6 +30,7 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "No Rujukan Diperlukan")]
         public string NoInbois { get; set; }
         [BindProperty]
+        [DisplayName("Jumlah RM")]
         public decimal Jumlah { get; set; }
         //field end
 

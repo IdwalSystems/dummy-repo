@@ -62,8 +62,8 @@
 
 @*div table*@
 
-<div class="table-responsive">
-    <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
+<div class="table-responsive table-sm">
+    <table class="table table-bordered table-hover display compact nowrap" width="100%">
         <thead>
             <tr>
                 <th>
@@ -111,8 +111,8 @@
                     <td>
                         @item.Tarikh.ToString("dd/MM/yyyy")
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Jumlah)
+                    <td class="text-right">
+                        @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
                     </td>
                     <td>
                         @item.NamaSykt.ToUpper()

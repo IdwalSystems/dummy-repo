@@ -27,6 +27,11 @@
         }
 
         $("#searchColumn").change(function () {
+            $("#myInput").val("");
+            $("#inputTarikh1").val("");
+            $("#inputTarikh2").val("");
+            $("#searchKw").val("").trigger('change');
+
             if (this.value === "Tarikh") {
                 $("#myInput").hide();
                 $("#myInputDate1").show();
@@ -56,9 +61,10 @@
                 { orderable: false, targets: '_all' }
             ],
             "order": [[1, "asc"]],
-            "language": {
-                "emptyTable": "Tiada data wujud buat masa ini"
-            },
+            "scrollY": "50vh",
+            "scrollX": true,
+            "scrollCollapse": true,
+            "paging": false,
             dom: 'lrt'
         });
 

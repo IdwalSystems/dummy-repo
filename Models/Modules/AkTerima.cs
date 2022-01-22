@@ -21,6 +21,7 @@ namespace MSNK.Models.Modules
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Tarikh { get; set; }
         public DateTime? TarikhPosting { get; set; }
+        [DisplayName("Jumlah RM")]
         public decimal Jumlah { get; set; }
         [DisplayName("Kod Pembayar")]
         [MaxLength(20)]

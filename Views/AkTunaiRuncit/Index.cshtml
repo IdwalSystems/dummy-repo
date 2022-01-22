@@ -36,16 +36,16 @@
         </div>
     </div>
 </div>
-<div class="table-responsive">
-    <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%">
+<div class="table-responsive table-sm">
+    <table class="table table-bordered table-hover display compact nowrap" width="100%">
         <thead>
-            <tr class="table-secondary">
+            <tr>
                 <th width="5%">Bil</th>
                 <th width="5%">
                     KW
                 </th>
                 <th class="kod" width="10%">
-                    Kod Rujukan 
+                    Kod Rujukan
                 </th>
                 <th class="nama">
                     Kod Akaun
@@ -59,31 +59,31 @@
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td></td>
-                <td>
-                    @item.KodKW
-                </td>
-                <td>
-                    @item.KodRujukan
-                </td>
-                <td>
-                    @item.KodAkaun - @item.Perihal
-                </td>
-                <td class="text-right">
-                    @Convert.ToDecimal(item.BakiLejarPanjar).ToString("#,##0.00")
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id"
-                       class="btn btn-primary btn-sm" type="button"
-                       data-toggle="tooltip" data-placement="top"
-                       title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                    <a asp-action="Delete" asp-route-id="@item.Id"
-                       class="btn btn-danger btn-sm" type="button"
-                       data-toggle="tooltip" data-placement="top"
-                       title="Hapus"><i class="fas fa-trash"></i></a>
-                </td>
-            </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        @item.KodKW
+                    </td>
+                    <td>
+                        @item.KodRujukan
+                    </td>
+                    <td>
+                        @item.KodAkaun - @item.Perihal
+                    </td>
+                    <td class="text-right">
+                        @Convert.ToDecimal(item.BakiLejarPanjar).ToString("#,##0.00")
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id"
+                           class="btn btn-primary btn-sm" type="button"
+                           data-toggle="tooltip" data-placement="top"
+                           title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.Id"
+                           class="btn btn-danger btn-sm" type="button"
+                           data-toggle="tooltip" data-placement="top"
+                           title="Hapus"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

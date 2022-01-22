@@ -62,8 +62,8 @@
 
 @*div table*@
 
-<div class="table-responsive">
-    <table class="table table-bordered table-hover text-nowrap table-sm nowrap " width="100%">
+<div class="table-responsive table-sm">
+    <table class="table table-bordered table-hover display compact nowrap" width="100%">
         <thead>
             <tr>
                 <th>
@@ -99,112 +99,112 @@
                 <th>
                     Batal
                 </th>
-                <th class="action-button"></th>
+                <th ></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tahun)
-                </td>
-                @switch (item.FlKategoriPenerima)
-                {
-                    case 1:
-                        <td>Pembekal</td>
-                        break;
-                    case 2:
-                        <td>Pekerja</td>
-                        break;
-                    default:
-                        <td>Am</td>
-                        break;
-                }
-                <td>
-                    @item.NoPV.Substring(3)
-                </td>
-                <td>
-                    @item.Tarikh.ToString("dd/MM/yyyy")
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Jumlah)
-                </td>
-                <td>
-                    @item.Penerima.ToUpper()
-                </td>
-                <td>
-                    @item.CaraBayar.ToUpper()
-                </td>
-                <td>
-                    @if (item.FlCetak == 0)
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tahun)
+                    </td>
+                    @switch (item.FlKategoriPenerima)
                     {
-                        <label class="mb-0">BELUM</label>
+                        case 1:
+                            <td>PEMBEKAL</td>
+                            break;
+                        case 2:
+                            <td>PEKERJA</td>
+                            break;
+                        default:
+                            <td>AM</td>
+                            break;
                     }
-                    else
-                    {
-                        <label class="mb-0">SUDAH</label>
-                    }
-                </td>
-                <td>
-                    @if (item.FlPosting == 0)
-                    {
-                        <label class="mb-0">BELUM</label>
-                    }
-                    else
-                    {
-                        <label class="mb-0">SUDAH</label>
-                    }
-                </td>
-                <td>
-                    @if (item.FlBatal == 0)
-                    {
-                        <label class="mb-0">TIDAK</label>
-                    }
-                    else
-                    {
-                        <label class="mb-0">YA</label>
-                    }
-                </td>
-                <td class="action-button">
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                    <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
-                    @if (item.FlPosting == 0)
-                    {
-                        @if (item.Jumlah != 0)
+                    <td>
+                        @item.NoPV.Substring(3)
+                    </td>
+                    <td>
+                        @item.Tarikh.ToString("dd/MM/yyyy")
+                    </td>
+                    <td class="text-right">
+                        @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
+                    </td>
+                    <td>
+                        @item.Penerima.ToUpper()
+                    </td>
+                    <td>
+                        @item.CaraBayar.ToUpper()
+                    </td>
+                    <td>
+                        @if (item.FlCetak == 0)
                         {
-                            @if (item.FlKategoriPenerima == 1)
+                            <label class="mb-0">BELUM</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">SUDAH</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.FlPosting == 0)
+                        {
+                            <label class="mb-0">BELUM</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">SUDAH</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.FlBatal == 0)
+                        {
+                            <label class="mb-0">TIDAK</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">YA</label>
+                        }
+                    </td>
+                    <td class="action-button">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                        @if (item.FlPosting == 0)
+                        {
+                            @if (item.Jumlah != 0)
                             {
-                                @if (item.Jumlah == item.JumlahInbois)
+                                @if (item.FlKategoriPenerima == 1)
+                                {
+                                    @if (item.Jumlah == item.JumlahInbois)
+                                    {
+                                        <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                            <i class="fas fa-sync"></i>
+                                        </a>
+                                    }
+                                }
+                                else
                                 {
                                     <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
                                         <i class="fas fa-sync"></i>
                                     </a>
                                 }
-                            }
-                            else
-                            {
-                                <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
-                                    <i class="fas fa-sync"></i>
-                                </a>
+
                             }
 
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                        }
+                        else
+                        {
+                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
+                                <i class="fas fa-sync"></i>
+                            </a>
                         }
 
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
-                    }
-                    else
-                    {
-                        <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
-                            <i class="fas fa-sync"></i>
-                        </a>
-                    }
 
-
-                </td>
-            </tr>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

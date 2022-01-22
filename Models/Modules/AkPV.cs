@@ -23,6 +23,7 @@ namespace MSNK.Models.Modules
         [DisplayName("No Rujukan")]
         [MaxLength(20)]
         public string NoPV { get; set; }
+        [DisplayName("Jumlah RM")]
         public decimal Jumlah { get; set; }
         [DisplayName("No KP")]
         public string NoKP { get; set; }

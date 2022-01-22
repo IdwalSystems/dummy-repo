@@ -12,7 +12,9 @@ namespace MSNK.Models.Modules
         //field
         public int Id { get; set; }
         public int AkBelianId { get; set; }
+        [DisplayName("Kod Akaun")]
         public int AkCartaId { get; set; }
+        [DisplayName("Amaun RM")]
         public decimal Amaun { get; set; }
         //field end
 

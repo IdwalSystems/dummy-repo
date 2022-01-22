@@ -10,7 +10,9 @@ namespace MSNK.Models.Modules
         //field
         public int Id { get; set; }
         public int AkTerimaId { get; set; }
+        [DisplayName("Cara Bayar")]
         public int JCaraBayarId { get; set; }
+        [DisplayName("Amaun RM")]
         public decimal Amaun { get; set; }
         [MaxLength(10)]
         public string NoCek { get; set; } 
