@@ -59,7 +59,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.JKW)
                 </th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -72,7 +71,7 @@
                         @Html.DisplayFor(modelItem => item.Tahun)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Tarikh)
+                        @item.Tarikh.ToString("dd/MM/yyyy")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Kod)
@@ -81,39 +80,34 @@
                         @Html.DisplayFor(modelItem => item.Penerima)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.VotId)
+                        @Html.DisplayFor(modelItem => item.Vot.Kod)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Rujukan)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Debit)
+                        @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Kredit)
+                        @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Tanggungan)
+                        @Convert.ToDecimal(item.Tanggungan).ToString("#,##0.00")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Tbs)
+                        @Convert.ToDecimal(item.Tbs).ToString("#,##0.00")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Baki)
+                        @Convert.ToDecimal(item.Baki).ToString("#,##0.00")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Rizab)
+                        @Convert.ToDecimal(item.Rizab).ToString("#,##0.00")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Liabiliti)
+                        @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.JKW.Kod)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     </td>
                 </tr>
             }
