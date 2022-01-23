@@ -1,6 +1,50 @@
-﻿setTimeout(function () {
-    $(".alert").fadeOut();
-}, 2000); 
+﻿////const myTimeout = setTimeout(myGreeting, 5000);
+
+////function myGreeting() {
+////    toastr.options = {
+////        "closeButton": true,
+////        "timeOut": "0",
+////        "extendedTimeOut": "0"
+////    }
+////    // for warning - orange box
+////    toastr.warning("Masa anda telah tamat. Sila tekan butang 'Refresh' untuk log in semula.");
+////}
+$(function () {
+    $("body").on('click keypress', function () {
+        ResetThisSession();
+    });
+});
+
+var timeInSecondsAfterSessionOut = 1800; // change this to change session time out (in seconds).
+var secondTick = 0;
+
+function ResetThisSession() {
+    secondTick = 0;
+}
+
+function StartThisSessionTimer() {
+    secondTick++;
+    var timeLeft = ((timeInSecondsAfterSessionOut - secondTick) / 60).toFixed(0); // in minutes
+    timeLeft = timeInSecondsAfterSessionOut - secondTick; // override, we have 30 secs only 
+
+    $("#spanTimeLeft").html(timeLeft);
+
+    if (secondTick > timeInSecondsAfterSessionOut) {
+        clearTimeout(tick);
+        
+        toastr.options = {
+            "closeButton": true,
+            "timeOut": "500000",
+            "extendedTimeOut": "100000"
+        };
+        toastr.warning("Masa anda telah tamat. Sila log in semula.");
+        /*window.location = '/Account/Login';*/
+        return ;
+    }
+    tick = setTimeout("StartThisSessionTimer()", 1000);
+}
+
+StartThisSessionTimer();
 
 function showDate(d) {
     var s = new Date(d);

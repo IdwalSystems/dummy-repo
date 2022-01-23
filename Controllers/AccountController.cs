@@ -71,6 +71,23 @@ namespace MSNK.Controllers
             return View(registerViewModel);
         }
 
+        // redirect to login controller
+        [HttpGet]
+        public async Task<JsonResult> JsonLogOff()
+        {
+            try
+            {
+                await LogOff();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //redirect to login end
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
