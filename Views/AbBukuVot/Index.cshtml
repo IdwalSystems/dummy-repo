@@ -10,6 +10,50 @@
     </div>
 </div>
 <partial name="_JSIndex" />
+
+<div class="card mb-2">
+    <div class="card-body pl-3 pb-2 ">
+        <label class="form-control-plaintext" for="searchselect">Carian : </label>
+        <div class="form-actions no-color mb-2">
+            <form asp-action="Index" method="get" class="needs-validation" novalidate>
+                <div class="form-actions no-color mb-3">
+                    <div class="form-row">
+                        <div class="col-md">
+                            <div class="input-group mb-2 input-group-sm ">
+                                <select class="custom-select" name="searchKW" asp-items="@ViewBag.Kw" required id="ddlKW"></select>
+                                <label class="invalid-feedback">Kumpulan Wang Diperlukan.</label>
+                            </div>
+                            <div class="input-group mb-2 input-group-sm ">
+                                <select class="custom-select select2" name="searchCarta" asp-items="@ViewBag.AkCarta1" style="width:100%" required></select>
+                                <label class="invalid-feedback">Carta Diperlukan.</label>
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="input-group mb-2 input-group-sm ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Daripada</span>
+                                </div>
+                                <input class="form-control" type="date" name="searchFrom" value="@ViewData["searchFrom"]" required id="tarDari" />
+                                <label class="invalid-feedback">Tarikh Diperlukan.</label>
+                            </div>
+                            <div class="input-group mb- input-group-sm ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Sehingga</span>
+                                </div>
+                                <input class="form-control" type="date" name="searchUntil" value="@ViewData["searchUntil"]" required id="tarHingga" />
+                                <label class="invalid-feedback">Tarikh Diperlukan.</label>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Papar" class="btn btn-outline-primary" /> |
+                    <a asp-action="Index" class="btn btn-link">Batal Papar</a>
+                    @*<button type="submit" class="btn btn-sm btn-info"><i class="fa fa-search"></i></button>*@
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="table-responsive table-sm">
     <table class="table table-bordered table-hover display compact nowrap" width="100%">
         <thead>

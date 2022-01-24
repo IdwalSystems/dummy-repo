@@ -66,8 +66,8 @@
     </div>
 </div>
 
-<div class="table-responsive" >
-    <table class="table table-bordered table-hover text-nowrap nowrap compact" width="100%">
+<div class="table-responsive table-sm">
+    <table class="table table-bordered table-hover display compact nowrap" width="100%">
         <thead>
             <tr>
                 <th class="thbil">
@@ -93,32 +93,32 @@
                 </th>
             </tr>
         </thead>
-        <tbody >
+        <tbody>
             @{ int rowNo = 0; }
             @foreach (var item in Model)
             {
-            <tr>
-                <td class="bil">
-                    @(rowNo += 1)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tarikh)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AkCarta2.Kod) - @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NoRujukan)
-                </td>
-                <td class="debit">
-                    @Html.DisplayFor(modelItem => item.Debit)
-                </td>
-                <td class="kredit">
-                    @Html.DisplayFor(modelItem => item.Kredit)
-                </td>
-                <td class="total">
-                </td>
-            </tr>
+                <tr>
+                    <td class="bil">
+                        @(rowNo += 1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tarikh)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AkCarta2.Kod) - @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoRujukan)
+                    </td>
+                    <td class="debit">
+                        @Html.DisplayFor(modelItem => item.Debit)
+                    </td>
+                    <td class="kredit">
+                        @Html.DisplayFor(modelItem => item.Kredit)
+                    </td>
+                    <td class="total">
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

@@ -15,7 +15,7 @@ $(function () {
     });
 });
 
-var timeInSecondsAfterSessionOut = 1800; // change this to change session time out (in seconds).
+var timeInSecondsAfterSessionOut = 600; // change this to change session time out (in seconds).
 var secondTick = 0;
 
 function ResetThisSession() {
