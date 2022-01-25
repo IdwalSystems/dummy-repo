@@ -24,6 +24,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Posting")]
         [DefaultValue("0")]
         public int FlPosting { get; set; }
+        public DateTime? TarikhPosting { get; set; }
         [DisplayName("Batal")]
         [DefaultValue("0")]
         public int FlBatal { get; set; }
@@ -37,6 +38,7 @@ namespace MSNK.Models.Modules
         public string NoCAS { get; set; }
         [DisplayName("No PO")]
         public string NoPO { get; set; }
+        [DisplayName("Tarkih Seksyen Kewangan")]
         public DateTime? TarikhSeksyenKewangan { get; set; }
         // untuk kewangan end
 

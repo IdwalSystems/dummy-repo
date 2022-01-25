@@ -250,12 +250,25 @@ namespace MSNK.Controllers
             }
 
             var akNotaMinta = await _akNotaMintaRepo.GetById((int) id);
+
+            AkNotaMintaViewModel viewModel = new AkNotaMintaViewModel();
+
+            viewModel.AkPembekalId = akNotaMinta.AkPembekalId;
+            viewModel.AkPembekal = akNotaMinta.AkPembekal;
+            viewModel.Tahun = akNotaMinta.Tahun;
+            viewModel.Tarikh = akNotaMinta.Tarikh;
+            viewModel.JKW = akNotaMinta.JKW;
+            viewModel.JKWId = akNotaMinta.JKWId;
+            viewModel.NoRujukan = akNotaMinta.NoRujukan;
+            viewModel.Tajuk = akNotaMinta.Tajuk;
+
             if (akNotaMinta == null)
             {
                 return NotFound();
             }
 
             PopulateTable(id);
+            PopulateList();
             return View(akNotaMinta);
         }
 

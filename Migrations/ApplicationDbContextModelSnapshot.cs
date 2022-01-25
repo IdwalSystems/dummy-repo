@@ -590,6 +590,9 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("Tarikh")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("TarikhPosting")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("TarikhSeksyenKewangan")
                         .HasColumnType("datetime2");
 

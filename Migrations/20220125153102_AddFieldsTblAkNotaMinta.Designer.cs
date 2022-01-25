@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220125144253_AddFieldNoPOTblAkNotaMinta")]
-    partial class AddFieldNoPOTblAkNotaMinta
+    [Migration("20220125153102_AddFieldsTblAkNotaMinta")]
+    partial class AddFieldsTblAkNotaMinta
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -590,6 +590,9 @@ namespace MSNK.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("Tarikh")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TarikhPosting")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("TarikhSeksyenKewangan")
