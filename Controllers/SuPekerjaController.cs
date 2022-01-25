@@ -273,8 +273,9 @@ namespace MSNK.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
                 TempData[SD.Success] = "Data berjaya diubah..!";
+                return RedirectToAction(nameof(Index));
+                
             }
             PopulateList();
             return View(suPekerja);
@@ -312,8 +313,9 @@ namespace MSNK.Controllers
             var suPekerja = await _context.SuPekerja.FindAsync(id);
             _context.SuPekerja.Remove(suPekerja);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
+            return RedirectToAction(nameof(Index));
+            
         }
 
         private bool SuPekerjaExists(int id)

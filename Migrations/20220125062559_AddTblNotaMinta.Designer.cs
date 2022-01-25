@@ -4,14 +4,16 @@ using MSNK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220125062559_AddTblNotaMinta")]
+    partial class AddTblNotaMinta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -564,9 +566,6 @@ namespace MSNK.Migrations
                     b.Property<string>("NoCAS")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NoPO")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NoRujukan")
                         .HasColumnType("nvarchar(max)");
 
@@ -1040,7 +1039,9 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Emel")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("JBankId")
                         .HasColumnType("int");
@@ -1074,7 +1075,9 @@ namespace MSNK.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Telefon1")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
@@ -1814,9 +1817,6 @@ namespace MSNK.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Kod")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Perihal")
                         .HasColumnType("nvarchar(max)");
 
@@ -1917,9 +1917,6 @@ namespace MSNK.Migrations
                     b.Property<int>("JTahapId")
                         .HasColumnType("int");
 
-                    b.Property<int>("JenisPermohonan")
-                        .HasColumnType("int");
-
                     b.Property<int>("JumAtl")
                         .HasColumnType("int");
 
@@ -1964,6 +1961,9 @@ namespace MSNK.Migrations
 
                     b.Property<bool>("Pertandingan")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Ppn")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("ProgramBinaan")
                         .HasColumnType("bit");

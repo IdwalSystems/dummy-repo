@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220125044615_AddTblNotaMinta")]
-    partial class AddTblNotaMinta
+    [Migration("20220125073310_adjustFieldTblAkPembekal")]
+    partial class adjustFieldTblAkPembekal
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -545,9 +545,6 @@ namespace MSNK.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AkPOId")
-                        .HasColumnType("int");
-
                     b.Property<int>("AkPembekalId")
                         .HasColumnType("int");
 
@@ -566,7 +563,13 @@ namespace MSNK.Migrations
                     b.Property<decimal>("Jumlah")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("NoCAS")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NoRujukan")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoSiri")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tahun")
@@ -586,6 +589,9 @@ namespace MSNK.Migrations
                     b.Property<DateTime>("Tarikh")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("TarikhSeksyenKewangan")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
@@ -593,8 +599,6 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AkPOId");
 
                     b.HasIndex("AkPembekalId");
 
@@ -683,6 +687,9 @@ namespace MSNK.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AkNotaMintaId")
+                        .HasColumnType("int");
+
                     b.Property<int>("AkPembekalId")
                         .HasColumnType("int");
 
@@ -737,6 +744,8 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AkNotaMintaId");
 
                     b.HasIndex("AkPembekalId");
 
@@ -1030,9 +1039,7 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Emel")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("JBankId")
                         .HasColumnType("int");
@@ -1066,9 +1073,7 @@ namespace MSNK.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Telefon1")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
@@ -1808,6 +1813,9 @@ namespace MSNK.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Kod")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Perihal")
                         .HasColumnType("nvarchar(max)");
 
@@ -1908,6 +1916,9 @@ namespace MSNK.Migrations
                     b.Property<int>("JTahapId")
                         .HasColumnType("int");
 
+                    b.Property<int>("JenisPermohonan")
+                        .HasColumnType("int");
+
                     b.Property<int>("JumAtl")
                         .HasColumnType("int");
 
@@ -1952,9 +1963,6 @@ namespace MSNK.Migrations
 
                     b.Property<bool>("Pertandingan")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Ppn")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("ProgramBinaan")
                         .HasColumnType("bit");
@@ -2638,10 +2646,6 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkNotaMinta", b =>
                 {
-                    b.HasOne("MSNK.Models.Modules.AkPO", null)
-                        .WithMany("AkNotaMinta")
-                        .HasForeignKey("AkPOId");
-
                     b.HasOne("MSNK.Models.Modules.AkPembekal", "AkPembekal")
                         .WithMany("AkNotaMinta")
                         .HasForeignKey("AkPembekalId")
@@ -2662,7 +2666,7 @@ namespace MSNK.Migrations
             modelBuilder.Entity("MSNK.Models.Modules.AkNotaMinta1", b =>
                 {
                     b.HasOne("MSNK.Models.Modules.AkCarta", "AkCarta")
-                        .WithMany()
+                        .WithMany("AkNotaMinta1")
                         .HasForeignKey("AkCartaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2687,6 +2691,11 @@ namespace MSNK.Migrations
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPO", b =>
                 {
+                    b.HasOne("MSNK.Models.Modules.AkNotaMinta", "AkNotaMinta")
+                        .WithMany("AkPO")
+                        .HasForeignKey("AkNotaMintaId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("MSNK.Models.Modules.AkPembekal", "AkPembekal")
                         .WithMany("AkPO")
                         .HasForeignKey("AkPembekalId")
@@ -2698,6 +2707,8 @@ namespace MSNK.Migrations
                         .HasForeignKey("JKWId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("AkNotaMinta");
 
                     b.Navigation("AkPembekal");
 
@@ -3203,6 +3214,8 @@ namespace MSNK.Migrations
 
                     b.Navigation("AkJurnal1");
 
+                    b.Navigation("AkNotaMinta1");
+
                     b.Navigation("AkPO1");
 
                     b.Navigation("AkPV1");
@@ -3230,13 +3243,13 @@ namespace MSNK.Migrations
                     b.Navigation("AkNotaMinta1");
 
                     b.Navigation("AkNotaMinta2");
+
+                    b.Navigation("AkPO");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkPO", b =>
                 {
                     b.Navigation("AkBelian");
-
-                    b.Navigation("AkNotaMinta");
 
                     b.Navigation("AkPO1");
 

@@ -45,11 +45,14 @@ namespace MSNK.Models.Modules
         public AkPembekal AkPembekal { get; set; }
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
+        [DisplayName("No Nota Minta")]
+        public int? AkNotaMintaId { get; set; }
+        public AkNotaMinta AkNotaMinta { get; set; }
         public JKW JKW { get; set; }
         public ICollection<AkPO2> AkPO2 { get; set; }
         public ICollection<AkPO1> AkPO1 { get; set; }
         public ICollection<AkBelian> AkBelian { get; set; }
-        public ICollection<AkNotaMinta> AkNotaMinta { get; set; }
+        
         //relationship end
 
         // log

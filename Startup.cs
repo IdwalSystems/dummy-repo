@@ -92,6 +92,9 @@ namespace MSNK
             services.AddTransient<ListViewIRepository<SpPermohonanAktiviti1, int>, SpPermohonanAktiviti1Repository>();
             services.AddTransient<ListViewIRepository<SpPermohonanAktiviti2, int>, SpPermohonanAktiviti2Repository>();
             //PERMOHONAN AKTIVITI END
+            services.AddTransient<IRepository<AkNotaMinta, int, string>, AkNotaMintaRepository>();
+            services.AddTransient<ListViewIRepository<AkNotaMinta1, int>, AkNotaMinta1Repository>();
+            services.AddTransient<ListViewIRepository<AkNotaMinta2, int>, AkNotaMinta2Repository>();
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
@@ -100,6 +103,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartPekerja.GetCart(ss));
             services.AddScoped(ss => SessionCartTunaiRuncit.GetCart(ss));
             services.AddScoped(ss => SessionCartTunaiCV.GetCart(ss));
+            services.AddScoped(ss => SessionCartNotaMinta.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -184,6 +188,18 @@ namespace MSNK
                 options.AddPolicy("TR002T", policy => policy.RequireClaim("TR002T"));
                 options.AddPolicy("TR002UT", policy => policy.RequireClaim("TR002UT"));
                 //Tunai Keluar End
+                //Menu Nota Minta
+                //Nota Minta
+                options.AddPolicy("NM001", policy => policy.RequireClaim("NM001"));
+                options.AddPolicy("NM001C", policy => policy.RequireClaim("NM001C"));
+                options.AddPolicy("NM001E", policy => policy.RequireClaim("NM001E"));
+                options.AddPolicy("NM001E1", policy => policy.RequireClaim("NM001E1"));
+                options.AddPolicy("NM001D", policy => policy.RequireClaim("NM001D"));
+                options.AddPolicy("NM001P", policy => policy.RequireClaim("NM001P"));
+                options.AddPolicy("NM001B", policy => policy.RequireClaim("NM001B"));
+                options.AddPolicy("NM001T", policy => policy.RequireClaim("NM001T"));
+                options.AddPolicy("NM001UT", policy => policy.RequireClaim("NM001UT"));
+                //Nota Minta End
             });
 
             services.AddMvc(f =>

@@ -17,6 +17,12 @@ namespace MSNK.Migrations
                 oldType: "nvarchar(max)",
                 oldNullable: true);
 
+            migrationBuilder.AddColumn<int>(
+                name: "AkNotaMintaId",
+                table: "AkPO",
+                type: "int",
+                nullable: true);
+
             migrationBuilder.AddColumn<string>(
                 name: "Tajuk",
                 table: "AkPO",
@@ -37,13 +43,15 @@ namespace MSNK.Migrations
                     FlPosting = table.Column<int>(type: "int", nullable: false),
                     FlBatal = table.Column<int>(type: "int", nullable: false),
                     FlCetak = table.Column<int>(type: "int", nullable: false),
+                    NoSiri = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NoCAS = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TarikhSeksyenKewangan = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarMasuk = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserIdKemaskini = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TarKemaskini = table.Column<DateTime>(type: "datetime2", nullable: false),
                     JKWId = table.Column<int>(type: "int", nullable: false),
-                    AkPembekalId = table.Column<int>(type: "int", nullable: false),
-                    AkPOId = table.Column<int>(type: "int", nullable: true)
+                    AkPembekalId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,12 +60,6 @@ namespace MSNK.Migrations
                         name: "FK_AkNotaMinta_AkPembekal_AkPembekalId",
                         column: x => x.AkPembekalId,
                         principalTable: "AkPembekal",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AkNotaMinta_AkPO_AkPOId",
-                        column: x => x.AkPOId,
-                        principalTable: "AkPO",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -124,14 +126,14 @@ namespace MSNK.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AkPO_AkNotaMintaId",
+                table: "AkPO",
+                column: "AkNotaMintaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AkNotaMinta_AkPembekalId",
                 table: "AkNotaMinta",
                 column: "AkPembekalId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AkNotaMinta_AkPOId",
-                table: "AkNotaMinta",
-                column: "AkPOId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AkNotaMinta_JKWId",
@@ -152,10 +154,21 @@ namespace MSNK.Migrations
                 name: "IX_AkNotaMinta2_AkNotaMintaId",
                 table: "AkNotaMinta2",
                 column: "AkNotaMintaId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AkPO_AkNotaMinta_AkNotaMintaId",
+                table: "AkPO",
+                column: "AkNotaMintaId",
+                principalTable: "AkNotaMinta",
+                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_AkPO_AkNotaMinta_AkNotaMintaId",
+                table: "AkPO");
+
             migrationBuilder.DropTable(
                 name: "AkNotaMinta1");
 
@@ -164,6 +177,14 @@ namespace MSNK.Migrations
 
             migrationBuilder.DropTable(
                 name: "AkNotaMinta");
+
+            migrationBuilder.DropIndex(
+                name: "IX_AkPO_AkNotaMintaId",
+                table: "AkPO");
+
+            migrationBuilder.DropColumn(
+                name: "AkNotaMintaId",
+                table: "AkPO");
 
             migrationBuilder.DropColumn(
                 name: "Tajuk",

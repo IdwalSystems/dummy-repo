@@ -245,7 +245,6 @@ namespace MSNK.Controllers
 
                     m.JKWId = JKWId;
                     m.NoPermohonan = RunningNumber(spPermohonanAktiviti);
-                    m.Ppn = spPermohonanAktiviti.Ppn;
                     m.Tarikh = spPermohonanAktiviti.Tarikh;
                     m.Penyertaan = spPermohonanAktiviti.Penyertaan;
                     m.Pertandingan = spPermohonanAktiviti.Pertandingan;

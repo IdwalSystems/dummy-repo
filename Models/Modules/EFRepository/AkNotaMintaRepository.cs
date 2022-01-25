@@ -8,52 +8,50 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    
-    public class AkPORepository : IRepository<AkPO, int, string>
+    public class AkNotaMintaRepository : IRepository<AkNotaMinta, int, string>
     {
         public readonly ApplicationDbContext context;
 
-        public AkPORepository(ApplicationDbContext context) => this.context = context;
+        public AkNotaMintaRepository(ApplicationDbContext context) => this.context = context;
+
         public async Task Delete(int id)
         {
-            var model = await context.AkPO.FirstOrDefaultAsync(b => b.Id == id);
+            var model = await context.AkNotaMinta.FirstOrDefaultAsync(b => b.Id == id);
             if (model != null)
             {
                 context.Remove(model);
             }
         }
 
-        public async Task<IEnumerable<AkPO>> GetAll()
+        public async Task<IEnumerable<AkNotaMinta>> GetAll()
         {
-            return await context.AkPO
+            return await context.AkNotaMinta
                 .Include(b => b.JKW)
                 .Include(b => b.AkPembekal)
-                .Include(b => b.AkNotaMinta)
-                .Include(b => b.AkPO1)
-                .Include(b => b.AkPO2)
+                .Include(b => b.AkNotaMinta1)
+                .Include(b => b.AkNotaMinta2)
                 .ToListAsync();
         }
 
-        public async Task<AkPO> GetById(int id)
+        public async Task<AkNotaMinta> GetById(int id)
         {
-            return await context.AkPO
+            return await context.AkNotaMinta
                 .Where(d => d.Id == id)
                 .Include(b => b.JKW)
-                .Include(d => d.AkPO1).ThenInclude(d => d.AkCarta)
-                .Include(d => d.AkPO2)
-                .Include(d => d.AkPembekal).ThenInclude(d => d.JNegeri)
-                .Include(d => d.AkPembekal).ThenInclude(d => d.JBank)
+                .Include(b => b.AkPembekal)
+                .Include(b => b.AkNotaMinta1)
+                .Include(b => b.AkNotaMinta2)
                 .FirstOrDefaultAsync();
         }
 
-        public Task<AkPO> GetByString(string id)
+        public Task<AkNotaMinta> GetByString(string id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<AkPO> Insert(AkPO entity)
+        public async Task<AkNotaMinta> Insert(AkNotaMinta entity)
         {
-            await context.AkPO.AddAsync(entity);
+            await context.AkNotaMinta.AddAsync(entity);
             return entity;
         }
 
@@ -62,7 +60,7 @@ namespace MSNK.Models.Modules.EFRepository
             await context.SaveChangesAsync();
         }
 
-        public async Task Update(AkPO entity)
+        public async Task Update(AkNotaMinta entity)
         {
             context.Update(entity);
             await context.SaveChangesAsync();

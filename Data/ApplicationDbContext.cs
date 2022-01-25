@@ -139,6 +139,12 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.JKWId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
+
+            modelBuilder.Entity<AkPO>()
+                .HasOne(m => m.AkNotaMinta)
+                .WithMany(t => t.AkPO)
+                .HasForeignKey(m => m.AkNotaMintaId)
+                .OnDelete(DeleteBehavior.NoAction);
             //AkPO end
             //AkNotaMinta
             modelBuilder.Entity<AkNotaMinta>()

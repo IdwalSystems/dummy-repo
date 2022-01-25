@@ -35,11 +35,11 @@ namespace MSNK.Models.Modules
         [DisplayName("No Akaun Bank")]
         public string NoAkaunBank { get; set; }
         public string Emel { get; set; }
-        [DisplayName("No Cek / EFT")]
+        [DisplayName("No Cek / EFT / JomPAY")]
         [MaxLength(10)]
         public string NoCekAtauEFT { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        [DisplayName("Tarikh Cek / EFT")]
+        [DisplayName("Tarikh Cek / EFT / JomPAY")]
         public DateTime? TarCekAtauEFT { get; set; }
         [MaxLength(400)]
         [DefaultValue("")]

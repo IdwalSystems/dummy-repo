@@ -84,6 +84,17 @@ namespace MSNK.Data
             new Claim("TR002T","TR002 Tunai Keluar - Posting"),
             new Claim("TR002UT","TR002 Tunai Keluar - UnPosting"),
             //Tunai Keluar end
+            //Nota Minta
+            new Claim("NM001","NM001 Nota Minta"),
+            new Claim("NM001C","NM001 Nota Minta - Tambah"),
+            new Claim("NM001E","NM001 Nota Minta - Ubah"),
+            new Claim("NM001E1","NM001 Nota Minta - Ubah Bahagian Kewangan"),
+            new Claim("NM001D","NM001 Nota Minta - Hapus"),
+            new Claim("NM001P","NM001 Nota Minta - Cetak"),
+            new Claim("NM001B","NM001 Nota Minta - Batal"),
+            new Claim("NM001T","NM001 Nota Minta - Posting"),
+            new Claim("NM001UT","NM001 Baucer Jurnal - UnPosting"),
+            //Nota Minta end
         };
     }
 }

@@ -33,11 +33,9 @@ namespace MSNK.Models.Modules
         public string Poskod { get; set; }//nvarchar
         [Required(ErrorMessage = "Bandar Diperlukan."), MaxLength(100)]
         public string Bandar { get; set; }
-        
-        [Required(ErrorMessage = "Nombor Telefon Diperlukan."), Phone(ErrorMessage = "Nombor Telefon Tidak Sah."), MaxLength(30)]
+
         [Display(Name = "No Telefon")]
         public string Telefon1 { get; set; }
-        [Required(ErrorMessage = "Emel Diperlukan."), EmailAddress(ErrorMessage = "Emel Tidak Sah."), MaxLength(100)]
         public string Emel { get; set; }
         [Required(ErrorMessage = "Nombor Akaun Bank Diperlukan."), MaxLength(20)]
         [Display(Name = "No Akaun Bank")]

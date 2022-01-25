@@ -160,7 +160,7 @@
         var value = $("#ddlJCaraBayar option:selected");
         $("#txtNoCekAtauEFT").val("");
         $("#txtTarCekAtauEFT").val("");
-        if (value.text() == 'C - CEK' || value.text() == 'E - EFT') {
+        if (value.text() == 'C - CEK' || value.text() == 'E - EFT' || value.text() == 'JP - JOMPAY') {
             $("#txtNoCekAtauEFT").prop('disabled', false);
             $("#txtTarCekAtauEFT").prop('disabled', false);
         } else {

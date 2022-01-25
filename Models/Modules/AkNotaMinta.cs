@@ -32,6 +32,14 @@ namespace MSNK.Models.Modules
         public int FlCetak { get; set; }
         //flag end
 
+        // untuk kewangan
+        public string NoSiri{ get; set; }
+        public string NoCAS { get; set; }
+        [DisplayName("No PO")]
+        public string NoPO { get; set; }
+        public DateTime? TarikhSeksyenKewangan { get; set; }
+        // untuk kewangan end
+
         // log
         public string UserId { get; set; }
         [DisplayName("Tarikh Masuk")]
@@ -42,12 +50,16 @@ namespace MSNK.Models.Modules
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime TarKemaskini { get; set; } = DateTime.Now;
         //log end
+
+        [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
+        [DisplayName("Kod Pembekal")]
         public int AkPembekalId { get; set; }
         public AkPembekal AkPembekal { get; set; }
         public ICollection<AkNotaMinta1> AkNotaMinta1 { get; set; }
         public ICollection<AkNotaMinta2> AkNotaMinta2 { get; set; }
+        public ICollection<AkPO> AkPO { get; set; }
 
     }
 }

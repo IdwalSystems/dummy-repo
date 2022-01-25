@@ -36,6 +36,21 @@
     }
     // check end
 
+    // onchange Cara Bayaran
+    $("body").on('change', "#ddlJCaraBayar", function () {
+        var value = $("#ddlJCaraBayar option:selected");
+        $("#txtNoCekAtauEFT").val("");
+        $("#txtTarCekAtauEFT").val("");
+        if (value.text() == 'C - CEK / WANG POS' || value.text() == 'E - EFT' || value.text() == 'JP - JOMPAY') {
+            $("#txtNoCekAtauEFT").prop('disabled', false);
+            $("#txtTarCekAtauEFT").prop('disabled', false);
+        } else {
+            $("#txtNoCekAtauEFT").prop('disabled', true);
+            $("#txtTarCekAtauEFT").prop('disabled', true);
+        }
+    });
+    //onchange Cara Bayaran end
+
     // onchange no Inbois pembekal
     $("body").on('change', "#txtAkBelian", function () {
         var noInbois = $("#txtAkBelian").val();

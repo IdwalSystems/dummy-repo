@@ -8,6 +8,7 @@ namespace MSNK.Models.Modules
     public class JSukan
     {
         public int Id { get; set; }
+        public string Kod { get; set; }
         public string Perihal { get; set; }
 
         //relationship

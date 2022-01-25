@@ -11,7 +11,8 @@ namespace MSNK.Models.Modules
     {
         public int Id { get; set; }
         public string NoPermohonan { get; set; }
-        public string Ppn { get; set; }
+        [DisplayName("Jenis Permohonan")]
+        public int JenisPermohonan { get; set; }
         public bool Penyertaan { get; set; }
         public bool Pertandingan { get; set; }
         public bool Pengelolaan { get; set; }
