@@ -25,6 +25,7 @@ namespace MSNK.Models.Modules
         public string Tahun { get; set; }
         public DateTime TempohSiap { get; set; }
         public DateTime TarikhSiap { get; set; }
+        public string Tajuk { get; set; }
         //field end
 
         //flag
@@ -48,6 +49,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkPO2> AkPO2 { get; set; }
         public ICollection<AkPO1> AkPO1 { get; set; }
         public ICollection<AkBelian> AkBelian { get; set; }
+        public ICollection<AkNotaMinta> AkNotaMinta { get; set; }
         //relationship end
 
         // log

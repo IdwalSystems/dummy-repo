@@ -209,7 +209,7 @@ namespace MSNK.Controllers
             List<AkBank> akBankList = _context.AkBank.Include(b => b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
 
-            List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.Where(b=> b.Kod == "C" || b.Kod == "E").ToList();
+            List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.Where(b=> b.Kod == "C" || b.Kod == "E" || b.Kod == "JP").ToList();
             ViewBag.JCaraBayar = jCaraBayarList;
 
         }
@@ -1003,7 +1003,10 @@ namespace MSNK.Controllers
                     m.FlJenisBaucer = akPV.FlJenisBaucer;
                     m.NoRekup = akPV.NoRekup;
                     m.denganTanggungan = akPV.denganTanggungan;
-                    m.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
+                    if (AkTunaiRuncitId != 0)
+                    {
+                        m.AkTunaiRuncitId = AkTunaiRuncitId;
+                    }
 
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;

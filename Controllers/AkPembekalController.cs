@@ -130,6 +130,18 @@ namespace MSNK.Controllers
         public async Task<IActionResult> Create(AkPembekal akPembekal, int jNegeriId, int jBankId)
         {
             AkPembekal akP = new();
+
+            // check kalau ada no Akaun redundant
+            var akPAkaunRedundant = _context.AkPembekal.Where(x => x.AkaunBank == akPembekal.AkaunBank).FirstOrDefault();
+
+            if (akPAkaunRedundant != null)
+            {
+                TempData[SD.Error] = "No Akaun berikut telah didaftarkan. Sila cuba sekali lagi.";
+                PopulateList();
+
+                return View(akP);
+            }
+            // check end
             if (ModelState.IsValid)
             {
                 if (akPembekal != null)

@@ -146,7 +146,7 @@
                                 <option value="0" disabled selected>-- Pilih Cara Bayaran --</option>
                                 @foreach (var s in ViewBag.JCaraBayar)
                                 {
-                                    <option value="@s.Id">@s.Kod - @s.Perihal</option>
+                                    <option value="@s.Id" class="text-uppercase">@s.Kod - @s.Perihal</option>
                                 }
                             </select>
                             <span asp-validation-for="JCaraBayarId" class="text-danger"></span>

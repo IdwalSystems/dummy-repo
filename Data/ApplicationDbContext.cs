@@ -59,6 +59,9 @@ namespace MSNK.Data
         public DbSet<AkTunaiCV> AkTunaiCV { get; set; }
         public DbSet<AkTunaiCV1> AkTunaiCV1 { get; set; }
         public DbSet<AkTunaiLejar> AkTunaiLejar { get; set; }
+        public DbSet<AkNotaMinta> AkNotaMinta { get; set; }
+        public DbSet<AkNotaMinta1> AkNotaMinta1 { get; set; }
+        public DbSet<AkNotaMinta2> AkNotaMinta2 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -137,6 +140,21 @@ namespace MSNK.Data
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
             //AkPO end
+            //AkNotaMinta
+            modelBuilder.Entity<AkNotaMinta>()
+                    .HasOne(m => m.AkPembekal)
+                    .WithMany(t => t.AkNotaMinta)
+                    .HasForeignKey(m => m.AkPembekalId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+            modelBuilder.Entity<AkNotaMinta>()
+                    .HasOne(m => m.JKW)
+                    .WithMany(t => t.AkNotaMinta)
+                    .HasForeignKey(m => m.JKWId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+            //AkNotaMinta end
             //AkJurnal
             modelBuilder.Entity<AkJurnal>()
                 .HasOne(m => m.JKW)
