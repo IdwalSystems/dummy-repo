@@ -253,14 +253,30 @@ namespace MSNK.Controllers
 
             AkNotaMintaViewModel viewModel = new AkNotaMintaViewModel();
 
+            viewModel.Id = akNotaMinta.Id;
             viewModel.AkPembekalId = akNotaMinta.AkPembekalId;
             viewModel.AkPembekal = akNotaMinta.AkPembekal;
             viewModel.Tahun = akNotaMinta.Tahun;
             viewModel.Tarikh = akNotaMinta.Tarikh;
             viewModel.JKW = akNotaMinta.JKW;
             viewModel.JKWId = akNotaMinta.JKWId;
-            viewModel.NoRujukan = akNotaMinta.NoRujukan;
+            viewModel.NoRujukan = akNotaMinta.NoRujukan.Substring(3);
             viewModel.Tajuk = akNotaMinta.Tajuk;
+            viewModel.NoSiri = akNotaMinta.NoSiri;
+            viewModel.NoCAS = akNotaMinta.NoCAS;
+            viewModel.NoPO = akNotaMinta.NoPO;
+            viewModel.TarikhSeksyenKewangan = akNotaMinta.TarikhSeksyenKewangan;
+            viewModel.FlPosting = akNotaMinta.FlPosting;
+            viewModel.FlCetak = akNotaMinta.FlCetak;
+            viewModel.FlBatal = akNotaMinta.FlBatal;
+
+            viewModel.Jumlah = akNotaMinta.Jumlah;
+            viewModel.AkNotaMinta1 = akNotaMinta.AkNotaMinta1;
+            foreach (AkNotaMinta2 item in akNotaMinta.AkNotaMinta2)
+            {
+                viewModel.JumlahPerihal += item.Amaun;
+            }
+            viewModel.AkNotaMinta2 = akNotaMinta.AkNotaMinta2;
 
             if (akNotaMinta == null)
             {
@@ -269,7 +285,7 @@ namespace MSNK.Controllers
 
             PopulateTable(id);
             PopulateList();
-            return View(akNotaMinta);
+            return View(viewModel);
         }
 
         // GET: AkNotaMinta/Create
@@ -431,7 +447,7 @@ namespace MSNK.Controllers
         // get an item from cart akNotaMinta2 end
 
         //save cart akNotaMinta2
-        public JsonResult SaveCartAkBNotaMinta2(AkNotaMinta2 akNotaMinta2)
+        public JsonResult SaveCartAkNotaMinta2(AkNotaMinta2 akNotaMinta2)
         {
 
             try
@@ -737,6 +753,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkNotaMinta/Edit/5
+        [Authorize(Policy = "NM001E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -744,54 +761,144 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akNotaMinta = await _context.AkNotaMinta.FindAsync(id);
+            var akNotaMinta = await _akNotaMintaRepo.GetById((int)id);
+
+            AkNotaMintaViewModel viewModel = new AkNotaMintaViewModel();
+
+            viewModel.Id = akNotaMinta.Id;
+            viewModel.AkPembekalId = akNotaMinta.AkPembekalId;
+            viewModel.AkPembekal = akNotaMinta.AkPembekal;
+            viewModel.Tahun = akNotaMinta.Tahun;
+            viewModel.Tarikh = akNotaMinta.Tarikh;
+            viewModel.JKW = akNotaMinta.JKW;
+            viewModel.JKWId = akNotaMinta.JKWId;
+            viewModel.NoRujukan = akNotaMinta.NoRujukan.Substring(3);
+            viewModel.Tajuk = akNotaMinta.Tajuk;
+            viewModel.NoSiri = akNotaMinta.NoSiri;
+            viewModel.NoCAS = akNotaMinta.NoCAS;
+            viewModel.NoPO = akNotaMinta.NoPO;
+            viewModel.TarikhSeksyenKewangan = akNotaMinta.TarikhSeksyenKewangan;
+            viewModel.FlPosting = akNotaMinta.FlPosting;
+            viewModel.FlCetak = akNotaMinta.FlCetak;
+            viewModel.FlBatal = akNotaMinta.FlBatal;
+
+            viewModel.Jumlah = akNotaMinta.Jumlah;
+            viewModel.AkNotaMinta1 = akNotaMinta.AkNotaMinta1;
+            foreach (AkNotaMinta2 item in akNotaMinta.AkNotaMinta2)
+            {
+                viewModel.JumlahPerihal += item.Amaun;
+            }
+            viewModel.AkNotaMinta2 = akNotaMinta.AkNotaMinta2;
+
             if (akNotaMinta == null)
             {
                 return NotFound();
             }
-            ViewData["AkPembekalId"] = new SelectList(_context.AkPembekal, "Id", "AkaunBank", akNotaMinta.AkPembekalId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", akNotaMinta.JKWId);
-            return View(akNotaMinta);
+
+            CartEmpty();
+            PopulateTable(id);
+            PopulateList();
+            PopulateCartFromDb(akNotaMinta);
+            return View(viewModel);
         }
 
         // POST: AkNotaMinta/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "NM001E")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Tahun,Tarikh,NoRujukan,Tajuk,Jumlah,FlPosting,FlBatal,FlCetak,NoSiri,NoCAS,TarikhSeksyenKewangan,UserId,TarMasuk,UserIdKemaskini,TarKemaskini,JKWId,AkPembekalId")] AkNotaMinta akNotaMinta)
+        public async Task<IActionResult> Edit(int id, AkNotaMinta akNotaMinta, int JKWId, int AkPembekalId, string NamaPembekal, decimal JumlahPerihal)
         {
             if (id != akNotaMinta.Id)
             {
                 return NotFound();
             }
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        var user = await _userManager.GetUserAsync(User);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(akNotaMinta);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AkNotaMintaExists(akNotaMinta.Id))
-                    {
-                        return NotFound();
+                        AkNotaMinta dataAsal = await _akNotaMintaRepo.GetById(id);
+
+                        // list of input that cannot be change
+                        akNotaMinta.Tahun = dataAsal.Tahun;
+                        akNotaMinta.JKWId = dataAsal.JKWId;
+                        akNotaMinta.NoRujukan = dataAsal.NoRujukan;
+                        akNotaMinta.NoPO = dataAsal.NoPO;
+                        akNotaMinta.NoCAS = dataAsal.NoCAS;
+                        akNotaMinta.TarikhSeksyenKewangan = dataAsal.TarikhSeksyenKewangan;
+                        akNotaMinta.NoSiri = dataAsal.NoSiri;
+                        akNotaMinta.TarMasuk = dataAsal.TarMasuk;
+                        akNotaMinta.UserId = dataAsal.UserId;
+                        // list of input that cannot be change end
+
+                        foreach (AkNotaMinta1 item in dataAsal.AkNotaMinta1)
+                        {
+                            var model = _context.AkNotaMinta1.FirstOrDefault(b => b.Id == item.Id);
+                            if (model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+
+                        foreach (AkNotaMinta2 item in dataAsal.AkNotaMinta2)
+                        {
+                            var model = _context.AkNotaMinta2.FirstOrDefault(b => b.Id == item.Id);
+                            if (model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+                        _context.Entry(dataAsal).State = EntityState.Detached;
+
+                        akNotaMinta.AkNotaMinta1 = _cart.Lines1.ToList();
+                        akNotaMinta.AkNotaMinta2 = _cart.Lines2.ToList();
+
+                        akNotaMinta.UserIdKemaskini = user.UserName;
+                        akNotaMinta.TarKemaskini = DateTime.Now;
+
+                        _context.Update(akNotaMinta);
+
+                        //insert applog
+                        AppLog appLog = new AppLog();
+
+                        appLog.UserId = user.UserName;
+                        appLog.LgModule = modul + "E";
+                        appLog.LgOperation = "Ubah";
+                        appLog.LgNote = modul + " Nota Minta - Ubah";
+                        appLog.NoRujukan = akNotaMinta.NoRujukan;
+                        appLog.Jumlah = akNotaMinta.Jumlah;
+
+                        await _appLog.Insert(appLog);
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!AkNotaMintaExists(akNotaMinta.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
-                }
+                    CartEmpty();
+                TempData[SD.Success] = "Data berjaya diubah..!";
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["AkPembekalId"] = new SelectList(_context.AkPembekal, "Id", "AkaunBank", akNotaMinta.AkPembekalId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", akNotaMinta.JKWId);
+                }
+            TempData[SD.Warning] = "Data tidak lengkap. Sila cuba sekali lagi";
+            PopulateList();
+            PopulateTable(id);
             return View(akNotaMinta);
         }
 
         // GET: AkNotaMinta/Delete/5
+        [Authorize(Policy = "NM001D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -799,20 +906,48 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akNotaMinta = await _context.AkNotaMinta
-                .Include(a => a.AkPembekal)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akNotaMinta = await _akNotaMintaRepo.GetById((int)id);
+
+            AkNotaMintaViewModel viewModel = new AkNotaMintaViewModel();
+
+            viewModel.Id = akNotaMinta.Id;
+            viewModel.AkPembekalId = akNotaMinta.AkPembekalId;
+            viewModel.AkPembekal = akNotaMinta.AkPembekal;
+            viewModel.Tahun = akNotaMinta.Tahun;
+            viewModel.Tarikh = akNotaMinta.Tarikh;
+            viewModel.JKW = akNotaMinta.JKW;
+            viewModel.JKWId = akNotaMinta.JKWId;
+            viewModel.NoRujukan = akNotaMinta.NoRujukan.Substring(3);
+            viewModel.Tajuk = akNotaMinta.Tajuk;
+            viewModel.NoSiri = akNotaMinta.NoSiri;
+            viewModel.NoCAS = akNotaMinta.NoCAS;
+            viewModel.NoPO = akNotaMinta.NoPO;
+            viewModel.TarikhSeksyenKewangan = akNotaMinta.TarikhSeksyenKewangan;
+            viewModel.FlPosting = akNotaMinta.FlPosting;
+            viewModel.FlCetak = akNotaMinta.FlCetak;
+            viewModel.FlBatal = akNotaMinta.FlBatal;
+
+            viewModel.Jumlah = akNotaMinta.Jumlah;
+            viewModel.AkNotaMinta1 = akNotaMinta.AkNotaMinta1;
+            foreach (AkNotaMinta2 item in akNotaMinta.AkNotaMinta2)
+            {
+                viewModel.JumlahPerihal += item.Amaun;
+            }
+            viewModel.AkNotaMinta2 = akNotaMinta.AkNotaMinta2;
+
             if (akNotaMinta == null)
             {
                 return NotFound();
             }
 
-            return View(akNotaMinta);
+            PopulateTable(id);
+            PopulateList();
+            return View(viewModel);
         }
 
         // POST: AkNotaMinta/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "NM001D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

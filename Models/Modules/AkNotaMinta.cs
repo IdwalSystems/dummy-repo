@@ -34,7 +34,9 @@ namespace MSNK.Models.Modules
         //flag end
 
         // untuk kewangan
+        [DisplayName("No Siri")]
         public string NoSiri{ get; set; }
+        [DisplayName("No CAS")]
         public string NoCAS { get; set; }
         [DisplayName("No PO")]
         public string NoPO { get; set; }

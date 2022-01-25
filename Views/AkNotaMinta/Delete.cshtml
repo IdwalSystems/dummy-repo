@@ -1,124 +1,256 @@
-﻿@model MSNK.Models.Modules.AkNotaMinta
+﻿@model MSNK.Models.Modules.ViewModel.AkNotaMintaViewModel
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Hapus";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Delete</h1>
+<h1>Hapus</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3 class="text-danger">Anda pasti?</h3>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card box-shadow border-danger mb-3" id="denganPesananTempatan">
+            <div class="card-header bg-danger text-white">
+                <h5>Nota Minta - @ViewData["Title"]</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col-lg-10">
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="Tarikh" class="control-label"></label>
+                                    <input asp-for="Tarikh" class="form-control form-control-sm"  type="date" required readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label asp-for="Tahun" class="control-label"></label>
+                                    <input asp-for="Tahun" class="form-control form-control-sm"  required id="txtTahun" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                    <select class="form-control form-control-sm" asp-for="JKWId" required id="ddlKW" disabled>
+                                        @foreach (var s in ViewBag.JKW)
+                                        {
+                                            <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="NoRujukan" class="control-label"></label>
+                                    <input asp-for="NoRujukan" class="form-control form-control-sm text-uppercase" required id="txtNoRujukan" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
+                            <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" required disabled>
+                                <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
+                                @foreach (var s in ViewBag.AkPembekal)
+                                {
+                                    <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Tajuk" class="control-label"></label>
+                            <textarea asp-for="Tajuk" class="form-control form-control-sm text-uppercase" rows="2" id="txtTajuk" readonly></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="NoPO" class="control-label"></label>
+                                    <input asp-for="NoPO" class="form-control form-control-sm text-uppercase" required disabled />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="NoSiri" class="control-label"></label>
+                                    <input asp-for="NoSiri" class="form-control form-control-sm text-uppercase" required disabled />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="NoCAS" class="control-label"></label>
+                                    <input asp-for="NoCAS" class="form-control form-control-sm text-uppercase" required disabled />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="TarikhSeksyenKewangan" class="control-label"></label>
+                                    <input asp-for="TarikhSeksyenKewangan" class="form-control form-control-sm" type="date" required readonly />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+                                <div class="form-group col-sm">
+                                    <label asp-for="FlPosting" class="control-label"></label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlPosting" type="radio" id="FlPosting1" name="FlPosting" class="custom-control-input" value="0" checked>
+                                        <label class="custom-control-label" for="FlPosting">Belum</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlPosting" type="radio" id="FlPosting2" name="FlPosting" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="FlPosting">Sudah</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card mb-2">
+                            <div class="card-body p-1">
+                                <div class="form-group col-sm">
+                                    <label asp-for="FlBatal" class="control-label"></label>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal1" class="custom-control-input" value="0" checked>
+                                        <label class="custom-control-label" for="FlBatal">Belum</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="FlBatal">Sudah</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*table Objek*@
+                <div class="card box-shadow mb-3 mt-2">
+                    <div class="card-header">
+                        <h6>Objek</h6>
+                    </div>
+                    <div class="card-body">
+                        <table id="tblObjek" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th style="width:40%">Kod</th>
+                                    <th style="width:50%">Amaun</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyObjek">
+                                @foreach (var item in ViewBag.akNotaMinta1)
+                                {
+                                    <tr id="@item.Id">
+                                        <td id="akCartaId" hidden>@item.AkCartaId</td>
+                                        <td class="text-left">@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
+                                        <td class="text-right" id="td1Amaun">@item.Amaun</td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group pb-2">
+                            <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
+                            <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly />
+                        </div>
+                    </div>
+
+                </div>
+                @*table Objek end*@
+
+                @*table perihal*@
+                <div class="card box-shadow mb-3 mt-2">
+                    <div class="card-header">
+                        <h6>Perihal</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive-md">
+                            <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Bil</th>
+                                        <th>No Stok</th>
+                                        <th width="30%">Perihal</th>
+                                        <th>Kuantiti</th>
+                                        <th>Unit</th>
+                                        <th>Harga/Unit</th>
+                                        <th>Amaun</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyPerihal">
+                                    @foreach (var item in ViewBag.akNotaMinta2)
+                                    {
+                                        <tr>
+                                            <td class="text-left">@item.Bil</td>
+                                            <td class="text-left">@item.NoStok</td>
+                                            <td class="text-left text-uppercase">@item.Perihal</td>
+                                            <td class="text-right">@item.Kuantiti</td>
+                                            <td class="text-center text-uppercase">@item.Unit</td>
+                                            <td class="text-right">@item.Harga</td>
+                                            <td class="text-right">@item.Amaun</td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <label class="control-label">Jumlah Perihal</label>
+                            <input class="form-control form-control-sm" id="jumlahPerihal" value="@Model.JumlahPerihal" name="JumlahPerihal" readonly />
+                        </div>
+                    </div>
+                </div>
+                @*table perihal end*@
+            </div>
+        </div>
+
+        @*<div class="form-group" hidden>
+                <label asp-for="TarikhPosting" class="control-label"></label>
+                <input asp-for="TarikhPosting" class="form-control" />
+                <span asp-validation-for="TarikhPosting" class="text-danger"></span>
+            </div>
+
+            <div class="form-group" hidden>
+                <label asp-for="FlCetak" class="control-label"></label>
+                <input asp-for="FlCetak" class="form-control" />
+                <span asp-validation-for="FlCetak" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="FlPosting" class="control-label"></label>
+                <input asp-for="FlPosting" class="form-control" />
+                <span asp-validation-for="FlPosting" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="FlBatal" class="control-label"></label>
+                <input asp-for="FlBatal" class="form-control" />
+                <span asp-validation-for="FlBatal" class="text-danger"></span>
+            </div>*@
+    </div>
+</div>
 <div>
-    <h4>AkNotaMinta</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tahun)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tahun)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tarikh)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tarikh)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NoRujukan)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NoRujukan)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tajuk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tajuk)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Jumlah)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Jumlah)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FlPosting)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FlPosting)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FlBatal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FlBatal)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FlCetak)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FlCetak)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NoSiri)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NoSiri)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NoCAS)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NoCAS)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TarikhSeksyenKewangan)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TarikhSeksyenKewangan)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TarMasuk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TarMasuk)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserIdKemaskini)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserIdKemaskini)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TarKemaskini)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TarKemaskini)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JKW)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JKW.Kod)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AkPembekal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AkPembekal.AkaunBank)
-        </dd class>
-    </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        @if (Model.FlPosting == 1)
+        {
+        }
+        else
+        {
+            <input type="submit" value="Hapus" class="btn btn-danger btn-sm" />
+        }
+
+        <a asp-action="Index">Kembali Ke Indeks</a>
     </form>
 </div>

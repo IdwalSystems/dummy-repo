@@ -1,86 +1,5 @@
 ﻿<script type="text/javascript">
-
     var bil = 1;
-
-     // onchange No PO
-    $("body").on('change', "#ddlAkPOId", function () {
-        $("#txtKodAkaun option").prop('disabled', false);
-        $("#txtKodAkaun option[value='']").prop('disabled', true);
-        var noPo = $("#ddlAkPOId").val();
-        JsonNoPo(noPo);
-    });
-    function JsonNoPo(id) {
-        if (id != null) {
-            $.ajax({
-                type: "POST",
-                //url: "/AkBelian/JsonGetNoPO",
-                url: '@Url.Action("JsonGetNoPO", "AkBelian")',
-                data: { id: id },
-                dataType: "json",
-                success: function (msg) {
-                    $("#ddlKodPembekal").val(msg?.record?.akPembekal?.id).change();
-                    displayObjekList(msg.record.akPO1);
-                    displayPerihalList(msg.record.akPO2);
-                    checkJumlah();
-                },
-                error: function (req, status, error) {
-                    alert(error);
-                }
-            });
-        }
-    }
-
-    function displayObjekList(data) {
-        $("table tbody#tbodyObjek").empty();
-        var jumlah = $("#jumlahObjek");
-        var sum = 0;
-        for (var i = 0; i < data.length; i++) {
-            var item = data[i];
-
-            var str = "<tr><td id='akCartaId' hidden>" + item.akCartaId +
-                "</td><td>" + item.akCarta.kod + " - " + item.akCarta.perihal +
-                "</td><td class='text-right'>" + (item.amaun).toFixed(2) +
-                "</td><td>" +
-                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
-                "</td><td>" +
-                "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
-                "</td><tr>";
-            $("table tbody#tbodyObjek").append(str);
-            sum += item.amaun;
-
-            $("#txtKodAkaun option[value=" + item.akCartaId + "]").prop('disabled', true);
-        }
-        jumlah.val(sum.toFixed(2));
-    }
-
-    function displayPerihalList(data) {
-        //refresh updated table objek
-        $("table tbody#tbodyPerihal").empty();
-        var jumlah = $("#jumlahPerihal");
-        var sum = 0;
-        for (var i = 0; i < data.length; i++) {
-            var item = data[i];
-            var str = "<tr><td id='txtIndek' hidden>" + item.indek +
-                "</td><td>" + item.baris +
-                "</td><td hidden>" + item.bil +
-                "</td><td class='text-uppercase'>" + item.noStok +
-                "</td><td class='text-uppercase'>" + item.perihal +
-                "</td><td>" + item.kuantiti +
-                "</td><td class='text-uppercase'>" + item.unit +
-                "</td><td class='text-right'>" + (item.harga).toFixed(2) +
-                "</td><td class='text-right'>" + (item.amaun).toFixed(2) +
-                "</td><td>" +
-                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
-                "</td><td>" +
-                "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
-                "</td><tr>";
-            $("table tbody#tbodyPerihal").append(str);
-            sum += item.amaun;
-            bil++;
-        }
-        jumlah.val(sum.toFixed(2));
-    }
-    //on change no PO end
 
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
@@ -100,12 +19,12 @@
             $.ajax({
                 type: "POST",
                 //url: "/AkBelian/GetCarta",
-                url: '@Url.Action("GetCarta", "AkBelian")',
+                url: '@Url.Action("GetCarta", "AkNotaMinta")',
                 data: Objek,
                 dataType: "json",
                 success: function (r) {
                     //Reference the TextBoxes.
-                    var txtAkBelian = $("#Id");
+                    var txtId = $("#Id");
                     var txtKodAkaun = $("#txtKodAkaun");
                     var txtAmaunObjek = $("#txtAmaunObjek");
                     var txtJumlah = $("#jumlahObjek");
@@ -147,8 +66,8 @@
                     var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                     cell.append(btnRemove1);
 
-                    var AkBelian1 = {
-                        AkBelianId: txtAkBelian.val(),
+                    var AkNotaMinta1 = {
+                        AkNotaMintaId: txtId.val(),
                         AkCartaId: txtKodAkaun.val(),
                         Amaun: txtAmaunObjek.val()
                     }
@@ -156,8 +75,8 @@
                     $.ajax({
                         type: "POST",
                         //url: "/AkBelian/SaveAkBelian1",
-                        url: '@Url.Action("SaveAkBelian1", "AkBelian")',
-                        data: AkBelian1,
+                        url: '@Url.Action("SaveAkNotaMinta1", "AkNotaMinta")',
+                        data: AkNotaMinta1,
                         dataType: "json",
                         success: function (r) {
                             //Clear the TextBoxes.
@@ -176,7 +95,7 @@
     }
     //add tbl objek end
 
-    //add tbl Perihal
+        //add tbl Perihal
     $("body").on("click", "#btnAdd2", function () {
         //Reference the Name and Country TextBoxes.
         var txtIndek = bil;
@@ -187,7 +106,7 @@
         //Send the JSON array to Controller using AJAX.
 
         //Reference the TextBoxes.
-        var txtAkBelian = $("#Id");
+        var txtId = $("#Id");
         var txtIndek = id;
         var txtBaris = $("#txtBaris");
         var txtBil = $("#txtBil");
@@ -264,8 +183,8 @@
         var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
         cell.append(btnRemove2);
 
-        var AkBelian2 = {
-            AkBelianId: txtAkBelian.val(),
+        var AkNotaMinta2 = {
+            AkNotaMintaId: txtId.val(),
             Indek: id,
             Baris: txtBaris.val(),
             Bil: txtBil.val(),
@@ -280,8 +199,8 @@
         $.ajax({
             type: "POST",
             //url: "/AkBelian/SaveAkBelian2",
-            url: '@Url.Action("SaveAkBelian2", "AkBelian")',
-            data: AkBelian2,
+            url: '@Url.Action("SaveAkNotaMinta2", "AkNotaMinta")',
+            data: AkNotaMinta2,
             dataType: "json",
             success: function (r) {
                 //Clear the TextBoxes.
@@ -295,7 +214,9 @@
                 txtHargaUnit.val("");
                 txtAmaun.val("");
                 bil++;
-                checkJumlah();
+                if ($("#jumlahObjek").val() != 0.00) {
+                    checkJumlah();
+                }
             }
         });
     }
@@ -305,7 +226,7 @@
     function Remove1(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var akBelianId = $('#Id').val();
+        var Id = $('#Id').val();
         var akCartaId = $("TD", row).eq(0).html();
         var amaun = $("TD", row).eq(2).html();
         var txtJumlah = $("#jumlahObjek");
@@ -318,16 +239,16 @@
             sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
             txtJumlah.val(sum.toFixed(2));
 
-            var AkBelian1 = {
-                AkBelianId: akBelianId,
+            var AkNotaMinta1 = {
+                AkNotaMintaId: Id,
                 AkCartaId: akCartaId
             }
             if (name != null) {
                 $.ajax({
                     type: "POST",
                     //url: "/AkBelian/RemoveAkBelian1",
-                    url: '@Url.Action("RemoveAkBelian1", "AkBelian")',
-                    data: AkBelian1,
+                    url: '@Url.Action("RemoveAkNotaMinta1", "AkNotaMinta")',
+                    data: AkNotaMinta1,
                     dataType: "json",
                     success: function (r) {
                         //Delete the Table row using it's Index.
@@ -346,7 +267,7 @@
     function Remove2(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var akBelianId = $("#Id").val();
+        var Id = $("#Id").val();
         var indek = $("TD", row).eq(0).html();
         var amaun = $("TD", row).eq(8).html();
         var txtJumlah = $("#jumlahPerihal");
@@ -359,21 +280,23 @@
             sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
             txtJumlah.val(sum.toFixed(2));
 
-            var AkBelian2 = {
-                AkBelianId: akBelianId,
+            var AkNotaMinta2 = {
+                AkNotaMintaId: Id,
                 Indek: indek
             }
             if (name != null) {
                 $.ajax({
                     type: "POST",
                     //url: "/AkBelian/RemoveAkBelian2",
-                    url: '@Url.Action("RemoveAkBelian2", "AkBelian")',
-                    data: AkBelian2,
+                    url: '@Url.Action("RemoveAkNotaMinta2", "AkNotaMinta")',
+                    data: AkNotaMinta2,
                     dataType: "json",
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
-                        checkJumlah();
+                        if ($("#jumlahObjek").val() != 0.00) {
+                            checkJumlah();
+                        }
                     }
                 });
             }
@@ -415,20 +338,20 @@
 
     function modalUpdate1() {
         var amaun = $("#moAmaun1").val();
-        var akBelianId = $("#Id").val();
+        var Id = $("#Id").val();
         var akCartaId = $("#moKodAkaun").val();
         var jumlah = $("#jumlahObjek");
 
-        var AkBelian1 = {
-            AkBelianId: akBelianId,
+        var AkNotaMinta1 = {
+            AkNotaMintaId: Id,
             AkCartaId: akCartaId,
             Amaun: amaun
         }
         $.ajax({
             type: "POST",
             //url: "/AkBelian/SaveCartAkBelian1",
-            url: '@Url.Action("SaveCartAkBelian1", "AkBelian")',
-            data: AkBelian1,
+            url: '@Url.Action("SaveCartAkNotaMinta1", "AkNotaMinta")',
+            data: AkNotaMinta1,
             dataType: "json",
             success: function (r) {
                 //insert notification here
@@ -436,7 +359,7 @@
                 $.ajax({
                     type: "POST",
                     //url: "/AkBelian/GetAllItemCartAkBelian1",
-                    url: '@Url.Action("GetAllItemCartAkBelian1", "AkBelian")',
+                    url: '@Url.Action("GetAllItemCartAkNotaMinta1", "AkNotaMinta")',
                     dataType: "json",
                     success: function (r) {
 
@@ -472,18 +395,18 @@
     function Update2(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var akBelianId = $('#Id').val();
+        var Id = $('#Id').val();
         var IndekId = $("TD", row).eq(0).html();
 
-        var AkBelian2 = {
-            AkBelianId: akBelianId,
+        var AkNotaMinta2 = {
+            AkNotaMintaId: Id,
             Indek: IndekId
         }
         $.ajax({
             type: "POST",
             //url: "/AkBelian/GetAnItemCartAkBelian2",
-            url: '@Url.Action("GetAnItemCartAkBelian2", "AkBelian")',
-            data: AkBelian2,
+            url: '@Url.Action("GetAnItemCartAkNotaMinta2", "AkNotaMinta")',
+            data: AkNotaMinta2,
             dataType: "json",
             success: function (r) {
                 //insert data in modal perihal
@@ -505,7 +428,7 @@
     };
 
     function modalUpdate2() {
-        var akBelianId = $("#Id").val();
+        var Id = $("#Id").val();
         var indek = $("#moIndek").val();
         var baris = $("#moBaris").val();
         var bil = $("#moBil").val();
@@ -517,8 +440,8 @@
         var amaun = $("#moAmaun2").val();
         var jumlah = $("#jumlahPerihal");
 
-        var AkBelian2 = {
-            AkBelianId: akBelianId,
+        var AkNotaMinta2 = {
+            AkNotaMintaId: Id,
             Indek: indek,
             Baris: baris,
             Bil: bil,
@@ -532,8 +455,8 @@
         $.ajax({
             type: "POST",
             //url: "/AkBelian/SaveCartAkBelian2",
-            url: '@Url.Action("SaveCartAkBelian2", "AkBelian")',
-            data: AkBelian2,
+            url: '@Url.Action("SaveCartAkNotaMinta2", "AkNotaMinta")',
+            data: AkNotaMinta2,
             dataType: "json",
             success: function (r) {
                 //insert notification here
@@ -541,7 +464,7 @@
                 $.ajax({
                     type: "POST",
                     //url: "/AkBelian/GetAllItemCartAkBelian2",
-                    url: '@Url.Action("GetAllItemCartAkBelian2", "AkBelian")',
+                    url: '@Url.Action("GetAllItemCartAkNotaMinta2", "AkNotaMinta")',
                     dataType: "json",
                     success: function (r) {
 
@@ -570,35 +493,17 @@
                             }
                         }
                         jumlah.val(sum.toFixed(2));
-                        checkJumlah();
+
+                        if ($("#jumlahObjek").val() != 0.00) {
+                            checkJumlah();
+                        }
+
                     }
                 });
             }
         });
     };
     //update tbl perihal end
-
-    // onchange kod pembekal
-    $("body").on('change', "#ddlKodPembekal", function () {
-        var kodPembekal = $("#ddlKodPembekal").val();
-        JsonKodPembekal(kodPembekal);
-    });
-    function JsonKodPembekal(id) {
-        $.ajax({
-            type: "POST",
-            //url: "/AkBelian/JsonGetPembekal",
-            url: '@Url.Action("JsonGetPembekal", "AkBelian")',
-            data: { data: id },
-            dataType: "json",
-            success: function (msg) {
-                $("#txtNamaPembekal").val(msg.record.namaSykt);
-            },
-            error: function (req, status, error) {
-                alert(error);
-            }
-        });
-    }
-    //on change Kod Pembekal end
 
     // onchange harga/unit and kuantiti
     $("body").on('change', ".hargaUnit, .kuantiti", function () {

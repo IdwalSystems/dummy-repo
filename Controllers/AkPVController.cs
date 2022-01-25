@@ -22,7 +22,7 @@ namespace MSNK.Controllers
     [Authorize]
     public class AkPVController : Controller
     {
-        public const string modul = "PV001";
+        public const string modul = "TG003";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
