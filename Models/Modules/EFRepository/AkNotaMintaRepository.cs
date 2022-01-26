@@ -39,7 +39,8 @@ namespace MSNK.Models.Modules.EFRepository
                 .Where(d => d.Id == id)
                 .Include(b => b.JKW)
                 .Include(b => b.AkPembekal).ThenInclude(b=> b.JBank)
-                .Include(b => b.AkNotaMinta1)
+                .Include(b => b.AkPembekal).ThenInclude(b => b.JNegeri)
+                .Include(b => b.AkNotaMinta1).ThenInclude(b => b.AkCarta)
                 .Include(b => b.AkNotaMinta2)
                 .FirstOrDefaultAsync();
         }

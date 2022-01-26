@@ -21,7 +21,7 @@
                         <div class="col-md-1">
                             <div class="form-group">
                                 <label asp-for="Tahun" class="control-label"></label>
-                                <input asp-for="Tahun" class="form-control form-control-sm" required />
+                                <input asp-for="Tahun" class="form-control form-control-sm" required readonly/>
                                 <span asp-validation-for="Tahun" class="text-danger"></span>
                             </div>
                         </div>
@@ -34,14 +34,14 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Tarikh" class="control-label"></label>
-                                <input asp-for="Tarikh" class="form-control form-control-sm" required />
+                                <input asp-for="Tarikh" class="form-control form-control-sm" required readonly/>
                                 <span asp-validation-for="Tarikh" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm" asp-for="JKWId" required>
+                                <select class="form-control form-control-sm" asp-for="JKWId" required disabled>
                                     <option value="" hidden>-- Pilih Kumpulan Wang --</option>
                                     @foreach (var s in ViewBag.JKW)
                                     {

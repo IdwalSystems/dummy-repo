@@ -1,0 +1,262 @@
+﻿@model MSNK.Models.Modules.PrintModel.NotaMintaPrintModel
+
+@{
+    ViewData["Title"] = "Cetakan Nota Minta";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+<style>
+    .flexrow {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex !important;
+    }
+
+        .flexrow > div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+    .image-container {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    h6 {
+        font-size: 0.8rem;
+    }
+
+    p {
+        font-size: 0.6rem;
+    }
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .max-lines {
+        display: block; /* or inline-block */
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 5.8em;
+    }
+</style>
+
+<div class="row flexrow mb-1">
+    <div class="col-2 image-container">
+        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1 , @Model.CompanyDetail.AlamatSyarikat2</p>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat3</p>
+        <p class="mb-0"> Tel: @Model.CompanyDetail.TelSyarikat   Faks: @Model.CompanyDetail.FaksSyarikat</p>
+    </div>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0"><strong>NOTA MINTA</strong></h6>
+    </div>
+</div>
+<div class="table-responsive-sm">
+    <hr class="bg-dark" />
+</div>
+<div class="row flexrow mb-1 ">
+    <div class="col-10 text-uppercase">
+        <p class="mb-0">Kepada:</p>
+        <p class="mb-0"><strong>PENGARAH MAJLIS SUKAN NEGERI KEDAH</strong></p>
+        <p class="mb-0">@Model.CompanyDetail.AlamatSyarikat1</p>
+        <p class="mb-0">@Model.CompanyDetail.AlamatSyarikat2</p>
+        <p class="mb-0">@Model.CompanyDetail.AlamatSyarikat3</p>
+    </div>
+
+</div>
+
+<br />
+<div class="bg-dark text-white font-weight-bold">
+    <p class="text-center" style="font-size:0.8rem;" colspan="2"><strong>MAKLUMAT PERMOHONAN PEROLEHAN</strong></p>
+</div>
+
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">Pembelian </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0"><strong>: @Model.AkNotaMinta.Tajuk</strong></p>
+    </div>
+</div>
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">Nama Pembekal </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0"><strong>: @Model.AkNotaMinta.AkPembekal.KodSykt - @Model.AkNotaMinta.AkPembekal.NamaSykt</strong></p>
+    </div>
+</div>
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">Alamat Pembekal </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0">: @Model.AkNotaMinta.AkPembekal.Alamat1, @Model.AkNotaMinta.AkPembekal.Alamat2</p>
+        <p class="mb-0 ml-1">  @Model.AkNotaMinta.AkPembekal.Alamat3, @Model.AkNotaMinta.AkPembekal.Poskod, @Model.AkNotaMinta.AkPembekal.Bandar</p>
+        <p class="mb-0 ml-1">  @Model.AkNotaMinta.AkPembekal.JNegeri.Perihal</p>
+    </div>
+
+</div>
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">Tarikh Permohonan </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0"><strong>: @Model.AkNotaMinta.Tarikh.ToString("dd/MM/yyyy")</strong></p>
+    </div>
+</div>
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">No Nota Minta </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0"><strong>: @Model.AkNotaMinta.NoRujukan</strong></p>
+    </div>
+</div>
+
+
+
+<br />
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr style="line-height:0.8rem;">
+                <td class="text-center font-weight-bold" width="5%">BIL  </td>
+                <td class="text-center font-weight-bold" width="55%">BUTIR-BUTIR</td>
+                <td class="text-center font-weight-bold" width="5%">KUANTITI </td>
+                <td class="text-center font-weight-bold" width="7%">HARGA SEUNIT RM</td>
+                <td class="text-center font-weight-bold" width="7%">AMAUN RM</td>
+            </tr>
+            <tr>
+                @foreach (var item in Model.AkNotaMinta.AkNotaMinta2)
+                {
+                    <td class="text-left">@item.Bil</td>
+                    <td class="text-left text-uppercase">@item.Perihal</td>
+                    <td class="text-right">@item.Kuantiti</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Harga).ToString("#,##0.00")</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                }
+
+            </tr>
+            <tr class="font-weight-bold">
+                <td class="text-right text-uppercase" colspan="4">Jumlah RM</td>
+                <td class="text-right">@Convert.ToDecimal(Model.AkNotaMinta.Jumlah).ToString("#,##0.00")</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="bg-dark text-white font-weight-bold">
+    <p class="text-center" style="font-size:0.8rem;" colspan="2"><strong>BAHAGIAN KEWANGAN</strong></p>
+</div>
+
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">No Siri </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0"><strong>: @Model.AkNotaMinta.NoSiri</strong></p>
+    </div>
+</div>
+
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">CAS No </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0"><strong>: @Model.AkNotaMinta.NoCAS</strong></p>
+    </div>
+</div>
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">Tarikh </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0"><strong>: @Model.TarikhKewangan</strong></p>
+    </div>
+</div>
+
+<br />
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr style="line-height:0.8rem;">
+                <td class="text-center font-weight-bold" width="5%">KOD KW</td>
+                <td class="text-center font-weight-bold" width="7%">KOD OBJEK</td>
+                <td class="text-center font-weight-bold" width="55%">PERIHAL OBJEK</td>
+                <td class="text-center font-weight-bold" width="7%">AMAUN RM</td>
+            </tr>
+            <tr>
+                @foreach (var item in Model.AkNotaMinta.AkNotaMinta1)
+                {
+                    <td class="text-center">@Model.AkNotaMinta.JKW.Kod</td>
+                    <td class="text-center">@item.AkCarta.Kod</td>
+                    <td class="text-left text-uppercase">@item.AkCarta.Perihal</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                }
+
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr class="font-weight-bold">
+                <td width="50%" height="70px">Disediakan Oleh : </td>
+                <td width="50%" height="70px">Diluluskan Oleh : </td>
+            </tr>
+            <tr>
+                <td><label></label></td>
+                <td class="text-center text-uppercase"><label>PENGARAH</label></td>
+            </tr>
+            <tr>
+                <td class="text-center text-uppercase"><label>MAJLIS SUKAN NEGERI KEDAH</label></td>
+                <td class="text-center text-uppercase"><label>MAJLIS SUKAN NEGERI KEDAH</label></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

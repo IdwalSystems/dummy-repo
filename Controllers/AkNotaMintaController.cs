@@ -8,10 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
+using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
 using MSNK.Models.Modules.ViewModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -1264,5 +1268,65 @@ namespace MSNK.Controllers
         {
             return _context.AkNotaMinta.Any(e => e.Id == id);
         }
+
+        // printing resit rasmi by akTerima.Id
+        [Authorize(Policy = "NM001P")]
+        public async Task<IActionResult> PrintPdf(int id)
+        {
+            AkNotaMinta akNotaMinta = await _akNotaMintaRepo.GetById(id);
+
+            var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akNotaMinta.Jumlah)).ToUpper();
+
+            var user = await _userManager.GetUserAsync(User);
+
+            NotaMintaPrintModel data = new NotaMintaPrintModel();
+
+
+            if (akNotaMinta.TarikhSeksyenKewangan != null)
+            {
+                data.TarikhKewangan= akNotaMinta.TarikhSeksyenKewangan.ToString();
+            }
+            else
+            {
+                data.TarikhKewangan = "";
+            }
+
+            CompanyDetails company = new CompanyDetails();
+            data.CompanyDetail = company;
+            data.AkNotaMinta = akNotaMinta;
+            data.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            data.username = user.UserName;
+
+            //update cetak -> 1
+            akNotaMinta.FlCetak = 1;
+            await _akNotaMintaRepo.Update(akNotaMinta);
+
+            //insert applog
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "P";
+            appLog.LgOperation = "Cetak";
+            appLog.LgNote = modul + " Nota Minta - Cetak";
+            appLog.NoRujukan = akNotaMinta.NoRujukan;
+            appLog.Jumlah = akNotaMinta.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+
+            return new ViewAsPdf("NotaMintaPrintPdf", data)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                //CustomSwitches = "--footer-center \"  Tarikh: " +
+                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+        // printing resit rasmi end
+
     }
 }

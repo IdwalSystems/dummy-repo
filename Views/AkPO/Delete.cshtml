@@ -13,45 +13,69 @@
     <div class="col-md-12">
         <div class="card box-shadow border-danger mb-3">
             <div class="card-header bg-danger text-white">
-
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="text-left">Pesanan Tempatan - @ViewData["Title"]</h5>
+                </div>
             </div>
+
+        </div>
             <div class="card-body">
                 <div class="form-row">
                     <div class="col-lg-10">
                         <div class="form-row">
-                            <div class="col-md-1">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="control-label">Tahun</label>
                                     <input class="form-control form-control-sm" value="@Model.Tahun" readonly />
                                 </div>
                             </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label asp-for="Tarikh" class="control-label"></label>
-                                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Tarikh)" readonly />
-                                </div>
-                            </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="control-label">Jenis Kumpulan Wang</label>
-                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
+                                    <input class="form-control form-control-sm" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
-                                    <label asp-for="NoPO" class="control-label"></label>
+                                    <label asp-for="Tarikh" class="control-label" ></label>
+                                    <input class="form-control form-control-sm" value="@Model.Tarikh.ToString("yyyy-MM-dd")" readonly />
+                                </div>
+                            </div>
 
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">No PO</label>
                                     <input class="form-control form-control-sm" value="@Model.NoPO" readonly />
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="AkNotaMintaId" class="control-label"></label>
+                                    <select class="form-control form-control-sm select2" asp-for="AkNotaMintaId" id="ddlNotaMinta" disabled>
+                                        <option value="" hidden>-- Pilih Nota Minta --</option>
+                                        @foreach (var s in ViewBag.AkNotaMinta)
+                                        {
+                                            <option value="@s.Id">@s.NoSiri - @s.NoRujukan </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            @*<div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">Kod Bank</label>
+                    <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
+                </div>
+            </div>*@
                         </div>
                         <div class="form-row">
-                            <div class="col-md-2">
-                                <label asp-for="AkPembekalId" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Model.AkPembekal.KodSykt" readonly />
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">No Pembekal</label>
+                                    <input class="form-control form-control-sm" value="@Model.AkPembekal.KodSykt" readonly />
+                                </div>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-8">
                                 <div class="form-group">
                                     <label class="control-label">Nama Pembekal</label>
                                     <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.NamaSykt" readonly />
@@ -60,13 +84,45 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Alamat</label>
-                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat1" readonly />
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat1 " readonly />
                         </div>
                         <div class="form-group">
-                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat2" readonly />
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat2 " readonly />
                         </div>
-                        <div class="form-group pb-3">
-                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat3" readonly />
+                        <div class="form-group">
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat3 " readonly />
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Poskod</label>
+                                    <input class="form-control form-control-sm" value="@Model.AkPembekal.Poskod " readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Bandar</label>
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Bandar " readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Tel</label>
+                                    <input class="form-control form-control-sm" value="@Model.AkPembekal.Telefon1 " readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label">Emel</label>
+                                    <input class="form-control form-control-sm" value="@Model.AkPembekal.Emel " readonly />
+                                </div>
+                            </div>
+                            @*<div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Negeri</label>
+                    <input class="form-control form-control-sm" value="@Model.JNegeri.Kod - @Model.JNegeri.Perihal" readonly />
+                </div>
+            </div>*@
                         </div>
                     </div>
                     <div class="col-lg-2">
@@ -150,7 +206,6 @@
                             <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th class="text-left">Baris</th>
                                         <th class="text-left">Bil</th>
                                         <th class="text-left">No Stok</th>
                                         <th class="text-left">Perihal</th>
@@ -164,7 +219,6 @@
                                     @foreach (var item in ViewBag.AkPO2)
                                     {
                                         <tr>
-                                            <td class="text-left">@item.Baris</td>
                                             <td class="text-left">@item.Bil</td>
                                             <td class="text-left">@item.NoStok</td>
                                             <td class="text-left">@item.Perihal</td>

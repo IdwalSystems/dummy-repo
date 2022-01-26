@@ -13,42 +13,58 @@
                     <div class="col-md-6">
                         <h5 class="text-left">Pesanan Tempatan - @ViewData["Title"]</h5>
                     </div>
-                    <div class="col-md-6">
-                        <p class="text-right">No PO: @Model.NoPO</p>
-                    </div>
                 </div>
 
             </div>
             <div class="card-body">
-                <div class="row">
+                <div class="form-row">
                     <div class="col-lg-10">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label asp-for="Tarikh" class="control-label"></label>
-                                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Tarikh)" readonly />
-                                </div>
-                            </div>
-                            <div class="col-md-3">
+                        <div class="form-row">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="control-label">Tahun</label>
                                     <input class="form-control form-control-sm" value="@Model.Tahun" readonly />
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="control-label">Jenis Kumpulan Wang</label>
                                     <input class="form-control form-control-sm" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
                                 </div>
                             </div>
-                            @*<div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="control-label">Kod Bank</label>
-                                    <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
+                                    <label asp-for="Tarikh" class="control-label"></label>
+                                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Tarikh)" readonly />
                                 </div>
-                            </div>*@
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">No PO</label>
+                                    <input class="form-control form-control-sm" value="@Model.NoPO" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="AkNotaMintaId" class="control-label"></label>
+                                    <select class="form-control form-control-sm select2" asp-for="AkNotaMintaId" id="ddlNotaMinta" disabled>
+                                        <option value="" hidden>-- Pilih Nota Minta --</option>
+                                        @foreach (var s in ViewBag.AkNotaMinta)
+                                        {
+                                            <option value="@s.Id">@s.NoSiri - @s.NoRujukan </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            @*<div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label">Kod Bank</label>
+                <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
+            </div>
+        </div>*@
                         </div>
-                        <div class="row">
+                        <div class="form-row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">No Pembekal</label>
@@ -72,39 +88,37 @@
                         <div class="form-group">
                             <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat3 " readonly />
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">
+                        <div class="form-row">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Poskod</label>
                                     <input class="form-control form-control-sm" value="@Model.AkPembekal.Poskod " readonly />
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Bandar</label>
                                     <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Bandar " readonly />
                                 </div>
                             </div>
-                            @*<div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="control-label">Negeri</label>
-                                    <input class="form-control form-control-sm" value="@Model.JNegeri.Kod - @Model.JNegeri.Perihal" readonly />
-                                </div>
-                            </div>*@
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Tel</label>
                                     <input class="form-control form-control-sm" value="@Model.AkPembekal.Telefon1 " readonly />
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Emel</label>
                                     <input class="form-control form-control-sm" value="@Model.AkPembekal.Emel " readonly />
                                 </div>
                             </div>
+                            @*<div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">Negeri</label>
+                <input class="form-control form-control-sm" value="@Model.JNegeri.Kod - @Model.JNegeri.Perihal" readonly />
+            </div>
+        </div>*@
                         </div>
                     </div>
                     <div class="col-lg-2">
