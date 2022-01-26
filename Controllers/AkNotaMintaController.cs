@@ -831,15 +831,6 @@ namespace MSNK.Controllers
                         akNotaMinta.UserId = dataAsal.UserId;
                         // list of input that cannot be change end
 
-                        foreach (AkNotaMinta1 item in dataAsal.AkNotaMinta1)
-                        {
-                            var model = _context.AkNotaMinta1.FirstOrDefault(b => b.Id == item.Id);
-                            if (model != null)
-                            {
-                                _context.Remove(model);
-                            }
-                        }
-
                         foreach (AkNotaMinta2 item in dataAsal.AkNotaMinta2)
                         {
                             var model = _context.AkNotaMinta2.FirstOrDefault(b => b.Id == item.Id);
@@ -850,7 +841,7 @@ namespace MSNK.Controllers
                         }
                         _context.Entry(dataAsal).State = EntityState.Detached;
 
-                        akNotaMinta.AkNotaMinta1 = _cart.Lines1.ToList();
+                        akNotaMinta.AkNotaMinta1 = dataAsal.AkNotaMinta1;
                         akNotaMinta.AkNotaMinta2 = _cart.Lines2.ToList();
 
                         akNotaMinta.UserIdKemaskini = user.UserName;
@@ -888,6 +879,205 @@ namespace MSNK.Controllers
                 TempData[SD.Success] = "Data berjaya diubah..!";
                 return RedirectToAction(nameof(Index));
                 }
+            TempData[SD.Warning] = "Data tidak lengkap. Sila cuba sekali lagi";
+            PopulateList();
+            PopulateTable(id);
+            return View(akNotaMinta);
+        }
+
+        // GET: AkNotaMinta/Edit/5
+        [Authorize(Policy = "NM001E1")]
+        public async Task<IActionResult> EditKewangan(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var akNotaMinta = await _akNotaMintaRepo.GetById((int)id);
+
+            AkNotaMintaViewModel viewModel = new AkNotaMintaViewModel();
+
+            viewModel.Id = akNotaMinta.Id;
+            viewModel.AkPembekalId = akNotaMinta.AkPembekalId;
+            viewModel.AkPembekal = akNotaMinta.AkPembekal;
+            viewModel.Tahun = akNotaMinta.Tahun;
+            viewModel.Tarikh = akNotaMinta.Tarikh;
+            viewModel.JKW = akNotaMinta.JKW;
+            viewModel.JKWId = akNotaMinta.JKWId;
+            viewModel.NoRujukan = akNotaMinta.NoRujukan.Substring(3);
+            viewModel.Tajuk = akNotaMinta.Tajuk;
+            viewModel.NoSiri = akNotaMinta.NoSiri;
+            viewModel.NoCAS = akNotaMinta.NoCAS;
+            viewModel.TarikhSeksyenKewangan = akNotaMinta.TarikhSeksyenKewangan;
+            viewModel.FlPosting = akNotaMinta.FlPosting;
+            viewModel.FlCetak = akNotaMinta.FlCetak;
+            viewModel.FlBatal = akNotaMinta.FlBatal;
+
+            viewModel.Jumlah = akNotaMinta.Jumlah;
+            viewModel.AkNotaMinta1 = akNotaMinta.AkNotaMinta1;
+            foreach (AkNotaMinta2 item in akNotaMinta.AkNotaMinta2)
+            {
+                viewModel.JumlahPerihal += item.Amaun;
+            }
+            viewModel.AkNotaMinta2 = akNotaMinta.AkNotaMinta2;
+
+            if (akNotaMinta == null)
+            {
+                return NotFound();
+            }
+
+            // get latest no rujukan running number if not existed 
+            if (akNotaMinta.NoSiri == null)
+            {
+                var year = DateTime.Now.Year.ToString().Substring(2);
+                var month = DateTime.Now.Month.ToString();
+                string prefix = "/" + month + "/" + year;
+                int x = 1;
+                string noRujukan = "0000" + prefix;
+
+                var LatestNoRujukan = _context.AkNotaMinta.Where(x => x.NoSiri.EndsWith(prefix))
+                            .Max(x => x.NoSiri);
+
+                if (LatestNoRujukan == null)
+                {
+                    noRujukan = string.Format("{0:" + "0000}", x) + prefix;
+                }
+                else
+                {
+                    x = int.Parse(LatestNoRujukan.Substring(0, 4));
+                    x++;
+                    noRujukan = string.Format("{0:" + "0000}", x) + prefix;
+                }
+                ViewBag.NoSiri = noRujukan;
+            }
+            else
+            {
+                ViewBag.NoSiri = akNotaMinta.NoSiri;
+            }
+            
+            // get latest no rujukan running number end
+            
+
+            CartEmpty();
+            PopulateTable(id);
+            PopulateList();
+            PopulateCartFromDb(akNotaMinta);
+            return View(viewModel);
+        }
+
+        // POST: AkNotaMinta/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [Authorize(Policy = "NM001E1")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditKewangan(int id, AkNotaMinta akNotaMinta, int JKWId, int AkPembekalId, string NamaPembekal, decimal JumlahPerihal)
+        {
+            if (id != akNotaMinta.Id)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    AkNotaMinta dataAsal = await _akNotaMintaRepo.GetById(id);
+
+                    // get latest no rujukan running number if not existed 
+                    if (dataAsal.NoSiri == null)
+                    {
+                        var year = DateTime.Now.Year.ToString().Substring(2);
+                        var month = DateTime.Now.Month.ToString();
+                        string prefix = "/" + month + "/" + year;
+                        int x = 1;
+                        string noRujukan = "0000" + prefix;
+
+                        var LatestNoRujukan = _context.AkNotaMinta.Where(x => x.NoSiri.EndsWith(prefix))
+                                    .Max(x => x.NoSiri);
+
+                        if (LatestNoRujukan == null)
+                        {
+                            noRujukan = string.Format("{0:" + "0000}", x) + prefix;
+                        }
+                        else
+                        {
+                            x = int.Parse(LatestNoRujukan.Substring(0, 4));
+                            x++;
+                            noRujukan = string.Format("{0:" + "0000}", x) + prefix;
+                        }
+                        akNotaMinta.NoSiri = noRujukan;
+                    }
+                    else
+                    {
+                        akNotaMinta.NoSiri = dataAsal.NoSiri;
+                    }
+
+                    // get latest no rujukan running number end
+
+                    // list of input that cannot be change
+                    akNotaMinta.Tahun = dataAsal.Tahun;
+                    akNotaMinta.JKWId = dataAsal.JKWId;
+                    akNotaMinta.NoRujukan = dataAsal.NoRujukan;
+                    akNotaMinta.AkPembekalId = dataAsal.AkPembekalId;
+                    akNotaMinta.Tajuk = dataAsal.Tajuk;
+                    akNotaMinta.NoCAS = dataAsal.NoCAS;
+                    akNotaMinta.TarikhSeksyenKewangan = dataAsal.TarikhSeksyenKewangan;
+                    akNotaMinta.TarMasuk = dataAsal.TarMasuk;
+                    akNotaMinta.UserId = dataAsal.UserId;
+                    // list of input that cannot be change end
+
+                    foreach (AkNotaMinta1 item in dataAsal.AkNotaMinta1)
+                    {
+                        var model = _context.AkNotaMinta1.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+
+                    _context.Entry(dataAsal).State = EntityState.Detached;
+
+                    akNotaMinta.AkNotaMinta1 = _cart.Lines1.ToList();
+                    akNotaMinta.AkNotaMinta2 = dataAsal.AkNotaMinta2;
+
+                    akNotaMinta.UserIdKemaskini = user.UserName;
+                    akNotaMinta.TarKemaskini = DateTime.Now;
+
+                    _context.Update(akNotaMinta);
+
+                    //insert applog
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "E";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Nota Minta - Ubah Bahagian Kewangan";
+                    appLog.NoRujukan = akNotaMinta.NoRujukan;
+                    appLog.Jumlah = akNotaMinta.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AkNotaMintaExists(akNotaMinta.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                CartEmpty();
+                TempData[SD.Success] = "Data berjaya diubah..!";
+                return RedirectToAction(nameof(Index));
+            }
             TempData[SD.Warning] = "Data tidak lengkap. Sila cuba sekali lagi";
             PopulateList();
             PopulateTable(id);

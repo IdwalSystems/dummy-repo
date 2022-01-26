@@ -243,7 +243,7 @@
                 AkNotaMintaId: Id,
                 AkCartaId: akCartaId
             }
-            if (name != null) {
+            if (akCartaId != null) {
                 $.ajax({
                     type: "POST",
                     //url: "/AkBelian/RemoveAkBelian1",
@@ -257,7 +257,7 @@
                     }
                 });
             }
-            $("#txtKodAkaun option[value=" + name + "]").prop('disabled', false);
+            $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', false);
 
         }
     };
@@ -308,19 +308,19 @@
     function Update1(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var akBelianId = $('#Id').val();
+        var Id = $('#Id').val();
         var akCartaId = $("TD", row).eq(0).html();
 
-        var AkBelian1 = {
-            AkBelianId: akBelianId,
+        var AkNotaMinta1 = {
+            AkNotaMintaId: Id,
             AkCartaId: akCartaId
         }
         if (akCartaId != null) {
             $.ajax({
                 type: "POST",
                 //url: "/AkBelian/GetAnItemCartAkBelian1",
-                url: '@Url.Action("GetAnItemCartAkBelian1", "AkBelian")',
-                data: AkBelian1,
+                url: '@Url.Action("GetAnItemCartAkNotaMinta1", "AkNotaMinta")',
+                data: AkNotaMinta1,
                 dataType: "json",
                 success: function (r) {
                     //insert data in modal objek

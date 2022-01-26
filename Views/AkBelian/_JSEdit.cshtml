@@ -322,7 +322,7 @@
                 AkBelianId: akBelianId,
                 AkCartaId: akCartaId
             }
-            if (name != null) {
+            if (akCartaId != null) {
                 $.ajax({
                     type: "POST",
                     //url: "/AkBelian/RemoveAkBelian1",
@@ -336,7 +336,7 @@
                     }
                 });
             }
-            $("#txtKodAkaun option[value=" + name + "]").prop('disabled', false);
+            $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', false);
 
         }
     };

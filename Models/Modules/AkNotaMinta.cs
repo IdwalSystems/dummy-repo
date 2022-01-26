@@ -38,7 +38,7 @@ namespace MSNK.Models.Modules
         public string NoSiri{ get; set; }
         [DisplayName("No CAS")] // no PO
         public string NoCAS { get; set; }
-        [DisplayName("Tarkih Seksyen Kewangan")]
+        [DisplayName("Tarikh Seksyen Kewangan")]
         public DateTime? TarikhSeksyenKewangan { get; set; }
         // untuk kewangan end
 

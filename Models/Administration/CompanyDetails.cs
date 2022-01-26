@@ -18,11 +18,11 @@ namespace MSNK.Models.Administration
         public CompanyDetails()
         {
             NamaSyarikat = "Majlis Sukan Negeri Kedah";
-            AlamatSyarikat1 = "Stadium Sultan Abdul Halim";
-            AlamatSyarikat2 = "Jalan Suka Menanti";
-            AlamatSyarikat3 = "05150 Alor Setar,Kedah";
-            TelSyarikat = "04-7303362 / 04-7303363";
-            FaksSyarikat = "04-734262";
+            AlamatSyarikat1 = "Kompleks Sukan Muadzam Shah";
+            AlamatSyarikat2 = "Lebuhraya Sultan Abdul Halim";
+            AlamatSyarikat3 = "05300 Alor Setar, KEDAH DARUL AMAN";
+            TelSyarikat = "04-7027441 / 7470 ";
+            FaksSyarikat = "04-7027442";
         }
     }
 }
