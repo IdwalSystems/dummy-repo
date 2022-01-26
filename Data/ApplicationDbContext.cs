@@ -50,9 +50,9 @@ namespace MSNK.Data
         public DbSet<AbBukuVot> AbBukuVot { get; set; }
         public DbSet<JSukan> JSukan { get; set; }
         public DbSet<JTahapAktiviti> JTahapAktiviti { get; set; }
-        public DbSet<SpPermohonanAktiviti> SpPermohonanAktiviti { get; set; }
-        public DbSet<SpPermohonanAktiviti1> SpPermohonanAktiviti1 { get; set; }
-        public DbSet<SpPermohonanAktiviti2> SpPermohonanAktiviti2 { get; set; }
+        public DbSet<SpPendahuluanPelbagai> SpPendahuluanPelbagai { get; set; }
+        public DbSet<SpPendahuluanPelbagai1> SpPendahuluanPelbagai1 { get; set; }
+        public DbSet<SpPendahuluanPelbagai2> SpPendahuluanPelbagai2 { get; set; }
         public DbSet<JJantina> JJantina { get; set; }
         public DbSet<AkTunaiRuncit> AkTunaiRuncit { get; set; }
         public DbSet<AkTunaiPemegang> AkTunaiPemegang { get; set; }

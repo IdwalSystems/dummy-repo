@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class SpPermohonanAktiviti2
+    public class SpPendahuluanPelbagai2
     {
         public int Id { get; set; }
         public int BilAtl { get; set; }
@@ -17,7 +17,7 @@ namespace MSNK.Models.Modules
         public int JumL { get; set; }
         public int JumP { get; set; }
 
-        public int SpPermohonanAktivitiId { get; set; }
+        public int SpPendahuluanPelbagaiId { get; set; }
         public JJantina JJantina { get; set; }
         public int JJantinaId { get; set; }
     }

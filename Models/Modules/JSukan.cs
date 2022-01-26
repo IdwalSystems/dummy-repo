@@ -12,7 +12,7 @@ namespace MSNK.Models.Modules
         public string Perihal { get; set; }
 
         //relationship
-        public ICollection<SpPermohonanAktiviti> SpPermohonanAktiviti { get; set; }
+        public ICollection<SpPendahuluanPelbagai> SpPermohonanAktiviti { get; set; }
 
         // log
         public string UserId { get; set; }

@@ -264,7 +264,6 @@ namespace MSNK.Controllers
             viewModel.Tajuk = akNotaMinta.Tajuk;
             viewModel.NoSiri = akNotaMinta.NoSiri;
             viewModel.NoCAS = akNotaMinta.NoCAS;
-            viewModel.NoPO = akNotaMinta.NoPO;
             viewModel.TarikhSeksyenKewangan = akNotaMinta.TarikhSeksyenKewangan;
             viewModel.FlPosting = akNotaMinta.FlPosting;
             viewModel.FlCetak = akNotaMinta.FlCetak;
@@ -776,7 +775,6 @@ namespace MSNK.Controllers
             viewModel.Tajuk = akNotaMinta.Tajuk;
             viewModel.NoSiri = akNotaMinta.NoSiri;
             viewModel.NoCAS = akNotaMinta.NoCAS;
-            viewModel.NoPO = akNotaMinta.NoPO;
             viewModel.TarikhSeksyenKewangan = akNotaMinta.TarikhSeksyenKewangan;
             viewModel.FlPosting = akNotaMinta.FlPosting;
             viewModel.FlCetak = akNotaMinta.FlCetak;
@@ -826,7 +824,6 @@ namespace MSNK.Controllers
                         akNotaMinta.Tahun = dataAsal.Tahun;
                         akNotaMinta.JKWId = dataAsal.JKWId;
                         akNotaMinta.NoRujukan = dataAsal.NoRujukan;
-                        akNotaMinta.NoPO = dataAsal.NoPO;
                         akNotaMinta.NoCAS = dataAsal.NoCAS;
                         akNotaMinta.TarikhSeksyenKewangan = dataAsal.TarikhSeksyenKewangan;
                         akNotaMinta.NoSiri = dataAsal.NoSiri;
@@ -921,7 +918,6 @@ namespace MSNK.Controllers
             viewModel.Tajuk = akNotaMinta.Tajuk;
             viewModel.NoSiri = akNotaMinta.NoSiri;
             viewModel.NoCAS = akNotaMinta.NoCAS;
-            viewModel.NoPO = akNotaMinta.NoPO;
             viewModel.TarikhSeksyenKewangan = akNotaMinta.TarikhSeksyenKewangan;
             viewModel.FlPosting = akNotaMinta.FlPosting;
             viewModel.FlCetak = akNotaMinta.FlCetak;

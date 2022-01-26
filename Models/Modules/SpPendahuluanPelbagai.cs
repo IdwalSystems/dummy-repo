@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class SpPermohonanAktiviti
+    public class SpPendahuluanPelbagai
     {
         public int Id { get; set; }
         public string NoPermohonan { get; set; }
@@ -53,8 +53,8 @@ namespace MSNK.Models.Modules
         public JNegeri JNegeri { get; set; }
         public JSukan JSukan { get; set; }
         public JTahapAktiviti JTahapAktiviti { get; set; }
-        public ICollection<SpPermohonanAktiviti1> SpPermohonanAktiviti1 { get; set; }
-        public ICollection<SpPermohonanAktiviti2> SpPermohonanAktiviti2 { get; set; }
+        public ICollection<SpPendahuluanPelbagai1> SpPendahuluanPelbagai1 { get; set; }
+        public ICollection<SpPendahuluanPelbagai2> SpPendahuluanPelbagai2 { get; set; }
 
 
         // log

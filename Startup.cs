@@ -85,13 +85,13 @@ namespace MSNK
             services.AddTransient<IRepository<AkTunaiCV, int, string>, AkTunaiCVRepository>();
             services.AddTransient<IRepository<AkTunaiLejar, int, string>, AkTunaiLejarRepository>();
             //TUNAI RUNCIT END
-            //PERMOHONAN AKTIVITI
+            //Pendahuluan Pelbagai
             services.AddTransient<IRepository<JTahapAktiviti, int, string>, JTahapAktivitiRepository>();
             services.AddTransient<IRepository<JSukan, int, string>, JSukanRepository>();
-            services.AddTransient<IRepository<SpPermohonanAktiviti, int, string>, SpPermohonanAktivitiRepository>();
-            services.AddTransient<ListViewIRepository<SpPermohonanAktiviti1, int>, SpPermohonanAktiviti1Repository>();
-            services.AddTransient<ListViewIRepository<SpPermohonanAktiviti2, int>, SpPermohonanAktiviti2Repository>();
-            //PERMOHONAN AKTIVITI END
+            services.AddTransient<IRepository<SpPendahuluanPelbagai, int, string>, SpPendahuluanPelbagaiRepository>();
+            services.AddTransient<ListViewIRepository<SpPendahuluanPelbagai1, int>, SpPendahuluanPelbagai1Repository>();
+            services.AddTransient<ListViewIRepository<SpPendahuluanPelbagai2, int>, SpPendahuluanPelbagai2Repository>();
+            //Pendahuluan Pelbagai END
             services.AddTransient<IRepository<AkNotaMinta, int, string>, AkNotaMintaRepository>();
             services.AddTransient<ListViewIRepository<AkNotaMinta1, int>, AkNotaMinta1Repository>();
             services.AddTransient<ListViewIRepository<AkNotaMinta2, int>, AkNotaMinta2Repository>();
@@ -200,6 +200,17 @@ namespace MSNK
                 options.AddPolicy("NM001T", policy => policy.RequireClaim("NM001T"));
                 options.AddPolicy("NM001UT", policy => policy.RequireClaim("NM001UT"));
                 //Nota Minta End
+                //Menu Permohonan
+                //Pendahuluan Pelbagai
+                options.AddPolicy("SP001", policy => policy.RequireClaim("SP001"));
+                options.AddPolicy("SP001C", policy => policy.RequireClaim("SP001C"));
+                options.AddPolicy("SP001E", policy => policy.RequireClaim("SP001E"));
+                options.AddPolicy("SP001D", policy => policy.RequireClaim("SP001D"));
+                options.AddPolicy("SP001P", policy => policy.RequireClaim("SP001P"));
+                options.AddPolicy("SP001B", policy => policy.RequireClaim("SP001B"));
+                options.AddPolicy("SP001T", policy => policy.RequireClaim("SP001T"));
+                options.AddPolicy("SP001UT", policy => policy.RequireClaim("SP001UT"));
+                //Pendahuluan Pelbagai End
             });
 
             services.AddMvc(f =>

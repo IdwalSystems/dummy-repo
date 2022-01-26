@@ -22,15 +22,16 @@ using MSNK.Models.Modules.ViewModel;
 namespace MSNK.Controllers
 {
     [Authorize]
-    public class SpPermohonanAktivitiController : Controller
+    public class SpPendahuluanPelbagaiController : Controller
 
 
     {
 
         public const string modul = "SP001";
-        private readonly IRepository<SpPermohonanAktiviti, int, string> _spPermohonanAktivitiRepo;
-        private readonly ListViewIRepository<SpPermohonanAktiviti1, int> _spPermohonanAktiviti1Repo;
-        private readonly ListViewIRepository<SpPermohonanAktiviti2, int> _spPermohonanAktiviti2Repo;
+
+        private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPendahuluanPelbagaiRepo;
+        private readonly ListViewIRepository<SpPendahuluanPelbagai1, int> _spPendahuluanPelbagai1Repo;
+        private readonly ListViewIRepository<SpPendahuluanPelbagai2, int> _spPendahuluanPelbagai2Repo;
         private readonly IRepository<JNegeri, int, string> _negeriRepo;
         private readonly IRepository<JSukan, int, string> _sukanRepo;
         private readonly IRepository<JTahapAktiviti, int, string> _tahapAktivitiRepo;
@@ -39,11 +40,11 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         //   private CartPeserta _cart;
 
-        public SpPermohonanAktivitiController(
+        public SpPendahuluanPelbagaiController(
            ApplicationDbContext context,
-           IRepository<SpPermohonanAktiviti, int, string> SpPermohonanAktivitiRepository,
-           ListViewIRepository<SpPermohonanAktiviti1, int> SpPermohonanAktiviti1Repository,
-           ListViewIRepository<SpPermohonanAktiviti2, int> SpPermohonanAktiviti2Repository,
+           IRepository<SpPendahuluanPelbagai, int, string> SpPendahuluanPelbagaiRepository,
+           ListViewIRepository<SpPendahuluanPelbagai1, int> SpPendahuluanPelbagai1Repository,
+           ListViewIRepository<SpPendahuluanPelbagai2, int> SpPendahuluanPelbagai2Repository,
            IRepository<JNegeri, int, string> negeriRepository,
            IRepository<JSukan, int, string> sukanRepository,
            IRepository<JTahapAktiviti, int, string> tahapAktivitiRepository,
@@ -53,9 +54,9 @@ namespace MSNK.Controllers
            //     CartPeserta cart
            )
         {
-            _spPermohonanAktivitiRepo = SpPermohonanAktivitiRepository;
-            _spPermohonanAktiviti1Repo = SpPermohonanAktiviti1Repository;
-            _spPermohonanAktiviti2Repo = SpPermohonanAktiviti2Repository;
+            _spPendahuluanPelbagaiRepo = SpPendahuluanPelbagaiRepository;
+            _spPendahuluanPelbagai1Repo = SpPendahuluanPelbagai1Repository;
+            _spPendahuluanPelbagai2Repo = SpPendahuluanPelbagai2Repository;
             _kwRepo = kwRepository;
             _akCartaRepo = akCartaRepository;
             _context = context;
@@ -66,7 +67,7 @@ namespace MSNK.Controllers
         }
 
         //Function Running Number
-        private string RunningNumber(SpPermohonanAktiviti data)
+        private string RunningNumber(SpPendahuluanPelbagai data)
         {
             var kw = _context.JKW.FirstOrDefault(x => x.Id == data.JKWId);
 
@@ -77,7 +78,7 @@ namespace MSNK.Controllers
             int x = 1;
             string noRujukan = prefix + "000000";
 
-            var LatestNoRujukan = _context.SpPermohonanAktiviti
+            var LatestNoRujukan = _context.SpPendahuluanPelbagai
                 .Where(x => x.NoPermohonan.Substring(0, 9) == prefix)
                 .Max(x => x.NoPermohonan);
             if (LatestNoRujukan == null)
@@ -93,7 +94,7 @@ namespace MSNK.Controllers
             return noRujukan;
         }
         [HttpPost]
-        public JsonResult JsonGetKod(SpPermohonanAktiviti data)
+        public JsonResult JsonGetKod(SpPendahuluanPelbagai data)
         {
             try
             {
@@ -122,7 +123,7 @@ namespace MSNK.Controllers
              string searchDate2,
              string searchColumn)
         {
-            var spPermohonanAktiviti = await _spPermohonanAktivitiRepo.GetAll();
+            var searchResult = await _spPendahuluanPelbagaiRepo.GetAll();
 
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
             {
@@ -131,7 +132,7 @@ namespace MSNK.Controllers
                 {
                     if (searchColumn == "NoPermohonan")
                     {
-                        spPermohonanAktiviti = spPermohonanAktiviti.Where(s => s.NoPermohonan.ToUpper().Contains(searchString.ToUpper())).ToList();
+                        searchResult = searchResult.Where(s => s.NoPermohonan.ToUpper().Contains(searchString.ToUpper())).ToList();
                     }
                     //else if (searchColumn == "Pembekal")
                     //{
@@ -151,7 +152,7 @@ namespace MSNK.Controllers
                     {
                         DateTime date1 = DateTime.Parse(searchDate1);
                         DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                        spPermohonanAktiviti = spPermohonanAktiviti.Where(x => x.TarSedia >= date1
+                        searchResult = searchResult.Where(x => x.TarSedia >= date1
                             && x.TarSedia <= date2).ToList();
                     }
                     ViewBag.SearchData1 = searchDate1;
@@ -166,7 +167,7 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = "Tarikh";
             }
 
-            return View(spPermohonanAktiviti);
+            return View(searchResult);
         }
 
         // GET: SpPermohonanAktiviti/Details/5
@@ -177,16 +178,16 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var spPermohonanAktiviti = await _spPermohonanAktivitiRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(spPermohonanAktiviti.JKWId);
-            spPermohonanAktiviti.JKW = kw;
-            if (spPermohonanAktiviti == null)
+            var spPendahuluanPelbagai = await _spPendahuluanPelbagaiRepo.GetById((int)id);
+            var kw = await _kwRepo.GetById(spPendahuluanPelbagai.JKWId);
+            spPendahuluanPelbagai.JKW = kw;
+            if (spPendahuluanPelbagai == null)
             {
                 return NotFound();
             }
             PopulateList();
             PopulateTable(id);
-            return View(spPermohonanAktiviti);
+            return View(spPendahuluanPelbagai);
         }
 
         //public async Task<IActionResult> Lulus(int? id)
@@ -230,31 +231,31 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SpPermohonanAktiviti spPermohonanAktiviti, int JKWId)
+        public async Task<IActionResult> Create(SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId)
         {
 
-            SpPermohonanAktiviti m = new SpPermohonanAktiviti();
-            var tahap = _context.JTahapAktiviti.FirstOrDefault(x => x.Id == spPermohonanAktiviti.JTahapId);
-            var sukan = _context.JSukan.FirstOrDefault(x => x.Id == spPermohonanAktiviti.JSukanId);
+            SpPendahuluanPelbagai m = new SpPendahuluanPelbagai();
+            var tahap = _context.JTahapAktiviti.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JTahapId);
+            var sukan = _context.JSukan.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JSukanId);
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
 
             if (ModelState.IsValid)
             {
-                if (spPermohonanAktiviti != null && JKWId != 0)
+                if (spPendahuluanPelbagai != null && JKWId != 0)
                 {
 
                     m.JKWId = JKWId;
-                    m.NoPermohonan = RunningNumber(spPermohonanAktiviti);
-                    m.Tarikh = spPermohonanAktiviti.Tarikh;
-                    m.Penyertaan = spPermohonanAktiviti.Penyertaan;
-                    m.Pertandingan = spPermohonanAktiviti.Pertandingan;
-                    m.Pengelolaan = spPermohonanAktiviti.Pengelolaan;
-                    m.ProgramBinaan = spPermohonanAktiviti.ProgramBinaan;
-                    m.JNegeriId = spPermohonanAktiviti.JNegeriId;
+                    m.NoPermohonan = RunningNumber(spPendahuluanPelbagai);
+                    m.Tarikh = spPendahuluanPelbagai.Tarikh;
+                    m.Penyertaan = spPendahuluanPelbagai.Penyertaan;
+                    m.Pertandingan = spPendahuluanPelbagai.Pertandingan;
+                    m.Pengelolaan = spPendahuluanPelbagai.Pengelolaan;
+                    m.ProgramBinaan = spPendahuluanPelbagai.ProgramBinaan;
+                    m.JNegeriId = spPendahuluanPelbagai.JNegeriId;
                     m.JSukan = sukan;
-                    m.Tarikh = spPermohonanAktiviti.Tarikh;
-                    m.Aktiviti = spPermohonanAktiviti.Aktiviti;
-                    m.Tempat = spPermohonanAktiviti.Tempat;
+                    m.Tarikh = spPendahuluanPelbagai.Tarikh;
+                    m.Aktiviti = spPendahuluanPelbagai.Aktiviti;
+                    m.Tempat = spPendahuluanPelbagai.Tempat;
                     m.JTahapAktiviti = tahap;
                     m.FlPosting = 0;
                     //m.TarikhPosting = spPermohonanAktiviti.TarikhPosting;
@@ -266,7 +267,7 @@ namespace MSNK.Controllers
                     //m.AkPO1 = _cart.Lines1.ToArray();
                     //m.AkPO2 = _cart.Lines2.ToArray();
 
-                    await _spPermohonanAktivitiRepo.Insert(m);
+                    await _spPendahuluanPelbagaiRepo.Insert(m);
 
                     await _context.SaveChangesAsync();
 
@@ -277,7 +278,7 @@ namespace MSNK.Controllers
             }
 
             PopulateList();
-            return View(spPermohonanAktiviti);
+            return View(spPendahuluanPelbagai);
         }
 
         // GET: SpPermohonanAktiviti/Edit/5
@@ -288,17 +289,17 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var spPermohonanAktiviti = await _context.SpPermohonanAktiviti.FindAsync(id);
-            if (spPermohonanAktiviti == null)
+            var spPendahuluanPelbagai = await _context.SpPendahuluanPelbagai.FindAsync(id);
+            if (spPendahuluanPelbagai == null)
 
             {
                 return NotFound();
             }
 
-            ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", spPermohonanAktiviti.JNegeriId);
-            ViewData["JSukanId"] = new SelectList(_context.JSukan, "Id", "Id", spPermohonanAktiviti.JSukanId);
-            ViewData["JTahapId"] = new SelectList(_context.JTahapAktiviti, "Id", "Id", spPermohonanAktiviti.JTahapId);
-            return View(spPermohonanAktiviti);
+            ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", spPendahuluanPelbagai.JNegeriId);
+            ViewData["JSukanId"] = new SelectList(_context.JSukan, "Id", "Id", spPendahuluanPelbagai.JSukanId);
+            ViewData["JTahapId"] = new SelectList(_context.JTahapAktiviti, "Id", "Id", spPendahuluanPelbagai.JTahapId);
+            return View(spPendahuluanPelbagai);
         }
 
         // POST: SpPermohonanAktiviti/Edit/5
@@ -306,9 +307,9 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Ppn,Penyertaan,Pertandingan,Pengelolaan,ProgramBinaan,JNegeriId,JSukanId,Tarikh,Aktiviti,Tempat,JTahapId,Penyedia,TarSedia,JumKeseluruhan,Penyokong,StatusSokong,TarSokong,JumSokong,Pelulus,StatusLulus,TarLulus,JumLulus,FlPosting,FlCetak,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] SpPermohonanAktiviti spPermohonanAktiviti)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Ppn,Penyertaan,Pertandingan,Pengelolaan,ProgramBinaan,JNegeriId,JSukanId,Tarikh,Aktiviti,Tempat,JTahapId,Penyedia,TarSedia,JumKeseluruhan,Penyokong,StatusSokong,TarSokong,JumSokong,Pelulus,StatusLulus,TarLulus,JumLulus,FlPosting,FlCetak,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] SpPendahuluanPelbagai spPendahuluanPelbagai)
         {
-            if (id != spPermohonanAktiviti.Id)
+            if (id != spPendahuluanPelbagai.Id)
             {
                 return NotFound();
             }
@@ -317,12 +318,12 @@ namespace MSNK.Controllers
             {
                 try
                 {
-                    _context.Update(spPermohonanAktiviti);
+                    _context.Update(spPendahuluanPelbagai);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SpPermohonanAktivitiExists(spPermohonanAktiviti.Id))
+                    if (!SpPendahuluanPelbagaiExists(spPendahuluanPelbagai.Id))
                     {
                         return NotFound();
                     }
@@ -333,10 +334,10 @@ namespace MSNK.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", spPermohonanAktiviti.JNegeriId);
-            ViewData["JSukanId"] = new SelectList(_context.JSukan, "Id", "Id", spPermohonanAktiviti.JSukanId);
-            ViewData["JTahapId"] = new SelectList(_context.JTahapAktiviti, "Id", "Id", spPermohonanAktiviti.JTahapId);
-            return View(spPermohonanAktiviti);
+            ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", spPendahuluanPelbagai.JNegeriId);
+            ViewData["JSukanId"] = new SelectList(_context.JSukan, "Id", "Id", spPendahuluanPelbagai.JSukanId);
+            ViewData["JTahapId"] = new SelectList(_context.JTahapAktiviti, "Id", "Id", spPendahuluanPelbagai.JTahapId);
+            return View(spPendahuluanPelbagai);
         }
 
         // GET: SpPermohonanAktiviti/Delete/5
@@ -347,18 +348,18 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var spPermohonanAktiviti = await _context.SpPermohonanAktiviti
+            var spPendahuluanPelbagai = await _context.SpPendahuluanPelbagai
                 .Include(s => s.JNegeri)
                 .Include(s => s.JSukan)
                 .Include(s => s.JTahapAktiviti)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (spPermohonanAktiviti == null)
+            if (spPendahuluanPelbagai == null)
             {
                 return NotFound();
             }
             PopulateList();
             PopulateTable(id);
-            return View(spPermohonanAktiviti);
+            return View(spPendahuluanPelbagai);
         }
 
         // POST: SpPermohonanAktiviti/Delete/5
@@ -366,8 +367,8 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var spPermohonanAktiviti = await _context.SpPermohonanAktiviti.FindAsync(id);
-            _context.SpPermohonanAktiviti.Remove(spPermohonanAktiviti);
+            var spPendahuluanPelbagai = await _context.SpPendahuluanPelbagai.FindAsync(id);
+            _context.SpPendahuluanPelbagai.Remove(spPendahuluanPelbagai);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -399,16 +400,16 @@ namespace MSNK.Controllers
         private void PopulateTable(int? id)
         {
 
-            List<SpPermohonanAktiviti1> spPermohonanAktiviti1Table = _context.SpPermohonanAktiviti1
+            List<SpPendahuluanPelbagai1> spPermohonanAktiviti1Table = _context.SpPendahuluanPelbagai1
                 .Include(b => b.AkCarta)
-                .Where(b => b.SpPermohonanAktivitiId == id)
+                .Where(b => b.SpPendahuluanPelbagaiId == id)
                 .OrderBy(b => b.Id)
                 .ToList();
             ViewBag.akPO1 = spPermohonanAktiviti1Table;
 
-            List<SpPermohonanAktiviti2> spPermohonanAktiviti2Table = _context.SpPermohonanAktiviti2
+            List<SpPendahuluanPelbagai2> spPermohonanAktiviti2Table = _context.SpPendahuluanPelbagai2
                 //.Include(b => b.AkCarta)
-                .Where(b => b.SpPermohonanAktivitiId == id)
+                .Where(b => b.SpPendahuluanPelbagaiId == id)
                 .OrderBy(b => b.Id)
                 .ToList();
             ViewBag.akPO2 = spPermohonanAktiviti2Table;
@@ -529,9 +530,9 @@ namespace MSNK.Controllers
         //}
         //// get all item from cart spPermohonanAktiviti1 end
 
-        private bool SpPermohonanAktivitiExists(int id)
+        private bool SpPendahuluanPelbagaiExists(int id)
         {
-            return _context.SpPermohonanAktiviti.Any(e => e.Id == id);
+            return _context.SpPendahuluanPelbagai.Any(e => e.Id == id);
         }
 
         //public async Task<IActionResult> PrintPdf(int id)

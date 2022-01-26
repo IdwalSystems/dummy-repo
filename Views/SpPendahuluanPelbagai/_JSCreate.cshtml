@@ -40,7 +40,7 @@
         var kw = $("#ddlKW").val();
 
         if (kw != 0) {
-            var SpPermohonaAktiviti = {
+            var SpPendahuluanPelbagai = {
                 //Tahun: tahun,
                 JKWId: kw
             };
@@ -48,8 +48,8 @@
             $.ajax({
                 type: "POST",
                 //url: "/AkPO/JsonGetKod",
-                url: '@Url.Action("JsonGetKod", "SpPermohonanAktiviti")',
-                data: SpPermohonaAktiviti,
+                url: '@Url.Action("JsonGetKod", "SpPendahuluanPelbagai")',
+                data: SpPendahuluanPelbagai,
                 dataType: "json",
                 success: function (msg) {
                     $("#txtNoPermohonan").val(msg.record);
@@ -121,7 +121,8 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                url: "/SpPermohonanAktiviti/GetJantina",
+                //url: "/SpPendahuluanPelbagai/GetJantina",
+                url: '@Url.Action("GetJantina", "SpPendahuluanPelbagai")', //baru
                 data: JJantina,
                 dataType: "json",
                 success: function (r) {

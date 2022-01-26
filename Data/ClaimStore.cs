@@ -93,8 +93,18 @@ namespace MSNK.Data
             new Claim("NM001P","NM001 Nota Minta - Cetak"),
             new Claim("NM001B","NM001 Nota Minta - Batal"),
             new Claim("NM001T","NM001 Nota Minta - Posting"),
-            new Claim("NM001UT","NM001 Baucer Jurnal - UnPosting"),
+            new Claim("NM001UT","NM001 Nota Minta - UnPosting"),
             //Nota Minta end
+            //Pendahuluan Pelbagai
+            new Claim("SP001","SP001 Pendahuluan Pelbagai"),
+            new Claim("SP001C","SP001 Pendahuluan Pelbagai - Tambah"),
+            new Claim("SP001E","SP001 Pendahuluan Pelbagai - Ubah"),
+            new Claim("SP001D","SP001 Pendahuluan Pelbagai - Hapus"),
+            new Claim("SP001P","SP001 Pendahuluan Pelbagai - Cetak"),
+            new Claim("SP001B","SP001 Pendahuluan Pelbagai - Batal"),
+            new Claim("SP001T","SP001 Pendahuluan Pelbagai - Posting"),
+            new Claim("SP001UT","SP001 Pendahuluan Pelbagai - UnPosting"),
+            //Pendahuluan Pelbagai end
         };
     }
 }
