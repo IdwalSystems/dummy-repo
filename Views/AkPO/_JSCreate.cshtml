@@ -1,5 +1,96 @@
 ﻿<script type="text/javascript">
 
+        // onchange No PO
+    $("body").on('change', "#ddlNotaMinta", function () {
+        $("#txtKodAkaun option").prop('disabled', false);
+        $("#txtKodAkaun option[value='']").prop('disabled', true);
+        var noNM = $("#ddlNotaMinta").val();
+        if (noNM != 0) {
+            JsonNoNM(noNM);
+        } else {
+
+        }
+        
+    });
+    function JsonNoNM(id) {
+        if (id != null) {
+            $.ajax({
+                type: "POST",
+                //url: "/AkBelian/JsonGetNoPO",
+                url: '@Url.Action("JsonGetNoNotaMinta", "AkPO")',
+                data: { id: id },
+                dataType: "json",
+                success: function (msg) {
+                    $("#ddlPembekal").val(msg?.record?.akPembekal?.id).change();
+                    $("ddlPembekal").prop('disabled', false);
+                    $("#txtNamaSykt").val(msg.record.akPembekal.namaSykt);
+                    $("#txtAlamat1").val(msg.record.akPembekal.alamat1);
+                    $("#txtAlamat2").val(msg.record.akPembekal.alamat2);
+                    $("#txtAlamat3").val(msg.record.akPembekal.alamat3);
+                    displayObjekList(msg.record.akNotaMinta1);
+                    displayPerihalList(msg.record.akNotaMinta2);
+
+                    checkJumlah();
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+
+    function displayObjekList(data) {
+        $("table tbody#tbodyObjek").empty();
+        var jumlah = $("#jumlahObjek");
+        var sum = 0;
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+
+            var str = "<tr><td id='akCartaId' hidden>" + item.akCartaId +
+                "</td><td>" + item.akCarta.kod + " - " + item.akCarta.perihal +
+                "</td><td class='text-right'>" + (item.amaun).toFixed(2) +
+                "</td><td>" +
+                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                "</td><td>" +
+                "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                "</td><tr>";
+            $("table tbody#tbodyObjek").append(str);
+            sum += item.amaun;
+
+            $("#txtKodAkaun option[value=" + item.akCartaId + "]").prop('disabled', true);
+        }
+        jumlah.val(sum.toFixed(2));
+    }
+
+    function displayPerihalList(data) {
+        //refresh updated table objek
+        $("table tbody#tbodyPerihal").empty();
+        var jumlah = $("#jumlahPerihal");
+        var sum = 0;
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            var str = "<tr><td id='txtIndek' hidden>" + item.indek +
+                "</td><td>" + item.bil +
+                "</td><td hidden>" + item.bil +
+                "</td><td class='text-uppercase'>" + item.noStok +
+                "</td><td class='text-uppercase'>" + item.perihal +
+                "</td><td>" + item.kuantiti +
+                "</td><td class='text-uppercase'>" + item.unit +
+                "</td><td class='text-right'>" + (item.harga).toFixed(2) +
+                "</td><td class='text-right'>" + (item.amaun).toFixed(2) +
+                "</td><td>" +
+                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                "</td><td>" +
+                "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                "</td><tr>";
+            $("table tbody#tbodyPerihal").append(str);
+            sum += item.amaun;
+            bil++;
+        }
+        jumlah.val(sum.toFixed(2));
+    }
+    //on change no PO end
+
     // In your Javascript (external .js resource or <script> tag)
     $(document).ready(function () {
         //$('.js-example-basic-single').select2();

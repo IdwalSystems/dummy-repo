@@ -93,7 +93,7 @@
                         @Html.DisplayFor(modelItem => item.NoPO)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Tarikh, "{0:dd/MM/yyyy}")
+                        @item.Tarikh.ToString("dd/MM/yyyy")
                     </td>
                     <td class="text-right">
                         @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")

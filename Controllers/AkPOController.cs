@@ -30,6 +30,7 @@ namespace MSNK.Controllers
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkPO, int, string> _akPORepo;
+        private readonly IRepository<AkNotaMinta, int, string> _akNotaMintaRepo;
         private readonly ListViewIRepository<AkPO1, int> _akPO1Repo;
         private readonly ListViewIRepository<AkPO2, int> _akPO2Repo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
@@ -45,11 +46,12 @@ namespace MSNK.Controllers
         public AkPOController(ApplicationDbContext context,
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
-            IRepository<AkPO, int, string> AkPORepository,
-            ListViewIRepository<AkPO1, int> AkPO1Repository,
-            ListViewIRepository<AkPO2, int> AkPO2Repository,
+            IRepository<AkPO, int, string> akPORepository,
+            IRepository<AkNotaMinta, int, string> akNotaMintaRepository,
+            ListViewIRepository<AkPO1, int> akPO1Repository,
+            ListViewIRepository<AkPO2, int> akPO2Repository,
             IRepository<AkCarta, int, string> akCartaRepository,
-            IRepository<AkPembekal, int, string> AkPembekalRepository,
+            IRepository<AkPembekal, int, string> akPembekalRepository,
             IRepository<AkBank, int, string> akBankRepository,
             IRepository<JBank, int, string> JBankRepository,
             IRepository<JNegeri, int, string> negeriRepository,
@@ -62,13 +64,14 @@ namespace MSNK.Controllers
             _context = context;
             _appLog = appLog;
             _userManager = userManager;
-            _akPORepo = AkPORepository;
-            _akPO1Repo = AkPO1Repository;
-            _akPO2Repo = AkPO2Repository;
+            _akPORepo = akPORepository;
+            _akNotaMintaRepo = akNotaMintaRepository;
+            _akPO1Repo = akPO1Repository;
+            _akPO2Repo = akPO2Repository;
             _akCartaRepo = akCartaRepository;
             _kwRepo = kwRepository;
             _negeriRepo = negeriRepository;
-            _akpembekalRepo = AkPembekalRepository;
+            _akpembekalRepo = akPembekalRepository;
             _akBankRepo = akBankRepository;
             _jbankRepo = JBankRepository;
             _akAkaunRepo = akAkaunRepository;
@@ -213,6 +216,7 @@ namespace MSNK.Controllers
             return View(akPO);
         }
         // GET: AkPO/Delete/5
+        [Authorize(Policy = "TG001D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -234,6 +238,7 @@ namespace MSNK.Controllers
 
         // POST: AkPO/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "TG001D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -242,6 +247,92 @@ namespace MSNK.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        // on change no PO controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetNoNotaMinta(int id)
+        {
+            try
+            {
+                CartEmpty();
+                PopulateCartFromAkNotaMinta(id);
+                var result = await _akNotaMintaRepo.GetById(id);
+
+                List<AkNotaMinta1> akNotaMinta1Table = await _context.AkNotaMinta1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkNotaMintaId == id)
+                .OrderBy(b => b.Id)
+                .ToListAsync();
+
+                foreach (AkNotaMinta1 item in akNotaMinta1Table)
+                {
+                    result.AkNotaMinta1.Add(item);
+                }
+
+                List<AkNotaMinta2> akNotaMinta2Table = await _context.AkNotaMinta2
+                .Where(b => b.AkNotaMintaId == id)
+                .OrderBy(b => b.Id)
+                .ToListAsync();
+
+                foreach (AkNotaMinta2 item in akNotaMinta2Table)
+                {
+                    result.AkNotaMinta2.Add(item);
+                }
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+
+        private void PopulateCartFromAkNotaMinta(int id)
+        {
+            var user = _userManager.GetUserName(User);
+
+            List<AkNotaMinta1> akNotaMinta1Table = _context.AkNotaMinta1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkNotaMintaId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+
+            foreach (AkNotaMinta1 item in akNotaMinta1Table)
+            {
+
+                item.AkNotaMintaId = 0;
+
+                _cart.AddItem1(item.AkNotaMintaId,
+                                item.AkCartaId,
+                               item.Amaun
+                               );
+            }
+
+            List<AkNotaMinta2> akNotaMinta2Table = _context.AkNotaMinta2
+                .AsNoTracking()
+                .Where(b => b.AkNotaMintaId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+
+            foreach (AkNotaMinta2 item in akNotaMinta2Table)
+            {
+                item.AkNotaMintaId = 0;
+
+                _cart.AddItem2(item.AkNotaMintaId,
+                               item.Indek,
+                               item.Baris,
+                               item.Bil,
+                               item.NoStok,
+                               item.Perihal,
+                               item.Kuantiti,
+                               item.Unit,
+                               item.Harga,
+                               item.Amaun);
+            }
+
+
+        }
+        //on change no PO controller end
 
         private void PopulateList()
         {
@@ -256,6 +347,9 @@ namespace MSNK.Controllers
 
             List<AkBank> akBankList = _context.AkBank.Include(b => b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
+
+            List<AkNotaMinta> akNotaMintaList = _context.AkNotaMinta.Where(x => x.FlPosting == 1).ToList();
+            ViewBag.AkNotaMinta = akNotaMintaList;
 
             List<AkCarta> akCartaList = _context.AkCarta
                 .Include(b => b.JKW)
@@ -319,12 +413,12 @@ namespace MSNK.Controllers
             }
         }
 
-        // GET: AkPO/Create
+        // GET: AkPO/Createt
+        [Authorize(Policy = "TG001C")]
         public IActionResult Create()
         {
+            CartEmpty();
             PopulateList();
-            ViewData["AkPembekalId"] = new SelectList(_context.AkPembekal, "Id", "KodSykt", "NamaSykt");
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod");
             return View();
         }
 
@@ -471,12 +565,13 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "TG001C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkPO akPO, int JKWId)
+        public async Task<IActionResult> Create(AkPO akPO, int JKWId, int? AkNotaMintaId)
         {
 
             AkPO m = new AkPO();
-            //var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             var pembekal = _context.AkPembekal.FirstOrDefault(x => x.Id == akPO.AkPembekalId);
 
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
@@ -513,6 +608,7 @@ namespace MSNK.Controllers
                     m.JKWId = JKWId;
                     m.NoPO = RunningNumber(akPO);
                     m.Tarikh = akPO.Tarikh;
+                    m.AkNotaMintaId = AkNotaMintaId;
                     m.TarikhPosting = akPO.TarikhPosting;
                     m.AkPembekal = pembekal;
                     m.Jumlah = akPO.Jumlah;
@@ -520,7 +616,7 @@ namespace MSNK.Controllers
                     m.FlBatal = 0;
                     m.FlCetak = 0;
                     m.Tahun = akPO.Tahun;
-                    //m.UserId = user.UserName;
+                    m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
 
                     m.AkPO1 = _cart.Lines1.ToArray();
@@ -545,7 +641,7 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
-                    TempData[SD.Success] = "Maklumat Pesanan Tempatan berjaya ditambah";
+                    TempData[SD.Success] = "Maklumat Pesanan Tempatan berjaya ditambah. No Pendaftaran adalah " + RunningNumber(akPO);
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -555,6 +651,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPO/Edit/5
+        [Authorize(Policy = "TG001E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -584,8 +681,9 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "TG001E")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkPO akPO, int JKWId, int JNegeriId, int AkBankId, decimal JumlahPerihal)
+        public async Task<IActionResult> Edit(int id, AkPO akPO, int JKWId, int JNegeriId, int AkBankId, decimal JumlahPerihal, int? AkNotaMintaId)
         {
             if (id != akPO.Id)
             {
@@ -1211,7 +1309,24 @@ namespace MSNK.Controllers
 
                         await _abBukuVotRepo.Insert(abBukuVotPosting);
                         // insert into AbBukuVot end
+ 
                     }
+
+                    //update AkNotaMinta
+                    if(akPO.AkNotaMintaId != null)
+                    {
+                        var noPO = "PO/" + akPO.NoPO;
+                        var tarikhPO = DateTime.Now;
+
+                        AkNotaMinta akNM = await _akNotaMintaRepo.GetById((int)akPO.AkNotaMintaId);
+
+                        akNM.NoCAS = noPO;
+                        akNM.TarikhSeksyenKewangan = tarikhPO;
+
+                        await _akNotaMintaRepo.Update(akNM);
+                    }
+                    
+                    //update AkNotaMinta end
 
                     //update posting status in akPO
                     akPO.FlPosting = 1;
@@ -1285,6 +1400,21 @@ namespace MSNK.Controllers
                     //delete data from abBukuVot
 
                     //update posting status in akPO
+
+                    //update AkNotaMinta
+
+                    if (akPO.AkNotaMintaId != null)
+                    {
+                        AkNotaMinta akNM = await _akNotaMintaRepo.GetById((int)akPO.AkNotaMintaId);
+
+                        akNM.NoCAS = "";
+                        akNM.TarikhSeksyenKewangan = null;
+
+                        await _akNotaMintaRepo.Update(akNM);
+                    }
+                    
+                    //update AkNotaMinta end
+
                     akPO.FlPosting = 0;
                     akPO.TarikhPosting = null;
                     await _akPORepo.Update(akPO);

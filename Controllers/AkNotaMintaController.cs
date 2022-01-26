@@ -1143,6 +1143,123 @@ namespace MSNK.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // posting function
+        [Authorize(Policy = "NM001T")]
+        public async Task<IActionResult> Posting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                AkNotaMinta akNotaMinta = await _akNotaMintaRepo.GetById((int)id);
+
+                List<AkNotaMinta1> akNM1 = akNotaMinta.AkNotaMinta1.ToList();
+
+                var akPO = await _context.AkPO.Where(x => x.AkNotaMintaId == id).FirstOrDefaultAsync();
+                if (akPO != null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke Pesanan Tempatan.";
+
+                }
+                else
+                {
+                    //posting operation start here
+                    
+                    //update posting status in akTerima
+                    akNotaMinta.FlPosting = 1;
+                    akNotaMinta.TarikhPosting = DateTime.Now;
+                    await _akNotaMintaRepo.Update(akNotaMinta);
+
+                    //insert applog
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "T";
+                    appLog.LgOperation = "Posting";
+                    appLog.LgNote = modul + " NotaMinta - Posting";
+                    appLog.NoRujukan = akNotaMinta.NoRujukan;
+                    appLog.Jumlah = akNotaMinta.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+
+                    TempData[SD.Success] = "Data berjaya dikemaskini ke Pesanan Tempatan.";
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // posting function end
+
+        // unposting function
+        [Authorize(Policy = "TG002UT")]
+        public async Task<IActionResult> UnPosting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AkNotaMinta akNotaMinta = await _akNotaMintaRepo.GetById((int) id);
+
+                List<AkPO> akPO = _context.AkPO.Where(x => x.AkNotaMintaId == id).ToList();
+
+                if (akPO == null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data belum dikemaskini ke Pesanan Tempatan.";
+
+                }
+                else
+                {
+                    //unposting operation start here
+
+                    //update posting status in akTerima
+                    akNotaMinta.FlPosting = 0;
+                    akNotaMinta.TarikhPosting = null;
+                    await _akNotaMintaRepo.Update(akNotaMinta);
+
+                    //insert applog
+                    var user = await _userManager.GetUserAsync(User);
+
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "UT";
+                    appLog.LgOperation = "UnPosting";
+                    appLog.LgNote = modul + " Nota Minta - UnPosting";
+                    appLog.NoRujukan = akNotaMinta.NoRujukan;
+                    appLog.Jumlah = akNotaMinta.Jumlah;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya batal kemaskini dari Pesanan Tempatan.";
+                    //unposting operation end
+                }
+
+            }
+            return RedirectToAction(nameof(Index));
+
+        }
+        // unposting function end
+
         private bool AkNotaMintaExists(int id)
         {
             return _context.AkNotaMinta.Any(e => e.Id == id);

@@ -18,8 +18,8 @@ namespace MSNK.Controllers
     [Authorize(Roles = "Admin , Supervisor")]
     public class SuPekerjaController : Controller
     {
-        //public const string modul = "JU001";
-        //public const string namamodul = "Daftar Anggota";
+        public const string modul = "FL002";
+        public const string namamodul = "Daftar Anggota";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -64,6 +64,9 @@ namespace MSNK.Controllers
         {
             List<JNegeri> JNegeriList = _context.JNegeri.OrderBy(b => b.Kod).ToList();
             ViewBag.JNegeri = JNegeriList;
+
+            List<JBank> JBankList = _context.JBank.OrderBy(b => b.Kod).ToList();
+            ViewBag.JBank = JBankList;
 
             List<JAgama> JAgamaList = _context.JAgama.OrderBy(b => b.Perihal).ToList();
             ViewBag.JAgama = JAgamaList;
@@ -175,51 +178,73 @@ namespace MSNK.Controllers
         public async Task<IActionResult> Create(SuPekerja suPekerja)
         {
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
+
+            var user = await _userManager.GetUserAsync(User);
+
             SuPekerja m = new SuPekerja();
-            if (ModelState.IsValid)
+            if (suPekerja.Emel != null)
             {
-                //string noRujukan = GetKod(akJurnal.JKWId);
-                if (suPekerja != null)
+                if (ModelState.IsValid)
                 {
-                    m.NoGaji = GetNoGaji();
-                    m.Nama = suPekerja.Nama;
-                    m.NoKp = suPekerja.NoKp;
-                    m.Alamat1 = suPekerja.Alamat1;
-                    m.Alamat2 = suPekerja.Alamat2;
-                    m.Alamat3 = suPekerja.Alamat3;
-                    m.Poskod = suPekerja.Poskod;
-                    m.Bandar = suPekerja.Bandar;
-                    m.JNegeriId = suPekerja.JNegeriId;
-                    //m.TelefonRumah = suPekerja.TelefonRumah;
-                    //m.TelefonBimbit = suPekerja.TelefonBimbit;
-                    m.Emel = suPekerja.Emel;
-                    //m.StatusKahwin = suPekerja.StatusKahwin;
-                    //m.BilAnak = suPekerja.BilAnak;
-                    //m.GajiPokok = suPekerja.GajiPokok;
-                    //m.TarikhMasukKerja = suPekerja.TarikhMasukKerja;
-                    //m.TarikhBerhentiKerja = suPekerja.TarikhBerhentiKerja;
-                    //m.TarikhPencen = suPekerja.TarikhPencen;
-                    //m.JAgamaId = suPekerja.JAgamaId;
-                    //m.JBangsaId = suPekerja.JBangsaId;
-                    //m.JJawatanPekerjaId = suPekerja.JJawatanPekerjaId;
-                    //m.JCaraBayarId = suPekerja.JCaraBayarId;
-                    m.NoAkaunBank = suPekerja.NoAkaunBank;
-                    m.UserId = username;
-                    m.TarMasuk = DateTime.Now;
-                    m.SuTanggungan = _cart.Lines1.ToArray();
+                    //string noRujukan = GetKod(akJurnal.JKWId);
+                    if (suPekerja != null)
+                    {
+                        m.NoGaji = GetNoGaji();
+                        m.Nama = suPekerja.Nama;
+                        m.NoKp = suPekerja.NoKp;
+                        m.Alamat1 = suPekerja.Alamat1;
+                        m.Alamat2 = suPekerja.Alamat2;
+                        m.Alamat3 = suPekerja.Alamat3;
+                        m.Poskod = suPekerja.Poskod;
+                        m.Bandar = suPekerja.Bandar;
+                        m.JNegeriId = suPekerja.JNegeriId;
+                        m.JBankId = suPekerja.JBankId;
+                        //m.TelefonRumah = suPekerja.TelefonRumah;
+                        //m.TelefonBimbit = suPekerja.TelefonBimbit;
+                        m.Emel = suPekerja.Emel;
+                        //m.StatusKahwin = suPekerja.StatusKahwin;
+                        //m.BilAnak = suPekerja.BilAnak;
+                        //m.GajiPokok = suPekerja.GajiPokok;
+                        //m.TarikhMasukKerja = suPekerja.TarikhMasukKerja;
+                        //m.TarikhBerhentiKerja = suPekerja.TarikhBerhentiKerja;
+                        //m.TarikhPencen = suPekerja.TarikhPencen;
+                        //m.JAgamaId = suPekerja.JAgamaId;
+                        //m.JBangsaId = suPekerja.JBangsaId;
+                        //m.JJawatanPekerjaId = suPekerja.JJawatanPekerjaId;
+                        //m.JCaraBayarId = suPekerja.JCaraBayarId;
+                        m.NoAkaunBank = suPekerja.NoAkaunBank;
+                        m.UserId = username;
+                        m.TarMasuk = DateTime.Now;
+                        m.SuTanggungan = _cart.Lines1.ToArray();
 
-                    await _suPekerjaRepo.Insert(m);
-                    //await AddLogAsync("Tambah", noRujukan, kredit);
-                    await _context.SaveChangesAsync();
+                        await _suPekerjaRepo.Insert(m);
 
-                    CartEmpty();
-                    TempData[SD.Success] = "Maklumat berjaya ditambah. No Gaji yang didaftar adalah " + m.NoGaji;
-                    return RedirectToAction(nameof(Index));
+                        //insert applog
+                        AppLog appLog = new AppLog();
+
+                        appLog.UserId = user.UserName;
+                        appLog.LgModule = modul + "E";
+                        appLog.LgOperation = "Tambah";
+                        appLog.LgNote = modul + " Daftar Anggota - Tambah";
+                        appLog.NoRujukan = suPekerja.NoGaji;
+                        appLog.Jumlah = 0;
+
+                        await _appLog.Insert(appLog);
+                        //insert applog end
+
+                        //await AddLogAsync("Tambah", noRujukan, kredit);
+                        await _context.SaveChangesAsync();
+
+                        CartEmpty();
+                        TempData[SD.Success] = "Maklumat berjaya ditambah. No Gaji yang didaftar adalah " + m.NoGaji;
+                        return RedirectToAction(nameof(Index));
+                    }
+                    //_context.Add(suPekerja);
+                    //await _context.SaveChangesAsync();
+                    //return RedirectToAction(nameof(Index));
                 }
-                //_context.Add(suPekerja);
-                //await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));
             }
+            
             PopulateList();
             return View(suPekerja);
         }
@@ -259,7 +284,36 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    SuPekerja dataAsal = await _suPekerjaRepo.GetById(id);
+
+                    // list of input that cannot be change
+                    suPekerja.Emel = dataAsal.Emel;
+                    suPekerja.TarMasuk = dataAsal.TarMasuk;
+                    suPekerja.UserId = dataAsal.UserId;
+                    // list of input that cannot be change end
+
+                    _context.Entry(dataAsal).State = EntityState.Detached;
+
+                    suPekerja.UserIdKemaskini = user.UserName;
+                    suPekerja.TarKemaskini = DateTime.Now;
+
                     _context.Update(suPekerja);
+
+                    //insert applog
+                    AppLog appLog = new AppLog();
+
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "E";
+                    appLog.LgOperation = "Ubah";
+                    appLog.LgNote = modul + " Daftar Anggota - Ubah";
+                    appLog.NoRujukan = suPekerja.NoGaji;
+                    appLog.Jumlah = 0;
+
+                    await _appLog.Insert(appLog);
+                    //insert applog end
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
