@@ -108,7 +108,7 @@
                         @if (item.AkBelian.AkPO != null)
                         {
                             <td class="text-center">@Convert.ToDateTime(item.AkBelian.AkPO.Tarikh).ToString("dd/MM/yyyy")</td>
-                            <td>@item.AkBelian.AkPO.NoPO</td>
+                            <td class="text-center">@item.AkBelian.AkPO.NoPO</td>
                             <td class="text-right">@Convert.ToDecimal(item.AkBelian.AkPO.Jumlah).ToString("#,##0.00")</td>
                         }
                         else
@@ -119,7 +119,7 @@
                         }
 
                         <td class="text-center">@Convert.ToDateTime(item.AkBelian.Tarikh).ToString("dd/MM/yyyy")</td>
-                        <td>@item.AkBelian.NoInbois.Substring(3)</td>
+                        <td class="text-center">@item.AkBelian.NoInbois.Substring(3)</td>
                         <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
                     </tr>
                 }
@@ -229,7 +229,7 @@
 
             </tr>
             <tr>
-                <td class="text-center">@DateTime.Now</td>
+                <td class="text-center">@DateTime.Now.ToString()</td>
                 <td class="text-center"></td>
                 <td class="text-center"></td>
             </tr>
