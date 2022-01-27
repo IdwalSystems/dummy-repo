@@ -9,6 +9,7 @@ namespace MSNK.Models.Modules.PrintModel
     public class PVPrintModel : AkPV
     {
         public string JumlahDalamPerkataan { get; set; }
+        public string TarikhCekAtauEFT { get; set; }
         public string Username { get; set; }
         public string KodPenerima { get; set; }
         public string Penerima { get; set; }

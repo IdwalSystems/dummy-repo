@@ -1280,7 +1280,7 @@ namespace MSNK.Controllers
 
                 List<AkPO1> akPO1 = akPO.AkPO1.ToList();
 
-                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan == akPO.NoPO).FirstOrDefaultAsync();
+                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(akPO.NoPO)).FirstOrDefaultAsync();
                 if (abBukuVot != null)
                 {
 
@@ -1375,7 +1375,7 @@ namespace MSNK.Controllers
                     .Include(x => x.AkPO2)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan == akPO.NoPO).ToList();
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(akPO.NoPO)).ToList();
                 if (abBukuVot == null)
                 {
 

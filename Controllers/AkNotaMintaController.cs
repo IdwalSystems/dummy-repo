@@ -1292,6 +1292,11 @@ namespace MSNK.Controllers
             }
 
             CompanyDetails company = new CompanyDetails();
+
+            foreach( AkNotaMinta2 item in akNotaMinta.AkNotaMinta2)
+            {
+                data.JumlahPerihal += item.Amaun;
+            }
             data.CompanyDetail = company;
             data.AkNotaMinta = akNotaMinta;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;

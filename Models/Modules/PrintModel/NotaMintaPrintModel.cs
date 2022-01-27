@@ -9,6 +9,7 @@ namespace MSNK.Models.Modules.PrintModel
     public class NotaMintaPrintModel 
     {
         public string JumlahDalamPerkataan { get; set; }
+        public decimal JumlahPerihal { get; set; }
         public string TarikhKewangan { get; set; }
         public string username { get; set; }
         public AkNotaMinta AkNotaMinta { get; set; }

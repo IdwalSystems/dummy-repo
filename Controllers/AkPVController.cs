@@ -1753,6 +1753,15 @@ namespace MSNK.Controllers
             data.NoKP = akPV.NoKP;
             data.CompanyDetail = company;
 
+            if (akPV.TarCekAtauEFT != null)
+            {
+                data.TarikhCekAtauEFT = akPV.TarCekAtauEFT.ToString();
+            }
+            else
+            {
+                data.TarikhCekAtauEFT = "";
+            }
+
             //update cetak -> 1
             akPV.FlCetak = 1;
             await _akPVRepo.Update(akPV);

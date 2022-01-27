@@ -178,13 +178,13 @@
             </tr>
             <tr>
                 <td class="text-left">Tarikh Bayaran</td>
-                @if (Model.TarCekAtauEFT == null)
+                @if (Model.TarikhCekAtauEFT == null)
                 {
                     <td class="text-center">-</td>
                 }
                 else
                 {
-                    <td class="text-center">@Convert.ToDateTime(Model.TarCekAtauEFT).ToString("dd/MM/yyyy")</td>
+                    <td class="text-center">@Convert.ToDateTime(Model.TarikhCekAtauEFT).ToString("dd/MM/yyyy")</td>
                 }
 
                 <td class="text-left">No Akaun Bank Pembayar</td>
