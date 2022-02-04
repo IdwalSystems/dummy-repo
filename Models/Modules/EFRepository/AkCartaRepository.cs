@@ -24,7 +24,9 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<IEnumerable<AkCarta>> GetAll()
         {
-            return await context.AkCarta.Include(b => b.JKW).Include(b =>b.JParas).Include(b => b.JJenis).ToListAsync();
+            return await context.AkCarta.Include(b => b.JKW).Include(b =>b.JParas).Include(b => b.JJenis)
+                .OrderBy(b=> b.Kod)
+                .ToListAsync();
         }
 
         public async Task<AkCarta> GetById(int id)

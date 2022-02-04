@@ -1,0 +1,214 @@
+﻿@model IEnumerable<MSNK.Models.Modules.AkCarta>
+
+@{
+    ViewData["Title"] = "Cetakan Senarai Carta";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+
+    CompanyDetails company = new CompanyDetails();
+
+    var bil = 0;
+}
+<style>
+    .flexrow {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex !important;
+    }
+
+        .flexrow > div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+    .image-container {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    h6 {
+        font-size: 0.8rem;
+    }
+
+    p {
+        font-size: 0.6rem;
+    }
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .max-lines {
+        display: block; /* or inline-block */
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 5.8em;
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+
+<div class="row flexrow mb-1 text-center">
+    <div class="col-12 text-uppercase">
+        <img class="image-container mb-2" src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
+        <h5 class="mb-1"><strong>@company.NamaSyarikat</strong></h5>
+        <p class="mb-0"> @company.AlamatSyarikat1 , @company.AlamatSyarikat2</p>
+        <p class="mb-0"> @company.AlamatSyarikat3</p>
+    </div>
+
+    <!--<div class="col-2 text-right">-->
+        @*<h6 class="mb-0"><strong>SENARAI CARTA AKAUN</strong></h6>*@
+    <!--</div>-->
+</div>
+@*<div class="form-row flexrow mb-1 text-center">
+    <div class="col-12 image-container text-uppercase text-center">
+        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" class="mb-3" />
+        <h5 class="mb-1"><strong>@company.NamaSyarikat</strong></h5>
+        <p class="mb-2"> @company.AlamatSyarikat1 , @company.AlamatSyarikat2, @company.AlamatSyarikat3</p>
+        <h5 class="mb-0 bg-dark text-white"> <strong>SENARAI CARTA AKAUN</strong></h5>
+    </div>
+</div>*@
+<br />
+    <table class="table table-bordered table-sm topic print-friendly">
+        <thead>
+            <tr class="bg-dark text-white">
+                <th colspan="11" class="text-center bg-dark text-white" style="line-height: 1.8rem;"><strong>SENARAI CARTA AKAUN</strong></th>
+            </tr>
+            <tr style="line-height:0.8rem;" class="bg-secondary text-white">
+
+                <th>Bil</th>
+                <th class="kw">
+                    @Html.DisplayNameFor(model => model.JKW)
+                </th>
+                <th class="kod">
+                    @Html.DisplayNameFor(model => model.Kod)
+                </th>
+                <th class="perihal">
+                    @Html.DisplayNameFor(model => model.Perihal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.JJenis)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.JParas)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DebitKredit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UmumDetail)
+                </th>
+                <th align="right">
+                    @Html.DisplayNameFor(model => model.Baki)
+                </th>
+                <th>
+                    Catatan
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var tabletype = item.JParas.Kod == "1" ? "table-danger" :
+                item.JParas.Kod == "2" ? "table-warning" :
+                item.JParas.Kod == "3" ? "table-info" : null;
+                bil++;
+                <tr class="@tabletype" style="line-height:0.8rem; page-break-before:avoid;">
+                    <td>
+                        @bil
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.JKW.Kod)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Kod)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Perihal)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.JJenis.Nama)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.JParas.Kod)
+                    </td>
+                    <td>
+                        @if (item.DebitKredit.ToString() == "D")
+                        {
+                            <label class="mb-0">DEBIT</label>
+                        }
+                        else if (item.DebitKredit.ToString() == "K")
+                        {
+                            <label class="mb-0">KREDIT</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.UmumDetail.ToString() == "U")
+                        {
+                            <label class="mb-0">UMUM</label>
+                        }
+                        else if (item.UmumDetail.ToString() == "D")
+                        {
+                            <label class="mb-0">DETAIL</label>
+                        }
+                    </td>
+                    <td align="right">
+                        @Html.DisplayFor(modelItem => item.Baki)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Catatan1)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

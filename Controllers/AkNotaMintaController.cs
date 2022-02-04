@@ -1269,7 +1269,7 @@ namespace MSNK.Controllers
             return _context.AkNotaMinta.Any(e => e.Id == id);
         }
 
-        // printing resit rasmi by akTerima.Id
+        // printing Nota Minta
         [Authorize(Policy = "NM001P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
@@ -1331,7 +1331,7 @@ namespace MSNK.Controllers
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
         }
-        // printing resit rasmi end
+        // printing Nota Minta end
 
     }
 }

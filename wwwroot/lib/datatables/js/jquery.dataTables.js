@@ -11506,7 +11506,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+			"sInfo": "Paparan dari _START_ hingga _END_ daripada _TOTAL_ entri",
 	
 	
 			/**
@@ -11527,7 +11527,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfoEmpty": "Showing 0 to 0 of 0 entries",
+			"sInfoEmpty": "Paparan dari 0 hingga 0 daripada 0 entri",
 	
 	
 			/**
@@ -11549,7 +11549,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfoFiltered": "(filtered from _MAX_ total entries)",
+			"sInfoFiltered": "(Ditapis dari _MAX_ entri)",
 	
 	
 			/**

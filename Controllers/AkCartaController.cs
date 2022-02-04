@@ -1,42 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
     [Authorize(Roles ="Admin , Supervisor")]
     public class AkCartaController : Controller
     {
-        public const string modul = "JU001";
-        public const string namamodul = "JU001";
+        public const string modul = "CA001";
+        public const string namamodul = "CA001";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AkCartaController(
             ApplicationDbContext context,
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
             IRepository<JKW, int, string> kwRepository,
-            IRepository<AkCarta, int, string> akCartaRepository)
+            IRepository<AkCarta, int, string> akCartaRepository,
+            IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _appLog = appLog;
             _userManager = userManager;
             _kwRepo = kwRepository;
             _akCartaRepo = akCartaRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: AkCarta
@@ -626,5 +634,22 @@ namespace MSNK.Controllers
             }
             await _appLog.Insert(appLog);
         }
+
+        // printing List of Carta
+        public async Task<IActionResult> PrintCarta()
+        {
+            IEnumerable<AkCarta> akCarta = await _akCartaRepo.GetAll();
+            
+            string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
+
+            return new ViewAsPdf("ListCartaPrintPdf", akCarta)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                CustomSwitches = customSwitches,
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+        // printing List of Carta end
     }
 }
