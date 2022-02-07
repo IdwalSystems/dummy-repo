@@ -158,6 +158,10 @@ namespace MSNK.Controllers
                 );
             }
 
+            var lastItem = akNotaMinta.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            ViewData["lastItem"] = lastItem.NoRujukan;
+
             return View(viewModel);
         }
 
@@ -254,6 +258,19 @@ namespace MSNK.Controllers
             }
 
             var akNotaMinta = await _akNotaMintaRepo.GetById((int) id);
+
+            // check if this data is the last one (for preventing batal purpose)
+            var lastItem = _context.AkNotaMinta.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            if (lastItem.Id == akNotaMinta.Id)
+            {
+                ViewData["isLastItem"] = "Y";
+            }
+            else
+            {
+                ViewData["isLastItem"] = "N";
+            }
+            // check end
 
             AkNotaMintaViewModel viewModel = new AkNotaMintaViewModel();
 
@@ -1263,6 +1280,51 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
+
+        // POST: AkNotaMinta/Cancel/5
+        [Authorize(Policy = "NM001B")]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var akNotaMinta = await _context.AkNotaMinta.FindAsync(id);
+            // check if already posting redirect back
+            if (akNotaMinta.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // check if this data is the last one (for preventing batal purpose)
+            var lastItem = _context.AkNotaMinta.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            if (lastItem.Id == akNotaMinta.Id)
+            {
+                TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            // check end
+            akNotaMinta.FlBatal = 1;
+
+            _context.AkNotaMinta.Update(akNotaMinta);
+
+            //insert applog
+            var user = await _userManager.GetUserAsync(User);
+
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "B";
+            appLog.LgOperation = "Batal";
+            appLog.LgNote = modul + " Nota Minta - Batal";
+            appLog.NoRujukan = akNotaMinta.NoRujukan;
+            appLog.Jumlah = akNotaMinta.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dibatalkan..!";
+            return RedirectToAction(nameof(Index));
+        }
 
         private bool AkNotaMintaExists(int id)
         {

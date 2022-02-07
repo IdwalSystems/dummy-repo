@@ -106,7 +106,7 @@
                         @Html.DisplayFor(modelItem => item.Tahun)
                     </td>
                     <td>
-                        @item.NoInbois.Substring(3)
+                        @item.NoInbois.Substring(3).ToUpper()
                     </td>
                     <td>
                         @item.Tarikh.ToString("dd/MM/yyyy")

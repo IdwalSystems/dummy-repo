@@ -1,126 +1,136 @@
-﻿@model MSNK.Models.Modules.AbBukuVot
+﻿@model IEnumerable<MSNK.Models.Modules.AbBukuVot>
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Papar";
 }
 
-<h1>Details</h1>
+<div class="row mb-2">
+    <div class="col-8">
+        <h3>Buku Vot - @ViewData["Title"]</h3>
+        <h5 class="text-info"> @ViewData["Vot"]</h5>
+    </div>
+</div>
+<partial name="_JSDetails" />
+<div class="card mb-2">
+    <div class="card-body pl-3 pb-2 ">
+        <div class="form-actions no-color mb-2">
+            <form asp-action="Details" method="get" class="needs-validation" novalidate>
+                <div class="form-actions no-color ">
+                    <input type="hidden" name="tahun" value="@ViewData["tahun"]" />
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="input-group input-group-sm ">
+                                <label class="form-control-label">Tarikh:</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+
+                            <div class="input-group mb-2 input-group-sm ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Dari</span>
+                                </div>
+                                <input class="form-control form-control-sm" type="date" name="searchFrom" value="@ViewData["searchFrom"]" required id="tahun" />
+                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+
+                            <div class="input-group mb-2 input-group-sm ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Hingga</span>
+                                </div>
+                                <input class="form-control form-control-sm" type="date" name="searchTo" value="@ViewData["searchTo"]" required id="tahun" />
+                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="table-responsive table-sm">
+    <table class="table table-bordered table-hover display compact nowrap" width="100%">
+        <thead>
+            <tr>
+                <th>
+                    Bil
+                </th>
+                <th>
+                    Tarikh
+                </th>
+                <th>
+                    Kod
+                </th>
+                <th>
+                    Penerima
+                </th>
+                <th>
+                    No Rujukan
+                </th>
+                <th>
+                    Debit RM
+                </th>
+                <th>
+                    Kredit RM
+                </th>
+                <th>
+                    Tanggungan RM
+                </th>
+                <th>
+                    Liabiliti RM
+                </th>
+                <th>
+                    Baki RM
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        @item.Tarikh.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @item.Kod
+                    </td>
+                    <td class="text-uppercase">
+                        @item.Penerima
+                    </td>
+                    <td class="text-uppercase">
+                        @item.Rujukan
+                    </td>
+                    <td>
+                        @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
+                    </td>
+                    <td>
+                        @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
+                    </td>
+                    <td>
+                        @Convert.ToDecimal(item.Tanggungan).ToString("#,##0.00")
+                    </td>
+                    <td>
+                        @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
+                    </td>
+                    <td>
+                        @Convert.ToDecimal(item.Baki).ToString("#,##0.00")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <div>
-    <h4>AbBukuVot</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tahun)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tahun)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tarikh)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tarikh)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Kod)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Kod)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Penerima)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Penerima)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VotId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VotId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rujukan)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rujukan)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Debit)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Debit)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Kredit)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Kredit)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tanggungan)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tanggungan)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tbs)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tbs)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Baki)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Baki)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rizab)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rizab)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Liabiliti)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Liabiliti)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JKW)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JKW.Kod)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TarMasuk)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TarMasuk)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserIdKemaskini)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserIdKemaskini)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TarKemaskini)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TarKemaskini)
-        </dd>
-    </dl>
+    <a asp-action="Index">Kembali Ke Indeks</a>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+

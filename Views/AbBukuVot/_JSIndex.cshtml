@@ -3,15 +3,11 @@
 
         var table = $('.table').DataTable({
             "paging": false,
-            rowReorder: true,
+            rowReorder: false,
             columnDefs: [
-                { orderable: true, className: 'reorder', targets: 2 },
-                { orderable: true, className: 'reorder', targets: 3 },
-                { orderable: true, className: 'reorder', targets: 5 },
-                { orderable: true, className: 'reorder', targets: 7 },
                 { orderable: false, targets: '_all' }
             ],
-            "order": [[3, "asc"]],
+            "order": [[1, "asc"],[3,"asc"]],
             "scrollY": "50vh",
             "scrollX": true,
             "scrollCollapse": true,

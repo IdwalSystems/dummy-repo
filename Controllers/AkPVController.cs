@@ -173,6 +173,10 @@ namespace MSNK.Controllers
                 }
                 );
             }
+            var lastItem = akPV.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            ViewData["lastItem"] = lastItem.NoPV;
+
             return View(viewModel);
         }
 
@@ -631,6 +635,19 @@ namespace MSNK.Controllers
             }
 
             var akPV = await _akPVRepo.GetById((int)id);
+
+            // check if this data is the last one (for preventing batal purpose)
+            var lastItem = _context.AkPV.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            if (lastItem.Id == akPV.Id)
+            {
+                ViewData["isLastItem"] = "Y";
+            }
+            else
+            {
+                ViewData["isLastItem"] = "N";
+            }
+            // check end
 
             if (akPV == null)
             {
@@ -2046,5 +2063,49 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
+
+        // POST: AkPV/Cancel/5
+        [Authorize(Policy = "PV001B")]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var akPV = await _context.AkPV.FindAsync(id);
+            // check if already posting redirect back
+            if (akPV.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            // check if this data is the last one (for preventing batal purpose)
+            var lastItem = _context.AkPV.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            if (lastItem.Id == akPV.Id)
+            {
+                TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            // check end
+            akPV.FlBatal = 1;
+
+            _context.AkPV.Update(akPV);
+
+            //insert applog
+            var user = await _userManager.GetUserAsync(User);
+
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "B";
+            appLog.LgOperation = "Batal";
+            appLog.LgNote = modul + " Baucer Pembayaran - Batal";
+            appLog.NoRujukan = akPV.NoPV;
+            appLog.Jumlah = akPV.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dibatalkan..!";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

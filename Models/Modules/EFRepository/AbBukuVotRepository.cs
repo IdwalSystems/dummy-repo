@@ -33,7 +33,11 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<AbBukuVot> GetById(int id)
         {
-            return await context.AbBukuVot.FindAsync(id);
+            return await context.AbBukuVot
+                .Where(d => d.VotId == id)
+                .Include(b => b.JKW)
+                .Include(b => b.Vot)
+                .FirstOrDefaultAsync();
         }
 
         public Task<AbBukuVot> GetByString(string id)

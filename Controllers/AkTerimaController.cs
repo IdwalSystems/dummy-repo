@@ -156,6 +156,11 @@ namespace MSNK.Controllers
                     JumlahUrusniaga = jumlahUrusniaga
                 });
             }
+
+            var lastItem = akTerima.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            ViewData["lastItem"] = lastItem.NoRujukan;
+
             return View(viewModel);
         }
 
@@ -168,12 +173,19 @@ namespace MSNK.Controllers
             }
 
             var akTerima = await _akTerimaRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akTerima.JKWId);
-            akTerima.JKW = kw;
-            var negeri = await _negeriRepo.GetById(akTerima.JNegeriId);
-            akTerima.JNegeri = negeri;
-            var akBank = await _akBankRepo.GetById(akTerima.AkBankId);
-            akTerima.AkBank = akBank;
+
+            // check if this data is the last one (for preventing batal purpose)
+            var lastItem = _context.AkTerima.OrderByDescending(x=> x.Id).FirstOrDefault();
+
+            if (lastItem.Id == akTerima.Id)
+            {
+                ViewData["isLastItem"] = "Y";
+            } 
+            else
+            {
+                ViewData["isLastItem"] = "N";
+            }
+            // check end
             if (akTerima == null)
             {
                 return NotFound();
@@ -691,12 +703,6 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var kw = await _kwRepo.GetById(akTerima.JKWId);
-            akTerima.JKW = kw;
-            var negeri = await _negeriRepo.GetById(akTerima.JNegeriId);
-            akTerima.JNegeri = negeri;
-            var akBank = await _akBankRepo.GetById(akTerima.AkBankId);
-            akTerima.AkBank = akBank;
             if (akTerima == null)
             {
                 return NotFound();
@@ -824,12 +830,8 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akTerima = await _context.AkTerima
-                .Include(a => a.AkBank)
-                .ThenInclude(a => a.JBank)
-                .Include(a => a.JKW)
-                .Include(a => a.JNegeri)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akTerima = await _akTerimaRepo.GetById((int) id);
+
             if (akTerima == null)
             {
                 return NotFound();
@@ -888,6 +890,15 @@ namespace MSNK.Controllers
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
                 return RedirectToAction(nameof(Index));
             }
+            // check if this data is the last one (for preventing batal purpose)
+            var lastItem = _context.AkTerima.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            if (lastItem.Id == akTerima.Id)
+            {
+                TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            // check end
             akTerima.FlBatal = 1;
 
             _context.AkTerima.Update(akTerima);

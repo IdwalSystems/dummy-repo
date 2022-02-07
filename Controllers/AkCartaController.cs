@@ -636,17 +636,19 @@ namespace MSNK.Controllers
         }
 
         // printing List of Carta
+        [AllowAnonymous]
         public async Task<IActionResult> PrintCarta()
         {
             IEnumerable<AkCarta> akCarta = await _akCartaRepo.GetAll();
             
-            string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
+            //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
 
-            return new ViewAsPdf("ListCartaPrintPdf", akCarta)
+            return new ViewAsPdf("ListCartaPrintPDF",akCarta)
             {
                 PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
-                CustomSwitches = customSwitches,
+                CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
+                        " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
         }

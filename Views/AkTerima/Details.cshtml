@@ -14,7 +14,7 @@
                         <h5 class="text-left">Resit Rasmi - @ViewData["Title"]</h5>
                     </div>
                 </div>
-                
+
             </div>
             <div class="card-body">
                 <div class="form-row">
@@ -129,7 +129,7 @@
                                         <label class="custom-control-label" for="FlCetak">Sudah</label>
                                     </div>
                                 </div>
-                            </div>       
+                            </div>
                         </div>
                         <div class="card mb-2">
                             <div class="card-body p-1">
@@ -152,20 +152,20 @@
                                 <div class="form-group col-sm">
                                     <label asp-for="FlBatal" class="control-label"></label>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal1" class="custom-control-input" value="0" checked>
+                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal" class="custom-control-input" value="0" checked>
                                         <label class="custom-control-label" for="FlBatal">Belum</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal" class="custom-control-input" value="1">
+                                        <input asp-for="FlBatal" type="radio" id="FlBatal2" name="FlBatal" class="custom-control-input" value="1">
                                         <label class="custom-control-label" for="FlBatal">Sudah</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
-                
+
                 @*table Objek*@
                 <div class="card box-shadow mb-3">
                     <div class="card-header">
@@ -226,45 +226,45 @@
                                 <tbody id="tbodyUrusniaga">
                                     @foreach (var item in ViewBag.akTerima2)
                                     {
-                                    <tr>
-                                        <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
-                                        <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
-                                        <td>@item.JCaraBayar.Perihal</td>
-                                        <td>@item.Amaun</td>
-                                        <td>@item.NoCek</td>
-                                        @switch (@item.JenisCek)
-                                        {
-                                            case "1":
-                                                <td>Cek Cawangan Ini</td>
-                                                break;
-                                            case "2":
-                                                <td>Cek Tempatan</td>
-                                                break;
-                                            case "3":
-                                                <td>Cek Luar</td>
-                                                break;
-                                            case "4":
-                                                <td>Cek Antarabangsa</td>
-                                                break;
-                                            default:
+                                        <tr>
+                                            <td id="jCaraBayarId" hidden>@item.JCaraBayarId</td>
+                                            <td hidden><input id="txtAkTerima2" value="@Model.Id" /></td>
+                                            <td>@item.JCaraBayar.Perihal</td>
+                                            <td>@item.Amaun</td>
+                                            <td>@item.NoCek</td>
+                                            @switch (@item.JenisCek)
+                                            {
+                                                case "1":
+                                                    <td>Cek Cawangan Ini</td>
+                                                    break;
+                                                case "2":
+                                                    <td>Cek Tempatan</td>
+                                                    break;
+                                                case "3":
+                                                    <td>Cek Luar</td>
+                                                    break;
+                                                case "4":
+                                                    <td>Cek Antarabangsa</td>
+                                                    break;
+                                                default:
+                                                    <td></td>
+                                                    break;
+                                            }
+
+                                            <td>@item.KodBankCek</td>
+                                            <td>@item.TempatCek</td>
+                                            <td>@item.NoSlip</td>
+                                            @if (@item.TarSlip == null)
+                                            {
                                                 <td></td>
-                                                break;
-                                        }
-
-                                        <td>@item.KodBankCek</td>
-                                        <td>@item.TempatCek</td>
-                                        <td>@item.NoSlip</td>
-                                        @if (@item.TarSlip == null)
-                                        {
-                                            <td></td>
-                                        }
-                                        else
-                                        {
-                                            <td>@item.TarSlip.ToString("dd/MM/yyyy")</td>
-                                        }
+                                            }
+                                            else
+                                            {
+                                                <td>@item.TarSlip.ToString("dd/MM/yyyy")</td>
+                                            }
 
 
-                                    </tr>
+                                        </tr>
 
                                     }
                                 </tbody>
@@ -292,7 +292,48 @@
     else
     {
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
-        <a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Batal</a>
+        @*<a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-warning btn-sm" onclick="return confirm('Adakah anda ingin teruskan operasi ini?')">Batal</a>*@
+        if (ViewData["isLastItem"].ToString() == "N")
+        {
+            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">
+                Batal
+            </button>
+        }
+
     }
     <a asp-action="Index">Kembali ke Indeks</a>
 </div>
+
+<!-- Modal Batal -->
+<div class="modal fade" id="modalBatal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-md modal-dialog modal-dialog-centered">
+        <div class="modal-content ">
+            <div class="modal-header bg-warning text-white">
+
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i>  Batal</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times text-white"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-center">Anda pasti untuk meneruskan operasi ini?</p>
+                <div class="form-row">
+                    <div class="col-6 mb-2">
+                        <a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-danger btn-block btn-lg ">YA</a>
+                    </div>
+                    <div class="col-6">
+                        <a data-dismiss="modal" aria-label="Close" class=" btn btn-secondary btn-block btn-lg text-white">TIDAK</a>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:0px;">
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Batal End -->

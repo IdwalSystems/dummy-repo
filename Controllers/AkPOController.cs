@@ -193,6 +193,10 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
             }
 
+            var lastItem = akPO.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            ViewData["lastItem"] = lastItem.NoPO;
+
             return View(akPO);
         }
 
@@ -207,6 +211,20 @@ namespace MSNK.Controllers
             var akPO = await _akPORepo.GetById((int)id);
             var kw = await _kwRepo.GetById(akPO.JKWId);
             akPO.JKW = kw;
+
+            // check if this data is the last one (for preventing batal purpose)
+            var lastItem = _context.AkPO.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            if (lastItem.Id == akPO.Id)
+            {
+                ViewData["isLastItem"] = "Y";
+            }
+            else
+            {
+                ViewData["isLastItem"] = "N";
+            }
+            // check end
+
             if (akPO == null)
             {
                 return NotFound();
@@ -1262,6 +1280,7 @@ namespace MSNK.Controllers
         }
 
         // posting function
+        [Authorize(Policy = "TG001T")]
         public async Task<IActionResult> Posting(int? id)
         {
             if (id == null)
@@ -1361,6 +1380,7 @@ namespace MSNK.Controllers
         // posting function end
 
         // unposting function
+        [Authorize(Policy = "TG001UT")]
         public async Task<IActionResult> UnPosting(int? id)
         {
             if (id == null)
@@ -1385,61 +1405,71 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    //unposting operation start here
-                    //delete data from akAkaun
-                    foreach (AbBukuVot item in abBukuVot)
+                    AkBelian akBelian = _context.AkBelian.Where(x => x.AkPOId == id).FirstOrDefault();
+
+                    if(akBelian != null)
                     {
-                        await _abBukuVotRepo.Delete(item.Id);
+                        //linkage id error
+                        TempData[SD.Error] = "Data terkait pada no Inbois " + akBelian.NoInbois.ToUpper() + ". Batal posting tidak dibenarkan";
+                    }
+                    else
+                    {
+                        //unposting operation start here
+                        //delete data from akAkaun
+                        foreach (AbBukuVot item in abBukuVot)
+                        {
+                            await _abBukuVotRepo.Delete(item.Id);
+                        }
+
+                        //delete data from abBukuVot
+                        //foreach (AbBukuVot item in abBukuVot)
+                        //{
+                        //    await _abBukuVotRepo.Delete(item.Id);
+                        //}
+                        //delete data from abBukuVot
+
+                        //update posting status in akPO
+
+                        //update AkNotaMinta
+
+                        if (akPO.AkNotaMintaId != null)
+                        {
+                            AkNotaMinta akNM = await _akNotaMintaRepo.GetById((int)akPO.AkNotaMintaId);
+
+                            akNM.NoCAS = "";
+                            akNM.TarikhSeksyenKewangan = null;
+
+                            await _akNotaMintaRepo.Update(akNM);
+                        }
+
+                        //update AkNotaMinta end
+
+                        akPO.FlPosting = 0;
+                        akPO.TarikhPosting = null;
+                        await _akPORepo.Update(akPO);
+
+                        //insert applog
+                        var user = await _userManager.GetUserAsync(User);
+
+                        AppLog appLog = new AppLog();
+
+                        appLog.UserId = user.UserName;
+                        appLog.LgModule = modul + "UT";
+                        appLog.LgOperation = "UnPosting";
+                        appLog.LgNote = modul + " Pesanan Tempatan - UnPosting";
+                        appLog.NoRujukan = akPO.NoPO;
+                        appLog.Jumlah = akPO.Jumlah;
+
+                        await _appLog.Insert(appLog);
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
+
+                        TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                        //unposting operation end
                     }
 
-                    //delete data from abBukuVot
-                    //foreach (AbBukuVot item in abBukuVot)
-                    //{
-                    //    await _abBukuVotRepo.Delete(item.Id);
-                    //}
-                    //delete data from abBukuVot
-
-                    //update posting status in akPO
-
-                    //update AkNotaMinta
-
-                    if (akPO.AkNotaMintaId != null)
-                    {
-                        AkNotaMinta akNM = await _akNotaMintaRepo.GetById((int)akPO.AkNotaMintaId);
-
-                        akNM.NoCAS = "";
-                        akNM.TarikhSeksyenKewangan = null;
-
-                        await _akNotaMintaRepo.Update(akNM);
-                    }
-                    
-                    //update AkNotaMinta end
-
-                    akPO.FlPosting = 0;
-                    akPO.TarikhPosting = null;
-                    await _akPORepo.Update(akPO);
-
-                    //insert applog
-                    var user = await _userManager.GetUserAsync(User);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "UT";
-                    appLog.LgOperation = "UnPosting";
-                    appLog.LgNote = modul + " Pesanan Tempatan - UnPosting";
-                    appLog.NoRujukan = akPO.NoPO;
-                    appLog.Jumlah = akPO.Jumlah;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
-                    await _context.SaveChangesAsync();
-
-                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
-                    //unposting operation end
                 }
-
 
             }
 
@@ -1447,7 +1477,51 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
+        // POST: AkPO/Cancel/5
+        [Authorize(Policy = "TG001B")]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var akPO = await _context.AkPO.FindAsync(id);
+            // check if already posting redirect back
+            if (akPO.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            // check if this data is the last one (for preventing batal purpose)
+            var lastItem = _context.AkPO.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            if (lastItem.Id == akPO.Id)
+            {
+                TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            // check end
+            akPO.FlBatal = 1;
+
+            _context.AkPO.Update(akPO);
+
+            //insert applog
+            var user = await _userManager.GetUserAsync(User);
+
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "B";
+            appLog.LgOperation = "Batal";
+            appLog.LgNote = modul + " Pesanan Tempatan - Batal";
+            appLog.NoRujukan = akPO.NoPO;
+            appLog.Jumlah = akPO.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dibatalkan..!";
+            return RedirectToAction(nameof(Index));
+        }
         // printing resit rasmi by akPO.Id
+        [Authorize(Policy = "TG001P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
             AkPO akPO = await _akPORepo.GetById(id);
@@ -1483,12 +1557,6 @@ namespace MSNK.Controllers
             //insert applog end
 
             await _context.SaveChangesAsync();
-
-            var actionPDF = new ViewAsPdf("htmlpage")
-            {
-                FileName = "abc" + ".pdf",
-                PageSize = Rotativa.AspNetCore.Options.Size.A4,
-            };
 
             return new ViewAsPdf("POPrintPdf", data)
             {

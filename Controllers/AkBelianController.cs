@@ -33,6 +33,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
+        private readonly IRepository<AkPV, int, string> _akPVRepo;
         private CartBelian _cart;
 
         public AkBelianController(
@@ -48,6 +49,7 @@ namespace MSNK.Controllers
             IRepository<AkCarta, int, string> akCartaRepository,
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
             IRepository<AkAkaun, int, string> akAkaunRepository,
+            IRepository<AkPV, int, string> akPVRepository,
             CartBelian cart
             )
         {
@@ -63,6 +65,7 @@ namespace MSNK.Controllers
             _akCartaRepo = akCartaRepository;
             _abBukuVotRepo = abBukuVotRepository;
             _akAkaunRepo = akAkaunRepository;
+            _akPVRepo = akPVRepository;
             _cart = cart;
         }
 
@@ -619,7 +622,7 @@ namespace MSNK.Controllers
             AkBelian m = new AkBelian();
             var user = await _userManager.GetUserAsync(User);
 
-            var noRujukan = "IN/" + akBelian.NoInbois;
+            var noRujukan = "IN/" + akBelian.NoInbois.ToUpper();
 
             var akPo = await _akPORepo.GetById(AkPOId);
             // checking for existing no rujukan
@@ -1249,8 +1252,16 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akBelian = await _context.AkBelian.FindAsync(id);
+            // check if already posting redirect back
+            if (akBelian.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
             _context.AkBelian.Remove(akBelian);
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -1530,44 +1541,56 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    //unposting operation start here
-                    //delete data from akAkaun
-                    foreach (AkAkaun item in akAkaun)
+                    AkPV2 akPV2 = _context.AkPV2.Where(x => x.AkBelianId == id).FirstOrDefault();
+
+                    if(akPV2 != null)
                     {
-                        await _akAkaunRepo.Delete(item.Id);
+                        AkPV akPV = await _akPVRepo.GetById(akPV2.AkPVId);
+                        //duplicate id error
+                        TempData[SD.Error] = "Data terkait dengan no baucer " + akPV.NoPV + ".";
+                    }
+                    else
+                    {
+                        //unposting operation start here
+                        //delete data from akAkaun
+                        foreach (AkAkaun item in akAkaun)
+                        {
+                            await _akAkaunRepo.Delete(item.Id);
+                        }
+
+                        //delete data from abBukuVot
+                        foreach (AbBukuVot item in abBukuVot)
+                        {
+                            await _abBukuVotRepo.Delete(item.Id);
+                        }
+                        //delete data from abBukuVot
+
+                        //update posting status in akTerima
+                        akBelian.FlPosting = 0;
+                        akBelian.TarikhPosting = null;
+                        await _akBelianRepo.Update(akBelian);
+
+                        //insert applog
+                        var user = await _userManager.GetUserAsync(User);
+
+                        AppLog appLog = new AppLog();
+
+                        appLog.UserId = user.UserName;
+                        appLog.LgModule = modul + "UT";
+                        appLog.LgOperation = "UnPosting";
+                        appLog.LgNote = modul + " Inbois Pembekal - UnPosting";
+                        appLog.NoRujukan = akBelian.NoInbois;
+                        appLog.Jumlah = akBelian.Jumlah;
+
+                        await _appLog.Insert(appLog);
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
+
+                        TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                        //unposting operation end
                     }
 
-                    //delete data from abBukuVot
-                    foreach (AbBukuVot item in abBukuVot)
-                    {
-                        await _abBukuVotRepo.Delete(item.Id);
-                    }
-                    //delete data from abBukuVot
-
-                    //update posting status in akTerima
-                    akBelian.FlPosting = 0;
-                    akBelian.TarikhPosting = null;
-                    await _akBelianRepo.Update(akBelian);
-
-                    //insert applog
-                    var user = await _userManager.GetUserAsync(User);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "UT";
-                    appLog.LgOperation = "UnPosting";
-                    appLog.LgNote = modul + " Inbois Pembekal - UnPosting";
-                    appLog.NoRujukan = akBelian.NoInbois;
-                    appLog.Jumlah = akBelian.Jumlah;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
-                    await _context.SaveChangesAsync();
-
-                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
-                    //unposting operation end
                 }
 
 

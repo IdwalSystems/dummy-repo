@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MSNK.Models.Modules.AbBukuVot>
+﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.AbBukuVotViewModel>
 
 @{
     ViewData["Title"] = "Indeks";
@@ -18,36 +18,48 @@
             <form asp-action="Index" method="get" class="needs-validation" novalidate>
                 <div class="form-actions no-color mb-3">
                     <div class="form-row">
-                        <div class="col-md">
-                            <div class="input-group mb-2 input-group-sm ">
-                                <select class="custom-select" name="searchKW" asp-items="@ViewBag.Kw" required id="ddlKW"></select>
-                                <label class="invalid-feedback">Kumpulan Wang Diperlukan.</label>
-                            </div>
-                            <div class="input-group mb-2 input-group-sm ">
-                                <select class="custom-select select2" name="searchCarta" asp-items="@ViewBag.AkCarta1" style="width:100%" required></select>
-                                <label class="invalid-feedback">Carta Diperlukan.</label>
-                            </div>
+                        <div class="col-md-2">
+                            <label class="form-control-label">Tahun</label>
                         </div>
-                        <div class="col-md">
+                        <div class="col-md-2">
                             <div class="input-group mb-2 input-group-sm ">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Daripada</span>
-                                </div>
-                                <input class="form-control" type="date" name="searchFrom" value="@ViewData["searchFrom"]" required id="tarDari" />
-                                <label class="invalid-feedback">Tarikh Diperlukan.</label>
-                            </div>
-                            <div class="input-group mb- input-group-sm ">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Sehingga</span>
-                                </div>
-                                <input class="form-control" type="date" name="searchUntil" value="@ViewData["searchUntil"]" required id="tarHingga" />
-                                <label class="invalid-feedback">Tarikh Diperlukan.</label>
+                                <input class="form-control form-control-sm" type="text" name="searchYear" value="@ViewData["searchYear"]" required id="tahun" />
+                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
                             </div>
                         </div>
                     </div>
-                    <input type="submit" value="Papar" class="btn btn-outline-primary" /> |
-                    <a asp-action="Index" class="btn btn-link">Batal Papar</a>
-                    @*<button type="submit" class="btn btn-sm btn-info"><i class="fa fa-search"></i></button>*@
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="input-group mb-2 input-group-sm ">
+                                <label class="form-control-label">Kod Akaun</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            
+                            <div class="input-group mb-2 input-group-sm ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Dari</span>
+                                </div>
+                                <input class="form-control form-control-sm" type="text" name="searchFrom" value="@ViewData["searchFrom"]" required id="tahun" />
+                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            
+                            <div class="input-group mb-2 input-group-sm ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Hingga</span>
+                                </div>
+                                <input class="form-control form-control-sm" type="text" name="searchTo" value="@ViewData["searchTo"]" required id="tahun" />
+                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i></button>
+                            @*<a asp-action="Index" class="btn btn-warning btn-sm"><i class="fas fa-times"></i></a>*@
+                        </div>
+                    </div>
+
                 </div>
             </form>
         </div>
@@ -62,46 +74,34 @@
                     Bil
                 </th>
                 <th>
-                    KW
+                    Tahun
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Tahun)
+                    Kump. Wang
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Tarikh)
+                    Kod Akaun
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Kod)
+                    Perihal
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Penerima)
+                    Debit RM
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.VotId)
+                    Kredit RM
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Rujukan)
+                    Tanggungan RM
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Debit)
+                    Liabiliti RM
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Kredit)
+                    Baki RM
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Tanggungan)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Tbs)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Baki)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Rizab)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Liabiliti)
+
                 </th>
             </tr>
         </thead>
@@ -112,25 +112,16 @@
                     <td>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.JKW.Kod)
+                        @item.Tahun
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Tahun)
+                        @item.KW
                     </td>
                     <td>
-                        @item.Tarikh.ToString("dd/MM/yyyy")
+                        @item.KodAkaun
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Kod)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Penerima)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Vot.Kod)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Rujukan)
+                    <td class="text-uppercase">
+                        @item.Perihal
                     </td>
                     <td>
                         @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
@@ -142,18 +133,14 @@
                         @Convert.ToDecimal(item.Tanggungan).ToString("#,##0.00")
                     </td>
                     <td>
-                        @Convert.ToDecimal(item.Tbs).ToString("#,##0.00")
+                        @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
                     </td>
                     <td>
                         @Convert.ToDecimal(item.Baki).ToString("#,##0.00")
                     </td>
-                    <td>
-                        @Convert.ToDecimal(item.Rizab).ToString("#,##0.00")
+                    <td class="action-button">
+                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-tahun="@item.Tahun" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
                     </td>
-                    <td>
-                        @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
-                    </td>
-
                 </tr>
             }
         </tbody>

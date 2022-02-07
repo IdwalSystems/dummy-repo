@@ -144,6 +144,9 @@ namespace MSNK.Controllers
                     FlBatal = item.FlBatal
                 });
             }
+            var lastItem = akTunaiCV.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            ViewData["lastItem"] = lastItem.NoCV;
             return View(viewModel);
         }
 
@@ -156,6 +159,19 @@ namespace MSNK.Controllers
             }
 
             var akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
+
+            // check if this data is the last one (for preventing batal purpose)
+            var lastItem = _context.AkTunaiCV.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            if (lastItem.Id == akTunaiCV.Id)
+            {
+                ViewData["isLastItem"] = "Y";
+            }
+            else
+            {
+                ViewData["isLastItem"] = "N";
+            }
+            // check end
 
             if (akTunaiCV == null)
             {
@@ -966,5 +982,50 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
+
+        // POST: AkTunaiCV/Cancel/5
+        [Authorize(Policy = "TR002B")]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var akTunaiCV = await _context.AkTunaiCV.FindAsync(id);
+            // check if already posting redirect back
+            if (akTunaiCV.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // check if this data is the last one (for preventing batal purpose)
+            var lastItem = _context.AkTunaiCV.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            if (lastItem.Id == akTunaiCV.Id)
+            {
+                TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            // check end
+            akTunaiCV.FlBatal = 1;
+
+            _context.AkTunaiCV.Update(akTunaiCV);
+
+            //insert applog
+            var user = await _userManager.GetUserAsync(User);
+
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "B";
+            appLog.LgOperation = "Batal";
+            appLog.LgNote = modul + " Penerimaan - Batal";
+            appLog.NoRujukan = akTunaiCV.NoCV;
+            appLog.Jumlah = akTunaiCV.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dibatalkan..!";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
