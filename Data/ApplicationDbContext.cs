@@ -33,6 +33,9 @@ namespace MSNK.Data
         public DbSet<AkPO> AkPO { get; set; }
         public DbSet<AkPO1> AkPO1 { get; set; }
         public DbSet<AkPO2> AkPO2 { get; set; }
+        public DbSet<AkPOLaras> AkPOLaras { get; set; }
+        public DbSet<AkPOLaras1> AkPOLaras1 { get; set; }
+        public DbSet<AkPOLaras2> AkPOLaras2 { get; set; }
         public DbSet<AkJurnal> AkJurnal { get; set; }
         public DbSet<AkJurnal1> AkJurnal1 { get; set; }
         public DbSet<AppLog> AppLog { get; set; }
@@ -145,6 +148,21 @@ namespace MSNK.Data
                 .WithMany(t => t.AkPO)
                 .HasForeignKey(m => m.AkNotaMintaId)
                 .OnDelete(DeleteBehavior.NoAction);
+            //AkPO end
+            //AkPO
+            modelBuilder.Entity<AkPOLaras>()
+                    .HasOne(m => m.AkPO)
+                    .WithMany(t => t.AkPOLaras)
+                    .HasForeignKey(m => m.AkPOId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+            modelBuilder.Entity<AkPOLaras>()
+                    .HasOne(m => m.JKW)
+                    .WithMany(t => t.AkPOLaras)
+                    .HasForeignKey(m => m.JKWId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
             //AkPO end
             //AkNotaMinta
             modelBuilder.Entity<AkNotaMinta>()

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkPO
+    public class AkPOLaras 
     {
         //field
         public int Id { get; set; }
         [MaxLength(50)]
         [DisplayName("No. Pesanan Tempatan")]
-        public string NoPO { get; set; }
+        public string NoPOLaras { get; set; }
         [DisplayName("Tarikh")]
         public DateTime Tarikh { get; set; }
         [DisplayName("Tarikh Posting")]
@@ -23,8 +23,6 @@ namespace MSNK.Models.Modules
         [MaxLength(4)]
         [DisplayName("Tahun Belanjawan")]
         public string Tahun { get; set; }
-        public DateTime TempohSiap { get; set; }
-        public DateTime TarikhSiap { get; set; }
         public string Tajuk { get; set; }
         //field end
 
@@ -39,20 +37,14 @@ namespace MSNK.Models.Modules
         //flag end
 
         //relationship
-        [DisplayName("Kod Pembekal")]
-        public int AkPembekalId { get; set; }
-        [DisplayName("Nama Pembekal")]
-        public AkPembekal AkPembekal { get; set; }
+        [DisplayName("No Pesanan Tempatan")]
+        public int AkPOId { get; set; }
+        public AkPO AkPO { get; set; }
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
-        [DisplayName("No Nota Minta")]
-        public int? AkNotaMintaId { get; set; }
-        public AkNotaMinta AkNotaMinta { get; set; }
         public JKW JKW { get; set; }
-        public ICollection<AkPO2> AkPO2 { get; set; }
-        public ICollection<AkPO1> AkPO1 { get; set; }
-        public ICollection<AkBelian> AkBelian { get; set; }
-        public ICollection<AkPOLaras> AkPOLaras { get; set; }
+        public ICollection<AkPOLaras2> AkPOLaras2 { get; set; }
+        public ICollection<AkPOLaras1> AkPOLaras1 { get; set; }
 
         //relationship end
 
