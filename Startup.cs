@@ -96,6 +96,7 @@ namespace MSNK
             services.AddTransient<ListViewIRepository<AkNotaMinta1, int>, AkNotaMinta1Repository>();
             services.AddTransient<ListViewIRepository<AkNotaMinta2, int>, AkNotaMinta2Repository>();
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
+            services.AddScoped(ss => SessionCartPendahuluan.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
             services.AddScoped(ss => SessionCartBelian.GetCart(ss));

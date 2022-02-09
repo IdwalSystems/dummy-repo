@@ -65,7 +65,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkBelian1> AkBelian1 { get; set; }
         public ICollection<AkPV1> AkPV1 { get; set; }
         public ICollection<AbBukuVot> Vot { get; set; }
-        public ICollection<SpPendahuluanPelbagai1> SpPermohonanAktiviti1 { get; set; }
+        public ICollection<SpPendahuluanPelbagai> SpPendahuluanPelbagai { get; set; }
         public ICollection<AkTunaiRuncit> AkTunaiRuncit { get; set; }
         public ICollection<AkTunaiCV1> AkTunaiCV1 { get; set; }
         public ICollection<AkNotaMinta1> AkNotaMinta1 { get; set; }

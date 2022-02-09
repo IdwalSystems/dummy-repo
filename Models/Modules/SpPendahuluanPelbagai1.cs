@@ -8,15 +8,19 @@ namespace MSNK.Models.Modules
     public class SpPendahuluanPelbagai1
     {
         public int Id { get; set; }
-        public int AkCartaId { get; set; }
-        public string Perihal { get; set; }
-        public decimal Kadar { get; set; }
-        public int Bil { get; set; }
-        public decimal Bln { get; set; }
-        public decimal Jumlah { get; set; }
         public int SpPendahuluanPelbagaiId { get; set; }
+        public int BilAtl { get; set; }
+        public int BilJul { get; set; }
+        public int BilPeg { get; set; }
+        public int BilTek { get; set; }
+        public int BilUru { get; set; }
 
-        //relationship
-        public AkCarta AkCarta { get; set; }
+        public int JumL { get; set; }
+        public int JumP { get; set; }
+
+        //Relationship 
+        public JJantina JJantina { get; set; }
+        public int JJantinaId { get; set; }
+        //Relationship End
     }
 }

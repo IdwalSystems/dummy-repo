@@ -27,13 +27,13 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<SpPendahuluanPelbagai1>> GetAll(int sPPermohonanAktivitiId)
         {
             return await context.SpPendahuluanPelbagai1
-                .Include(b => b.AkCarta)
+                //.Include(b => b.AkCarta)
                 .ToListAsync();
         }
 
-        public async Task<SpPendahuluanPelbagai1> GetBy2Id(int sPPermohonanAktivitiId, int akCartaId)
+        public Task<SpPendahuluanPelbagai1> GetBy2Id(int id1, int id2)
         {
-            return await context.SpPendahuluanPelbagai1.FirstOrDefaultAsync(x => x.SpPendahuluanPelbagaiId == sPPermohonanAktivitiId && x.AkCartaId == akCartaId);
+            throw new NotImplementedException();
         }
 
         public async Task<SpPendahuluanPelbagai1> GetById(int id)
@@ -56,7 +56,8 @@ namespace MSNK.Models.Modules.EFRepository
         {
 
             SpPendahuluanPelbagai1 data = context.SpPendahuluanPelbagai1.FirstOrDefault(x => x.Id == entity.Id);
-            data.Jumlah = entity.Jumlah;
+            data.JumL = entity.JumL;
+            data.JumP = entity.JumP;
             //Tambah kalau ada data dalam field lagi
             await context.SaveChangesAsync();
         }

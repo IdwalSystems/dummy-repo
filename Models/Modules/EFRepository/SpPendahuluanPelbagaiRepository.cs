@@ -38,7 +38,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.SpPendahuluanPelbagai
                 .Where(d => d.Id == id)
                 .Include(b => b.JKW)
-                .Include(d => d.SpPendahuluanPelbagai1).ThenInclude(d => d.AkCarta)
+                .Include(d => d.SpPendahuluanPelbagai1)
                 .Include(d => d.SpPendahuluanPelbagai2)
                 //.Include(d => d.AkPembekal).ThenInclude(d => d.JNegeri)
                 //.Include(d => d.AkPembekal).ThenInclude(d => d.JBank)

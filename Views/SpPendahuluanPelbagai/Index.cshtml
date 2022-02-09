@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MSNK.Models.Modules.SpPendahuluanPelbagai>
 
 @{
-    ViewData["Title"] = "Permohonan Aktiviti";
+    ViewData["Title"] = "Pendahuluan Pelbagai";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <partial name="_JSIndex" />
@@ -10,7 +10,7 @@
 
 <div class="row mb-2">
     <div class="col-8">
-        <h3 class="text-left">Permohonan Baru</h3>
+        <h3 class="text-left">Senarai Permohonan Pendahuluan Pelbagai</h3>
     </div>
     <div class="col-4 text-right">
         <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
@@ -61,7 +61,7 @@
     <thead>
         <tr>
             <th>
-               No Permohonan
+                No Permohonan
             </th>
 
             <th>
@@ -91,6 +91,10 @@
 
             <td>
                 @Html.DisplayFor(modelItem => item.NoPermohonan)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Penyedia)
             </td>
 
             <td>

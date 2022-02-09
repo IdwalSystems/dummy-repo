@@ -17,18 +17,9 @@ namespace MSNK.Models.Modules
         public bool Pertandingan { get; set; }
         public bool Pengelolaan { get; set; }
         public bool ProgramBinaan { get; set; }
-        public int JNegeriId { get; set; }
-        public int JSukanId { get; set; }
         public string Tarikh { get; set; }
         public string Aktiviti { get; set; }
         public string Tempat { get; set; }
-        public int JTahapId { get; set; }
-
-        public int JumAtl { get; set; }
-        public int JumJul { get; set; }
-        public int JumPeg { get; set; }
-        public int JumTek { get; set; }
-        public int JumUru { get; set; }
 
         public string Penyedia { get; set; }
         public DateTime TarSedia { get; set; }
@@ -48,10 +39,15 @@ namespace MSNK.Models.Modules
         public int FlCetak { get; set; }
 
         //relationship
+        public int AkCartaId { get; set; }
+        public AkCarta AkCarta { get; set; }
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
+        public int JNegeriId { get; set; }
         public JNegeri JNegeri { get; set; }
+        public int JSukanId { get; set; }
         public JSukan JSukan { get; set; }
+        public int JTahapAktivitiId { get; set; }
         public JTahapAktiviti JTahapAktiviti { get; set; }
         public ICollection<SpPendahuluanPelbagai1> SpPendahuluanPelbagai1 { get; set; }
         public ICollection<SpPendahuluanPelbagai2> SpPendahuluanPelbagai2 { get; set; }
