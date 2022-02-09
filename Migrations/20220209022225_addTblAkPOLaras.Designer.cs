@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220209020218_addTblAkPOLaras")]
+    [Migration("20220209022225_addTblAkPOLaras")]
     partial class addTblAkPOLaras
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -855,7 +855,7 @@ namespace MSNK.Migrations
                     b.Property<decimal>("Jumlah")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("NoPOLaras")
+                    b.Property<string>("NoRujukan")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 

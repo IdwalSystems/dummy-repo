@@ -12,8 +12,8 @@ namespace MSNK.Models.Modules
         //field
         public int Id { get; set; }
         [MaxLength(50)]
-        [DisplayName("No. Pesanan Tempatan")]
-        public string NoPOLaras { get; set; }
+        [DisplayName("No. Rujukan")]
+        public string NoRujukan { get; set; }
         [DisplayName("Tarikh")]
         public DateTime Tarikh { get; set; }
         [DisplayName("Tarikh Posting")]

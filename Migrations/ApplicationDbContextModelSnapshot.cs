@@ -853,7 +853,7 @@ namespace MSNK.Migrations
                     b.Property<decimal>("Jumlah")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("NoPOLaras")
+                    b.Property<string>("NoRujukan")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
