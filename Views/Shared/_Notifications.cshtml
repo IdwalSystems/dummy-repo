@@ -17,3 +17,10 @@
             toastr.warning('@TempData[SD.Warning]');
     </script>
 }
+
+@if (TempData[SD.Info] != null)
+{
+    <script type="text/javascript">
+            toastr.info('@TempData[SD.Info]');
+    </script>
+}

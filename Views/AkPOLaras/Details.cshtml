@@ -46,11 +46,11 @@
                                 </div>
                             </div>
                             @*<div class="col-md-3">
-                <div class="form-group">
-                    <label class="control-label">Kod Bank</label>
-                    <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
-                </div>
-            </div>*@
+                                    <div class="form-group">
+                                        <label class="control-label">Kod Bank</label>
+                                        <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
+                                    </div>
+                                </div>*@
                         </div>
                         <div class="form-row">
                             <div class="col-md-4">
@@ -102,11 +102,11 @@
                                 </div>
                             </div>
                             @*<div class="col-md-4">
-                <div class="form-group">
-                    <label class="control-label">Negeri</label>
-                    <input class="form-control form-control-sm" value="@Model.JNegeri.Kod - @Model.JNegeri.Perihal" readonly />
-                </div>
-            </div>*@
+                                    <div class="form-group">
+                                        <label class="control-label">Negeri</label>
+                                        <input class="form-control form-control-sm" value="@Model.JNegeri.Kod - @Model.JNegeri.Perihal" readonly />
+                                    </div>
+                                </div>*@
                         </div>
                         <div class="form-group pb-3">
                             <label asp-for="Tajuk" class="control-label"></label>
@@ -182,6 +182,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyObjek">
+
                                     @foreach (var item in ViewBag.akPOLaras1)
                                     {
                                         <tr id="@item.Id">
@@ -228,19 +229,21 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyPerihal">
+
                                     @foreach (var item in ViewBag.akPOLaras2)
                                     {
-                                    <tr>
-                                        <td class="text-left">@item.Bil</td>
-                                        <td class="text-left">@item.NoStok</td>
-                                        <td class="text-left text-uppercase">@item.Perihal</td>
-                                        <td class="text-right">@item.Kuantiti</td>
-                                        <td class="text-center text-uppercase">@item.Unit</td>
-                                        <td class="text-right">@item.Harga</td>
-                                        <td class="text-right">@item.Amaun</td>
-                                    </tr>
+                                        <tr>
+                                            <td class="text-left">@item.Bil</td>
+                                            <td class="text-left">@item.NoStok</td>
+                                            <td class="text-left text-uppercase">@item.Perihal</td>
+                                            <td class="text-right">@item.Kuantiti</td>
+                                            <td class="text-center text-uppercase">@item.Unit</td>
+                                            <td class="text-right">@item.Harga</td>
+                                            <td class="text-right">@item.Amaun</td>
+                                        </tr>
 
                                     }
+
                                 </tbody>
                                 <tfoot>
 

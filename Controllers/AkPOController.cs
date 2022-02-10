@@ -682,6 +682,22 @@ namespace MSNK.Controllers
             return View(akPO);
         }
 
+        // get latest Index number in AkNotaMinta2
+        public JsonResult GetLatestIndexNumberPerihal()
+        {
+
+            try
+            {
+                var data = _cart.Lines2.Max(x => x.Indek);
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
         // POST: AkPO/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -703,6 +719,15 @@ namespace MSNK.Controllers
                     {
                         var user = await _userManager.GetUserAsync(User);
                         AkPO akPOAsal = await _akPORepo.GetById(id);
+
+                        // list of input that cannot be change
+                        akPO.Tahun = akPOAsal.Tahun;
+                        akPO.JKWId = akPOAsal.JKWId;
+                        akPO.NoPO = akPOAsal.NoPO;
+                        akPO.TarMasuk = akPOAsal.TarMasuk;
+                        akPO.UserId = akPOAsal.UserId;
+                        akPO.FlCetak = 0;
+                        // list of input that cannot be change end
 
                         foreach (AkPO1 item in akPOAsal.AkPO1)
                         {
@@ -728,6 +753,7 @@ namespace MSNK.Controllers
 
                         akPO.UserIdKemaskini = user.UserName;
                         akPO.TarKemaskini = DateTime.Now;
+                        akPO.FlCetak = 0;
 
                         _context.Update(akPO);
 
@@ -1283,6 +1309,15 @@ namespace MSNK.Controllers
                     .Include(x => x.AkPO1).ThenInclude(x => x.AkCarta)
                     .Include(x => x.AkPO2)
                     .FirstOrDefaultAsync(x => x.Id == id);
+
+                //check for print
+                if (akPO.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
 
                 List<AkPO1> akPO1 = akPO.AkPO1.ToList();
 

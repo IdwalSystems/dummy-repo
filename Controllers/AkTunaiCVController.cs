@@ -146,7 +146,14 @@ namespace MSNK.Controllers
             }
             var lastItem = akTunaiCV.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            ViewData["lastItem"] = lastItem.NoCV;
+            if (lastItem != null)
+            {
+                ViewData["lastItem"] = lastItem.NoCV;
+            }
+            else
+            {
+                ViewData["lastItem"] = "NaN";
+            }
             return View(viewModel);
         }
 
@@ -717,6 +724,7 @@ namespace MSNK.Controllers
                     akTunaiCV.Tarikh = akTunaiCVAsal.Tarikh;
                     akTunaiCV.TarMasuk = akTunaiCVAsal.TarMasuk;
                     akTunaiCV.UserId = akTunaiCVAsal.UserId;
+                    akTunaiCV.FlCetak = 0;
                     // list of input that cannot be change end
 
                     foreach (AkTunaiCV1 item in akTunaiCVAsal.AkTunaiCV1)
@@ -835,6 +843,15 @@ namespace MSNK.Controllers
                 var user = await _userManager.GetUserAsync(User);
 
                 AkTunaiCV akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
+
+                //check for print
+                if (akTunaiCV.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
 
                 List<AkTunaiCV1> akTunaiCV1 = akTunaiCV.AkTunaiCV1.ToList();
 

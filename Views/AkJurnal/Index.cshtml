@@ -24,8 +24,8 @@
             <form asp-action="Index" method="get">
                 <div class="form-row">
                     <div class="col-sm-3 mb-2">
-                        <select class="custom-select form-control-sm" 
-                                name="searchColumn" 
+                        <select class="custom-select form-control-sm"
+                                name="searchColumn"
                                 asp-items="@ViewBag.SearchColumn" id="searchColumn"></select>
                     </div>
                     <div class="col-sm-9 mb-2">
@@ -80,10 +80,10 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Tarikh)
                 </th>
-                <th >
+                <th>
                     Jum Debit RM
                 </th>
-                <th >
+                <th>
                     Jum Kredit RM
                 </th>
                 <th>
@@ -153,9 +153,13 @@
                         <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank" id="btnCetak"><i class="fas fa-print"></i></a>
                         @if (item.Posting == 0)
                         {
-                            <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
-                                <i class="fas fa-sync"></i>
-                            </a>
+                            @if (item.Cetak != 0)
+                            {
+                                <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                    <i class="fas fa-sync"></i>
+                                </a>
+                            }
+
                             <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
                         }
                         else

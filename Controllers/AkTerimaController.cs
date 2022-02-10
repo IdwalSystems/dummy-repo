@@ -751,6 +751,7 @@ namespace MSNK.Controllers
                         akTerima.Nama = akTerimaAsal.Nama;
                         akTerima.TarMasuk = akTerimaAsal.TarMasuk;
                         akTerima.UserId = akTerimaAsal.UserId;
+                        akTerima.FlCetak = 0;
                         // list of input that cannot be change end
 
                         foreach (AkTerima1 item in akTerimaAsal.AkTerima1)
@@ -1449,6 +1450,15 @@ namespace MSNK.Controllers
                     .Include(x => x.AkTerima2).ThenInclude(x=> x.JCaraBayar)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
+                //check if data print status is printed or not
+                if (akTerima.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila Cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                // check if data print status is printed or not end
+
                 List<AkTerima1> akT1 = akTerima.AkTerima1.ToList();
                 List<AkTerima2> akT2 = akTerima.AkTerima2.ToList();
 
@@ -1657,7 +1667,8 @@ namespace MSNK.Controllers
                 //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
                 //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
-            };
+            }  ;
+            
         }
         // printing resit rasmi end
 

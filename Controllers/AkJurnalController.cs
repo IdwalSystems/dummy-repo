@@ -393,6 +393,7 @@ namespace MSNK.Controllers
                         akJurnal.TarMasuk = akJurnalAsal.TarMasuk;
                         akJurnal.UserIdKemaskini = user.UserName;
                         akJurnal.TarKemaskini = DateTime.Now;
+                        akJurnal.Cetak = 0;
 
                         _context.Update(akJurnal);
                         await AddLogAsync("Ubah", akJurnal.NoJurnal, kredit);
@@ -806,6 +807,14 @@ namespace MSNK.Controllers
             else
             {
                 AkJurnal akJurnal = await _context.AkJurnal.Include(x => x.AkJurnal1).FirstOrDefaultAsync(x => x.Id == id);
+
+                if (akJurnal.Cetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+
                 List<AkJurnal1> akJ1 = akJurnal.AkJurnal1.OrderBy(x=>x.Indeks).ToList();
 
                 var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == "JR/"+akJurnal.NoJurnal).FirstOrDefaultAsync();

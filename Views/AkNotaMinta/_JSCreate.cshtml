@@ -356,7 +356,7 @@
                 //insert data in modal objek
                 $("#moId1").val(r.record.id);
                 $("#moKodAkaun").val(r.record.akCartaId);
-                $("#moAmaun1").val(r.record.amaun);
+                $("#moAmaun1").val(r.record.amaun.toFixed(2));
 
                 //show modal objek
                 $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
@@ -439,10 +439,10 @@
                 $("#moBil").val(r.record.bil);
                 $("#moNoStok").val(r.record.noStok);
                 $("#moPerihal").val(r.record.perihal);
-                $("#moKuantiti").val(r.record.kuantiti);
+                $("#moKuantiti").val(r.record.kuantiti.toFixed(2));
                 $("#moUnit").val(r.record.unit);
-                $("#moHargaUnit").val(r.record.harga);
-                $("#moAmaun2").val(r.record.amaun);
+                $("#moHargaUnit").val(r.record.harga.toFixed(2));
+                $("#moAmaun2").val(r.record.amaun.toFixed(2));
 
                 //show modal perihal
                 $("#modalPerihal").modal({ backdrop: 'static', keyboard: false });
@@ -501,7 +501,7 @@
                                     "</td><td class='text-left'>" + item1.bil +
                                     "</td><td class='text-left'>" + item1.noStok +
                                     "</td><td class='text-left'>" + item1.perihal +
-                                    "</td><td class='text-right'>" + item1.kuantiti +
+                                    "</td><td class='text-right'>" + item1.kuantiti.toFixed(2) +
                                     "</td><td class='text-center'>" + item1.unit +
                                     "</td><td class='text-right'>" + (item1.harga).toFixed(2) +
                                     "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +

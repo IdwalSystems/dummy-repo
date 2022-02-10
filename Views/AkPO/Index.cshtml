@@ -76,6 +76,9 @@
                     Nama Pembekal
                 </th>
                 <th>
+                    Cetak
+                </th>
+                <th>
                     Posting
                 </th>
                 <th>
@@ -101,6 +104,16 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.AkPembekal.KodSykt) @Html.DisplayFor(modelItem => item.AkPembekal.NamaSykt)
+                    </td>
+                    <td>
+                        @if (item.FlCetak == 0)
+                        {
+                            <label class="mb-0">BELUM</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">SUDAH</label>
+                        }
                     </td>
                     <td>
                         @if (item.FlPosting == 0)
@@ -129,9 +142,13 @@
                         {
                             @if (item.FlPosting == 0)
                             {
-                                <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
-                                    <i class="fas fa-sync"></i>
-                                </a>
+                                @if (item.FlCetak != 0)
+                                {
+                                    <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                        <i class="fas fa-sync"></i>
+                                    </a>
+                                }
+
                                 @if (ViewData["LastItem"].ToString() == item.NoPO)
                                 {
                                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>

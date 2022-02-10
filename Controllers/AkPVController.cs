@@ -1476,6 +1476,7 @@ namespace MSNK.Controllers
                     akPV.NoRekup = akPVAsal.NoRekup;
                     akPV.TarMasuk = akPVAsal.TarMasuk;
                     akPV.UserId = akPVAsal.UserId;
+                    akPV.FlCetak = 0;
                     // list of input that cannot be change end
 
                     foreach (AkPV1 item in akPVAsal.AkPV1)
@@ -1784,10 +1785,6 @@ namespace MSNK.Controllers
             {
                 data.TarikhCekAtauEFT = akPV.TarCekAtauEFT.ToString();
             }
-            else
-            {
-                data.TarikhCekAtauEFT = "";
-            }
 
             //update cetak -> 1
             akPV.FlCetak = 1;
@@ -1818,6 +1815,15 @@ namespace MSNK.Controllers
                 var user = await _userManager.GetUserAsync(User);
 
                 AkPV akPV = await _akPVRepo.GetById((int)id);
+
+                //check for print
+                if (akPV.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
 
                 List<AkPV1> akPV1 = akPV.AkPV1.ToList();
 

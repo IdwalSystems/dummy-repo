@@ -164,7 +164,7 @@
                         {
                             @if (item.Jumlah != 0)
                             {
-                                @if (item.Jumlah == item.JumlahPerihal)
+                                @if (item.Jumlah == item.JumlahPerihal && item.FlCetak != 0)
                                 {
                                     <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
                                         <i class="fas fa-sync"></i>

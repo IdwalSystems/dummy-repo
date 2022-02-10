@@ -18,7 +18,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-row">
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="Tahun" class="control-label"></label>
                                 <input asp-for="Tahun" class="form-control form-control-sm" required readonly/>
@@ -38,7 +38,7 @@
                                 <span asp-validation-for="Tarikh" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
                                 <select class="form-control form-control-sm" asp-for="JKWId" required disabled>
@@ -65,7 +65,7 @@
                         </div>*@
                     </div>
                     <div class="form-row">
-                        <div class="col-md-2">
+                        <div class="col-md-12 mb-2">
                             <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
                             <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" required>
                                 <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>

@@ -408,6 +408,10 @@ namespace MSNK.Controllers
                 PopulateCartFromAkPO(id);
                 var result = await _akPORepo.GetById(id);
 
+                var akPOLaras = _context.AkPOLaras
+                    .Include(x=> x.AkPOLaras1)
+                    .Where(x => x.AkPOId == id).FirstOrDefault();
+
                 List<AkPO1> akPO1Table = await _context.AkPO1
                 .Include(b => b.AkCarta)
                 .Where(b => b.AkPOId == id)
@@ -426,6 +430,13 @@ namespace MSNK.Controllers
 
                 foreach (AkPO2 item in akPO2Table)
                 {
+                    if (akPOLaras != null)
+                    {
+                        item.Amaun = 0;
+                        item.Harga = 0;
+                        item.Kuantiti = 0;
+                    }
+
                     result.AkPO2.Add(item);
                 }
 
@@ -753,6 +764,22 @@ namespace MSNK.Controllers
             PopulateTable(id);
             PopulateCartFromDb(akBelian);
             return View(akBelian);
+        }
+
+        // get latest Index number in AkBelian2
+        public JsonResult GetLatestIndexNumberPerihal()
+        {
+
+            try
+            {
+                var data = _cart.Lines2.Max(x => x.Indek);
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
         }
 
         // update add akBelian1

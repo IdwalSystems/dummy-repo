@@ -144,7 +144,15 @@ namespace MSNK.Controllers
 
             var lastItem = akPOLaras.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            ViewData["lastItem"] = lastItem.NoRujukan;
+            if (lastItem != null)
+            {
+                ViewData["lastItem"] = lastItem.NoRujukan;
+            }
+            else
+            {
+                ViewData["lastItem"] = "NaN";
+            }
+
 
             return View(akPOLaras);
         }
@@ -842,6 +850,7 @@ namespace MSNK.Controllers
                         akPOLaras.NoRujukan = akPOLarasAsal.NoRujukan;
                         akPOLaras.TarMasuk = akPOLarasAsal.TarMasuk;
                         akPOLaras.UserId = akPOLarasAsal.UserId;
+                        akPOLaras.FlCetak = 0;
                         // list of input that cannot be change end
 
                         foreach (AkPOLaras1 item in akPOLarasAsal.AkPOLaras1)
@@ -1048,6 +1057,15 @@ namespace MSNK.Controllers
                 var user = await _userManager.GetUserAsync(User);
 
                 AkPOLaras akPOLaras = await _akPOLarasRepo.GetById((int)id);
+
+                //check for print
+                if (akPOLaras.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
 
                 List<AkPOLaras1> akPOLaras1 = akPOLaras.AkPOLaras1.ToList();
 

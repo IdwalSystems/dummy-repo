@@ -152,6 +152,7 @@ namespace MSNK.Controllers
                     NamaSykt = namaSykt,
                     Alamat1 = alamat1,
                     FlBatal = item.FlBatal,
+                    FlCetak = item.FlCetak,
                     FlPosting = item.FlPosting,
                     JumlahPerihal = jumlahPerihal
                 }
@@ -829,6 +830,22 @@ namespace MSNK.Controllers
             return View(viewModel);
         }
 
+        // get latest Index number in AkNotaMinta2
+        public JsonResult GetLatestIndexNumberPerihal()
+        {
+
+            try
+            {
+                var data = _cart.Lines2.Max(x => x.Indek);
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
         // POST: AkNotaMinta/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -858,6 +875,7 @@ namespace MSNK.Controllers
                         akNotaMinta.NoSiri = dataAsal.NoSiri;
                         akNotaMinta.TarMasuk = dataAsal.TarMasuk;
                         akNotaMinta.UserId = dataAsal.UserId;
+                        akNotaMinta.FlCetak = 0;
                         // list of input that cannot be change end
 
                         foreach (AkNotaMinta2 item in dataAsal.AkNotaMinta2)
@@ -1185,6 +1203,15 @@ namespace MSNK.Controllers
                 var user = await _userManager.GetUserAsync(User);
 
                 AkNotaMinta akNotaMinta = await _akNotaMintaRepo.GetById((int)id);
+
+                //check for print
+                if (akNotaMinta.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
 
                 List<AkNotaMinta1> akNM1 = akNotaMinta.AkNotaMinta1.ToList();
 
