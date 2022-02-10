@@ -19,7 +19,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">Tarikh</label>
-                                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Tarikh)" readonly />
+                                    <input class="form-control form-control-sm" value="@Model.Tarikh.ToString("dd/MM/yyyy")" readonly />
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -155,7 +155,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="TarCekAtauEFT" class="control-label">Tarikh Cek/EFT</label>
-                                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarCekAtauEFT)" readonly />
+                                    <input class="form-control form-control-sm" value="@Model.TarCekAtauEFT" readonly />
                                 </div>
                             </div>
                         </div>
@@ -268,7 +268,7 @@
                                 <div class="form-group col-sm">
                                     <label class="control-label">Batal</label>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal1" class="custom-control-input" value="0" checked>
+                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal" class="custom-control-input" value="0" checked>
                                         <label class="custom-control-label" for="FlBatal">Belum</label>
                                     </div>
                                     <div class="custom-control custom-radio">

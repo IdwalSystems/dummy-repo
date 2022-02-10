@@ -175,7 +175,14 @@ namespace MSNK.Controllers
             }
             var lastItem = akPV.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            ViewData["lastItem"] = lastItem.NoPV;
+            if (lastItem != null)
+            {
+                ViewData["lastItem"] = lastItem.NoPV;
+            }
+            else
+            {
+                ViewData["lastItem"] = "NaN";
+            }
 
             return View(viewModel);
         }
@@ -1702,20 +1709,23 @@ namespace MSNK.Controllers
         [Authorize(Policy = "PV001P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
-            AkPV akPV = await _context.AkPV
-                .Include(x => x.JKW)
-                .Include(x => x.AkBank)
-                .Include(x=> x.JCaraBayar)
-                .Include(x => x.AkPembekal).ThenInclude(x=> x.JBank)
-                .Include(x => x.SuPekerja).ThenInclude(x=> x.JBank)
-                .Include(x => x.AkPV1).ThenInclude(x => x.AkCarta)
-                .Include(x=> x.AkPV2).ThenInclude(x=> x.AkBelian).ThenInclude(x=> x.AkPO)
-                .FirstOrDefaultAsync(x => x.Id == id);
+            AkPV akPV = await _akPVRepo.GetById(id);
 
             PVPrintModel data = new PVPrintModel();
             var user = await _userManager.GetUserAsync(User);
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
-            var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPV.Jumlah)).ToUpper();
+            
+            string jumlahDalamPerkataan;
+
+            if (akPV.Jumlah < 0)
+            {
+                jumlahDalamPerkataan = ("Kurangan Ringgit Malaysia " + Tools.JumlahDalamPerkataan(0 - akPV.Jumlah)).ToUpper();
+            }
+            else
+            {
+                jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPV.Jumlah)).ToUpper();
+            }
+            
             var noAkaunBank = "";
             var namaBankPenerima = "";
 

@@ -4,53 +4,52 @@ using MSNK.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.Cart.Session
 {
-    public class SessionCartPO : CartPO
+    public class SessionCartPOLaras : CartPOLaras
     {
-        public static CartPO GetCart(IServiceProvider services)
+        public static CartPOLaras GetCart(IServiceProvider services)
         {
             ISession session = services.GetRequiredService<IHttpContextAccessor>()?
                 .HttpContext.Session;
-            SessionCartPO cart = session?.GetJson<SessionCartPO>("CartPO") ??
-                new SessionCartPO();
+            SessionCartPOLaras cart = session?.GetJson<SessionCartPOLaras>("CartPOLaras") ??
+                new SessionCartPOLaras();
             cart.Session = session;
             return cart;
         }
         private ISession Session { get; set; }
 
-        //PO1
+        //POLaras1
         public override void AddItem1(
-                int AkPOId,
+                int AkPOLarasId,
                 int akCartaId,
                 decimal Amaun
             )
         {
-            base.AddItem1(AkPOId, 
-                          akCartaId, 
+            base.AddItem1(AkPOLarasId,
+                          akCartaId,
                           Amaun
                           );
 
-            Session.SetJson("CartPO", this);
+            Session.SetJson("CartPOLaras", this);
         }
         public override void RemoveItem1(int id)
         {
             base.RemoveItem1(id);
-            Session.SetJson("CartPO", this);
+            Session.SetJson("CartPOLaras", this);
         }
         public override void Clear1()
         {
             base.Clear1();
-            Session.Remove("CartPO");
+            Session.Remove("CartPOLaras");
         }
-        //PO1 End
+        //POLaras1 End
 
-        //PO2
+        //POLaras2
         public override void AddItem2(
-            int akPOId,
+            int akPOLarasId,
             int Indek,
             int Baris,
             string Bil,
@@ -62,7 +61,7 @@ namespace MSNK.Models.Modules.Cart.Session
             decimal Amaun
             )
         {
-            base.AddItem2( akPOId,
+            base.AddItem2(akPOLarasId,
                     Indek,
                     Baris,
                     Bil,
@@ -73,19 +72,18 @@ namespace MSNK.Models.Modules.Cart.Session
                     Harga,
                     Amaun);
 
-            Session.SetJson("CartPO", this);
+            Session.SetJson("CartPOLaras", this);
         }
         public override void RemoveItem2(int id)
         {
             base.RemoveItem2(id);
-            Session.SetJson("CartPO", this);
+            Session.SetJson("CartPOLaras", this);
         }
         public override void Clear2()
         {
             base.Clear2();
-            Session.Remove("CartPO");
+            Session.Remove("CartPOLaras");
         }
-        //PO2 End
+        //POLaras2 End
     }
 }
-

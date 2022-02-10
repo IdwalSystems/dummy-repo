@@ -288,7 +288,6 @@ namespace MSNK.Controllers
             }
 
             var akBelian = await _akBelianRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akBelian.JKWId);
 
             var kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
 
@@ -317,13 +316,13 @@ namespace MSNK.Controllers
             akBelianView.AkPembekalId = akBelian.AkPembekalId;
             akBelianView.AkPO = akPO;
             akBelianView.AkPembekal = pembekal;
-            akBelianView.JKW = kw;
             akBelianView.Id = akBelian.Id;
             akBelianView.Tahun = akBelian.Tahun;
             akBelianView.NoInbois = akBelian.NoInbois;
             akBelianView.Tarikh = akBelian.Tarikh;
             akBelianView.TarikhTerima = akBelian.TarikhTerima;
             akBelianView.TarikhKewanganTerima = akBelian.TarikhKewanganTerima;
+            akBelianView.JKWId = akBelian.JKWId;
             akBelianView.JKW = akBelian.JKW;
             akBelianView.KodObjekAP = kodObjekAkaunPemiutang;
             akBelianView.Jumlah = akBelian.Jumlah;
@@ -335,7 +334,21 @@ namespace MSNK.Controllers
             {
                 akBelianView.JumlahPerihal += item.Amaun;
             }
+            akBelianView.AkBelian1 = akBelian.AkBelian1;
             akBelianView.AkBelian2 = akBelian.AkBelian2;
+
+            // check if this data is the last one (for preventing batal purpose)
+            var lastItem = _context.AkBelian.OrderByDescending(x => x.Id).FirstOrDefault();
+
+            if (lastItem.Id == akBelian.Id)
+            {
+                ViewData["isLastItem"] = "Y";
+            }
+            else
+            {
+                ViewData["isLastItem"] = "N";
+            }
+            // check end
 
             PopulateTable(id);
             return View(akBelianView);
@@ -714,10 +727,7 @@ namespace MSNK.Controllers
             }
 
             var akBelian = await _akBelianRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akBelian.JKWId);
-            akBelian.JKW = kw;
-            var KodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
-            akBelian.KodObjekAP = KodObjekAkaunPemiutang;
+
             var akPO = new AkPO();
             if (akBelian.AkPOId != null)
             {
@@ -732,9 +742,6 @@ namespace MSNK.Controllers
             }
 
             akBelian.AkPO = akPO;
-
-            var pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
-            akBelian.AkPembekal = pembekal;
 
             if (akBelian == null)
             {

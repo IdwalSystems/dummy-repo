@@ -35,7 +35,7 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label asp-for="Tarikh" class="control-label"></label>
-                                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Tarikh)" readonly />
+                                    <input class="form-control form-control-sm" value="@Model.Tarikh.ToString("dd/MM/yyyy")" readonly />
                                 </div>
                             </div>
 
@@ -159,7 +159,7 @@
                                 <div class="form-group col-sm">
                                     <label asp-for="FlBatal" class="control-label"></label>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal1" class="custom-control-input" value="0" checked>
+                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal" class="custom-control-input" value="0" checked>
                                         <label class="custom-control-label" for="FlBatal">Belum</label>
                                     </div>
                                     <div class="custom-control custom-radio">
@@ -220,29 +220,26 @@
                             <table id="tblUrusniaga" class="table table-sm" cellpadding="0" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Bil</th>
-                                        <th>No Stok</th>
-                                        <th width="30%">Perihal</th>
-                                        <th>Kuantiti</th>
-                                        <th>Unit</th>
-                                        <th>Harga/Unit</th>
-                                        <th>Amaun</th>
-                                        <th></th>
+                                        <th class="text-left">Bil</th>
+                                        <th class="text-left">No Stok</th>
+                                        <th class="text-left">Perihal</th>
+                                        <th class="text-right">Kuantiti</th>
+                                        <th class="text-center">Unit</th>
+                                        <th class="text-right">Harga RM/Unit</th>
+                                        <th class="text-right">Amaun RM</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyPerihal">
-                                    @foreach (var item in ViewBag.akPO2)
+                                    @foreach (var item in ViewBag.akPOLaras2)
                                     {
                                         <tr>
-                                            <td hidden><input id="txtAkPO2" value="@Model.Id" /></td>
-                                            <td hidden>@item.Baris</td>
-                                            <td class="editable-txt">@item.Bil</td>
-                                            <td class="editable-txt">@item.NoStok</td>
-                                            <td class="editable-txt">@item.Perihal</td>
-                                            <td class="editable-txt">@item.Kuantiti</td>
-                                            <td class="editable-txt">@item.Unit</td>
-                                            <td class="editable-txt">@item.Harga/Unit</td>
-                                            <td class="editable-txt">@item.Amaun</td>
+                                            <td class="text-left">@item.Bil</td>
+                                            <td class="text-left">@item.NoStok</td>
+                                            <td class="text-left text-uppercase">@item.Perihal</td>
+                                            <td class="text-right">@item.Kuantiti</td>
+                                            <td class="text-center text-uppercase">@item.Unit</td>
+                                            <td class="text-right">@item.Harga</td>
+                                            <td class="text-right">@item.Amaun</td>
                                         </tr>
 
                                     }

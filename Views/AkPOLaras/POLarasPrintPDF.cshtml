@@ -1,7 +1,7 @@
-﻿@model MSNK.Models.Modules.PrintModel.POPrintModel
+﻿@model MSNK.Models.Modules.PrintModel.POLarasPrintModel
 
 @{
-    ViewData["Title"] = "Cetakan Pesanan Tempatan";
+    ViewData["Title"] = "Cetakan Pelarasan Pesanan Tempatan";
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
 }
 <style>
@@ -95,7 +95,7 @@
     </div>
 
     <div class="col-2 text-right">
-        <h6 class="mb-0"><strong>PESANAN TEMPATAN</strong></h6>
+        <h6 class="mb-0"><strong>PELARASAN PESANAN TEMPATAN</strong></h6>
         @*<h6 class="mb-0">NO PO:</h6>
             <h6 class="mb-0 ">@Model.AkPO.NoPO</h6>
             <h6 class="mb-0">TARIKH PESANAN TEMPATAN: @Html.DisplayFor(x => x.AkPO.Tarikh, "{0:dd/MM/yyyy}")</h6>*@
@@ -103,21 +103,21 @@
 </div>
 <div class="row flexrow mb-1">
     <div class="col-8 text-center text-uppercase">
-        <h5 class="mb-1"><strong>Tahun Kewangan @Model.AkPO.Tahun</strong></h5>
+        <h5 class="mb-1"><strong>Tahun Kewangan @Model.AkPOLaras.Tahun</strong></h5>
     </div>
 </div>
 <div class="table-responsive-sm mb-0">
     <table class="table table-bordered table-sm topic">
         <tbody>
             <tr>
-                <td class="text-center text-uppercase font-weight-bold" width="15%">No Pesanan Tempatan</td>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">No Rujukan</td>
                 <td class="text-center text-uppercase font-weight-bold" width="15%">Tarikh</td>
                 <td class="text-center text-uppercase font-weight-bold" width="15%">Kumpulan Wang </td>
             </tr>
             <tr>
-                <td class="text-center">@Model.AkPO.NoPO</td>
-                <td class="text-center" width="15%">@Convert.ToDateTime(Model.AkPO.Tarikh).ToString("dd/MM/yyyy")</td>
-                <td class="text-center">@Model.AkPO.JKW.Kod - @Model.AkPO.JKW.Perihal</td>
+                <td class="text-center">@Model.AkPOLaras.NoRujukan</td>
+                <td class="text-center" width="15%">@Convert.ToDateTime(Model.AkPOLaras.Tarikh).ToString("dd/MM/yyyy")</td>
+                <td class="text-center">@Model.AkPOLaras.JKW.Kod - @Model.AkPOLaras.JKW.Perihal</td>
             </tr>
         </tbody>
     </table>
@@ -134,28 +134,28 @@
             </tr>
             <tr>
                 <td class="text-left" width="15%">KOD SYARIKAT</td>
-                <td class="text-left">@Model.AkPO.AkPembekal.KodSykt</td>
+                <td class="text-left">@Model.AkPOLaras.AkPO.AkPembekal.KodSykt</td>
             </tr>
             <tr>
                 <td class="text-left" width="15%" rowspan="4">PEMBEKAL</td>
-                <td class="text-left">@Model.AkPO.AkPembekal.NamaSykt</td>
+                <td class="text-left">@Model.AkPOLaras.AkPO.AkPembekal.NamaSykt</td>
             </tr>
             <tr>
-                <td class="text-left">@Model.AkPO.AkPembekal.Alamat1</td>
+                <td class="text-left">@Model.AkPOLaras.AkPO.AkPembekal.Alamat1</td>
             </tr>
             <tr>
-                <td class="text-left">@Model.AkPO.AkPembekal.Alamat2</td>
+                <td class="text-left">@Model.AkPOLaras.AkPO.AkPembekal.Alamat2</td>
             </tr>
             <tr>
-                <td class="text-left" >@Model.AkPO.AkPembekal.Alamat3</td>
+                <td class="text-left">@Model.AkPOLaras.AkPO.AkPembekal.Alamat3</td>
             </tr>
             <tr>
                 <td class="text-left">Nama Bank</td>
-                <td class="text-left">@Model.AkPO.AkPembekal.JBank.Nama</td>
+                <td class="text-left">@Model.AkPOLaras.AkPO.AkPembekal.JBank.Nama</td>
             </tr>
             <tr>
                 <td class="text-left">No Akaun Bank</td>
-                <td class="text-left">@Model.AkPO.AkPembekal.AkaunBank</td>
+                <td class="text-left">@Model.AkPOLaras.AkPO.AkPembekal.AkaunBank</td>
             </tr>
         </tbody>
     </table>
@@ -170,7 +170,7 @@
             </tr>
         </thead>
 
-        @foreach (var item in Model.AkPO.AkPO1)
+        @foreach (var item in Model.AkPOLaras.AkPOLaras1)
         {
 
             <tr>
@@ -185,7 +185,7 @@
         }
         <tr class="font-weight-bold">
             <td class="text-right" colspan="2">Jumlah RM</td>
-            <td class="text-right">@Convert.ToDecimal(Model.AkPO.Jumlah).ToString("#,##0.00")</td>
+            <td class="text-right">@Convert.ToDecimal(Model.AkPOLaras.Jumlah).ToString("#,##0.00")</td>
         </tr>
         <tfoot>
 
@@ -210,7 +210,7 @@
                 <td class="text-center">HARGA/UNIT</td>
                 <td class="text-center">AMAUN</td>
             </tr>
-            @foreach (var item in Model.AkPO.AkPO2)
+            @foreach (var item in Model.AkPOLaras.AkPOLaras2)
             {
 
                 <tr>
@@ -226,7 +226,7 @@
             }
             <tr class="font-weight-bold">
                 <td class="text-right" colspan="6">Jumlah RM</td>
-                <td class="text-right">@Convert.ToDecimal(Model.AkPO.Jumlah).ToString("#,##0.00")</td>
+                <td class="text-right">@Convert.ToDecimal(Model.AkPOLaras.Jumlah).ToString("#,##0.00")</td>
             </tr>
         </tbody>
         <tfoot>
@@ -274,9 +274,9 @@
                 <td class="text-left">Nama:</td>
                 <td class="text-left">Nama:</td>
                 <td class="text-left">Nama:</td>
-                                
-            </tr>               
-            <tr>                
+
+            </tr>
+            <tr>
                 <td class="text-left">Jawatan:</td>
                 <td class="text-left">Jawatan:</td>
                 <td class="text-left">Jawatan:</td>

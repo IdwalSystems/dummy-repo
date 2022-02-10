@@ -195,7 +195,14 @@ namespace MSNK.Controllers
 
             var lastItem = akPO.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            ViewData["lastItem"] = lastItem.NoPO;
+            if (lastItem != null)
+            {
+                ViewData["lastItem"] = lastItem.NoPO;
+            }
+            else
+            {
+                ViewData["lastItem"] = "NaN";
+            }
 
             return View(akPO);
         }
@@ -593,29 +600,9 @@ namespace MSNK.Controllers
             var pembekal = _context.AkPembekal.FirstOrDefault(x => x.Id == akPO.AkPembekalId);
 
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
-            
+
             // get latest no rujukan running number  
-            //var kw = _context.JKW.FirstOrDefault(x => x.Id == akPO.JKWId);
-
-            //var kumpulanWang = kw.Kod;
-            //var year = DateTime.Now.Year.ToString();
-            //var month = DateTime.Now.Month.ToString();
-            //string prefix = year + "/" + kumpulanWang + "/";
-            //int x = 1;
-            //string noRujukan = prefix + "000000";
-
-            //var LatestNoRujukan = _context.AkPO.Max(x => x.NoPO);
-            //if (LatestNoRujukan == null)
-            //{
-            //    noRujukan = string.Format("{0:" + prefix + "000000}", x);
-            //}
-            //else
-            //{
-            //    x = int.Parse(LatestNoRujukan.Substring(10));
-            //    x++;
-            //    noRujukan = string.Format("{0:" + prefix + "000000}", x);
-            //}
-
+            var noRujukan = RunningNumber(akPO);
             // get latest no rujukan running number end
 
             if (ModelState.IsValid)
@@ -624,7 +611,7 @@ namespace MSNK.Controllers
                 {
 
                     m.JKWId = JKWId;
-                    m.NoPO = RunningNumber(akPO);
+                    m.NoPO = noRujukan;
                     m.Tarikh = akPO.Tarikh;
                     m.AkNotaMintaId = AkNotaMintaId;
                     m.TarikhPosting = akPO.TarikhPosting;
@@ -644,22 +631,22 @@ namespace MSNK.Controllers
 
                     //insert applog
 
-                    //AppLog appLog = new AppLog();
+                    AppLog appLog = new AppLog();
 
-                    //appLog.UserId = user.UserName;
-                    //appLog.LgModule = modul + "C";
-                    //appLog.LgOperation = "Tambah";
-                    //appLog.LgNote = modul + " Penerimaan - Tambah";
-                    //appLog.NoRujukan = noRujukan;
-                    //appLog.Jumlah = akPO.Jumlah;
+                    appLog.UserId = user.UserName;
+                    appLog.LgModule = modul + "C";
+                    appLog.LgOperation = "Tambah";
+                    appLog.LgNote = modul + " Pesanan Tempatan - Tambah";
+                    appLog.NoRujukan = noRujukan;
+                    appLog.Jumlah = akPO.Jumlah;
 
-                    //await _appLog.Insert(appLog);
+                    await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
-                    TempData[SD.Success] = "Maklumat Pesanan Tempatan berjaya ditambah. No Pendaftaran adalah " + RunningNumber(akPO);
+                    TempData[SD.Success] = "Maklumat Pesanan Tempatan berjaya ditambah. No Pendaftaran adalah " + noRujukan;
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -1405,68 +1392,81 @@ namespace MSNK.Controllers
                 }
                 else
                 {
+                    // check if already linked with AkBelian
                     AkBelian akBelian = _context.AkBelian.Where(x => x.AkPOId == id).FirstOrDefault();
 
                     if(akBelian != null)
                     {
                         //linkage id error
-                        TempData[SD.Error] = "Data terkait pada no Inbois " + akBelian.NoInbois.ToUpper() + ". Batal posting tidak dibenarkan";
+                        TempData[SD.Error] = "Data terkait pada No Inbois " + akBelian.NoInbois.ToUpper() + ". Batal posting tidak dibenarkan";
                     }
                     else
                     {
-                        //unposting operation start here
-                        //delete data from akAkaun
-                        foreach (AbBukuVot item in abBukuVot)
+                        // check if already linked with AkPOLaras
+                        AkPOLaras akPOLaras = _context.AkPOLaras.Where(x => x.AkPOId == id).FirstOrDefault();
+
+                        if (akPOLaras != null)
                         {
-                            await _abBukuVotRepo.Delete(item.Id);
+                            //linkage id error
+                            TempData[SD.Error] = "Data terkait pada No Pelarasan Tanggungan " + akPOLaras.NoRujukan.ToUpper() + ". Batal posting tidak dibenarkan";
+                        } 
+                        else
+                        {
+                            //unposting operation start here
+                            //delete data from akAkaun
+                            foreach (AbBukuVot item in abBukuVot)
+                            {
+                                await _abBukuVotRepo.Delete(item.Id);
+                            }
+
+                            //delete data from abBukuVot
+                            //foreach (AbBukuVot item in abBukuVot)
+                            //{
+                            //    await _abBukuVotRepo.Delete(item.Id);
+                            //}
+                            //delete data from abBukuVot
+
+                            //update posting status in akPO
+
+                            //update AkNotaMinta
+
+                            if (akPO.AkNotaMintaId != null)
+                            {
+                                AkNotaMinta akNM = await _akNotaMintaRepo.GetById((int)akPO.AkNotaMintaId);
+
+                                akNM.NoCAS = "";
+                                akNM.TarikhSeksyenKewangan = null;
+
+                                await _akNotaMintaRepo.Update(akNM);
+                            }
+
+                            //update AkNotaMinta end
+
+                            akPO.FlPosting = 0;
+                            akPO.TarikhPosting = null;
+                            await _akPORepo.Update(akPO);
+
+                            //insert applog
+                            var user = await _userManager.GetUserAsync(User);
+
+                            AppLog appLog = new AppLog();
+
+                            appLog.UserId = user.UserName;
+                            appLog.LgModule = modul + "UT";
+                            appLog.LgOperation = "UnPosting";
+                            appLog.LgNote = modul + " Pesanan Tempatan - UnPosting";
+                            appLog.NoRujukan = akPO.NoPO;
+                            appLog.Jumlah = akPO.Jumlah;
+
+                            await _appLog.Insert(appLog);
+                            //insert applog end
+
+                            await _context.SaveChangesAsync();
+
+                            TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                            //unposting operation end
                         }
 
-                        //delete data from abBukuVot
-                        //foreach (AbBukuVot item in abBukuVot)
-                        //{
-                        //    await _abBukuVotRepo.Delete(item.Id);
-                        //}
-                        //delete data from abBukuVot
-
-                        //update posting status in akPO
-
-                        //update AkNotaMinta
-
-                        if (akPO.AkNotaMintaId != null)
-                        {
-                            AkNotaMinta akNM = await _akNotaMintaRepo.GetById((int)akPO.AkNotaMintaId);
-
-                            akNM.NoCAS = "";
-                            akNM.TarikhSeksyenKewangan = null;
-
-                            await _akNotaMintaRepo.Update(akNM);
-                        }
-
-                        //update AkNotaMinta end
-
-                        akPO.FlPosting = 0;
-                        akPO.TarikhPosting = null;
-                        await _akPORepo.Update(akPO);
-
-                        //insert applog
-                        var user = await _userManager.GetUserAsync(User);
-
-                        AppLog appLog = new AppLog();
-
-                        appLog.UserId = user.UserName;
-                        appLog.LgModule = modul + "UT";
-                        appLog.LgOperation = "UnPosting";
-                        appLog.LgNote = modul + " Pesanan Tempatan - UnPosting";
-                        appLog.NoRujukan = akPO.NoPO;
-                        appLog.Jumlah = akPO.Jumlah;
-
-                        await _appLog.Insert(appLog);
-                        //insert applog end
-
-                        await _context.SaveChangesAsync();
-
-                        TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
-                        //unposting operation end
                     }
 
                 }
@@ -1526,7 +1526,16 @@ namespace MSNK.Controllers
         {
             AkPO akPO = await _akPORepo.GetById(id);
 
-            var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPO.Jumlah)).ToUpper();
+            string jumlahDalamPerkataan;
+
+            if (akPO.Jumlah < 0)
+            {
+                jumlahDalamPerkataan = ("Kurangan Ringgit Malaysia " + Tools.JumlahDalamPerkataan(0 - akPO.Jumlah)).ToUpper();
+            }
+            else
+            {
+                jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPO.Jumlah)).ToUpper();
+            }
 
             var user = await _userManager.GetUserAsync(User);
 

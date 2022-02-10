@@ -1,0 +1,155 @@
+﻿@model IEnumerable<MSNK.Models.Modules.AkPOLaras>
+
+@{
+    ViewData["Title"] = "Pelarasan Tanggungan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<partial name="_JSIndex" />
+
+<h1></h1>
+
+<div class="row mb-2">
+    <div class="col-8">
+        <h3 class="text-left">Pelarasan Pesanan Tempatan</h3>
+    </div>
+    <div class="col-4 text-right">
+        <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
+    </div>
+</div>
+@*div carian*@
+<div class="card mb-2">
+    <div class="card-body pl-3 pb-2 ">
+        <label class="form-control-plaintext" for="searchselect">Carian : </label>
+
+        <div class="form-actions no-color mb-2">
+            <form asp-action="Index" method="get">
+                <div class="form-row">
+                    <div class="col-sm-3 mb-2">
+                        <select class="custom-select form-control-sm"
+                                name="searchColumn"
+                                asp-items="@ViewBag.SearchColumn" id="searchColumn"></select>
+                    </div>
+                    <div class="col-sm-9 mb-2">
+                        <div class="form-row">
+                            <div class="col-10">
+                                <div class="form-row">
+                                    <div class="col-12">
+                                        <input class="form-control form-control-sm" type="text" name="searchString" id="myInput" value="@ViewBag.SearchData1" />
+                                    </div>
+                                    <div class="col-6" id="myInputDate1">
+                                        <input class="form-control form-control-sm mb-2" type="date" name="searchDate1" id="inputTarikh1" value="@ViewBag.SearchData1" />
+                                    </div>
+                                    <div class="col-6" id="myInputDate2">
+                                        <input class="form-control form-control-sm" type="date" name="searchDate2" id="inputTarikh2" value="@ViewBag.SearchData2" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="btn btn-sm btn-info"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@*div carian end*@
+
+<div class="table-responsive table-sm">
+    <table class="table table-bordered table-hover display compact nowrap" width="100%">
+        <thead>
+            <tr>
+                <th width="5%">Bil</th>
+                <th>
+                    No Rujukan
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tarikh)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Jumlah)
+                </th>
+                <th>
+                    Nama Pembekal
+                </th>
+                <th>
+                    Posting
+                </th>
+                <th>
+                    Batal
+                </th>
+                <th width="5%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var tabletype = item.FlBatal == 1 ? "table-danger" : null;
+                <tr class="@tabletype">
+                    <td></td>
+                    <td>
+                        @item.NoRujukan.Substring(3)
+                    </td>
+                    <td>
+                        @item.Tarikh.ToString("dd/MM/yyyy")
+                    </td>
+                    <td class="text-right">
+                        @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
+                    </td>
+                    <td>
+                        @item.AkPO.AkPembekal.KodSykt @item.AkPO.AkPembekal.NamaSykt.ToUpper()
+                    </td>
+                    <td>
+                        @if (item.FlPosting == 0)
+                        {
+                            <label class="mb-0">BELUM</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">SUDAH</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.FlBatal == 0)
+                        {
+                            <label class="mb-0">TIDAK</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">YA</label>
+                        }
+                    </td>
+                    <td class="action-button">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                        @if (item.FlBatal == 0)
+                        {
+                            @if (item.FlPosting == 0)
+                            {
+                                <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                    <i class="fas fa-sync"></i>
+                                </a>
+                                @if (ViewData["LastItem"].ToString() == item.NoRujukan)
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                                }
+                            }
+                            else
+                            {
+                                <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
+                                    <i class="fas fa-sync"></i>
+                                </a>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

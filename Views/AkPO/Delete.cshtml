@@ -211,19 +211,19 @@
                                         <th class="text-left">Perihal</th>
                                         <th class="text-right">Kuantiti</th>
                                         <th class="text-center">Unit</th>
-                                        <th class="text-right">Harga/Unit</th>
-                                        <th class="text-right">Amaun</th>
+                                        <th class="text-right">Harga RM/Unit</th>
+                                        <th class="text-right">Amaun RM</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyPerihal">
-                                    @foreach (var item in ViewBag.AkPO2)
+                                    @foreach (var item in ViewBag.akPOLaras2)
                                     {
                                         <tr>
                                             <td class="text-left">@item.Bil</td>
                                             <td class="text-left">@item.NoStok</td>
-                                            <td class="text-left">@item.Perihal</td>
+                                            <td class="text-left text-uppercase">@item.Perihal</td>
                                             <td class="text-right">@item.Kuantiti</td>
-                                            <td class="text-center">@item.Unit</td>
+                                            <td class="text-center text-uppercase">@item.Unit</td>
                                             <td class="text-right">@item.Harga</td>
                                             <td class="text-right">@item.Amaun</td>
                                         </tr>

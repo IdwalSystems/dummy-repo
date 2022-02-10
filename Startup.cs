@@ -62,6 +62,9 @@ namespace MSNK
             services.AddTransient<IRepository<AkPO, int, string>, AkPORepository>();
             services.AddTransient<ListViewIRepository<AkPO1, int>, AkPO1Repository>();
             services.AddTransient<ListViewIRepository<AkPO2, int>, AkPO2Repository>();
+            services.AddTransient<IRepository<AkPOLaras, int, string>, AkPOLarasRepository>();
+            services.AddTransient<ListViewIRepository<AkPOLaras1, int>, AkPOLaras1Repository>();
+            services.AddTransient<ListViewIRepository<AkPOLaras2, int>, AkPOLaras2Repository>();
             services.AddTransient<IRepository<AkPembekal, int, string>, AkPembekalRepository>();
             services.AddTransient<IRepository<AkJurnal, int, string>, AkJurnalRepository>();
             services.AddTransient<ListViewIRepository<AkJurnal1, int>, AkJurnal1Repository>();
@@ -98,6 +101,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPendahuluan.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
+            services.AddScoped(ss => SessionCartPOLaras.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
             services.AddScoped(ss => SessionCartBelian.GetCart(ss));
             services.AddScoped(ss => SessionCartPV.GetCart(ss));
@@ -136,6 +140,16 @@ namespace MSNK
                 options.AddPolicy("TG001B", policy => policy.RequireClaim("TG001B"));
                 options.AddPolicy("TG001T", policy => policy.RequireClaim("TG001T"));
                 options.AddPolicy("TG001UT", policy => policy.RequireClaim("TG001UT"));
+                //Pesanan Tempatan End
+                //Pelarasan Tanggungan
+                options.AddPolicy("PT001", policy => policy.RequireClaim("PT001"));
+                options.AddPolicy("PT001C", policy => policy.RequireClaim("PT001C"));
+                options.AddPolicy("PT001E", policy => policy.RequireClaim("PT001E"));
+                options.AddPolicy("PT001D", policy => policy.RequireClaim("PT001D"));
+                options.AddPolicy("PT001P", policy => policy.RequireClaim("PT001P"));
+                options.AddPolicy("PT001B", policy => policy.RequireClaim("PT001B"));
+                options.AddPolicy("PT001T", policy => policy.RequireClaim("PT001T"));
+                options.AddPolicy("PT001UT", policy => policy.RequireClaim("PT001UT"));
                 //Pesanan Tempatan End
                 //Invois Pembekal
                 options.AddPolicy("TG002", policy => policy.RequireClaim("TG002"));

@@ -159,7 +159,14 @@ namespace MSNK.Controllers
 
             var lastItem = akTerima.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            ViewData["lastItem"] = lastItem.NoRujukan;
+            if (lastItem != null)
+            {
+                ViewData["lastItem"] = lastItem.NoRujukan;
+            }
+            else
+            {
+                ViewData["lastItem"] = "NaN";
+            }
 
             return View(viewModel);
         }
@@ -1602,7 +1609,16 @@ namespace MSNK.Controllers
         {
             AkTerima akTerima = await _akTerimaRepo.GetById(id);
 
-            var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akTerima.Jumlah)).ToUpper();
+            string jumlahDalamPerkataan;
+
+            if (akTerima.Jumlah < 0)
+            {
+                jumlahDalamPerkataan = ("Kurangan Ringgit Malaysia " + Tools.JumlahDalamPerkataan(0 - akTerima.Jumlah)).ToUpper();
+            }
+            else
+            {
+                jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akTerima.Jumlah)).ToUpper();
+            }
 
             var user = await _userManager.GetUserAsync(User);
 

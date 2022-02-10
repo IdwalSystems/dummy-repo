@@ -31,7 +31,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .ThenInclude(b => b.AkPembekal)
                 .Include(b => b.AkPembekal)
                 .Include(b => b.KodObjekAP)
-                .Include(b => b.AkBelian1)
+                .Include(b => b.AkBelian1).ThenInclude(b => b.AkCarta)
                 .Include(b => b.AkBelian2)
                 .ToListAsync();
         }
@@ -43,7 +43,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .ThenInclude(b => b.AkPembekal)
                 .Include(b => b.AkPembekal)
                 .Include(b => b.KodObjekAP)
-                .Include(b => b.AkBelian1)
+                .Include(b => b.AkBelian1).ThenInclude(b=> b.AkCarta)
                 .Include(b => b.AkBelian2)
                 .Where(b=> b.Id == id)
                 .FirstOrDefaultAsync();

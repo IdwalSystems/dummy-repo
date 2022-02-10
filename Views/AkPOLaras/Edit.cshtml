@@ -1,4 +1,4 @@
-﻿@model MSNK.Models.Modules.AkPO
+﻿@model MSNK.Models.Modules.AkPOLaras
 
 @{
     ViewData["Title"] = "Ubah";
@@ -14,31 +14,31 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="card box-shadow border-primary mb-3">
                 <div class="card-header bg-primary text-white">
-                    <h5>Pesanan Tempatan - @ViewData["Title"]</h5>
+                    <h5>Pelarasan Pesanan Tempatan - @ViewData["Title"]</h5>
                 </div>
                 <div class="card-body">
                     <div class="form-row">
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="Tahun" class="control-label"></label>
-                                <input asp-for="Tahun" class="form-control form-control-sm" required readonly/>
+                                <input asp-for="Tahun" class="form-control form-control-sm" required readonly />
                                 <span asp-validation-for="Tahun" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="NoPO" class="control-label"></label>
-                                <input asp-for="NoPO" class="form-control form-control-sm text-uppercase" readonly />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label asp-for="Tarikh" class="control-label"></label>
-                                <input asp-for="Tarikh" class="form-control form-control-sm" required readonly/>
-                                <span asp-validation-for="Tarikh" class="text-danger"></span>
+                                <label asp-for="NoRujukan" class="control-label"></label>
+                                <input value="@Model.NoRujukan.Substring(3)" class="form-control form-control-sm text-uppercase" readonly />
                             </div>
                         </div>
                         <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="Tarikh" class="control-label"></label>
+                                <input name="Tarikh" value="@Model.Tarikh.ToString("dd/MM/yyyy")" class="form-control form-control-sm" required readonly />
+                                <span asp-validation-for="Tarikh" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
                                 <select class="form-control form-control-sm" asp-for="JKWId" required disabled>
@@ -50,32 +50,25 @@
                                 </select>
                                 <span asp-validation-for="JKWId" class="text-danger"></span>
                             </div>
+
                         </div>
-                        @*<div class="col-md-3">
+
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label asp-for="AkPO1" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm select2" asp-for="AkPO1" id="ddlAkPOId" disabled>
+                                <label asp-for="AkPOId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm select2" asp-for="AkPOId" id="ddlAkPOId">
                                     <option value="" disabled selected>-- Pilih No PO --</option>
-                                    @foreach (var s in ViewBag.AkPO1)
+                                    @foreach (var s in ViewBag.AkPO)
                                     {
                                         <option value="@s.Id">@s.NoPO</option>
                                     }
                                 </select>
                             </div>
-                        </div>*@
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-2">
-                            <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
-                            <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" required>
-                                <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
-                                @foreach (var s in ViewBag.AkPembekal)
-                                {
-                                    <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
-                                }
-                            </select>
-                            <span asp-validation-for="AkPembekalId" class="text-danger"></span>
                         </div>
+                    </div>
+                    <div class="form-group pb-3">
+                        <label asp-for="Tajuk" class="control-label"></label>
+                        <textarea asp-for="Tajuk" class="form-control form-control-sm text-uppercase" rows="2"> @Model.Tajuk</textarea>
                     </div>
                     @*table Objek*@
                     <div class="card box-shadow mb-3 mt-2">
@@ -87,25 +80,25 @@
                                 <thead>
                                     <tr>
                                         <th style="width:40%">Kod</th>
-                                        <th style="width:50%">Amaun</th>
+                                        <th style="width:50%" class="text-right">Amaun RM</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyObjek">
 
-                                    @foreach (var item in ViewBag.AkPO1)
+                                    @foreach (var item in ViewBag.AkPOLaras1)
                                     {
                                         <tr id="@item.Id">
                                             <td id="akCartaId" hidden>@item.AkCartaId</td>
                                             <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                            <td id="td1Amaun"class="text-right" >@item.Amaun</td>
+                                            <td id="td1Amaun" class="text-right">@item.Amaun</td>
                                             <td>
                                                 <button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
                                             </td>
                                             <td>
-                                                <button class="btn btn-danger btn-sm" type="button" id="btnRemove1" onclick="Remove1(this)">
+                                                <button class="btn btn-danger btn-sm" type="button" id="btnRemove1" onclick="Remove1(this)" hidden>
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
@@ -113,7 +106,7 @@
 
                                     }
                                 </tbody>
-                                <tfoot>
+                                <tfoot hidden>
                                     <tr>
                                         <td id="akCartaId" hidden></td>
                                         <td hidden><input id="txtAkPO1" value="@Model.Id" /></td>
@@ -152,18 +145,17 @@
                                 <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Bil</th>
-                                            <th>No Stok</th>
-                                            <th width="30%">Perihal</th>
-                                            <th>Kuantiti</th>
-                                            <th>Unit</th>
-                                            <th>Harga/Unit</th>
-                                            <th>Amaun</th>
-                                            <th></th>
+                                            <th class="text-left">Bil</th>
+                                            <th class="text-left">No Stok</th>
+                                            <th class="text-left">Perihal</th>
+                                            <th class="text-right">Kuantiti</th>
+                                            <th class="text-center">Unit</th>
+                                            <th class="text-right">Harga RM/Unit</th>
+                                            <th class="text-right">Amaun RM</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbodyPerihal">
-                                        @foreach (var item in ViewBag.AkPO2)
+                                        @foreach (var item in ViewBag.AkPOLaras2)
                                         {
                                             <tr id="@item.Id">
                                                 <td hidden>@item.Indek</td>
@@ -210,7 +202,7 @@
                         <div class="card-footer">
                             <div class="form-group">
                                 <label class="control-label">Jumlah Perihal</label>
-                                <input class="form-control form-control-sm" id="jumlahPerihal" name="JumlahPerihal"  value="0.00" readonly />
+                                <input class="form-control form-control-sm" id="jumlahPerihal" name="JumlahPerihal" value="0.00" readonly />
                             </div>
                         </div>
 
@@ -220,7 +212,7 @@
                 </div>
             </div>
             <div class="form-group ">
-                <input type="submit" value="Simpan" class="btn btn-primary" />
+                <input type="submit" id="btnSave" value="Simpan" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -281,7 +273,7 @@
                     <input id="moId2" hidden />
                     <input id="moIndek" hidden />
                     <div class="form-row">
-                        <div class="col-md-2">
+                        <div class="col-md-2" hidden>
                             <div class="form-group">
                                 <label class="col-form-label">Baris</label>
                                 <input type="number" class="form-control form-control-sm" id="moBaris">
@@ -304,7 +296,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="col-form-label">Perihal</label>
-                                <input type="text" class="form-control form-control-sm" id="moPerihal">
+                                <textarea type="text" class="form-control form-control-sm text-uppercase" id="moPerihal" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -318,7 +310,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-form-label">Unit</label>
-                                <input type="text" class="form-control form-control-sm" id="moUnit">
+                                <input type="text" class="form-control form-control-sm text-uppercase" id="moUnit">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -347,63 +339,6 @@
 </div>
 <!-- Modal Perihal End -->
 <hr />
-@*<div class="row">
-        <div class="col-md-4">
-            <form asp-action="Edit">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="Id" />
-                <div class="form-group">
-                    <label asp-for="NoPO" class="control-label"></label>
-                    <input asp-for="NoPO" class="form-control" />
-                    <span asp-validation-for="NoPO" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Tarikh" class="control-label"></label>
-                    <input asp-for="Tarikh" class="form-control" />
-                    <span asp-validation-for="Tarikh" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="TarikhPosting" class="control-label"></label>
-                    <input asp-for="TarikhPosting" class="form-control" />
-                    <span asp-validation-for="TarikhPosting" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="AkPembekalId" class="control-label"></label>
-                    <select asp-for="AkPembekalId" class="form-control" asp-items="ViewBag.AkPembekalId"></select>
-                    <span asp-validation-for="AkPembekalId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Jumlah" class="control-label"></label>
-                    <input asp-for="Jumlah" class="form-control" />
-                    <span asp-validation-for="Jumlah" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="FlPosting" class="control-label"></label>
-                    <input asp-for="FlPosting" class="form-control" />
-                    <span asp-validation-for="FlPosting" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="JKWId" class="control-label"></label>
-                    <select asp-for="JKWId" class="form-control" asp-items="ViewBag.JKWId"></select>
-                    <span asp-validation-for="JKWId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Tahun" class="control-label"></label>
-                    <input asp-for="Tahun" class="form-control" />
-                    <span asp-validation-for="Tahun" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="FlBatal" class="control-label"></label>
-                    <input asp-for="FlBatal" class="form-control" />
-                    <span asp-validation-for="FlBatal" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </div>
-            </form>
-        </div>
-    </div>*@
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
