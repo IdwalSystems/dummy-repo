@@ -255,7 +255,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId)
+        public async Task<IActionResult> Create(SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId, int AkCartaId)
         {
             var user = "";
             if (spPendahuluanPelbagai.UserIdKemaskini == "" || spPendahuluanPelbagai.UserIdKemaskini == null)
@@ -295,6 +295,8 @@ namespace MSNK.Controllers
                     m.Aktiviti = spPendahuluanPelbagai.Aktiviti;
                     m.Tempat = spPendahuluanPelbagai.Tempat;
                     m.JTahapAktiviti = tahap;
+                    m.AkCartaId = spPendahuluanPelbagai.AkCartaId;
+                    m.JumKeseluruhan = spPendahuluanPelbagai.JumKeseluruhan;
                     m.FlPosting = 0;
                     //m.TarikhPosting = spPermohonanAktiviti.TarikhPosting;
                     //m.FlBatal = 0;
@@ -302,7 +304,7 @@ namespace MSNK.Controllers
                     //m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
 
-                    //m.AkPO1 = _cart.Lines1.ToArray();
+                    m.SpPendahuluanPelbagai1 = _cart.Lines1.ToArray();
                     //m.AkPO2 = _cart.Lines2.ToArray();
 
                     await _spPendahuluanPelbagaiRepo.Insert(m);
@@ -481,6 +483,24 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
+        public JsonResult RemoveSpPendahuluanPelbagai1(SpPendahuluanPelbagai1 spPendahuluanPelbagai1)
+        {
+
+            try
+            {
+                if (spPendahuluanPelbagai1 != null)
+                {
+
+                    _cart.RemoveItem1(spPendahuluanPelbagai1.JJantinaId);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
 
         //private void PopulateCart(SpPermohonanAktiviti spPermohonanAktiviti)
         //{
@@ -513,21 +533,45 @@ namespace MSNK.Controllers
         //    }
         //}
 
-        //public JsonResult GetAnItemCartSpPermohonanAktiviti2(SpPermohonanAktiviti2 spPermohonanAktiviti)
-        //{
+        public JsonResult GetAnItemCartSpPendahuluanPelbagai1(SpPendahuluanPelbagai1 spPendahuluanPelbagai1)
+        {
 
-        //    try
-        //    {
-        //        SpPermohonanAktiviti2 data = _cart.Lines1.Where(x => x.Id == spPermohonanAktiviti.Id).FirstOrDefault();
+            try
+            {
+                SpPendahuluanPelbagai1 data = _cart.Lines1.Where(x => x.Id == spPendahuluanPelbagai1.Id).FirstOrDefault();
 
-        //        return Json(new { result = "OK", record = data });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { result = "ERROR", message = ex.Message });
-        //    }
-        //}
-        //// get an item from cart spPermohonanAktiviti1 end
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get an item from cart spPermohonanAktiviti1 end
+
+        // get all item from cart spPermohonanAktiviti1
+        public JsonResult GetAllItemCartSpPendahuluanPelbagai1(SpPendahuluanPelbagai1 spPendahuluanPelbagai1)
+        {
+
+            try
+            {
+                List<SpPendahuluanPelbagai1> data = _cart.Lines1.ToList();
+
+                foreach (SpPendahuluanPelbagai1 item in data)
+                {
+                    //   var jJantina = _context.JJantina.Find(item.Id);
+
+                    //  item.JJantina = jJantina;
+                }
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart spPermohonanAktiviti1 end
 
         ////save cart spPermohonanAktiviti1
         //public JsonResult SaveCartSpPermohonanAktiviti2(SpPermohonanAktiviti2 spPermohonanAktiviti2)
@@ -571,31 +615,7 @@ namespace MSNK.Controllers
         //        return Json(new { result = "ERROR", message = ex.Message });
         //    }
         //}
-        ////save cart spPermohonanAktiviti1 end
-
-        //// get all item from cart spPermohonanAktiviti1
-        //public JsonResult GetAllItemCartSpPermohonanAktiviti2(SpPermohonanAktiviti2 spPermohonanAktiviti)
-        //{
-
-        //    try
-        //    {
-        //        List<SpPermohonanAktiviti2> data = _cart.Lines1.ToList();
-
-        //        foreach (SpPermohonanAktiviti2 item in data)
-        //        {
-        //         //   var jJantina = _context.JJantina.Find(item.Id);
-
-        //          //  item.JJantina = jJantina;
-        //        }
-
-        //        return Json(new { result = "OK", record = data });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { result = "ERROR", message = ex.Message });
-        //    }
-        //}
-        //// get all item from cart spPermohonanAktiviti1 end
+        ////save cart spPermohonanAktiviti1 end        
 
         private bool SpPendahuluanPelbagaiExists(int id)
         {

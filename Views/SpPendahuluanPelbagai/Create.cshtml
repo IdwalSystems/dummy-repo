@@ -144,6 +144,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JTahapAktivitiId" class="control-label">Tahap</label><span class="text-danger control-label">*</span>
@@ -157,63 +159,128 @@
                                 <span asp-validation-for="JTahapAktivitiId" class="text-danger"></span>
                             </div>
                         </div>
-                        @*table urusniaga*@
-                        <div class="card box-shadow mb-3 mt-2">
-                            <div class="card-header">
-                                <h6>Bilangan Anggota</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive-md">
-                                    <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th>Jantina</th>
-                                                <th>Atlet</th>
-                                                <th>Jurulatih</th>
-                                                <th>Pegawai</th>
-                                                <th>Teknikal</th>
-                                                <th>Urusetia</th>
-                                                <th>Jumlah</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbodyPerihal">
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td>
-                                                    <select class="form-control form-control-sm" id="ddlJantina">
-                                                        <option value="" hidden>-- Pilih --</option>
-                                                        @foreach (var s in ViewBag.JJantina)
-                                                        {
-                                                            <option value="@s.Id">@s.Perihal </option>
-                                                        }
-                                                    </select>
-                                                </td>
-                                                <td><input class="form-control form-control-sm" type="number" id="txtAtlet" maxlength="4" value="0"></td>
-                                                <td><input class="form-control form-control-sm" type="number" id="txtJurulatih" maxlength="4" value="0"></td>
-                                                <td><input class="form-control form-control-sm" type="number" id="txtPegawai" maxlength="4" value="0"></td>
-                                                <td><input class="form-control form-control-sm" type="number" id="txtTeknikal" maxlength="4" value="0"></td>
-                                                <td><input class="form-control form-control-sm" type="number" id="txtUrusetia" maxlength="4" value="0"></td>
-                                                <td><input class="form-control form-control-sm amaun" type="number" id="txtJumlah" maxlength="4" readonly value="0"></td>
-                                                <td><button class="btn btn-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <div class="form-group">
-                                    <label class="control-label">Jumlah Perihal</label>
-                                    <input class="form-control form-control-sm" id="jumlahPerihal" value="0.00" readonly />
-                                </div>
-                            </div>
-
-                        </div>
-
-                        @*table urusniaga end*@
                     </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="AkCartaId" class="control-label">Kod Objek/Vot</label>
+                                <select class="form-control form-control-sm select2" asp-for="AkCartaId" id="ddlAkCarta">
+                                    <option value="" hidden>-- Pilih Kod Objek --</option>
+                                    @foreach (var s in ViewBag.AkCarta)
+                                    {
+                                        <option value="@s.Id">@s.Kod @s.Perihal </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="JumKeseluruhan" class="control-label">Jumlah</label><span class="text-danger control-label">*</span>
+                                <input asp-for="JumKeseluruhan" class="form-control form-control-sm form-control-sm-custom" required id="txtJumlahKeseluruhan" />
+                            </div>
+                        </div>
+                    </div>
+                    @*table Peserta*@
+                    <div class="card box-shadow mb-3 mt-2">
+                        <div class="card-header">
+                            <h6>Bilangan Anggota</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive-md">
+                                <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Jantina</th>
+                                            <th>Atlet</th>
+                                            <th>Jurulatih</th>
+                                            <th>Pegawai</th>
+                                            <th>Teknikal</th>
+                                            <th>Urusetia</th>
+                                            <th>Jumlah</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyPerihal">
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <select class="form-control form-control-sm" id="ddlJantina">
+                                                    <option value="" hidden>-- Pilih --</option>
+                                                    @foreach (var s in ViewBag.JJantina)
+                                                    {
+                                                        <option value="@s.Id">@s.Perihal </option>
+                                                    }
+                                                </select>
+                                            </td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtAtlet" maxlength="4" value="0"></td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtJurulatih" maxlength="4" value="0"></td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtPegawai" maxlength="4" value="0"></td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtTeknikal" maxlength="4" value="0"></td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtUrusetia" maxlength="4" value="0"></td>
+                                            <td><input class="form-control form-control-sm amaun" type="number" id="txtJumlah" maxlength="4" readonly value="0"></td>
+                                            <td><button class="btn btn-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="form-group">
+                                <label class="control-label">Jumlah Peserta</label>
+                                <input class="form-control form-control-sm" id="jumlahPeserta" value="0.00" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    @*table Peserta end*@
+                    <br />
+                    @*table Perihal*@
+                    <div class="card box-shadow mb-3 mt-2">
+                        <div class="card-header">
+                            <h6>Perihal</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive-md">
+                                <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Bil</th>
+                                            <th>No Stok</th>
+                                            <th width="30%">Perihal</th>
+                                            <th>Kuantiti</th>
+                                            <th>Unit</th>
+                                            <th>Harga/Unit</th>
+                                            <th>Amaun</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyPerihal">
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td hidden><input class="form-control form-control-sm" type="text" id="txtIndek" maxlength="3"></td>
+                                            <td hidden><input class="form-control form-control-sm" type="number" id="txtBaris" maxlength="3" value="0"></td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtBil" maxlength="3" value="0"></td>
+                                            <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtNoStok" maxlength="100" value="-"></td>
+                                            <td><textarea class="form-control form-control-sm text-uppercase" type="text" id="txtPerihal" maxlength="100" value="-" rows="2"></textarea></td>
+                                            <td><input class="form-control form-control-sm kuantiti" type="number" id="txtKuantiti" maxlength="6" value="0"></td>
+                                            <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtUnit" value="-"></td>
+                                            <td><input class="form-control form-control-sm hargaUnit" type="number" id="txtHargaUnit" maxlength="6" value="0.00"></td>
+                                            <td><input class="form-control form-control-sm amaun" type="number" id="txtAmaun" maxlength="6" readonly value="0.00"></td>
+                                            <td><button class="btn btn-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="form-group">
+                                <label class="control-label">Jumlah Perihal</label>
+                                <input class="form-control form-control-sm" id="jumlahPerihal" value="0.00" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    @*table Perihal end*@
                 </div>
             </div>
             <div class="form-group">

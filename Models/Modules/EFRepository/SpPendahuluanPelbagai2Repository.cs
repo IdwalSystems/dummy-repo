@@ -27,7 +27,7 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<SpPendahuluanPelbagai2>> GetAll(int sPPermohonanAktivitiId)
         {
             return await context.SpPendahuluanPelbagai2
-                .Include(b => b.JJantina)
+                //.Include(b => b.JJantina)
                 .Where(x => x.SpPendahuluanPelbagaiId == sPPermohonanAktivitiId)
                 .ToListAsync();
         }

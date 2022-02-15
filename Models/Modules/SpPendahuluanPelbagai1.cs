@@ -14,10 +14,7 @@ namespace MSNK.Models.Modules
         public int BilPeg { get; set; }
         public int BilTek { get; set; }
         public int BilUru { get; set; }
-
-        public int JumL { get; set; }
-        public int JumP { get; set; }
-
+        public int Jumlah { get; set; }
         //Relationship 
         public JJantina JJantina { get; set; }
         public int JJantinaId { get; set; }

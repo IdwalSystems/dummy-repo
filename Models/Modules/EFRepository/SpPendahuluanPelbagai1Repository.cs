@@ -56,8 +56,8 @@ namespace MSNK.Models.Modules.EFRepository
         {
 
             SpPendahuluanPelbagai1 data = context.SpPendahuluanPelbagai1.FirstOrDefault(x => x.Id == entity.Id);
-            data.JumL = entity.JumL;
-            data.JumP = entity.JumP;
+            data.Jumlah = entity.Jumlah;
+
             //Tambah kalau ada data dalam field lagi
             await context.SaveChangesAsync();
         }
