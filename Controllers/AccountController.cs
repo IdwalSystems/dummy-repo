@@ -49,16 +49,27 @@ namespace MSNK.Controllers
                 await _roleManager.CreateAsync(new IdentityRole("User"));
             }
 
+            //List<SelectListItem> listItems = new List<SelectListItem>();
+            //var role = _roleManager.Roles.ToList();
+            //foreach(IdentityRole item in role)
+            //{
+            //    listItems.Add(new SelectListItem()
+            //    {
+            //        Value = item.Name,
+            //        Text = item.Name
+            //    });
+            //}
             List<SelectListItem> listItems = new List<SelectListItem>();
-            var role = _roleManager.Roles.ToList();
-            foreach(IdentityRole item in role)
+            //listItems.Add(new SelectListItem()
+            //{
+            //    Value = "Admin",
+            //    Text = "Admin"
+            //});
+            listItems.Add(new SelectListItem()
             {
-                listItems.Add(new SelectListItem()
-                {
-                    Value = item.Name,
-                    Text = item.Name
-                });
-            }
+                Value = "User",
+                Text = "User"
+            });
 
             ViewData["ReturnUrl"] = returnurl;
             RegisterViewModel registerViewModel = new RegisterViewModel()
@@ -152,16 +163,11 @@ namespace MSNK.Controllers
             }
 
             List<SelectListItem> listItems = new List<SelectListItem>();
-            listItems.Add(new SelectListItem()
-            {
-                Value = "Admin",
-                Text = "Admin"
-            });
-            listItems.Add(new SelectListItem()
-            {
-                Value = "Supervisor",
-                Text = "Supervisor"
-            });
+            //listItems.Add(new SelectListItem()
+            //{
+            //    Value = "Admin",
+            //    Text = "Admin"
+            //});
             listItems.Add(new SelectListItem()
             {
                 Value = "User",
@@ -223,6 +229,20 @@ namespace MSNK.Controllers
                 }
 
             }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            
             return View(model);
         }
 

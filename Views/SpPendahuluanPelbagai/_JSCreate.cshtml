@@ -74,7 +74,7 @@
     // onchange harga/unit and kuantiti
     $("body").on('change', ".atlet, .jurulatih, .pegawai, .teknikal, .urusetia", function () {
         //main body
-        var atlet = $("#txAtlet").val();
+        var atlet = $("#txtAtlet").val();
         var jurulatih = $("#txtJurulatih").val();
         var pegawai = $("#txtPegawai").val();
         var teknikal = $("#txtTeknikal").val();
@@ -95,7 +95,7 @@
 
     function countTotalAmountPerItem(atlet, jurulatih, pegawai, teknikal, urusetia) {
         if (atlet != null && jurulatih != null && pegawai != null && teknikal != null && urusetia != null) {
-            return total = atlet + jurulatih + pegawai + teknikal + urusetia;
+            return total = parseInt(atlet) + parseInt(jurulatih) + parseInt(pegawai) + parseInt(teknikal) + parseInt(urusetia);
         }
     }
     //on change harga/unit and kuantiti end
