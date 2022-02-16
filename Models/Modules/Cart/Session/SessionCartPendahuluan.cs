@@ -24,13 +24,14 @@ namespace MSNK.Models.Modules.Cart.Session
 
         //SPPENDAHULUANPELBAGAI1
         public override void AddItem1(
-                    int SpPendahuluanPelbagaiId,
-                    int JJantinaId,
-                    int BilAtl,
-                    int BilJul,
-                    int BilPeg,
-                    int BilTek,
-                    int BilUru)
+            int SpPendahuluanPelbagaiId,
+            int JJantinaId,
+            int BilAtl,
+            int BilJul,
+            int BilPeg,
+            int BilTek,
+            int BilUru,
+            int Jumlah)
         {
             base.AddItem1(SpPendahuluanPelbagaiId,
             JJantinaId,
@@ -38,7 +39,8 @@ namespace MSNK.Models.Modules.Cart.Session
             BilJul,
             BilPeg,
             BilTek,
-            BilUru);
+            BilUru,
+            Jumlah);
 
             Session.SetJson("CartPendahuluan", this);
         }
@@ -55,42 +57,38 @@ namespace MSNK.Models.Modules.Cart.Session
         //SPPENDAHULUANPELBAGAI1 END
 
         //SPPENDAHULUANPELBAGAI2
-        //public override void AddItem2(
-        //    int akPOId,
-        //    int Indek,
-        //    int Baris,
-        //    string Bil,
-        //    string NoStok,
-        //    string Perihal,
-        //    decimal Kuantiti,
-        //    string Unit,
-        //    decimal Harga,
-        //    decimal Amaun
-        //    )
-        //{
-        //    base.AddItem2( akPOId,
-        //            Indek,
-        //            Baris,
-        //            Bil,
-        //            NoStok,
-        //            Perihal,
-        //            Kuantiti,
-        //            Unit,
-        //            Harga,
-        //            Amaun);
+        public override void AddItem2(
+            int SpPendahuluanPelbagaiId,
+            int Indek,
+            int Baris,
+            string Perihal,
+            decimal Kadar,
+            decimal Bil,
+            decimal Bulan,
+            decimal Jumlah)
+        {
+            base.AddItem2(
+            SpPendahuluanPelbagaiId,
+            Indek,
+            Baris,
+            Perihal,
+            Kadar,
+            Bil,
+            Bulan,
+            Jumlah);
 
-        //    Session.SetJson("CartPendahuluan", this);
-        //}
-        //public override void RemoveItem2(int id)
-        //{
-        //    base.RemoveItem2(id);
-        //    Session.SetJson("CartPendahuluan", this);
-        //}
-        //public override void Clear2()
-        //{
-        //    base.Clear2();
-        //    Session.Remove("CartPendahuluan");
-        //}
+            Session.SetJson("CartPendahuluan", this);
+        }
+        public override void RemoveItem2(int id)
+        {
+            base.RemoveItem2(id);
+            Session.SetJson("CartPendahuluan", this);
+        }
+        public override void Clear2()
+        {
+            base.Clear2();
+            Session.Remove("CartPendahuluan");
+        }
         //SPPENDAHULUANPELBAGAI2 END
     }
 }
