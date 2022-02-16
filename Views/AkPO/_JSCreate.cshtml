@@ -231,7 +231,7 @@
         var amount = $("#txtHargaUnit").val();
         var quantity = $("#txtKuantiti").val();
 
-        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)));
+        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)).toFixed(2));
         //main body end
 
         //modal perihal
