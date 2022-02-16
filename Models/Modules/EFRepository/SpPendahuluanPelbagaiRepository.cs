@@ -27,8 +27,12 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.SpPendahuluanPelbagai
                 .Include(b => b.JKW)
+                .Include(b => b.JTahapAktiviti)
+                .Include(b => b.JSukan)
+                .Include(b => b.AkCarta)
+                .Include(b => b.JNegeri)
                 //.Include(b => b.AkPembekal)
-                .Include(b => b.SpPendahuluanPelbagai1)
+                .Include(b => b.SpPendahuluanPelbagai1).ThenInclude(b => b.JJantina)
                 .Include(b => b.SpPendahuluanPelbagai2)
                 .ToListAsync();
         }
@@ -38,7 +42,12 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.SpPendahuluanPelbagai
                 .Where(d => d.Id == id)
                 .Include(b => b.JKW)
-                .Include(d => d.SpPendahuluanPelbagai1)
+                .Include(b => b.JTahapAktiviti)
+                .Include(b => b.JSukan)
+                .Include(b => b.AkCarta)
+                .Include(b => b.JNegeri)
+                //.Include(b => b.AkPembekal)
+                .Include(b => b.SpPendahuluanPelbagai1).ThenInclude(b => b.JJantina)
                 .Include(d => d.SpPendahuluanPelbagai2)
                 //.Include(d => d.AkPembekal).ThenInclude(d => d.JNegeri)
                 //.Include(d => d.AkPembekal).ThenInclude(d => d.JBank)

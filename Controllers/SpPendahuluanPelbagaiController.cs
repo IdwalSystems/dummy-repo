@@ -29,6 +29,7 @@ namespace MSNK.Controllers
 
         public const string modul = "SP001";
 
+        private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPendahuluanPelbagaiRepo;
         private readonly ListViewIRepository<SpPendahuluanPelbagai1, int> _spPendahuluanPelbagai1Repo;
         private readonly ListViewIRepository<SpPendahuluanPelbagai2, int> _spPendahuluanPelbagai2Repo;
@@ -44,6 +45,7 @@ namespace MSNK.Controllers
 
         public SpPendahuluanPelbagaiController(
            ApplicationDbContext context,
+           AppLogIRepository<AppLog, int> appLog,
            IRepository<SpPendahuluanPelbagai, int, string> SpPendahuluanPelbagaiRepository,
            ListViewIRepository<SpPendahuluanPelbagai1, int> SpPendahuluanPelbagai1Repository,
            ListViewIRepository<SpPendahuluanPelbagai2, int> SpPendahuluanPelbagai2Repository,
@@ -57,6 +59,7 @@ namespace MSNK.Controllers
            CartPendahuluan cart
            )
         {
+            _appLog = appLog;
             _spPendahuluanPelbagaiRepo = SpPendahuluanPelbagaiRepository;
             _spPendahuluanPelbagai1Repo = SpPendahuluanPelbagai1Repository;
             _spPendahuluanPelbagai2Repo = SpPendahuluanPelbagai2Repository;
@@ -622,58 +625,71 @@ namespace MSNK.Controllers
             return _context.SpPendahuluanPelbagai.Any(e => e.Id == id);
         }
 
-        //public async Task<IActionResult> PrintPdf(int id)
-        //{
-        //spPermohonanAktiviti spPermohonanAktiviti = await _spPermohonanARepo.GetById(id);
+        public async Task<IActionResult> PrintPdf(int id)
+        {
+            SpPendahuluanPelbagai sp = await _spPendahuluanPelbagaiRepo.GetById(id);
 
-        //var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(spPermohonanAktiviti.Jumlah)).ToUpper();
+            var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(sp.JumKeseluruhan)).ToUpper();
 
-        //var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
 
-        //POPrintModel data = new POPrintModel();
+            PendahuluanPelbagaiPrintModel data = new PendahuluanPelbagaiPrintModel();
 
-        //CompanyDetails company = new CompanyDetails();
-        //data.CompanyDetail = company;
-        //data.spPermohonanAktiviti = spPermohonanAktiviti;
-        ////data.spPermohonanAktiviti.JNegeri = negeri;
-        //data.JumlahDalamPerkataan = jumlahDalamPerkataan;
-        //data.Username = user.UserName;
+            foreach (SpPendahuluanPelbagai1 item in sp.SpPendahuluanPelbagai1)
+            {
+                data.BilAtl += item.BilAtl;
+                data.BilJul += item.BilJul;
+                data.BilPeg += item.BilPeg;
+                data.BilTek += item.BilTek;
+                data.BilUru += item.BilUru;
+                data.Jumlah += item.Jumlah;
+            }
 
-        ////update cetak -> 1
-        //spPermohonanAktiviti.FlCetak = 1;
-        //await _spPermohonanAktivitiRepo.Update(spPermohonanAktiviti);
+            foreach (SpPendahuluanPelbagai2 item in sp.SpPendahuluanPelbagai2)
+            {
+                data.JumlahPerihal += item.Jumlah;
+            }
 
-        ////insert applog
-        //AppLog appLog = new AppLog();
+            List<JTahapAktiviti> list = _context.JTahapAktiviti.ToList();
 
-        //appLog.UserId = user.UserName;
-        //appLog.LgModule = modul + "P";
-        //appLog.LgOperation = "Cetak";
-        //appLog.LgNote = modul + " Pesanan Tempatan - Cetak";
-        //appLog.NoRujukan = spPermohonanAktiviti.NoPO;
-        //appLog.Jumlah = spPermohonanAktiviti.Jumlah;
+            data.Tahap = list;
 
-        //await _appLog.Insert(appLog);
-        ////insert applog end
+            CompanyDetails company = new CompanyDetails();
+            data.CompanyDetail = company;
+            data.SpPendahuluanPelbagai = sp;
+            //data.spPermohonanAktiviti.JNegeri = negeri;
+            data.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            data.Username = user.UserName;
 
-        //await _context.SaveChangesAsync();
+            //update cetak -> 1
+            sp.FlCetak = 1;
+            await _spPendahuluanPelbagaiRepo.Update(sp);
 
-        //var actionPDF = new ViewAsPdf("htmlpage")
-        //{
-        //    FileName = "abc" + ".pdf",
-        //    PageSize = Rotativa.AspNetCore.Options.Size.A4,
-        //};
+            //insert applog
+            AppLog appLog = new AppLog();
 
-        //return new ViewAsPdf("POPrintPdf", data)
-        //{
-        //    PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
-        //    PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
-        //    //CustomSwitches = "--footer-center \"  Tarikh: " +
-        //    //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
-        //    //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
-        //    PageSize = Rotativa.AspNetCore.Options.Size.A4,
-        //};
-        //}
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "P";
+            appLog.LgOperation = "Cetak";
+            appLog.LgNote = modul + " Pendahuluan Pelbagai - Cetak";
+            appLog.NoRujukan = sp.NoPermohonan;
+            appLog.Jumlah = sp.JumKeseluruhan;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+
+            return new ViewAsPdf("PendahuluanPelbagaiPrintPDF", data)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                //CustomSwitches = "--footer-center \"  Tarikh: " +
+                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
     }
 }
 
