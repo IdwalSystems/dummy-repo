@@ -71,6 +71,35 @@
 
     });
 
+    // onchange harga/unit and kuantiti
+    $("body").on('change', ".atlet, .jurulatih, .pegawai, .teknikal, .urusetia", function () {
+        //main body
+        var atlet = $("#txAtlet").val();
+        var jurulatih = $("#txtJurulatih").val();
+        var pegawai = $("#txtPegawai").val();
+        var teknikal = $("#txtTeknikal").val();
+        var urusetia = $("#txtUrusetia").val();
+
+        $("#txtJumlahPeserta").val((countTotalAmountPerItem(atlet, jurulatih, pegawai, teknikal, urusetia)));
+        //main body end
+
+        //modal perihal
+        var moAmount = $("#moHargaUnit").val();
+        var moQuantity = $("#moKuantiti").val();
+
+        $("#moAmaun2").val((countTotalAmountPerItem(moAmount, moQuantity)));
+        //modal perihal end
+    });
+
+    var bil = 1;
+
+    function countTotalAmountPerItem(atlet, jurulatih, pegawai, teknikal, urusetia) {
+        if (atlet != null && jurulatih != null && pegawai != null && teknikal != null && urusetia != null) {
+            return total = atlet + jurulatih + pegawai + teknikal + urusetia;
+        }
+    }
+    //on change harga/unit and kuantiti end
+
     // check if jumlahObjek is equal to jumlahUrusniaga
     function checkJumlah() {
         var jumlahObjek = $("#jumlahObjek").val();
@@ -115,7 +144,7 @@
 
                     //Sum value to Total text field
                     var sum = 0;
-                    sum = parseFloat(txtAtlet.val()) + parseFloat(txtJurulatih.val()) + parseFloat(txtPegawai.val()) + parseFloat(txtTeknikal.val()) + parseFloat(txtUrusetia.val());
+                    sum = parseFloat(txtAtlet.val()) + parseFloat(txtJurulatih.val()) + parseFloat(txtPegawai.val()) + parseFloat(txtTeknikal.val()) + parseFloat(txtUrusetia.val()) + parseFloat(jumlahPeserta.val());
                     jumlahPeserta.val(sum);
 
                     //Get the reference of the Table's TBODY element.
@@ -230,7 +259,7 @@
 
         //Sum value to Total text field
         var sum = 0;
-        sum = parseFloat(txtKadar.val()) * parseFloat(txtBil.val()) * parseFloat(txtBulan.val());
+        sum = parseFloat(txtKadar.val()) * parseFloat(txtBil.val()) * parseFloat(txtBulan.val()) + parseFloat(jumlahPerihal.val());
         jumlahPerihal.val(sum);
 
         //Get the reference of the Table's TBODY element.
