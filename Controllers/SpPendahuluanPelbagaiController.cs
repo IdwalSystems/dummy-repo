@@ -308,7 +308,7 @@ namespace MSNK.Controllers
                     m.TarMasuk = DateTime.Now;
 
                     m.SpPendahuluanPelbagai1 = _cart.Lines1.ToArray();
-                    //m.AkPO2 = _cart.Lines2.ToArray();
+                    m.SpPendahuluanPelbagai2 = _cart.Lines2.ToArray();
 
                     await _spPendahuluanPelbagaiRepo.Insert(m);
 
@@ -476,7 +476,34 @@ namespace MSNK.Controllers
                          spPendahuluanPelbagai1.BilJul,
                          spPendahuluanPelbagai1.BilPeg,
                          spPendahuluanPelbagai1.BilTek,
-                         spPendahuluanPelbagai1.BilUru);
+                         spPendahuluanPelbagai1.BilUru,
+                         spPendahuluanPelbagai1.Jumlah);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        public async Task<JsonResult> SaveSpPendahuluanPelbagai2(SpPendahuluanPelbagai2 spPendahuluanPelbagai2)
+        {
+
+            try
+            {
+                if (spPendahuluanPelbagai2 != null)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    _cart.AddItem2(spPendahuluanPelbagai2.SpPendahuluanPelbagaiId,
+                         spPendahuluanPelbagai2.Indek,
+                         spPendahuluanPelbagai2.Baris,
+                         spPendahuluanPelbagai2.Perihal,
+                         spPendahuluanPelbagai2.Kadar,
+                         spPendahuluanPelbagai2.Bil,
+                         spPendahuluanPelbagai2.Bil,
+                         spPendahuluanPelbagai2.Jumlah);
                 }
 
                 return Json(new { result = "OK" });
@@ -495,6 +522,25 @@ namespace MSNK.Controllers
                 {
 
                     _cart.RemoveItem1(spPendahuluanPelbagai1.JJantinaId);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public JsonResult RemoveSpPendahuluanPelbagai2(SpPendahuluanPelbagai2 spPendahuluanPelbagai2)
+        {
+
+            try
+            {
+                if (spPendahuluanPelbagai2 != null)
+                {
+
+                    _cart.RemoveItem2(spPendahuluanPelbagai2.Indek);
                 }
 
                 return Json(new { result = "OK" });

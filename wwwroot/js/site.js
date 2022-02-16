@@ -44,7 +44,7 @@ function StartThisSessionTimer() {
     tick = setTimeout("StartThisSessionTimer()", 1000);
 }
 
-StartThisSessionTimer();
+/*StartThisSessionTimer();*/
 
 function showDate(d) {
     var s = new Date(d);
