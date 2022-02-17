@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,7 @@ using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart.Session;
 using MSNK.Models.Modules.EFRepository;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Services;
 using Rotativa.AspNetCore;
 using System;
 
@@ -31,9 +33,20 @@ namespace MSNK
         {
             services.AddSession();
             services.AddMemoryCache();
-            
+
+            //MailJet
+            //MailJetOptions settings = Configuration.GetSection("MailJet").Get<MailJetOptions>();
+            //services.AddSingleton(settings);
+            //services.AddSingleton<IEmailSender, MailJetEmailSender>();
+
+            //SendGrid
+            services.AddTransient<SendGridEmailServices, SendGridEmailSender>();
+
             services.AddDbContext<ApplicationDbContext>(options=>options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider); ;
+
             services.Configure<IdentityOptions>(opt =>
                 {
                     opt.Password.RequiredLength = 5;

@@ -1,21 +1,53 @@
 ﻿@model MSNK.Models.Login.ViewModel.RegisterViewModel
 
+@{
+    ViewData["Title"] = "Daftar Pengguna";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    // onchange kod pembekal
+    $("body").on('change', "#ddlSuPekerja", function () {
+        var kodPekerja = $("#ddlSuPekerja").val();
+        JsonKodPekerja(kodPekerja);
+    });
+
+    function JsonKodPekerja(id) {
+        if (id != null) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("JsonGetEmailFromSuPekerja", "Account")',
+                data: { data: id },
+                dataType: "json",
+                success: function (msg) {
+                    $("#Email").val(msg.record.emel);
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+    //onchange Kod Pembekal end
+</script>
 <h4 class="text-info">Daftar</h4>
 <form asp-controller="Account" asp-action="Register" method="post" role="form">
     <h6>Daftar pengguna baru</h6>
     <hr />
+
     <div asp-validation-summary="All" class="text-danger"></div>
+
     <div class="form-group">
         <label asp-for="Email" class="col-md-5"></label>
         <div class="col-md-10">
-            <input asp-for="Email" class="form-control form-control-sm" />
+            <input asp-for="Email" class="form-control form-control-sm" readonly />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
         <label asp-for="SuPekerjaId" class="control-label col-md-5"></label><span class="text-danger control-label"></span>
         <div class="col-md-10">
-            <select class="form-control select2 form-control-sm" asp-for="SuPekerjaId" required id="ddlKW">
+            <select class="form-control select2 form-control-sm" asp-for="SuPekerjaId" required id="ddlSuPekerja">
                 <option value="0" selected disabled>-- Sila Pilih Anggota -- </option>
                 @foreach (var s in ViewBag.SuPekerja)
                 {
@@ -25,17 +57,18 @@
             <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
         </div>
     </div>
-    <div class="form-group">
+
+    <div class="form-group" hidden>
         <label asp-for="Password" class="col-md-5"></label>
         <div class="col-md-10">
-            <input asp-for="Password" class="form-control form-control-sm" />
+            <input asp-for="Password" class="form-control form-control-sm" value="Spmb1234#" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" hidden>
         <label asp-for="ConfirmPassword" class="col-md-5"></label>
         <div class="col-md-10">
-            <input asp-for="ConfirmPassword" class="form-control  form-control-sm" />
+            <input asp-for="ConfirmPassword" class="form-control  form-control-sm" value="Spmb1234#" />
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
     </div>
@@ -52,6 +85,9 @@
         <div class="col-md-2">
             <button type="submit" class="btn btn-success btn-sm form-control">Daftar</button>
         </div>
+    </div>
+    <div class="form-group">
+        <p class="col-md-12 text-info" style="font-size:10px"><span class="text-danger">Nota: </span>Katalaluan bagi pendaftaran pengguna kali pertama adalah: <strong>Spmb1234#</strong></p>
     </div>
 </form>
 

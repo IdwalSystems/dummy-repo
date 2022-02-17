@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MSNK.Data;
@@ -7,6 +8,7 @@ using MSNK.Models.Administration;
 using MSNK.Models.Login.ViewModel;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,17 +20,23 @@ namespace MSNK.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        //private readonly IEmailSender _emailSender;
+        private readonly SendGridEmailServices _mailServices; 
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
         public AccountController(
             ApplicationDbContext db, 
             UserManager<IdentityUser> userManager, 
-            SignInManager<IdentityUser> signInManager, 
+            SignInManager<IdentityUser> signInManager,
+            //IEmailSender emailSender,
+            SendGridEmailServices mailServices,
             RoleManager<IdentityRole> roleManager,
             IRepository<SuPekerja, int, string> suPekerja)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _mailServices = mailServices;
+            //_emailSender = emailSender;
             _roleManager = roleManager;
             _suPekerjaRepo = suPekerja;
         }
@@ -82,6 +90,23 @@ namespace MSNK.Controllers
             return View(registerViewModel);
         }
 
+        // on change kod pembekal controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetEmailFromSuPekerja(int data)
+        {
+            try
+            {
+                var result = await _suPekerjaRepo.GetById(data);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change kod pembekal controller end
+
         // redirect to login controller
         [HttpGet]
         public async Task<JsonResult> JsonLogOff()
@@ -114,9 +139,10 @@ namespace MSNK.Controllers
                 //check if user already exist in SuPekerja or not
                 //if true then form is valid
                 var pekerja = await _suPekerjaRepo.GetById((int)model.SuPekerjaId);
-                if (pekerja != null)
+                if (pekerja != null && pekerja.Emel == model.Email)
                 {
                     model.Nama = pekerja.Nama;
+                    model.Password = "Spmb1234#";
 
                     if (ModelState.IsValid)
                     {
@@ -242,15 +268,74 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Emel);
+                if (user == null)
+                {
+                    return RedirectToAction("ForgotPasswordConfirmation");
+                }
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+
+                //await _emailSender.SendEmailAsync(model.Emel, "Set Semula Katalaluan - Identity Manager",
+                //    "Sila set semula katalaluan anda dengan melayari pautan ini: <a href=\"" + callbackUrl + "\">link</a>");
+                await _mailServices.SendEmailAsync(model.Emel, "Set Semula Katalaluan Sistem SPMB",
+                    "Sila set semula katalaluan anda dengan melayari pautan ini:<br> <a href=\"" + callbackUrl + "\">"+callbackUrl+"</a>");
+
+                return RedirectToAction("ForgotPasswordConfirmation");
+            }
+
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string code=null)
+        {
+            return code == null ? View("Error") : View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    return RedirectToAction("ResetPasswordConfirmation");
+                }
+                var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+                if(result.Succeeded)
+                {
+                    return RedirectToAction("ResetPasswordConfirmation");
+                }
+                AddErrors(result);
+
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
         }
 
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(string.Empty,error.Description);
+                ModelState.AddModelError(string.Empty, error.Description);
             }
         }
     }

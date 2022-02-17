@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,17 +20,20 @@ namespace MSNK.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<JKW, int, string> _kwRepo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
 
         public AbBukuVotController(
             ApplicationDbContext context,
+            UserManager<IdentityUser> userManager,
             IRepository<AbBukuVot, int, string> akBukuVotRepository,
             IRepository<JKW, int, string> kwRepository,
             IRepository<AkCarta, int, string> akCartaRepository
             )
         {
             _context = context;
+            _userManager = userManager;
             _abBukuVotRepo = akBukuVotRepository;
             _kwRepo = kwRepository;
             _akCartaRepo = akCartaRepository;
@@ -42,6 +46,8 @@ namespace MSNK.Controllers
             string searchTo
             )
         {
+
+            var user = await _userManager.GetUserAsync(User);
 
             var tahun = "";
             if (string.IsNullOrEmpty(searchYear))
