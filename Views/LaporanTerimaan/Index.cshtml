@@ -20,17 +20,24 @@
                         <div class="form-group col-sm">
                             @*<div class="custom-control custom-radio">
 
-                                <input class="custom-control-input" type="radio" id="LPR0011" name="kodLaporan" value="LPR0011">
-                                <label class="custom-control-label" for="LPR0011">
-                                    Laporan Datfar Resit
-                                </label>
+            <input class="custom-control-input" type="radio" id="LPR0011" name="kodLaporan" value="LPR0011">
+            <label class="custom-control-label" for="LPR0011">
+                Laporan Datfar Resit
+            </label>
 
-                            </div>*@
+        </div>*@
                             <div class="custom-control custom-radio">
 
                                 <input class="custom-control-input" type="radio" name="kodLaporan" id="LPR0012" value="LPR0012" checked>
                                 <label class="custom-control-label" for="LPR0012">
-                                    Laporan Daftar Resit Terperinci
+                                    Laporan Daftar Resit Terperinci - Pecahan Cara Bayar
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio">
+
+                                <input class="custom-control-input" type="radio" name="kodLaporan" id="LPR0013" value="LPR0013">
+                                <label class="custom-control-label" for="LPR0013">
+                                    Laporan Daftar Resit Terperinci - Pecahan Kod Akaun
                                 </label>
                             </div>
                         </div>
@@ -54,6 +61,15 @@
                                     <option value="0">SEMUA</option>
                                     <option value="1">BELUM POSTING</option>
                                     <option value="2">SUDAH POSTING</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-row">
+                            <label for="Status" class="col-sm-2 col-form-label">Susunan</label>
+                            <div class="col-sm-5">
+                                <select class="form-control form-control-sm input-group-sm" name="susunan" required>
+                                    <option value="0">TARIKH</option>
+                                    <option value="1" selected>NO RESIT</option>
                                 </select>
                             </div>
                         </div>

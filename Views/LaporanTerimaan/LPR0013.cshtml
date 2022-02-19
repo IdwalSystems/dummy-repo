@@ -1,0 +1,269 @@
+﻿@model MSNK.Models.Modules.PrintModel.Reporting.LPR0012PrintModel
+
+@{
+    ViewData["Title"] = "Cetakan LPR0013";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    CompanyDetails company = new CompanyDetails();
+
+    var bil = 0;
+    int id = 0;
+}
+<style>
+    .flexrow {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex !important;
+    }
+
+        .flexrow > div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+    .image-container {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    h6 {
+        font-size: 0.8rem;
+    }
+
+    p {
+        font-size: 0.6rem;
+    }
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    table tbody tr td {
+        font-size: 0.8rem;
+        line-height: 1.0rem;
+    }
+
+    table thead tr th {
+        font-size: 0.8rem;
+        line-height: 1.0rem;
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+
+<table class="table table-bordered table-sm topic">
+    <thead>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-secondary">
+            <th class="text-center font-weight-bold text-white">BIL  </th>
+            <th class="text-center font-weight-bold text-white">TARIKH  </th>
+            <th class="text-center font-weight-bold text-white">NO RESIT</th>
+            <th class="text-center font-weight-bold text-white">PEMBAYAR </th>
+            <th class="text-center font-weight-bold text-white">KOD AKAUN DEBIT</th>
+            <th class="text-center font-weight-bold text-white">KOD AKAUN KREDIT</th>
+            <th class="text-center font-weight-bold text-white">DEBIT RM</th>
+            <th class="text-center font-weight-bold text-white">KREDIT RM</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.AkTerima)
+        {
+
+            @foreach (var item1 in item.AkTerima1)
+            {
+                //if data has more than one akTerima1, jumlah change to 0.00
+                if (item.Id == id)
+                {
+                    item.Jumlah = 0;
+                }
+                else
+                {
+                    id = item.Id;
+                }
+                // end
+
+                // if data is Batal, change row color to red
+                var tabletype = "";
+                if (item.FlBatal == 1)
+                {
+                    tabletype = "table-danger";
+                }
+                // end
+                bil++;
+                <tr class="@tabletype" style="line-height:0.8rem; page-break-before:avoid;">
+                    @if (item.Jumlah == 0)
+                    {
+                        <td class="text-right" style="border-top: none; border-bottom: none;"></td>
+                        <td class="text-right" style="border-top: none; border-bottom: none;"></td>
+                        <td class="text-right" style="border-top: none; border-bottom: none;"></td>
+                        <td class="text-right" style="border-top: none; border-bottom: none;"></td>
+                        <td class="text-right" style="border-top: none; border-bottom: none;"></td>
+                    }
+                    else
+                    {
+                        <td class="text-right" style="border-bottom:none;">@id</td>
+                        <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
+                        <td class="text-center" style="border-bottom:none;">@item.NoRujukan.Substring(3)</td>
+                        <td class="text-left text-uppercase" style="border-bottom:none;">@item.Nama</td>
+                        <td class="text-left text-uppercase" style="border-bottom:none;">@item.AkBank.AkCarta.Kod - @item.AkBank.AkCarta.Perihal </td>
+                    }
+
+
+                    <td class="text-left text-uppercase">@item1.AkCarta.Kod - @item1.AkCarta.Perihal</td>
+                    @if (item.Jumlah == 0)
+                    {
+                        <td class="text-right" style="border-top: none; border-bottom: none;"></td>
+                    }
+                    else
+                    {
+                        <td class="text-right " style="border-bottom:none;">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+                    }
+
+                    <td class="text-right ">@Convert.ToDecimal(item1.Amaun).ToString("#,##0.00")</td>
+                </tr>
+            }
+
+        }
+        <tr class="font-weight-bold">
+            <td colspan="6" class="table-borderless text-right">JUMLAH RM</td>
+            <td class="text-right">@Convert.ToDecimal(Model.Debit).ToString("#,##0.00")</td>
+            <td class="text-right">@Convert.ToDecimal(Model.Kredit).ToString("#,##0.00")</td>
+        </tr>
+    </tbody>
+</table>
+
+@*ringkasan*@
+<div>
+    <p class="breakhere"></p>
+</div>
+
+<div class="row flexrow mb-3 ml-0 text-white">
+    <div class="col-2 image-container" hidden>
+        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+        <h6 class="mb-0 text-white"> -</h6>
+        <h6 class="mb-0 text-white"> -</h6>
+        <h6 class="mb-0">Laporan Daftar Resit Terperinci Kump Wang : @Model.JKW.Kod - @Model.JKW.Perihal </h6>
+        <h6 class="mb-0">Bagi Tarikh : @Convert.ToDateTime(Model.TarikhDari).ToString("dd/MM/yyyy") -> @Convert.ToDateTime(Model.TarikhHingga).ToString("dd/MM/yyyy")</h6>
+    </div>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0">Tarikh: @Convert.ToDateTime(DateTime.Today).ToString("dd/MM/yyyy")</h6>
+        <h6 class="mb-0">Laporan: @Model.KodLaporan</h6>
+    </div>
+</div>
+
+<h6><strong>Ringkasan:</strong></h6>
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+
+        <tbody>
+            <tr class="bg-secondary">
+                <td class="text-center font-weight-bold text-white">Kod</td>
+                <td class="text-center font-weight-bold text-white">Nama Objek</td>
+                <td class="text-center font-weight-bold text-white">Debit RM</td>
+                <td class="text-center font-weight-bold text-white">Kredit RM</td>
+            </tr>
+            @foreach (var item in Model.LPR0013_1)
+            {
+
+                <tr>
+                    <td class="text-center text-uppercase">@item.KodAkaun</td>
+                    <td class="text-left text-uppercase">@item.Perihal</td>
+                    <td class="text-right ">@Convert.ToDecimal(item.Debit).ToString("#,##0.00")</td>
+                    <td class="text-right ">@Convert.ToDecimal(item.Kredit).ToString("#,##0.00")</td>
+                </tr>
+
+            }
+            <tr class="font-weight-bold">
+                <td colspan="2" class="table-borderless text-right">JUMLAH RM</td>
+                <td class="text-right">@Convert.ToDecimal(Model.Debit).ToString("#,##0.00")</td>
+                <td class="text-right">@Convert.ToDecimal(Model.Kredit).ToString("#,##0.00")</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+@*ringkasan end*@
+
+@*tandatangan*@
+<div class="row flexrow mb-3 ml-0">
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disediakan Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+        <h6>@Model.Username</h6>
+    </div>
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disemak Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+    </div>
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disahkan Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+    </div>
+</div>
+@*tandatangan end*@

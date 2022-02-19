@@ -63,6 +63,7 @@ namespace MSNK
                 opt.SlidingExpiration = true;
             });
 
+
             services.AddTransient<IRepository<AkBank, int, string>, AkBankRepository>();
             services.AddTransient<IRepository<JKW, int, string>, JKWRepository>();
             services.AddTransient<IRepository<JBank, int, string>, JBankRepository>();
@@ -275,6 +276,13 @@ namespace MSNK
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
+
+            var contentRootPath = (string)AppDomain.CurrentDomain.GetData("ContentRootPath");
+            var webRootPath = (string)AppDomain.CurrentDomain.GetData("WebRootPath");
+
+            // setup app's root folders
+            AppDomain.CurrentDomain.SetData("ContentRootPath", env.ContentRootPath);
+            AppDomain.CurrentDomain.SetData("WebRootPath", env.WebRootPath);
 
             app.UseEndpoints(endpoints =>
             {

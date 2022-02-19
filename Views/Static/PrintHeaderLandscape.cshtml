@@ -1,0 +1,107 @@
+﻿@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    CompanyDetails company = new CompanyDetails();
+}
+<style>
+    .flexrow {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex !important;
+    }
+
+        .flexrow > div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+    .image-container {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    h6 {
+        font-size: 0.8rem;
+    }
+
+    p {
+        font-size: 0.6rem;
+    }
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    table tbody tr td {
+        font-size: 0.8rem;
+        line-height: 1.0rem;
+    }
+
+    table thead tr th {
+        font-size: 0.8rem;
+        line-height: 1.0rem;
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+<div class="row flexrow mb-3 ml-0">
+    <div class="col-2 image-container">
+        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+    </div>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0">Tarikh: @Convert.ToDateTime(DateTime.Today).ToString("dd/MM/yyyy")</h6>
+    </div>
+</div>
