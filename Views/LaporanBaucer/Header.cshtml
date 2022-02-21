@@ -1,4 +1,6 @@
-﻿@{
+﻿@model MSNK.Models.Modules.PrintModel.Reporting.LPV001PrintModel
+@{
+    ViewData["Title"] = "Cetakan LPV001";
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
     CompanyDetails company = new CompanyDetails();
 }
@@ -93,15 +95,24 @@
         page-break-inside: avoid
     }
 </style>
-<div class="row flexrow mb-3 ml-0">
+
+<div class="row flexrow mb-3 ml-0 ">
     <div class="col-2 image-container">
         <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
     </div>
     <div class="col-8 text-uppercase">
-        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+        <h5 class="mb-1"><strong>@company.NamaSyarikat</strong></h5>
+        <h6 class="mb-0 text-white"> -</h6>
+        <h6 class="mb-0 text-white"> -</h6>
+        <h6 class="mb-0">
+            @Model.Tajuk
+            @Model.KodKw - @Model.PerihalKw
+        </h6>
+        <h6 class="mb-0">Bagi Tarikh : @Convert.ToDateTime(Model.TarikhDari).ToString("dd/MM/yyyy") -> @Convert.ToDateTime(Model.TarikhHingga).ToString("dd/MM/yyyy")</h6>
     </div>
 
     <div class="col-2 text-right">
         <h6 class="mb-0">Tarikh: @Convert.ToDateTime(DateTime.Today).ToString("dd/MM/yyyy")</h6>
+        <h6 class="mb-0">Laporan: @Model.KodLaporan</h6>
     </div>
 </div>

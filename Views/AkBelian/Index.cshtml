@@ -99,7 +99,8 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
+                var tabletype = item.FlBatal == 1 ? "table-danger" : null;
+                <tr class="@tabletype">
                     <td>
                     </td>
                     <td>
@@ -142,26 +143,28 @@
                     </td>
                     <td class="action-button">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                        @if (item.FlPosting == 0)
+                        @if (item.FlBatal == 0)
                         {
-                            @if (item.Jumlah != 0)
+                            @if (item.FlPosting == 0)
                             {
-                                @if (item.Jumlah == item.JumlahPerihal)
+                                @if (item.Jumlah != 0)
                                 {
-                                    <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
-                                        <i class="fas fa-sync"></i>
-                                    </a>
+                                    @if (item.Jumlah == item.JumlahPerihal)
+                                    {
+                                        <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                            <i class="fas fa-sync"></i>
+                                        </a>
+                                    }
                                 }
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
                             }
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                            else
+                            {
+                                <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
+                                    <i class="fas fa-sync"></i>
+                                </a>
+                            }
                         }
-                        else
-                        {
-                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
-                                <i class="fas fa-sync"></i>
-                            </a>
-                        }
-
 
                     </td>
                 </tr>

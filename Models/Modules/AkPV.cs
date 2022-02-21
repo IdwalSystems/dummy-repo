@@ -83,6 +83,8 @@ namespace MSNK.Models.Modules
         public int JCaraBayarId { get; set; }
         [DisplayName("Kod Kaunter Panjar")]
         public int? AkTunaiRuncitId { get; set; }
+        [DisplayName("No Permohonan Aktiviti")]
+        public int? SpPendahuluanPelbagaiId { get; set; }
         public JKW JKW { get; set; }
         
         public AkBank AkBank { get; set; }
@@ -90,6 +92,7 @@ namespace MSNK.Models.Modules
         public SuPekerja SuPekerja { get; set; }
         public JCaraBayar JCaraBayar { get; set; }
         public AkTunaiRuncit AkTunaiRuncit { get; set; }
+        public SpPendahuluanPelbagai SpPendahuluanPelbagai { get; set; }
         public ICollection<AkPV1> AkPV1 { get; set; }
         public ICollection<AkPV2> AkPV2 { get; set; }
         //relationship end

@@ -1,12 +1,11 @@
-﻿@model MSNK.Models.Modules.PrintModel.Reporting.LPR0012PrintModel
+﻿@model MSNK.Models.Modules.PrintModel.Reporting.LPV001PrintModel
 
 @{
-    ViewData["Title"] = "Cetakan LPR0012";
+    ViewData["Title"] = "Cetakan LPV00101";
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
     CompanyDetails company = new CompanyDetails();
 
     var bil = 0;
-    int id = 0;
 }
 <style>
     .flexrow {
@@ -112,32 +111,25 @@
             <th class="text-center font-weight-bold" colspan="11">Bil  </th>
         </tr>
         <tr class="bg-secondary">
-            <th class="text-center font-weight-bold text-white">Bil  </th>
-            <th class="text-center font-weight-bold text-white">Tarikh  </th>
-            <th class="text-center font-weight-bold text-white">No Resit</th>
-            <th class="text-center font-weight-bold text-white">Pembayar </th>
-            <th class="text-center font-weight-bold text-white">Cara Bayar</th>
-            <th class="text-center font-weight-bold text-white">No Cek/Dok.</th>
-            <th class="text-center font-weight-bold text-white">No Slip</th>
-            <th class="text-center font-weight-bold text-white">Tar Slip</th>
-            <th class="text-center font-weight-bold text-white">Amaun RM</th>
+            <th class="text-center font-weight-bold text-white">BIL  </th>
+            <th class="text-center font-weight-bold text-white">TARIKH </th>
+            <th class="text-center font-weight-bold text-white">NO BAUCER</th>
+            <th class="text-center font-weight-bold text-white">PENERIMA </th>
+
+            <th class="text-center font-weight-bold text-white">KOD AKAUN</th>
+            <th class="text-center font-weight-bold text-white">PERIHALAN AKAUN</th>
+            <th class="text-center font-weight-bold text-white">CARA BAYAR</th>
+            <th class="text-center font-weight-bold text-white">NO CEK</th>
+            <th class="text-center font-weight-bold text-white">TARIKH CEK</th>
+            <th class="text-center font-weight-bold text-white">AMAUN RM</th>
+
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.AkTerima)
+        @foreach (var item in Model.AkPV)
         {
-            @foreach (var item2 in item.AkTerima2)
+            @foreach (var item1 in item.AkPV1)
             {
-                //if data has more than one akTerima1, jumlah change to 0.00
-                if (item.Id == id)
-                {
-                    item.Jumlah = 0;
-                }
-                else
-                {
-                    id = item.Id;
-                }
-                // end
 
                 // if data is Batal, change row color to red
                 var tabletype = "";
@@ -147,47 +139,48 @@
                 }
                 // end
                 bil++;
-                <tr class="@tabletype" style="line-height:0.8rem; page-break-before:avoid;">
-                    @if (item.Jumlah == 0)
-                    {
-                        <td class="text-right" style="border-top: none; border-bottom: none;"></td>
-                        <td class="text-right" style="border-top: none; border-bottom: none;"></td>
-                        <td class="text-right" style="border-top: none; border-bottom: none;"></td>
-                        <td class="text-right" style="border-top: none; border-bottom: none;"></td>
-                    }
-                    else
-                    {
-                        <td class="text-right" style="border-bottom:none;">@id</td>
-                        <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
-                        <td class="text-center" style="border-bottom:none;">@item.NoRujukan.Substring(3)</td>
-                        <td class="text-left text-uppercase" style="border-bottom:none;">@item.Nama</td>
-                    }
+        <tr class="@tabletype" style="line-height:0.8rem; page-break-before:avoid;">
 
-                    <td class="text-center text-uppercase">@item2.JCaraBayar.Perihal</td>
-                    <td class="text-center text-uppercase">@item2.NoCek</td>
-                    <td class="text-center text-uppercase">@item2.NoSlip</td>
-                    @if (item2.TarSlip != null)
-                    {
-                        <td class="text-center text-uppercase">@Convert.ToDateTime(item2.TarSlip).ToString("dd/MM/yyyy")</td>
-                    }
-                    else
-                    {
-                        <td class="text-center">-</td>
-                    }
-                    <td class="text-right ">@Convert.ToDecimal(item2.Amaun).ToString("#,##0.00")</td>
-                </tr>
+            <td class="text-right" style="border-bottom:none;">@bil</td>
+            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
+            <td class="text-center" style="border-bottom:none;">@item.NoPV.Substring(3)</td>
+            <td class="text-left text-uppercase" style="border-bottom:none;">@item.Nama</td>
+
+            <td class="text-center text-uppercase">@item1.AkCarta.Kod</td>
+            <td class="text-left text-uppercase">@item1.AkCarta.Perihal</td>
+            <td class="text-center text-uppercase">@item.JCaraBayar.Perihal</td>
+            @if (item.NoCekAtauEFT != null)
+            {
+                <td class="text-center text-uppercase">@item.NoCekAtauEFT</td>
+            }
+            else
+            {
+                <td class="text-center">-</td>
+            }
+            @if (item.TarCekAtauEFT != null)
+            {
+                <td class="text-center text-uppercase">@Convert.ToDateTime(item.TarCekAtauEFT).ToString("dd/MM/yyyy")</td>
+            }
+            else
+            {
+                <td class="text-center">-</td>
+            }
+
+
+            <td class="text-right ">@Convert.ToDecimal(item1.Amaun).ToString("#,##0.00")</td>
+        </tr>
             }
 
         }
         <tr class="font-weight-bold">
-            <td colspan="8" class="table-borderless text-right">JUMLAH RM</td>
-            <td class="text-right">@Convert.ToDecimal(Model.AmaunUrusniaga).ToString("#,##0.00")</td>
+            <td colspan="9" class="table-borderless text-right">JUMLAH RM</td>
+            <td class="text-right">@Convert.ToDecimal(Model.JumlahDebit).ToString("#,##0.00")</td>
         </tr>
     </tbody>
 </table>
 
 @*ringkasan*@
-<div>
+@*<div>
     <p class="breakhere"></p>
 </div>
 
@@ -222,7 +215,7 @@
                             <td class="text-center font-weight-bold text-white">Jenis Cara Bayar</td>
                             <td class="text-center font-weight-bold text-white">Bilangan</td>
                         </tr>
-                        @foreach (var item in Model.LPR0012_1)
+                        @foreach (var item in Model.LPR00102_1)
                         {
 
                             <tr>
@@ -242,7 +235,7 @@
         </div>
 
     </div>
-</div>
+</div>*@
 
 @*ringkasan end*@
 

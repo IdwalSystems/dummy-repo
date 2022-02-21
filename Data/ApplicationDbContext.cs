@@ -127,6 +127,12 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.AkBankId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
+
+            modelBuilder.Entity<AkTerima>()
+               .HasOne(m => m.SpPendahuluanPelbagai!)
+               .WithMany(t => t.AkTerima)
+               .HasForeignKey(m => m.SpPendahuluanPelbagaiId)
+               .OnDelete(DeleteBehavior.NoAction);
             //AkTerima end
             //AkPO
             modelBuilder.Entity<AkPO>()
@@ -252,6 +258,12 @@ namespace MSNK.Data
                 .HasOne(m => m.AkTunaiRuncit!)
                 .WithMany(t => t.AkPV)
                 .HasForeignKey(m => m.AkTunaiRuncitId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkPV>()
+                .HasOne(m => m.SpPendahuluanPelbagai!)
+                .WithMany(t => t.AkPV)
+                .HasForeignKey(m => m.SpPendahuluanPelbagaiId)
                 .OnDelete(DeleteBehavior.NoAction);
             //AKPV end
             //AkTunaiRuncit

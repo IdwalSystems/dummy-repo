@@ -2100,9 +2100,12 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
             // check end
-            akPV.FlBatal = 1;
+            // Batal operation
 
+            akPV.FlBatal = 1;
             _context.AkPV.Update(akPV);
+
+            // Batal operation end
 
             //insert applog
             var user = await _userManager.GetUserAsync(User);

@@ -112,7 +112,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JNegeriId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm select2" asp-for="JNegeriId" required>
+                                <select class="form-control form-control-sm select2" asp-for="JNegeriId" required id="ddlNegeri">
                                     <option value="" disabled selected>-- Pilih Negeri --</option>
                                     @foreach (var s in ViewBag.JNegeri)
                                     {
@@ -156,7 +156,7 @@
                                 <thead>
                                     <tr>
                                         <th style="width:40%">Kod</th>
-                                        <th style="width:50%">Amaun</th>
+                                        <th style="width:50%">Amaun RM</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -201,7 +201,7 @@
                                     <thead>
                                         <tr>
                                             <th>Cara Bayar</th>
-                                            <th>Amaun</th>
+                                            <th>Amaun RM</th>
                                             <th>No Cek</th>
                                             <th>Jenis Cek</th>
                                             <th>Kod Bank Cek</th>
@@ -230,8 +230,8 @@
                                             <td><input class="form-control form-control-sm" type="text" id="txtNoCek" maxlength="10" value="-"></td>
 
                                             <td>
-                                                <select class="form-control form-control-sm" id="txtJenisCek">
-                                                    <option value="" disabled selected>-- Pilih Jenis Cek --</option>
+                                                <select class="form-control form-control-sm text-uppercase" id="txtJenisCek">
+                                                    <option class="text-lowercase" value="" disabled selected>-- Pilih Jenis Cek --</option>
                                                     <option value="1">Cek Cawangan Ini</option>
                                                     <option value="2">Cek Tempatan</option>
                                                     <option value="3">Cek Luar</option>
@@ -400,8 +400,8 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label class="col-form-label">Jenis Cek</label>
-                                <select class="form-control form-control-sm" id="moJenisCek">
-                                    <option value="" disabled selected>-- Pilih Jenis Cek --</option>
+                                <select class="form-control form-control-sm text-uppercase" id="moJenisCek">
+                                    <option value="" class="text-lowercase" disabled selected>-- Pilih Jenis Cek --</option>
                                     <option value="1">Cek Cawangan Ini</option>
                                     <option value="2">Cek Tempatan</option>
                                     <option value="3">Cek Luar</option>

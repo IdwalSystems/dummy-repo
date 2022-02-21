@@ -76,11 +76,11 @@ namespace MSNK.Controllers
             var tajuk = "";
             JKW kW = _context.JKW.Where(x => x.Kod == "100").FirstOrDefault();
 
-            LPR0012PrintModel reportModel = new LPR0012PrintModel();
+            LPR001PrintModel reportModel = new LPR001PrintModel();
 
-            if (kodLaporan == "LPR0012" || kodLaporan == "LPR0013")
+            if (kodLaporan == "LPR00102" || kodLaporan == "LPR00103")
             {
-                if(kodLaporan == "LPR0012")
+                if(kodLaporan == "LPR00102")
                 {
                     tajuk = "Laporan Daftar Resit Terperinci Mengikut Pecahan Cara Bayar Kump Wang :";
                 }
@@ -240,8 +240,8 @@ namespace MSNK.Controllers
 
                 IEnumerable<RingkasanPrintModel> result = debitResult.Concat(kreditResult);
 
-                reportModel.LPR0012_1 = ringkasanCaraBayarResult;
-                reportModel.LPR0013_1 = result;
+                reportModel.LPR00102_1 = ringkasanCaraBayarResult;
+                reportModel.LPR00103_1 = result;
 
                 // ringkasan kredit group by Kod Objek AkTerima1 end
             }
@@ -291,7 +291,7 @@ namespace MSNK.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult Header(LPR0012PrintModel reportModel)
+        public ActionResult Header(LPR001PrintModel reportModel)
         {
             return View(reportModel);
         }

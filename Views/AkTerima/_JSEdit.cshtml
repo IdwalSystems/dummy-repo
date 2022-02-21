@@ -392,7 +392,7 @@
                     //insert data in modal objek
                     $("#moId1").val(r.record.id);
                     $("#moKodAkaun").val(r.record.akCartaId);
-                    $("#moAmaun1").val(r.record.amaun);
+                    $("#moAmaun1").val(r.record.amaun.toFixed(2));
 
                     //show modal objek
                     $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
@@ -483,7 +483,7 @@
                     //Delete the Table row using it's Index.
                     $("#moId2").val(r.record.jCaraBayarId);
                     $("#moCaraBayar").val(r.record.jCaraBayarId);
-                    $("#moAmaun2").val(r.record.amaun);
+                    $("#moAmaun2").val(r.record.amaun.toFixed(2));
                     $("#moNoCek").val(r.record.noCek);
                     $("#moJenisCek").val(r.record.jenisCek);
                     $("#moKodBankCek").val(r.record.kodBankCek);
@@ -492,7 +492,7 @@
                     $("#moTarSlip").val(r.record.tarSlip);
                     var jenisBayar = $("#moCaraBayar option:selected").text();
                     // check if jenis bayar equal to cek, enable all related cek fields, otherwise disabled it
-                    if (jenisBayar.trim() == "CEK") {
+                    if (jenisBayar.indexOf("CEK") >= 0) {
                         // enable fields
                         $("#moNoCek").prop('disabled', false);
                         $("#moJenisCek").prop('disabled', false);

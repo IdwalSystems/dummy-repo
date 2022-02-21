@@ -160,15 +160,13 @@
         var value = $("#ddlJCaraBayar option:selected");
         $("#txtNoCekAtauEFT").val("");
         $("#txtTarCekAtauEFT").val("");
-        if (value.text() == 'C - CEK' || value.text() == 'E - EFT' || value.text() == 'JP - JOMPAY') {
+        if (value.text().indexOf("C -") >= 0 || value.text().indexOf("E -") >= 0 || value.text().indexOf("JP -") >= 0) {
             $("#txtNoCekAtauEFT").prop('disabled', false);
             $("#txtTarCekAtauEFT").prop('disabled', false);
         } else {
             $("#txtNoCekAtauEFT").prop('disabled', true);
             $("#txtTarCekAtauEFT").prop('disabled', true);
         }
-
-
     });
     //onchange Cara Bayaran end
 

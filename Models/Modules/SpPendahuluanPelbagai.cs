@@ -51,6 +51,8 @@ namespace MSNK.Models.Modules
         public JTahapAktiviti JTahapAktiviti { get; set; }
         public ICollection<SpPendahuluanPelbagai1> SpPendahuluanPelbagai1 { get; set; }
         public ICollection<SpPendahuluanPelbagai2> SpPendahuluanPelbagai2 { get; set; }
+        public ICollection<AkPV> AkPV { get; set; }
+        public ICollection<AkTerima> AkTerima { get; set; }
 
 
         // log

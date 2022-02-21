@@ -26,6 +26,45 @@
     }
     // onchange no Rujukan end
 
+    // onchange no KP
+    $("body").on('change', "#NoKp", function () {
+        var noKP = $("#NoKp").val();
+        if (noKP != null) {
+            JsonNoKP(noKP);
+        }
+
+    });
+
+    function JsonNoKP(id) {
+        $.ajax({
+            type: "POST",
+            //url: "/AkTerima/JsonGetKod", // asal
+            url: '@Url.Action("JsonGetNoKP", "AkTerima")', //baru
+            data: { data: id },
+            dataType: "json",
+            success: function (msg) {
+                if (msg) {
+                    $("#Nama").val(msg.record.nama);
+                    $("#Alamat1").val(msg.record.alamat1);
+                    $("#Alamat2").val(msg.record.alamat2);
+                    $("#Alamat3").val(msg.record.alamat3);
+                    $("#Poskod").val(msg.record.poskod);
+                    $("#Bandar").val(msg.record.bandar);
+                    $("#ddlNegeri").val(msg.record.jNegeriId).trigger('change');
+                    $("#Tel").val(msg.record.tel);
+                    $("#Emel").val(msg.record.emel);
+
+
+                }
+                
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    // onchange no KP end
+
     // onchange CaraBayar
     $("body").on('change', "#ddlCaraBayar", function () {
         var caraBayar = $("#ddlCaraBayar").val();
@@ -228,7 +267,7 @@
                     if ($("#txtJenisCek").val() == null) {
                         cell.html("");
                     } else {
-                        cell.html($("#txtJenisCek option:selected").text());
+                        cell.html($("#txtJenisCek option:selected").text().toUpperCase());
                     }
 
 
@@ -400,7 +439,7 @@
                     //insert data in modal objek
                     $("#moId1").val(r.record.id);
                     $("#moKodAkaun").val(r.record.akCartaId);
-                    $("#moAmaun1").val(r.record.amaun);
+                    $("#moAmaun1").val(r.record.amaun.toFixed(2));
 
                     //show modal objek
                     $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
@@ -444,8 +483,8 @@
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
-                                    "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
-                                    "</td><td>" + (item1.amaun).toFixed(2) +
+                                    "</td><td class='tex-uppercase'>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
+                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" +
                                     "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
@@ -486,7 +525,7 @@
                 //insert data in modal urusniaga
                 $("#moId2").val(jCaraBayarId);
                 $("#moCaraBayar").val(r.record.jCaraBayarId);
-                $("#moAmaun2").val(r.record.amaun);
+                $("#moAmaun2").val(r.record.amaun.toFixed(2));
                 $("#moNoCek").val(r.record.noCek);
                 $("#moJenisCek").val(r.record.jenisCek);
                 $("#moKodBankCek").val(r.record.kodBankCek);
@@ -495,7 +534,7 @@
                 $("#moTarSlip").val(r.record.tarSlip);
 
                 // check if jenis bayar equal to cek, enable all related cek fields, otherwise disabled it
-                if (jenisBayar == "CEK") {
+                if (jenisBayar.indexOf("CEK") >= 0) {
                     // enable fields
                     $("#moNoCek").prop('disabled', false);
                     $("#moJenisCek").prop('disabled', false);
@@ -569,12 +608,12 @@
                                     tarSlip = showDate(item1.tarSlip);
                                 }
                                 var str = "<tr><td id='jCaraBayarId' hidden>" + item1.jCaraBayarId +
-                                    "</td><td>" + item1.jCaraBayar.perihal +
+                                    "</td><td class='text-uppercase'>" + item1.jCaraBayar.perihal +
                                     "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" + item1.noCek +
-                                    "</td><td>" + item1.jenisCek +
-                                    "</td><td>" + item1.kodBankCek +
-                                    "</td><td>" + item1.tempatCek +
+                                    "</td><td class='text-uppercase'>" + item1.jenisCek +
+                                    "</td><td class='text-uppercase'>" + item1.kodBankCek +
+                                    "</td><td class='text-uppercase'>" + item1.tempatCek +
                                     "</td><td>" + item1.noSlip +
                                     "</td><td>" + tarSlip +
                                     "</td><td>" +

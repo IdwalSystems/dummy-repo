@@ -75,6 +75,8 @@ namespace MSNK.Models.Modules
         [DisplayName("Kod Bank")]
         public int AkBankId { get; set; }
         public AkBank AkBank { get; set; }
+        public int? SpPendahuluanPelbagaiId { get; set; }
+        public SpPendahuluanPelbagai SpPendahuluanPelbagai { get; set; }
         public ICollection<AkTerima1> AkTerima1 { get; set; }
         public ICollection<AkTerima2> AkTerima2 { get; set; }
         //relationship end

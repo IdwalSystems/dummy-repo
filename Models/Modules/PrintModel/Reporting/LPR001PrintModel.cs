@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.PrintModel.Reporting
 {
-    public class LPR0012PrintModel : AkTerima
+    public class LPR001PrintModel :AkTerima
     {
         public string Username { get; set; }
         public IEnumerable<AkTerima> AkTerima { get; set; }
@@ -22,8 +22,8 @@ namespace MSNK.Models.Modules.PrintModel.Reporting
         public decimal Kredit { get; set; }
         public decimal AmaunUrusniaga { get; set; }
         public CompanyDetails CompanyDetail { get; set; }
-        public IEnumerable<RingkasanPrintModel> LPR0012_1 { get; set; }
-        public IEnumerable<RingkasanPrintModel> LPR0013_1 { get; set; }
+        public IEnumerable<RingkasanPrintModel> LPR00102_1 { get; set; }
+        public IEnumerable<RingkasanPrintModel> LPR00103_1 { get; set; }
 
     }
 }

@@ -1215,7 +1215,7 @@ namespace MSNK.Controllers
 
                 List<AkNotaMinta1> akNM1 = akNotaMinta.AkNotaMinta1.ToList();
 
-                var akPO = await _context.AkPO.Where(x => x.AkNotaMintaId == id).FirstOrDefaultAsync();
+                var akPO = await _context.AkPO.Where(x => x.AkNotaMintaId == id && x.FlBatal == 0).FirstOrDefaultAsync();
                 if (akPO != null)
                 {
 

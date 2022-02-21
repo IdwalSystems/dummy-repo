@@ -396,6 +396,37 @@ namespace MSNK.Controllers
         }
         // function json get no rujukan (running number) end
 
+        // on change NoKP controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetNoKP(string data)
+        {
+            try
+            {
+                var result = await _context.AkTerima.Where(x=> x.NoKp == data).FirstOrDefaultAsync();
+
+                if (result == null)
+                {
+                    result = new AkTerima
+                    {
+                        Nama = "",
+                        Alamat1 = "",
+                        Alamat2 = "",
+                        Alamat3 = "",
+                        Poskod = "",
+                        Bandar = "",
+                        Tel = "",
+                        Emel = ""
+                    };
+                }
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change NoKP controller end
+
         // on change CaraBayar controller
         [HttpPost]
         public async Task<JsonResult> JsonGetCaraBayar(int data)

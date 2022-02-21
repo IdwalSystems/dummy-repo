@@ -1,7 +1,7 @@
-﻿@model MSNK.Models.Modules.PrintModel.Reporting.LPR0012PrintModel
+﻿@model MSNK.Models.Modules.PrintModel.Reporting.LPR001PrintModel
 
 @{
-    ViewData["Title"] = "Cetakan LPR0013";
+    ViewData["Title"] = "Cetakan LPR00103";
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
     CompanyDetails company = new CompanyDetails();
 
@@ -223,7 +223,7 @@
                 <td class="text-center font-weight-bold text-white">Debit RM</td>
                 <td class="text-center font-weight-bold text-white">Kredit RM</td>
             </tr>
-            @foreach (var item in Model.LPR0013_1)
+            @foreach (var item in Model.LPR00103_1)
             {
 
                 <tr>

@@ -1293,6 +1293,27 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            // check if already link with akPV, Batal akPV included
+            var akPV2 = (from tbl2 in _context.AkPV2.ToList()
+                         join tbl in _context.AkPV.ToList()
+                         on tbl2.AkPVId equals tbl.Id into tbl2Tbl
+                         from tbl2_tbl in tbl2Tbl.DefaultIfEmpty()
+                         select new
+                         {
+                             Id = tbl2.Id,
+                             AkPVId = tbl2_tbl.Id,
+                             AkBelianId = tbl2.AkBelianId
+
+                         }).Where(x => x.AkBelianId == id).FirstOrDefault();
+
+            if (akPV2 != null)
+            {
+                AkPV akPV = await _akPVRepo.GetById(akPV2.AkPVId);
+                //duplicate id error
+                TempData[SD.Error] = "Data terkait dengan no baucer " + akPV.NoPV + ".";
+                return RedirectToAction(nameof(Index));
+            }
+
             _context.AkBelian.Remove(akBelian);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
@@ -1575,9 +1596,19 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    AkPV2 akPV2 = _context.AkPV2.Where(x => x.AkBelianId == id).FirstOrDefault();
+                    var akPV2 = (from tbl2 in _context.AkPV2.ToList()
+                                   join tbl in _context.AkPV.ToList()
+                                   on tbl2.AkPVId equals tbl.Id into tbl2Tbl
+                                   from tbl2_tbl in tbl2Tbl.DefaultIfEmpty().Where(x => x.FlBatal != 1)
+                                   select new
+                                   {
+                                       Id = tbl2.Id,
+                                       AkPVId = tbl2_tbl.Id,
+                                       AkBelianId = tbl2.AkBelianId
 
-                    if(akPV2 != null)
+                                   }).Where(x=> x.AkBelianId == id).FirstOrDefault();
+
+                    if (akPV2 != null)
                     {
                         AkPV akPV = await _akPVRepo.GetById(akPV2.AkPVId);
                         //duplicate id error
@@ -1634,6 +1665,43 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
+        // POST: AkPV/Cancel/5
+        [Authorize(Policy = "TG002B")]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var akBelian = await _context.AkBelian.FindAsync(id);
+            // check if already posting redirect back
+            if (akBelian.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
 
+            // Batal operation
+
+            akBelian.FlBatal = 1;
+            _context.AkBelian.Update(akBelian);
+
+            // Batal operation end
+
+            //insert applog
+            var user = await _userManager.GetUserAsync(User);
+
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "B";
+            appLog.LgOperation = "Batal";
+            appLog.LgNote = modul + " Inbois Pembekal - Batal";
+            appLog.NoRujukan = akBelian.NoInbois;
+            appLog.Jumlah = akBelian.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dibatalkan..!";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
