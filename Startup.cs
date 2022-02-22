@@ -277,12 +277,12 @@ namespace MSNK
             app.UseAuthorization();
             app.UseSession();
 
-            var contentRootPath = (string)AppDomain.CurrentDomain.GetData("ContentRootPath");
-            var webRootPath = (string)AppDomain.CurrentDomain.GetData("WebRootPath");
+            //var contentRootPath = (string)AppDomain.CurrentDomain.GetData("ContentRootPath");
+            //var webRootPath = (string)AppDomain.CurrentDomain.GetData("WebRootPath");
 
-            // setup app's root folders
-            AppDomain.CurrentDomain.SetData("ContentRootPath", env.ContentRootPath);
-            AppDomain.CurrentDomain.SetData("WebRootPath", env.WebRootPath);
+            //// setup app's root folders
+            //AppDomain.CurrentDomain.SetData("ContentRootPath", env.ContentRootPath);
+            //AppDomain.CurrentDomain.SetData("WebRootPath", env.WebRootPath);
 
             app.UseEndpoints(endpoints =>
             {
