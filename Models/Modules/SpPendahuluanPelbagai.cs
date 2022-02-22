@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class SpPendahuluanPelbagai : LogHelper,ISoftDelete
+    public class SpPendahuluanPelbagai : AppLogHelper
     {
         public int Id { get; set; }
         public string NoPermohonan { get; set; }
@@ -54,10 +54,6 @@ namespace MSNK.Models.Modules
         public ICollection<SpPendahuluanPelbagai2> SpPendahuluanPelbagai2 { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
         public ICollection<AkTerima> AkTerima { get; set; }
-        public bool FlHapus { get; set; }
-        public DateTime? TarHapus { get; set; }
 
-        // log
-        // log end
     }
 }

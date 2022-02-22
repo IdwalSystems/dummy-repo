@@ -70,7 +70,24 @@ namespace MSNK.Data
             base.OnModelCreating(modelBuilder);
 
             //load item without soft delete
+            modelBuilder.Entity<JKW>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
             modelBuilder.Entity<JBahagian>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JCaraBayar>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<AkBank>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JBank>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JNegeri>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JAgama>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JBangsa>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JSukan>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JTahapAktiviti>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JJantina>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JJawatanPekerja>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<AkPembekal>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<SuPekerja>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<AkCarta>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<AkTunaiPemegang>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JJenis>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JParas>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
             //load item without soft delete end
 
             //modelBuilder.Entity<IdentityRole>()

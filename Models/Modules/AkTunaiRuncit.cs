@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSNK.Models.Helper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkTunaiRuncit
+    public class AkTunaiRuncit : AppLogHelper
     {
         public int Id { get; set; }
         [DisplayName("Kod Kaunter Panjar")]
@@ -25,15 +26,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkTunaiLejar> AkTunaiLejar { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
 
-        // log
-        public string UserId { get; set; }
-        [DisplayName("Tarikh Masuk")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TarMasuk { get; set; }
-        public string UserIdKemaskini { get; set; }
-        [DisplayName("Tarikh Kemaskini")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TarKemaskini { get; set; } = DateTime.Now;
+
 
     }
 }

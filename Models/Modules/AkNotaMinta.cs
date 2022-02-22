@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSNK.Models.Helper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkNotaMinta
+    public class AkNotaMinta : AppLogHelper
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Tahun Diperlukan.")]
@@ -42,16 +43,6 @@ namespace MSNK.Models.Modules
         public DateTime? TarikhSeksyenKewangan { get; set; }
         // untuk kewangan end
 
-        // log
-        public string UserId { get; set; }
-        [DisplayName("Tarikh Masuk")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TarMasuk { get; set; }
-        public string UserIdKemaskini { get; set; }
-        [DisplayName("Tarikh Kemaskini")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TarKemaskini { get; set; } = DateTime.Now;
-        //log end
 
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }

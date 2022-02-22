@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MSNK.Models.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkBelian
+    public class AkBelian : AppLogHelper
     {
         //field
         public int Id { get; set; }
@@ -66,16 +67,5 @@ namespace MSNK.Models.Modules
         public ICollection<AkBelian2> AkBelian2 { get; set; }
         public ICollection<AkPV2> AkPV2 { get; set; }
         //relationship end
-
-        // log
-        public string UserId { get; set; }
-        [DisplayName("Tarikh Masuk")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TarMasuk { get; set; }
-        public string UserIdKemaskini { get; set; }
-        [DisplayName("Tarikh Kemaskini")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
-        public DateTime TarKemaskini { get; set; } = DateTime.Now;
-        //log end
     }
 }

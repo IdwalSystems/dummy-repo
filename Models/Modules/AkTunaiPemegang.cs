@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSNK.Models.Helper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkTunaiPemegang
+    public class AkTunaiPemegang : AppLogHelper, ISoftDelete
     {
         public int Id { get; set; }
         [DisplayName("Kod Kaunter Panjar")]
@@ -14,5 +15,10 @@ namespace MSNK.Models.Modules
         [DisplayName("Kod Anggota")]
         public int SuPekerjaId { get; set; }
         public SuPekerja SuPekerja { get; set; }
+
+        //soft delete
+        public bool FlHapus { get; set; }
+        public DateTime? TarHapus { get; set; }
+        //soft delete end
     }
 }

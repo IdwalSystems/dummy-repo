@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class JBahagian : LogHelper, ISoftDelete
+    public class JBahagian : AppLogHelper, ISoftDelete
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Kod Diperlukan")]

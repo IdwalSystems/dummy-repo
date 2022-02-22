@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Helper
 {
-    public class LogHelper
+    public class AppLogHelper
     {
         // log
         public string UserId { get; set; }

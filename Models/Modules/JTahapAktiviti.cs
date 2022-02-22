@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MSNK.Models.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class JTahapAktiviti
+    public class JTahapAktiviti : AppLogHelper, ISoftDelete
     {
         public int Id { get; set; }
         public string Perihal { get; set; }
@@ -13,11 +14,9 @@ namespace MSNK.Models.Modules
         //relationship
         public ICollection<SpPendahuluanPelbagai> SpPermohonanAktiviti { get; set; }
 
-        // log
-        public string UserId { get; set; }
-        public DateTime TarMasuk { get; set; }
-        public string UserIdKemaskini { get; set; }
-        public DateTime TarKemaskini { get; set; } = DateTime.Now;
-        // log end
+        //soft delete
+        public bool FlHapus { get; set; }
+        public DateTime? TarHapus { get; set; }
+        //soft delete end
     }
 }

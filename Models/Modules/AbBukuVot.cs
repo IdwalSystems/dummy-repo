@@ -39,10 +39,5 @@ namespace MSNK.Models.Modules
         public JKW JKW { get; set; }
         public AkCarta Vot { get; set; }
 
-        // log
-        public string UserId { get; set; }
-        public DateTime TarMasuk { get; set; }
-        public string UserIdKemaskini { get; set; }
-        public DateTime TarKemaskini { get; set; } = DateTime.Now;
     }
 }
