@@ -62,6 +62,7 @@ namespace MSNK.Controllers
             {
                 _context.Add(caraBayar);
                 await _context.SaveChangesAsync();
+                TempData[SD.Success] = "Data berjaya ditambah..!";
                 return RedirectToAction(nameof(Index));
             }
             return View(caraBayar);
@@ -144,6 +145,7 @@ namespace MSNK.Controllers
             var caraBayar = await _context.JCaraBayar.FindAsync(id);
             _context.JCaraBayar.Remove(caraBayar);
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 

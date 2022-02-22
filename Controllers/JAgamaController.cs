@@ -62,6 +62,7 @@ namespace MSNK.Controllers
             {
                 _context.Add(jAgama);
                 await _context.SaveChangesAsync();
+                TempData[SD.Success] = "Data berjaya ditambah..!";
                 return RedirectToAction(nameof(Index));
             }
             return View(jAgama);
@@ -101,6 +102,7 @@ namespace MSNK.Controllers
                 {
                     _context.Update(jAgama);
                     await _context.SaveChangesAsync();
+                    TempData[SD.Success] = "Data berjaya diubah..!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -144,6 +146,7 @@ namespace MSNK.Controllers
             var jAgama = await _context.JAgama.FindAsync(id);
             _context.JAgama.Remove(jAgama);
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 

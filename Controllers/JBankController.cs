@@ -62,6 +62,7 @@ namespace MSNK.Controllers
             {
                 _context.Add(bank);
                 await _context.SaveChangesAsync();
+                TempData[SD.Success] = "Data berjaya ditambah..!";
                 return RedirectToAction(nameof(Index));
             }
             return View(bank);
@@ -144,6 +145,7 @@ namespace MSNK.Controllers
             var bank = await _context.JBank.FindAsync(id);
             _context.JBank.Remove(bank);
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 

@@ -62,6 +62,7 @@ namespace MSNK.Controllers
             {
                 _context.Add(jBangsa);
                 await _context.SaveChangesAsync();
+                TempData[SD.Success] = "Data berjaya ditambah..!";
                 return RedirectToAction(nameof(Index));
             }
             return View(jBangsa);
@@ -101,6 +102,7 @@ namespace MSNK.Controllers
                 {
                     _context.Update(jBangsa);
                     await _context.SaveChangesAsync();
+                    TempData[SD.Success] = "Data berjaya diubah..!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -144,6 +146,7 @@ namespace MSNK.Controllers
             var jBangsa = await _context.JBangsa.FindAsync(id);
             _context.JBangsa.Remove(jBangsa);
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 

@@ -42,7 +42,15 @@ namespace MSNK
             //SendGrid
             services.AddTransient<SendGridEmailServices, SendGridEmailSender>();
 
-            services.AddDbContext<ApplicationDbContext>(options=>options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationDbContext>(
+                options=> {
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                    options.UseTriggers(triggerOptions =>
+                    {
+                        triggerOptions.AddTrigger<SoftDeleteTrigger>();
+                    });
+                });
+            
 
             services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider); ;

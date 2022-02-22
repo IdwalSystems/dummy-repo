@@ -1,0 +1,27 @@
+﻿<script type="text/javascript">
+    // onchange no Rujukan
+    $("body").on('change', "#ddlKW", function () {
+        var kodKW = $("#ddlKW").val();
+        if (kodKW != null) {
+            JsonKod(kodKW);
+        }
+
+    });
+
+    function JsonKod(id) {
+        $.ajax({
+            type: "POST",
+            //url: "/AkPV/JsonGetKod",
+            url: '@Url.Action("JsonGetKod", "JBahagian")',
+            data: {data:id},
+            dataType: "json",
+            success: function (msg) {
+                $("#txtNoRujukan").val(msg.record);
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    // onchange no Rujukan end
+</script>

@@ -62,7 +62,9 @@ namespace MSNK.Controllers
             {
                 _context.Add(jJawatanPekerja);
                 await _context.SaveChangesAsync();
+                TempData[SD.Success] = "Data berjaya ditambah..!";
                 return RedirectToAction(nameof(Index));
+
             }
             return View(jJawatanPekerja);
         }
@@ -101,6 +103,7 @@ namespace MSNK.Controllers
                 {
                     _context.Update(jJawatanPekerja);
                     await _context.SaveChangesAsync();
+                    TempData[SD.Success] = "Data berjaya diubah..!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -144,6 +147,7 @@ namespace MSNK.Controllers
             var jJawatanPekerja = await _context.JJawatanPekerja.FindAsync(id);
             _context.JJawatanPekerja.Remove(jJawatanPekerja);
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,0 +1,69 @@
+﻿@model MSNK.Models.Modules.JBahagian
+
+@{
+    ViewData["Title"] = "Ubah";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Bahagian - Ubah</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="JKWId" class="control-label"></label>
+                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" id="ddlKW" disabled>
+                    @foreach (var s in ViewBag.JKW)
+                    {
+                        <option value="@s.Id">@s.Perihal </option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Kod" class="control-label"></label>
+                <input asp-for="Kod" class="form-control form-control-sm" readonly/>
+                <span asp-validation-for="Kod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Perihal" class="control-label"></label>
+                <input asp-for="Perihal" class="form-control form-control-sm text-uppercase" />
+                <span asp-validation-for="Perihal" class="text-danger"></span>
+            </div>
+            <div hidden>
+                <div class="form-group">
+                    <label asp-for="UserId" class="control-label"></label>
+                    <input asp-for="UserId" class="form-control form-control-sm" />
+                    <span asp-validation-for="UserId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TarMasuk" class="control-label"></label>
+                    <input asp-for="TarMasuk" class="form-control form-control-sm" value="@DateTime.Now.ToString("s")" />
+                    <span asp-validation-for="TarMasuk" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserIdKemaskini" class="control-label"></label>
+                    <input asp-for="UserIdKemaskini" class="form-control form-control-sm" />
+                    <span asp-validation-for="UserIdKemaskini" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TarKemaskini" class="control-label"></label>
+                    <input asp-for="TarKemaskini" class="form-control form-control-sm" value="@DateTime.Now.ToString("s")" />
+                    <span asp-validation-for="TarKemaskini" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Simpan" class="btn btn-primary btn-sm" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Kembali ke Indeks</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

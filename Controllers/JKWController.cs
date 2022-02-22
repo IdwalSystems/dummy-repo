@@ -62,7 +62,9 @@ namespace MSNK.Controllers
             {
                 _context.Add(kW);
                 await _context.SaveChangesAsync();
+                TempData[SD.Success] = "Data berjaya ditambah..!";
                 return RedirectToAction(nameof(Index));
+                
             }
             return View(kW);
         }
@@ -101,6 +103,7 @@ namespace MSNK.Controllers
                 {
                     _context.Update(kW);
                     await _context.SaveChangesAsync();
+                    TempData[SD.Success] = "Data berjaya diubah..!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -144,6 +147,7 @@ namespace MSNK.Controllers
             var kW = await _context.JKW.FindAsync(id);
             _context.JKW.Remove(kW);
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 

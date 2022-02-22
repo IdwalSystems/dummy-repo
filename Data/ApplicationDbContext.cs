@@ -69,6 +69,10 @@ namespace MSNK.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            //load item without soft delete
+            modelBuilder.Entity<JBahagian>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            //load item without soft delete end
+
             //modelBuilder.Entity<IdentityRole>()
             //    .HasData(new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() 
             //    });
@@ -301,5 +305,6 @@ namespace MSNK.Data
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan3).HasDefaultValue("");
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan4).HasDefaultValue("");
         }
+        public DbSet<MSNK.Models.Modules.JBahagian> JBahagian { get; set; }
     }
 }
