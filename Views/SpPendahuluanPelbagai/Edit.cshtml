@@ -1,292 +1,341 @@
 ﻿@model MSNK.Models.Modules.SpPendahuluanPelbagai
 
-@{
-    ViewData["Title"] = "Ubah";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+@{ ViewData["Title"] = "Ubah";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
 <partial name="_JSEdit" />
-
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Edit">
+        <form asp-action="Edit" class="needs-validation">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="card box-shadow border-primary mb-3">
-                <div class="card-header bg-primary text-white ">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="text-left">Permohonan Aktiviti- @ViewData["Title"]</h5>
-                        </div>
-                    </div>
+            <div class="card box-shadow border-success mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5>Permohonan Pendahuluan Pelbagai - @ViewData["Title"]</h5>
                 </div>
                 <div class="card-body">
-                    <div class="form-row">
-                        <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
                             <div class="form-group">
-                                <label asp-for="Tarikh" class="control-label">No Rujukan</label><span class="text-danger control-label">*</span>
-                                <input asp-for="Tarikh" class="form-control form-control-sm" required />
-                                <span asp-validation-for="Tarikh" class="text-danger"></span>
+                                <label class="control-label">Jenis Permohonan</label>
+                            </div>
+                            <div class="form-row col-sm ml-2">
+                                <div class="custom-control custom-radio col-md-4 ">
+                                    <input class="custom-control-input" asp-for="JenisPermohonan" type="radio" name="jenisPermohonan" id="1" value="1">
+                                    <label class="custom-control-label" for="1">
+                                        SUKAN ELITE
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-4">
+                                    <input class="custom-control-input" asp-for="JenisPermohonan" type="radio" name="jenisPermohonan" id="2" value="2">
+                                    <label class="custom-control-label" for="2">
+                                        SUKAN BAKAT DAN PELAPIS
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm" asp-for="JKWId" required disabled>
+                                    <option value="" hidden>-- Pilih Kumpulan Wang --</option>
+                                    @foreach (var s in ViewBag.JKW)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="JKWId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="NoPermohonan" class="control-label">No Permohonan</label><span class="text-danger control-label">*</span>
+                                <input asp-for="NoPermohonan" class="form-control form-control-sm form-control-sm-custom" required id="txtNoPermohonan" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Tarikh" class="control-label">Tarikh Aktiviti</label><span class="text-danger control-label">*</span>
+                                <input asp-for="Tarikh" class="form-control form-control-sm" required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JNegeriId" class="control-label">Negeri</label><span class="text-danger control-label">*</span>
-                                @*<select class="form-control form-control-sm" asp-for="JNegeriId" required>
-                                <option value="" disabled selected>-- Pilih Negeri --</option>
-                                @foreach (var s in ViewBag.JNegeri)
-                                {
-                                    <option value="@s.Id">@s.Perihal </option>
-                                }
-                            </select>*@
+                                <select class="form-control form-control-sm select2" asp-for="JNegeriId" required>
+                                    <option value="" disabled selected>-- Pilih Negeri --</option>
+                                    @foreach (var s in ViewBag.JNegeri)
+                                    {
+                                        <option value="@s.Id">@s.Perihal </option>
+                                    }
+                                </select>
                                 <span asp-validation-for="JNegeriId" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label asp-for="JSukan" class="control-label">Sukan</label><span class="text-danger control-label">*</span>
-                                @*<select class="form-control form-control-sm" asp-for="JSukan" required>
-                                <option value="" disabled selected>-- Pilih Sukan --</option>
-                                @foreach (var s in ViewBag.JSukan)
-                                {
-                                <option value="@s.Id">@s.Perihal </option>
-                                 }
-                                  </select>*@
-                                <span asp-validation-for="JSukan" class="text-danger"></span>
+                                <label asp-for="JSukanId" class="control-label">Sukan</label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm select2" asp-for="JSukanId" required>
+                                    <option value="" disabled selected>-- Pilih Sukan --</option>
+                                    @foreach (var s in ViewBag.JSukan)
+                                    {
+                                        <option value="@s.Id">@s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="JSukanId" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="Tarikh" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Tarikh" class="form-control form-control-sm" required />
-                                <span asp-validation-for="Tarikh" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label asp-for="Aktiviti" class="control-label">Aktiviti</label><span class="text-danger control-label">*</span>
-                                <input asp-for="Aktiviti" class="form-control form-control-sm" required />
+                                <label asp-for="Aktiviti" class="control-label">Aktiviti/Kejohanan</label><span class="text-danger control-label">*</span>
+                                <input asp-for="Aktiviti" class="form-control form-control-sm text-uppercase" required />
                                 <span asp-validation-for="Aktiviti" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="Tempat" class="control-label">Tempat</label><span class="text-danger control-label">*</span>
-                                <input asp-for="Tempat" class="form-control form-control-sm" required />
+                                <input asp-for="Tempat" class="form-control form-control-sm text-uppercase" required />
                                 <span asp-validation-for="Tempat" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="card mb-2">
-
                             <div class="form-row">
                                 <div class="card-body p-1">
                                     <div class="form-group col-sm">
                                         <label>Penyertaan</label>
                                         <div class="custom-control custom-radio">
-                                            <input type="checkbox" checked="checked">
+                                            <input type="checkbox" asp-for="Penyertaan" data-val="true" id="Penyertaan" name="Penyertaan" value="true">
+                                            <input name="Penyertaan" type="hidden" value="false">
                                         </div>
-
                                     </div>
                                 </div>
                                 <div class="card-body p-1">
                                     <div class="form-group col-sm">
                                         <label>Pengelolaan</label>
                                         <div class="custom-control custom-radio">
-                                            <input type="checkbox" checked="checked">
+                                            <input type="checkbox" asp-for="Pengelolaan" data-val="true" id="Pengelolaan" name="Pengelolaan" value="true">
+                                            <input name="Pengelolaan" type="hidden" value="false">
                                         </div>
-
                                     </div>
                                 </div>
                                 <div class="card-body p-1">
                                     <div class="form-group col-sm">
                                         <label>Pertandingan</label>
                                         <div class="custom-control custom-radio">
-                                            <input type="checkbox" checked="checked">
+                                            <input type="checkbox" asp-for="Pertandingan" data-val="true" id="Pertandingan" name="Pertandingan" value="true">
+                                            <input name="Pertandingan" type="hidden" value="false">
                                         </div>
-
                                     </div>
                                 </div>
                                 <div class="card-body p-1">
                                     <div class="form-group col-sm">
                                         <label>Program Binaan</label>
                                         <div class="custom-control custom-radio">
-                                            <input type="checkbox" checked="checked">
+                                            <input type="checkbox" data-val="true" id="ProgramBinaan" name="ProgramBinaan" value="true">
+                                            <input name="ProgramBinaan" type="hidden" value="false">
                                         </div>
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
+                    </div>
+                    <div class="form-row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JTahapAktivitiId" class="control-label">Tahap</label><span class="text-danger control-label">*</span>
-                                @*<select class="form-control form-control-sm select2" asp-for="JTahapId" required>
-                                <option value="" disabled selected>-- Pilih Tahap --</option>
-                                @foreach (var s in ViewBag.JTahapAktiviti)
-                                {
-                                    <option value="@s.Id">@s.Id - @s.Perihal </option>
-                                }
-                            </select>*@
+                                <select class="form-control form-control-sm select2" asp-for="JTahapAktivitiId" required>
+                                    <option value="" disabled selected>-- Pilih Tahap --</option>
+                                    @foreach (var s in ViewBag.JTahapAktiviti)
+                                    {
+                                        <option value="@s.Id">@s.Perihal </option>
+                                    }
+                                </select>
                                 <span asp-validation-for="JTahapAktivitiId" class="text-danger"></span>
                             </div>
                         </div>
-
                     </div>
-                    @*<div class="form-group">
-                    <label asp-for="Penyertaan" class="control-label"></label>
-                    <input asp-for="Penyertaan" class="form-control" />
-                    <span asp-validation-for="Penyertaan" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Pertandingan" class="control-label"></label>
-                    <input asp-for="Pertandingan" class="form-control" />
-                    <span asp-validation-for="Pertandingan" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Pengelolaan" class="control-label"></label>
-                    <input asp-for="Pengelolaan" class="form-control" />
-                    <span asp-validation-for="Pengelolaan" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ProgramBinaan" class="control-label"></label>
-                    <input asp-for="ProgramBinaan" class="form-control" />
-                    <span asp-validation-for="ProgramBinaan" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="JNegeriId" class="control-label"></label>
-                    <select asp-for="JNegeriId" class="form-control" asp-items="ViewBag.JNegeriId"></select>
-                    <span asp-validation-for="JNegeriId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="JSukanId" class="control-label"></label>
-                    <select asp-for="JSukanId" class="form-control" asp-items="ViewBag.JSukanId"></select>
-                    <span asp-validation-for="JSukanId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Tarikh" class="control-label"></label>
-                    <input asp-for="Tarikh" class="form-control" />
-                    <span asp-validation-for="Tarikh" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Aktiviti" class="control-label"></label>
-                    <input asp-for="Aktiviti" class="form-control" />
-                    <span asp-validation-for="Aktiviti" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Tempat" class="control-label"></label>
-                    <input asp-for="Tempat" class="form-control" />
-                    <span asp-validation-for="Tempat" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="JTahapId" class="control-label"></label>
-                    <input asp-for="JTahapId" class="form-control" />
-                    <span asp-validation-for="JTahapId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Penyedia" class="control-label"></label>
-                    <input asp-for="Penyedia" class="form-control" />
-                    <span asp-validation-for="Penyedia" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="TarSedia" class="control-label"></label>
-                    <input asp-for="TarSedia" class="form-control" />
-                    <span asp-validation-for="TarSedia" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="JumKeseluruhan" class="control-label"></label>
-                    <input asp-for="JumKeseluruhan" class="form-control" />
-                    <span asp-validation-for="JumKeseluruhan" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Penyokong" class="control-label"></label>
-                    <input asp-for="Penyokong" class="form-control" />
-                    <span asp-validation-for="Penyokong" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="StatusSokong" class="control-label"></label>
-                    <input asp-for="StatusSokong" class="form-control" />
-                    <span asp-validation-for="StatusSokong" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="TarSokong" class="control-label"></label>
-                    <input asp-for="TarSokong" class="form-control" />
-                    <span asp-validation-for="TarSokong" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="JumSokong" class="control-label"></label>
-                    <input asp-for="JumSokong" class="form-control" />
-                    <span asp-validation-for="JumSokong" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Pelulus" class="control-label"></label>
-                    <input asp-for="Pelulus" class="form-control" />
-                    <span asp-validation-for="Pelulus" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="StatusLulus" class="control-label"></label>
-                    <input asp-for="StatusLulus" class="form-control" />
-                    <span asp-validation-for="StatusLulus" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="TarLulus" class="control-label"></label>
-                    <input asp-for="TarLulus" class="form-control" />
-                    <span asp-validation-for="TarLulus" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="JumLulus" class="control-label"></label>
-                    <input asp-for="JumLulus" class="form-control" />
-                    <span asp-validation-for="JumLulus" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="FlPosting" class="control-label"></label>
-                    <input asp-for="FlPosting" class="form-control" />
-                    <span asp-validation-for="FlPosting" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="FlCetak" class="control-label"></label>
-                    <input asp-for="FlCetak" class="form-control" />
-                    <span asp-validation-for="FlCetak" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="UserId" class="control-label"></label>
-                    <input asp-for="UserId" class="form-control" />
-                    <span asp-validation-for="UserId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="TarMasuk" class="control-label"></label>
-                    <input asp-for="TarMasuk" class="form-control" />
-                    <span asp-validation-for="TarMasuk" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="UserIdKemaskini" class="control-label"></label>
-                    <input asp-for="UserIdKemaskini" class="form-control" />
-                    <span asp-validation-for="UserIdKemaskini" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="TarKemaskini" class="control-label"></label>
-                    <input asp-for="TarKemaskini" class="form-control" />
-                    <span asp-validation-for="TarKemaskini" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </div>*@
-                </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="AkCartaId" class="control-label">Kod Objek/Vot</label>
+                                <select class="form-control form-control-sm select2" asp-for="AkCartaId" id="ddlAkCarta">
+                                    <option value="" hidden>-- Pilih Kod Objek --</option>
+                                    @foreach (var s in ViewBag.AkCarta)
+                                    {
+                                        <option value="@s.Id">@s.Kod @s.Perihal </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="JumKeseluruhan" class="control-label">Jumlah</label><span class="text-danger control-label">*</span>
+                                <input asp-for="JumKeseluruhan" class="form-control form-control-sm form-control-sm-custom" required id="txtJumlahKeseluruhan" />
+                            </div>
+                        </div>
+                    </div>
+                    @*table Peserta*@
+                    <div class="card box-shadow mb-3 mt-2">
+                        <div class="card-header">
+                            <h6>Bilangan Peserta</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive-md">
+                                <table id="tblPeserta" class="table table-sm" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Jantina</th>
+                                            <th>Atlet</th>
+                                            <th>Jurulatih</th>
+                                            <th>Pegawai</th>
+                                            <th>Teknikal</th>
+                                            <th>Urusetia</th>
+                                            <th>Jumlah</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyPeserta">
+                                        @foreach (var item in ViewBag.SpPendahuluanPelbagai1)
+                                        {
+                                            <tr id="@item.Id">
+                                                <td id="jJantinaId">@item.JJantina.Perihal</td>
+                                                <td>@item.BilAtl</td>
+                                                <td>@item.BilJul</td>
+                                                <td>@item.BilPeg</td>
+                                                <td>@item.BilTek</td>
+                                                <td>@item.BilUru</td>
+                                                <td id="td1Amaun">@item.Jumlah</td>
+                                                <td>
+                                                    @*<button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
+                            <i class="fa fa-edit"></i>
+                        </button>*@
+                                                </td>
+                                                <td>
+                                                    @*<button class="btn btn-danger btn-sm" type="button" id="btnRemove1" onclick="Remove1(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>*@
+                                                </td>
+                                            </tr>
 
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <select class="form-control form-control-sm" id="ddlJantina">
+                                                    <option value="" hidden>-- Pilih --</option>
+                                                    @foreach (var s in ViewBag.JJantina)
+                                                    {
+                                                        <option value="@s.Id">@s.Perihal </option>
+                                                    }
+                                                </select>
+                                            </td>
+                                            <td><input class="form-control form-control-sm atlet" type="number" id="txtAtlet" maxlength="4" value="0"></td>
+                                            <td><input class="form-control form-control-sm jurulatih" type="number" id="txtJurulatih" maxlength="4" value="0"></td>
+                                            <td><input class="form-control form-control-sm pegawai" type="number" id="txtPegawai" maxlength="4" value="0"></td>
+                                            <td><input class="form-control form-control-sm teknikal" type="number" id="txtTeknikal" maxlength="4" value="0"></td>
+                                            <td><input class="form-control form-control-sm urusetia" type="number" id="txtUrusetia" maxlength="4" value="0"></td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtJumlahPeserta" maxlength="4" readonly value="0"></td>
+                                            <td><button class="btn btn-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="form-group">
+                                <label class="control-label">Jumlah Peserta</label>
+                                <input value="@ViewData["jumlahPeserta"]" class="form-control form-control-sm" id="jumlahPeserta" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    @*table Peserta end*@
+                    <br />
+                    @*table Perihal*@
+                    <div class="card box-shadow mb-3 mt-2">
+                        <div class="card-header">
+                            <h6>Perihal</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive-md">
+                                <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th width="30%">Perihal</th>
+                                            <th>Kadar (RM)</th>
+                                            <th>Bil</th>
+                                            <th>Bulan</th>
+                                            <th>Jumlah (RM)</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyPerihal">
+                                        @foreach (var item in ViewBag.SpPendahuluanPelbagai2)
+                                        {
+                                            <tr id="@item.Id">
+                                                <td hidden>@item.Indek</td>
+                                                <td class="text-left">@item.Bil</td>
+                                                <td class="text-left text-uppercase">@item.Perihal</td>
+                                                <td>@item.Kadar</td>
+                                                <td>@item.Bil</td>
+                                                <td>@item.Bulan</td>
+                                                <td>@item.Jumlah</td>
+                                                <td>
+                                                    @*<button class="btn btn-primary btn-sm" type="button" id="btnUpdate2" data-toggle="modal" data-target="#modalPerihal" onclick="Update2(this)">
+                            <i class="fa fa-edit"></i>
+                        </button>*@
+                                                </td>
+                                                <td>
+                                                    @*<button class="btn btn-danger btn-sm" type="button" id="btnRemove2" onclick="Remove2(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>*@
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td hidden><input class="form-control form-control-sm" type="text" id="txtIndek" maxlength="3"></td>
+                                            <td hidden><input class="form-control form-control-sm" type="number" id="txtBaris" maxlength="3" value="0"></td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtNo" maxlength="3" value="0"></td>
+                                            <td><textarea class="form-control form-control-sm text-uppercase" type="text" id="txtPerihal" maxlength="100" value="-" rows="2"></textarea></td>
+                                            <td><input class="form-control form-control-sm kadar" type="number" id="txtKadar" maxlength="6" value="0"></td>
+                                            <td><input class="form-control form-control-sm bil" type="text" id="txtBil" value="0"></td>
+                                            <td><input class="form-control form-control-sm bulan" type="number" id="txtBulan" maxlength="3" value="0.00"></td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtJumlahPerihal" maxlength="6" readonly value="0.00"></td>
+                                            <td><button class="btn btn-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="form-group">
+                                <label class="control-label">Jumlah Perihal (RM)</label>
+                                <input asp-for="JumKeseluruhan" class="form-control form-control-sm" id="jumlahPerihal" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    @*table Perihal end*@
+                </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Simpan" id="btnSave" class="btn btn-primary" />
+                <input type="submit" value="Simpan" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-
 <div>
-    <a asp-action="Index">Kembali Ke Indeks</a>
+    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
 @section Scripts {

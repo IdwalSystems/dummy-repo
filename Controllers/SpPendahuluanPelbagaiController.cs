@@ -87,6 +87,7 @@ namespace MSNK.Controllers
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.SpPendahuluanPelbagai
+                .IgnoreQueryFilters()
                 .Where(x => x.NoPermohonan.Substring(0, 9) == prefix)
                 .Max(x => x.NoPermohonan);
             if (LatestNoRujukan == null)
@@ -141,6 +142,69 @@ namespace MSNK.Controllers
 
         }
         //End Function Get Jantina Id
+
+        //Function Cart Empty
+        public JsonResult CartEmpty()
+        {
+            try
+            {
+                ViewBag.spPendahuluanPelbagai1 = new List<int>();
+                ViewBag.spPendahuluanPelbagai2 = new List<int>();
+                _cart.Clear1();
+                _cart.Clear2();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //Function Cart Empty end
+
+
+        //Function PopulateCartfromDb guna utk Edit
+        private void PopulateCartFromDb(SpPendahuluanPelbagai spPendahuluanPelbagai)
+        {
+            List<SpPendahuluanPelbagai1> spPendahuluanPelbagai1Table = _context.SpPendahuluanPelbagai1
+                .Include(b => b.JJantina)
+                .Where(b => b.SpPendahuluanPelbagaiId == spPendahuluanPelbagai.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            foreach (SpPendahuluanPelbagai1 spPendahuluanPelbagai1 in spPendahuluanPelbagai1Table)
+            {
+                _cart.AddItem1(spPendahuluanPelbagai1.SpPendahuluanPelbagaiId,
+                               spPendahuluanPelbagai1.JJantinaId,
+                               spPendahuluanPelbagai1.BilAtl,
+                               spPendahuluanPelbagai1.BilJul,
+                               spPendahuluanPelbagai1.BilPeg,
+                               spPendahuluanPelbagai1.BilTek,
+                               spPendahuluanPelbagai1.BilUru,
+                               spPendahuluanPelbagai1.Jumlah);
+            }
+
+            ViewBag.spPendahuluanPelbagai1 = spPendahuluanPelbagai1Table;
+
+            List<SpPendahuluanPelbagai2> spPendahuluanPelbagai2Table = _context.SpPendahuluanPelbagai2
+                //.Include(b => b.Indek)
+                .Where(b => b.SpPendahuluanPelbagaiId == spPendahuluanPelbagai.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            foreach (SpPendahuluanPelbagai2 spPendahuluanPelbagai2 in spPendahuluanPelbagai2Table)
+            {
+                _cart.AddItem2(spPendahuluanPelbagai2.SpPendahuluanPelbagaiId,
+                         spPendahuluanPelbagai2.Indek,
+                         spPendahuluanPelbagai2.Baris,
+                         spPendahuluanPelbagai2.Perihal,
+                         spPendahuluanPelbagai2.Kadar,
+                         spPendahuluanPelbagai2.Bil,
+                         spPendahuluanPelbagai2.Bulan,
+                         spPendahuluanPelbagai2.Jumlah);
+            }
+
+            ViewBag.spPendahuluanPelbagai2 = spPendahuluanPelbagai2Table;
+        }
+        //Function PopulateCartfromDb end
 
         // GET: SpPermohonanAktiviti
         public async Task<IActionResult> Index(
@@ -205,12 +269,20 @@ namespace MSNK.Controllers
             }
 
             var spPendahuluanPelbagai = await _spPendahuluanPelbagaiRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(spPendahuluanPelbagai.JKWId);
-            spPendahuluanPelbagai.JKW = kw;
+            //var kw = await _kwRepo.GetById(spPendahuluanPelbagai.JKWId);
+            //spPendahuluanPelbagai.JKW = kw;
+            int jumlahPeserta = 0;
             if (spPendahuluanPelbagai == null)
             {
                 return NotFound();
             }
+
+            foreach (var item in spPendahuluanPelbagai.SpPendahuluanPelbagai1)
+            {
+                jumlahPeserta += item.Jumlah;
+            }
+
+            ViewData["jumlahPeserta"] = jumlahPeserta;
             PopulateList();
             PopulateTable(id);
             return View(spPendahuluanPelbagai);
@@ -245,11 +317,7 @@ namespace MSNK.Controllers
         public IActionResult Create()
         {
             PopulateList();
-            //ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod");
-            //ViewData["JJantinaId"] = new SelectList(_context.JJantina, "Id", "Id");
-            //ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod");
-            //ViewData["JSukanId"] = new SelectList(_context.JSukan, "Id", "Id");
-            //ViewData["JTahapId"] = new SelectList(_context.JTahapAktiviti, "Id", "Id");
+            CartEmpty();
             return View();
         }
 
@@ -332,16 +400,23 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var spPendahuluanPelbagai = await _context.SpPendahuluanPelbagai.FindAsync(id);
-            if (spPendahuluanPelbagai == null)
+            var spPendahuluanPelbagai = await _spPendahuluanPelbagaiRepo.GetById((int)id);
+            int jumlahPeserta = 0;
 
+            if (spPendahuluanPelbagai == null)
             {
                 return NotFound();
             }
 
-            ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", spPendahuluanPelbagai.JNegeriId);
-            ViewData["JSukanId"] = new SelectList(_context.JSukan, "Id", "Id", spPendahuluanPelbagai.JSukanId);
-            ViewData["JTahapId"] = new SelectList(_context.JTahapAktiviti, "Id", "Id", spPendahuluanPelbagai.JTahapAktivitiId);
+            foreach (var item in spPendahuluanPelbagai.SpPendahuluanPelbagai1)
+            {
+                jumlahPeserta += item.Jumlah;
+            }
+
+            ViewData["jumlahPeserta"] = jumlahPeserta;
+            PopulateList();
+            PopulateTable(id);
+            PopulateCartFromDb(spPendahuluanPelbagai);
             return View(spPendahuluanPelbagai);
         }
 
@@ -350,36 +425,104 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Ppn,Penyertaan,Pertandingan,Pengelolaan,ProgramBinaan,JNegeriId,JSukanId,Tarikh,Aktiviti,Tempat,JTahapId,Penyedia,TarSedia,JumKeseluruhan,Penyokong,StatusSokong,TarSokong,JumSokong,Pelulus,StatusLulus,TarLulus,JumLulus,FlPosting,FlCetak,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] SpPendahuluanPelbagai spPendahuluanPelbagai)
+        public async Task<IActionResult> Edit(int id, SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId, int JNegeriId, int JJantinaId, decimal JumKeseluruhan)
         {
             if (id != spPendahuluanPelbagai.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (spPendahuluanPelbagai.JumKeseluruhan == JumKeseluruhan)
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(spPendahuluanPelbagai);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SpPendahuluanPelbagaiExists(spPendahuluanPelbagai.Id))
+                    try
                     {
-                        return NotFound();
+                        var user = await _userManager.GetUserAsync(User);
+                        SpPendahuluanPelbagai spPendahuluanPelbagaiAsal = await _spPendahuluanPelbagaiRepo.GetById(id);
+
+                        // list of input that cannot be change
+                        //spPendahuluanPelbagai.Tahun = spPendahuluanPelbagaiAsal.Tahun;
+                        spPendahuluanPelbagai.JKWId = spPendahuluanPelbagaiAsal.JKWId;
+                        //spPendahuluanPelbagai.NoRujukan = spPendahuluanPelbagaiAsal.NoRujukan;
+                        //spPendahuluanPelbagai.Nama = spPendahuluanPelbagaiAsal.Nama;
+                        spPendahuluanPelbagai.TarMasuk = spPendahuluanPelbagaiAsal.TarMasuk;
+                        spPendahuluanPelbagai.UserId = spPendahuluanPelbagaiAsal.UserId;
+                        spPendahuluanPelbagai.FlCetak = 0;
+                        // list of input that cannot be change end
+
+                        foreach (SpPendahuluanPelbagai1 item in spPendahuluanPelbagaiAsal.SpPendahuluanPelbagai1)
+                        {
+                            var model = _context.SpPendahuluanPelbagai1.FirstOrDefault(b => b.Id == item.Id);
+                            if (model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+
+                        foreach (SpPendahuluanPelbagai2 item in spPendahuluanPelbagaiAsal.SpPendahuluanPelbagai2)
+                        {
+                            var model = _context.SpPendahuluanPelbagai2.FirstOrDefault(b => b.Id == item.Id);
+                            if (model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+                        _context.Entry(spPendahuluanPelbagaiAsal).State = EntityState.Detached;
+
+                        spPendahuluanPelbagai.SpPendahuluanPelbagai1 = _cart.Lines1.ToList();
+                        spPendahuluanPelbagai.SpPendahuluanPelbagai2 = _cart.Lines2.ToList();
+
+                        spPendahuluanPelbagai.UserIdKemaskini = user.UserName;
+                        spPendahuluanPelbagai.TarKemaskini = DateTime.Now;
+
+                        _context.Update(spPendahuluanPelbagai);
+
+                        //insert applog
+                        AppLog appLog = new AppLog();
+
+                        appLog.UserId = user.UserName;
+                        appLog.LgModule = modul + "E";
+                        appLog.LgOperation = "Ubah";
+                        appLog.LgNote = modul + " Pendahuluan Pelbagai - Ubah";
+                        appLog.NoRujukan = spPendahuluanPelbagai.NoPermohonan;
+                        appLog.Jumlah = spPendahuluanPelbagai.JumKeseluruhan;
+
+                        await _appLog.Insert(appLog);
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!SpPendahuluanPelbagaiExists(spPendahuluanPelbagai.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    CartEmpty();
+                    // checking for jumlah objek & jumlah perihal
+                    if (spPendahuluanPelbagai.JumKeseluruhan != JumKeseluruhan)
+                    {
+                        TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Urusniaga";
                     }
                     else
                     {
-                        throw;
+                        TempData[SD.Success] = "Data berjaya diubah..!";
                     }
+
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", spPendahuluanPelbagai.JNegeriId);
-            ViewData["JSukanId"] = new SelectList(_context.JSukan, "Id", "Id", spPendahuluanPelbagai.JSukanId);
-            ViewData["JTahapId"] = new SelectList(_context.JTahapAktiviti, "Id", "Id", spPendahuluanPelbagai.JTahapAktivitiId);
+
+            TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Urusniaga";
+            PopulateList();
+            PopulateTable(id);
+            //PopulateCart();
             return View(spPendahuluanPelbagai);
         }
 
@@ -419,7 +562,7 @@ namespace MSNK.Controllers
         private void PopulateList()
         {
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
-            ViewBag.JKw = kwList;
+            ViewBag.JKW = kwList;
 
             List<JNegeri> negeriList = _context.JNegeri.OrderBy(b => b.Kod).ToList();
             ViewBag.JNegeri = negeriList;
@@ -453,12 +596,12 @@ namespace MSNK.Controllers
                 .ToList();
             ViewBag.spPendahuluanPelbagai1 = spPendahuluanPelbagai1;
 
-            List<SpPendahuluanPelbagai2> spPermohonanAktiviti2Table = _context.SpPendahuluanPelbagai2
+            List<SpPendahuluanPelbagai2> spPendahuluanPelbagai2 = _context.SpPendahuluanPelbagai2
                 //.Include(b => b.AkCarta)
                 .Where(b => b.SpPendahuluanPelbagaiId == id)
                 .OrderBy(b => b.Id)
                 .ToList();
-            ViewBag.akPO2 = spPermohonanAktiviti2Table;
+            ViewBag.spPendahuluanPelbagai2 = spPendahuluanPelbagai2;
         }
 
         public async Task<JsonResult> SaveSpPendahuluanPelbagai1 (SpPendahuluanPelbagai1 spPendahuluanPelbagai1)
@@ -502,7 +645,7 @@ namespace MSNK.Controllers
                          spPendahuluanPelbagai2.Perihal,
                          spPendahuluanPelbagai2.Kadar,
                          spPendahuluanPelbagai2.Bil,
-                         spPendahuluanPelbagai2.Bil,
+                         spPendahuluanPelbagai2.Bulan,
                          spPendahuluanPelbagai2.Jumlah);
                 }
 
@@ -551,43 +694,47 @@ namespace MSNK.Controllers
             }
         }
 
-        //private void PopulateCart(SpPermohonanAktiviti spPermohonanAktiviti)
-        //{
-        //    List<SpPermohonanAktiviti2> spPermohonanAktiviti2Table = _context.SpPermohonanAktiviti2
-        //        //.Include(b => b.JJantina)
-        //        .Where(b => b.SpPermohonanAktivitiId == spPermohonanAktiviti.Id)
-        //        .OrderBy(b => b.Id)
-        //        .ToList();
+        //save cart SpPendahuluanPelbagai1
+        public JsonResult SaveCartSpPendahuluanPelbagai1(SpPendahuluanPelbagai1 spPendahuluanPelbagai1)
+        {
 
-        //    foreach (SpPermohonanAktiviti2 spPermohonanAktiviti2 in spPermohonanAktiviti2Table)
-        //    {
-        //        _cart.AddItem2 (spPermohonanAktiviti2.Id,
-        //                       spPermohonanAktiviti2.BilAtlL,
-        //                       spPermohonanAktiviti2.BilJulL,
-        //                       spPermohonanAktiviti2.BilPegL,
-        //                       spPermohonanAktiviti2.BilTekL,
-        //                       spPermohonanAktiviti2.BilUruL,
-        //                       spPermohonanAktiviti2.BilAtlP,
-        //                       spPermohonanAktiviti2.BilJulP,
-        //                       spPermohonanAktiviti2.BilPegP,
-        //                       spPermohonanAktiviti2.BilTekP,
-        //                       spPermohonanAktiviti2.BilUruP,
-        //                       spPermohonanAktiviti2.JumL,
-        //                       spPermohonanAktiviti2.JumP,
-        //                       spPermohonanAktiviti2.JumAtl,
-        //                       spPermohonanAktiviti2.JumJul,
-        //                       spPermohonanAktiviti2.JumPeg,
-        //                       spPermohonanAktiviti2.JumTek,
-        //                       spPermohonanAktiviti2.JumUru);
-        //    }
-        //}
+            try
+            {
 
+                var akP1 = _cart.Lines1.Where(x => x.JJantinaId == spPendahuluanPelbagai1.JJantinaId).FirstOrDefault();
+
+                var user = _userManager.GetUserName(User);
+
+                if (akP1 != null)
+                {
+                    _cart.RemoveItem1(spPendahuluanPelbagai1.JJantinaId);
+
+                    _cart.AddItem1(spPendahuluanPelbagai1.SpPendahuluanPelbagaiId,
+                                    spPendahuluanPelbagai1.JJantinaId,
+                                    spPendahuluanPelbagai1.BilAtl,
+                                    spPendahuluanPelbagai1.BilJul,
+                                    spPendahuluanPelbagai1.BilPeg,
+                                    spPendahuluanPelbagai1.BilTek,
+                                    spPendahuluanPelbagai1.BilUru,
+                                    spPendahuluanPelbagai1.Jumlah);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //save cart SpPendahuluanPelbagai1 end
+
+        // get an item from cart SpPendahuluanPelbagai1
         public JsonResult GetAnItemCartSpPendahuluanPelbagai1(SpPendahuluanPelbagai1 spPendahuluanPelbagai1)
         {
 
             try
             {
-                SpPendahuluanPelbagai1 data = _cart.Lines1.Where(x => x.Id == spPendahuluanPelbagai1.Id).FirstOrDefault();
+                SpPendahuluanPelbagai1 data = _cart.Lines1.Where(x => x.JJantinaId == spPendahuluanPelbagai1.JJantinaId).FirstOrDefault();
 
                 return Json(new { result = "OK", record = data });
             }
@@ -596,9 +743,9 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get an item from cart spPermohonanAktiviti1 end
+        // get an item from cart SpPendahuluanPelbagai1 end
 
-        // get all item from cart spPermohonanAktiviti1
+        // get all item from cart SpPendahuluanPelbagai1
         public JsonResult GetAllItemCartSpPendahuluanPelbagai1(SpPendahuluanPelbagai1 spPendahuluanPelbagai1)
         {
 
@@ -608,9 +755,9 @@ namespace MSNK.Controllers
 
                 foreach (SpPendahuluanPelbagai1 item in data)
                 {
-                    //   var jJantina = _context.JJantina.Find(item.Id);
+                       var jJantina = _context.JJantina.Find(item.JJantinaId);
 
-                    //  item.JJantina = jJantina;
+                      item.JJantina = jJantina;
                 }
 
                 return Json(new { result = "OK", record = data });
@@ -620,51 +767,75 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get all item from cart spPermohonanAktiviti1 end
+        // get all item from cart SpPendahuluanPelbagai1 end 
 
-        ////save cart spPermohonanAktiviti1
-        //public JsonResult SaveCartSpPermohonanAktiviti2(SpPermohonanAktiviti2 spPermohonanAktiviti2)
-        //{
+        //save cart SpPendahuluanPelbagai2
+        public JsonResult SaveCartSpPendahuluanPelbagai2(SpPendahuluanPelbagai2 spPendahuluanPelbagai2)
+        {
 
-        //    try
-        //    {
+            try
+            {
 
-        //        var akP1 = _cart.Lines1.Where(x => x.Id == spPermohonanAktiviti2.Id).FirstOrDefault();
+                var akP1 = _cart.Lines2.Where(x => x.Indek == spPendahuluanPelbagai2.Indek).FirstOrDefault();
 
-        //        //var user = _userManager.GetUserName(User);
+                var user = _userManager.GetUserName(User);
 
-        //        if (akP1 != null)
-        //        {
-        //            _cart.RemoveItem2(spPermohonanAktiviti2.Id);
+                if (akP1 != null)
+                {
+                    _cart.RemoveItem2(spPendahuluanPelbagai2.Indek);
 
-        //            _cart.AddItem2(spPermohonanAktiviti2.Id,
-        //                       spPermohonanAktiviti2.BilAtlL,
-        //                       spPermohonanAktiviti2.BilJulL,
-        //                       spPermohonanAktiviti2.BilPegL,
-        //                       spPermohonanAktiviti2.BilTekL,
-        //                       spPermohonanAktiviti2.BilUruL,
-        //                       spPermohonanAktiviti2.BilAtlP,
-        //                       spPermohonanAktiviti2.BilJulP,
-        //                       spPermohonanAktiviti2.BilPegP,
-        //                       spPermohonanAktiviti2.BilTekP,
-        //                       spPermohonanAktiviti2.BilUruP,
-        //                       spPermohonanAktiviti2.JumL,
-        //                       spPermohonanAktiviti2.JumP,
-        //                       spPermohonanAktiviti2.JumAtl,
-        //                       spPermohonanAktiviti2.JumJul,
-        //                       spPermohonanAktiviti2.JumPeg,
-        //                       spPermohonanAktiviti2.JumTek,
-        //                       spPermohonanAktiviti2.JumUru);
-        //        }
+                    _cart.AddItem2(spPendahuluanPelbagai2.SpPendahuluanPelbagaiId,
+                                    spPendahuluanPelbagai2.Indek,
+                                    spPendahuluanPelbagai2.Baris,
+                                    spPendahuluanPelbagai2.Perihal,
+                                    spPendahuluanPelbagai2.Kadar,
+                                    spPendahuluanPelbagai2.Bil,
+                                    spPendahuluanPelbagai2.Bulan,
+                                    spPendahuluanPelbagai2.Jumlah);
+                }
 
-        //        return Json(new { result = "OK" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { result = "ERROR", message = ex.Message });
-        //    }
-        //}
-        ////save cart spPermohonanAktiviti1 end        
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //save cart SpPendahuluanPelbagai2 end
+
+        // get an item from cart SpPendahuluanPelbagai2
+        public JsonResult GetAnItemCartSpPendahuluanPelbagai2(SpPendahuluanPelbagai2 spPendahuluanPelbagai2)
+        {
+
+            try
+            {
+                SpPendahuluanPelbagai2 data = _cart.Lines2.Where(x => x.Indek == spPendahuluanPelbagai2.Indek).FirstOrDefault();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get an item from cart SpPendahuluanPelbagai2 end
+
+        // get all item from cart SpPendahuluanPelbagai2
+        public JsonResult GetAllItemCartSpPendahuluanPelbagai2(SpPendahuluanPelbagai2 spPendahuluanPelbagai2)
+        {
+
+            try
+            {
+                List<SpPendahuluanPelbagai2> data = _cart.Lines2.OrderBy(b => b.Indek).ToList();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart SpPendahuluanPelbagai1 end 
 
         private bool SpPendahuluanPelbagaiExists(int id)
         {

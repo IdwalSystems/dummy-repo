@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSNK.Models.Helper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class SpPendahuluanPelbagai
+    public class SpPendahuluanPelbagai : LogHelper,ISoftDelete
     {
         public int Id { get; set; }
         public string NoPermohonan { get; set; }
@@ -53,13 +54,10 @@ namespace MSNK.Models.Modules
         public ICollection<SpPendahuluanPelbagai2> SpPendahuluanPelbagai2 { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
         public ICollection<AkTerima> AkTerima { get; set; }
-
+        public bool FlHapus { get; set; }
+        public DateTime? TarHapus { get; set; }
 
         // log
-        public string UserId { get; set; }
-        public DateTime TarMasuk { get; set; }
-        public string UserIdKemaskini { get; set; }
-        public DateTime TarKemaskini { get; set; } = DateTime.Now;
         // log end
     }
 }
