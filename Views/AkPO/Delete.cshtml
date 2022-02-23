@@ -145,14 +145,14 @@
                         <div class="card mb-2">
                             <div class="card-body p-1">
                                 <div class="form-group col-sm">
-                                    <label asp-for="FlBatal" class="control-label"></label>
+                                    <label asp-for="FlHapus" class="control-label"></label>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal1" class="custom-control-input" value="0" checked>
-                                        <label class="custom-control-label" for="FlBatal">Belum</label>
+                                        <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus1" class="custom-control-input" value="0" checked>
+                                        <label class="custom-control-label" for="FlHapus">Tidak</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal" class="custom-control-input" value="1">
-                                        <label class="custom-control-label" for="FlBatal">Sudah</label>
+                                        <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="FlHapus">Ya</label>
                                     </div>
                                 </div>
                             </div>
@@ -261,59 +261,3 @@
         <a asp-action="Index">Kembali Ke Indeks</a>
     </form>
 </div>
-@*<dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NoPO)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NoPO)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tarikh)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tarikh)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TarikhPosting)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TarikhPosting)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Jumlah)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Jumlah)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FlPosting)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FlPosting)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tahun)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tahun)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FlBatal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FlBatal)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AkPembekal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AkPembekal.Id)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.JKW)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.JKW.Kod)
-        </dd class>
-    </dl>*@

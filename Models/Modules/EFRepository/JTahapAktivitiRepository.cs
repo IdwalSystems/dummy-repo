@@ -38,7 +38,7 @@ namespace MSNK.Models.Modules.EFRepository
 
         }
 
-        public Task<JTahapAktiviti> GetByIdForDeletedItems(int id)
+        public Task<JTahapAktiviti> GetByIdIncludeDeletedItems(int id)
         {
             throw new NotImplementedException();
         }

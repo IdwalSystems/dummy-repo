@@ -38,7 +38,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JJawatanPekerja.FindAsync(id);
         }
 
-        public Task<JJawatanPekerja> GetByIdForDeletedItems(int id)
+        public Task<JJawatanPekerja> GetByIdIncludeDeletedItems(int id)
         {
             throw new NotImplementedException();
         }

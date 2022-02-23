@@ -93,7 +93,7 @@
                     @Html.DisplayNameFor(model => model.Cetak)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Batal)
+                    @Html.DisplayNameFor(model => model.FlHapus)
                 </th>
                 <th class="action-button" width="5%"></th>
             </tr>
@@ -101,7 +101,8 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
+                var tabletype = item.FlHapus == 1 ? "table-danger" : null;
+                <tr class="@tabletype">
                     <td></td>
                     <td>
                         @Html.DisplayFor(modelItem => item.NoJurnal)
@@ -139,7 +140,7 @@
                         }
                     </td>
                     <td>
-                        @if (item.Batal == 0)
+                        @if (item.FlHapus == 0)
                         {
                             <label class="mb-0">TIDAK</label>
                         }
@@ -151,23 +152,37 @@
                     <td class="action-button">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
                         <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank" id="btnCetak"><i class="fas fa-print"></i></a>
-                        @if (item.Posting == 0)
+                        @if (item.FlHapus == 0)
                         {
-                            @if (item.Cetak != 0)
+                            @if (item.Posting == 0)
                             {
-                                <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                @if (item.Cetak != 0)
+                                {
+                                    <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                        <i class="fas fa-sync"></i>
+                                    </a>
+                                }
+
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                            }
+                            else
+                            {
+                                <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
                                     <i class="fas fa-sync"></i>
                                 </a>
                             }
-
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
                         }
                         else
                         {
-                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
-                                <i class="fas fa-sync"></i>
-                            </a>
+                            if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                            {
+                                <a asp-action="Rollback" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                    <i class="fas fa-trash-restore"></i>
+                                </a>
+
+                            }
                         }
+
                     </td>
                 </tr>
             }

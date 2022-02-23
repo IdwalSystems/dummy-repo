@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkTunaiRuncit : AppLogHelper
+    public class AkTunaiRuncit : AppLogHelper, ISoftDelete
     {
         public int Id { get; set; }
         [DisplayName("Kod Kaunter Panjar")]
@@ -25,6 +25,19 @@ namespace MSNK.Models.Modules
         public ICollection<AkTunaiPemegang> AkTunaiPemegang { get; set; }
         public ICollection<AkTunaiLejar> AkTunaiLejar { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
+
+        //flag
+        [DisplayName("Cetak")]
+        [DefaultValue("0")]
+        public int FlCetak { get; set; }
+        [DisplayName("Posting")]
+        [DefaultValue("0")]
+        public int FlPosting { get; set; }
+        [DisplayName("Batal")]
+        [DefaultValue("0")]
+        public int FlHapus { get; set; }
+        public DateTime? TarHapus { get; set; }
+        //flag end
 
 
 

@@ -89,11 +89,13 @@ namespace MSNK.Controllers
                     tajuk = "Laporan Daftar Resit Terperinci Mengikut Pecahan Kod Akaun Kump Wang :";
                 }
                 IEnumerable<AkTerima> akT = _context.AkTerima
+                    .IgnoreQueryFilters()
                     .Include(b => b.JKW)
                     .Include(b => b.AkBank).ThenInclude(b => b.AkCarta)
                     .Include(b => b.JNegeri)
                     .Include(b => b.AkTerima1).ThenInclude(b => b.AkCarta)
                     .Include(b => b.AkTerima2).ThenInclude(b => b.JCaraBayar)
+                    .Where(b=> b.JKWId == 1)
                     .ToList();
 
                 // date condition
@@ -139,7 +141,7 @@ namespace MSNK.Controllers
                 reportModel.AkTerima = akT;
                 foreach (AkTerima item in reportModel.AkTerima)
                 {
-                    if (item.FlBatal == 1)
+                    if (item.FlHapus == 1)
                     {
                         debit += 0;
                     }
@@ -151,7 +153,7 @@ namespace MSNK.Controllers
 
                     foreach (AkTerima1 item1 in item.AkTerima1)
                     {
-                        if (item.FlBatal == 1)
+                        if (item.FlHapus == 1)
                         {
                             kredit += 0;
                         }
@@ -162,7 +164,7 @@ namespace MSNK.Controllers
                     }
                     foreach (AkTerima2 item2 in item.AkTerima2)
                     {
-                        if (item.FlBatal == 1)
+                        if (item.FlHapus == 1)
                         {
                             amaunUrusniaga += 0;
                         }
@@ -181,7 +183,7 @@ namespace MSNK.Controllers
                 var RingkasanCaraBayar = (from tbl1 in _context.AkTerima2.Include(x => x.JCaraBayar).ToList()
                                                      join tbl in _context.AkTerima.ToList()
                                                      on tbl1.AkTerimaId equals tbl.Id into tbl1Tbl
-                                                     from tbl1_tbl in tbl1Tbl.DefaultIfEmpty().Where(x => x.FlBatal != 1)
+                                                     from tbl1_tbl in tbl1Tbl.DefaultIfEmpty()
                                                      select new
                                                      {
                                                          CaraBayar = tbl1.JCaraBayar.Perihal
@@ -199,7 +201,7 @@ namespace MSNK.Controllers
 
                 //Ringkasan Cara bayar end
                 //Ringkasan Debit group by kod Bank AkTerima
-                var DebitLines = (from tbl in _context.AkTerima.Include(x => x.AkBank).ThenInclude(x => x.AkCarta).Where(x => x.FlBatal != 1).ToList()
+                var DebitLines = (from tbl in _context.AkTerima.Include(x => x.AkBank).ThenInclude(x => x.AkCarta).Where(x => x.FlHapus != 1).ToList()
                                   select new
                                   {
                                       kodAkaun = tbl.AkBank.AkCarta.Kod,
@@ -221,7 +223,7 @@ namespace MSNK.Controllers
                 var kreditLines = (from tbl1 in _context.AkTerima1.Include(x => x.AkCarta).ToList()
                                    join tbl in _context.AkTerima.ToList()
                                    on tbl1.AkTerimaId equals tbl.Id into tbl1Tbl
-                                   from tbl1_tbl in tbl1Tbl.DefaultIfEmpty().Where(x => x.FlBatal != 1)
+                                   from tbl1_tbl in tbl1Tbl.DefaultIfEmpty()
                                    select new
                                    {
                                        kodAkaun = tbl1.AkCarta.Kod,

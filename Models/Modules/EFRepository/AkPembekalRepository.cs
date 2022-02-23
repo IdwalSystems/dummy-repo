@@ -42,7 +42,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkPembekal.FindAsync(id);
         }
 
-        public async Task<AkPembekal> GetByIdForDeletedItems(int id)
+        public async Task<AkPembekal> GetByIdIncludeDeletedItems(int id)
         {
             return await context.AkPembekal
                 .IgnoreQueryFilters()

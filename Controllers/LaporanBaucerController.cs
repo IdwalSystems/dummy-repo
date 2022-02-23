@@ -136,7 +136,7 @@ namespace MSNK.Controllers
 
                 foreach (AkPV item in reportModel.AkPV)
                 {
-                    if (item.FlBatal == 1)
+                    if (item.FlHapus == 1)
                     {
                         jumlahDebit += 0;
                     }

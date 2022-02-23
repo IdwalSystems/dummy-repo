@@ -32,6 +32,7 @@ namespace MSNK.Models.Modules
         public string NoInbois { get; set; }
         [BindProperty]
         [DisplayName("Jumlah RM")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
         //field end
 

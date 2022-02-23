@@ -105,6 +105,11 @@ namespace MSNK.Controllers
 
             var akPV = await _akPVRepo.GetAll();
 
+            if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
+            {
+                akPV = await _akPVRepo.GetAllIncludeDeletedItems();
+            }
+
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
@@ -165,23 +170,13 @@ namespace MSNK.Controllers
                     Jumlah = item.Jumlah,
                     Penerima = item.Nama,
                     CaraBayar = item.JCaraBayar.Perihal,
-                    FlBatal = item.FlBatal,
+                    FlHapus = item.FlHapus,
                     FlPosting = item.FlPosting,
                     FlCetak = item.FlCetak,
                     JumlahInbois = jumlahInbois,
                     FlKategoriPenerima = item.FlKategoriPenerima
                 }
                 );
-            }
-            var lastItem = akPV.OrderByDescending(x => x.Id).FirstOrDefault();
-
-            if (lastItem != null)
-            {
-                ViewData["lastItem"] = lastItem.NoPV;
-            }
-            else
-            {
-                ViewData["lastItem"] = "NaN";
             }
 
             return View(viewModel);
@@ -295,29 +290,7 @@ namespace MSNK.Controllers
                 else
                 {
                     // get latest no rujukan running number  
-                    var kw = _context.JKW.FirstOrDefault(x => x.Id == data);
-
-                    var kumpulanWang = kw.Kod;
-                    string prefix =  kumpulanWang + year;
-                    int x = 1;
-                    string noRujukan = prefix + "000000";
-
-                    var LatestNoRujukan = _context.AkPV
-                        .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
-                        .Max(x => x.NoPV);
-                    if (LatestNoRujukan == null)
-                    {
-                        noRujukan = string.Format("{0:" + prefix + "000000}", x);
-                    }
-                    else
-                    {
-                        x = int.Parse(LatestNoRujukan.Substring(10));
-                        x++;
-                        noRujukan = string.Format("{0:" + prefix + "000000}", x);
-                    }
-
-                    result = noRujukan;
-
+                    result = GetNoRujukan(data, year);
                     // get latest no rujukan running number end
                 }
                 return Json(new { result = "OK", record = result });
@@ -641,20 +614,13 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPV = await _akPVRepo.GetById((int)id);
+            var akPV = await _akPVRepo.GetByIdIncludeDeletedItems((int)id);
 
-            // check if this data is the last one (for preventing batal purpose)
-            var lastItem = _context.AkPV.OrderByDescending(x => x.Id).FirstOrDefault();
-
-            if (lastItem.Id == akPV.Id)
+            // normal user access
+            if (User.IsInRole("User"))
             {
-                ViewData["isLastItem"] = "Y";
+                akPV = await _akPVRepo.GetById((int)id);
             }
-            else
-            {
-                ViewData["isLastItem"] = "N";
-            }
-            // check end
 
             if (akPV == null)
             {
@@ -721,7 +687,7 @@ namespace MSNK.Controllers
             akPVView.CaraBayar = akPV.JCaraBayar.Perihal;
             akPVView.FlPosting = akPV.FlPosting;
             akPVView.FlCetak = akPV.FlCetak;
-            akPVView.FlBatal = akPV.FlBatal;
+            akPVView.FlHapus = akPV.FlHapus;
             akPVView.FlKategoriPenerima = akPV.FlKategoriPenerima;
             akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
             akPVView.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
@@ -755,22 +721,20 @@ namespace MSNK.Controllers
             ViewBag.akPV2 = akPV2Table;
         }
 
-        // GET: AkPV/Create
-        [Authorize(Policy = "PV001C")]
-        public IActionResult Create()
+        private string GetNoRujukan(int data, string year)
         {
-            // get latest no rujukan running number  
-            var kw = _context.JKW.FirstOrDefault(x => x.Kod == "100");
+            var kw = _context.JKW.FirstOrDefault(x => x.Id == data);
 
             var kumpulanWang = kw.Kod;
-            var year = DateTime.Now.Year.ToString();
-            string prefix = kumpulanWang + year;
+
+            string prefix = year + "/" + kumpulanWang + "/";
             int x = 1;
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkPV
-                        .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
-                        .Max(x => x.NoPV);
+                       .IgnoreQueryFilters()
+                       .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
+                       .Max(x => x.NoPV);
 
             if (LatestNoRujukan == null)
             {
@@ -782,9 +746,19 @@ namespace MSNK.Controllers
                 x++;
                 noRujukan = string.Format("{0:" + prefix + "000000}", x);
             }
+            return noRujukan;
+        }
 
+        // GET: AkPV/Create
+        [Authorize(Policy = "PV001C")]
+        public IActionResult Create()
+        {
+            // get latest no rujukan running number  
+            var year = DateTime.Now.Year.ToString();
+            var data = 1;
+
+            ViewBag.NoRujukan = GetNoRujukan(data, year);
             // get latest no rujukan running number end
-            ViewBag.NoRujukan = noRujukan;
 
             PopulateList();
             CartEmpty();
@@ -962,6 +936,7 @@ namespace MSNK.Controllers
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkPV
+                .IgnoreQueryFilters()
                         .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
                         .Max(x => x.NoPV);
 
@@ -1021,7 +996,7 @@ namespace MSNK.Controllers
                     }
                     m.Jumlah = akPV.Jumlah;
                     m.FlPosting = 0;
-                    m.FlBatal = 0;
+                    m.FlHapus = 0;
                     m.FlCetak = 0;
                     m.FlKategoriPenerima = akPV.FlKategoriPenerima;
                     m.FlJenisBaucer = akPV.FlJenisBaucer;
@@ -1145,7 +1120,7 @@ namespace MSNK.Controllers
             akPVView.CaraBayar = akPV.JCaraBayar.Perihal;
             akPVView.FlPosting = akPV.FlPosting;
             akPVView.FlCetak = akPV.FlCetak;
-            akPVView.FlBatal = akPV.FlBatal;
+            akPVView.FlHapus = akPV.FlHapus;
             akPVView.FlKategoriPenerima = akPV.FlKategoriPenerima;
             akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
 
@@ -1648,7 +1623,7 @@ namespace MSNK.Controllers
             akPVView.CaraBayar = akPV.JCaraBayar.Perihal;
             akPVView.FlPosting = akPV.FlPosting;
             akPVView.FlCetak = akPV.FlCetak;
-            akPVView.FlBatal = akPV.FlBatal;
+            akPVView.FlHapus = akPV.FlHapus;
             akPVView.FlKategoriPenerima = akPV.FlKategoriPenerima;
             akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
             akPVView.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
@@ -1680,6 +1655,9 @@ namespace MSNK.Controllers
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
                 return RedirectToAction(nameof(Index));
             }
+            akPV.FlCetak = 0;
+            _context.AkPV.Update(akPV);
+
             _context.AkPV.Remove(akPV);
 
             //insert applog
@@ -1710,7 +1688,7 @@ namespace MSNK.Controllers
         [Authorize(Policy = "PV001P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
-            AkPV akPV = await _akPVRepo.GetById(id);
+            AkPV akPV = await _akPVRepo.GetByIdIncludeDeletedItems(id);
 
             PVPrintModel data = new PVPrintModel();
             var user = await _userManager.GetUserAsync(User);
@@ -2080,30 +2058,69 @@ namespace MSNK.Controllers
         }
         // unposting function end
 
+        //// POST: AkPV/Cancel/5
+        //[Authorize(Policy = "PV001B")]
+        //public async Task<IActionResult> Cancel(int id)
+        //{
+        //    var akPV = await _context.AkPV.FindAsync(id);
+        //    // check if already posting redirect back
+        //    if (akPV.FlPosting == 1)
+        //    {
+        //        TempData[SD.Error] = "Akses tidak dibenarkan..!";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    // check if this data is the last one (for preventing batal purpose)
+        //    var lastItem = _context.AkPV.OrderByDescending(x => x.Id).FirstOrDefault();
+
+        //    if (lastItem.Id == akPV.Id)
+        //    {
+        //        TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    // check end
+        //    // Batal operation
+
+        //    akPV.FlHapus = 1;
+        //    _context.AkPV.Update(akPV);
+
+        //    // Batal operation end
+
+        //    //insert applog
+        //    var user = await _userManager.GetUserAsync(User);
+
+        //    AppLog appLog = new AppLog();
+
+        //    appLog.UserId = user.UserName;
+        //    appLog.LgModule = modul + "B";
+        //    appLog.LgOperation = "Batal";
+        //    appLog.LgNote = modul + " Baucer Pembayaran - Batal";
+        //    appLog.NoRujukan = akPV.NoPV;
+        //    appLog.Jumlah = akPV.Jumlah;
+
+        //    await _appLog.Insert(appLog);
+        //    //insert applog end
+
+        //    await _context.SaveChangesAsync();
+        //    TempData[SD.Success] = "Data berjaya dibatalkan..!";
+        //    return RedirectToAction(nameof(Index));
+        //}
         // POST: AkPV/Cancel/5
-        [Authorize(Policy = "PV001B")]
-        public async Task<IActionResult> Cancel(int id)
+        [Authorize(Policy = "PV001R")]
+        public async Task<IActionResult> RollBack(int id)
         {
-            var akPV = await _context.AkPV.FindAsync(id);
+            var obj = await _akPVRepo.GetByIdIncludeDeletedItems(id);
             // check if already posting redirect back
-            if (akPV.FlPosting == 1)
+            if (obj.FlPosting == 1)
             {
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
                 return RedirectToAction(nameof(Index));
             }
-            // check if this data is the last one (for preventing batal purpose)
-            var lastItem = _context.AkPV.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            if (lastItem.Id == akPV.Id)
-            {
-                TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
-                return RedirectToAction(nameof(Index));
-            }
-            // check end
             // Batal operation
 
-            akPV.FlBatal = 1;
-            _context.AkPV.Update(akPV);
+            obj.FlHapus = 0;
+            obj.FlCetak = 0;
+            _context.AkPV.Update(obj);
 
             // Batal operation end
 
@@ -2113,17 +2130,17 @@ namespace MSNK.Controllers
             AppLog appLog = new AppLog();
 
             appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "B";
-            appLog.LgOperation = "Batal";
-            appLog.LgNote = modul + " Baucer Pembayaran - Batal";
-            appLog.NoRujukan = akPV.NoPV;
-            appLog.Jumlah = akPV.Jumlah;
+            appLog.LgModule = modul + "R";
+            appLog.LgOperation = "Rollback";
+            appLog.LgNote = modul + " Baucer Pembayaran - Rollback";
+            appLog.NoRujukan = obj.NoPV;
+            appLog.Jumlah = obj.Jumlah;
 
             await _appLog.Insert(appLog);
             //insert applog end
 
             await _context.SaveChangesAsync();
-            TempData[SD.Success] = "Data berjaya dibatalkan..!";
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
         }
     }

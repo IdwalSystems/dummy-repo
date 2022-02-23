@@ -20,6 +20,7 @@ namespace MSNK.Models.Modules
         public string LgOperation { get; set; }
         public string LgNote { get; set; }
         public string NoRujukan { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
         public string SysCode { get; set; }
         

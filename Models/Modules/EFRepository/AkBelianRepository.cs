@@ -63,7 +63,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<AkBelian> GetByIdForDeletedItems(int id)
+        public async Task<AkBelian> GetByIdIncludeDeletedItems(int id)
         {
             return await context.AkBelian.Include(b => b.JKW)
                 .IgnoreQueryFilters()

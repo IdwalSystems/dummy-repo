@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkTunaiCV : AppLogHelper
+    public class AkTunaiCV : AppLogHelper, ISoftDelete
     {
         public int Id { get; set; }
         [DisplayName("Kod Kaunter Panjar")]
@@ -32,12 +33,14 @@ namespace MSNK.Models.Modules
         public string Alamat3 { get; set; }
         public string Catatan { get; set; }
         [DisplayName("Jumlah RM")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
         public ICollection<AkTunaiCV1> AkTunaiCV1 { get; set; }
         public int FlPosting { get; set; }
         public DateTime? TarikhPosting { get; set; }
         public int FlCetak { get; set; }
-        public int FlBatal { get; set; }
+        public int FlHapus { get; set; }
+        public DateTime? TarHapus { get; set; }
 
     }
 }

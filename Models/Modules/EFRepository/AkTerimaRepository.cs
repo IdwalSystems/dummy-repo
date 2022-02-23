@@ -33,9 +33,16 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
-        public Task<IEnumerable<AkTerima>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<AkTerima>> GetAllIncludeDeletedItems()
         {
-            throw new NotImplementedException();
+            return await context.AkTerima
+                .IgnoreQueryFilters()
+                .Include(b => b.JKW)
+                .Include(b => b.AkBank)
+                .Include(b => b.JNegeri)
+                .Include(b => b.AkTerima1)
+                .Include(b => b.AkTerima2)
+                .ToListAsync();
         }
 
         public async Task<AkTerima> GetById(int id)
@@ -50,9 +57,17 @@ namespace MSNK.Models.Modules.EFRepository
                 .FirstOrDefaultAsync();
         }
 
-        public Task<AkTerima> GetByIdForDeletedItems(int id)
+        public async Task<AkTerima> GetByIdIncludeDeletedItems(int id)
         {
-            throw new NotImplementedException();
+            return await context.AkTerima
+                .IgnoreQueryFilters()
+                .Include(b => b.JKW)
+                .Include(b => b.AkBank)
+                .Include(b => b.JNegeri)
+                .Include(b => b.AkTerima1).ThenInclude(b => b.AkCarta)
+                .Include(b => b.AkTerima2).ThenInclude(b => b.JCaraBayar)
+                .Where(b => b.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public Task<AkTerima> GetByString(string id)

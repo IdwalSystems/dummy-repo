@@ -38,7 +38,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JAgama.FindAsync(id);
         }
 
-        public Task<JAgama> GetByIdForDeletedItems(int id)
+        public Task<JAgama> GetByIdIncludeDeletedItems(int id)
         {
             throw new NotImplementedException();
         }

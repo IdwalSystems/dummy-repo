@@ -189,7 +189,7 @@ namespace MSNK.Controllers
             viewModel.Jumlah = akPOLaras.Jumlah;
             viewModel.TarikhPosting = akPOLaras.TarikhPosting;
             viewModel.FlPosting = akPOLaras.FlPosting;
-            viewModel.FlBatal = akPOLaras.FlBatal;
+            viewModel.FlHapus = akPOLaras.FlHapus;
             viewModel.FlCetak = akPOLaras.FlCetak;
 
             foreach (AkPOLaras2 item in akPOLaras.AkPOLaras2)
@@ -462,7 +462,7 @@ namespace MSNK.Controllers
                     m.TarikhPosting = akPOLaras.TarikhPosting;
                     m.Jumlah = akPOLaras.Jumlah;
                     m.FlPosting = 0;
-                    m.FlBatal = 0;
+                    m.FlHapus = 0;
                     m.FlCetak = 0;
                     m.Tahun = akPOLaras.Tahun;
                     m.UserId = user.UserName;
@@ -959,7 +959,7 @@ namespace MSNK.Controllers
             viewModel.Jumlah = akPOLaras.Jumlah;
             viewModel.TarikhPosting = akPOLaras.TarikhPosting;
             viewModel.FlPosting = akPOLaras.FlPosting;
-            viewModel.FlBatal = akPOLaras.FlBatal;
+            viewModel.FlHapus = akPOLaras.FlHapus;
             viewModel.FlCetak = akPOLaras.FlCetak;
 
             foreach (AkPOLaras2 item in akPOLaras.AkPOLaras2)
@@ -1020,7 +1020,7 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
             // check end
-            akPOLaras.FlBatal = 1;
+            akPOLaras.FlHapus = 1;
 
             _context.AkPOLaras.Update(akPOLaras);
 

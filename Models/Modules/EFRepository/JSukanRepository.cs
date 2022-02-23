@@ -38,7 +38,7 @@ namespace MSNK.Models.Modules.EFRepository
 
         }
 
-        public Task<JSukan> GetByIdForDeletedItems(int id)
+        public Task<JSukan> GetByIdIncludeDeletedItems(int id)
         {
             throw new NotImplementedException();
         }

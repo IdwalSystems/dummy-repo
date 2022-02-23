@@ -37,9 +37,19 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
-        public Task<IEnumerable<AkPV>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<AkPV>> GetAllIncludeDeletedItems()
         {
-            throw new NotImplementedException();
+            return await context.AkPV
+                .IgnoreQueryFilters()
+                .Include(b => b.JKW)
+                .Include(b => b.AkPembekal)
+                .Include(b => b.SuPekerja)
+                .Include(b => b.AkBank)
+                .Include(b => b.JCaraBayar)
+                .Include(b => b.AkPV1)
+                .Include(b => b.AkPV2)
+                .ThenInclude(b => b.AkBelian)
+                .ToListAsync();
         }
 
         public async Task<AkPV> GetById(int id)
@@ -60,9 +70,23 @@ namespace MSNK.Models.Modules.EFRepository
                 .FirstOrDefaultAsync();
         }
 
-        public Task<AkPV> GetByIdForDeletedItems(int id)
+        public async Task<AkPV> GetByIdIncludeDeletedItems(int id)
         {
-            throw new NotImplementedException();
+            return await context.AkPV
+                .IgnoreQueryFilters()
+                .Include(b => b.JKW)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkCarta)
+                .Include(b => b.AkPembekal).ThenInclude(x => x.JBank)
+                .Include(b => b.SuPekerja).ThenInclude(x => x.JBank)
+                .Include(b => b.AkBank).ThenInclude(b => b.JBank)
+                .Include(b => b.JCaraBayar)
+                .Include(b => b.AkPV1)
+                    .ThenInclude(b => b.AkCarta)
+                .Include(b => b.AkPV2)
+                    .ThenInclude(b => b.AkBelian)
+                        .ThenInclude(b => b.AkPO)
+                .Where(b => b.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public Task<AkPV> GetByString(string id)

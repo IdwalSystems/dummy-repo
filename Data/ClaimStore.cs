@@ -18,6 +18,7 @@ namespace MSNK.Data
             new Claim("PR001D","PR001 Penerimaan - Hapus"),
             new Claim("PR001P","PR001 Penerimaan - Cetak"),
             new Claim("PR001B","PR001 Penerimaan - Batal"),
+            new Claim("PR001R","PR001 Penerimaan - Rollback"),
             new Claim("PR001T","PR001 Penerimaan - Posting"),
             new Claim("PR001UT","PR001 Penerimaan - UnPosting"),
             //Resit Rasmi end
@@ -29,6 +30,7 @@ namespace MSNK.Data
             new Claim("TG001D","TG001 Pesanan Tempatan - Hapus"),
             new Claim("TG001P","TG001 Pesanan Tempatan - Cetak"),
             new Claim("TG001B","TG001 Pesanan Tempatan - Batal"),
+            new Claim("TG001R","TG001 Pesanan Tempatan - Rollback"),
             new Claim("TG001T","TG001 Pesanan Tempatan - Posting"),
             new Claim("TG001UT","TG001 Pesanan Tempatan - UnPosting"),
             //Pesanan Tempatan end
@@ -39,6 +41,7 @@ namespace MSNK.Data
             new Claim("PT001D","PT001 Pelarasan Tanggungan - Hapus"),
             new Claim("PT001P","PT001 Pelarasan Tanggungan - Cetak"),
             new Claim("PT001B","PT001 Pelarasan Tanggungan - Batal"),
+            new Claim("PT001R","PT001 Pelarasan Tanggungan - Rollback"),
             new Claim("PT001T","PT001 Pelarasan Tanggungan - Posting"),
             new Claim("PT001UT","PT001 Pelarasan Tanggungan - UnPosting"),
             //Pelarasan Tanggungan end
@@ -49,6 +52,7 @@ namespace MSNK.Data
             new Claim("TG002D","TG002 Invois Pembekal - Hapus"),
             //new Claim("TG002P","TG002 Invois Pembekal - Cetak"),
             new Claim("TG002B","TG002 Invois Pembekal - Batal"),
+            new Claim("TG002R","TG002 Invois Pembekal - Rollback"),
             new Claim("TG002T","TG002 Invois Pembekal - Posting"),
             new Claim("TG002UT","TG002 Invois Pembekal - UnPosting"),
             //Invois Pembekal end
@@ -60,6 +64,7 @@ namespace MSNK.Data
             new Claim("PV001D","PV001 Baucer Pembayaran - Hapus"),
             new Claim("PV001P","PV001 Baucer Pembayaran - Cetak"),
             new Claim("PV001B","PV001 Baucer Pembayaran - Batal"),
+            new Claim("PV001R","PV001 Baucer Pembayaran - Rollback"),
             new Claim("PV001T","PV001 Baucer Pembayaran - Posting"),
             new Claim("PV001UT","PV001 Baucer Pembayaran - UnPosting"),
             //Baucer Pembayaran end
@@ -70,6 +75,7 @@ namespace MSNK.Data
             new Claim("JU001D","JU001 Baucer Jurnal - Hapus"),
             new Claim("JU001P","JU001 Baucer Jurnal - Cetak"),
             new Claim("JU001B","JU001 Baucer Jurnal - Batal"),
+            new Claim("JU001R","JU001 Baucer Jurnal - Rollback"),
             new Claim("JU001T","JU001 Baucer Jurnal - Posting"),
             new Claim("JU001UT","JU001 Baucer Jurnal - UnPosting"),
             //Baucer Jurnal end
@@ -80,6 +86,7 @@ namespace MSNK.Data
             new Claim("TR001E","TR001 Pemegang Tunai Runcit - Ubah"),
             new Claim("TR001D","TR001 Pemegang Tunai Runcit - Hapus"),
             new Claim("TR001P","TR001 Pemegang Tunai Runcit - Cetak"),
+            new Claim("TR001R","TR001 Pemegang Tunai Runcit - Rollback"),
             //new Claim("TR001B","TR001 Pemegang Tunai Runcit - Batal"),
             //new Claim("TR001T","TR001 Pemegang Tunai Runcit - Posting"),
             //new Claim("TR001UT","TR001 Pemegang Tunai Runcit - UnPosting"),
@@ -91,6 +98,7 @@ namespace MSNK.Data
             new Claim("TR002D","TR002 Tunai Keluar - Hapus"),
             new Claim("TR002P","TR002 Tunai Keluar - Cetak"),
             new Claim("TR002B","TR002 Tunai Keluar - Batal"),
+            new Claim("TR002R","TR002 Tunai Keluar - Rollback"),
             new Claim("TR002T","TR002 Tunai Keluar - Posting"),
             new Claim("TR002UT","TR002 Tunai Keluar - UnPosting"),
             //Tunai Keluar end
@@ -102,6 +110,7 @@ namespace MSNK.Data
             new Claim("NM001D","NM001 Nota Minta - Hapus"),
             new Claim("NM001P","NM001 Nota Minta - Cetak"),
             new Claim("NM001B","NM001 Nota Minta - Batal"),
+            new Claim("NM001R","NM001 Nota Minta - Rollback"),
             new Claim("NM001T","NM001 Nota Minta - Posting"),
             new Claim("NM001UT","NM001 Nota Minta - UnPosting"),
             //Nota Minta end
@@ -112,6 +121,7 @@ namespace MSNK.Data
             new Claim("SP001D","SP001 Pendahuluan Pelbagai - Hapus"),
             new Claim("SP001P","SP001 Pendahuluan Pelbagai - Cetak"),
             new Claim("SP001B","SP001 Pendahuluan Pelbagai - Batal"),
+            new Claim("SP001R","SP001 Pendahuluan Pelbagai - Rollback"),
             new Claim("SP001T","SP001 Pendahuluan Pelbagai - Posting"),
             new Claim("SP001UT","SP001 Pendahuluan Pelbagai - UnPosting"),
             //Pendahuluan Pelbagai end

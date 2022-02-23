@@ -30,9 +30,13 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
-        public Task<IEnumerable<AkJurnal>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<AkJurnal>> GetAllIncludeDeletedItems()
         {
-            throw new NotImplementedException();
+            return await context.AkJurnal
+                .IgnoreQueryFilters()
+                .Include(b => b.JKW)
+                .Include(b => b.AkJurnal1).ThenInclude(b => b.AkCarta)
+                .ToListAsync();
         }
 
         public async Task<AkJurnal> GetById(int id)
@@ -40,9 +44,13 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkJurnal.FindAsync(id);
         }
 
-        public Task<AkJurnal> GetByIdForDeletedItems(int id)
+        public async Task<AkJurnal> GetByIdIncludeDeletedItems(int id)
         {
-            throw new NotImplementedException();
+            return await context.AkJurnal
+                .IgnoreQueryFilters()
+                .Include(b => b.JKW)
+                .Include(b => b.AkJurnal1).ThenInclude(b=> b.AkCarta)
+                .Where(x=>x.Id == id).FirstOrDefaultAsync();
         }
 
         public Task<AkJurnal> GetByString(string id)

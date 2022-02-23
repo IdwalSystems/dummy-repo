@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkPO : AppLogHelper
+    public class AkPO : AppLogHelper, ISoftDelete
     {
         //field
         public int Id { get; set; }
@@ -20,6 +21,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Posting")]
         public DateTime? TarikhPosting { get; set; }
         [DisplayName("Jumlah RM")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
         [MaxLength(4)]
         [DisplayName("Tahun Belanjawan")]
@@ -32,7 +34,8 @@ namespace MSNK.Models.Modules
         //flag
         [DisplayName("Status Batal")]
         [DefaultValue("0")]
-        public int FlBatal { get; set; }
+        public int FlHapus { get; set; }
+        public DateTime? TarHapus { get; set; }
         [DisplayName("Posting")]
         [DefaultValue("0")]
         public int FlPosting { get; set; }

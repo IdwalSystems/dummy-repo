@@ -38,7 +38,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JBank.FindAsync(id);
         }
 
-        public Task<JBank> GetByIdForDeletedItems(int id)
+        public Task<JBank> GetByIdIncludeDeletedItems(int id)
         {
             throw new NotImplementedException();
         }

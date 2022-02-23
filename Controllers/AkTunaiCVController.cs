@@ -141,7 +141,7 @@ namespace MSNK.Controllers
                     Catatan = item.Catatan,
                     FlPosting = item.FlPosting,
                     FlCetak = item.FlCetak,
-                    FlBatal = item.FlBatal
+                    FlHapus = item.FlHapus
                 });
             }
             var lastItem = akTunaiCV.OrderByDescending(x => x.Id).FirstOrDefault();
@@ -595,7 +595,7 @@ namespace MSNK.Controllers
 
                     m.Jumlah = akTunaiCV.Jumlah;
                     m.FlPosting = 0;
-                    m.FlBatal = 0;
+                    m.FlHapus = 0;
                     m.FlCetak = 0;
                     m.KategoriPenerima = akTunaiCV.KategoriPenerima;
 
@@ -1000,49 +1000,49 @@ namespace MSNK.Controllers
         }
         // unposting function end
 
-        // POST: AkTunaiCV/Cancel/5
-        [Authorize(Policy = "TR002B")]
-        public async Task<IActionResult> Cancel(int id)
-        {
-            var akTunaiCV = await _context.AkTunaiCV.FindAsync(id);
-            // check if already posting redirect back
-            if (akTunaiCV.FlPosting == 1)
-            {
-                TempData[SD.Error] = "Akses tidak dibenarkan..!";
-                return RedirectToAction(nameof(Index));
-            }
+        //// POST: AkTunaiCV/Cancel/5
+        //[Authorize(Policy = "TR002B")]
+        //public async Task<IActionResult> Cancel(int id)
+        //{
+        //    var akTunaiCV = await _context.AkTunaiCV.FindAsync(id);
+        //    // check if already posting redirect back
+        //    if (akTunaiCV.FlPosting == 1)
+        //    {
+        //        TempData[SD.Error] = "Akses tidak dibenarkan..!";
+        //        return RedirectToAction(nameof(Index));
+        //    }
 
-            // check if this data is the last one (for preventing batal purpose)
-            var lastItem = _context.AkTunaiCV.OrderByDescending(x => x.Id).FirstOrDefault();
+        //    // check if this data is the last one (for preventing batal purpose)
+        //    var lastItem = _context.AkTunaiCV.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            if (lastItem.Id == akTunaiCV.Id)
-            {
-                TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
-                return RedirectToAction(nameof(Index));
-            }
-            // check end
-            akTunaiCV.FlBatal = 1;
+        //    if (lastItem.Id == akTunaiCV.Id)
+        //    {
+        //        TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    // check end
+        //    akTunaiCV.FlHapus = 1;
 
-            _context.AkTunaiCV.Update(akTunaiCV);
+        //    _context.AkTunaiCV.Update(akTunaiCV);
 
-            //insert applog
-            var user = await _userManager.GetUserAsync(User);
+        //    //insert applog
+        //    var user = await _userManager.GetUserAsync(User);
 
-            AppLog appLog = new AppLog();
+        //    AppLog appLog = new AppLog();
 
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "B";
-            appLog.LgOperation = "Batal";
-            appLog.LgNote = modul + " Penerimaan - Batal";
-            appLog.NoRujukan = akTunaiCV.NoCV;
-            appLog.Jumlah = akTunaiCV.Jumlah;
+        //    appLog.UserId = user.UserName;
+        //    appLog.LgModule = modul + "B";
+        //    appLog.LgOperation = "Batal";
+        //    appLog.LgNote = modul + " Penerimaan - Batal";
+        //    appLog.NoRujukan = akTunaiCV.NoCV;
+        //    appLog.Jumlah = akTunaiCV.Jumlah;
 
-            await _appLog.Insert(appLog);
-            //insert applog end
+        //    await _appLog.Insert(appLog);
+        //    //insert applog end
 
-            await _context.SaveChangesAsync();
-            TempData[SD.Success] = "Data berjaya dibatalkan..!";
-            return RedirectToAction(nameof(Index));
-        }
+        //    await _context.SaveChangesAsync();
+        //    TempData[SD.Success] = "Data berjaya dibatalkan..!";
+        //    return RedirectToAction(nameof(Index));
+        //}
     }
 }

@@ -89,10 +89,27 @@ namespace MSNK.Data
             modelBuilder.Entity<JJenis>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JParas>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
 
-            //Tanggungan
-            modelBuilder.Entity<AkBelian>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            //Terimaan
+            modelBuilder.Entity<AkTerima>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
 
+            // Terimaan End
+
+            //Baucer
+            modelBuilder.Entity<AkPV>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkJurnal>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            // Baucer End
+            //Tanggungan
+            modelBuilder.Entity<AkNotaMinta>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkPO>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkPOLaras>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkBelian>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Tanggungan End
+            //Tunai Runcit
+            modelBuilder.Entity<AkTunaiCV>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            //Tunai Runcit End
+            //Permohonan
+            modelBuilder.Entity<SpPendahuluanPelbagai>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            //Permohonan End
             //load item without soft delete end
 
             //modelBuilder.Entity<IdentityRole>()

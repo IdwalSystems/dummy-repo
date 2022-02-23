@@ -17,7 +17,6 @@ using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
 using Rotativa.AspNetCore;
 using MSNK.Infrastructure;
-using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
@@ -91,6 +90,7 @@ namespace MSNK.Controllers
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkPO
+                .IgnoreQueryFilters()
                 .Where(x => x.NoPO.Substring(0, 9) == prefix)
                 .Max(x => x.NoPO);
             if (LatestNoRujukan == null)
@@ -150,6 +150,11 @@ namespace MSNK.Controllers
             }
 
             var akPO = await _akPORepo.GetAll();
+
+            if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
+            {
+                akPO = await _akPORepo.GetAllIncludeDeletedItems();
+            }
 
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
             {
@@ -268,7 +273,32 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akPO = await _context.AkPO.FindAsync(id);
+            // check if already posting redirect back
+            if (akPO.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            akPO.FlCetak = 0;
+            _context.AkPO.Update(akPO);
+
             _context.AkPO.Remove(akPO);
+
+            //insert applog
+            var user = await _userManager.GetUserAsync(User);
+
+            AppLog appLog = new AppLog();
+
+            appLog.UserId = user.UserName;
+            appLog.LgModule = modul + "D";
+            appLog.LgOperation = "Hapus";
+            appLog.LgNote = modul + " Pesanan Tempatan - Hapus";
+            appLog.NoRujukan = akPO.NoPO;
+            appLog.Jumlah = akPO.Jumlah;
+
+            await _appLog.Insert(appLog);
+            //insert applog end
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -618,7 +648,7 @@ namespace MSNK.Controllers
                     m.AkPembekal = pembekal;
                     m.Jumlah = akPO.Jumlah;
                     m.FlPosting = 0;
-                    m.FlBatal = 0;
+                    m.FlHapus = 0;
                     m.FlCetak = 0;
                     m.Tahun = akPO.Tahun;
                     m.UserId = user.UserName;
@@ -1433,7 +1463,7 @@ namespace MSNK.Controllers
                     var akBelian = (from tblBelian in _context.AkBelian.ToList()
                                  join tblPO in _context.AkPO.ToList()
                                  on tblBelian.AkPOId equals tblPO.Id into tblBelianTblPO
-                                 from tblBelian_tblPO in tblBelianTblPO.DefaultIfEmpty().Where(x => x.FlBatal != 1)
+                                 from tblBelian_tblPO in tblBelianTblPO.DefaultIfEmpty().Where(x => x.FlHapus != 1)
                                  select new
                                  {
                                      Id = tblBelian.Id,
@@ -1525,29 +1555,68 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
-        // POST: AkPO/Cancel/5
-        [Authorize(Policy = "TG001B")]
-        public async Task<IActionResult> Cancel(int id)
+        //// POST: AkPO/Cancel/5
+        //[Authorize(Policy = "TG001B")]
+        //public async Task<IActionResult> Cancel(int id)
+        //{
+        //    var akPO = await _context.AkPO.FindAsync(id);
+        //    // check if already posting redirect back
+        //    if (akPO.FlPosting == 1)
+        //    {
+        //        TempData[SD.Error] = "Akses tidak dibenarkan..!";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    // check if this data is the last one (for preventing batal purpose)
+        //    var lastItem = _context.AkPO.OrderByDescending(x => x.Id).FirstOrDefault();
+
+        //    if (lastItem.Id == akPO.Id)
+        //    {
+        //        TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    // check end
+        //    akPO.FlHapus = 1;
+
+        //    _context.AkPO.Update(akPO);
+
+        //    //insert applog
+        //    var user = await _userManager.GetUserAsync(User);
+
+        //    AppLog appLog = new AppLog();
+
+        //    appLog.UserId = user.UserName;
+        //    appLog.LgModule = modul + "B";
+        //    appLog.LgOperation = "Batal";
+        //    appLog.LgNote = modul + " Pesanan Tempatan - Batal";
+        //    appLog.NoRujukan = akPO.NoPO;
+        //    appLog.Jumlah = akPO.Jumlah;
+
+        //    await _appLog.Insert(appLog);
+        //    //insert applog end
+
+        //    await _context.SaveChangesAsync();
+        //    TempData[SD.Success] = "Data berjaya dibatalkan..!";
+        //    return RedirectToAction(nameof(Index));
+        //}
+        // POST: AkPV/Cancel/5
+        [Authorize(Policy = "TG001R")]
+        public async Task<IActionResult> RollBack(int id)
         {
-            var akPO = await _context.AkPO.FindAsync(id);
+            var obj = await _akPORepo.GetByIdIncludeDeletedItems(id);
             // check if already posting redirect back
-            if (akPO.FlPosting == 1)
+            if (obj.FlPosting == 1)
             {
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
                 return RedirectToAction(nameof(Index));
             }
-            // check if this data is the last one (for preventing batal purpose)
-            var lastItem = _context.AkPO.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            if (lastItem.Id == akPO.Id)
-            {
-                TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
-                return RedirectToAction(nameof(Index));
-            }
-            // check end
-            akPO.FlBatal = 1;
+            // Batal operation
 
-            _context.AkPO.Update(akPO);
+            obj.FlHapus = 0;
+            obj.FlCetak = 0;
+            _context.AkPO.Update(obj);
+
+            // Batal operation end
 
             //insert applog
             var user = await _userManager.GetUserAsync(User);
@@ -1555,24 +1624,24 @@ namespace MSNK.Controllers
             AppLog appLog = new AppLog();
 
             appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "B";
-            appLog.LgOperation = "Batal";
-            appLog.LgNote = modul + " Pesanan Tempatan - Batal";
-            appLog.NoRujukan = akPO.NoPO;
-            appLog.Jumlah = akPO.Jumlah;
+            appLog.LgModule = modul + "R";
+            appLog.LgOperation = "Rollback";
+            appLog.LgNote = modul + " Pesanan Tempatan - Rollback";
+            appLog.NoRujukan = obj.NoPO;
+            appLog.Jumlah = obj.Jumlah;
 
             await _appLog.Insert(appLog);
             //insert applog end
 
             await _context.SaveChangesAsync();
-            TempData[SD.Success] = "Data berjaya dibatalkan..!";
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
         }
         // printing resit rasmi by akPO.Id
         [Authorize(Policy = "TG001P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
-            AkPO akPO = await _akPORepo.GetById(id);
+            AkPO akPO = await _akPORepo.GetByIdIncludeDeletedItems(id);
 
             string jumlahDalamPerkataan;
 

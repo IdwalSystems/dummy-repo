@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkPV : AppLogHelper
+    public class AkPV : AppLogHelper, ISoftDelete
     {
         //field
         public int Id { get; set; }
@@ -25,6 +25,7 @@ namespace MSNK.Models.Modules
         [MaxLength(20)]
         public string NoPV { get; set; }
         [DisplayName("Jumlah RM")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
         [DisplayName("No KP")]
         public string NoKP { get; set; }
@@ -58,7 +59,8 @@ namespace MSNK.Models.Modules
         public int FlPosting { get; set; }
         [DisplayName("Batal")]
         [DefaultValue("0")]
-        public int FlBatal { get; set; }
+        public int FlHapus { get; set; }
+        public DateTime? TarHapus { get; set; }
         [DisplayName("Jenis Baucer")]
         // Am = 0; Rekupan = 1; Akruan = 2;
         public int FlJenisBaucer { get; set; }

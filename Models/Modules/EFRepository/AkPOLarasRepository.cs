@@ -50,7 +50,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .FirstOrDefaultAsync();
         }
 
-        public Task<AkPOLaras> GetByIdForDeletedItems(int id)
+        public Task<AkPOLaras> GetByIdIncludeDeletedItems(int id)
         {
             throw new NotImplementedException();
         }

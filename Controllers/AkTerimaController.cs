@@ -92,6 +92,11 @@ namespace MSNK.Controllers
 
             var akTerima = await _akTerimaRepo.GetAll();
 
+            if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
+            {
+                akTerima = await _akTerimaRepo.GetAllIncludeDeletedItems();
+            }
+
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
             { 
                     // searching with '%like%' condition
@@ -150,22 +155,11 @@ namespace MSNK.Controllers
                     Tarikh = item.Tarikh,
                     Jumlah = item.Jumlah,
                     Nama = item.Nama,
-                    FlBatal = item.FlBatal,
+                    FlHapus = item.FlHapus,
                     FlPosting = item.FlPosting,
                     FlCetak = item.FlCetak,
                     JumlahUrusniaga = jumlahUrusniaga
                 });
-            }
-
-            var lastItem = akTerima.OrderByDescending(x => x.Id).FirstOrDefault();
-
-            if (lastItem != null)
-            {
-                ViewData["lastItem"] = lastItem.NoRujukan;
-            }
-            else
-            {
-                ViewData["lastItem"] = "NaN";
             }
 
             return View(viewModel);
@@ -179,20 +173,14 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akTerima = await _akTerimaRepo.GetById((int)id);
+            var akTerima = await _akTerimaRepo.GetByIdIncludeDeletedItems((int)id);
 
-            // check if this data is the last one (for preventing batal purpose)
-            var lastItem = _context.AkTerima.OrderByDescending(x=> x.Id).FirstOrDefault();
-
-            if (lastItem.Id == akTerima.Id)
+            // normal user access
+            if (User.IsInRole("User"))
             {
-                ViewData["isLastItem"] = "Y";
-            } 
-            else
-            {
-                ViewData["isLastItem"] = "N";
+                akTerima = await _akTerimaRepo.GetById((int)id);
             }
-            // check end
+
             if (akTerima == null)
             {
                 return NotFound();
@@ -313,22 +301,20 @@ namespace MSNK.Controllers
             ViewBag.akTerima2 = akTerima2Table;
         }
 
-        // GET: AkTerima/Create
-        [Authorize(Policy = "PR001C")]
-        public IActionResult Create()
+        private string GetNoRujukan(int data, string year)
         {
-            // get latest no rujukan running number  
-            var kw = _context.JKW.FirstOrDefault(x => x.Kod == "100");
+            var kw = _context.JKW.FirstOrDefault(x => x.Id == data);
 
             var kumpulanWang = kw.Kod;
-            var year = DateTime.Now.Year.ToString();
-            string prefix = kumpulanWang + year;
+            
+            string prefix = year + "/" + kumpulanWang + "/";
             int x = 1;
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkTerima
-                        .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
-                        .Max(x => x.NoRujukan);
+                       .IgnoreQueryFilters()
+                       .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
+                       .Max(x => x.NoRujukan);
 
             if (LatestNoRujukan == null)
             {
@@ -336,13 +322,23 @@ namespace MSNK.Controllers
             }
             else
             {
-                x = int.Parse(LatestNoRujukan.Substring(12));
+                x = int.Parse(LatestNoRujukan.Substring(10));
                 x++;
                 noRujukan = string.Format("{0:" + prefix + "000000}", x);
             }
+            return noRujukan;
+        }
+            // GET: AkTerima/Create
+            [Authorize(Policy = "PR001C")]
+        public IActionResult Create()
+        {
+            // get latest no rujukan running number 
+            var year = DateTime.Now.Year.ToString();
+            var data = 1;
 
+            ViewBag.NoRujukan = GetNoRujukan(data,year);
             // get latest no rujukan running number end
-            ViewBag.NoRujukan = noRujukan;
+
             PopulateList();
             CartEmpty();
             return View();
@@ -361,30 +357,7 @@ namespace MSNK.Controllers
                 else
                 {
                     // get latest no rujukan running number  
-                    var kw = _context.JKW.FirstOrDefault(x => x.Id == data);
-
-                    var kumpulanWang = kw.Kod;
-                    string prefix = kumpulanWang + year;
-                    int x = 1;
-                    string noRujukan = prefix + "000000";
-
-                    var LatestNoRujukan = _context.AkTerima
-                        .Where(x=> x.Tahun == year && x.JKW.Kod == kw.Kod)
-                        .Max(x => x.NoRujukan);
-
-                    if (LatestNoRujukan == null)
-                    {
-                        noRujukan = string.Format("{0:" + prefix + "000000}", x);
-                    }
-                    else
-                    {
-                        x = int.Parse(LatestNoRujukan.Substring(12));
-                        x++;
-                        noRujukan = string.Format("{0:" + prefix + "000000}", x);
-                    }
-
-                    result = noRujukan;
-
+                    result = GetNoRujukan(data,year);
                     // get latest no rujukan running number end
                 }
                 return Json(new { result = "OK", record = result });
@@ -646,6 +619,7 @@ namespace MSNK.Controllers
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkTerima
+                .IgnoreQueryFilters()
                         .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
                         .Max(x => x.NoRujukan);
 
@@ -655,7 +629,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                x = int.Parse(LatestNoRujukan.Substring(12));
+                x = int.Parse(LatestNoRujukan.Substring(10));
                 x++;
                 noRujukan = string.Format("{0:" + prefix + "000000}", x);
             }
@@ -676,7 +650,6 @@ namespace MSNK.Controllers
                     m.Jumlah = akTerima.Jumlah;
                     m.FlCetak = 0;
                     m.FlPosting = 0;
-                    m.FlBatal = 0;
                     m.KodPembayar = akTerima.KodPembayar;
                     m.NoKp = akTerima.NoKp;
                     m.Nama = akTerima.Nama;
@@ -896,6 +869,9 @@ namespace MSNK.Controllers
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
                 return RedirectToAction(nameof(Index));
             }
+            akTerima.FlCetak = 0;
+            _context.AkTerima.Update(akTerima);
+
             _context.AkTerima.Remove(akTerima);
 
             //insert applog
@@ -919,28 +895,68 @@ namespace MSNK.Controllers
         }
 
         // POST: AkTerima/Cancel/5
-        [Authorize(Policy = "PR001B")]
-        public async Task<IActionResult> Cancel(int id)
+        //[Authorize(Policy = "PR001B")]
+        //public async Task<IActionResult> Cancel(int id)
+        //{
+        //    var akTerima = await _context.AkTerima.FindAsync(id);
+        //    // check if already posting redirect back
+        //    if (akTerima.FlPosting == 1)
+        //    {
+        //        TempData[SD.Error] = "Akses tidak dibenarkan..!";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    // check if this data is the last one (for preventing batal purpose)
+        //    var lastItem = _context.AkTerima.OrderByDescending(x => x.Id).FirstOrDefault();
+
+        //    if (lastItem.Id == akTerima.Id)
+        //    {
+        //        TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    // check end
+        //    akTerima.FlHapus = 1;
+
+        //    _context.AkTerima.Update(akTerima);
+
+        //    //insert applog
+        //    var user = await _userManager.GetUserAsync(User);
+
+        //    AppLog appLog = new AppLog();
+
+        //    appLog.UserId = user.UserName;
+        //    appLog.LgModule = modul + "B";
+        //    appLog.LgOperation = "Batal";
+        //    appLog.LgNote = modul + " Penerimaan - Batal";
+        //    appLog.NoRujukan = akTerima.NoRujukan;
+        //    appLog.Jumlah = akTerima.Jumlah;
+
+        //    await _appLog.Insert(appLog);
+        //    //insert applog end
+
+        //    await _context.SaveChangesAsync();
+        //    TempData[SD.Success] = "Data berjaya dibatalkan..!";
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        // POST: AkPV/Cancel/5
+        [Authorize(Policy = "PR001R")]
+        public async Task<IActionResult> RollBack(int id)
         {
-            var akTerima = await _context.AkTerima.FindAsync(id);
+            var obj = await _akTerimaRepo.GetByIdIncludeDeletedItems(id);
             // check if already posting redirect back
-            if (akTerima.FlPosting == 1)
+            if (obj.FlPosting == 1)
             {
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
                 return RedirectToAction(nameof(Index));
             }
-            // check if this data is the last one (for preventing batal purpose)
-            var lastItem = _context.AkTerima.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            if (lastItem.Id == akTerima.Id)
-            {
-                TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
-                return RedirectToAction(nameof(Index));
-            }
-            // check end
-            akTerima.FlBatal = 1;
+            // Batal operation
 
-            _context.AkTerima.Update(akTerima);
+            obj.FlHapus = 0;
+            obj.FlCetak = 0;
+            _context.AkTerima.Update(obj);
+
+            // Batal operation end
 
             //insert applog
             var user = await _userManager.GetUserAsync(User);
@@ -948,17 +964,17 @@ namespace MSNK.Controllers
             AppLog appLog = new AppLog();
 
             appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "B";
-            appLog.LgOperation = "Batal";
-            appLog.LgNote = modul + " Penerimaan - Batal";
-            appLog.NoRujukan = akTerima.NoRujukan;
-            appLog.Jumlah = akTerima.Jumlah;
+            appLog.LgModule = modul + "R";
+            appLog.LgOperation = "Rollback";
+            appLog.LgNote = modul + " Inbois Pembekal - Rollback";
+            appLog.NoRujukan = obj.NoRujukan;
+            appLog.Jumlah = obj.Jumlah;
 
             await _appLog.Insert(appLog);
             //insert applog end
 
             await _context.SaveChangesAsync();
-            TempData[SD.Success] = "Data berjaya dibatalkan..!";
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -1648,7 +1664,7 @@ namespace MSNK.Controllers
         [Authorize(Policy = "PR001P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
-            AkTerima akTerima = await _akTerimaRepo.GetById(id);
+            AkTerima akTerima = await _akTerimaRepo.GetByIdIncludeDeletedItems(id);
 
             string jumlahDalamPerkataan;
 

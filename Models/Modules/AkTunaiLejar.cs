@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,10 +23,13 @@ namespace MSNK.Models.Modules
         public int AkCartaId { get; set; }
         public AkCarta AkCarta { get; set; }
         [DisplayName("Debit RM")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Debit { get; set; }
         [DisplayName("Kredit RM")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Kredit { get; set; }
         [DisplayName("Baki RM")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Baki { get; set; }
         public string Rekup { get; set; }
 

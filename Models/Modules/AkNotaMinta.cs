@@ -3,12 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkNotaMinta : AppLogHelper
+    public class AkNotaMinta : AppLogHelper, ISoftDelete
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Tahun Diperlukan.")]
@@ -20,6 +21,7 @@ namespace MSNK.Models.Modules
         public string NoRujukan { get; set; }
         public string Tajuk { get; set; }
         [DisplayName("Jumlah RM")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
         //flag
         [DisplayName("Posting")]
@@ -28,7 +30,8 @@ namespace MSNK.Models.Modules
         public DateTime? TarikhPosting { get; set; }
         [DisplayName("Batal")]
         [DefaultValue("0")]
-        public int FlBatal { get; set; }
+        public int FlHapus { get; set; }
+        public DateTime? TarHapus { get; set; }
         [DisplayName("Cetak")]
         [DefaultValue("0")]
         public int FlCetak { get; set; }

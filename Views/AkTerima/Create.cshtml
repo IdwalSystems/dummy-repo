@@ -35,7 +35,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm" asp-for="JKWId" required id="ddlKW">
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" required id="ddlKW">
                                     @foreach (var s in ViewBag.JKW)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -278,9 +278,9 @@
                 <span asp-validation-for="FlPosting" class="text-danger"></span>
             </div>
             <div class="form-group" hidden>
-                <label asp-for="FlBatal" class="control-label"></label>
-                <input asp-for="FlBatal" class="form-control form-control-sm" value="0" />
-                <span asp-validation-for="FlBatal" class="text-danger"></span>
+                <label asp-for="FlHapus" class="control-label"></label>
+                <input asp-for="FlHapus" class="form-control form-control-sm" value="0" />
+                <span asp-validation-for="FlHapus" class="text-danger"></span>
             </div>
             <div class="form-group" hidden>
                 <label asp-for="KodPembayar" class="control-label"></label>

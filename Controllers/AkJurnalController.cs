@@ -61,7 +61,7 @@ namespace MSNK.Controllers
             _abBukuVot = abBukuVotRepository;
             _cart = cart;
         }
-        private string GetKod(AkJurnal data)
+        private string GetNoRujukan(AkJurnal data)
         {
             var kw = _context.JKW.FirstOrDefault(x => x.Id == data.JKWId);
 
@@ -73,6 +73,7 @@ namespace MSNK.Controllers
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkJurnal
+                .IgnoreQueryFilters()
                 .Where(x => x.NoJurnal.Substring(0,9) == prefix)
                 .Max(x => x.NoJurnal);
             if (LatestNoRujukan == null)
@@ -99,7 +100,7 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    result = GetKod(data);
+                    result = GetNoRujukan(data);
                 }
                 return Json(new { result = "OK", record = result });
             }
@@ -188,6 +189,12 @@ namespace MSNK.Controllers
 
             var akJurnal = await _akJurnalRepo.GetAll();
 
+            if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
+            {
+                akJurnal = await _akJurnalRepo.GetAllIncludeDeletedItems();
+
+            }
+
             if (!String.IsNullOrEmpty(searchString) || !String.IsNullOrEmpty(searchKw)||
                 (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
             {
@@ -242,8 +249,15 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akJurnal = await _akJurnalRepo.GetById((int)id);
-            akJurnal.JKW = await _jKWRepo.GetById(akJurnal.JKWId);
+            var akJurnal = await _akJurnalRepo.GetByIdIncludeDeletedItems((int)id);
+            akJurnal.JKW = await _jKWRepo.GetByIdIncludeDeletedItems(akJurnal.JKWId);
+
+            if (User.IsInRole("User"))
+            {
+                akJurnal = await _akJurnalRepo.GetById((int)id);
+                akJurnal.JKW = await _jKWRepo.GetById(akJurnal.JKWId);
+            }
+            
 
             if (akJurnal == null)
             {
@@ -282,7 +296,7 @@ namespace MSNK.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    string noRujukan = GetKod(akJurnal);
+                    string noRujukan = GetNoRujukan(akJurnal);
                     if (akJurnal != null && JKWId != 0)
                     {
                         m.JKWId = akJurnal.JKWId;
@@ -296,7 +310,7 @@ namespace MSNK.Controllers
                         m.Catatan4 = akJurnal.Catatan4;
                         m.Posting = akJurnal.Posting;
                         m.Cetak = akJurnal.Cetak;
-                        m.Batal = akJurnal.Batal;
+                        m.FlHapus = akJurnal.FlHapus;
                         m.AkJurnal1 = _cart.Lines1.OrderBy(x=>x.Indeks).ToList();
                         m.UserId = user.UserName;
                         m.TarMasuk = DateTime.Now;
@@ -457,6 +471,9 @@ namespace MSNK.Controllers
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
                 return RedirectToAction(nameof(Index));
             }
+
+            akJurnal.Cetak = 0;
+            _context.AkJurnal.Update(akJurnal);
             _context.AkJurnal.Remove(akJurnal);
             await AddLogAsync("Hapus", akJurnal.NoJurnal, akJurnal.JumKredit);
             await _context.SaveChangesAsync();
@@ -952,10 +969,7 @@ namespace MSNK.Controllers
 
         public async Task<IActionResult> PrintPdf(int id)
         {
-            AkJurnal akJurnal = await _context.AkJurnal
-                .Include(x=>x.JKW)
-                .Include(x=>x.AkJurnal1).ThenInclude(x=>x.AkCarta)
-                .FirstOrDefaultAsync(x => x.Id == id);
+            AkJurnal akJurnal = await _akJurnalRepo.GetByIdIncludeDeletedItems(id);
 
             JurnalPrintModel data = new JurnalPrintModel();
             var user = "";
@@ -994,6 +1008,35 @@ namespace MSNK.Controllers
                 //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
+        }
+
+        // POST: AkPV/Cancel/5
+        [Authorize(Policy = "JU001R")]
+        public async Task<IActionResult> RollBack(int id)
+        {
+            var obj = await _akJurnalRepo.GetByIdIncludeDeletedItems(id);
+            // check if already posting redirect back
+            if (obj.Posting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Batal operation
+
+            obj.FlHapus = 0;
+            obj.Cetak = 0;
+            _context.AkJurnal.Update(obj);
+
+            // Batal operation end
+
+            //insert applog
+            await AddLogAsync("Rollback", obj.NoJurnal, obj.JumKredit);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
+            return RedirectToAction(nameof(Index));
         }
 
         private string GetJenisObjek(int id)

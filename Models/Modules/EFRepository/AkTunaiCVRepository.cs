@@ -51,7 +51,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .FirstOrDefaultAsync();
         }
 
-        public Task<AkTunaiCV> GetByIdForDeletedItems(int id)
+        public Task<AkTunaiCV> GetByIdIncludeDeletedItems(int id)
         {
             throw new NotImplementedException();
         }

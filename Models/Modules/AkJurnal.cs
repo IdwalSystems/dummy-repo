@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkJurnal : AppLogHelper
+    public class AkJurnal : AppLogHelper, ISoftDelete
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
@@ -48,7 +48,8 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int Cetak { get; set; }
         [DefaultValue("0")]
-        public int Batal { get; set; }
+        public int FlHapus { get; set; }
+        public DateTime? TarHapus { get; set; }
         [MaxLength(15)]
 
         //Relationship

@@ -149,6 +149,7 @@ namespace MSNK
                 options.AddPolicy("PR001D", policy => policy.RequireClaim("PR001D"));
                 options.AddPolicy("PR001P", policy => policy.RequireClaim("PR001P"));
                 options.AddPolicy("PR001B", policy => policy.RequireClaim("PR001B"));
+                options.AddPolicy("PR001R", policy => policy.RequireClaim("PR001R"));
                 options.AddPolicy("PR001T", policy => policy.RequireClaim("PR001T"));
                 options.AddPolicy("PR001UT", policy => policy.RequireClaim("PR001UT"));
                 //Resit Rasmi end
@@ -160,6 +161,7 @@ namespace MSNK
                 options.AddPolicy("TG001D", policy => policy.RequireClaim("TG001D"));
                 options.AddPolicy("TG001P", policy => policy.RequireClaim("TG001P"));
                 options.AddPolicy("TG001B", policy => policy.RequireClaim("TG001B"));
+                options.AddPolicy("TG001R", policy => policy.RequireClaim("TG001R"));
                 options.AddPolicy("TG001T", policy => policy.RequireClaim("TG001T"));
                 options.AddPolicy("TG001UT", policy => policy.RequireClaim("TG001UT"));
                 //Pesanan Tempatan End
@@ -170,6 +172,7 @@ namespace MSNK
                 options.AddPolicy("PT001D", policy => policy.RequireClaim("PT001D"));
                 options.AddPolicy("PT001P", policy => policy.RequireClaim("PT001P"));
                 options.AddPolicy("PT001B", policy => policy.RequireClaim("PT001B"));
+                options.AddPolicy("PT001R", policy => policy.RequireClaim("PT001R"));
                 options.AddPolicy("PT001T", policy => policy.RequireClaim("PT001T"));
                 options.AddPolicy("PT001UT", policy => policy.RequireClaim("PT001UT"));
                 //Pesanan Tempatan End
@@ -180,6 +183,7 @@ namespace MSNK
                 options.AddPolicy("TG002D", policy => policy.RequireClaim("TG002D"));
                 //options.AddPolicy("TG002P", policy => policy.RequireClaim("TG002P"));
                 options.AddPolicy("TG002B", policy => policy.RequireClaim("TG002B"));
+                options.AddPolicy("TG002R", policy => policy.RequireClaim("TG002R"));
                 options.AddPolicy("TG002T", policy => policy.RequireClaim("TG002T"));
                 options.AddPolicy("TG002UT", policy => policy.RequireClaim("TG002UT"));
                 //Invois Pembekal End
@@ -191,6 +195,7 @@ namespace MSNK
                 options.AddPolicy("PV001D", policy => policy.RequireClaim("PV001D"));
                 options.AddPolicy("PV001P", policy => policy.RequireClaim("PV001P"));
                 options.AddPolicy("PV001B", policy => policy.RequireClaim("PV001B"));
+                options.AddPolicy("PV001R", policy => policy.RequireClaim("PV001R"));
                 options.AddPolicy("PV001T", policy => policy.RequireClaim("PV001T"));
                 options.AddPolicy("PV001UT", policy => policy.RequireClaim("PV001UT"));
                 //Baucer Pembayaran End
@@ -201,6 +206,7 @@ namespace MSNK
                 options.AddPolicy("JU001D", policy => policy.RequireClaim("JU001D"));
                 options.AddPolicy("JU001P", policy => policy.RequireClaim("JU001P"));
                 options.AddPolicy("JU001B", policy => policy.RequireClaim("JU001B"));
+                options.AddPolicy("JU001R", policy => policy.RequireClaim("JU001R"));
                 options.AddPolicy("JU001T", policy => policy.RequireClaim("JU001T"));
                 options.AddPolicy("JU001UT", policy => policy.RequireClaim("JU001UT"));
                 //Baucer Jurnal End
@@ -211,6 +217,7 @@ namespace MSNK
                 options.AddPolicy("TR001E", policy => policy.RequireClaim("TR001E"));
                 options.AddPolicy("TR001D", policy => policy.RequireClaim("TR001D"));
                 options.AddPolicy("TR001P", policy => policy.RequireClaim("TR001P"));
+                options.AddPolicy("TR001R", policy => policy.RequireClaim("TR001R"));
                 //options.AddPolicy("TR001B", policy => policy.RequireClaim("TR001B"));
                 //options.AddPolicy("TR001T", policy => policy.RequireClaim("TR001T"));
                 //options.AddPolicy("TR001UT", policy => policy.RequireClaim("TR001UT"));
@@ -222,6 +229,7 @@ namespace MSNK
                 options.AddPolicy("TR002D", policy => policy.RequireClaim("TR002D"));
                 options.AddPolicy("TR002P", policy => policy.RequireClaim("TR002P"));
                 options.AddPolicy("TR002B", policy => policy.RequireClaim("TR002B"));
+                options.AddPolicy("TR002R", policy => policy.RequireClaim("TR002R"));
                 options.AddPolicy("TR002T", policy => policy.RequireClaim("TR002T"));
                 options.AddPolicy("TR002UT", policy => policy.RequireClaim("TR002UT"));
                 //Tunai Keluar End
@@ -234,6 +242,7 @@ namespace MSNK
                 options.AddPolicy("NM001D", policy => policy.RequireClaim("NM001D"));
                 options.AddPolicy("NM001P", policy => policy.RequireClaim("NM001P"));
                 options.AddPolicy("NM001B", policy => policy.RequireClaim("NM001B"));
+                options.AddPolicy("NM001R", policy => policy.RequireClaim("NM001R"));
                 options.AddPolicy("NM001T", policy => policy.RequireClaim("NM001T"));
                 options.AddPolicy("NM001UT", policy => policy.RequireClaim("NM001UT"));
                 //Nota Minta End
@@ -245,6 +254,7 @@ namespace MSNK
                 options.AddPolicy("SP001D", policy => policy.RequireClaim("SP001D"));
                 options.AddPolicy("SP001P", policy => policy.RequireClaim("SP001P"));
                 options.AddPolicy("SP001B", policy => policy.RequireClaim("SP001B"));
+                options.AddPolicy("SP001R", policy => policy.RequireClaim("SP001R"));
                 options.AddPolicy("SP001T", policy => policy.RequireClaim("SP001T"));
                 options.AddPolicy("SP001UT", policy => policy.RequireClaim("SP001UT"));
                 //Pendahuluan Pelbagai End

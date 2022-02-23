@@ -370,7 +370,7 @@ namespace MSNK.Controllers
                     m.JumKeseluruhan = spPendahuluanPelbagai.JumKeseluruhan;
                     m.FlPosting = 0;
                     //m.TarikhPosting = spPermohonanAktiviti.TarikhPosting;
-                    //m.FlBatal = 0;
+                    //m.FlHapus = 0;
                     m.FlCetak = 0;
                     //m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;

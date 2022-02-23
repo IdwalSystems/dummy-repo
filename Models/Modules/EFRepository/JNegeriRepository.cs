@@ -38,7 +38,7 @@ namespace MSNK.Models.Modules.EFRepository
 
         }
 
-        public Task<JNegeri> GetByIdForDeletedItems(int id)
+        public Task<JNegeri> GetByIdIncludeDeletedItems(int id)
         {
             throw new NotImplementedException();
         }

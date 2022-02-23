@@ -41,7 +41,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public Task<AkTunaiLejar> GetByIdForDeletedItems(int id)
+        public Task<AkTunaiLejar> GetByIdIncludeDeletedItems(int id)
         {
             throw new NotImplementedException();
         }

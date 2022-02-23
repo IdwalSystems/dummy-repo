@@ -293,14 +293,14 @@ namespace MSNK.Controllers
             }
 
             // admin access
-            var akBelian = await _akBelianRepo.GetByIdForDeletedItems((int)id);
+            var akBelian = await _akBelianRepo.GetByIdIncludeDeletedItems((int)id);
 
-            var kodObjekAkaunPemiutang = await _akCartaRepo.GetByIdForDeletedItems(akBelian.KodObjekAPId);
+            var kodObjekAkaunPemiutang = await _akCartaRepo.GetByIdIncludeDeletedItems(akBelian.KodObjekAPId);
 
             var akPO = new AkPO();
             if (akBelian.AkPOId != null)
             {
-                akPO = await _akPORepo.GetByIdForDeletedItems((int)akBelian.AkPOId);
+                akPO = await _akPORepo.GetByIdIncludeDeletedItems((int)akBelian.AkPOId);
             } else
             {
                 akPO = new AkPO()
@@ -309,7 +309,7 @@ namespace MSNK.Controllers
                 };     
             }
 
-            var pembekal = await _akPembekalRepo.GetByIdForDeletedItems(akBelian.AkPembekalId);
+            var pembekal = await _akPembekalRepo.GetByIdIncludeDeletedItems(akBelian.AkPembekalId);
 
             if (akBelian == null)
             {
@@ -318,7 +318,7 @@ namespace MSNK.Controllers
             // admin access end
 
             // normal user access
-            if (!User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+            if (User.IsInRole("User"))
             {
                 kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
 
@@ -1618,7 +1618,7 @@ namespace MSNK.Controllers
                     var akPV2 = (from tbl2 in _context.AkPV2.ToList()
                                    join tbl in _context.AkPV.ToList()
                                    on tbl2.AkPVId equals tbl.Id into tbl2Tbl
-                                   from tbl2_tbl in tbl2Tbl.DefaultIfEmpty().Where(x => x.FlBatal != 1)
+                                   from tbl2_tbl in tbl2Tbl.DefaultIfEmpty().Where(x => x.FlHapus != 1)
                                    select new
                                    {
                                        Id = tbl2.Id,
@@ -1725,13 +1725,12 @@ namespace MSNK.Controllers
         //}
 
         // POST: AkPV/Cancel/5
-        [Authorize(Roles = "SuperAdmin,Supervisor")]
-        [Authorize(Policy = "TG002B")]
+        [Authorize(Policy = "TG002R")]
         public async Task<IActionResult> RollBack(int id)
         {
-            var akBelian = await _akBelianRepo.GetByIdForDeletedItems(id);
+            var obj = await _akBelianRepo.GetByIdIncludeDeletedItems(id);
             // check if already posting redirect back
-            if (akBelian.FlPosting == 1)
+            if (obj.FlPosting == 1)
             {
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
                 return RedirectToAction(nameof(Index));
@@ -1739,8 +1738,8 @@ namespace MSNK.Controllers
 
             // Batal operation
 
-            akBelian.FlHapus = 0;
-            _context.AkBelian.Update(akBelian);
+            obj.FlHapus = 0;
+            _context.AkBelian.Update(obj);
 
             // Batal operation end
 
@@ -1750,11 +1749,11 @@ namespace MSNK.Controllers
             AppLog appLog = new AppLog();
 
             appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "B";
+            appLog.LgModule = modul + "R";
             appLog.LgOperation = "Rollback";
             appLog.LgNote = modul + " Inbois Pembekal - Rollback";
-            appLog.NoRujukan = akBelian.NoInbois;
-            appLog.Jumlah = akBelian.Jumlah;
+            appLog.NoRujukan = obj.NoInbois;
+            appLog.Jumlah = obj.Jumlah;
 
             await _appLog.Insert(appLog);
             //insert applog end

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,6 +39,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Bilangan Anak")]
         public int BilAnak { get; set; }
         [DisplayName("Gaji Pokok")]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal GajiPokok { get; set; }
         [DisplayName("Tarikh Masuk Kerja")]
         public DateTime TarikhMasukKerja { get; set; }

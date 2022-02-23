@@ -41,6 +41,7 @@
             background: rgb(238,174,202);
             background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
         }
+
             .bg-super .nav-link {
                 color: white;
             }
@@ -94,53 +95,25 @@
                             else if (User.IsInRole("Admin"))
                             {
                                 <partial name="_SistemPartialNavbar" />
-                                @*<partial name="_SistemPartialNavbar" />
-                <partial name="_JadualPartialNavbar" />
-                <partial name="_DaftarPartialNavbar" />
-                <partial name="_LejarPartialNavbar" />
-                <partial name="_TerimaanPartialNavbar" />
-                <partial name="_TanggunganPartialNavbar" />
-                <partial name="_BaucerPartialNavbar" />
-                <partial name="_TunaiRuncitPartialNavbar" />
-                <partial name="_PermohonanPartialNavbar" />*@
                             }
                             else if (User.IsInRole("Supervisor"))
                             {
-                                <partial name="_DaftarPartialNavbar" />
                                 <partial name="_JadualPartialNavbar" />
                                 <partial name="_DaftarPartialNavbar" />
                                 <partial name="_LejarPartialNavbar" />
                                 <partial name="_TerimaanPartialNavbar" />
                                 <partial name="_TanggunganPartialNavbar" />
                                 <partial name="_BaucerPartialNavbar" />
-                                <partial name="_TunaiRuncitPartialNavbar" />
-                                <partial name="_PermohonanPartialNavbar" />
-                                @*<partial name="_SistemPartialNavbar" />
-                <partial name="_JadualPartialNavbar" />
-                <partial name="_DaftarPartialNavbar" />
-                <partial name="_LejarPartialNavbar" />
-                <partial name="_TerimaanPartialNavbar" />
-                <partial name="_TanggunganPartialNavbar" />
-                <partial name="_BaucerPartialNavbar" />
-                <partial name="_TunaiRuncitPartialNavbar" />
-                <partial name="_PermohonanPartialNavbar" />*@
+                                @*<partial name="_TunaiRuncitPartialNavbar" />*@
+                                @*<partial name="_PermohonanPartialNavbar" />*@
                             }
                             else
                             {
-                                <!--<partial name="_TerimaanPartialNavbar" />
-            <partial name="_TanggunganPartialNavbar" />
-            <partial name="_BaucerPartialNavbar" />-->
-                                @*<partial name="_TunaiRuncitPartialNavbar" />*@
-                                @*<partial name="_PermohonanPartialNavbar" />*@
-                                <partial name="_SistemPartialNavbar" />
-                                <partial name="_JadualPartialNavbar" />
-                                <partial name="_DaftarPartialNavbar" />
-                                <partial name="_LejarPartialNavbar" />
                                 <partial name="_TerimaanPartialNavbar" />
                                 <partial name="_TanggunganPartialNavbar" />
                                 <partial name="_BaucerPartialNavbar" />
-                                <partial name="_TunaiRuncitPartialNavbar" />
-                                <partial name="_PermohonanPartialNavbar" />
+                                @*<partial name="_TunaiRuncitPartialNavbar" />*@
+                                @*<partial name="_PermohonanPartialNavbar" />*@
                             }
                         }
                     </ul>

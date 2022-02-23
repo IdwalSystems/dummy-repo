@@ -10,7 +10,7 @@ namespace MSNK.Models.Modules.IRepository
         Task<IEnumerable<T1>> GetAll();
         Task<IEnumerable<T1>> GetAllIncludeDeletedItems();
         Task<T1> GetById(T2 id);
-        Task<T1> GetByIdForDeletedItems(T2 id);
+        Task<T1> GetByIdIncludeDeletedItems(T2 id);
         Task<T1> GetByString(T3 id);
         Task<T1> Insert(T1 entity);
         Task Delete(T2 id);
