@@ -12,25 +12,25 @@ namespace MSNK.Models.Modules
     {
         public static void SeedUsers(UserManager<IdentityUser> userManager)
         {
-            if (userManager.FindByEmailAsync("admin@idwal.com.my").Result == null)
+            if (userManager.FindByEmailAsync("superadmin@idwal.com.my").Result == null)
             {
                 var user = new ApplicationUser
                 {
-                    UserName = "admin@idwal.com.my",
-                    Email = "admin@idwal.com.my",
-                    Nama = "Admin"
+                    UserName = "superadmin@idwal.com.my",
+                    Email = "superadmin@idwal.com.my",
+                    Nama = "SuperAdmin"
                 };
 
-                IdentityResult result = userManager.CreateAsync(user, "Idwalsys57#").Result;
+                IdentityResult result = userManager.CreateAsync(user, "SuperIdwalsys57#").Result;
 
                 if (result.Succeeded)
                 {
-                    userManager.AddToRoleAsync(user, "Admin").Wait();
+                    userManager.AddToRoleAsync(user, "SuperAdmin").Wait();
                 } 
             }
             else
             {
-                userManager.AddToRoleAsync(userManager.FindByEmailAsync("admin@idwal.com.my").Result, "Admin").Wait();
+                userManager.AddToRoleAsync(userManager.FindByEmailAsync("superadmin@idwal.com.my").Result, "SuperAdmin").Wait();
             }
         }
 
@@ -90,11 +90,14 @@ namespace MSNK.Models.Modules
             //}
             if (context.Roles.Any())
             {
-
+                //context.Roles.AddRange(
+                //    new IdentityRole { Name = "SuperAdmin", NormalizedName = "SuperAdmin".ToUpper() }
+                //    );
             }
             else
             {
                 context.Roles.AddRange(
+                    new IdentityRole { Name = "SuperAdmin", NormalizedName = "SuperAdmin".ToUpper() },
                    new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() },
                     new IdentityRole { Name = "Supervisor", NormalizedName = "Supervisor".ToUpper() },
                     new IdentityRole { Name = "User", NormalizedName = "User".ToUpper() }

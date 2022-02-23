@@ -33,6 +33,11 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
+        public Task<IEnumerable<AkNotaMinta>> GetAllIncludeDeletedItems()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<AkNotaMinta> GetById(int id)
         {
             return await context.AkNotaMinta
@@ -43,6 +48,11 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkNotaMinta1).ThenInclude(b => b.AkCarta)
                 .Include(b => b.AkNotaMinta2)
                 .FirstOrDefaultAsync();
+        }
+
+        public Task<AkNotaMinta> GetByIdForDeletedItems(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<AkNotaMinta> GetByString(string id)

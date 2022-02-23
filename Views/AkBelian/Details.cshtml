@@ -113,12 +113,12 @@
                                 <div class="form-group col-sm">
                                     <label class="control-label">Batal</label>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal" class="custom-control-input" value="0" checked>
-                                        <label class="custom-control-label" for="FlBatal">Belum</label>
+                                        <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus" class="custom-control-input" value="0" checked>
+                                        <label class="custom-control-label" for="FlHapus">Tidak</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlBatal" type="radio" id="FlBatal1" name="FlBatal" class="custom-control-input" value="1">
-                                        <label class="custom-control-label" for="FlBatal">Sudah</label>
+                                        <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus" class="custom-control-input" value="1">
+                                        <label class="custom-control-label" for="FlHapus">Ya</label>
                                     </div>
                                 </div>
                             </div>
@@ -227,21 +227,26 @@
     </div>
 </div>
 <div>
-    @if (Model.FlPosting == 1)
+    @if (Model.FlHapus == 0)
     {
+        @if (Model.FlPosting == 1)
+        {
+        }
+        else
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
+
+            @*<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">
+                    Batal
+                </button>*@
+        }
     }
-    else
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
-        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">
-            Batal
-        </button>
-    }
+
     <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
-<!-- Modal Batal -->
-<div class="modal fade" id="modalBatal" tabindex="-1" role="dialog" aria-hidden="true">
+<!-- Modal Hapus -->
+@*<div class="modal fade" id="modalBatal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-md modal-dialog modal-dialog-centered">
         <div class="modal-content ">
             <div class="modal-header bg-warning text-white">
@@ -271,5 +276,5 @@
             </div>
         </div>
     </div>
-</div>
-<!-- Modal Batal End -->
+</div>*@
+<!-- Modal Hapus End -->

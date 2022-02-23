@@ -35,7 +35,7 @@ namespace MSNK.Models.Modules
         //relationship end
 
         //soft delete
-        public bool FlHapus { get; set; }
+        public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
         //soft delete end
     }

@@ -40,20 +40,22 @@ namespace MSNK.Controllers
             _roleManager = roleManager;
             _suPekerjaRepo = suPekerja;
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin,Admin")]
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin,Admin")]
         public async Task<IActionResult> Register(string returnurl=null)
         {
-            if (!await _roleManager.RoleExistsAsync("Admin"))
+            if (!await _roleManager.RoleExistsAsync("SuperAdmin"))
             {
                 //create role
+                await _roleManager.CreateAsync(new IdentityRole("SuperAdmin"));
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
+                await _roleManager.CreateAsync(new IdentityRole("Supervisor"));
                 await _roleManager.CreateAsync(new IdentityRole("User"));
             }
 
@@ -208,7 +210,7 @@ namespace MSNK.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin , Supervisor , User")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {

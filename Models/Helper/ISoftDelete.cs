@@ -11,7 +11,7 @@ namespace MSNK.Models.Helper
     {
         //Soft Delete
         
-        public bool FlHapus { get; set; }
+        public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
         //Soft Delete end
 

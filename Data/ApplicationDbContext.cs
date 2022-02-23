@@ -70,24 +70,29 @@ namespace MSNK.Data
             base.OnModelCreating(modelBuilder);
 
             //load item without soft delete
-            modelBuilder.Entity<JKW>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JBahagian>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JCaraBayar>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<AkBank>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JBank>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JNegeri>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JAgama>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JBangsa>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JSukan>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JTahapAktiviti>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JJantina>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JJawatanPekerja>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<AkPembekal>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<SuPekerja>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<AkCarta>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<AkTunaiPemegang>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JJenis>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
-            modelBuilder.Entity<JParas>().HasQueryFilter(m => EF.Property<bool>(m, "FlHapus") == false);
+            modelBuilder.Entity<JKW>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JBahagian>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JCaraBayar>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkBank>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JBank>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JNegeri>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JAgama>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JBangsa>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JSukan>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JTahapAktiviti>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JJantina>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JJawatanPekerja>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkPembekal>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<SuPekerja>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkCarta>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkTunaiPemegang>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JJenis>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JParas>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+
+            //Tanggungan
+            modelBuilder.Entity<AkBelian>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+
+            //Tanggungan End
             //load item without soft delete end
 
             //modelBuilder.Entity<IdentityRole>()

@@ -37,6 +37,11 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
+        public Task<IEnumerable<SpPendahuluanPelbagai>> GetAllIncludeDeletedItems()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<SpPendahuluanPelbagai> GetById(int id)
         {
             return await context.SpPendahuluanPelbagai
@@ -52,6 +57,11 @@ namespace MSNK.Models.Modules.EFRepository
                 //.Include(d => d.AkPembekal).ThenInclude(d => d.JNegeri)
                 //.Include(d => d.AkPembekal).ThenInclude(d => d.JBank)
                 .FirstOrDefaultAsync();
+        }
+
+        public Task<SpPendahuluanPelbagai> GetByIdForDeletedItems(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<SpPendahuluanPelbagai> GetByString(string id)

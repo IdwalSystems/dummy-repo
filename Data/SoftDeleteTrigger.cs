@@ -23,7 +23,7 @@ namespace MSNK.Data
             {
                 var entry = _dataContext.Entry(context.Entity);
                 context.Entity.TarHapus = DateTime.UtcNow;
-                context.Entity.FlHapus = true;
+                context.Entity.FlHapus = 1;
                 entry.State = EntityState.Modified;
             }
             await Task.CompletedTask;

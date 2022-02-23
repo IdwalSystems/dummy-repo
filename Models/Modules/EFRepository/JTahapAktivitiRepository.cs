@@ -27,10 +27,20 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JTahapAktiviti.ToListAsync();
         }
 
+        public Task<IEnumerable<JTahapAktiviti>> GetAllIncludeDeletedItems()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<JTahapAktiviti> GetById(int id)
         {
             return await context.JTahapAktiviti.FindAsync(id);
 
+        }
+
+        public Task<JTahapAktiviti> GetByIdForDeletedItems(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<JTahapAktiviti> GetByString(string id)

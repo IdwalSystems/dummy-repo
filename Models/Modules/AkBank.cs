@@ -33,7 +33,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkPV> AkPV { get; set; }
 
         //soft delete
-        public bool FlHapus { get; set; }
+        public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
         //soft delete end
 

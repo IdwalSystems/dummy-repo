@@ -99,15 +99,16 @@
         <tbody>
             @foreach (var item in Model)
             {
-                var tabletype = item.FlBatal == 1 ? "table-danger" : null;
+                
+                var tabletype = item.FlHapus == 1 ? "table-danger" : null;
                 <tr class="@tabletype">
                     <td>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Tahun)
                     </td>
-                    <td>
-                        @item.NoInbois.Substring(3).ToUpper()
+                    <td class="text-uppercase">
+                        @item.NoInbois.Substring(3)
                     </td>
                     <td>
                         @item.Tarikh.ToString("dd/MM/yyyy")
@@ -115,11 +116,11 @@
                     <td class="text-right">
                         @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
                     </td>
-                    <td>
-                        @item.NamaSykt.ToUpper()
+                    <td class="text-uppercase">
+                        @item.NamaSykt
                     </td>
-                    <td>
-                        @item.Alamat1.ToUpper()
+                    <td class="text-uppercase">
+                        @item.Alamat1
                     </td>
                     <td>
                         @if (item.FlPosting == 0)
@@ -132,7 +133,7 @@
                         }
                     </td>
                     <td>
-                        @if (item.FlBatal == 0)
+                        @if (item.FlHapus == 0)
                         {
                             <label class="mb-0">TIDAK</label>
                         }
@@ -143,7 +144,7 @@
                     </td>
                     <td class="action-button">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                        @if (item.FlBatal == 0)
+                        @if (item.FlHapus == 0)
                         {
                             @if (item.FlPosting == 0)
                             {
@@ -163,6 +164,16 @@
                                 <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
                                     <i class="fas fa-sync"></i>
                                 </a>
+                            }
+                        }
+                        else
+                        {
+                            if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                            {
+                                <a asp-action="Rollback" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                    <i class="fas fa-trash-restore"></i>
+                                </a>
+
                             }
                         }
 

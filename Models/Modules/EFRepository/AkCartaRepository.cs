@@ -29,9 +29,26 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<AkCarta>> GetAllIncludeDeletedItems()
+        {
+            return await context.AkCarta
+                .IgnoreQueryFilters()
+                .Include(b => b.JKW).Include(b => b.JParas).Include(b => b.JJenis)
+                .OrderBy(b => b.Kod)
+                .ToListAsync();
+        }
+
         public async Task<AkCarta> GetById(int id)
         {
             return await context.AkCarta.FindAsync(id);
+        }
+
+        public async Task<AkCarta> GetByIdForDeletedItems(int id)
+        {
+            return await context.AkCarta
+                .IgnoreQueryFilters()
+                .Where(x=> x.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public Task<AkCarta> GetByString(string id)

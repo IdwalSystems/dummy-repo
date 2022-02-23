@@ -36,6 +36,20 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<AkBelian>> GetAllIncludeDeletedItems()
+        {
+            return await context.AkBelian
+                .IgnoreQueryFilters()
+                .Include(b => b.JKW)
+                .Include(b => b.AkPO)
+                .ThenInclude(b => b.AkPembekal)
+                .Include(b => b.AkPembekal)
+                .Include(b => b.KodObjekAP)
+                .Include(b => b.AkBelian1).ThenInclude(b => b.AkCarta)
+                .Include(b => b.AkBelian2)
+                .ToListAsync();
+        }
+
         public async Task<AkBelian> GetById(int id)
         {
             return await context.AkBelian.Include(b => b.JKW)
@@ -46,6 +60,20 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkBelian1).ThenInclude(b=> b.AkCarta)
                 .Include(b => b.AkBelian2)
                 .Where(b=> b.Id == id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<AkBelian> GetByIdForDeletedItems(int id)
+        {
+            return await context.AkBelian.Include(b => b.JKW)
+                .IgnoreQueryFilters()
+                .Include(b => b.AkPO)
+                .ThenInclude(b => b.AkPembekal)
+                .Include(b => b.AkPembekal)
+                .Include(b => b.KodObjekAP)
+                .Include(b => b.AkBelian1).ThenInclude(b => b.AkCarta)
+                .Include(b => b.AkBelian2)
+                .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
         }
 

@@ -34,12 +34,41 @@
         </script>*@
 </head>
 
+
 <body>
+    <style>
+        .bg-super {
+            background: rgb(238,174,202);
+            background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+        }
+            .bg-super .nav-link {
+                color: white;
+            }
+    </style>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-toggleable-lg navbar-light bg-white border-bottom box-shadow mb-3">
+        @{
+            var navtype = "";
+        }
+        @if (User.IsInRole("Admin"))
+        {
+            navtype = "bg-dark navbar-dark";
+        }
+        else if (User.IsInRole("Supervisor"))
+        {
+            navtype = "bg-info navbar-dark";
+        }
+        else if (User.IsInRole("User"))
+        {
+            navtype = "bg-light navbar-light";
+        }
+        else
+        {
+            navtype = "bg-super navbar-super";
+        }
+        <nav class="navbar navbar-expand-lg navbar-toggleable-lg @navtype border-bottom mb-3">
             <div class="container">
 
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" style="width:50px;height:50px;text-align:center;height:100%"/></a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" style="width:50px;height:50px;text-align:center;height:100%" /></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -50,7 +79,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
 
-                            @if (User.IsInRole("Admin"))
+                            @if (User.IsInRole("SuperAdmin"))
                             {
                                 <partial name="_SistemPartialNavbar" />
                                 <partial name="_JadualPartialNavbar" />
@@ -62,8 +91,13 @@
                                 <partial name="_TunaiRuncitPartialNavbar" />
                                 <partial name="_PermohonanPartialNavbar" />
                             }
+                            else if (User.IsInRole("Admin"))
+                            {
+                                <partial name="_SistemPartialNavbar" />
+                            }
                             else if (User.IsInRole("Supervisor"))
                             {
+                                <partial name="_DaftarPartialNavbar" />
                                 <partial name="_JadualPartialNavbar" />
                                 <partial name="_DaftarPartialNavbar" />
                                 <partial name="_LejarPartialNavbar" />

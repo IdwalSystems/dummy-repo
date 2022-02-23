@@ -27,10 +27,20 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JNegeri.ToListAsync();
         }
 
+        public Task<IEnumerable<JNegeri>> GetAllIncludeDeletedItems()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<JNegeri> GetById(int id)
         {
             return await context.JNegeri.FindAsync(id);
 
+        }
+
+        public Task<JNegeri> GetByIdForDeletedItems(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<JNegeri> GetByString(string id)

@@ -28,9 +28,19 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JAgama.ToListAsync();
         }
 
+        public Task<IEnumerable<JAgama>> GetAllIncludeDeletedItems()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<JAgama> GetById(int id)
         {
             return await context.JAgama.FindAsync(id);
+        }
+
+        public Task<JAgama> GetByIdForDeletedItems(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<JAgama> GetByString(string id)

@@ -18,9 +18,13 @@
         {
             <h2>Peranan anda - Supervisor</h2>
         }
+        else if (User.IsInRole("User"))
+        {
+            <h2>Peranan anda - User</h2>
+        }
         else
         {
-        <h2>Peranan anda - User</h2>
+            <h2>Peranan anda - SuperAdmin</h2>
         }
-}
+    }
 </div>

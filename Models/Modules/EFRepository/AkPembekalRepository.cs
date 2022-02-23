@@ -24,12 +24,29 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<IEnumerable<AkPembekal>> GetAll()
         {
-            return await context.AkPembekal.Include(b => b.JNegeri).Include(b => b.JBank).ToListAsync();
+            return await context.AkPembekal
+                .Include(b => b.JNegeri).Include(b => b.JBank)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<AkPembekal>> GetAllIncludeDeletedItems()
+        {
+            return await context.AkPembekal
+                .IgnoreQueryFilters()
+                .Include(b => b.JNegeri).Include(b => b.JBank)
+                .ToListAsync();
         }
 
         public async Task<AkPembekal> GetById(int id)
         {
             return await context.AkPembekal.FindAsync(id);
+        }
+
+        public async Task<AkPembekal> GetByIdForDeletedItems(int id)
+        {
+            return await context.AkPembekal
+                .IgnoreQueryFilters()
+                .Where(x=> x.Id == id).FirstOrDefaultAsync();
         }
 
         public Task<AkPembekal> GetByString(string id)

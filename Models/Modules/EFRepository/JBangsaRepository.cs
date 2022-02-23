@@ -28,9 +28,19 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JBangsa.ToListAsync();
         }
 
+        public Task<IEnumerable<JBangsa>> GetAllIncludeDeletedItems()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<JBangsa> GetById(int id)
         {
             return await context.JBangsa.FindAsync(id);
+        }
+
+        public Task<JBangsa> GetByIdForDeletedItems(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<JBangsa> GetByString(string id)

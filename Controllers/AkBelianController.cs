@@ -93,6 +93,11 @@ namespace MSNK.Controllers
 
             var akBelian = await _akBelianRepo.GetAll();
 
+            if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
+            {
+                akBelian = await _akBelianRepo.GetAllIncludeDeletedItems();
+            }
+            
             //var akBelian = await _context.AkBelian.ToListAsync();
 
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
@@ -170,7 +175,7 @@ namespace MSNK.Controllers
                         Jumlah = item.Jumlah,
                         NamaSykt = namaSykt,
                         Alamat1 = alamat1,
-                        FlBatal = item.FlBatal,
+                        FlHapus = item.FlHapus,
                         FlPosting = item.FlPosting,
                         JumlahPerihal = jumlahPerihal
                 }
@@ -287,14 +292,15 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akBelian = await _akBelianRepo.GetById((int)id);
+            // admin access
+            var akBelian = await _akBelianRepo.GetByIdForDeletedItems((int)id);
 
-            var kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
+            var kodObjekAkaunPemiutang = await _akCartaRepo.GetByIdForDeletedItems(akBelian.KodObjekAPId);
 
             var akPO = new AkPO();
             if (akBelian.AkPOId != null)
             {
-                akPO = await _akPORepo.GetById((int)akBelian.AkPOId);
+                akPO = await _akPORepo.GetByIdForDeletedItems((int)akBelian.AkPOId);
             } else
             {
                 akPO = new AkPO()
@@ -303,12 +309,39 @@ namespace MSNK.Controllers
                 };     
             }
 
-            var pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
+            var pembekal = await _akPembekalRepo.GetByIdForDeletedItems(akBelian.AkPembekalId);
 
             if (akBelian == null)
             {
                 return NotFound();
             }
+            // admin access end
+
+            // normal user access
+            if (!User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+            {
+                kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
+
+                if (akBelian.AkPOId != null)
+                {
+                    akPO = await _akPORepo.GetById((int)akBelian.AkPOId);
+                }
+                else
+                {
+                    akPO = new AkPO()
+                    {
+                        NoPO = "-"
+                    };
+                }
+
+                pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
+
+                if (akBelian == null)
+                {
+                    return NotFound();
+                }
+            }
+            //normal user access end
 
             AkBelianViewModel akBelianView = new AkBelianViewModel();
 
@@ -328,7 +361,7 @@ namespace MSNK.Controllers
             akBelianView.Jumlah = akBelian.Jumlah;
             akBelianView.TarikhPosting = akBelian.TarikhPosting;
             akBelianView.FlPosting = akBelian.FlPosting;
-            akBelianView.FlBatal = akBelian.FlBatal;
+            akBelianView.FlHapus = akBelian.FlHapus;
 
             foreach (AkBelian2 item in akBelian.AkBelian2)
             {
@@ -336,19 +369,6 @@ namespace MSNK.Controllers
             }
             akBelianView.AkBelian1 = akBelian.AkBelian1;
             akBelianView.AkBelian2 = akBelian.AkBelian2;
-
-            // check if this data is the last one (for preventing batal purpose)
-            var lastItem = _context.AkBelian.OrderByDescending(x => x.Id).FirstOrDefault();
-
-            if (lastItem.Id == akBelian.Id)
-            {
-                ViewData["isLastItem"] = "Y";
-            }
-            else
-            {
-                ViewData["isLastItem"] = "N";
-            }
-            // check end
 
             PopulateTable(id);
             return View(akBelianView);
@@ -680,7 +700,6 @@ namespace MSNK.Controllers
                     m.Tarikh = akBelian.Tarikh;
                     m.Jumlah = akBelian.Jumlah;
                     m.FlPosting = 0;
-                    m.FlBatal = 0;
                     if (akPo != null)
                     {
                         m.FlPO = "1";
@@ -1267,7 +1286,7 @@ namespace MSNK.Controllers
             akBelianView.Jumlah = akBelian.Jumlah;
             akBelianView.TarikhPosting = akBelian.TarikhPosting;
             akBelianView.FlPosting = akBelian.FlPosting;
-            akBelianView.FlBatal = akBelian.FlBatal;
+            akBelianView.FlHapus = akBelian.FlHapus;
 
             foreach (AkBelian2 item in akBelian.AkBelian2)
             {
@@ -1666,10 +1685,51 @@ namespace MSNK.Controllers
         }
         // unposting function end
         // POST: AkPV/Cancel/5
+        //[Authorize(Policy = "TG002B")]
+        //public async Task<IActionResult> Cancel(int id)
+        //{
+        //    var akBelian = await _context.AkBelian.FindAsync(id);
+        //    // check if already posting redirect back
+        //    if (akBelian.FlPosting == 1)
+        //    {
+        //        TempData[SD.Error] = "Akses tidak dibenarkan..!";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    // Batal operation
+
+        //    akBelian.FlHapus = 1;
+        //    akBelian.TarHapus = DateTime.Now;
+        //    _context.AkBelian.Update(akBelian);
+
+        //    // Batal operation end
+
+        //    //insert applog
+        //    var user = await _userManager.GetUserAsync(User);
+
+        //    AppLog appLog = new AppLog();
+
+        //    appLog.UserId = user.UserName;
+        //    appLog.LgModule = modul + "B";
+        //    appLog.LgOperation = "Batal";
+        //    appLog.LgNote = modul + " Inbois Pembekal - Batal";
+        //    appLog.NoRujukan = akBelian.NoInbois;
+        //    appLog.Jumlah = akBelian.Jumlah;
+
+        //    await _appLog.Insert(appLog);
+        //    //insert applog end
+
+        //    await _context.SaveChangesAsync();
+        //    TempData[SD.Success] = "Data berjaya dibatalkan..!";
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        // POST: AkPV/Cancel/5
+        [Authorize(Roles = "SuperAdmin,Supervisor")]
         [Authorize(Policy = "TG002B")]
-        public async Task<IActionResult> Cancel(int id)
+        public async Task<IActionResult> RollBack(int id)
         {
-            var akBelian = await _context.AkBelian.FindAsync(id);
+            var akBelian = await _akBelianRepo.GetByIdForDeletedItems(id);
             // check if already posting redirect back
             if (akBelian.FlPosting == 1)
             {
@@ -1679,7 +1739,7 @@ namespace MSNK.Controllers
 
             // Batal operation
 
-            akBelian.FlBatal = 1;
+            akBelian.FlHapus = 0;
             _context.AkBelian.Update(akBelian);
 
             // Batal operation end
@@ -1691,8 +1751,8 @@ namespace MSNK.Controllers
 
             appLog.UserId = user.UserName;
             appLog.LgModule = modul + "B";
-            appLog.LgOperation = "Batal";
-            appLog.LgNote = modul + " Inbois Pembekal - Batal";
+            appLog.LgOperation = "Rollback";
+            appLog.LgNote = modul + " Inbois Pembekal - Rollback";
             appLog.NoRujukan = akBelian.NoInbois;
             appLog.Jumlah = akBelian.Jumlah;
 
@@ -1700,7 +1760,7 @@ namespace MSNK.Controllers
             //insert applog end
 
             await _context.SaveChangesAsync();
-            TempData[SD.Success] = "Data berjaya dibatalkan..!";
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
         }
     }

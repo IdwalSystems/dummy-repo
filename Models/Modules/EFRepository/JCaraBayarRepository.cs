@@ -26,9 +26,19 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JCaraBayar.ToListAsync();
         }
 
+        public Task<IEnumerable<JCaraBayar>> GetAllIncludeDeletedItems()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<JCaraBayar> GetById(int id)
         {
             return await context.JCaraBayar.FindAsync(id);
+        }
+
+        public Task<JCaraBayar> GetByIdForDeletedItems(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<JCaraBayar> GetByString(string id)

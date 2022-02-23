@@ -34,6 +34,11 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
+        public Task<IEnumerable<AkTunaiCV>> GetAllIncludeDeletedItems()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<AkTunaiCV> GetById(int id)
         {
             return await context.AkTunaiCV
@@ -44,6 +49,11 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
+        }
+
+        public Task<AkTunaiCV> GetByIdForDeletedItems(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<AkTunaiCV> GetByString(string id)

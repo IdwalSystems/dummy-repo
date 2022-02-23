@@ -34,12 +34,38 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<AkPO>> GetAllIncludeDeletedItems()
+        {
+            return await context.AkPO
+                .IgnoreQueryFilters()
+                .Include(b => b.JKW)
+                .Include(b => b.AkPembekal)
+                .Include(b => b.AkNotaMinta)
+                .Include(b => b.AkPO1)
+                .Include(b => b.AkPO2)
+                .ToListAsync();
+        }
+
         public async Task<AkPO> GetById(int id)
         {
             return await context.AkPO
                 .Where(d => d.Id == id)
                 .Include(b => b.JKW)
                 .Include(b=> b.AkNotaMinta)
+                .Include(d => d.AkPO1).ThenInclude(d => d.AkCarta)
+                .Include(d => d.AkPO2)
+                .Include(d => d.AkPembekal).ThenInclude(d => d.JNegeri)
+                .Include(d => d.AkPembekal).ThenInclude(d => d.JBank)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<AkPO> GetByIdForDeletedItems(int id)
+        {
+            return await context.AkPO
+                .IgnoreQueryFilters()
+                .Where(d => d.Id == id)
+                .Include(b => b.JKW)
+                .Include(b => b.AkNotaMinta)
                 .Include(d => d.AkPO1).ThenInclude(d => d.AkCarta)
                 .Include(d => d.AkPO2)
                 .Include(d => d.AkPembekal).ThenInclude(d => d.JNegeri)

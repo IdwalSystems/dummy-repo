@@ -31,9 +31,19 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
+        public Task<IEnumerable<AkAkaun>> GetAllIncludeDeletedItems()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<AkAkaun> GetById(int id)
         {
             return await context.AkAkaun.FindAsync(id);
+        }
+
+        public Task<AkAkaun> GetByIdForDeletedItems(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<AkAkaun> GetByString(string id)
