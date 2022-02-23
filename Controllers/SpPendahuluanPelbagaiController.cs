@@ -21,7 +21,7 @@ using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin,Supervisor,User")]
     public class SpPendahuluanPelbagaiController : Controller
 
 

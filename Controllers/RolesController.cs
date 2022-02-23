@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public class RolesController : Controller
     {
         private readonly ApplicationDbContext _db;

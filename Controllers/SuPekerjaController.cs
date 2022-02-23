@@ -15,7 +15,7 @@ using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "Admin , Supervisor")]
+    [Authorize(Roles = "SuperAdmin,Supervisor")]
     public class SuPekerjaController : Controller
     {
         public const string modul = "FL002";

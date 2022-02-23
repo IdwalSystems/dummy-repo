@@ -18,7 +18,7 @@ using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles ="Admin , Supervisor")]
+    [Authorize(Roles = "SuperAdmin , Supervisor")]
     public class AkCartaController : Controller
     {
         public const string modul = "CA001";

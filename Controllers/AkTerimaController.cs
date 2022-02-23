@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin , Supervisor, User")]
     public class AkTerimaController : Controller
     {
         public const string modul = "PR001";

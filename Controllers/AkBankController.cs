@@ -14,7 +14,7 @@ using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin , Supervisor")]
     public class AkBankController : Controller
     {
         public const string modul = "JD003";

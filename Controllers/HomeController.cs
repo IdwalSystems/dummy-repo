@@ -37,7 +37,7 @@ namespace MSNK.Controllers
             
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Privacy()
         {
             return View();

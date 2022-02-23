@@ -12,7 +12,7 @@ using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "Admin , Supervisor")]
+    [Authorize(Roles = "SuperAdmin , Supervisor")]
     public class AkAkaunController : Controller
     {
         private readonly ApplicationDbContext _context;

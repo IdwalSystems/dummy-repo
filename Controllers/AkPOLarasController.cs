@@ -20,7 +20,7 @@ using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin , Supervisor, User")]
     public class AkPOLarasController : Controller
     {
         

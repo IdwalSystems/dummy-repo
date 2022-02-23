@@ -15,7 +15,7 @@ using MSNK.Models.Operations;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "Admin , Supervisor")]
+    [Authorize(Roles = "SuperAdmin , Supervisor")]
     public class AbBukuVotController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -13,7 +13,7 @@ using MSNK.Models.Modules;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "Admin , Supervisor")]
+    [Authorize(Roles = "SuperAdmin,Supervisor")]
     public class JBahagianController : Controller
     {
         private readonly ApplicationDbContext _context;

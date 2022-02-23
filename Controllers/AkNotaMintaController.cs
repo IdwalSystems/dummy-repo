@@ -19,7 +19,7 @@ using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin , Supervisor, User")]
     public class AkNotaMintaController : Controller
     {
         public const string modul = "NM001";

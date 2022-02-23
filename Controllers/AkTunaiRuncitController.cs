@@ -15,7 +15,7 @@ using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin , Supervisor, User")]
     public class AkTunaiRuncitController : Controller
     {
         public const string modul = "TR001";
