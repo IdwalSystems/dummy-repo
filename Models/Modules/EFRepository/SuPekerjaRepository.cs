@@ -33,19 +33,42 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
-        public Task<IEnumerable<SuPekerja>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<SuPekerja>> GetAllIncludeDeletedItems()
         {
-            throw new NotImplementedException();
+            return await context.SuPekerja
+                .IgnoreQueryFilters()
+                .Include(b => b.JAgama)
+                .Include(b => b.JBangsa)
+                .Include(b => b.JCaraBayar)
+                .Include(b => b.JJawatanPekerja)
+                .Include(b => b.JNegeri)
+                .Include(b => b.SuTanggungan)
+                .ToListAsync();
         }
 
         public async Task<SuPekerja> GetById(int id)
         {
-            return await context.SuPekerja.FindAsync(id);
+            return await context.SuPekerja
+                .Include(b => b.JAgama)
+                .Include(b => b.JBangsa)
+                .Include(b => b.JCaraBayar)
+                .Include(b => b.JJawatanPekerja)
+                .Include(b => b.JNegeri)
+                .Include(b => b.SuTanggungan)
+                .FirstOrDefaultAsync(x=> x.Id == id);
         }
 
-        public Task<SuPekerja> GetByIdIncludeDeletedItems(int id)
+        public async Task<SuPekerja> GetByIdIncludeDeletedItems(int id)
         {
-            throw new NotImplementedException();
+            return await context.SuPekerja
+                .IgnoreQueryFilters()
+                .Include(b => b.JAgama)
+                .Include(b => b.JBangsa)
+                .Include(b => b.JCaraBayar)
+                .Include(b => b.JJawatanPekerja)
+                .Include(b => b.JNegeri)
+                .Include(b => b.SuTanggungan)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<SuPekerja> GetByString(string noKP)

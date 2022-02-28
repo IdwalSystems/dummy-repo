@@ -3,28 +3,65 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules;
+using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
     [Authorize(Roles = "SuperAdmin,Supervisor")]
     public class JSukanController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        public const string modul = "JD008";
+        public const string namamodul = "Jadual Sukan";
 
-        public JSukanController(ApplicationDbContext context)
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly AppLogIRepository<AppLog, int> _appLog;
+
+        public JSukanController(ApplicationDbContext context,
+            UserManager<IdentityUser> userManager,
+            AppLogIRepository<AppLog, int> appLog)
         {
             _context = context;
+            _userManager = userManager;
+            _appLog = appLog;
+        }
+
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
         }
 
         // GET: JSukan
         public async Task<IActionResult> Index()
         {
-            return View(await _context.JSukan.ToListAsync());
+            var obj = await _context.JSukan.ToListAsync();
+
+            if (User.IsInRole("SuperAdmin"))
+            {
+                obj = await _context.JSukan.IgnoreQueryFilters().ToListAsync();
+            }
+
+            return View(obj);
         }
 
         // GET: JSukan/Details/5
@@ -61,6 +98,7 @@ namespace MSNK.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(jSukan);
+                await AddLogAsync("Tambah", jSukan.Perihal, jSukan.Perihal, 0, 0); 
                 await _context.SaveChangesAsync();
                 TempData[SD.Success] = "Data berjaya ditambah..!";
                 return RedirectToAction(nameof(Index));
@@ -101,7 +139,18 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var objAsal = await _context.JSukan.FirstOrDefaultAsync(x => x.Id == jSukan.Id);
+                    var perihalAsal = objAsal.Perihal;
+
+                    _context.Entry(objAsal).State = EntityState.Detached;
+
                     _context.Update(jSukan);
+
+                    if (perihalAsal != jSukan.Perihal)
+                    {
+                        await AddLogAsync("Ubah", perihalAsal + " -> " + jSukan.Perihal,jSukan.Perihal,id, 0);
+                    }
+
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = "Data berjaya diubah..!";
                 }
@@ -145,12 +194,34 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var jSukan = await _context.JSukan.FindAsync(id);
+
+            var user = await _userManager.GetUserAsync(User);
+            jSukan.UserIdKemaskini = user.UserName;
+            jSukan.TarKemaskini = DateTime.Now;
+
             _context.JSukan.Remove(jSukan);
+            await AddLogAsync("Hapus", jSukan.Perihal,jSukan.Perihal,id, 0);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> RollBack(int id)
+        {
+            var obj = await _context.JSukan.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            // Batal operation
+
+            obj.FlHapus = 0;
+            _context.JSukan.Update(obj);
+
+            // Batal operation end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
+            return RedirectToAction(nameof(Index));
+        }
         private bool JSukanExists(int id)
         {
             return _context.JSukan.Any(e => e.Id == id);

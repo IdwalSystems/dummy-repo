@@ -3,28 +3,63 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules;
+using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
     [Authorize(Roles = "SuperAdmin , Supervisor")]
     public class JBangsaController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        public const string modul = "JD003";
+        public const string namamodul = "Bangsa";
 
-        public JBangsaController(ApplicationDbContext context)
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly AppLogIRepository<AppLog, int> _appLog;
+
+        public JBangsaController(ApplicationDbContext context,
+            UserManager<IdentityUser> userManager,
+            AppLogIRepository<AppLog, int> appLog)
         {
             _context = context;
+            _userManager = userManager;
+            _appLog = appLog;
         }
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
 
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
+        }
         // GET: JBangsa
         public async Task<IActionResult> Index()
         {
-            return View(await _context.JBangsa.ToListAsync());
+            var obj = await _context.JBangsa.ToListAsync();
+
+            if (User.IsInRole("SuperAdmin"))
+            {
+                obj = await _context.JBangsa.IgnoreQueryFilters().ToListAsync();
+            }
+
+            return View(obj);
         }
 
         // GET: JBangsa/Details/5
@@ -61,6 +96,7 @@ namespace MSNK.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(jBangsa);
+                await AddLogAsync("Tambah", jBangsa.Perihal, jBangsa.Perihal, 0, 0);
                 await _context.SaveChangesAsync();
                 TempData[SD.Success] = "Data berjaya ditambah..!";
                 return RedirectToAction(nameof(Index));
@@ -100,7 +136,17 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var objAsal = await _context.JBangsa.FirstOrDefaultAsync(x => x.Id == jBangsa.Id);
+                    var perihalAsal = objAsal.Perihal;
+
+                    _context.Entry(objAsal).State = EntityState.Detached;
+
                     _context.Update(jBangsa);
+
+                    if (perihalAsal != jBangsa.Perihal)
+                    {
+                        await AddLogAsync("Ubah", perihalAsal + " -> " + jBangsa.Perihal,jBangsa.Perihal,id, 0);
+                    }
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = "Data berjaya diubah..!";
                 }
@@ -144,12 +190,33 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var jBangsa = await _context.JBangsa.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            jBangsa.UserIdKemaskini = user.UserName;
+            jBangsa.TarKemaskini = DateTime.Now;
+
             _context.JBangsa.Remove(jBangsa);
+            await AddLogAsync("Hapus", jBangsa.Perihal,jBangsa.Perihal,id, 0);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> RollBack(int id)
+        {
+            var obj = await _context.JBangsa.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            // Batal operation
+
+            obj.FlHapus = 0;
+            _context.JBangsa.Update(obj);
+
+            // Batal operation end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
+            return RedirectToAction(nameof(Index));
+        }
         private bool JBangsaExists(int id)
         {
             return _context.JBangsa.Any(e => e.Id == id);

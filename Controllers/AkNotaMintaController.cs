@@ -23,6 +23,7 @@ namespace MSNK.Controllers
     public class AkNotaMintaController : Controller
     {
         public const string modul = "NM001";
+        public const string namamodul = "Nota Minta";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -55,6 +56,25 @@ namespace MSNK.Controllers
             _abBukuVotRepo = abBukuVotRepository;
             _akCartaRepo = akCartaRepository; 
             _cart = cart;
+        }
+
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
         }
 
         // GET: AkNotaMinta
@@ -730,17 +750,7 @@ namespace MSNK.Controllers
                     await _akNotaMintaRepo.Insert(m);
 
                     //insert applog
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "C";
-                    appLog.LgOperation = "Tambah";
-                    appLog.LgNote = modul + " Nota Minta - Tambah";
-                    appLog.NoRujukan = noRujukan;
-                    appLog.Jumlah = akNotaMinta.Jumlah;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("Tambah", m.NoRujukan, m.NoRujukan, 0, m.Jumlah);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -850,16 +860,19 @@ namespace MSNK.Controllers
                         akNotaMinta.TarMasuk = dataAsal.TarMasuk;
                         akNotaMinta.UserId = dataAsal.UserId;
                         akNotaMinta.FlCetak = 0;
-                        // list of input that cannot be change end
+                    // list of input that cannot be change end
 
+                        decimal jumlahAsal = 0;
                         foreach (AkNotaMinta2 item in dataAsal.AkNotaMinta2)
-                        {
+                            {
                             var model = _context.AkNotaMinta2.FirstOrDefault(b => b.Id == item.Id);
                             if (model != null)
                             {
+                                jumlahAsal += model.Amaun;
                                 _context.Remove(model);
                             }
                         }
+                        
                         _context.Entry(dataAsal).State = EntityState.Detached;
 
                         akNotaMinta.AkNotaMinta1 = dataAsal.AkNotaMinta1;
@@ -871,19 +884,19 @@ namespace MSNK.Controllers
                         _context.Update(akNotaMinta);
 
                         //insert applog
-                        AppLog appLog = new AppLog();
+                        if (jumlahAsal != JumlahPerihal)
+                        {
+                            await AddLogAsync("Ubah","RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" + 
+                                Convert.ToDecimal(JumlahPerihal).ToString("#,##0.00"), akNotaMinta.NoRujukan, id, JumlahPerihal);
 
-                        appLog.UserId = user.UserName;
-                        appLog.LgModule = modul + "E";
-                        appLog.LgOperation = "Ubah";
-                        appLog.LgNote = modul + " Nota Minta - Ubah";
-                        appLog.NoRujukan = akNotaMinta.NoRujukan;
-                        appLog.Jumlah = akNotaMinta.Jumlah;
-
-                        await _appLog.Insert(appLog);
+                        }
+                        else
+                        {
+                            await AddLogAsync("Ubah", "Ubah Data", akNotaMinta.NoRujukan, id, JumlahPerihal);
+                        }
                         //insert applog end
 
-                        await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -1058,7 +1071,7 @@ namespace MSNK.Controllers
                             _context.Remove(model);
                         }
                     }
-
+                    var jumlahAsal = dataAsal.Jumlah;
                     _context.Entry(dataAsal).State = EntityState.Detached;
 
                     akNotaMinta.AkNotaMinta1 = _cart.Lines1.ToList();
@@ -1070,16 +1083,17 @@ namespace MSNK.Controllers
                     _context.Update(akNotaMinta);
 
                     //insert applog
-                    AppLog appLog = new AppLog();
+                    if (jumlahAsal != akNotaMinta.Jumlah)
+                    {
+                        await AddLogAsync("Ubah", "Ubah Bahagian Kewangan RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" +
+                            Convert.ToDecimal(akNotaMinta.Jumlah).ToString("#,##0.00"), akNotaMinta.NoRujukan, id, akNotaMinta.Jumlah);
 
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "E";
-                    appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Nota Minta - Ubah Bahagian Kewangan";
-                    appLog.NoRujukan = akNotaMinta.NoRujukan;
-                    appLog.Jumlah = akNotaMinta.Jumlah;
+                    }
+                    else
+                    {
+                        await AddLogAsync("Ubah", "Ubah Data Ubah Bahagian Kewangan", akNotaMinta.NoRujukan, id, akNotaMinta.Jumlah);
+                    }
 
-                    await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1159,24 +1173,18 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akNotaMinta = await _context.AkNotaMinta.FindAsync(id);
+
+            var user = await _userManager.GetUserAsync(User);
+            akNotaMinta.UserIdKemaskini = user.UserName;
+            akNotaMinta.TarKemaskini = DateTime.Now;
+
             akNotaMinta.FlCetak = 0;
             _context.AkNotaMinta.Update(akNotaMinta);
 
             _context.AkNotaMinta.Remove(akNotaMinta);
 
             //insert applog
-            var user = await _userManager.GetUserAsync(User);
-
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "D";
-            appLog.LgOperation = "Hapus";
-            appLog.LgNote = modul + " Nota Minta - Hapus";
-            appLog.NoRujukan = akNotaMinta.NoRujukan;
-            appLog.Jumlah = akNotaMinta.Jumlah;
-
-            await _appLog.Insert(appLog);
+            await AddLogAsync("Hapus", "Hapus Data", akNotaMinta.NoRujukan, id, akNotaMinta.Jumlah);
             //insert applog end
 
             await _context.SaveChangesAsync();
@@ -1226,16 +1234,8 @@ namespace MSNK.Controllers
                     await _akNotaMintaRepo.Update(akNotaMinta);
 
                     //insert applog
-                    AppLog appLog = new AppLog();
+                    await AddLogAsync("Posting", "Posting Data", akNotaMinta.NoRujukan, (int)id, akNotaMinta.Jumlah);
 
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "T";
-                    appLog.LgOperation = "Posting";
-                    appLog.LgNote = modul + " NotaMinta - Posting";
-                    appLog.NoRujukan = akNotaMinta.NoRujukan;
-                    appLog.Jumlah = akNotaMinta.Jumlah;
-
-                    await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1283,18 +1283,8 @@ namespace MSNK.Controllers
                     await _akNotaMintaRepo.Update(akNotaMinta);
 
                     //insert applog
-                    var user = await _userManager.GetUserAsync(User);
+                    await AddLogAsync("UnPosting", "UnPosting Data", akNotaMinta.NoRujukan, (int)id, akNotaMinta.Jumlah);
 
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "UT";
-                    appLog.LgOperation = "UnPosting";
-                    appLog.LgNote = modul + " Nota Minta - UnPosting";
-                    appLog.NoRujukan = akNotaMinta.NoRujukan;
-                    appLog.Jumlah = akNotaMinta.Jumlah;
-
-                    await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1366,27 +1356,17 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Batal operation
+            // Rollback operation
 
             obj.FlHapus = 0;
             obj.FlCetak = 0;
             _context.AkNotaMinta.Update(obj);
 
-            // Batal operation end
+            // Rollback operation end
 
             //insert applog
-            var user = await _userManager.GetUserAsync(User);
+            await AddLogAsync("Rollback", "Rollback Data", obj.NoRujukan, (int)id, obj.Jumlah);
 
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "R";
-            appLog.LgOperation = "Rollback";
-            appLog.LgNote = modul + " Nota Minta - Rollback";
-            appLog.NoRujukan = obj.NoRujukan;
-            appLog.Jumlah = obj.Jumlah;
-
-            await _appLog.Insert(appLog);
             //insert applog end
 
             await _context.SaveChangesAsync();
@@ -1447,16 +1427,8 @@ namespace MSNK.Controllers
             await _akNotaMintaRepo.Update(akNotaMinta);
 
             //insert applog
-            AppLog appLog = new AppLog();
+            await AddLogAsync("Cetak", "Cetak Data", akNotaMinta.NoRujukan, (int)id, akNotaMinta.Jumlah);
 
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "P";
-            appLog.LgOperation = "Cetak";
-            appLog.LgNote = modul + " Nota Minta - Cetak";
-            appLog.NoRujukan = akNotaMinta.NoRujukan;
-            appLog.Jumlah = akNotaMinta.Jumlah;
-
-            await _appLog.Insert(appLog);
             //insert applog end
 
             await _context.SaveChangesAsync();

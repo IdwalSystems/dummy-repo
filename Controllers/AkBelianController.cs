@@ -20,6 +20,7 @@ namespace MSNK.Controllers
     {
 
         public const string modul = "TG002";
+        public const string namamodul = "Inbois Pembekal";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -67,6 +68,25 @@ namespace MSNK.Controllers
             _akAkaunRepo = akAkaunRepository;
             _akPVRepo = akPVRepository;
             _cart = cart;
+        }
+
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
         }
 
         // GET: AkBelian
@@ -666,11 +686,21 @@ namespace MSNK.Controllers
             AkBelian m = new AkBelian();
             var user = await _userManager.GetUserAsync(User);
 
-            var noRujukan = "IN/" + akBelian.NoInbois.ToUpper();
+            var pembekal = await _akPembekalRepo.GetById(AkPembekalId);
+            if (pembekal == null)
+            {
+                TempData[SD.Error] = "Pembekal tidak wujud..!";
+                //PopulateCart();
+                PopulateList();
+                CartEmpty();
+                return View(akBelian);
+            }
+
+            var noRujukan = "IN/"+ pembekal.KodSykt.ToUpper() + "/" + akBelian.NoInbois.ToUpper();
 
             var akPo = await _akPORepo.GetById(AkPOId);
             // checking for existing no rujukan
-            var countNoRujukan = _context.AkBelian.Where(x => x.NoInbois == noRujukan).Count();
+            var countNoRujukan = _context.AkBelian.Where(x => x.NoInbois == noRujukan && x.AkPembekalId == AkPembekalId).Count();
 
             if (countNoRujukan > 0)
             {
@@ -698,6 +728,8 @@ namespace MSNK.Controllers
                     m.Tahun = akBelian.Tahun;
                     m.NoInbois = noRujukan;
                     m.Tarikh = akBelian.Tarikh;
+                    m.TarikhTerima = akBelian.TarikhTerima;
+                    m.TarikhKewanganTerima = akBelian.TarikhKewanganTerima;
                     m.Jumlah = akBelian.Jumlah;
                     m.FlPosting = 0;
                     if (akPo != null)
@@ -721,17 +753,7 @@ namespace MSNK.Controllers
                     await _akBelianRepo.Insert(m);
 
                     //insert applog
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "C";
-                    appLog.LgOperation = "Tambah";
-                    appLog.LgNote = modul + " Inbois Pembekal - Tambah";
-                    appLog.NoRujukan = noRujukan;
-                    appLog.Jumlah = akBelian.Jumlah;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("Tambah", m.NoInbois, m.NoInbois, 0, m.Jumlah);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -889,20 +911,6 @@ namespace MSNK.Controllers
                     akBelian.TarKemaskini = DateTime.Now;
                     await _akBelianRepo.Update(akBelian);
 
-                    //insert applog
-                    var akCarta = await _akCartaRepo.GetById(akB1.AkCartaId);
-
-                    AppLog appLog = new AppLog();
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "ED";
-                    appLog.LgOperation = "Hapus";
-                    appLog.LgNote = modul + " Inbois Pembekal - Hapus Objek";
-                    appLog.NoRujukan = akBelian.NoInbois + "/" + akCarta.Kod;
-                    appLog.Jumlah = akB1.Amaun;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
                     await _context.SaveChangesAsync();
 
 
@@ -930,18 +938,6 @@ namespace MSNK.Controllers
                     _context.AkBelian2.Remove(akB2);
 
                     AkBelian akBelian = await _akBelianRepo.GetById(akBelian2.AkBelianId);
-
-                    //insert applog
-                    AppLog appLog = new AppLog();
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "ED";
-                    appLog.LgOperation = "Hapus";
-                    appLog.LgNote = modul + " Inbois Pembekal - Hapus Objek";
-                    appLog.NoRujukan = akBelian.NoInbois + "/" + akBelian2.Indek;
-                    appLog.Jumlah = akB2.Amaun;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
 
                     await _context.SaveChangesAsync();
 
@@ -996,24 +992,6 @@ namespace MSNK.Controllers
                 akBelian.TarKemaskini = DateTime.Now;
                 await _akBelianRepo.Update(akBelian);
                 // update total akTerima with date updated and userUpdated end
-
-                //insert applog
-                if (akBelian1.Amaun != originalAmount)
-                {
-                    var akCarta = await _akCartaRepo.GetById(akB1.AkCartaId);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "EE";
-                    appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Invois Pembekal - Ubah Objek";
-                    appLog.NoRujukan = akBelian.NoInbois + "/" + akCarta.Kod + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akBelian1.Amaun.ToString();
-                    appLog.Jumlah = akB1.Amaun;
-
-                    await _appLog.Insert(appLog);
-                }
-                //insert applog end
 
                 await _context.SaveChangesAsync();
 
@@ -1083,22 +1061,6 @@ namespace MSNK.Controllers
 
                 var akBelian = await _akBelianRepo.GetById(akBelian2.AkBelianId);
 
-                //insert applog
-                if (akBelian2.Amaun != originalAmount)
-                {
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "EE";
-                    appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Invois Pembekal - Ubah Objek";
-                    appLog.NoRujukan = akBelian.NoInbois + "/" + akBelian2.Indek + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akBelian2.Amaun.ToString();
-                    appLog.Jumlah = akBelian2.Amaun;
-
-                    await _appLog.Insert(appLog);
-                }
-                //insert applog end
-
                 await _context.SaveChangesAsync();
 
                 return Json(new { result = "OK" });
@@ -1155,10 +1117,15 @@ namespace MSNK.Controllers
                         akBelian.Tahun = akBelianAsal.Tahun;
                         akBelian.JKWId = akBelianAsal.JKWId;
                         akBelian.NoInbois = akBelianAsal.NoInbois;
-                        akBelian.AkPembekalId = akBelianAsal.AkPembekalId;
+                        if (akBelianAsal.AkPOId != null)
+                        {
+                            akBelian.AkPOId = akBelianAsal.AkPOId;
+                            akBelian.AkPembekalId = akBelianAsal.AkPembekalId;
+                        }
                         akBelian.TarMasuk = akBelianAsal.TarMasuk;
                         akBelian.UserId = akBelianAsal.UserId;
                         akBelian.KodObjekAPId = akBelianAsal.KodObjekAPId;
+                        decimal jumlahAsal = akBelianAsal.Jumlah;
                         // list of input that cannot be change end
 
                         foreach (AkBelian1 item in akBelianAsal.AkBelian1)
@@ -1189,16 +1156,17 @@ namespace MSNK.Controllers
                         _context.Update(akBelian);
 
                         //insert applog
-                        AppLog appLog = new AppLog();
+                        if(jumlahAsal != akBelian.Jumlah)
+                        {
+                            await AddLogAsync("Ubah","RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" +
+                                Convert.ToDecimal(akBelian.Jumlah).ToString("#,##0.00"), akBelian.NoInbois, id, akBelian.Jumlah);
 
-                        appLog.UserId = user.UserName;
-                        appLog.LgModule = modul + "E";
-                        appLog.LgOperation = "Ubah";
-                        appLog.LgNote = modul + " Inbois Pembekal - Ubah";
-                        appLog.NoRujukan = akBelian.NoInbois;
-                        appLog.Jumlah = akBelian.Jumlah;
+                        }
+                        else
+                        {
+                            await AddLogAsync("Ubah", "Ubah Data", akBelian.NoInbois, id, akBelian.Jumlah);
+                        }
 
-                        await _appLog.Insert(appLog);
                         //insert applog end
 
                         await _context.SaveChangesAsync();
@@ -1313,27 +1281,36 @@ namespace MSNK.Controllers
             }
 
             // check if already link with akPV, Batal akPV included
-            var akPV2 = (from tbl2 in _context.AkPV2.ToList()
-                         join tbl in _context.AkPV.ToList()
-                         on tbl2.AkPVId equals tbl.Id into tbl2Tbl
-                         from tbl2_tbl in tbl2Tbl.DefaultIfEmpty()
-                         select new
-                         {
-                             Id = tbl2.Id,
-                             AkPVId = tbl2_tbl.Id,
-                             AkBelianId = tbl2.AkBelianId
+            var akPV = await _akPVRepo.GetAll();
+            var akPV2 = _context.AkPV2.ToList();
+            var result = (from tbl2 in akPV2
+                          join tbl in akPV
+                          on tbl2.AkPVId equals tbl.Id into tbl2Tbl
+                          from tbl2_tbl in tbl2Tbl
+                          select new
+                          {
+                              Id = tbl2.Id,
+                              AkPVId = tbl2.AkPVId,
+                              AkBelianId = tbl2.AkBelianId
 
-                         }).Where(x => x.AkBelianId == id).FirstOrDefault();
+                          }).Where(x => x.AkBelianId == id).FirstOrDefault();
 
-            if (akPV2 != null)
+            if (result != null)
             {
-                AkPV akPV = await _akPVRepo.GetById(akPV2.AkPVId);
+                AkPV akPVItem = await _akPVRepo.GetById(result.AkPVId);
                 //duplicate id error
-                TempData[SD.Error] = "Data terkait dengan no baucer " + akPV.NoPV + ".";
+                TempData[SD.Error] = "Data terkait dengan no baucer " + akPVItem.NoPV + ".";
                 return RedirectToAction(nameof(Index));
             }
 
+            var user = await _userManager.GetUserAsync(User);
+            akBelian.UserIdKemaskini = user.UserName;
+            akBelian.TarKemaskini = DateTime.Now;
+
             _context.AkBelian.Remove(akBelian);
+            //insert applog
+            await AddLogAsync("Hapus", "Hapus Data", akBelian.NoInbois, id, akBelian.Jumlah);
+            //insert applog end
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
@@ -1342,6 +1319,11 @@ namespace MSNK.Controllers
         private bool AkBelianExists(int id)
         {
             return _context.AkBelian.Any(e => e.Id == id);
+        }
+
+        private bool CurrentAkBelianExists(int akPembekalId,string noRujukan)
+        {
+            return _context.AkBelian.Any(e => e.AkPembekalId == akPembekalId && e.NoInbois == noRujukan);
         }
 
         // function  json Create
@@ -1461,8 +1443,6 @@ namespace MSNK.Controllers
             }
             else
             {
-                var user = await _userManager.GetUserAsync(User);
-
                 AkBelian akBelian = await _akBelianRepo.GetById((int)id);
 
                 List<AkBelian1> akB1 = akBelian.AkBelian1.ToList();
@@ -1562,16 +1542,8 @@ namespace MSNK.Controllers
                     await _akBelianRepo.Update(akBelian);
 
                     //insert applog
-                    AppLog appLog = new AppLog();
+                    await AddLogAsync("Posting", "Posting Data", akBelian.NoInbois, (int)id, akBelian.Jumlah);
 
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "T";
-                    appLog.LgOperation = "Posting";
-                    appLog.LgNote = modul + " Inbois Pembekal - Posting";
-                    appLog.NoRujukan = akBelian.NoInbois;
-                    appLog.Jumlah = akBelian.Jumlah;
-
-                    await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1598,10 +1570,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                AkBelian akBelian = await _context.AkBelian
-                    .Include(x=> x.KodObjekAP)
-                    .Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta)
-                    .FirstOrDefaultAsync(x => x.Id == id);
+                AkBelian akBelian = await _akBelianRepo.GetById((int) id);
 
                 List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akBelian.NoInbois).ToList();
 
@@ -1615,23 +1584,25 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    var akPV2 = (from tbl2 in _context.AkPV2.ToList()
-                                   join tbl in _context.AkPV.ToList()
+                    var akPV = await _akPVRepo.GetAll();
+                    var akPV2 = _context.AkPV2.ToList();
+                    var result = (from tbl2 in akPV2
+                                   join tbl in akPV
                                    on tbl2.AkPVId equals tbl.Id into tbl2Tbl
-                                   from tbl2_tbl in tbl2Tbl.DefaultIfEmpty().Where(x => x.FlHapus != 1)
+                                   from tbl2_tbl in tbl2Tbl
                                    select new
                                    {
                                        Id = tbl2.Id,
-                                       AkPVId = tbl2_tbl.Id,
+                                       AkPVId = tbl2.AkPVId,
                                        AkBelianId = tbl2.AkBelianId
 
                                    }).Where(x=> x.AkBelianId == id).FirstOrDefault();
 
-                    if (akPV2 != null)
+                    if (result != null)
                     {
-                        AkPV akPV = await _akPVRepo.GetById(akPV2.AkPVId);
+                        AkPV akPVItem = await _akPVRepo.GetById(result.AkPVId);
                         //duplicate id error
-                        TempData[SD.Error] = "Data terkait dengan no baucer " + akPV.NoPV + ".";
+                        TempData[SD.Error] = "Data terkait dengan no baucer " + akPVItem.NoPV + ".";
                     }
                     else
                     {
@@ -1655,18 +1626,8 @@ namespace MSNK.Controllers
                         await _akBelianRepo.Update(akBelian);
 
                         //insert applog
-                        var user = await _userManager.GetUserAsync(User);
+                        await AddLogAsync("UnPosting", "Batal Posting Data", akBelian.NoInbois, (int)id, akBelian.Jumlah);
 
-                        AppLog appLog = new AppLog();
-
-                        appLog.UserId = user.UserName;
-                        appLog.LgModule = modul + "UT";
-                        appLog.LgOperation = "UnPosting";
-                        appLog.LgNote = modul + " Inbois Pembekal - UnPosting";
-                        appLog.NoRujukan = akBelian.NoInbois;
-                        appLog.Jumlah = akBelian.Jumlah;
-
-                        await _appLog.Insert(appLog);
                         //insert applog end
 
                         await _context.SaveChangesAsync();
@@ -1736,31 +1697,47 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Batal operation
+            if(CurrentAkBelianExists(obj.AkPembekalId,obj.NoInbois) == false)
+            {
+                // Batal operation
 
-            obj.FlHapus = 0;
-            _context.AkBelian.Update(obj);
+                obj.FlHapus = 0;
+                _context.AkBelian.Update(obj);
 
-            // Batal operation end
+                // Batal operation end
 
-            //insert applog
-            var user = await _userManager.GetUserAsync(User);
+                //insert applog
+                await AddLogAsync("Rollback", "Rollback Data", obj.NoInbois, id, obj.Jumlah);
+                //insert applog end
 
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "R";
-            appLog.LgOperation = "Rollback";
-            appLog.LgNote = modul + " Inbois Pembekal - Rollback";
-            appLog.NoRujukan = obj.NoInbois;
-            appLog.Jumlah = obj.Jumlah;
-
-            await _appLog.Insert(appLog);
-            //insert applog end
-
-            await _context.SaveChangesAsync();
-            TempData[SD.Success] = "Data berjaya dikembalikan..!";
+                await _context.SaveChangesAsync();
+                TempData[SD.Success] = "Data berjaya dikembalikan..!";
+                
+            }
+            else
+            {
+                TempData[SD.Error] = "No Inbois telah wujud..!";
+                
+            }
             return RedirectToAction(nameof(Index));
+
         }
+
+        // on change kod pembekal controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetKod(int data, string noInbois)
+        {
+            try
+            {
+                var result = await _context.AkBelian.FirstOrDefaultAsync(x=>x.NoInbois == "IN/"+ data +"/"+noInbois);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change kod pembekal controller end
     }
 }

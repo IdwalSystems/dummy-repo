@@ -22,7 +22,8 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin , Supervisor, User")]
     public class AkPVController : Controller
     {
-        public const string modul = "TG003";
+        public const string modul = "PV001";
+        public const string namamodul = "Baucer Pembayaran";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -79,6 +80,24 @@ namespace MSNK.Controllers
             _akAkaunRepo = akAkaunRepository;
             _abBukuVotRepo = abBukuVotRepository;
             _cart = cart;
+        }
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
         }
 
         // GET: AkPV
@@ -1017,16 +1036,8 @@ namespace MSNK.Controllers
 
                     //insert applog
 
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "C";
-                    appLog.LgOperation = "Tambah";
-                    appLog.LgNote = modul + " Baucer Pembayaran - Tambah";
-                    appLog.NoRujukan = noRujukan;
-                    appLog.Jumlah = akPV.Jumlah;
-
-                    await _appLog.Insert(appLog);
+                    //insert applog
+                    await AddLogAsync("Tambah", m.NoPV, m.NoPV, 0, m.Jumlah);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1200,20 +1211,6 @@ namespace MSNK.Controllers
                     akPV.TarKemaskini = DateTime.Now;
                     await _akPVRepo.Update(akPV);
 
-                    //insert applog
-                    var akCarta = await _akCartaRepo.GetById(akB1.AkCartaId);
-
-                    AppLog appLog = new AppLog();
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "ED";
-                    appLog.LgOperation = "Hapus";
-                    appLog.LgNote = modul + " Baucer Pembayaran - Hapus Objek";
-                    appLog.NoRujukan = akPV.NoPV + "/" + akCarta.Kod;
-                    appLog.Jumlah = akB1.Amaun;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
                     await _context.SaveChangesAsync();
 
 
@@ -1268,24 +1265,6 @@ namespace MSNK.Controllers
                 akPV.TarKemaskini = DateTime.Now;
                 await _akPVRepo.Update(akPV);
                 // update total akTerima with date updated and userUpdated end
-
-                //insert applog
-                if (akPV1.Amaun != originalAmount)
-                {
-                    var akCarta = await _akCartaRepo.GetById(akB1.AkCartaId);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "EE";
-                    appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Baucer Pembayaran - Ubah Objek";
-                    appLog.NoRujukan = akPV.NoPV + "/" + akCarta.Kod + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akPV1.Amaun.ToString();
-                    appLog.Jumlah = akB1.Amaun;
-
-                    await _appLog.Insert(appLog);
-                }
-                //insert applog end
 
                 await _context.SaveChangesAsync();
 
@@ -1358,21 +1337,6 @@ namespace MSNK.Controllers
 
                     _context.AkPV2.Remove(akT2);
 
-                    //insert applog
-                    var akPV = await _akPVRepo.GetById(akPV2.AkPVId);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "ED";
-                    appLog.LgOperation = "Hapus";
-                    appLog.LgNote = modul + " Penerimaan - Hapus Perihal";
-                    appLog.NoRujukan = akPV.NoPV + "/" + akT2.AkBelian.NoInbois;
-                    appLog.Jumlah = akPV2.Amaun;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
                     await _context.SaveChangesAsync();
 
                 }
@@ -1406,13 +1370,13 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
-                    var akPVAsal = await _akPVRepo.GetById(id);
-                    var jumlah = akPVAsal.Jumlah;
+                    var dataAsal = await _akPVRepo.GetById(id);
+                    var jumlah = dataAsal.Jumlah;
 
                     switch (akPV.FlKategoriPenerima)
                     {
                         case 1:
-                            var pembekal = akPVAsal.AkPembekal;
+                            var pembekal = dataAsal.AkPembekal;
                             akPV.SuPekerjaId = null;
                             akPV.Nama = pembekal.NamaSykt;
                             akPV.Alamat1 = pembekal.Alamat1;
@@ -1423,7 +1387,7 @@ namespace MSNK.Controllers
                             akPV.NoAkaunBank = pembekal.AkaunBank;
                             break;
                         case 2:
-                            var pekerja = akPVAsal.SuPekerja;
+                            var pekerja = dataAsal.SuPekerja;
                             akPV.AkPembekalId = null;
                             akPV.Nama = pekerja.Nama;
                             akPV.Alamat1 = pekerja.Alamat1;
@@ -1434,27 +1398,27 @@ namespace MSNK.Controllers
                             akPV.NoAkaunBank = pekerja.NoAkaunBank;
                             break;
                         default:
-                            akPV.Nama = akPVAsal.Nama;
+                            akPV.Nama = dataAsal.Nama;
                             akPV.AkPembekalId = null;
                             akPV.SuPekerjaId = null;
                             break;
                     }
 
                     // list of input that cannot be change
-                    akPV.Tahun = akPVAsal.Tahun;
-                    akPV.JKWId = akPVAsal.JKWId;
-                    akPV.NoPV = akPVAsal.NoPV;
-                    akPV.SuPekerjaId = akPVAsal.SuPekerjaId;
-                    akPV.AkPembekalId = akPVAsal.AkPembekalId;
-                    akPV.FlJenisBaucer = akPVAsal.FlJenisBaucer;
-                    akPV.AkTunaiRuncitId = akPVAsal.AkTunaiRuncitId;
-                    akPV.NoRekup = akPVAsal.NoRekup;
-                    akPV.TarMasuk = akPVAsal.TarMasuk;
-                    akPV.UserId = akPVAsal.UserId;
+                    akPV.Tahun = dataAsal.Tahun;
+                    akPV.JKWId = dataAsal.JKWId;
+                    akPV.NoPV = dataAsal.NoPV;
+                    akPV.SuPekerjaId = dataAsal.SuPekerjaId;
+                    akPV.AkPembekalId = dataAsal.AkPembekalId;
+                    akPV.FlJenisBaucer = dataAsal.FlJenisBaucer;
+                    akPV.AkTunaiRuncitId = dataAsal.AkTunaiRuncitId;
+                    akPV.NoRekup = dataAsal.NoRekup;
+                    akPV.TarMasuk = dataAsal.TarMasuk;
+                    akPV.UserId = dataAsal.UserId;
                     akPV.FlCetak = 0;
                     // list of input that cannot be change end
 
-                    foreach (AkPV1 item in akPVAsal.AkPV1)
+                    foreach (AkPV1 item in dataAsal.AkPV1)
                     {
                         var model = _context.AkPV1.FirstOrDefault(b => b.Id == item.Id);
                         if (model != null)
@@ -1463,7 +1427,7 @@ namespace MSNK.Controllers
                         }
                     }
 
-                    foreach (AkPV2 item in akPVAsal.AkPV2)
+                    foreach (AkPV2 item in dataAsal.AkPV2)
                     {
                         var model = _context.AkPV2.FirstOrDefault(b => b.Id == item.Id);
                         if (model != null)
@@ -1471,8 +1435,8 @@ namespace MSNK.Controllers
                             _context.Remove(model);
                         }
                     }
-
-                    _context.Entry(akPVAsal).State = EntityState.Detached;
+                    var jumlahAsal = dataAsal.Jumlah;
+                    _context.Entry(dataAsal).State = EntityState.Detached;
 
                     akPV.AkPV1 = _cart.Lines1.ToList();
                     akPV.AkPV2 = _cart.Lines2.ToList();
@@ -1486,24 +1450,16 @@ namespace MSNK.Controllers
                     _context.Update(akPV);
 
                     //insert applog
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "E";
-                    appLog.LgOperation = "Ubah";
-                    if (jumlah != akPV.Jumlah)
+                    if (jumlahAsal != akPV.Jumlah)
                     {
-                        appLog.LgNote = modul + " Baucer Pembayaran - Ubah Jumlah dari RM" + jumlah + " ke RM" + akPV.Jumlah;
+                        await AddLogAsync("Ubah","RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" + 
+                            Convert.ToDecimal(akPV.Jumlah).ToString("#,##0.00"), akPV.NoPV, id, akPV.Jumlah);
+
                     }
                     else
                     {
-                        appLog.LgNote = modul + " Baucer Pembayaran - Ubah";
+                        await AddLogAsync("Ubah", "Ubah Data", akPV.NoPV, id, akPV.Jumlah);
                     }
-                    
-                    appLog.NoRujukan = akPV.NoPV;
-                    appLog.Jumlah = akPV.Jumlah;
-
-                    await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1649,6 +1605,9 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akPV = await _context.AkPV.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            akPV.UserIdKemaskini = user.UserName;
+            akPV.TarKemaskini = DateTime.Now;
             // check if already posting redirect back
             if (akPV.FlPosting == 1)
             {
@@ -1661,18 +1620,7 @@ namespace MSNK.Controllers
             _context.AkPV.Remove(akPV);
 
             //insert applog
-            var user = await _userManager.GetUserAsync(User);
-
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "D";
-            appLog.LgOperation = "Hapus";
-            appLog.LgNote = modul + " Baucer Pembayaran - Hapus";
-            appLog.NoRujukan = akPV.NoPV;
-            appLog.Jumlah = akPV.Jumlah;
-
-            await _appLog.Insert(appLog);
+            await AddLogAsync("Hapus", "Hapus Data", akPV.NoPV, id, akPV.Jumlah);
             //insert applog end
 
             await _context.SaveChangesAsync();
@@ -1944,22 +1892,8 @@ namespace MSNK.Controllers
                         }
                     }
 
-                    //update posting status in akTerima
-                    akPV.FlPosting = 1;
-                    akPV.TarikhPosting = DateTime.Now;
-                    await _akPVRepo.Update(akPV);
-
                     //insert applog
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "T";
-                    appLog.LgOperation = "Posting";
-                    appLog.LgNote = modul + " Baucer Pembayaran - Posting";
-                    appLog.NoRujukan = akPV.NoPV;
-                    appLog.Jumlah = akPV.Jumlah;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("Posting", "Posting Data", akPV.NoPV, (int)id, akPV.Jumlah);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -2030,18 +1964,7 @@ namespace MSNK.Controllers
                     await _akPVRepo.Update(akPV);
 
                     //insert applog
-                    var user = await _userManager.GetUserAsync(User);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "UT";
-                    appLog.LgOperation = "UnPosting";
-                    appLog.LgNote = modul + " Baucer Pembayaran - UnPosting";
-                    appLog.NoRujukan = akPV.NoPV;
-                    appLog.Jumlah = akPV.Jumlah;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("UnPosting", "UnPosting Data", akPV.NoPV, (int)id, akPV.Jumlah);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -2116,27 +2039,16 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Batal operation
+            // rollback operation
 
             obj.FlHapus = 0;
             obj.FlCetak = 0;
             _context.AkPV.Update(obj);
 
-            // Batal operation end
+            // rollback operation end
 
             //insert applog
-            var user = await _userManager.GetUserAsync(User);
-
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "R";
-            appLog.LgOperation = "Rollback";
-            appLog.LgNote = modul + " Baucer Pembayaran - Rollback";
-            appLog.NoRujukan = obj.NoPV;
-            appLog.Jumlah = obj.Jumlah;
-
-            await _appLog.Insert(appLog);
+            await AddLogAsync("Posting", "Posting Data", obj.NoPV, id, obj.Jumlah);
             //insert applog end
 
             await _context.SaveChangesAsync();

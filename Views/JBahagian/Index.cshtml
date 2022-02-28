@@ -55,7 +55,8 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
+                var tabletype = item.FlHapus == 1 ? "table-danger" : null;
+                <tr class="@tabletype">
                     <td width="5%"></td>
                     <td width="5%">
                         @item.Kod
@@ -64,14 +65,28 @@
                         @item.Perihal
                     </td>
                     <td width="5%">
-                        <a asp-action="Details" asp-route-id="@item.Id"
-                           class="btn btn-primary btn-sm" type="button"
-                           data-toggle="tooltip" data-placement="top"
-                           title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                        <a asp-action="Delete" asp-route-id="@item.Id"
-                           class="btn btn-danger btn-sm" type="button"
-                           data-toggle="tooltip" data-placement="top"
-                           title="Hapus"><i class="fas fa-trash"></i></a>
+                        @if (item.FlHapus == 0)
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Id"
+                               class="btn btn-primary btn-sm" type="button"
+                               data-toggle="tooltip" data-placement="top"
+                               title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                            <a asp-action="Delete" asp-route-id="@item.Id"
+                               class="btn btn-danger btn-sm" type="button"
+                               data-toggle="tooltip" data-placement="top"
+                               title="Hapus"><i class="fas fa-trash"></i></a>
+                        }
+                        else
+                        {
+                            if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                            {
+                                <a asp-action="Rollback" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                    <i class="fas fa-trash-restore"></i>
+                                </a>
+
+                            }
+                        }
+
                     </td>
                 </tr>
             }

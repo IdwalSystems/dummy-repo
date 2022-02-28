@@ -186,7 +186,7 @@
                     {
                         if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
                         {
-                            <a asp-action="Rollback" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                            <a asp-action="Rollback" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
                                 <i class="fas fa-trash-restore"></i>
                             </a>
 

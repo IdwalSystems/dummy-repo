@@ -16,6 +16,35 @@
 
     //});
 
+    // onchange no Rujukan
+    $("body").on('change', "#NoInbois, #ddlAkPOId", function () {
+        var kodPembekal = $("#ddlKodPembekal").val();
+        var noInbois = $("#NoInbois").val();
+        if (kodPembekal != 0) {
+            JsonKod(kodPembekal, noInbois);
+        }
+
+    });
+
+    function JsonKod(id, noInbois) {
+        $.ajax({
+            type: "POST",
+            //url: "/AkPV/JsonGetKod",
+            url: '@Url.Action("JsonGetKod", "AkBelian")',
+            data: { data: id, noInbois: noInbois },
+            dataType: "json",
+            success: function (msg) {
+                if (msg.record) {
+                    toastr.error("No rujukan telah wujud..!");
+                    $("#NoInbois").val("");
+                }
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    // onchange no Rujukan end
 
     // onchange kod pembekal
     $("body").on('change', "#ddlKodPembekal", function () {
@@ -604,14 +633,14 @@
         var amount = $("#txtHargaUnit").val();
         var quantity = $("#txtKuantiti").val();
 
-        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)));
+        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)).toFixed(2));
         //main body end
 
         //modal perihal
         var moAmount = $("#moHargaUnit").val();
         var moQuantity = $("#moKuantiti").val();
 
-        $("#moAmaun2").val((countTotalAmountPerItem(moAmount, moQuantity)));
+        $("#moAmaun2").val((countTotalAmountPerItem(moAmount, moQuantity)).toFixed(2));
         //modal perihal end
     });
 

@@ -27,9 +27,11 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JTahapAktiviti.ToListAsync();
         }
 
-        public Task<IEnumerable<JTahapAktiviti>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<JTahapAktiviti>> GetAllIncludeDeletedItems()
         {
-            throw new NotImplementedException();
+            return await context.JTahapAktiviti
+                 .IgnoreQueryFilters()
+                 .ToListAsync();
         }
 
         public async Task<JTahapAktiviti> GetById(int id)
@@ -38,9 +40,11 @@ namespace MSNK.Models.Modules.EFRepository
 
         }
 
-        public Task<JTahapAktiviti> GetByIdIncludeDeletedItems(int id)
+        public async Task<JTahapAktiviti> GetByIdIncludeDeletedItems(int id)
         {
-            throw new NotImplementedException();
+            return await context.JTahapAktiviti
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public Task<JTahapAktiviti> GetByString(string id)

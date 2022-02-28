@@ -24,7 +24,14 @@ namespace MSNK.Controllers
         // GET: JJawatanPekerja
         public async Task<IActionResult> Index()
         {
-            return View(await _context.JJawatanPekerja.ToListAsync());
+            var obj = await _context.JJawatanPekerja.ToListAsync();
+
+            if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
+            {
+                obj = await _context.JJawatanPekerja.IgnoreQueryFilters().ToListAsync();
+            }
+
+            return View(obj);
         }
 
         // GET: JJawatanPekerja/Details/5
@@ -151,6 +158,22 @@ namespace MSNK.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> RollBack(int id)
+        {
+            var obj = await _context.JJawatanPekerja.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            // Batal operation
+
+            obj.FlHapus = 0;
+            _context.JJawatanPekerja.Update(obj);
+
+            // Batal operation end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
+            return RedirectToAction(nameof(Index));
+        }
         private bool JJawatanPekerjaExists(int id)
         {
             return _context.JJawatanPekerja.Any(e => e.Id == id);

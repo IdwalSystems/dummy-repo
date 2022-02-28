@@ -24,6 +24,7 @@ namespace MSNK.Controllers
     public class AkTerimaController : Controller
     {
         public const string modul = "PR001";
+        public const string namamodul = "Penerimaan";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -65,6 +66,25 @@ namespace MSNK.Controllers
             _akCartaRepo = akCartaRepository;
             _akAkaunRepo = akAkaunRepository;
             _cart = cart;
+        }
+
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
         }
 
         [Authorize(Policy = "PR001")]
@@ -671,17 +691,7 @@ namespace MSNK.Controllers
                     await _akTerimaRepo.Insert(m);
 
                     //insert applog
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "C";
-                    appLog.LgOperation = "Tambah";
-                    appLog.LgNote = modul + " Penerimaan - Tambah";
-                    appLog.NoRujukan = noRujukan;
-                    appLog.Jumlah = akTerima.Jumlah;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("Tambah", m.NoRujukan, m.NoRujukan, 0, m.Jumlah);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -746,19 +756,19 @@ namespace MSNK.Controllers
                     try
                     {
                         var user = await _userManager.GetUserAsync(User);
-                        AkTerima akTerimaAsal = await _akTerimaRepo.GetById(id);
+                        AkTerima dataAsal = await _akTerimaRepo.GetById(id);
 
                         // list of input that cannot be change
-                        akTerima.Tahun = akTerimaAsal.Tahun;
-                        akTerima.JKWId = akTerimaAsal.JKWId;
-                        akTerima.NoRujukan = akTerimaAsal.NoRujukan;
-                        akTerima.Nama = akTerimaAsal.Nama;
-                        akTerima.TarMasuk = akTerimaAsal.TarMasuk;
-                        akTerima.UserId = akTerimaAsal.UserId;
+                        akTerima.Tahun = dataAsal.Tahun;
+                        akTerima.JKWId = dataAsal.JKWId;
+                        akTerima.NoRujukan = dataAsal.NoRujukan;
+                        akTerima.Nama = dataAsal.Nama;
+                        akTerima.TarMasuk = dataAsal.TarMasuk;
+                        akTerima.UserId = dataAsal.UserId;
                         akTerima.FlCetak = 0;
                         // list of input that cannot be change end
 
-                        foreach (AkTerima1 item in akTerimaAsal.AkTerima1)
+                        foreach (AkTerima1 item in dataAsal.AkTerima1)
                         {
                             var model = _context.AkTerima1.FirstOrDefault(b => b.Id == item.Id);
                             if (model != null)
@@ -767,7 +777,7 @@ namespace MSNK.Controllers
                             }
                         }
 
-                        foreach (AkTerima2 item in akTerimaAsal.AkTerima2)
+                        foreach (AkTerima2 item in dataAsal.AkTerima2)
                         {
                             var model = _context.AkTerima2.FirstOrDefault(b => b.Id == item.Id);
                             if (model != null)
@@ -775,7 +785,8 @@ namespace MSNK.Controllers
                                 _context.Remove(model);
                             }
                         }
-                        _context.Entry(akTerimaAsal).State = EntityState.Detached;
+                        decimal jumlahAsal = dataAsal.Jumlah;
+                        _context.Entry(dataAsal).State = EntityState.Detached;
 
                         akTerima.AkTerima1 = _cart.Lines1.ToList();
                         akTerima.AkTerima2 = _cart.Lines2.ToList();
@@ -786,16 +797,16 @@ namespace MSNK.Controllers
                         _context.Update(akTerima);
 
                         //insert applog
-                        AppLog appLog = new AppLog();
+                        if (jumlahAsal != akTerima.Jumlah)
+                        {
+                            await AddLogAsync("Ubah","RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" + 
+                                Convert.ToDecimal(akTerima.Jumlah).ToString("#,##0.00"), akTerima.NoRujukan, id, akTerima.Jumlah);
 
-                        appLog.UserId = user.UserName;
-                        appLog.LgModule = modul + "E";
-                        appLog.LgOperation = "Ubah";
-                        appLog.LgNote = modul + " Penerimaan - Ubah";
-                        appLog.NoRujukan = akTerima.NoRujukan;
-                        appLog.Jumlah = akTerima.Jumlah;
-
-                        await _appLog.Insert(appLog);
+                        }
+                        else
+                        {
+                            await AddLogAsync("Ubah", "Ubah Data", akTerima.NoRujukan, id, akTerima.Jumlah);
+                        }
                         //insert applog end
 
                         await _context.SaveChangesAsync();
@@ -863,6 +874,11 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akTerima = await _context.AkTerima.FindAsync(id);
+
+            var user = await _userManager.GetUserAsync(User);
+            akTerima.UserIdKemaskini = user.UserName;
+            akTerima.TarKemaskini = DateTime.Now;
+
             // check if already posting redirect back
             if (akTerima.FlPosting == 1)
             {
@@ -875,18 +891,7 @@ namespace MSNK.Controllers
             _context.AkTerima.Remove(akTerima);
 
             //insert applog
-            var user = await _userManager.GetUserAsync(User);
-
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "D";
-            appLog.LgOperation = "Hapus";
-            appLog.LgNote = modul + " Penerimaan - Hapus";
-            appLog.NoRujukan = akTerima.NoRujukan;
-            appLog.Jumlah = akTerima.Jumlah;
-
-            await _appLog.Insert(appLog);
+            await AddLogAsync("Hapus", "Hapus Data", akTerima.NoRujukan, id, akTerima.Jumlah);
             //insert applog end
 
             await _context.SaveChangesAsync();
@@ -950,27 +955,16 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Batal operation
+            // Rollback operation
 
             obj.FlHapus = 0;
             obj.FlCetak = 0;
             _context.AkTerima.Update(obj);
 
-            // Batal operation end
+            // Rollback operation end
 
             //insert applog
-            var user = await _userManager.GetUserAsync(User);
-
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "R";
-            appLog.LgOperation = "Rollback";
-            appLog.LgNote = modul + " Inbois Pembekal - Rollback";
-            appLog.NoRujukan = obj.NoRujukan;
-            appLog.Jumlah = obj.Jumlah;
-
-            await _appLog.Insert(appLog);
+            await AddLogAsync("Rollback", "Rollback Data", obj.NoRujukan, id, obj.Jumlah);
             //insert applog end
 
             await _context.SaveChangesAsync();
@@ -1212,20 +1206,6 @@ namespace MSNK.Controllers
                     akTerima.TarKemaskini = DateTime.Now;
                     await _akTerimaRepo.Update(akTerima);
 
-                    //insert applog
-                    var akCarta = await _akCartaRepo.GetById(akT1.AkCartaId);
-
-                    AppLog appLog = new AppLog();
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "ED";
-                    appLog.LgOperation = "Hapus";
-                    appLog.LgNote = modul + " Penerimaan - Hapus Objek";
-                    appLog.NoRujukan = akTerima.NoRujukan + "/" + akCarta.Kod;
-                    appLog.Jumlah = akT1.Amaun;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
                     await _context.SaveChangesAsync();
 
                     _cart.RemoveItem1(akTerima1.AkCartaId);
@@ -1267,24 +1247,6 @@ namespace MSNK.Controllers
                 akTerima.TarKemaskini = DateTime.Now;
                 await _akTerimaRepo.Update(akTerima);
                 // update total akTerima with date updated and userUpdated end
-
-                //insert applog
-                if (akTerima1.Amaun != originalAmount)
-                {
-                    var akCarta = await _akCartaRepo.GetById(akT1.AkCartaId);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "EE";
-                    appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Penerimaan - Ubah Objek";
-                    appLog.NoRujukan = akTerima.NoRujukan + "/" + akCarta.Kod + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akTerima1.Amaun.ToString();
-                    appLog.Jumlah = akT1.Amaun;
-
-                    await _appLog.Insert(appLog);
-                }
-                //insert applog end
 
                 await _context.SaveChangesAsync();
 
@@ -1372,21 +1334,6 @@ namespace MSNK.Controllers
 
                     _context.AkTerima2.Remove(akT2);
 
-                    //insert applog
-                    var akTerima = await _akTerimaRepo.GetById(akTerima2.AkTerimaId);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "ED";
-                    appLog.LgOperation = "Hapus";
-                    appLog.LgNote = modul + " Penerimaan - Hapus Perihal";
-                    appLog.NoRujukan = akTerima.NoRujukan + "/" + akTerima2.JCaraBayar.Kod;
-                    appLog.Jumlah = akTerima2.Amaun;
-
-                    await _appLog.Insert(appLog);
-                    //insert applog end
-
                     await _context.SaveChangesAsync();
 
                 }
@@ -1421,24 +1368,6 @@ namespace MSNK.Controllers
                 akT2.TarSlip = akTerima2.TarSlip;;
 
                 _context.AkTerima2.Update(akT2);
-
-                //insert applog
-                if (akTerima2.Amaun != originalAmount)
-                {
-                    var akTerima = await _akTerimaRepo.GetById(akTerima2.AkTerimaId);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "EE";
-                    appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Penerimaan - Ubah Perihal";
-                    appLog.NoRujukan = akTerima.NoRujukan + "/" + akT2.JCaraBayar.Kod + " Dari Amaun RM" + originalAmount.ToString() + " ke RM" + akTerima2.Amaun.ToString();
-                    appLog.Jumlah = akTerima2.Amaun;
-
-                    await _appLog.Insert(appLog);
-                }
-                //insert applog end
 
                 await _context.SaveChangesAsync();
 
@@ -1568,18 +1497,8 @@ namespace MSNK.Controllers
                     await _akTerimaRepo.Update(akTerima);
 
                     //insert applog
-                    var user = await _userManager.GetUserAsync(User);
-                    
-                    AppLog appLog = new AppLog();
+                    await AddLogAsync("Posting", "Posting Data", akTerima.NoRujukan, (int)id, akTerima.Jumlah);
 
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "T";
-                    appLog.LgOperation = "Posting";
-                    appLog.LgNote = modul + " Penerimaan - Posting";
-                    appLog.NoRujukan = akTerima.NoRujukan;
-                    appLog.Jumlah = akTerima.Jumlah;
-
-                    await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1632,18 +1551,8 @@ namespace MSNK.Controllers
                     await _akTerimaRepo.Update(akTerima);
 
                     //insert applog
-                    var user = await _userManager.GetUserAsync(User);
+                    await AddLogAsync("UnPosting", "UnPosting Data", akTerima.NoRujukan, (int)id, akTerima.Jumlah);
 
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "UT";
-                    appLog.LgOperation = "UnPosting";
-                    appLog.LgNote = modul + " Penerimaan - UnPosting";
-                    appLog.NoRujukan = akTerima.NoRujukan;
-                    appLog.Jumlah = akTerima.Jumlah;
-
-                    await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1692,16 +1601,7 @@ namespace MSNK.Controllers
             await _akTerimaRepo.Update(akTerima);
 
             //insert applog
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "P";
-            appLog.LgOperation = "Cetak";
-            appLog.LgNote = modul + " Penerimaan - Cetak";
-            appLog.NoRujukan = akTerima.NoRujukan;
-            appLog.Jumlah = akTerima.Jumlah;
-
-            await _appLog.Insert(appLog);
+            await AddLogAsync("Cetak", "Cetak Data", akTerima.NoRujukan, id, akTerima.Jumlah);
             //insert applog end
 
             await _context.SaveChangesAsync();

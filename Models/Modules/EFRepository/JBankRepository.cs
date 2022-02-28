@@ -28,9 +28,9 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JBank.ToListAsync();
         }
 
-        public Task<IEnumerable<JBank>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<JBank>> GetAllIncludeDeletedItems()
         {
-            throw new NotImplementedException();
+            return await context.JBank.IgnoreQueryFilters().ToListAsync();
         }
 
         public async Task<JBank> GetById(int id)
@@ -38,9 +38,11 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JBank.FindAsync(id);
         }
 
-        public Task<JBank> GetByIdIncludeDeletedItems(int id)
+        public async Task<JBank> GetByIdIncludeDeletedItems(int id)
         {
-            throw new NotImplementedException();
+            return await context.JBank
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public Task<JBank> GetByString(string id)

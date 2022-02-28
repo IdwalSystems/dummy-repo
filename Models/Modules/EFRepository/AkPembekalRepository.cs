@@ -39,13 +39,16 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<AkPembekal> GetById(int id)
         {
-            return await context.AkPembekal.FindAsync(id);
+            return await context.AkPembekal
+                .Include(b => b.JNegeri).Include(b => b.JBank)
+                .Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<AkPembekal> GetByIdIncludeDeletedItems(int id)
         {
             return await context.AkPembekal
                 .IgnoreQueryFilters()
+                .Include(b => b.JNegeri).Include(b => b.JBank)
                 .Where(x=> x.Id == id).FirstOrDefaultAsync();
         }
 

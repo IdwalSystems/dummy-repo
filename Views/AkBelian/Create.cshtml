@@ -26,13 +26,6 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label asp-for="NoInbois" class="control-label"></label>
-                            <input asp-for="NoInbois" class="form-control form-control-sm text-uppercase" required />
-                            <span asp-validation-for="NoInbois" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
                             <label asp-for="Tarikh" class="control-label"></label>
                             <input asp-for="Tarikh" class="form-control form-control-sm" value="@DateTime.Now.ToString("s")" required />
                             <span asp-validation-for="Tarikh" class="text-danger"></span>
@@ -60,6 +53,15 @@
                                     <option value="@s.Id">@s.NoPO</option>
                                 }
                             </select>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="NoInbois" class="control-label"></label>
+                            <input asp-for="NoInbois" class="form-control form-control-sm text-uppercase" required />
+                            <span asp-validation-for="NoInbois" class="text-danger"></span>
                         </div>
                     </div>
                 </div>

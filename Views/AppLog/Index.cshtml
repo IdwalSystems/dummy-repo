@@ -1,0 +1,80 @@
+﻿@model IEnumerable<MSNK.Models.Modules.AppLog>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<partial name="_JSIndex" />
+<div class="row mb-2">
+    <div class="col-8">
+        <h3 class="text-left">Transaksi Log Pengguna</h3>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%" id="IndexTable">
+        <thead>
+            <tr>
+                <th>Bil</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LgDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LgModule)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LgOperation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LgNote)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NoRujukan)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Jumlah)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SysCode)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td></td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LgDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LgModule)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LgOperation)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LgNote)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoRujukan)
+                    </td>
+                    <td>
+                        @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SysCode)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

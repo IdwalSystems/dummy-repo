@@ -18,12 +18,17 @@ namespace MSNK.Controllers
 {
     public class AccountController : Controller
     {
+        public const string modul = "SY001";
+        public const string namamodul = "Sistem Pengguna";
+
+        private readonly ApplicationDbContext _db;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         //private readonly IEmailSender _emailSender;
         private readonly SendGridEmailServices _mailServices; 
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
+        private readonly AppLogIRepository<AppLog, int> _appLog;
         public AccountController(
             ApplicationDbContext db, 
             UserManager<IdentityUser> userManager, 
@@ -31,15 +36,38 @@ namespace MSNK.Controllers
             //IEmailSender emailSender,
             SendGridEmailServices mailServices,
             RoleManager<IdentityRole> roleManager,
-            IRepository<SuPekerja, int, string> suPekerja)
+            IRepository<SuPekerja, int, string> suPekerja,
+            AppLogIRepository<AppLog,int> appLog)
         {
+            _db = db;
             _userManager = userManager;
             _signInManager = signInManager;
             _mailServices = mailServices;
             //_emailSender = emailSender;
             _roleManager = roleManager;
             _suPekerjaRepo = suPekerja;
+            _appLog = appLog;
         }
+
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
+        }
+
         [Authorize(Roles = "SuperAdmin,Admin")]
         public IActionResult Index()
         {
@@ -128,7 +156,7 @@ namespace MSNK.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin,Admin")]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnurl=null)
         {
             
@@ -166,16 +194,18 @@ namespace MSNK.Controllers
                             {
                                 await _userManager.AddToRoleAsync(user, "User");
                             }
-                            if (!User.IsInRole("Admin"))
-                            {
-                                await _signInManager.SignInAsync(user, isPersistent: false);
-                                return LocalRedirect(returnurl);
-                            }
-                            else
-                            {
+                            //if (!User.IsInRole("Admin"))
+                            //{
+                            //    await _signInManager.SignInAsync(user, isPersistent: false);
+                            //    return LocalRedirect(returnurl);
+                            //}
+                            //else
+                            //{
                                 TempData[SD.Success] = "Data pengguna berjaya ditambah.";
+                                await AddLogAsync("Tambah", model.Email + " - " + pekerja.Nama, model.Email, 0, 0);
+                                _db.SaveChanges();
                                 return RedirectToAction(nameof(UserController.Index), "User");
-                            }
+                            //}
 
 
                         }

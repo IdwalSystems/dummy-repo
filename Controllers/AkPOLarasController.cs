@@ -25,6 +25,7 @@ namespace MSNK.Controllers
     {
         
         public const string modul = "PT001";
+        public const string namamodul = "Pelarasan Pesanan Tempatan";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -74,6 +75,25 @@ namespace MSNK.Controllers
             _akAkaunRepo = akAkaunRepository;
             _abBukuVotRepo = abBukuVotRepository;
             _cart = cart;
+        }
+
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
         }
 
         // GET: AkPOLaras
@@ -474,17 +494,7 @@ namespace MSNK.Controllers
                     await _akPOLarasRepo.Insert(m);
 
                     //insert applog
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "C";
-                    appLog.LgOperation = "Tambah";
-                    appLog.LgNote = modul + " Pelarasan Tanggungan - Tambah";
-                    appLog.NoRujukan = "PT/" + noRujukan;
-                    appLog.Jumlah = akPOLaras.Jumlah;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("Tambah", m.NoRujukan, m.NoRujukan, 0, m.Jumlah);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -842,18 +852,18 @@ namespace MSNK.Controllers
                     {
                         var user = await _userManager.GetUserAsync(User);
 
-                        AkPOLaras akPOLarasAsal = await _akPOLarasRepo.GetById(id);
+                        AkPOLaras dataAsal = await _akPOLarasRepo.GetById(id);
 
                         // list of input that cannot be change
-                        akPOLaras.Tahun = akPOLarasAsal.Tahun;
-                        akPOLaras.JKWId = akPOLarasAsal.JKWId;
-                        akPOLaras.NoRujukan = akPOLarasAsal.NoRujukan;
-                        akPOLaras.TarMasuk = akPOLarasAsal.TarMasuk;
-                        akPOLaras.UserId = akPOLarasAsal.UserId;
+                        akPOLaras.Tahun = dataAsal.Tahun;
+                        akPOLaras.JKWId = dataAsal.JKWId;
+                        akPOLaras.NoRujukan = dataAsal.NoRujukan;
+                        akPOLaras.TarMasuk = dataAsal.TarMasuk;
+                        akPOLaras.UserId = dataAsal.UserId;
                         akPOLaras.FlCetak = 0;
                         // list of input that cannot be change end
 
-                        foreach (AkPOLaras1 item in akPOLarasAsal.AkPOLaras1)
+                        foreach (AkPOLaras1 item in dataAsal.AkPOLaras1)
                         {
                             var model = _context.AkPOLaras1.FirstOrDefault(b => b.Id == item.Id);
                             if (model != null)
@@ -862,7 +872,7 @@ namespace MSNK.Controllers
                             }
                         }
 
-                        foreach (AkPOLaras2 item in akPOLarasAsal.AkPOLaras2)
+                        foreach (AkPOLaras2 item in dataAsal.AkPOLaras2)
                         {
                             var model = _context.AkPOLaras2.FirstOrDefault(b => b.Id == item.Id);
                             if (model != null)
@@ -870,7 +880,8 @@ namespace MSNK.Controllers
                                 _context.Remove(model);
                             }
                         }
-                        _context.Entry(akPOLarasAsal).State = EntityState.Detached;
+                        decimal jumlahAsal = dataAsal.Jumlah;
+                        _context.Entry(dataAsal).State = EntityState.Detached;
 
                         akPOLaras.AkPOLaras1 = _cart.Lines1.ToList();
                         akPOLaras.AkPOLaras2 = _cart.Lines2.ToList();
@@ -880,17 +891,17 @@ namespace MSNK.Controllers
 
                         _context.Update(akPOLaras);
 
-                        //insert applog
-                        AppLog appLog = new AppLog();
+                        // insert applog
+                        if (jumlahAsal != akPOLaras.Jumlah)
+                        {
+                            await AddLogAsync("Ubah","RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" + 
+                                Convert.ToDecimal(akPOLaras.Jumlah).ToString("#,##0.00"), akPOLaras.NoRujukan, id, akPOLaras.Jumlah);
 
-                        appLog.UserId = user.UserName;
-                        appLog.LgModule = modul + "E";
-                        appLog.LgOperation = "Ubah";
-                        appLog.LgNote = modul + " Pelarasan Tanggungan - Ubah";
-                        appLog.NoRujukan = akPOLaras.NoRujukan;
-                        appLog.Jumlah = akPOLaras.Jumlah;
-
-                        await _appLog.Insert(appLog);
+                        }
+                        else
+                        {
+                            await AddLogAsync("Ubah", "Ubah Data", akPOLaras.NoRujukan, id, akPOLaras.Jumlah);
+                        }
                         //insert applog end
 
                         await _context.SaveChangesAsync();
@@ -982,6 +993,9 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akPOLaras = await _context.AkPOLaras.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            akPOLaras.UserIdKemaskini = user.UserName;
+            akPOLaras.TarKemaskini = DateTime.Now;
             // check if already posting redirect back
             if (akPOLaras.FlPosting == 1)
             {
@@ -1001,48 +1015,48 @@ namespace MSNK.Controllers
         }
 
         // POST: AkPV/Cancel/5
-        [Authorize(Policy = "PT001B")]
-        public async Task<IActionResult> Cancel(int id)
-        {
-            var akPOLaras = await _context.AkPOLaras.FindAsync(id);
-            // check if already posting redirect back
-            if (akPOLaras.FlPosting == 1)
-            {
-                TempData[SD.Error] = "Akses tidak dibenarkan..!";
-                return RedirectToAction(nameof(Index));
-            }
-            // check if this data is the last one (for preventing batal purpose)
-            var lastItem = _context.AkPOLaras.OrderByDescending(x => x.Id).FirstOrDefault();
+        //[Authorize(Policy = "PT001B")]
+        //public async Task<IActionResult> Cancel(int id)
+        //{
+        //    var akPOLaras = await _context.AkPOLaras.FindAsync(id);
+        //    // check if already posting redirect back
+        //    if (akPOLaras.FlPosting == 1)
+        //    {
+        //        TempData[SD.Error] = "Akses tidak dibenarkan..!";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    // check if this data is the last one (for preventing batal purpose)
+        //    var lastItem = _context.AkPOLaras.OrderByDescending(x => x.Id).FirstOrDefault();
 
-            if (lastItem.Id == akPOLaras.Id)
-            {
-                TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
-                return RedirectToAction(nameof(Index));
-            }
-            // check end
-            akPOLaras.FlHapus = 1;
+        //    if (lastItem.Id == akPOLaras.Id)
+        //    {
+        //        TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    // check end
+        //    akPOLaras.FlHapus = 1;
 
-            _context.AkPOLaras.Update(akPOLaras);
+        //    _context.AkPOLaras.Update(akPOLaras);
 
-            //insert applog
-            var user = await _userManager.GetUserAsync(User);
+        //    //insert applog
+        //    var user = await _userManager.GetUserAsync(User);
 
-            AppLog appLog = new AppLog();
+        //    AppLog appLog = new AppLog();
 
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "B";
-            appLog.LgOperation = "Batal";
-            appLog.LgNote = modul + " Pelarasan Tanggungan - Batal";
-            appLog.NoRujukan = akPOLaras.NoRujukan;
-            appLog.Jumlah = akPOLaras.Jumlah;
+        //    appLog.UserId = user.UserName;
+        //    appLog.LgModule = modul + "B";
+        //    appLog.LgOperation = "Batal";
+        //    appLog.LgNote = modul + " Pelarasan Tanggungan - Batal";
+        //    appLog.NoRujukan = akPOLaras.NoRujukan;
+        //    appLog.Jumlah = akPOLaras.Jumlah;
 
-            await _appLog.Insert(appLog);
-            //insert applog end
+        //    await _appLog.Insert(appLog);
+        //    //insert applog end
 
-            await _context.SaveChangesAsync();
-            TempData[SD.Success] = "Data berjaya dibatalkan..!";
-            return RedirectToAction(nameof(Index));
-        }
+        //    await _context.SaveChangesAsync();
+        //    TempData[SD.Success] = "Data berjaya dibatalkan..!";
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         // posting function
         [Authorize(Policy = "PT001T")]
@@ -1107,16 +1121,8 @@ namespace MSNK.Controllers
                     await _akPOLarasRepo.Update(akPOLaras);
 
                     //insert applog
-                    AppLog appLog = new AppLog();
+                    await AddLogAsync("Posting", "Posting Data", akPOLaras.NoRujukan, (int)id, akPOLaras.Jumlah);
 
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "T";
-                    appLog.LgOperation = "Posting";
-                    appLog.LgNote = modul + " Pelarasan Tanggungan - Posting";
-                    appLog.NoRujukan = akPOLaras.NoRujukan;
-                    appLog.Jumlah = akPOLaras.Jumlah;
-
-                    await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1181,18 +1187,8 @@ namespace MSNK.Controllers
                         await _akPOLarasRepo.Update(akPOLaras);
 
                         //insert applog
-                        var user = await _userManager.GetUserAsync(User);
+                        await AddLogAsync("UnPosting", "UnPosting Data", akPOLaras.NoRujukan, (int)id, akPOLaras.Jumlah);
 
-                        AppLog appLog = new AppLog();
-
-                        appLog.UserId = user.UserName;
-                        appLog.LgModule = modul + "UT";
-                        appLog.LgOperation = "UnPosting";
-                        appLog.LgNote = modul + " Pelarasan Tanggungan - UnPosting";
-                        appLog.NoRujukan = akPOLaras.NoRujukan;
-                        appLog.Jumlah = akPOLaras.Jumlah;
-
-                        await _appLog.Insert(appLog);
                         //insert applog end
 
                         await _context.SaveChangesAsync();
@@ -1242,16 +1238,8 @@ namespace MSNK.Controllers
             await _akPOLarasRepo.Update(akPOLaras);
 
             //insert applog
-            AppLog appLog = new AppLog();
+            await AddLogAsync("Cetak", "Cetak Data", akPOLaras.NoRujukan, (int)id, akPOLaras.Jumlah);
 
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "P";
-            appLog.LgOperation = "Cetak";
-            appLog.LgNote = modul + " Pelarasan Tanggungan - Cetak";
-            appLog.NoRujukan = akPOLaras.NoRujukan;
-            appLog.Jumlah = akPOLaras.Jumlah;
-
-            await _appLog.Insert(appLog);
             //insert applog end
 
             await _context.SaveChangesAsync();

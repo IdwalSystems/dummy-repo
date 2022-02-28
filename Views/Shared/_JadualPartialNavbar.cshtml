@@ -3,17 +3,47 @@
         Jadual
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-        <a class="dropdown-item" asp-area="" asp-controller="JKW" asp-action="Index">Kumpulan Wang</a>
-        <a class="dropdown-item" asp-area="" asp-controller="JBahagian" asp-action="Index">Bahagian</a>
-        <a class="dropdown-item" asp-area="" asp-controller="JCaraBayar" asp-action="Index">Cara Bayar</a>
-        <a class="dropdown-item" asp-area="" asp-controller="AkBank" asp-action="Index">Akaun Bank</a>
-        <a class="dropdown-item" asp-area="" asp-controller="JBank" asp-action="Index">Nama Bank</a>
+        <div class="dropdown-item dropright">
+            <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Belanjawan
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-area="" asp-controller="JBahagian" asp-action="Index">Bahagian</a>
+                <a class="dropdown-item" asp-area="" asp-controller="JKW" asp-action="Index">Kumpulan Wang</a>
+            </div>
+        </div>
+        <div class="dropdown-item dropright">
+            <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Pembayaran / Penerimaan
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-area="" asp-controller="AkBank" asp-action="Index">Akaun Bank</a>
+                <a class="dropdown-item" asp-area="" asp-controller="JBank" asp-action="Index">Bank</a>
+                <a class="dropdown-item" asp-area="" asp-controller="JCaraBayar" asp-action="Index">Cara Bayar</a>
+            </div>
+        </div>
+        <div class="dropdown-item dropright">
+            <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Permohonan Pendahuluan
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-area="" asp-controller="JJantina" asp-action="Index">Jantina</a>
+                <a class="dropdown-item" asp-area="" asp-controller="JSukan" asp-action="Index">Sukan</a>
+                <a class="dropdown-item" asp-area="" asp-controller="JTahapAktiviti" asp-action="Index">Tahap Aktiviti</a>
+            </div>
+        </div>
+        <div class="dropdown-item dropright">
+            <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Pendaftaran
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-area="" asp-controller="JAgama" asp-action="Index">Agama</a>
+                <a class="dropdown-item" asp-area="" asp-controller="JBangsa" asp-action="Index">Bangsa</a>
+            </div>
+        </div>
+
         <a class="dropdown-item" asp-area="" asp-controller="JNegeri" asp-action="Index">Negeri</a>
-        <a class="dropdown-item" asp-area="" asp-controller="JAgama" asp-action="Index">Agama</a>
-        <a class="dropdown-item" asp-area="" asp-controller="JBangsa" asp-action="Index">Bangsa</a>
-        <a class="dropdown-item" asp-area="" asp-controller="JSukan" asp-action="Index">Sukan</a>
-        <a class="dropdown-item" asp-area="" asp-controller="JTahapAktiviti" asp-action="Index">Tahap Aktiviti</a>
-        <a class="dropdown-item" asp-area="" asp-controller="JJantina" asp-action="Index">Jantina</a>
-        <a class="dropdown-item" asp-area="" asp-controller="JJawatanPekerja" asp-action="Index">Jawatan Pekerja</a>
+
+        @*<a class="dropdown-item" asp-area="" asp-controller="JJawatanPekerja" asp-action="Index">Jawatan Pekerja</a>*@
     </div>
 </li>

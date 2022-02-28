@@ -17,7 +17,8 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin , Supervisor")]
     public class AkBankController : Controller
     {
-        public const string modul = "JD003";
+        public const string modul = "JD009";
+        public const string namamodul = "Akaun Bank";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -39,6 +40,25 @@ namespace MSNK.Controllers
             _kwRepo = kwRepository;
             _bankRepo = bankRepository;
             _akBankRepo = akBankRepository; 
+        }
+
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog,modul,operasi);
         }
 
         // GET: AkBank
@@ -97,7 +117,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkBankViewModel akBank, int JKWId, int JBankId, int AkCartaId)
+        public async Task<IActionResult> Create(AkBank akBank, int JKWId, int JBankId, int AkCartaId)
         {
             AkBank akB = new AkBank();
             var user = await _userManager.GetUserAsync(User);
@@ -117,17 +137,7 @@ namespace MSNK.Controllers
                     await _akBankRepo.Insert(akB);
 
                     //insert applog
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "C";
-                    appLog.LgOperation = "Tambah";
-                    appLog.LgNote = modul + " Jadual Bank - Tambah";
-                    appLog.NoRujukan = akBank.Kod;
-                    appLog.Jumlah = 0;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("Tambah",akB.Kod + " - " + akB.NoAkaun, akB.Kod, 0, 0);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -142,6 +152,7 @@ namespace MSNK.Controllers
             return View(akBank);
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         // GET: AkBank/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -164,6 +175,7 @@ namespace MSNK.Controllers
         // POST: AkBank/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkBank akBank, int JKWId, int JBankId, int AkCartaId)
@@ -178,22 +190,22 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+
+                    var objAsal = await _context.AkBank.FirstOrDefaultAsync(x => x.Id == akBank.Id);
+
+                    var kodAsal = objAsal.Kod;
+                    var noAkaunAsal = objAsal.NoAkaun;
+
+                    _context.Entry(objAsal).State = EntityState.Detached;
+
                     akBank.UserIdKemaskini = user.UserName;
                     akBank.TarKemaskini = DateTime.Now;
 
                     _context.Update(akBank);
-
                     //insert applog
-                    AppLog appLog = new AppLog();
+                    await AddLogAsync("Ubah",kodAsal + " -> " + akBank.Kod + ", "
+                        + noAkaunAsal + " -> " + akBank.NoAkaun + ", ", akBank.Kod, id, 0);
 
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "E";
-                    appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Jadual Bank - Ubah";
-                    appLog.NoRujukan = akBank.Kod;
-                    appLog.Jumlah = 0;
-
-                    await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -239,21 +251,17 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            
             var akBank = await _context.AkBank.FindAsync(id);
+
+            var user = await _userManager.GetUserAsync(User);
+            akBank.UserIdKemaskini = user.UserName;
+            akBank.TarKemaskini = DateTime.Now;
+
             await _akBankRepo.Delete(id);
             //insert applog
-            var user = await _userManager.GetUserAsync(User);
+            await AddLogAsync("Hapus",akBank.Kod + " - " + akBank.NoAkaun, akBank.Kod, id, 0);
 
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "D";
-            appLog.LgOperation = "Hapus";
-            appLog.LgNote = modul + " Jadual Bank - Hapus";
-            appLog.NoRujukan = akBank.Kod;
-            appLog.Jumlah = 0;
-
-            await _appLog.Insert(appLog);
             //insert applog end
 
             await _context.SaveChangesAsync();

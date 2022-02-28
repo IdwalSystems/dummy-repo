@@ -24,7 +24,14 @@ namespace MSNK.Controllers
         // GET: JJantina
         public async Task<IActionResult> Index()
         {
-            return View(await _context.JJantina.ToListAsync());
+            var obj = await _context.JJantina.ToListAsync();
+
+            if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
+            {
+                obj = await _context.JJantina.IgnoreQueryFilters().ToListAsync();
+            }
+
+            return View(obj);
         }
 
         // GET: JJantina/Details/5
@@ -147,6 +154,22 @@ namespace MSNK.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> RollBack(int id)
+        {
+            var obj = await _context.JJantina.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            // Batal operation
+
+            obj.FlHapus = 0;
+            _context.JJantina.Update(obj);
+
+            // Batal operation end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
+            return RedirectToAction(nameof(Index));
+        }
         private bool JJantinaExists(int id)
         {
             return _context.JJantina.Any(e => e.Id == id);

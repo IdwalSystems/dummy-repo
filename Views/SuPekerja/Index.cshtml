@@ -61,60 +61,22 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Emel)
                 </th>
-                @*<th>
-            @Html.DisplayNameFor(model => model.Alamat1)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Poskod)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Bandar)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TelefonBimbit)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StatusKahwin)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BilAnak)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TarikhMasukKerja)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TarikhBerhentiKerja)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TarikhPencen)
-        </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.NoAkaunBank)
                 </th>
-                @*<th>
-            @Html.DisplayNameFor(model => model.JNegeri)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.JAgama)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.JBangsa)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.JJawatanPekerja)
-        </th>*@
                 <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
+            var tabletype = item.FlHapus == 1 ? "table-danger" : null;
+                <tr class="@tabletype">
                 <td></td>
                 <td>
                     @Html.DisplayFor(modelItem => item.NoGaji)
                 </td>
-                <td>
+                <td class="text-uppercase">
                     @Html.DisplayFor(modelItem => item.Nama)
                 </td>
                 <td>
@@ -123,51 +85,33 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Emel)
                 </td>
-                @*<td>
-            @Html.DisplayFor(modelItem => item.Alamat1)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Poskod)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Bandar)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TelefonBimbit)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StatusKahwin)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.BilAnak)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TarikhMasukKerja)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TarikhBerhentiKerja)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TarikhPencen)
-        </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.NoAkaunBank)
                 </td>
-                @*<td>
-            @Html.DisplayFor(modelItem => item.JNegeri.Kod)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.JAgama.Id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.JBangsa.Id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.JJawatanPekerja.Id)
-        </td>*@
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                <td width="5%">
+                    <a asp-action="Details" asp-route-id="@item.Id"
+                       class="btn btn-primary btn-sm" type="button"
+                       data-toggle="tooltip" data-placement="top"
+                       title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                    @if (item.FlHapus == 0)
+                    {
+
+                        <a asp-action="Delete" asp-route-id="@item.Id"
+                           class="btn btn-danger btn-sm" type="button"
+                           data-toggle="tooltip" data-placement="top"
+                           title="Hapus"><i class="fas fa-trash"></i></a>
+                    }
+                    else
+                    {
+                        if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                        {
+                            <a asp-action="Rollback" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                <i class="fas fa-trash-restore"></i>
+                            </a>
+
+                        }
+                    }
+
                 </td>
             </tr>
             }

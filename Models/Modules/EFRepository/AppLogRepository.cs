@@ -28,11 +28,52 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AppLog.ToListAsync();
         }
 
-        public async Task<AppLog> Insert(AppLog entity)
+        public async Task<AppLog> Insert(AppLog entity,string modul, string operasi)
         {
             entity.LgDate = DateTime.Now;
             entity.SysCode = "SPPB";
+            if (operasi == "Tambah")
+            {
+                entity.LgModule = modul + "C";
+                entity.LgOperation = "Tambah";
+            }
+            else if (operasi == "Hapus")
+            {
+                entity.LgModule = modul + "D";
+                entity.LgOperation = "Hapus";
+            }
+            else if (operasi == "Ubah")
+            {
+                entity.LgModule = modul + "E";
+                entity.LgOperation = "Ubah";
+            }
+            else if (operasi == "Posting")
+            {
+                entity.LgModule = modul + "T";
+                entity.LgOperation = "Posting";
+            }
+            else if (operasi == "UnPosting")
+            {
+                entity.LgModule = modul + "UT";
+                entity.LgOperation = "UnPosting";
+            }
+            else if (operasi == "Cetak")
+            {
+                entity.LgModule = modul + "P";
+                entity.LgOperation = "Cetak";
+            }
+            else if (operasi == "Batal")
+            {
+                entity.LgModule = modul + "B";
+                entity.LgOperation = "Batal";
+            }
+            else if (operasi == "Rollback")
+            {
+                entity.LgModule = modul + "R";
+                entity.LgOperation = "Rollback";
+            }
             await context.AppLog.AddAsync(entity);
+
             return entity;
         }
     }

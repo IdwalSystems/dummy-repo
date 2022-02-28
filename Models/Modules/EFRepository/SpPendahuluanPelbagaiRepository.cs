@@ -37,9 +37,19 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
-        public Task<IEnumerable<SpPendahuluanPelbagai>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<SpPendahuluanPelbagai>> GetAllIncludeDeletedItems()
         {
-            throw new NotImplementedException();
+            return await context.SpPendahuluanPelbagai
+                .IgnoreQueryFilters()
+                .Include(b => b.JKW)
+                .Include(b => b.JTahapAktiviti)
+                .Include(b => b.JSukan)
+                .Include(b => b.AkCarta)
+                .Include(b => b.JNegeri)
+                //.Include(b => b.AkPembekal)
+                .Include(b => b.SpPendahuluanPelbagai1).ThenInclude(b => b.JJantina)
+                .Include(b => b.SpPendahuluanPelbagai2)
+                .ToListAsync();
         }
 
         public async Task<SpPendahuluanPelbagai> GetById(int id)
@@ -59,9 +69,22 @@ namespace MSNK.Models.Modules.EFRepository
                 .FirstOrDefaultAsync();
         }
 
-        public Task<SpPendahuluanPelbagai> GetByIdIncludeDeletedItems(int id)
+        public async Task<SpPendahuluanPelbagai> GetByIdIncludeDeletedItems(int id)
         {
-            throw new NotImplementedException();
+            return await context.SpPendahuluanPelbagai
+                .IgnoreQueryFilters()
+                .Where(d => d.Id == id)
+                .Include(b => b.JKW)
+                .Include(b => b.JTahapAktiviti)
+                .Include(b => b.JSukan)
+                .Include(b => b.AkCarta)
+                .Include(b => b.JNegeri)
+                //.Include(b => b.AkPembekal)
+                .Include(b => b.SpPendahuluanPelbagai1).ThenInclude(b => b.JJantina)
+                .Include(d => d.SpPendahuluanPelbagai2)
+                //.Include(d => d.AkPembekal).ThenInclude(d => d.JNegeri)
+                //.Include(d => d.AkPembekal).ThenInclude(d => d.JBank)
+                .FirstOrDefaultAsync();
         }
 
         public Task<SpPendahuluanPelbagai> GetByString(string id)

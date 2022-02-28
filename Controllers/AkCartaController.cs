@@ -21,8 +21,8 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin , Supervisor")]
     public class AkCartaController : Controller
     {
-        public const string modul = "CA001";
-        public const string namamodul = "CA001";
+        public const string modul = "AK001";
+        public const string namamodul = "AK001";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -45,6 +45,25 @@ namespace MSNK.Controllers
             _kwRepo = kwRepository;
             _akCartaRepo = akCartaRepository;
             _webHostEnvironment = webHostEnvironment;
+        }
+
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota ;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
         }
 
         // GET: AkCarta
@@ -190,11 +209,15 @@ namespace MSNK.Controllers
                         akC.Catatan2 = akCarta.Catatan2;
                         try {
                             await _akCartaRepo.Insert(akC);
+                            //insert applog
+                            await AddLogAsync("Tambah", akC.Kod, akC.Kod, 0, akC.Baki);
+                            //insert applog end
                             await _akCartaRepo.Save();
                         }
                         catch { }
                         finally
                         {
+                            //add bakiawal into akAkaun
                             if (akCarta.Baki != 0)
                             {
                                 AkAkaun aka = new AkAkaun()
@@ -346,6 +369,10 @@ namespace MSNK.Controllers
                         carta.Baki = akCarta.Baki;
                         carta.Catatan1 = akCarta.Catatan1;
                         carta.Catatan2 = akCarta.Catatan2;
+                        var user = await _userManager.GetUserAsync(User);
+                        carta.UserIdKemaskini = user.UserName;
+                        carta.TarKemaskini = DateTime.Now;
+
                         try
                         {
                             await _akCartaRepo.Update(carta);
@@ -378,6 +405,10 @@ namespace MSNK.Controllers
                                 }
                             }
                         }
+                        //insert applog
+                        await AddLogAsync("Ubah", carta.Kod, carta.Kod, id, carta.Baki);
+                        //insert applog end
+
                         await _context.SaveChangesAsync();
                         TempData[SD.Success] = "Data berjaya diubah..!";
                     }
@@ -445,6 +476,10 @@ namespace MSNK.Controllers
 
             string kodCarta = akCarta.Kod;
 
+            var user = await _userManager.GetUserAsync(User);
+            akCarta.UserIdKemaskini = user.UserName;
+            akCarta.TarKemaskini = DateTime.Now;
+
             if (
                 akCarta.AkAkaun1.Count > 0||
                 akCarta.AkAkaun2.Count > 0||
@@ -472,6 +507,9 @@ namespace MSNK.Controllers
                 if (allCarta.Count() == 1)
                 {
                     _context.AkCarta.Remove(akCarta);
+                    //insert applog
+                    await AddLogAsync("Hapus", akCarta.Kod + " Paras 1", akCarta.Kod, 0, akCarta.Baki);
+                    //insert applog end
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
                 }
@@ -496,6 +534,9 @@ namespace MSNK.Controllers
                 if (allCarta.Count() == 1)
                 {
                     _context.AkCarta.Remove(akCarta);
+                    //insert applog
+                    await AddLogAsync("Hapus", akCarta.Kod + " Paras 2", akCarta.Kod, 0, akCarta.Baki);
+                    //insert applog end
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
                 }
@@ -520,6 +561,9 @@ namespace MSNK.Controllers
                 if (allCarta.Count() == 1)
                 {
                     _context.AkCarta.Remove(akCarta);
+                    //insert applog
+                    await AddLogAsync("Hapus", akCarta.Kod + " Paras 3", akCarta.Kod, 0, akCarta.Baki);
+                    //insert applog end
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
                 }
@@ -535,6 +579,9 @@ namespace MSNK.Controllers
             else if(akCarta.JParas.Kod == "4")
             {
                 _context.AkCarta.Remove(akCarta);
+                //insert applog
+                await AddLogAsync("Hapus", akCarta.Kod + " Paras 4", akCarta.Kod, 0, akCarta.Baki);
+                //insert applog end
                 await _context.SaveChangesAsync();
                 TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
             }
@@ -549,90 +596,6 @@ namespace MSNK.Controllers
         private bool CheckKod(string kod)
         {
             return _context.AkCarta.Any(e => e.Kod == kod);
-        }
-
-        private async Task AddLogAsync(string operasi, string rujukan, decimal jumlah)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.NoRujukan = rujukan;
-            appLog.Jumlah = jumlah;
-
-            if(operasi == "Tambah")
-            {
-                appLog.LgModule = modul + "C";
-                appLog.LgOperation = "Tambah";
-                appLog.LgNote = modul + " " + namamodul + " - Tambah";
-            }
-            else if (operasi == "Hapus")
-            {
-                appLog.LgModule = modul + "D";
-                appLog.LgOperation = "Hapus";
-                appLog.LgNote = modul + " " + namamodul + " - Hapus";
-            }
-            else if (operasi == "Ubah")
-            {
-                appLog.LgModule = modul + "E";
-                appLog.LgOperation = "Ubah";
-                appLog.LgNote = modul + " " + namamodul + " - Ubah";
-            }
-            else if (operasi == "TambahObjek")
-            {
-                appLog.LgModule = modul + "EC";
-                appLog.LgOperation = "Tambah";
-                appLog.LgNote = modul + " " + namamodul + " - Tambah Objek";
-            }
-            else if (operasi == "HapusObjek")
-            {
-                appLog.LgModule = modul + "ED";
-                appLog.LgOperation = "Hapus";
-                appLog.LgNote = modul + " " + namamodul + " - Hapus Objek";
-            }
-            else if (operasi == "UbahObjek")
-            {
-                appLog.LgModule = modul + "EE";
-                appLog.LgOperation = "Ubah";
-                appLog.LgNote = modul + " " + namamodul + " - Ubah Objek";
-            }
-            else if (operasi == "TambahPerihal")
-            {
-                appLog.LgModule = modul + "EC";
-                appLog.LgOperation = "Tambah";
-                appLog.LgNote = modul + " " + namamodul + " - Tambah Perihal";
-            }
-            else if(operasi == "HapusPerihal")
-            {
-                appLog.LgModule = modul + "ED";
-                appLog.LgOperation = "Hapus";
-                appLog.LgNote = modul + " " + namamodul + " - Hapus Perihal";
-            }
-            else if (operasi == "UbahPerihal")
-            {
-                appLog.LgModule = modul + "EE";
-                appLog.LgOperation = "Ubah";
-                appLog.LgNote = modul + " " + namamodul + " - Ubah Perihal";
-            }
-            else if (operasi=="Posting")
-            {
-                appLog.LgModule = modul + "T";
-                appLog.LgOperation = "Posting";
-                appLog.LgNote = modul + " " + namamodul + " - Posting";
-            }
-            else if (operasi=="UnPosting")
-            {
-                appLog.LgModule = modul + "UT";
-                appLog.LgOperation = "UnPosting";
-                appLog.LgNote = modul + " " + namamodul + " - UnPosting";
-            }
-            else if (operasi=="Cetak") 
-            {
-                appLog.LgModule = modul + "P";
-                appLog.LgOperation = "Cetak";
-                appLog.LgNote = modul +" "+ namamodul + " - Cetak";
-            }
-            await _appLog.Insert(appLog);
         }
 
         // printing List of Carta

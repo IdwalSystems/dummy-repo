@@ -600,20 +600,20 @@
     }
     //on change Kod Pembekal end
 
-    // onchange harga/unit and kuantiti
+    // on change harga/unit and kuantiti
     $("body").on('change', ".hargaUnit, .kuantiti", function () {
         //main body
         var amount = $("#txtHargaUnit").val();
         var quantity = $("#txtKuantiti").val();
 
-        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)));
+        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)).toFixed(2));
         //main body end
 
         //modal perihal
         var moAmount = $("#moHargaUnit").val();
         var moQuantity = $("#moKuantiti").val();
 
-        $("#moAmaun2").val((countTotalAmountPerItem(moAmount, moQuantity)));
+        $("#moAmaun2").val((countTotalAmountPerItem(moAmount, moQuantity)).toFixed(2));
         //modal perihal end
     });
 

@@ -119,11 +119,11 @@
                     <td>
                         @if (item.FlPosting == 0)
                         {
-                            <label class="mb-0">TIDAK</label>
+                            <label class="mb-0">BELUM</label>
                         }
                         else
                         {
-                            <label class="mb-0">YA</label>
+                            <label class="mb-0">SUDAH</label>
                         }
                     </td>
                     <td>
@@ -155,7 +155,7 @@
                             }
                             else
                             {
-                                <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
+                                <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
                                     <i class="fas fa-sync"></i>
                                 </a>
                             }

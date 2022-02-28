@@ -10,27 +10,60 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules;
+using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
     [Authorize(Roles = "SuperAdmin,Supervisor")]
     public class JBahagianController : Controller
     {
+        public const string modul = "JD002";
+        public const string namamodul = "Bahagian";
+
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IRepository<JBahagian, int, string> _jBahagianRepo;
+        private readonly AppLogIRepository<AppLog, int> _appLog;
 
         public JBahagianController(ApplicationDbContext context,
-            UserManager<IdentityUser> userManager)
+            UserManager<IdentityUser> userManager,
+            IRepository<JBahagian, int, string> jBahagianRepo,
+            AppLogIRepository<AppLog, int> appLog)
         {
             _context = context;
             _userManager = userManager;
+            _jBahagianRepo = jBahagianRepo;
+            _appLog = appLog;
         }
 
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
+        }
         // GET: JBahagian
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.JBahagian.Include(j => j.JKW);
-            return View(await applicationDbContext.ToListAsync());
+            var obj = await _jBahagianRepo.GetAll();
+
+            if (User.IsInRole("SuperAdmin"))
+            {
+                obj = await _jBahagianRepo.GetAllIncludeDeletedItems();
+            }
+            return View(obj);
         }
 
         // GET: JBahagian/Details/5
@@ -41,9 +74,8 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var jBahagian = await _context.JBahagian
-                .Include(j => j.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var jBahagian = await _jBahagianRepo.GetById((int)id);
+
             if (jBahagian == null)
             {
                 return NotFound();
@@ -182,6 +214,7 @@ namespace MSNK.Controllers
                     m.TarMasuk = DateTime.Now;
 
                     _context.Add(jBahagian);
+                    await AddLogAsync("Tambah", m.Kod + " - " + m.Perihal,m.Kod,0, 0);
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = "Data berjaya ditambah..!";
                     return RedirectToAction(nameof(Index));
@@ -238,6 +271,7 @@ namespace MSNK.Controllers
                     jBahagian.Kod = jBahagianAsal.Kod;
                     jBahagian.TarMasuk = jBahagianAsal.TarMasuk;
                     jBahagian.UserId = jBahagianAsal.UserId;
+                    var perihalAsal = jBahagianAsal.Perihal;
                     // list of input that cannot be change end
                     _context.Entry(jBahagianAsal).State = EntityState.Detached;
 
@@ -245,6 +279,16 @@ namespace MSNK.Controllers
                     jBahagian.TarKemaskini = DateTime.Now;
 
                     _context.Update(jBahagian);
+
+                    if (perihalAsal != jBahagian.Perihal)
+                    {
+                        await AddLogAsync("Ubah", perihalAsal + " -> " + jBahagian.Perihal, jBahagian.Kod,id, 0);
+                    }
+                    else
+                    {
+                        await AddLogAsync("Ubah", "Ubah Data", jBahagian.Kod, id, 0);
+                    }
+
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = "Data berjaya diubah..!";
                 }
@@ -276,9 +320,8 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var jBahagian = await _context.JBahagian
-                .Include(j => j.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var jBahagian = await _jBahagianRepo.GetById((int)id);
+
             if (jBahagian == null)
             {
                 return NotFound();
@@ -293,9 +336,32 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var jBahagian = await _context.JBahagian.FindAsync(id);
+
+            var user = await _userManager.GetUserAsync(User);
+            jBahagian.UserIdKemaskini = user.UserName;
+            jBahagian.TarKemaskini = DateTime.Now;
+
             _context.JBahagian.Remove(jBahagian);
+            await AddLogAsync("Hapus", jBahagian.Kod + " - " + jBahagian.Perihal, jBahagian.Kod,id, 0);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> RollBack(int id)
+        {
+            var obj = await _jBahagianRepo.GetByIdIncludeDeletedItems(id);
+
+            // Batal operation
+
+            obj.FlHapus = 0;
+            _context.JBahagian.Update(obj);
+
+            //await AddLogAsync("Rollback", obj.Kod + " - " + obj.Perihal, 0);
+            // Batal operation end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
         }
 

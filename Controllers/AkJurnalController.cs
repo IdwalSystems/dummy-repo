@@ -61,6 +61,24 @@ namespace MSNK.Controllers
             _abBukuVot = abBukuVotRepository;
             _cart = cart;
         }
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
+        }
         private string GetNoRujukan(AkJurnal data)
         {
             var kw = _context.JKW.FirstOrDefault(x => x.Id == data.JKWId);
@@ -316,7 +334,9 @@ namespace MSNK.Controllers
                         m.TarMasuk = DateTime.Now;
 
                         await _akJurnalRepo.Insert(m);
-                        await AddLogAsync("Tambah", noRujukan, kredit);
+                        //insert applog
+                        await AddLogAsync("Tambah", noRujukan, noRujukan, 0, kredit);
+                        //insert applog end
                         await _context.SaveChangesAsync();
 
                         CartEmpty();
@@ -393,6 +413,7 @@ namespace MSNK.Controllers
                     {
                         var user = await _userManager.GetUserAsync(User);
                         AkJurnal akJurnalAsal = await _akJurnalRepo.GetById(id);
+
                         akJurnalAsal.AkJurnal1 = _akJurnal1Repo.GetAll(id).Result.ToList();
                         foreach(AkJurnal1 item in akJurnalAsal.AkJurnal1)
                         {
@@ -402,6 +423,11 @@ namespace MSNK.Controllers
                                 _context.Remove(model);
                             }
                         }
+                        var kreditAsal = akJurnalAsal.JumKredit;
+                        var debitAsal = akJurnalAsal.JumDebit;
+                        var logKredit = "";
+                        var logDebit = "";
+
                         _context.Entry(akJurnalAsal).State = EntityState.Detached;
 
                         akJurnal.AkJurnal1 = _cart.Lines1.OrderBy(q => q.Indeks).ToList();
@@ -412,7 +438,27 @@ namespace MSNK.Controllers
                         akJurnal.Cetak = 0;
 
                         _context.Update(akJurnal);
-                        await AddLogAsync("Ubah", akJurnal.NoJurnal, kredit);
+                        //insert applog
+                        if (kreditAsal != akJurnal.JumKredit)
+                        {
+                            logKredit = "Kredit : RM " + kreditAsal.ToString() + " -> RM " + akJurnal.JumKredit;
+                        }
+
+                        if (debitAsal != akJurnal.JumDebit)
+                        {
+                            logDebit = "Debit : RM " + debitAsal.ToString() + " -> RM " + akJurnal.JumDebit;
+                        }
+
+                        if (logKredit != "" || logDebit != "")
+                        {
+                            await AddLogAsync("Ubah", "Ubah Data : " + logKredit + "," +logDebit, akJurnal.NoJurnal, id, akJurnal.JumKredit);
+                        }
+                        else
+                        {
+                            await AddLogAsync("Ubah", "Ubah Data", akJurnal.NoJurnal, id, akJurnal.JumKredit);
+                        }
+                        //insert applog end
+
                         await _context.SaveChangesAsync();
                         TempData[SD.Success] = "Maklumat berjaya diubah. No jurnal - " + akJurnal.NoJurnal;
                     }
@@ -466,6 +512,10 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akJurnal = await _context.AkJurnal.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            akJurnal.UserIdKemaskini = user.UserName;
+            akJurnal.TarKemaskini = DateTime.Now;
+
             if (akJurnal.Posting == 1)
             {
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
@@ -475,7 +525,7 @@ namespace MSNK.Controllers
             akJurnal.Cetak = 0;
             _context.AkJurnal.Update(akJurnal);
             _context.AkJurnal.Remove(akJurnal);
-            await AddLogAsync("Hapus", akJurnal.NoJurnal, akJurnal.JumKredit);
+            await AddLogAsync("Hapus", "Hapus Data", akJurnal.NoJurnal, id, akJurnal.JumKredit);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
@@ -768,55 +818,6 @@ namespace MSNK.Controllers
             }
         }
 
-
-        private async Task AddLogAsync(string operasi, string rujukan, decimal jumlah)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.NoRujukan = rujukan;
-            appLog.Jumlah = jumlah;
-
-            if (operasi == "Tambah")
-            {
-                appLog.LgModule = modul + "C";
-                appLog.LgOperation = "Tambah";
-                appLog.LgNote = modul + " " + namamodul + " - Tambah";
-            }
-            else if (operasi == "Hapus")
-            {
-                appLog.LgModule = modul + "D";
-                appLog.LgOperation = "Hapus";
-                appLog.LgNote = modul + " " + namamodul + " - Hapus";
-            }
-            else if (operasi == "Ubah")
-            {
-                appLog.LgModule = modul + "E";
-                appLog.LgOperation = "Ubah";
-                appLog.LgNote = modul + " " + namamodul + " - Ubah";
-            }
-            else if (operasi == "Posting")
-            {
-                appLog.LgModule = modul + "T";
-                appLog.LgOperation = "Posting";
-                appLog.LgNote = modul + " " + namamodul + " - Posting";
-            }
-            else if (operasi == "UnPosting")
-            {
-                appLog.LgModule = modul + "UT";
-                appLog.LgOperation = "UnPosting";
-                appLog.LgNote = modul + " " + namamodul + " - UnPosting";
-            }
-            else if (operasi == "Cetak")
-            {
-                appLog.LgModule = modul + "P";
-                appLog.LgOperation = "Cetak";
-                appLog.LgNote = modul + " " + namamodul + " - Cetak";
-            }
-            await _appLog.Insert(appLog);
-        }
-
         public async Task<IActionResult> Posting(int? id)
         {
             if (id == null)
@@ -909,7 +910,9 @@ namespace MSNK.Controllers
                     akJurnal.Posting = 1;
                     akJurnal.TarikhPosting = DateTime.Now;
                     await _akJurnalRepo.Update(akJurnal);
-                    await AddLogAsync("Posting", akJurnal.NoJurnal, akJurnal.JumKredit);
+                    //insert applog
+                    await AddLogAsync("Posting", "Posting Data", akJurnal.NoJurnal, (int)id, akJurnal.JumKredit);
+                    //insert applog end
 
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
@@ -957,7 +960,9 @@ namespace MSNK.Controllers
                     akJurnal.TarikhPosting = null;
                     await _akJurnalRepo.Update(akJurnal);
 
-                    await AddLogAsync("UnPosting", akJurnal.NoJurnal, akJurnal.JumKredit);
+                    //insert applog
+                    await AddLogAsync("UnPosting", "Batal Posting Data", akJurnal.NoJurnal, (int)id, akJurnal.JumKredit);
+                    //insert applog end
                     await _context.SaveChangesAsync();
 
                     TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
@@ -996,7 +1001,9 @@ namespace MSNK.Controllers
             //update cetak -> 1
             akJurnal.Cetak = 1;
             await _akJurnalRepo.Update(akJurnal);
-            await AddLogAsync("Cetak", akJurnal.NoJurnal, akJurnal.JumKredit);
+            //insert applog
+            await AddLogAsync("Cetak", "Cetak Data", akJurnal.NoJurnal,id, akJurnal.JumKredit);
+            //insert applog end
             await _context.SaveChangesAsync();
 
             return new ViewAsPdf("JurnalPrintPdf", data)
@@ -1015,6 +1022,7 @@ namespace MSNK.Controllers
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _akJurnalRepo.GetByIdIncludeDeletedItems(id);
+
             // check if already posting redirect back
             if (obj.Posting == 1)
             {
@@ -1031,7 +1039,7 @@ namespace MSNK.Controllers
             // Batal operation end
 
             //insert applog
-            await AddLogAsync("Rollback", obj.NoJurnal, obj.JumKredit);
+            await AddLogAsync("Rollback", "Rolback Data", obj.NoJurnal, (int)id, obj.JumKredit);
             //insert applog end
 
             await _context.SaveChangesAsync();

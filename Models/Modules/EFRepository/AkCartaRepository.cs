@@ -40,13 +40,17 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<AkCarta> GetById(int id)
         {
-            return await context.AkCarta.FindAsync(id);
+            return await context.AkCarta
+                .Include(b => b.JKW).Include(b => b.JParas).Include(b => b.JJenis)
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<AkCarta> GetByIdIncludeDeletedItems(int id)
         {
             return await context.AkCarta
                 .IgnoreQueryFilters()
+                .Include(b => b.JKW).Include(b => b.JParas).Include(b => b.JJenis)
                 .Where(x=> x.Id == id)
                 .FirstOrDefaultAsync();
         }

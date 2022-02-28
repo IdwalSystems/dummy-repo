@@ -28,6 +28,7 @@ namespace MSNK.Controllers
     {
 
         public const string modul = "SP001";
+        public const string namamodul = "Pendahuluan Pelbagai";
 
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPendahuluanPelbagaiRepo;
@@ -72,6 +73,25 @@ namespace MSNK.Controllers
             _tahapAktivitiRepo = tahapAktivitiRepository;
             _userManager = userManager;
             _cart = cart;
+        }
+
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
         }
 
         //Function Running Number
@@ -468,6 +488,14 @@ namespace MSNK.Controllers
                                 _context.Remove(model);
                             }
                         }
+                        // AK CODE
+                        decimal jumSeluruhAsal = spPendahuluanPelbagaiAsal.JumKeseluruhan;
+                        decimal jumSokongAsal = spPendahuluanPelbagaiAsal.JumSokong;
+                        decimal jumLulusAsal = spPendahuluanPelbagaiAsal.JumLulus;
+                        var logSeluruh = "";
+                        var logSokong = "";
+                        var logLulus = "";
+                        //AK CODE END
                         _context.Entry(spPendahuluanPelbagaiAsal).State = EntityState.Detached;
 
                         spPendahuluanPelbagai.SpPendahuluanPelbagai1 = _cart.Lines1.ToList();
@@ -478,18 +506,33 @@ namespace MSNK.Controllers
 
                         _context.Update(spPendahuluanPelbagai);
 
+                        // AK CODE
                         //insert applog
-                        AppLog appLog = new AppLog();
+                        if (jumSeluruhAsal != spPendahuluanPelbagai.JumKeseluruhan)
+                        {
+                            logSeluruh = "Kredit : RM " + jumSeluruhAsal.ToString() + " -> RM " + spPendahuluanPelbagai.JumKeseluruhan;
+                        }
 
-                        appLog.UserId = user.UserName;
-                        appLog.LgModule = modul + "E";
-                        appLog.LgOperation = "Ubah";
-                        appLog.LgNote = modul + " Pendahuluan Pelbagai - Ubah";
-                        appLog.NoRujukan = spPendahuluanPelbagai.NoPermohonan;
-                        appLog.Jumlah = spPendahuluanPelbagai.JumKeseluruhan;
+                        if (jumSokongAsal != spPendahuluanPelbagai.JumSokong)
+                        {
+                            logSokong = "Debit : RM " + jumSokongAsal.ToString() + " -> RM " + spPendahuluanPelbagai.JumSokong;
+                        }
 
-                        await _appLog.Insert(appLog);
+                        if (jumLulusAsal != spPendahuluanPelbagai.JumLulus)
+                        {
+                            logLulus = "Debit : RM " + jumLulusAsal.ToString() + " -> RM " + spPendahuluanPelbagai.JumLulus;
+                        }
+
+                        if (logSeluruh != "" || logSokong != "" || logLulus != "")
+                        {
+                            await AddLogAsync("Ubah", "Ubah Data : " + logSeluruh + ", " + logSokong + ", " + logLulus, spPendahuluanPelbagai.NoPermohonan, id, spPendahuluanPelbagai.JumKeseluruhan);
+                        }
+                        else
+                        {
+                            await AddLogAsync("Ubah", "Ubah Data", spPendahuluanPelbagai.NoPermohonan, id, spPendahuluanPelbagai.JumKeseluruhan);
+                        }
                         //insert applog end
+                        //AK CODE END
 
                         await _context.SaveChangesAsync();
                     }
@@ -844,7 +887,7 @@ namespace MSNK.Controllers
 
         public async Task<IActionResult> PrintPdf(int id)
         {
-            SpPendahuluanPelbagai sp = await _spPendahuluanPelbagaiRepo.GetById(id);
+            SpPendahuluanPelbagai sp = await _spPendahuluanPelbagaiRepo.GetByIdIncludeDeletedItems(id);
 
             var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(sp.JumKeseluruhan)).ToUpper();
 
@@ -883,16 +926,7 @@ namespace MSNK.Controllers
             await _spPendahuluanPelbagaiRepo.Update(sp);
 
             //insert applog
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "P";
-            appLog.LgOperation = "Cetak";
-            appLog.LgNote = modul + " Pendahuluan Pelbagai - Cetak";
-            appLog.NoRujukan = sp.NoPermohonan;
-            appLog.Jumlah = sp.JumKeseluruhan;
-
-            await _appLog.Insert(appLog);
+            await AddLogAsync("Cetak", "Cetak Data", sp.NoPermohonan, id, sp.JumKeseluruhan);
             //insert applog end
 
             await _context.SaveChangesAsync();

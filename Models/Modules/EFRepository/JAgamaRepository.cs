@@ -28,9 +28,9 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JAgama.ToListAsync();
         }
 
-        public Task<IEnumerable<JAgama>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<JAgama>> GetAllIncludeDeletedItems()
         {
-            throw new NotImplementedException();
+            return await context.JAgama.IgnoreQueryFilters().ToListAsync();
         }
 
         public async Task<JAgama> GetById(int id)
@@ -38,9 +38,9 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JAgama.FindAsync(id);
         }
 
-        public Task<JAgama> GetByIdIncludeDeletedItems(int id)
+        public async Task<JAgama> GetByIdIncludeDeletedItems(int id)
         {
-            throw new NotImplementedException();
+            return await context.JAgama.IgnoreQueryFilters().FirstOrDefaultAsync(x=> x.Id == id);
         }
 
         public Task<JAgama> GetByString(string id)

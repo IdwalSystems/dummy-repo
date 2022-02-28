@@ -15,6 +15,7 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         [DisplayName("No Gaji")]
         public string NoGaji { get; set; }
+        [Required(ErrorMessage = "No Kad Pengenalan Diperlukan")]
         [DisplayName("No KP")]
         public string NoKp { get; set; }
         public string Nama { get; set; }
@@ -25,11 +26,13 @@ namespace MSNK.Models.Modules
         public string Poskod { get; set; }
         public string Bandar { get; set; }
         [DisplayName("Negeri")]
+        [Required(ErrorMessage = "Negeri Diperlukan")]
         public int JNegeriId { get; set; }
         [DisplayName("No Telefon Rumah")]
         public string TelefonRumah { get; set; }
         [DisplayName("No Telefon Bimbit")]
         public string TelefonBimbit { get; set; }
+        [Required(ErrorMessage = "Emel Diperlukan")]
         [EmailAddress(ErrorMessage = "Emel Tidak Sah."), MaxLength(100)]
         public string Emel { get; set; }
         [DefaultValue("0")]
@@ -62,9 +65,11 @@ namespace MSNK.Models.Modules
 
         //relationship
         [DisplayName("Negeri")]
+        
         public JNegeri JNegeri { get; set; }
         [DisplayName("Agama")]
         public JAgama JAgama { get; set; }
+        
         [DisplayName("Nama Bank")]
         public JBank JBank { get; set; }
         [DisplayName("Bangsa")]

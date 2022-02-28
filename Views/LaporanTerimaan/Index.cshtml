@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Laporan Daftar Resit";
+    ViewData["Title"] = "LPR001 Laporan Daftar Resit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     int year = DateTime.Now.Year;
@@ -11,7 +11,7 @@
     <form asp-action="PRINT">
         <div class="card box-shadow border-info mb-3">
             <div class="card-header bg-info text-white">
-                <h5>Penerimaan - @ViewData["Title"]</h5>
+                <h5>@ViewData["Title"]</h5>
             </div>
             
             <div class="card-body">
@@ -30,14 +30,14 @@
 
                                 <input class="custom-control-input" type="radio" name="kodLaporan" id="LPR00102" value="LPR00102" checked>
                                 <label class="custom-control-label" for="LPR00102">
-                                    Laporan Daftar Resit Terperinci - Pecahan Cara Bayar
+                                    02 - Laporan Daftar Resit Terperinci - Pecahan Cara Bayar
                                 </label>
                             </div>
                             <div class="custom-control custom-radio">
 
                                 <input class="custom-control-input" type="radio" name="kodLaporan" id="LPR00103" value="LPR00103">
                                 <label class="custom-control-label" for="LPR00103">
-                                    Laporan Daftar Resit Terperinci - Pecahan Kod Akaun
+                                    03 - Laporan Daftar Resit Terperinci - Pecahan Kod Akaun
                                 </label>
                             </div>
                         </div>

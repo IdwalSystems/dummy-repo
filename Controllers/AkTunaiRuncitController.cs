@@ -19,6 +19,7 @@ namespace MSNK.Controllers
     public class AkTunaiRuncitController : Controller
     {
         public const string modul = "TR001";
+        public const string namamodul = "Pemegang Tunai Runcit";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -45,6 +46,25 @@ namespace MSNK.Controllers
             _akCartaRepo = akCartaRepository;
             _akTunaiRuncitRepo = akTunaiRuncitRepository;
             _cart = cart;
+        }
+
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
         }
 
         // GET: AkTunaiRuncit
@@ -347,18 +367,9 @@ namespace MSNK.Controllers
                     m.AkTunaiPemegang = _cart.Lines1.ToArray();
 
                     await _akTunaiRuncitRepo.Insert(m);
+
                     //insert applog
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "C";
-                    appLog.LgOperation = "Tambah";
-                    appLog.LgNote = modul + " Pemegang Tunai Runcit - Tambah";
-                    appLog.NoRujukan = noRujukan;
-                    appLog.Jumlah = 0;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("Tambah", m.KaunterPanjar, m.KaunterPanjar, 0,0);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -456,17 +467,9 @@ namespace MSNK.Controllers
                     akTunaiRuncit.TarKemaskini = DateTime.Now;
 
                     _context.Update(akTunaiRuncit);
+
                     //insert applog
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "E";
-                    appLog.LgOperation = "Ubah";
-                    appLog.LgNote = modul + " Pemegang Tunai Runcit - Ubah";
-                    appLog.NoRujukan = akTunaiRuncit.KaunterPanjar;
-                    appLog.Jumlah = 0;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("Ubah", "Ubah Data", akTunaiRuncit.KaunterPanjar, id, 0);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -523,22 +526,17 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akTunaiRuncit = await _context.AkTunaiRuncit.FindAsync(id);
+
+            var user = await _userManager.GetUserAsync(User);
+            akTunaiRuncit.UserIdKemaskini = user.UserName;
+            akTunaiRuncit.TarKemaskini = DateTime.Now;
+
             _context.AkTunaiRuncit.Remove(akTunaiRuncit);
 
             //insert applog
-            var user = await _userManager.GetUserAsync(User);
-
-            AppLog appLog = new AppLog();
-
-            appLog.UserId = user.UserName;
-            appLog.LgModule = modul + "D";
-            appLog.LgOperation = "Hapus";
-            appLog.LgNote = modul + " Pemegang Tunai Runcit - Hapus";
-            appLog.NoRujukan = akTunaiRuncit.KaunterPanjar;
-            appLog.Jumlah = 0;
-
-            await _appLog.Insert(appLog);
+            await AddLogAsync("Hapus", "Hapus Data", akTunaiRuncit.KaunterPanjar, id, 0);
             //insert applog end
+
 
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";

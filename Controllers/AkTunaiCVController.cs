@@ -20,6 +20,7 @@ namespace MSNK.Controllers
     {
 
         public const string modul = "TR002";
+        public const string namamodul = "Tunai Keluar";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -59,6 +60,26 @@ namespace MSNK.Controllers
             _akBankRepo = akBankRepository;
             _cart = cart;
         }
+
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
+        }
+
         // GET: AkTunaiCV
         [Authorize(Policy = "TR002")]
         public async Task<IActionResult> Index(
@@ -607,18 +628,9 @@ namespace MSNK.Controllers
                     await _akTunaiCVRepo.Insert(m);
 
                     //insert applog
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "C";
-                    appLog.LgOperation = "Tambah";
-                    appLog.LgNote = modul + " Tunai Keluar - Tambah";
-                    appLog.NoRujukan = noRujukan;
-                    appLog.Jumlah = akTunaiCV.Jumlah;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("Tambah", m.NoCV + " - " + m.Penerima, m.NoCV, 0, m.Jumlah);
                     //insert applog end
+
                     await _context.SaveChangesAsync();
                     CartEmpty();
                     TempData[SD.Success] = "Maklumat berjaya ditambah. No rujukan pendaftaran adalah " + noRujukan;
@@ -690,8 +702,8 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
-                    var akTunaiCVAsal = await _akTunaiCVRepo.GetById(id);
-                    var jumlah = akTunaiCVAsal.Jumlah;
+                    var dataAsal = await _akTunaiCVRepo.GetById(id);
+                    var jumlah = dataAsal.Jumlah;
 
                     switch (akTunaiCV.KategoriPenerima)
                     {
@@ -718,16 +730,16 @@ namespace MSNK.Controllers
                     }
 
                     // list of input that cannot be change
-                    akTunaiCV.Tahun = akTunaiCVAsal.Tahun;
-                    akTunaiCV.AkTunaiRuncitId = akTunaiCVAsal.AkTunaiRuncitId;
-                    akTunaiCV.NoCV = akTunaiCVAsal.NoCV;
-                    akTunaiCV.Tarikh = akTunaiCVAsal.Tarikh;
-                    akTunaiCV.TarMasuk = akTunaiCVAsal.TarMasuk;
-                    akTunaiCV.UserId = akTunaiCVAsal.UserId;
+                    akTunaiCV.Tahun = dataAsal.Tahun;
+                    akTunaiCV.AkTunaiRuncitId = dataAsal.AkTunaiRuncitId;
+                    akTunaiCV.NoCV = dataAsal.NoCV;
+                    akTunaiCV.Tarikh = dataAsal.Tarikh;
+                    akTunaiCV.TarMasuk = dataAsal.TarMasuk;
+                    akTunaiCV.UserId = dataAsal.UserId;
                     akTunaiCV.FlCetak = 0;
                     // list of input that cannot be change end
 
-                    foreach (AkTunaiCV1 item in akTunaiCVAsal.AkTunaiCV1)
+                    foreach (AkTunaiCV1 item in dataAsal.AkTunaiCV1)
                     {
                         var model = _context.AkTunaiCV1.FirstOrDefault(b => b.Id == item.Id);
                         if (model != null)
@@ -735,8 +747,8 @@ namespace MSNK.Controllers
                             _context.Remove(model);
                         }
                     }
-
-                    _context.Entry(akTunaiCVAsal).State = EntityState.Detached;
+                    decimal jumlahAsal = dataAsal.Jumlah;
+                    _context.Entry(dataAsal).State = EntityState.Detached;
 
                     akTunaiCV.AkTunaiCV1 = _cart.Lines1.ToList();
 
@@ -750,24 +762,16 @@ namespace MSNK.Controllers
                     _context.Update(akTunaiCV);
 
                     //insert applog
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "E";
-                    appLog.LgOperation = "Ubah";
-                    if (jumlah != akTunaiCV.Jumlah)
+                    if (jumlahAsal != akTunaiCV.Jumlah)
                     {
-                        appLog.LgNote = modul + " Tunai Keluar - Ubah Jumlah dari RM" + jumlah + " ke RM" + akTunaiCV.Jumlah;
+                        await AddLogAsync("Ubah","RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" + 
+                            Convert.ToDecimal(akTunaiCV.Jumlah).ToString("#,##0.00"), akTunaiCV.NoCV, id, akTunaiCV.Jumlah);
+
                     }
                     else
                     {
-                        appLog.LgNote = modul + " Tunai Keluar - Ubah";
+                        await AddLogAsync("Ubah", "Ubah Data", akTunaiCV.NoCV, id, akTunaiCV.Jumlah);
                     }
-
-                    appLog.NoRujukan = akTunaiCV.NoCV;
-                    appLog.Jumlah = akTunaiCV.Jumlah;
-
-                    await _appLog.Insert(appLog);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -820,7 +824,16 @@ namespace MSNK.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akTunaiCV = await _context.AkTunaiCV.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            akTunaiCV.UserIdKemaskini = user.UserName;
+            akTunaiCV.TarKemaskini = DateTime.Now;
+
             _context.AkTunaiCV.Remove(akTunaiCV);
+
+            //insert applog
+            await AddLogAsync("Hapus", "Hapus Data", akTunaiCV.NoCV, id, akTunaiCV.Jumlah);
+            //insert applog end
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -910,16 +923,7 @@ namespace MSNK.Controllers
                     await _akTunaiCVRepo.Update(akTunaiCV);
 
                     //insert applog
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "T";
-                    appLog.LgOperation = "Posting";
-                    appLog.LgNote = modul + " Tunai Keluar - Posting";
-                    appLog.NoRujukan = akTunaiCV.NoCV;
-                    appLog.Jumlah = akTunaiCV.Jumlah;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("Posting", "Posting Data", akTunaiCV.NoCV,(int) id, akTunaiCV.Jumlah);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -972,18 +976,7 @@ namespace MSNK.Controllers
                     await _akTunaiCVRepo.Update(akTunaiCV);
 
                     //insert applog
-                    var user = await _userManager.GetUserAsync(User);
-
-                    AppLog appLog = new AppLog();
-
-                    appLog.UserId = user.UserName;
-                    appLog.LgModule = modul + "UT";
-                    appLog.LgOperation = "UnPosting";
-                    appLog.LgNote = modul + " Tunai Keluar - UnPosting";
-                    appLog.NoRujukan = akTunaiCV.NoCV;
-                    appLog.Jumlah = akTunaiCV.Jumlah;
-
-                    await _appLog.Insert(appLog);
+                    await AddLogAsync("UnPosting", "UnPosting Data", akTunaiCV.NoCV,(int) id, akTunaiCV.Jumlah);
                     //insert applog end
 
                     await _context.SaveChangesAsync();

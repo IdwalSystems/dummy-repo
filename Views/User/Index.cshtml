@@ -67,28 +67,79 @@
                         </td>
                         <td>
                             <div class="text-center">
-                                <form asp-action="Delete" asp-route-userId="@item.Id">
-                                    <a asp-action="Edit" asp-route-userId="@item.Id" class="btn btn-info text-white btn-sm" style="cursor:pointer">
+                                @if (item.Role != "SuperAdmin")
+                                {
+                                    <form asp-action="Delete" asp-route-userId="@item.Id">
+                                        <a asp-action="Edit" asp-route-userId="@item.Id" class="btn btn-info text-white btn-sm" style="cursor:pointer">
+                                            Ubah
+                                        </a>
+                                        <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar">Capaian</a>
+                                        @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now)
+                                        {
+                                            // we want to show them the option to lock
+                                            <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-success text-white btn-sm" style="cursor:pointer">
+                                                <span>&nbsp; Lock &nbsp;</span>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            // we want to show them the option to unlock
+                                            <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-warning text-white" style="cursor:pointer">
+                                                <span>Unlock</span>
+                                            </button>
+                                        }
+
+                                        <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger btn-sm">Hapus</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <a href="#" class="btn btn-info text-white btn-sm" style="cursor:pointer">
                                         Ubah
                                     </a>
-                                    <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn btn-primary text-white btn-sm" style="cursor:pointer">Capaian</a>
-
+                                    <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar">Capaian</a>
                                     @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now)
                                     {
                                         // we want to show them the option to lock
-                                        <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-success text-white btn-sm" style="cursor:pointer">
+                                        <a href="#" class="btn btn-success text-white btn-sm" style="cursor:pointer">
                                             <span>&nbsp; Lock &nbsp;</span>
-                                        </button>
+                                        </a>
                                     }
                                     else
                                     {
                                         // we want to show them the option to unlock
-                                        <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-warning text-white" style="cursor:pointer">
+                                        <a href="#" class="btn btn-warning text-white" style="cursor:pointer">
                                             <span>Unlock</span>
-                                        </button>
+                                        </a>
                                     }
-                                    <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger btn-sm">Hapus</button>
-                                </form>
+                                    <a href="#" class="btn btn-danger btn-sm" type="button" onclick="return confirm('Anda pasti?')" data-toggle="tooltip" data-placement="top" title="Hapus">Hapus</a>
+                                }
+
+
+                                @*<form asp-action="Delete" asp-route-userId="@item.Id">
+
+            <a asp-action="Edit" asp-route-userId="@item.Id" class="btn btn-info text-white btn-sm" style="cursor:pointer">
+                Ubah
+            </a>
+            <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn btn-primary text-white btn-sm" style="cursor:pointer">Capaian</a>
+
+            @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now)
+            {
+                // we want to show them the option to lock
+                <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-success text-white btn-sm" style="cursor:pointer">
+                    <span>&nbsp; Lock &nbsp;</span>
+                </button>
+            }
+            else
+            {
+                // we want to show them the option to unlock
+                <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-warning text-white" style="cursor:pointer">
+                    <span>Unlock</span>
+                </button>
+            }
+
+            <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger btn-sm">Hapus</button>
+        </form>*@
                             </div>
                         </td>
                     </tr>

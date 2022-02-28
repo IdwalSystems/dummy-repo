@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MSNK.Data;
 using MSNK.Models.Administration;
+using MSNK.Models.Modules;
+using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -17,13 +19,39 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin,Admin")]
     public class UserController : Controller
     {
+        public const string modul = "SY001";
+        public const string namamodul = "Sistem Pengguna";
+
         private readonly ApplicationDbContext _db;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly AppLogIRepository<AppLog, int> _appLog;
 
-        public UserController(ApplicationDbContext db, UserManager<IdentityUser> userManager)
+        public UserController(
+            ApplicationDbContext db, 
+            UserManager<IdentityUser> userManager,
+            AppLogIRepository<AppLog,int> appLog)
         {
             _db = db;
             _userManager = userManager;
+            _appLog = appLog;
+        }
+        private async Task AddLogAsync(
+            string operasi,
+            string nota,
+            string rujukan,
+            int idRujukan,
+            decimal jumlah)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            AppLog appLog = new AppLog();
+
+            appLog.IdRujukan = idRujukan;
+            appLog.UserId = user.UserName;
+            appLog.NoRujukan = rujukan;
+            appLog.LgNote = namamodul + " - " + nota;
+            appLog.Jumlah = jumlah;
+
+            await _appLog.Insert(appLog, modul, operasi);
         }
 
         public IActionResult Index()
@@ -40,9 +68,18 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    user.Role = roles.FirstOrDefault(u => u.Id == role.RoleId).Name;
+                    if(user.Role == "SuperAdmin")
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        user.Role = roles.FirstOrDefault(u => u.Id == role.RoleId).Name;
+                    }
                 }
             }
+            //hide superadmin
+                //userList = userList.Where(x => x.Role != "SuperAdmin").ToList();
 
             return View(userList);
         }
@@ -62,14 +99,34 @@ namespace MSNK.Controllers
             var userRole = _db.UserRoles.ToList();
             var roles = _db.Roles.ToList();
             var role = userRole.FirstOrDefault(u => u.UserId == userId);
-            if (role != null) {
+            if (role != null)
+            {
                 objFromDb.RoleId = roles.FirstOrDefault(u => u.Id == role.RoleId).Id;
             }
-            objFromDb.RoleList = _db.Roles.Select(u => new SelectListItem
+            objFromDb.RoleList = _db.Roles.Where(x => x.Name != "SuperAdmin").Select(u => new SelectListItem
             {
                 Text = u.Name,
                 Value = u.Id
             });
+
+            //List<SelectListItem> listItems = new List<SelectListItem>();
+            //listItems.Add(new SelectListItem()
+            //{
+            //    Value = "Admin",
+            //    Text = "Admin"
+            //});
+            //listItems.Add(new SelectListItem()
+            //{
+            //    Value = "Supervisor",
+            //    Text = "Supervisor"
+            //});
+            //listItems.Add(new SelectListItem()
+            //{
+            //    Value = "User",
+            //    Text = "User"
+            //});
+
+            //objFromDb.RoleList = listItems;
 
             return View(objFromDb);
         }
@@ -78,36 +135,75 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ApplicationUser user)
         {
-
-            if (ModelState.IsValid)
+            if(user.RoleId != null)
             {
-                var objFromDb = _db.applicationUsers.FirstOrDefault(u => u.Id == user.Id);
-                if (objFromDb == null)
+                if (ModelState.IsValid)
                 {
-                    return NotFound();
-                }
-                var userRole = _db.UserRoles.FirstOrDefault(u => u.UserId == objFromDb.Id);
-                if (userRole != null)
-                {
-                    var previousRoleName = _db.Roles.Where(u => u.Id == userRole.RoleId).Select(e => e.Name).FirstOrDefault();
-                    //removing old role
-                    await _userManager.RemoveFromRoleAsync(objFromDb, previousRoleName);
+                    var objFromDb = _db.applicationUsers.FirstOrDefault(u => u.Id == user.Id);
+                    var roleAsal = "";
+                    var roleBaru = "";
+                    if (objFromDb == null)
+                    {
+                        return NotFound();
+                    }
+                    var userRole = _db.UserRoles.FirstOrDefault(u => u.UserId == objFromDb.Id);
 
+                    if (userRole != null)
+                    {
+                        var previousRoleName = _db.Roles.Where(u => u.Id == userRole.RoleId).Select(e => e.Name).FirstOrDefault();
+                        var newRoleName = _db.Roles.Where(u => u.Id == user.RoleId).Select(e => e.Name).FirstOrDefault();
+                        roleAsal = previousRoleName;
+                        roleBaru = newRoleName;
+                        //removing old role
+                        await _userManager.RemoveFromRoleAsync(objFromDb, previousRoleName);
+
+                        //add new role
+                        await _userManager.AddToRoleAsync(objFromDb, _db.Roles.FirstOrDefault(u => u.Id == user.RoleId).Name);
+                    }
+                    else
+                    {
+                        //add new role
+                        await _userManager.AddToRoleAsync(objFromDb, user.RoleId);
+                        
+                        
+                    }
+                    objFromDb.Nama = user.Nama;
+                    if (roleAsal != roleBaru)
+                    {
+                        await AddLogAsync("Ubah", roleAsal + " -> " + roleBaru, user.Email, 0, 0);
+
+                    }
+                    _db.SaveChanges();
+                    TempData[SD.Success] = "Data pengguna berjaya diubah.";
+                    return RedirectToAction(nameof(Index));
                 }
-                //add new role
-                await _userManager.AddToRoleAsync(objFromDb, _db.Roles.FirstOrDefault(u => u.Id == user.RoleId).Name);
-                objFromDb.Nama = user.Nama;
-                _db.SaveChanges();
-                TempData[SD.Success] = "Data pengguna berjaya diubah.";
-                return RedirectToAction(nameof(Index));
             }
-            
-            user.RoleList = _db.Roles.Select(u => new SelectListItem
+
+            List<SelectListItem> listItems = new List<SelectListItem>();
+            listItems.Add(new SelectListItem()
             {
-                Text = u.Name,
-                Value = u.Id
+                Value = "Admin",
+                Text = "Admin"
+            });
+            listItems.Add(new SelectListItem()
+            {
+                Value = "Supervisor",
+                Text = "Supervisor"
+            });
+            listItems.Add(new SelectListItem()
+            {
+                Value = "User",
+                Text = "User"
             });
 
+            user.RoleList = listItems;
+
+            //user.RoleList = _db.Roles.Select(u => new SelectListItem
+            //{
+            //    Text = u.Name,
+            //    Value = u.Id
+            //});
+            TempData[SD.Error] = "Sila Pilih Tahap Pengguna..!";
             return View(user);
         }
         [HttpPost]
@@ -124,6 +220,7 @@ namespace MSNK.Controllers
                 //clicking on this action will unlock time
                 objFromDb.LockoutEnd = DateTime.Now;
                 TempData[SD.Success] = "Buka kunci pengguna berjaya.";
+
             }
             else
             {
@@ -137,7 +234,7 @@ namespace MSNK.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(string userId)
+        public async Task<IActionResult> Delete(string userId)
         {
             var objFromDb = _db.applicationUsers.FirstOrDefault(u => u.Id == userId);
             if (objFromDb == null)
@@ -145,6 +242,8 @@ namespace MSNK.Controllers
                 return NotFound();
             }
             _db.applicationUsers.Remove(objFromDb);
+            await AddLogAsync("Hapus", objFromDb.Email + " - " + objFromDb.Nama, objFromDb.Email, 0, 0);
+
             _db.SaveChanges();
             TempData[SD.Success] = "Hapus pengguna berjaya.";
             return RedirectToAction(nameof(Index));
@@ -205,6 +304,9 @@ namespace MSNK.Controllers
             {
                 TempData[SD.Error] = "Ralat ketika menambah capaian.";
             }
+            await AddLogAsync("Ubah", user.Email + " - Ubah Capaian", user.Email, 0, 0);
+
+            _db.SaveChanges();
             TempData[SD.Success] = "Capaian berjaya diubah.";
             return RedirectToAction(nameof(Index));
         }

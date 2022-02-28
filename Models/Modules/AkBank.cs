@@ -10,8 +10,6 @@ namespace MSNK.Models.Modules
     public class AkBank : AppLogHelper, ISoftDelete
     {
         
-        
-        
         public int Id { get; set; }
         [MaxLength(6)]
         public string Kod { get; set; }
@@ -19,13 +17,16 @@ namespace MSNK.Models.Modules
         [MaxLength(20)]
         public string NoAkaun { get; set; }
 
-        //Relationship    
-        public int JKWId { get; set; }
+        //Relationship
+        [Required(ErrorMessage = "Kumpulan Wang Diperlukan")]
         [Display(Name = "Jenis Kumpulan Wang")]
-        public JKW JKW { get; set; }   
-        public int JBankId { get; set; }
+        public int JKWId { get; set; }
+        public JKW JKW { get; set; }
+        [Required(ErrorMessage = "Bank Diperlukan")]
         [Display(Name = "Nama Bank")]
+        public int JBankId { get; set; }
         public JBank JBank { get; set; }
+        [Required(ErrorMessage = "Kod Akaun Diperlukan")]
         public int AkCartaId { get; set; }
         [Display(Name = "Kod Akaun")]
         public AkCarta AkCarta { get; set; }

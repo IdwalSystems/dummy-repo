@@ -27,9 +27,11 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JSukan.ToListAsync();
         }
 
-        public Task<IEnumerable<JSukan>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<JSukan>> GetAllIncludeDeletedItems()
         {
-            throw new NotImplementedException();
+            return await context.JSukan
+                .IgnoreQueryFilters()
+                .ToListAsync();
         }
 
         public async Task<JSukan> GetById(int id)
@@ -38,9 +40,11 @@ namespace MSNK.Models.Modules.EFRepository
 
         }
 
-        public Task<JSukan> GetByIdIncludeDeletedItems(int id)
+        public async Task<JSukan> GetByIdIncludeDeletedItems(int id)
         {
-            throw new NotImplementedException();
+            return await context.JSukan
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public Task<JSukan> GetByString(string id)

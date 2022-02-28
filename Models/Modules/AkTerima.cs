@@ -15,7 +15,7 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         [Required(ErrorMessage = "Tahun Diperlukan.")]
         [MaxLength(4)]
-        public string Tahun { get; set; }      
+        public string Tahun { get; set; }
         [DisplayName("No Rujukan")]
         [MaxLength(20)]
         public string NoRujukan { get; set; }
