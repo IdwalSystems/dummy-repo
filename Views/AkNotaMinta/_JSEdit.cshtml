@@ -164,7 +164,7 @@
 
         //Add Harga cell.
         var cell = $(row.insertCell(-1));
-        cell.html(txtHargaUnit.val());
+        cell.html(parseFloat(txtHargaUnit.val()).toFixed(2));
         cell.addClass('text-right');
 
         //Add Amaun cell.
@@ -511,14 +511,14 @@
         var amount = $("#txtHargaUnit").val();
         var quantity = $("#txtKuantiti").val();
 
-        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)));
+        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)).toFixed(2));
         //main body end
 
         //modal perihal
         var moAmount = $("#moHargaUnit").val();
         var moQuantity = $("#moKuantiti").val();
 
-        $("#moAmaun2").val((countTotalAmountPerItem(moAmount, moQuantity)));
+        $("#moAmaun2").val((countTotalAmountPerItem(moAmount, moQuantity)).toFixed(2));
         //modal perihal end
     });
 

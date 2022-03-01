@@ -218,7 +218,7 @@
                             //Clear the TextBoxes.
                             txtKodAkaun.val("").trigger('change');
                             txtAmaunObjek.val("0.00");
-                            if ($('#ddlKodPembekal').val() != 0) {
+                            if ($('#ddlKodPembekal').val()) {
                                 checkJumlah();
                             }
                         }
@@ -264,7 +264,7 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
-                        if ($('#ddlKodPembekal').val() != 0) {
+                        if ($('#ddlKodPembekal').val()) {
                             checkJumlah();
                         } else {
 
@@ -356,7 +356,7 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
-                        if ($('#ddlKodPembekal').val() != 0) {
+                        if ($('#ddlKodPembekal').val()) {
                             checkJumlah();
                         } else {
 

@@ -206,11 +206,16 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
-            List<AkBelian> aBelianList = _context.AkBelian
+            List<AkBelian> akBelianList = _context.AkBelian
                 .Include(b => b.AkPO)
                 .Where(b=> b.FlPosting == 1)
                 .OrderBy(b => b.Tarikh).ToList();
-            ViewBag.AkBelian = aBelianList;
+
+            foreach(var item in akBelianList)
+            {
+                item.NoInbois = item.NoInbois.Substring(9);
+            }
+            ViewBag.AkBelian = akBelianList;
 
             List<AkPembekal> akPembekalList = _context.AkPembekal
                 .Include(b => b.JBank)
@@ -451,12 +456,18 @@ namespace MSNK.Controllers
         {
             try
             {
+                CartEmpty();
+
                 var result = _context.AkBelian
                     .Include(b=>b.AkPO)
                     .Include(b=>b.AkBelian1).ThenInclude(b=>b.AkCarta)
                     .Where(b => b.Id == akBelian.Id)
                     .FirstOrDefault();
 
+                //if (result!= null)
+                //{
+                //    PopulateCartAkPV1(result.Id);
+                //}
                 return Json(new { result = "OK", record = result });
             }
             catch (Exception ex)
@@ -465,6 +476,28 @@ namespace MSNK.Controllers
             }
 
         }
+
+        //private void PopulateCartAkPV1(int id)
+        //{
+        //    var user = _userManager.GetUserName(User);
+
+        //    List<AkBelian1> table1 = _context.AkBelian1
+        //        .Include(b => b.AkCarta)
+        //        .Where(b => b.AkBelianId == id)
+        //        .OrderBy(b => b.Id)
+        //        .ToList();
+
+        //    foreach (AkBelian1 item in table1)
+        //    {
+
+        //        item.AkBelianId = 0;
+
+        //        _cart.AddItem1(item.AkBelianId,
+        //                        item.Amaun,
+        //                        item.AkCartaId);
+        //    }
+        //}
+        //on change no PO controller end
 
         public async Task<JsonResult> SaveAkPV2(AkPV2 akPV2)
         {
@@ -824,6 +857,14 @@ namespace MSNK.Controllers
             {
                 var result = await _akBelianRepo.GetById(data);
 
+                var akPOLaras = _context.AkPOLaras
+                    .Include(x => x.AkPOLaras1)
+                    .Where(x => x.AkPOId == result.AkPOId && x.FlPosting == 1).FirstOrDefault();
+
+                if(akPOLaras != null)
+                {
+                    result.AkPO.Jumlah += akPOLaras.Jumlah;
+                }
 
                 return Json(new { result = "OK", record = result });
             }
@@ -869,6 +910,22 @@ namespace MSNK.Controllers
         }
         // json empty cart end
 
+        [HttpPost]
+        [Authorize(Policy = "PV001C")]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateByJenis(string jenis)
+        {
+            // get latest no rujukan running number  
+            var year = DateTime.Now.Year.ToString();
+            var data = 1;
+
+            ViewBag.NoRujukan = GetNoRujukan(data, year);
+            // get latest no rujukan running number end
+
+            PopulateList();
+            CartEmpty();
+            return View(jenis);
+        }
         // POST: AkPV/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.

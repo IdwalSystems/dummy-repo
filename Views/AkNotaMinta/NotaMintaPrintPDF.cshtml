@@ -169,17 +169,17 @@
                 <td class="text-center font-weight-bold" width="7%">HARGA SEUNIT RM</td>
                 <td class="text-center font-weight-bold" width="7%">AMAUN RM</td>
             </tr>
-            <tr>
-                @foreach (var item in Model.AkNotaMinta.AkNotaMinta2)
-                {
-                <td class="text-left">@item.Bil</td>
-                <td class="text-left text-uppercase">@item.Perihal</td>
-                <td class="text-right">@item.Kuantiti</td>
-                <td class="text-right">@Convert.ToDecimal(item.Harga).ToString("#,##0.00")</td>
-                <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
-                }
+            @foreach (var item in Model.AkNotaMinta.AkNotaMinta2)
+            {
+                <tr>
+                    <td class="text-left">@item.Bil</td>
+                    <td class="text-left text-uppercase">@item.Perihal</td>
+                    <td class="text-right">@item.Kuantiti</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Harga).ToString("#,##0.00")</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                </tr>
 
-            </tr>
+            }
             <tr class="font-weight-bold">
                 <td class="text-right text-uppercase" colspan="4">Jumlah RM</td>
                 <td class="text-right">@Convert.ToDecimal(Model.JumlahPerihal).ToString("#,##0.00")</td>
@@ -228,16 +228,16 @@
                 <td class="text-center font-weight-bold" width="55%">PERIHAL OBJEK</td>
                 <td class="text-center font-weight-bold" width="7%">AMAUN RM</td>
             </tr>
-            <tr>
-                @foreach (var item in Model.AkNotaMinta.AkNotaMinta1)
-                {
-                <td class="text-center">@Model.AkNotaMinta.JKW.Kod</td>
-                <td class="text-center">@item.AkCarta.Kod</td>
-                <td class="text-left text-uppercase">@item.AkCarta.Perihal</td>
-                <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
-                }
+            @foreach (var item in Model.AkNotaMinta.AkNotaMinta1)
+            {
+                <tr>
+                    <td class="text-center">@Model.AkNotaMinta.JKW.Kod</td>
+                    <td class="text-center">@item.AkCarta.Kod</td>
+                    <td class="text-left text-uppercase">@item.AkCarta.Perihal</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                </tr>
 
-            </tr>
+            }
         </tbody>
     </table>
 </div>

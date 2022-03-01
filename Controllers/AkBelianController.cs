@@ -450,7 +450,7 @@ namespace MSNK.Controllers
 
                 var akPOLaras = _context.AkPOLaras
                     .Include(x=> x.AkPOLaras1)
-                    .Where(x => x.AkPOId == id).FirstOrDefault();
+                    .Where(x => x.AkPOId == id && x.FlPosting == 1).FirstOrDefault();
 
                 List<AkPO1> akPO1Table = await _context.AkPO1
                 .Include(b => b.AkCarta)
@@ -460,7 +460,10 @@ namespace MSNK.Controllers
 
                 foreach (AkPO1 item in akPO1Table)
                 {
-                    result.AkPO1.Add(item);
+                    if(item.Amaun != 0)
+                    {
+                        result.AkPO1.Add(item);
+                    }
                 }
 
                 List<AkPO2> akPO2Table = await _context.AkPO2
@@ -492,6 +495,10 @@ namespace MSNK.Controllers
         {
             var user = _userManager.GetUserName(User);
 
+            AkPOLaras akPOLaras = _context.AkPOLaras
+                    .Include(x => x.AkPOLaras1)
+                    .Where(x => x.AkPOId == id && x.FlPosting == 1).FirstOrDefault();
+
             List<AkPO1> akPO1Table =  _context.AkPO1
                 .Include(b => b.AkCarta)
                 .Where(b => b.AkPOId == id)
@@ -503,9 +510,24 @@ namespace MSNK.Controllers
 
                 item.AkPOId = 0;
 
-                _cart.AddItem1(item.AkPOId,
-                               item.Amaun,
-                               item.AkCartaId);
+                //if there is pelarasan PO
+                if(akPOLaras != null)
+                {
+                    foreach(var laras in akPOLaras.AkPOLaras1)
+                    {
+                        if(laras.AkCartaId == item.AkCartaId)
+                        {
+                            item.Amaun += laras.Amaun;
+                        }
+                    }
+                }
+                
+                if(item.Amaun != 0)
+                {
+                    _cart.AddItem1(item.AkPOId,
+                                   item.Amaun,
+                                   item.AkCartaId);
+                }
             }
 
             List<AkPO2> akPO2Table = _context.AkPO2
@@ -517,6 +539,9 @@ namespace MSNK.Controllers
             foreach (AkPO2 item in akPO2Table)
             {
                 item.AkPOId = 0;
+                item.Amaun = 0;
+                item.Kuantiti = 0;
+                item.Harga = 0;
 
                 _cart.AddItem2(item.AkPOId,
                                item.Indek,
@@ -1458,98 +1483,106 @@ namespace MSNK.Controllers
                 else
                 {
                     //posting operation start here
-
-                    var kodPembekal = "";
-                    var penerima = "";
-
-                    if (akBelian.AkPembekalId != 0)
+                    if(akBelian.TarikhTerima != null || akBelian.TarikhKewanganTerima != null)
                     {
-                        kodPembekal = akBelian.AkPembekal.KodSykt;
-                        penerima = akBelian.AkPembekal.NamaSykt;
+                        var kodPembekal = "";
+                        var penerima = "";
+
+                        if (akBelian.AkPembekalId != 0)
+                        {
+                            kodPembekal = akBelian.AkPembekal.KodSykt;
+                            penerima = akBelian.AkPembekal.NamaSykt;
+                        }
+
+                        foreach (AkBelian1 item in akB1)
+                        {
+                            //insert into AbBukuVot
+                            AbBukuVot abBukuVot = new AbBukuVot();
+                            if (akBelian.AkPO != null)
+                            {
+                                //dengan tanggungan
+                                abBukuVot = new AbBukuVot()
+                                {
+                                    Tahun = akBelian.Tahun,
+                                    JKWId = akBelian.JKWId,
+                                    Tarikh = akBelian.Tarikh,
+                                    Kod = kodPembekal,
+                                    Penerima = penerima,
+                                    VotId = item.AkCartaId,
+                                    Rujukan = akBelian.NoInbois,
+                                    Tanggungan = 0 - item.Amaun,
+                                    Liabiliti = item.Amaun
+
+                                };
+                            }
+                            else
+                            {
+                                //tanpa tanggungan
+                                abBukuVot = new AbBukuVot()
+                                {
+                                    Tahun = akBelian.Tahun,
+                                    JKWId = akBelian.JKWId,
+                                    Tarikh = akBelian.Tarikh,
+                                    Kod = kodPembekal,
+                                    Penerima = penerima,
+                                    VotId = item.AkCartaId,
+                                    Rujukan = akBelian.NoInbois,
+                                    Liabiliti = item.Amaun
+                                };
+
+                            }
+
+                            await _abBukuVotRepo.Insert(abBukuVot);
+
+                            // insert into AbBukuVot end
+
+                            //insert into akAkaun
+                            AkAkaun akALiabiliti = new AkAkaun()
+                            {
+                                NoRujukan = akBelian.NoInbois,
+                                JKWId = akBelian.JKWId,
+                                AkCartaId1 = akBelian.KodObjekAPId,
+                                AkCartaId2 = item.AkCartaId,
+                                Tarikh = akBelian.Tarikh,
+                                Kredit = item.Amaun
+                            };
+
+                            await _akAkaunRepo.Insert(akALiabiliti);
+
+                            AkAkaun akAObjek = new AkAkaun()
+                            {
+                                NoRujukan = akBelian.NoInbois,
+                                JKWId = akBelian.JKWId,
+                                AkCartaId1 = item.AkCartaId,
+                                AkCartaId2 = akBelian.KodObjekAPId,
+                                Tarikh = akBelian.Tarikh,
+                                Debit = item.Amaun
+                            };
+
+                            await _akAkaunRepo.Insert(akAObjek);
+                        }
+
+                        //update posting status in akTerima
+                        akBelian.FlPosting = 1;
+                        akBelian.TarikhPosting = DateTime.Now;
+                        await _akBelianRepo.Update(akBelian);
+
+                        //insert applog
+                        await AddLogAsync("Posting", "Posting Data", akBelian.NoInbois, (int)id, akBelian.Jumlah);
+
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
+
+
+                        TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
                     }
-
-                    foreach (AkBelian1 item in akB1)
+                    else
                     {
-                        //insert into AbBukuVot
-                        AbBukuVot abBukuVot = new AbBukuVot();
-                        if (akBelian.AkPO != null)
-                        {
-                            //dengan tanggungan
-                            abBukuVot = new AbBukuVot()
-                            {
-                                Tahun = akBelian.Tahun,
-                                JKWId = akBelian.JKWId,
-                                Tarikh = akBelian.Tarikh,
-                                Kod = kodPembekal,
-                                Penerima = penerima,
-                                VotId = item.AkCartaId,
-                                Rujukan = akBelian.NoInbois,
-                                Tanggungan = 0 - item.Amaun,
-                                Liabiliti = item.Amaun
-
-                            };
-                        }
-                        else
-                        {
-                            //tanpa tanggungan
-                            abBukuVot = new AbBukuVot()
-                            {
-                                Tahun = akBelian.Tahun,
-                                JKWId = akBelian.JKWId,
-                                Tarikh = akBelian.Tarikh,
-                                Kod = kodPembekal,
-                                Penerima = penerima,
-                                VotId = item.AkCartaId,
-                                Rujukan = akBelian.NoInbois,
-                                Liabiliti = item.Amaun
-                            };
-
-                        }
-
-                        await _abBukuVotRepo.Insert(abBukuVot);
-
-                        // insert into AbBukuVot end
-
-                        //insert into akAkaun
-                        AkAkaun akALiabiliti = new AkAkaun()
-                        {
-                            NoRujukan = akBelian.NoInbois,
-                            JKWId = akBelian.JKWId,
-                            AkCartaId1 = akBelian.KodObjekAPId,
-                            AkCartaId2 = item.AkCartaId,
-                            Tarikh = akBelian.Tarikh,
-                            Kredit = item.Amaun
-                        };
-
-                        await _akAkaunRepo.Insert(akALiabiliti);
-
-                        AkAkaun akAObjek = new AkAkaun()
-                        {
-                            NoRujukan = akBelian.NoInbois,
-                            JKWId = akBelian.JKWId,
-                            AkCartaId1 = item.AkCartaId,
-                            AkCartaId2 = akBelian.KodObjekAPId,
-                            Tarikh = akBelian.Tarikh,
-                            Debit = item.Amaun
-                        };
-
-                        await _akAkaunRepo.Insert(akAObjek);
+                        //duplicate id error
+                        TempData[SD.Error] = "Sila isi tarikh terima / tarikh kewangan terima untuk meneruskan operasi ini.";
                     }
                     
-                    //update posting status in akTerima
-                    akBelian.FlPosting = 1;
-                    akBelian.TarikhPosting = DateTime.Now;
-                    await _akBelianRepo.Update(akBelian);
-
-                    //insert applog
-                    await AddLogAsync("Posting", "Posting Data", akBelian.NoInbois, (int)id, akBelian.Jumlah);
-
-                    //insert applog end
-
-                    await _context.SaveChangesAsync();
-
-
-                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
                 }
 
 

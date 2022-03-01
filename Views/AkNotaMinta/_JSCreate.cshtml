@@ -128,6 +128,7 @@
                             //Clear the TextBoxes.
                             txtKodAkaun.val("").trigger('change');
                             txtAmaunObjek.val("0.00");
+                            checkJumlah();
                         }
                     });
 
@@ -257,6 +258,7 @@
                 txtUnit.val("-");
                 txtHargaUnit.val("0.00");
                 txtAmaun.val("0.00");
+                checkJumlah();
                 bil++;
             }
         });
@@ -292,6 +294,7 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
+                        checkJumlah();
                     }
                 });
             }
@@ -410,6 +413,7 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }
@@ -515,6 +519,7 @@
                             }
                         }
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }
@@ -522,22 +527,20 @@
     };
     //update tbl perihal end
 
-    //update tbl perihal end
-
-    // onchange harga/unit and kuantiti
+    // on change harga/unit and kuantiti
     $("body").on('change', ".hargaUnit, .kuantiti", function () {
         //main body
         var amount = $("#txtHargaUnit").val();
         var quantity = $("#txtKuantiti").val();
 
-        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)));
+        $("#txtAmaun").val((countTotalAmountPerItem(amount, quantity)).toFixed(2));
         //main body end
 
         //modal perihal
         var moAmount = $("#moHargaUnit").val();
         var moQuantity = $("#moKuantiti").val();
 
-        $("#moAmaun2").val((countTotalAmountPerItem(moAmount, moQuantity)));
+        $("#moAmaun2").val((countTotalAmountPerItem(moAmount, moQuantity)).toFixed(2));
         //modal perihal end
     });
 

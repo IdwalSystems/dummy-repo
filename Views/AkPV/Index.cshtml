@@ -13,7 +13,9 @@
         <h3 class="text-left">Baucer Pembayaran</h3>
     </div>
     <div class="col-4 text-right">
-        <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
+        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalTambah">
+            Tambah Baru
+        </button>
     </div>
 </div>
 @*div Header end*@
@@ -66,9 +68,7 @@
     <table class="table table-bordered table-hover display compact nowrap" width="100%">
         <thead>
             <tr>
-                <th>
-                    Bil
-                </th>
+                <th width="2%">Bil</th>
                 <th style="width:2%">
                     Tahun
                 </th>
@@ -174,13 +174,13 @@
                         <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
                         @if (item.FlHapus == 0)
                         {
-                            @if (item.FlPosting == 0)
+                            if (item.FlPosting == 0)
                             {
-                                @if (item.Jumlah != 0)
+                                if (item.Jumlah != 0)
                                 {
-                                    @if (item.FlKategoriPenerima == 1)
+                                    if (item.FlKategoriPenerima == 1)
                                     {
-                                        @if (item.Jumlah == item.JumlahInbois && item.FlCetak != 0)
+                                        if (item.Jumlah == item.JumlahInbois && item.FlCetak != 0)
                                         {
                                             <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
                                                 <i class="fas fa-sync"></i>
@@ -189,9 +189,13 @@
                                     }
                                     else
                                     {
-                                        <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
-                                            <i class="fas fa-sync"></i>
-                                        </a>
+                                        if (item.FlCetak != 0)
+                                        {
+                                            <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
+                                                <i class="fas fa-sync"></i>
+                                            </a>
+                                        }
+
                                     }
 
                                 }
@@ -223,3 +227,60 @@
     </table>
 </div>
 @*div table end*@
+<!-- Modal Batal -->
+<div class="modal fade" id="modalTambah" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-md modal-dialog modal-dialog-centered ">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-info text-white ">
+
+                <h5 class="modal-title"><i class="fas fa-info-circle"></i>  Jenis Baucer</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times text-white"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="CreateByJenis">
+                    <div class="form-group col-sm">
+
+                        <div class="custom-control custom-radio">
+
+                            <input class="custom-control-input" type="radio" name="jenis" id="CreateAm" value="CreateAm" checked>
+                            <label class="custom-control-label" for="CreateAm">
+                                Am
+                            </label>
+                        </div>
+                        <div class="custom-control custom-radio">
+
+                            <input class="custom-control-input" type="radio" name="jenis" id="CreatePekerja" value="CreatePekerja">
+                            <label class="custom-control-label" for="CreatePekerja">
+                                Pekerja
+                            </label>
+                        </div>
+                        <div class="custom-control custom-radio" hidden>
+
+                            <input class="custom-control-input" type="radio" name="jenis" id="CreatePanjar" value="CreatePanjar">
+                            <label class="custom-control-label" for="CreatePanjar">
+                                Panjar
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-6 mb-2">
+                            <button type="submit" class="btn btn-success btn-block btn-lg ">TAMBAH</button>
+                        </div>
+                        <div class="col-6">
+                            <a data-dismiss="modal" aria-label="Close" class=" btn btn-secondary btn-block btn-lg text-white">BATAL</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer bg-success" style="padding:0px;">
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Batal End -->

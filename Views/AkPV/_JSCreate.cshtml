@@ -258,7 +258,7 @@
                 dataType: "json",
                 success: function (msg) {
                     $("#txtTarInbois").val(msg.record.tarikh);
-                    $("#txtAmaunInbois").val(msg.record.jumlah);
+                    $("#txtAmaunInbois").val(msg.record.jumlah.toFixed(2));
                     if (msg.record.akPO == null) {
                         $("#txtNoPO").val("-");
                         $("#txtTarPO").val("");
@@ -266,7 +266,7 @@
                     } else {
                         $("#txtNoPO").val(msg.record.akPO.noPO);
                         $("#txtTarPO").val(msg.record.akPO.tarikh);
-                        $("#txtAmaunPO").val(msg.record.akPO.jumlah);
+                        $("#txtAmaunPO").val(msg.record.akPO.jumlah.toFixed(2));
                     }
 
 
@@ -405,7 +405,7 @@
                             //Clear the TextBoxes.
                             txtKodAkaun.val("").trigger('change');
                             txtAmaunObjek.val("0.00");
-                            if ($('#ddlKodPembekal').val() != 0) {
+                            if ($('#ddlKodPembekal').val()) {
                                 checkJumlah();
                             }
 
@@ -451,7 +451,7 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
-                        if ($('#ddlKodPembekal').val() != 0) {
+                        if ($('#ddlKodPembekal').val()) {
                             checkJumlah();
                         } else {
 
@@ -485,7 +485,7 @@
                     //insert data in modal objek
                     $("#moId1").val(r.record.akCartaId);
                     $("#moKodAkaun").val(r.record.akCartaId);
-                    $("#moAmaun1").val(r.record.amaun);
+                    $("#moAmaun1").val(r.record.amaun.toFixed(2));
 
                     //show modal objek
                     $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
@@ -540,7 +540,7 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
-                        if ($('#ddlKodPembekal').val() != 0) {
+                        if ($('#ddlKodPembekal').val()) {
                             checkJumlah();
                         } else {
 
@@ -645,6 +645,8 @@
                     var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
                     cell.append(btnRemove2);
 
+                    //displayObjekList(r.record.akBelian1);
+
                     var AkPV2 = {
                         AkBelianId: ddlAkBelian.val(),
                         Amaun: txtAmaunInbois.val()
@@ -734,7 +736,7 @@
                 //insert data in modal urusniaga
                 $("#moId2").val(r.record.akBelianId);
                 $("#moAkBelian").val(r.record.akBelianId);
-                $("#moAmaun2").val(r.record.amaun);
+                $("#moAmaun2").val(r.record.amaun.toFixed(2));
 
                 //show modal objek
                 $("#modalInbois").modal({ backdrop: 'static', keyboard: false });
@@ -800,4 +802,27 @@
         });
     };
     //update tbl Inbois end
+
+    function displayObjekList(data) {
+        $("table tbody#tbodyObjek").empty();
+        var jumlah = $("#jumlahObjek");
+        var sum = 0;
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+
+            var str = "<tr><td id='akCartaId' hidden>" + item.akCartaId +
+                "</td><td>" + item.akCarta.kod + " - " + item.akCarta.perihal +
+                "</td><td class='text-right'>" + (item.amaun).toFixed(2) +
+                "</td><td>" +
+                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                "</td><td>" +
+                "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                "</td><tr>";
+            $("table tbody#tbodyObjek").append(str);
+            sum += item.amaun;
+
+            $("#txtKodAkaun option[value=" + item.akCartaId + "]").prop('disabled', true);
+        }
+        jumlah.val(sum.toFixed(2));
+    }
 </script>

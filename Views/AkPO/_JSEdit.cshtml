@@ -163,7 +163,7 @@
 
         //Add Harga cell.
         var cell = $(row.insertCell(-1));
-        cell.html(txtHargaUnit.val());
+        cell.html(parseFloat(txtHargaUnit.val()).toFixed(2));
         cell.addClass('text-right');
 
         //Add Amaun cell.
@@ -213,6 +213,9 @@
                 txtHargaUnit.val("");
                 txtAmaun.val("");
                 bil++;
+                if ($("#jumlahObjek").val() != 0.00) {
+                    checkJumlah();
+                }
             }
         });
     }

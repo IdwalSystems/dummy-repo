@@ -437,6 +437,9 @@ namespace MSNK.Controllers
             {
                 item.AkPOId = 0;
 
+
+                item.Perihal = "PELARASAN -" + item.Perihal;
+
                 _cart.AddItem2(item.AkPOId,
                                item.Indek,
                                item.Baris,
@@ -622,7 +625,7 @@ namespace MSNK.Controllers
             try
             {
                 AkPOLaras1 data = _cart.Lines1.Where(x => x.AkCartaId == akPOLaras1.AkCartaId).FirstOrDefault();
-
+                
                 return Json(new { result = "OK", record = data });
             }
             catch (Exception ex)

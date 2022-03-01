@@ -120,7 +120,7 @@ namespace MSNK.Controllers
         // GET: AkPembekal
         public async Task<IActionResult> Index()
         {
-            var akpembekal = await _akpembekalRepo.GetAll();
+            var akpembekal = await _akpembekalRepo.GetAllIncludeDeletedItems();
             return View(akpembekal);
         }
 
@@ -193,7 +193,7 @@ namespace MSNK.Controllers
                     await AddLogAsync("Tambah", akP.KodSykt + " - " + akP.NamaSykt, akP.KodSykt, 0, 0);
                     //insert applog end
                     await _akpembekalRepo.Save();
-                    TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Syarikat adalah " + akP.KodSykt;
+                    TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Pembekal adalah " + akP.KodSykt;
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -249,6 +249,9 @@ namespace MSNK.Controllers
                     AkPembekal dataAsal = await _akpembekalRepo.GetById(id);
                     akPembekal.KodSykt = dataAsal.KodSykt;
                     var namaAsal = dataAsal.NamaSykt;
+
+                    _context.Entry(dataAsal).State = EntityState.Detached;
+
                     akPembekal.UserIdKemaskini = user.UserName;
                     akPembekal.TarKemaskini = DateTime.Now;
                     //_context.Update(akPembekal);
