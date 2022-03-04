@@ -2,9 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using MSNK.Infrastructure;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.Cart.Session
 {
@@ -34,8 +31,6 @@ namespace MSNK.Models.Modules.Cart.Session
 
             Session.SetJson("CartPV", this);
         }
-
-
 
         public override void RemoveItem1(int id)
         {

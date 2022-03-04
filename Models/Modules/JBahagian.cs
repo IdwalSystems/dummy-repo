@@ -21,5 +21,7 @@ namespace MSNK.Models.Modules
         public int JKWId { get; set; }
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
+
+        public ICollection<AbWaran> AbWaran { get; set; }
     }
 }

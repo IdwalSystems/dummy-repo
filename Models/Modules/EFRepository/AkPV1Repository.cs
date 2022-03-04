@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules.IRepository;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,7 +36,10 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<AkPV1> GetById(int id)
         {
-            return await context.AkPV1.Include(d => d.AkCarta).Where(d => d.Id == id).FirstOrDefaultAsync();
+            return await context.AkPV1
+                .Include(d => d.AkCarta)
+                .Where(d => d.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<AkPV1> Insert(AkPV1 entity)

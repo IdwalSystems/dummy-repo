@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace MSNK.Data
 {
@@ -125,6 +122,18 @@ namespace MSNK.Data
             new Claim("SP001T","SP001 Pendahuluan Pelbagai - Posting"),
             new Claim("SP001UT","SP001 Pendahuluan Pelbagai - UnPosting"),
             //Pendahuluan Pelbagai end
+            //Menu Belanjawan
+            //Waran
+            new Claim("BJ001","BJ001 Waran"),
+            new Claim("BJ001C","BJ001 Waran - Tambah"),
+            new Claim("BJ001E","BJ001 Waran - Ubah"),
+            new Claim("BJ001D","BJ001 Waran - Hapus"),
+            new Claim("BJ001P","BJ001 Waran - Cetak"),
+            new Claim("BJ001B","BJ001 Waran - Batal"),
+            new Claim("BJ001R","BJ001 Waran - Rollback"),
+            new Claim("BJ001T","BJ001 Waran - Posting"),
+            new Claim("BJ001UT","BJ001 Waran - UnPosting"),
+            //Waran end
         };
     }
 }

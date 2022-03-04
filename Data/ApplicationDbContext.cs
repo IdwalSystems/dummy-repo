@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Models.Administration;
 using MSNK.Models.Modules;
@@ -65,6 +64,9 @@ namespace MSNK.Data
         public DbSet<AkNotaMinta> AkNotaMinta { get; set; }
         public DbSet<AkNotaMinta1> AkNotaMinta1 { get; set; }
         public DbSet<AkNotaMinta2> AkNotaMinta2 { get; set; }
+        public DbSet<JBahagian> JBahagian { get; set; }
+        public DbSet<AbWaran> AbWaran { get; set; }
+        public DbSet<AbWaran1> AbWaran1 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -91,7 +93,6 @@ namespace MSNK.Data
 
             //Terimaan
             modelBuilder.Entity<AkTerima>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
-
             // Terimaan End
 
             //Baucer
@@ -110,6 +111,9 @@ namespace MSNK.Data
             //Permohonan
             modelBuilder.Entity<SpPendahuluanPelbagai>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Permohonan End
+            //Belanjawan
+            modelBuilder.Entity<AbWaran>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            //Belanjawan end
             //load item without soft delete end
 
             //modelBuilder.Entity<IdentityRole>()
@@ -131,6 +135,18 @@ namespace MSNK.Data
                 .HasOne(e => e.JKW)
                 .WithMany(c => c.AkBank)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            //AbWaran
+            modelBuilder.Entity<AbWaran>()
+                .HasOne(e => e.JKW)
+                .WithMany(c => c.AbWaran)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AbWaran>()
+                .HasOne(e => e.JBahagian)
+                .WithMany(c => c.AbWaran)
+                .OnDelete(DeleteBehavior.Restrict);
+            //AbWaran End
 
             modelBuilder.Entity<AkCarta>()
                 .HasOne(e => e.JKW)
@@ -344,6 +360,6 @@ namespace MSNK.Data
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan3).HasDefaultValue("");
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan4).HasDefaultValue("");
         }
-        public DbSet<MSNK.Models.Modules.JBahagian> JBahagian { get; set; }
+        
     }
 }

@@ -39,6 +39,8 @@ namespace MSNK.Models.Modules
         public DateTime TarLulus { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal JumLulus { get; set; }
+        [DisplayName("Tarikh Posting")]
+        public DateTime? TarikhPosting { get; set; }
 
         public int FlPosting { get; set; }
         public int FlCetak { get; set; }

@@ -121,6 +121,10 @@ namespace MSNK
             services.AddTransient<IRepository<AkNotaMinta, int, string>, AkNotaMintaRepository>();
             services.AddTransient<ListViewIRepository<AkNotaMinta1, int>, AkNotaMinta1Repository>();
             services.AddTransient<ListViewIRepository<AkNotaMinta2, int>, AkNotaMinta2Repository>();
+
+            services.AddTransient<IRepository<AbWaran, int, string>, AbWaranRepository>();
+            services.AddTransient<ListViewIRepository<AbWaran1, int>, AbWaran1Repository>();
+
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPendahuluan.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
@@ -132,6 +136,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartTunaiRuncit.GetCart(ss));
             services.AddScoped(ss => SessionCartTunaiCV.GetCart(ss));
             services.AddScoped(ss => SessionCartNotaMinta.GetCart(ss));
+            services.AddScoped(ss => SessionCartWaran.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -259,6 +264,18 @@ namespace MSNK
                 options.AddPolicy("SP001T", policy => policy.RequireClaim("SP001T"));
                 options.AddPolicy("SP001UT", policy => policy.RequireClaim("SP001UT"));
                 //Pendahuluan Pelbagai End
+                //Menu Belanjawan
+                //Waran
+                options.AddPolicy("BJ001", policy => policy.RequireClaim("BJ001"));
+                options.AddPolicy("BJ001C", policy => policy.RequireClaim("BJ001C"));
+                options.AddPolicy("BJ001E", policy => policy.RequireClaim("BJ001E"));
+                options.AddPolicy("BJ001D", policy => policy.RequireClaim("BJ001D"));
+                options.AddPolicy("BJ001P", policy => policy.RequireClaim("BJ001P"));
+                options.AddPolicy("BJ001B", policy => policy.RequireClaim("BJ001B"));
+                options.AddPolicy("BJ001R", policy => policy.RequireClaim("BJ001R"));
+                options.AddPolicy("BJ001T", policy => policy.RequireClaim("BJ001T"));
+                options.AddPolicy("BJ001UT", policy => policy.RequireClaim("BJ001UT"));
+                //Waran End
             });
 
             services.AddMvc(f =>
