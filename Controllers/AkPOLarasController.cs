@@ -618,7 +618,7 @@ namespace MSNK.Controllers
             }
         }
 
-        // get an item from cart akBelian1
+        // get an item from cart akPOLaras1
         public JsonResult GetAnItemCartAkPOLaras1(AkPOLaras1 akPOLaras1)
         {
 
@@ -633,9 +633,9 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get an item from cart akBelian1 end
+        // get an item from cart akPOLaras1 end
 
-        //save cart akBelian1
+        //save cart akPOLaras1
         public JsonResult SaveCartAkPOLaras1(AkPOLaras1 akPOLaras1)
         {
 
@@ -663,9 +663,9 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        //save cart akBelian1 end
+        //save cart akPOLaras1 end
 
-        // get all item from cart akBelian1
+        // get all item from cart akPOLaras1
         public JsonResult GetAllItemCartAkPOLaras1()
         {
 
@@ -687,9 +687,9 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get all item from cart akBelian1 end
+        // get all item from cart akPOLaras1 end
 
-        // get an item from cart akBelian2
+        // get an item from cart akPOLaras2
         public JsonResult GetAnItemCartAkPOLaras2(AkPOLaras2 akPOLaras2)
         {
 
@@ -704,9 +704,9 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get an item from cart akBelian2 end
+        // get an item from cart akPOLaras2 end
 
-        //save cart akBelian2
+        //save cart akPOLaras2
         public JsonResult SaveCartAkPOLaras2(AkPOLaras2 akPOLaras2)
         {
 
@@ -741,9 +741,9 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        //save cart akBelian2 end
+        //save cart akPOLaras2 end
 
-        // get all item from cart akBelian2
+        // get all item from cart akPOLaras2
         public JsonResult GetAllItemCartAkPOLaras2()
         {
 
@@ -758,7 +758,7 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get all item from cart akBelian2 end
+        // get all item from cart akPOLaras2 end
 
         // function  json Create end
 

@@ -157,41 +157,288 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var abWaran = await _context.AbWaran
-                .Include(a => a.JBahagian)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var abWaran = await _abWaranRepo.GetById((int)id);
+
             if (abWaran == null)
             {
                 return NotFound();
             }
 
+            PopulateTable(id);
             return View(abWaran);
         }
 
-        // GET: AbWaran/Create
+        private void PopulateTable(int? id)
+        {
+            List<AbWaran1> table1 = _context.AbWaran1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AbWaranId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            ViewBag.abWaran1 = table1;
+        }
+
+        // GET: AkPV/Create
+        [Authorize(Policy = "BJ001C")]
         public IActionResult Create()
         {
-            ViewData["JBahagianId"] = new SelectList(_context.JBahagian, "Id", "Kod");
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod");
+            // get latest no rujukan running number  
+            var year = DateTime.Now.Year.ToString();
+
+            ViewBag.NoRujukan = GetNoRujukan(year);
+            // get latest no rujukan running number end
+
+            PopulateList();
+            CartEmpty();
             return View();
         }
+
+        private string GetNoRujukan(string year)
+        {
+            string prefix = year + "/";
+            int x = 1;
+            string noRujukan = prefix + "0000";
+
+            var LatestNoRujukan = _context.AbWaran
+                       .IgnoreQueryFilters()
+                       .Where(x => x.Tahun == year)
+                       .Max(x => x.NoRujukan);
+
+            if (LatestNoRujukan == null)
+            {
+                noRujukan = string.Format("{0:" + prefix + "0000}", x);
+            }
+            else
+            {
+                x = int.Parse(LatestNoRujukan.Substring(6));
+                x++;
+                noRujukan = string.Format("{0:" + prefix + "0000}", x);
+            }
+            return noRujukan;
+        }
+
+        private void PopulateList()
+        {
+            List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
+            ViewBag.JKw = kwList;
+
+            List<JBahagian> bahagianList = _context.JBahagian.OrderBy(b => b.Kod).ToList();
+            ViewBag.JBahagian = bahagianList;
+
+            List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Where(b => b.JParas.Kod == "4")
+                .OrderBy(b => b.Kod)
+                .ToList();
+            ViewBag.AkCarta = akCartaList;
+
+        }
+
+        public JsonResult CartEmpty()
+        {
+            try
+            {
+                _cart.Clear1();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        // on change no PO controller
+        [HttpPost]
+        public JsonResult JsonGetKod(string year)
+        {
+            try
+            {
+                var result = GetNoRujukan(year);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+
+        // function  json Create
+        public JsonResult GetCarta(AkCarta akCarta)
+        {
+            try
+            {
+                var result = _context.AkCarta.Where(b => b.Id == akCarta.Id).FirstOrDefault();
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+
+        public async Task<JsonResult> SaveAbWaran1(AbWaran1 abWaran1)
+        {
+
+            try
+            {
+                if (abWaran1 != null)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    _cart.AddItem1(abWaran1.AbWaranId,
+                                    abWaran1.Amaun,
+                                    abWaran1.AkCartaId,
+                                    abWaran1.TK
+                                    );
+
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public JsonResult RemoveAbWaran1(AbWaran1 abWaran1)
+        {
+
+            try
+            {
+                if (abWaran1 != null)
+                {
+
+                    _cart.RemoveItem1(abWaran1.AkCartaId);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        // get an item from cart abWaran1
+        public JsonResult GetAnItemCartAbWaran1(AbWaran1 abWaran1)
+        {
+
+            try
+            {
+                AbWaran1 data = _cart.Lines1.Where(x => x.AkCartaId == abWaran1.AkCartaId).FirstOrDefault();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get an item from cart AbWaran1 end
+
+        //save cart AbWaran1
+        public JsonResult SaveCartAbWaran1(AbWaran1 abWaran1)
+        {
+
+            try
+            {
+
+                var abW1 = _cart.Lines1.Where(x => x.AkCartaId == abWaran1.AkCartaId).FirstOrDefault();
+
+                var user = _userManager.GetUserName(User);
+
+                if (abW1 != null)
+                {
+                    _cart.RemoveItem1(abW1.AkCartaId);
+
+                    _cart.AddItem1(abWaran1.AbWaranId,
+                                    abWaran1.Amaun,
+                                    abWaran1.AkCartaId,
+                                    abWaran1.TK
+                                    );
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //save cart akPOLaras1 end
+
+        // get all item from cart akPOLaras1
+        public JsonResult GetAllItemCartAbWaran1()
+        {
+
+            try
+            {
+                List<AbWaran1> data = _cart.Lines1.ToList();
+
+                foreach (AbWaran1 item in data)
+                {
+                    var akCarta = _context.AkCarta.Find(item.AkCartaId);
+
+                    item.AkCarta = akCarta;
+                }
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart akPOLaras1 end
 
         // POST: AbWaran/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "BJ001C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NoRujukan,Tahun,Tarikh,TarikhPosting,Jumlah,FlJenisWaran,FlHapus,TarHapus,FlPosting,FlCetak,JKWId,JBahagianId,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] AbWaran abWaran)
+        public async Task<IActionResult> Create(AbWaran abWaran, int JKWId, int JBahagianId, int FlJenisWaran)
         {
+            AbWaran m = new AbWaran();
+            abWaran.NoRujukan = GetNoRujukan(abWaran.Tahun);
+            var user = await _userManager.GetUserAsync(User);
+
             if (ModelState.IsValid)
             {
-                _context.Add(abWaran);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (abWaran != null && JKWId != 0 && JBahagianId != 0)
+                {
+                    m.FlJenisWaran = FlJenisWaran;
+                    m.Tahun = abWaran.Tahun;
+                    m.Tarikh = abWaran.Tarikh;
+                    m.NoRujukan = GetNoRujukan(abWaran.Tahun);
+                    m.JKWId = JKWId;
+                    m.JBahagianId = JBahagianId;
+                    m.Jumlah = abWaran.Jumlah;
+                    m.UserId = user.UserName;
+                    m.TarMasuk = DateTime.Now;
+
+                    m.AbWaran1 = _cart.Lines1.ToArray();
+
+                    await _abWaranRepo.Insert(m);
+
+                    //insert applog
+                    await AddLogAsync("Tambah", m.NoRujukan, m.NoRujukan, 0, abWaran.Jumlah);
+                    //insert applog end
+                    await _abWaranRepo.Save();
+                    TempData[SD.Success] = "Maklumat berjaya ditambah. No Pendaftaran adalah " + m.NoRujukan;
+
+                    return RedirectToAction(nameof(Index));
+                }
             }
-            ViewData["JBahagianId"] = new SelectList(_context.JBahagian, "Id", "Kod", abWaran.JBahagianId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", abWaran.JKWId);
+
+            PopulateList();
+            CartEmpty();
+
             return View(abWaran);
         }
 

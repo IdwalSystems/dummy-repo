@@ -16,7 +16,7 @@ namespace MSNK.Models.Modules
         [DisplayName("No Rujukan")]
         public string NoRujukan { get; set; }
         [MaxLength(4)]
-        [DisplayName("Tahun Belanjawan")]
+        [DisplayName("Tahun")]
         [Required(ErrorMessage = "Tahun diperlukan")]
         public string Tahun { get; set; }
         [Required(ErrorMessage = "Tarikh diperlukan")]

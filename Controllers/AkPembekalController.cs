@@ -159,6 +159,7 @@ namespace MSNK.Controllers
         public async Task<IActionResult> Create(AkPembekal akPembekal, int jNegeriId, int jBankId)
         {
             AkPembekal akP = new();
+            var user = await _userManager.GetUserAsync(User);
 
             // check kalau ada no Akaun redundant
             var akPAkaunRedundant = _context.AkPembekal.Where(x => x.AkaunBank == akPembekal.AkaunBank).FirstOrDefault();
@@ -188,6 +189,7 @@ namespace MSNK.Controllers
                     akP.Alamat3 = akPembekal.Alamat3;
                     akP.Bandar = akPembekal.Bandar;
                     akP.Emel = akPembekal.Emel;
+                    akP.UserId = user.UserName;
                     await _akpembekalRepo.Insert(akP);
                     //insert applog
                     await AddLogAsync("Tambah", akP.KodSykt + " - " + akP.NamaSykt, akP.KodSykt, 0, 0);
