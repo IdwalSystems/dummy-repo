@@ -705,6 +705,61 @@ namespace MSNK.Controllers
 
         }
         // posting function end
+
+        // unposting function
+        [Authorize(Policy = "SP001UT")]
+        public async Task<IActionResult> UnPosting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                SpPendahuluanPelbagai obj = await _spPendahuluanPelbagaiRepo.GetById((int)id);
+
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(obj.NoPermohonan)).ToList();
+                if (abBukuVot == null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
+
+                }
+                else
+                {
+
+                    //unposting operation start here
+                    //delete data from abBukuVot
+                    foreach (AbBukuVot item in abBukuVot)
+                    {
+                        await _abBukuVotRepo.Delete(item.Id);
+                    }
+                    //delete data from abBukuVot end
+
+                    //update posting status in akPOLaras
+                    obj.FlPosting = 0;
+                    obj.TarikhPosting = null;
+                    await _spPendahuluanPelbagaiRepo.Update(obj);
+
+                    //insert applog
+                    await AddLogAsync("UnPosting", "UnPosting Data", obj.NoPermohonan, (int)id, obj.JumKeseluruhan);
+
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                    //unposting operation end
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // unposting function end
         private void PopulateList()
         {
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
