@@ -50,7 +50,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="NoPermohonan" class="control-label">No Permohonan</label><span class="text-danger control-label">*</span>
-                                <input asp-for="NoPermohonan" class="form-control form-control-sm form-control-sm-custom" required id="txtNoPermohonan" />
+                                <input asp-for="NoPermohonan" class="form-control form-control-sm form-control-sm-custom" required id="txtNoPermohonan" readonly/>
                             </div>
                         </div>
                     </div>
@@ -201,28 +201,29 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tbodyPeserta">
+                                    <tbody id="tbodyObjek">
                                         @foreach (var item in ViewBag.SpPendahuluanPelbagai1)
                                         {
-                                            <tr id="@item.Id">
-                                                <td id="jJantinaId">@item.JJantina.Perihal</td>
-                                                <td>@item.BilAtl</td>
-                                                <td>@item.BilJul</td>
-                                                <td>@item.BilPeg</td>
-                                                <td>@item.BilTek</td>
-                                                <td>@item.BilUru</td>
-                                                <td id="td1Amaun">@item.Jumlah</td>
-                                                <td>
-                                                    @*<button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
-                            <i class="fa fa-edit"></i>
-                        </button>*@
-                                                </td>
-                                                <td>
-                                                    @*<button class="btn btn-danger btn-sm" type="button" id="btnRemove1" onclick="Remove1(this)">
-                            <i class="fas fa-trash"></i>
-                        </button>*@
-                                                </td>
-                                            </tr>
+                                        <tr id="@item.Id">
+                                            <td id="jJantinaId" hidden>@item.JJantinaId</td>
+                                            <td>@item.JJantina.Perihal</td>
+                                            <td>@item.BilAtl</td>
+                                            <td>@item.BilJul</td>
+                                            <td>@item.BilPeg</td>
+                                            <td>@item.BilTek</td>
+                                            <td>@item.BilUru</td>
+                                            <td id="td1Amaun">@item.Jumlah</td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm" type="button" id="btnRemove1" onclick="Remove1(this)">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
 
                                         }
                                     </tbody>
@@ -282,21 +283,21 @@
                                         {
                                             <tr id="@item.Id">
                                                 <td hidden>@item.Indek</td>
-                                                <td class="text-left">@item.Bil</td>
+                                                <td class="text-left">@item.Baris</td>
                                                 <td class="text-left text-uppercase">@item.Perihal</td>
                                                 <td>@item.Kadar</td>
                                                 <td>@item.Bil</td>
                                                 <td>@item.Bulan</td>
                                                 <td>@item.Jumlah</td>
                                                 <td>
-                                                    @*<button class="btn btn-primary btn-sm" type="button" id="btnUpdate2" data-toggle="modal" data-target="#modalPerihal" onclick="Update2(this)">
-                            <i class="fa fa-edit"></i>
-                        </button>*@
+                                                    <button class="btn btn-primary btn-sm" type="button" id="btnUpdate2" data-toggle="modal" data-target="#modalPerihal" onclick="Update2(this)">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
                                                 </td>
                                                 <td>
-                                                    @*<button class="btn btn-danger btn-sm" type="button" id="btnRemove2" onclick="Remove2(this)">
-                            <i class="fas fa-trash"></i>
-                        </button>*@
+                                                    <button class="btn btn-danger btn-sm" type="button" id="btnRemove2" onclick="Remove2(this)">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
                                                 </td>
                                             </tr>
                                         }
@@ -304,13 +305,12 @@
                                     <tfoot>
                                         <tr>
                                             <td hidden><input class="form-control form-control-sm" type="text" id="txtIndek" maxlength="3"></td>
-                                            <td hidden><input class="form-control form-control-sm" type="number" id="txtBaris" maxlength="3" value="0"></td>
-                                            <td><input class="form-control form-control-sm" type="number" id="txtNo" maxlength="3" value="0"></td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtBaris" maxlength="3" value="0"></td>
                                             <td><textarea class="form-control form-control-sm text-uppercase" type="text" id="txtPerihal" maxlength="100" value="-" rows="2"></textarea></td>
-                                            <td><input class="form-control form-control-sm kadar" type="number" id="txtKadar" maxlength="6" value="0"></td>
+                                            <td><input class="form-control form-control-sm kadar" type="number" id="txtKadar" maxlength="6" value="0.00"></td>
                                             <td><input class="form-control form-control-sm bil" type="text" id="txtBil" value="0"></td>
-                                            <td><input class="form-control form-control-sm bulan" type="number" id="txtBulan" maxlength="3" value="0.00"></td>
-                                            <td><input class="form-control form-control-sm" type="number" id="txtJumlahPerihal" maxlength="6" readonly value="0.00"></td>
+                                            <td><input class="form-control form-control-sm bulan" type="number" id="txtBulan" maxlength="3" value="0"></td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtJumlahPerihal" maxlength="6" readonly value="0"></td>
                                             <td><button class="btn btn-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
                                         </tr>
                                     </tfoot>
@@ -337,6 +337,151 @@
 <div>
     <a asp-action="Index">Kembali ke Indeks</a>
 </div>
+
+<!-- Modal Objek -->
+<div class="modal fade bd-example-modal-lg" id="modalObjek" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Objek</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input id="moId" hidden />
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <select class="form-control form-control-sm" id="moJJantina">
+                                    <option value="" selected>-- Pilih --</option>
+                                    @foreach (var s in ViewBag.JJantina)
+                                    {
+                                        <option value="@s.Id">@s.Perihal </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="col-form-label">Atlet</label>
+                                <input type="number" class="form-control form-control-sm atlet" id="moBilAtl">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="col-form-label">Jurulatih</label>
+                                <input type="number" class="form-control form-control-sm jurulatih" id="moBilJul">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="col-form-label">Pegawai</label>
+                                <input type="number" class="form-control form-control-sm pegawai" id="moBilPeg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="col-form-label">Teknikal</label>
+                                <input type="number" class="form-control form-control-sm teknikal" id="moBilTek">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="col-form-label">Urusetia</label>
+                                <input type="number" class="form-control form-control-sm urusetia" id="moBilUru">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah</label>
+                                <input type="number" class="form-control form-control-sm" id="moJumlahPeserta">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate1()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Objek End -->
+
+<!-- Modal Perihal -->
+<div class="modal fade bd-example-modal-lg" id="modalPerihal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Perihal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input id="moId2" hidden />
+                    <input id="moIndek" hidden />
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="col-form-label">No</label>
+                                <input type="number" class="form-control form-control-sm" id="moBaris">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-form-label">Perihal</label>
+                                <input type="text" class="form-control form-control-sm" id="moPerihal">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Kadar</label>
+                                <input type="number" class="form-control form-control-sm kadar" id="moKadar">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Bil</label>
+                                <input type="text" class="form-control form-control-sm bil" id="moBil">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Bulan</label>
+                                <input type="number" class="form-control form-control-sm bulan" id="moBulan">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah</label>
+                                <input type="text" class="form-control form-control-sm " id="moJumlahPerihal" readonly>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate2()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Perihal End -->
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

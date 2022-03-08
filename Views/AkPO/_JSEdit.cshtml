@@ -460,7 +460,8 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/AkPO/GetAllItemCartAkPO2",
+                    url:'@Url.Action("GetAllItemCartAkPO2", "AkPO")',
+                    //url: "/AkPO/GetAllItemCartAkPO2",
                     dataType: "json",
                     success: function (r) {
 

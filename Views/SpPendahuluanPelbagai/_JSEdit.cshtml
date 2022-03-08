@@ -9,159 +9,73 @@
     //    return (day < 10 ? '0' + day : day) + "/" + (month < 10 ? '0' + month : month) + "/" + year;
     //}
 
-    // onchange CaraBayar
-    $("body").on('change', "#ddlCaraBayar", function () {
-        var caraBayar = $("#ddlCaraBayar").val();
-        $("#txtAmaunUrusniaga").val("0.00");
-        $("#txtNoCek").val("-");
-        $("#txtJenisCek").val("");
-        $("#txtKodBankCek").val("-");
-        $("#txtTempatCek").val("-");
-        $("#txtNoSlip").val("-");
-        $("#txtTarSlip").val("");
-        JsonCaraBayar(caraBayar);
-    });
-
-    function JsonCaraBayar(id) {
-        if (id != null) {
-            $.ajax({
-                type: "POST",
-                //url: "/AkTerima/JsonGetCaraBayar",
-                url: '@Url.Action("JsonGetCaraBayar", "AkTerima")',
-                data: { data: id },
-                dataType: "json",
-                success: function (msg) {
-                    if (msg.record.perihal.trim() == "CEK") {
-                        // enable fields
-                        $("#txtJenisCek").prop('disabled', false);
-                        $("#txtKodBankCek").prop('disabled', false);
-                        $("#txtTempatCek").prop('disabled', false);
-                        $("#txtNoCek").prop('disabled', false);
-                    }
-                    else {
-                        // disable fields
-                        $("#txtJenisCek").prop('disabled', true);
-                        $("#txtKodBankCek").prop('disabled', true);
-                        $("#txtTempatCek").prop('disabled', true);
-                        $("#txtNoCek").prop('disabled', true);
-                    }
-
-                },
-                error: function (req, status, error) {
-                    alert(error);
-                }
-            });
-        }
-    }
-    // onchange CaraBayar end
-
-    //add tbl objek
+//add tbl Peserta
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
-        var Id = $("#Id");
-        var txtKodAkaun = $("#txtKodAkaun");
-        if (txtKodAkaun.val() != null) {
-            GetCarta(txtKodAkaun.val(), Id.val());
+        var ddlJantina = $("#ddlJantina");
+        if (ddlJantina.val() != null) {
+            JumlahPeserta(ddlJantina.val());
         }
 
     });
 
-    function GetCarta(id,akTerimaId) {
-        var Objek = {
-            Id: id
+    // onchange harga/unit and kuantiti
+    $("body").on('change', ".atlet, .jurulatih, .pegawai, .teknikal, .urusetia, .kadar, .bil, .bulan", function () {
+        //main body -peserta
+        var atlet = $("#txtAtlet").val();
+        var jurulatih = $("#txtJurulatih").val();
+        var pegawai = $("#txtPegawai").val();
+        var teknikal = $("#txtTeknikal").val();
+        var urusetia = $("#txtUrusetia").val();
+
+        $("#txtJumlahPeserta").val((countTotalPeserta(atlet, jurulatih, pegawai, teknikal, urusetia)));
+
+        //main body -perihal
+        var kadar = $("#txtKadar").val();
+        var bil = $("#txtBil").val();
+        var bulan = $("#txtBulan").val();
+
+        $("#txtJumlahPerihal").val((countTotalPerihal(kadar, bil, bulan)));
+        //main body end
+
+        //modal peserta
+        var moatlet = $("#moBilAtl").val();
+        var mojurulatih = $("#moBilJul").val();
+        var mopegawai = $("#moBilPeg").val();
+        var moteknikal = $("#moBilTek").val();
+        var mourusetia = $("#moBilUru").val();
+
+        $("#moJumlahPeserta").val((countTotalPeserta(moatlet, mojurulatih, mopegawai, moteknikal, mourusetia)));
+        //modal peserta end
+
+        //modal Perihal
+        var mokadar = $("#moKadar").val();
+        var mobil = $("#moBil").val();
+        var mobulan = $("#moBulan").val();
+
+        $("#moJumlahPerihal").val((countTotalPerihal(mokadar, mobil, mobulan)));
+        //modal Perihal end
+    });
+
+    var bil = 1;
+
+    function countTotalPeserta(atlet, jurulatih, pegawai, teknikal, urusetia) {
+        if (atlet != null && jurulatih != null && pegawai != null && teknikal != null && urusetia != null) {
+            return total = parseInt(atlet) + parseInt(jurulatih) + parseInt(pegawai) + parseInt(teknikal) + parseInt(urusetia);
         }
-        if (id != "") {
-            //Send the JSON array to Controller using AJAX.
-            $.ajax({
-                type: "POST",
-                //url: "/AkTerima/GetCarta",
-                url: '@Url.Action("GetCarta", "AkTerima")',
-                data: Objek,
-                dataType: "json",
-                success: function (r) {
-                    //Reference the TextBoxes.
-                    var txtKodAkaun = $("#txtKodAkaun");
-                    var txtAmaunObjek = $("#txtAmaunObjek");
-                    var txtJumlah = $("#jumlahObjek");
-
-                    //Sum value to Total text field
-                    var sum = 0;
-                    sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
-                    txtJumlah.val(sum.toFixed(2));
-
-                    //Get the reference of the Table's TBODY element.
-                    var tBody = $("#tblObjek > TBODY")[0];
-                    //Add Row.
-                    var row = tBody.insertRow(-1);
-
-                    //Add akCartaId cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
-
-                    //Add kod cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.kod + ' - ' + r.record.perihal);
-
-                    //Add amaun cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(parseFloat(txtAmaunObjek.val()).toFixed(2));
-                    cell.attr("id", "td1Amaun_" + r.record.Id);
-                    cell.addClass("text-right");
-
-                    //Add Edit Button cell.
-                    cell = $(row.insertCell(-1));
-
-                    var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
-                    cell.append(btnUpdate1);
-
-                    //Add Remove Button cell.
-                    cell = $(row.insertCell(-1));
-
-                    var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
-                    cell.append(btnRemove1);
-
-                    var AkTerima1 = {
-                        AkTerimaId: akTerimaId,
-                        AkCartaId: txtKodAkaun.val(),
-                        Amaun: txtAmaunObjek.val()
-                    }
-
-                    $.ajax({
-                        type: "POST",
-                        //url: "/AkTerima/SaveAkTerima1",
-                        url: '@Url.Action("SaveAkTerima1", "AkTerima")',
-                        data: AkTerima1,
-                        dataType: "json",
-                        success: function (r) {
-                            //Clear the TextBoxes.
-                            txtKodAkaun.val("").trigger('change');
-                            txtAmaunObjek.val("");
-                            checkJumlah();
-                        }
-                    });
-
-                    $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
-
-
-                }
-            });
-        }
-
     }
-    //add tbl objek end
 
-    //add tbl Urusniaga
-    $("body").on("click", "#btnAdd2", function () {
-        //Reference the Name and Country TextBoxes.
-        var ddlCaraBayar = $("#ddlCaraBayar");
-        if (ddlCaraBayar.val() != null) {
-            GetCaraBayar(ddlCaraBayar.val());
+
+    function countTotalPerihal(kadar, bil, bulan) {
+        if (kadar != null && bil != null && bulan != null) {
+            return total = parseFloat(kadar) * parseFloat(bil) * parseFloat(bulan);
         }
-    });
+    }
+    //on change harga/unit and kuantiti end
 
-    function GetCaraBayar(id) {
-        var JCaraBayar = {
+    //add tbl Peserta
+    function JumlahPeserta(id) {
+        var JJantina = {
             Id: id
         }
         if (id != "") {
@@ -169,195 +83,241 @@
             $.ajax({
                 type: "POST",
                 //url: "/AkTerima/GetCaraBayar",
-                url: '@Url.Action("GetCaraBayar", "AkTerima")',
-                data: JCaraBayar,
+                url: '@Url.Action("GetJantina", "SpPendahuluanPelbagai")',
+                data: JJantina,
                 dataType: "json",
                 success: function (r) {
                     //Reference the TextBoxes.
-                    var txtAkTerima = $("#Id");
-                    var ddlCaraBayar = $("#ddlCaraBayar");
-                    var amaun = $("#txtAmaunUrusniaga");
-                    var txtNoCek = $("#txtNoCek");
-                    var txtJenisCek = $("#txtJenisCek");
-                    var txtKodBankCek = $("#txtKodBankCek");
-                    var txtTempatCek = $("#txtTempatCek");
-                    var txtNoSlip = $("#txtNoSlip");
-                    var txtTarSlip = $("#txtTarSlip");
-                    var txtJumlah = $("#jumlahUrusniaga");
+                    var ddlJantina = $("#ddlJantina");
+                    var txtAtlet = $("#txtAtlet");
+                    var txtJurulatih = $("#txtJurulatih");
+                    var txtPegawai = $("#txtPegawai");
+                    var txtTeknikal = $("#txtTeknikal");
+                    var txtUrusetia = $("#txtUrusetia");
+                    var txtJumlahPeserta = $("#txtJumlahPeserta");
+                    var jumlahPeserta = $("#jumlahPeserta");
 
                     //Sum value to Total text field
                     var sum = 0;
-                    sum = parseFloat(amaun.val()) + parseFloat(txtJumlah.val());
-                    txtJumlah.val(sum.toFixed(2));
+                    sum = parseFloat(txtAtlet.val()) + parseFloat(txtJurulatih.val()) + parseFloat(txtPegawai.val()) + parseFloat(txtTeknikal.val()) + parseFloat(txtUrusetia.val()) + parseFloat(jumlahPeserta.val());
+                    jumlahPeserta.val(sum);
+
                     //Get the reference of the Table's TBODY element.
-                    var tBody = $("#tblUrusniaga > TBODY")[0];
+                    var tBody = $("#tblPeserta > TBODY")[0];
                     //Add Row.
                     var row = tBody.insertRow(-1);
 
-                    //Add caraBayarId cell.
+                    //Add JantinaId cell.
                     var cell = $(row.insertCell(-1));
                     cell.html(r.record.id);
                     cell.prop("hidden", !this.checked);
 
-                    //Add caraBayar cell.
+                    //Add Jantina cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(r.record.perihal);
+                    //cell.html(r.record.id);
+                    cell.html($("#ddlJantina option:selected").text());
 
-                    //Add Amaun cell.
+
+                    //Add Atlet cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(parseFloat(amaun.val()).toFixed(2));
-                    cell.addClass("text-right");
+                    cell.html(txtAtlet.val());
 
-                    //Add NoCek cell.
+                    //Add Jurulatih cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtNoCek.val());
+                    cell.html(txtJurulatih.val());
 
-                    //Add JenisCek cell.
+                    //Add Pegawai cell.
                     var cell = $(row.insertCell(-1));
-                    if ($("#txtJenisCek").val() == null) {
-                        cell.html("");
-                    } else {
-                        cell.html($("#txtJenisCek option:selected").text());
-                    }
+                    cell.html(txtPegawai.val());
 
-                    //Add KodBankCek cell.
+                    //Add Teknikal cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtKodBankCek.val());
+                    cell.html(txtTeknikal.val());
 
-                    //Add TempatCek cell.
+                    //Add Urusetia cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtTempatCek.val());
+                    cell.html(txtUrusetia.val());
 
-                    //Add NoSlip cell.
+                    //Add Jumlah cell.
                     var cell = $(row.insertCell(-1));
-                    cell.html(txtNoSlip.val());
-
-                    //Add TarSlip cell.
-                    var cell = $(row.insertCell(-1));
-                    if (txtTarSlip.val() == null || txtTarSlip.val() == '') {
-                        cell.html('');
-                    } else {
-
-                        cell.html(showDate(txtTarSlip.val()));
-                    }
+                    cell.html(txtJumlahPeserta.val());
 
                     //Add Edit Button cell.
                     cell = $(row.insertCell(-1));
 
-                    var btnUpdate2 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
-                    cell.append(btnUpdate2);
+                    var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                    cell.append(btnUpdate1);
 
-                    //Add Remove Button cell.
+                    //Add Button cell.
                     cell = $(row.insertCell(-1));
-
-                    var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
-                    cell.append(btnRemove2);
-
-                    var AkTerima2 = {
-                        AkTerimaId: txtAkTerima.val(),
-                        JCaraBayarId: ddlCaraBayar.val(),
-                        Amaun: amaun.val(),
-                        NoCek: txtNoCek.val(),
-                        JenisCek: txtJenisCek.val(),
-                        KodBankCek: txtKodBankCek.val(),
-                        TempatCek: txtTempatCek.val(),
-                        NoSlip: txtNoSlip.val(),
-                        TarSlip: txtTarSlip.val()
+                    var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                    cell.append(btnRemove1);
+                    //alert(ddlJantina.val());
+                    var SpPendahuluanPelbagai1 = {
+                        JJantinaId: ddlJantina.val(),
+                        BilAtl: txtAtlet.val(),
+                        BilJul: txtJurulatih.val(),
+                        BilPeg: txtPegawai.val(),
+                        BilTek: txtTeknikal.val(),
+                        BilUru: txtUrusetia.val(),
+                        Jumlah: txtJumlahPeserta.val(),
                     }
                     $.ajax({
                         type: "POST",
                         //url: "/AkTerima/SaveAkTerima2",
-                        url: '@Url.Action("SaveAkTerima2", "AkTerima")',
-                        data: AkTerima2,
+                        url: '@Url.Action("SaveSpPendahuluanPelbagai1", "SpPendahuluanPelbagai")',
+                        data: SpPendahuluanPelbagai1,
                         dataType: "json",
                         success: function (r) {
                             //Clear the TextBoxes.
-                            ddlCaraBayar.val("").trigger('change');
-                            amaun.val("0.00");
-                            txtNoCek.val("");
-                            txtJenisCek.val("");
-                            txtKodBankCek.val("");
-                            txtTempatCek.val("");
-                            txtNoSlip.val("");
-                            txtTarSlip.val("");
+                            ddlJantina.val("").trigger('change');
+                            txtAtlet.val("0"),
+                            txtJurulatih.val("0"),
+                            txtPegawai.val("0"),
+                            txtTeknikal.val("0"),
+                            txtUrusetia.val("0"),
+                            txtJumlahPeserta.val("0"),
                             checkJumlah();
                         }
                     });
-                    $("#ddlCaraBayar option[value=" + ddlCaraBayar.val() + "]").prop('disabled', true);
+                    $("#ddlJantina option[value=" + ddlJantina.val() + "]").prop('disabled', true);
+
                 }
             });
         }
 
     }
-    //add tbl urusniaga end
+    //add tbl Peserta end
 
-    //remove tbl objek
+     //add tbl Perihal
+    var bil = $('#tblPerihal tr').length;
+    if (bil == 0) {
+        bil = 1;
+    }
+    $("body").on("click", "#btnAdd2", function () {
+        //Reference the Name and Country TextBoxes.
+        GetIndek(bil);
+    });
+
+    function GetIndek(indek) {
+        //Send the JSON array to Controller using AJAX.
+
+        //Reference the TextBoxes.
+        var txtIndek = indek;
+        var txtBaris = $("#txtBaris");
+        var txtPerihal = $("#txtPerihal");
+        var txtKadar = $("#txtKadar");
+        var txtBil = $("#txtBil");
+        var txtBulan = $("#txtBulan");
+        var txtJumlahPerihal = $("#txtJumlahPerihal");
+        var jumlahPerihal = $("#jumlahPerihal");
+
+        //Sum value to Total text field
+        var sum = 0;
+        sum = parseFloat(txtKadar.val()) * parseFloat(txtBil.val()) * parseFloat(txtBulan.val());
+        jumlahPerihal.val(sum.toFixed(2));
+
+        //Get the reference of the Table's TBODY element.
+        var tBody = $("#tblPerihal > TBODY")[0];
+        //Add Row.
+        var row = tBody.insertRow(-1);
+
+        //Add Indek cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtIndek);
+        cell.prop("hidden", !this.checked);
+
+        //Add Baris cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtBaris.val());
+        //cell.prop("hidden", !this.checked); - command untk hidden
+
+        //Add Perihal cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtPerihal.val());
+        cell.addClass('text-uppercase');
+
+        //Add Kadar cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtKadar.val());
+
+        //Add Bil cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtBil.val());
+
+        //Add Bulan cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtBulan.val());
+
+        //Add Jumlah cell.
+        var cell = $(row.insertCell(-1));
+        cell.html(txtJumlahPerihal.val());
+
+        //Add Edit Button cell.
+        cell = $(row.insertCell(-1));
+
+        var btnUpdate2 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
+        cell.append(btnUpdate2);
+
+        //Add Button cell.
+        cell = $(row.insertCell(-1));
+        var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
+        cell.append(btnRemove2);
+
+        var SpPendahuluanPelbagai2 = {
+            Indek: indek,
+            Baris: txtBaris.val(),
+            Perihal: txtPerihal.val(),
+            Kadar: txtKadar.val(),
+            Bil: txtBil.val(),
+            Bulan: txtBulan.val(),
+            Jumlah: txtJumlahPerihal.val(),
+        }
+        $.ajax({
+            type: "POST",
+            //url: "/AkPO/SaveAkPO2",
+            url: '@Url.Action("SaveSpPendahuluanPelbagai2", "SpPendahuluanPelbagai")',
+            data: SpPendahuluanPelbagai2,
+            dataType: "json",
+            success: function (r) {
+                //Clear the TextBoxes.
+                txtBaris.val("0");
+                txtPerihal.val("-");
+                txtKadar.val("0");
+                txtBil.val("0");
+                txtBulan.val("0");
+                txtJumlahPerihal.val("0.00");
+                checkJumlah();
+                bil++;
+            }
+        });
+    }
+//add tbl Perihal end
+
+//remove tbl Peserta
     function Remove1(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var akCartaId = $("TD", row).eq(0).html();
-        var amaun = $("TD", row).eq(2).html();
-        var txtJumlah = $("#jumlahObjek");
-        if (confirm("Hapus kod Akaun : " + akCartaId + " ?")) {
-            //Get the reference of the Table.
-            var table = $("#tblObjek")[0];
-
-            //Sum value to Total text field
-            var sum = 0;
-            sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
-            txtJumlah.val(sum.toFixed(2));
-
-            var AkTerima1 = {
-                AkCartaId: akCartaId
-            }
-            if (name != null) {
-                $.ajax({
-                    type: "POST",
-                    //url: "/AkTerima/RemoveAkTerima1",
-                    url: '@Url.Action("RemoveAkTerima1", "AkTerima")',
-                    data: AkTerima1,
-                    dataType: "json",
-                    success: function (r) {
-                        //Delete the Table row using it's Index.
-                        table.deleteRow(row[0].rowIndex);
-                        checkJumlah();
-                    }
-                });
-            }
-            $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', false);
-        }
-    };
-    //remove tbl objek end
-
-    //remove tbl urusniaga
-    function Remove2(button) {
-        //Determine the reference of the Row using the Button.
-        var row = $(button).closest("TR");
-        var akTerimaId = $('#Id').val();
         var name = $("TD", row).eq(0).html();
         var amaun = $("TD", row).eq(2).html();
-        var txtJumlah = $("#jumlahUrusniaga");
-        alert(amaun);
-
-        if (confirm("Hapus : " + name + " ?")) {
+        var txtJumlahPeserta = $("#txtJumlahPeserta");
+        if (confirm("Hapus Peserta : " + name + " ?")) {
             //Get the reference of the Table.
-            var table = $("#tblUrusniaga")[0];
+            var table = $("#tblPeserta")[0];
 
             //Sum value to Total text field
             var sum = 0;
-            sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
-            txtJumlah.val(sum.toFixed(2));
+            sum = parseFloat(txtJumlahPeserta.val()) - parseFloat(amaun);
+            txtJumlahPeserta.val(sum);
 
-            var AkTerima2 = {
-                JCaraBayarId: name,
-                AkTerimaId: akTerimaId
+            var SpPendahuluanPelbagai1 = {
+                JJantinaId: name,
             }
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    //url: "/AkTerima/RemoveAkTerima2",
-                    url: '@Url.Action("RemoveAkTerima2", "AkTerima")',
-                    data: AkTerima2,
+                    url: '@Url.Action("RemoveSpPendahuluanPelbagai1", "SpPendahuluanPelbagai")',
+                    data: SpPendahuluanPelbagai1,
                     dataType: "json",
                     success: function (r) {
                         //Delete the Table row using it's Index.
@@ -366,69 +326,166 @@
                     }
                 });
             }
-            $("#ddlCaraBayar option[value=" + name + "]").prop('disabled', false);
+            //$("#ddlJantina option[value=" + name + "]").prop('disabled', false);
+
         }
     };
-    //remove tbl urusniaga end
+    //remove tbl Peserta end
 
-    //update tbl objek
+    //remove tbl Perihal
+   function Remove2(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var name = $("TD", row).eq(0).html();
+        var amaun = $("TD", row).eq(8).html();
+        var txtJumlahPerihal = $("#txtJumlahPerihal");
+       if (confirm("Hapus : " + name + " ?")) {
+           //Get the reference of the Table.
+           var table = $("#tblPerihal")[0];
+
+           //Sum value to Total text field
+           var sum = 0;
+           sum = parseFloat(txtJumlahPerihal.val() - parseFloat(amaun));
+           txtJumlahPerihal.val(sum);
+
+           var SpPendahuluanPelbagai2 = {
+               Indek: name,
+           }
+           if (name != null) {
+               $.ajax({
+                   type: "POST",
+                   url: '@Url.Action("RemoveSpPendahuluanPelbagai2", "SpPendahuluanPelbagai")',
+                   data: SpPendahuluanPelbagai2,
+                   dataType: "json",
+                   success: function (r) {
+                       //Delete the Table row using it's Index.
+                       table.deleteRow(row[0].rowIndex);
+                       checkJumlah();
+                   }
+               });
+           }
+       }
+    };
+    //remove tbl Perihal end
+
+    function displayPesertaList(data) {
+        $("table tbody#tbodyObjek").empty();
+        var jumlah = $("#jumlahPeserta");
+        var sum = 0;
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+
+            var str = "<tr><td id='jJantinaId' hidden>" + item.jJantinaId +
+                "</td><td>" + item.BilAtl +
+                "</td><td>" + item.BilJul +
+                "</td><td>" + item.BilPeg +
+                "</td><td>" + item.BilTek +
+                "</td><td>" + item.BilUru +
+                "</td><td>" + item.Jumlah +
+                "</td><td>" +
+                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                "</td><td>" +
+                "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                "</td><tr>";
+            $("table tbody#tbodyObjek").append(str);
+            sum += item.amaun;
+
+            //$("#txtKodAkaun option[value=" + item.akCartaId + "]").prop('disabled', true);
+        }
+        jumlah.val(sum.toFixed(2));
+    }
+
+    function displayPerihalList(data) {
+        //refresh updated table Perihal
+        $("table tbody#tbodyPerihal").empty();
+        var jumlah = $("#jumlahPerihal");
+        var sum = 0;
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            var str = "<tr><td id='txtIndek' hidden>" + item.Indek +
+                "</td><td>" + item.Baris +
+                "</td><td class='text-uppercase'>" + item.Perihal +
+                "</td><td>" + (item.Kadar).toFixed(2) +
+                "</td><td>" + item.Bil+
+                "</td><td>" + item.Bulan +
+                "</td><td>" + (item.Jumlah).toFixed(2) +
+                "</td><td>" +
+                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                "</td><td>" +
+                "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                "</td><tr>";
+            $("table tbody#tbodyPerihal").append(str);
+            sum += item.amaun;
+            bil++;
+        }
+        jumlah.val(sum.toFixed(2));
+    }
+    //on change no Nota Minta end
+
+    //update tbl Peserta
     function Update1(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var akCartaId = $("TD", row).eq(0).html();
-
-        var AkTerima1 = {
-            AkCartaId: akCartaId
+        var jJantinaId = $("TD", row).eq(0).html();
+        //alert(jJantinaId);
+        var SpPendahuluanPelbagai1 = {
+            JJantinaId: jJantinaId,
         }
-        if (name != null) {
             $.ajax({
                 type: "POST",
-                //url: "/AkTerima/GetAnItemCartAkTerima1",
-                url: '@Url.Action("GetAnItemCartAkTerima1", "AkTerima")',
-                data: AkTerima1,
+                url: '@Url.Action("GetAnItemCartSpPendahuluanPelbagai1", "SpPendahuluanPelbagai")',
+                data: SpPendahuluanPelbagai1,
                 dataType: "json",
                 success: function (r) {
                     //insert data in modal objek
-                    $("#moId1").val(r.record.id);
-                    $("#moKodAkaun").val(r.record.akCartaId);
-                    $("#moAmaun1").val(r.record.amaun);
+                    $("#moId").val(r.record.Id);
+                    $("#moJJantina").val(r.record.jJantinaId);
+                    $("#moBilAtl").val(r.record.bilAtl);
+                    $("#moBilJul").val(r.record.bilJul);
+                    $("#moBilPeg").val(r.record.bilPeg);
+                    $("#moBilTek").val(r.record.bilTek);
+                    $("#moBilUru").val(r.record.bilUru);
+                    $("#moJumlahPeserta").val(r.record.jumlah);
 
                     //show modal objek
                     $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
 
                 }
             });
-        }
     };
 
     function modalUpdate1() {
-        var id = $("#moId1").val();
-        var akTerimaId = $("#Id").val();
-        var amaun = $("#moAmaun1").val();
-        var akCartaId = $("#moKodAkaun").val();
-        var jumlah = $("#jumlahObjek");
+        var id = $("#moId").val();
+        var jJantinaId = $("#moJJantina").val();
+        var bilAtl = $("#moBilAtl").val();
+        var bilJul = $("#moBilJul").val();
+        var bilPeg = $("#moBilPeg").val();
+        var bilTek = $("#moBilTek").val();
+        var bilUru = $("#moBilUru").val();
+        var moJumlahPeserta = $("#moJumlahPeserta").val();
+        var jumlahPeserta = $("#jumlahPeserta");
 
-        var AkTerima1 = {
+        var SpPendahuluanPelbagai1 = {
             Id: id,
-            AkTerimaId: akTerimaId,
-            akCartaId: akCartaId,
-            Amaun: amaun
+            JJantinaId: jJantinaId,
+            BilAtl: bilAtl,
+            BilJul: bilJul,
+            BilPeg: bilPeg,
+            BilTek: bilTek,
+            BilUru: bilUru,
+            Jumlah: moJumlahPeserta
         }
-
         $.ajax({
             type: "POST",
-            //url: "/AkTerima/SaveCartAkTerima1",
-            url: '@Url.Action("SaveCartAkTerima1", "AkTerima")',
-            data: AkTerima1,
+            url: '@Url.Action("SaveCartSpPendahuluanPelbagai1", "SpPendahuluanPelbagai")',
+            data: SpPendahuluanPelbagai1,
             dataType: "json",
             success: function (r) {
                 //insert notification here
 
                 $.ajax({
                     type: "POST",
-                    //url: "/AkTerima/GetAllItemCartAkTerima1",
-                    url: '@Url.Action("GetAllItemCartAkTerima1", "AkTerima")',
-                    data: AkTerima1,
+                    url: '@Url.Action("GetAllItemCartSpPendahuluanPelbagai1", "SpPendahuluanPelbagai")',
                     dataType: "json",
                     success: function (r) {
 
@@ -438,158 +495,134 @@
                         if (r.record.length > 0) {
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
-                                var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
-                                    "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
-                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                                var str = "<tr><td id='jJantinaId' hidden>" + item1.jJantinaId +
+                                    "</td><td>" + item1.jJantina.perihal +
+                                    "</td><td>" + item1.bilAtl +
+                                    "</td><td>" + item1.bilJul +
+                                    "</td><td>" + item1.bilPeg +
+                                    "</td><td>" + item1.bilTek +
+                                    "</td><td>" + item1.bilUru +
+                                    "</td><td>" + item1.jumlah +
                                     "</td><td>" +
                                     "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
                                     "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
                                 $("table tbody#tbodyObjek").append(str);
-                                sum += item1.amaun;
+                                sum += item1.jumlah;
                             }
                         }
 
-                        jumlah.val(sum.toFixed(2));
-                        checkJumlah();
+                        jumlahPeserta.val(sum);
+                        //checkJumlah();
                     }
                 });
+
             }
         });
     };
-    //update tbl objek end
+    //update tbl Peserta end
 
-    //update tbl urusniaga
+    //update tbl Perihal
     function Update2(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var akTerimaId = $('#Id').val();
-        var jCaraBayarId = $("TD", row).eq(0).html();
+        var spPendahuluanPelbagaiId = $('#Id').val();
+        var IndekId = $("TD", row).eq(0).html();
 
-        var AkTerima2 = {
-            AkTerimaId: akTerimaId,
-            JCaraBayarId: jCaraBayarId
-        }
-        if (name != null) {
-            $.ajax({
-                type: "POST",
-                //url: "/AkTerima/GetAnItemCartAkTerima2",
-                url: '@Url.Action("GetAnItemCartAkTerima2", "AkTerima")',
-                data: AkTerima2,
-                dataType: "json",
-                success: function (r) {
-                    //Delete the Table row using it's Index.
-                    $("#moId2").val(r.record.jCaraBayarId);
-                    $("#moCaraBayar").val(r.record.jCaraBayarId);
-                    $("#moAmaun2").val(r.record.amaun);
-                    $("#moNoCek").val(r.record.noCek);
-                    $("#moJenisCek").val(r.record.jenisCek);
-                    $("#moKodBankCek").val(r.record.kodBankCek);
-                    $("#moTempatCek").val(r.record.tempatCek);
-                    $("#moNoSlip").val(r.record.noSlip);
-                    $("#moTarSlip").val(r.record.tarSlip);
-                    var jenisBayar = $("#moCaraBayar option:selected").text();
-                    // check if jenis bayar equal to cek, enable all related cek fields, otherwise disabled it
-                    if (jenisBayar.trim() == "CEK") {
-                        // enable fields
-                        $("#moNoCek").prop('disabled', false);
-                        $("#moJenisCek").prop('disabled', false);
-                        $("#moKodBankCek").prop('disabled', false);
-                        $("#moTempatCek").prop('disabled', false);
-                    }
-                    else {
-                        // disable fields
-                        $("#moNoCek").prop('disabled', true);
-                        $("#moJenisCek").prop('disabled', true);
-                        $("#moKodBankCek").prop('disabled', true);
-                        $("#moTempatCek").prop('disabled', true);
-                    }
-                    // end check
-
-                    //show modal Urusniaga
-                    $("#modalUrusniaga").modal({ backdrop: 'static', keyboard: false });
-                }
-            });
-        }
-    };
-
-    function modalUpdate2() {
-        var id = $("#moId2").val();
-        var amaun = $("#moAmaun2").val();
-        var noCek = $("#moNoCek").val();
-        var jenisCek = $("#moJenisCek").val();
-        var kodBankCek = $("#moKodBankCek").val();
-        var tempatCek = $("#moTempatCek").val();
-        var noSlip = $("#moNoSlip").val();
-        var tarSlip = $("#moTarSlip").val();
-        var akTerimaId = $("#Id").val();
-        var jumlah = $("#jumlahUrusniaga");
-
-        var AkTerima2 = {
-            JCaraBayarId: id,
-            AkTerimaId: akTerimaId,
-            Amaun: amaun,
-            NoCek: noCek,
-            JenisCek: jenisCek,
-            KodBankCek: kodBankCek,
-            TempatCek: tempatCek,
-            NoSlip: noSlip,
-            TarSlip: tarSlip
+        var SpPendahuluanPelbagai2 = {
+            SpPendahuluanPelbagaiId: spPendahuluanPelbagaiId,
+            Indek: IndekId
         }
         $.ajax({
             type: "POST",
-            //url: "/AkTerima/SaveCartAkTerima2",
-            url: '@Url.Action("SaveCartAkTerima2", "AkTerima")',
-            data: AkTerima2,
+            //url: "/AkPO/GetAnItemCartAkPO2",
+            url: '@Url.Action("GetAnItemCartSpPendahuluanPelbagai2", "SpPendahuluanPelbagai")',
+            data: SpPendahuluanPelbagai2,
+            dataType: "json",
+            success: function (r) {
+                //insert data in modal perihal
+                $("#moId2").val(r.record.id);
+                $("#moIndek").val(r.record.indek);
+                $("#moBaris").val(r.record.baris);
+                $("#moPerihal").val(r.record.perihal);
+                $("#moKadar").val(r.record.kadar.toFixed(2));
+                $("#moBil").val(r.record.bil);
+                $("#moBulan").val(r.record.bulan);
+                $("#moJumlahPerihal").val(r.record.jumlah.toFixed(2));
+
+                //show modal perihal
+                $("#modalPerihal").modal({ backdrop: 'static', keyboard: false });
+            }
+        });
+    };
+
+    function modalUpdate2() {
+        var spPendahuluanPelbagaiId = $("#moId2").val();
+        var indek = $("#moIndek").val();
+        var baris = $("#moBaris").val();
+        var perihal = $("#moPerihal").val();
+        var kadar = $("#moKadar").val();
+        var bil = $("#moBil").val();
+        var bulan = $("#moBulan").val();
+        var moJumlahPerihal = $("#moJumlahPerihal").val();
+        var jumlahPerihal = $("#jumlahPerihal");
+
+        var SpPendahuluanPelbagai2 = {
+            SpPendahuluanPelbagaiId: spPendahuluanPelbagaiId,
+            Indek: indek,
+            Baris: baris,
+            Perihal: perihal,
+            Kadar: kadar,
+            Bil: bil,
+            Bulan: bulan,
+            Jumlah: moJumlahPerihal
+        }
+        $.ajax({
+            type: "POST",
+            //url: "/AkPO/SaveCartAkPO2",
+            url: '@Url.Action("SaveCartSpPendahuluanPelbagai2", "SpPendahuluanPelbagai")',
+            data: SpPendahuluanPelbagai2,
             dataType: "json",
             success: function (r) {
                 //insert notification here
 
                 $.ajax({
                     type: "POST",
-                    //url: "/AkTerima/GetAllItemCartAkTerima2",
-                    url: '@Url.Action("GetAllItemCartAkTerima2", "AkTerima")',
+                    url: '@Url.Action("GetAllItemCartSpPendahuluanPelbagai2", "SpPendahuluanPelbagai")',
                     dataType: "json",
                     success: function (r) {
 
                         //refresh updated table urusniaga
-                        $("table tbody#tbodyUrusniaga").empty();
+                        $("table tbody#tbodyPerihal").empty();
                         var sum = 0;
                         if (r.record.length > 0) {
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
-                                var tarSlip = "";
-                                if (item1.tarSlip == null) {
-                                } else {
-                                    tarSlip = showDate(item1.tarSlip);
-                                }
-                                var str = "<tr><td id='jCaraBayarId' hidden>" + item1.jCaraBayarId +
-                                    "</td><td class='text-uppercase'>" + item1.jCaraBayar.perihal +
-                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
-                                    "</td><td>" + item1.noCek +
-                                    "</td><td class='text-uppercase'>" + item1.jenisCek +
-                                    "</td><td class='text-uppercase'>" + item1.kodBankCek +
-                                    "</td><td class='text-uppercase'>" + item1.tempatCek +
-                                    "</td><td>" + item1.noSlip +
-                                    "</td><td>" + tarSlip +
+                                var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
+                                    "</td><td class='text-right'>" + item1.baris +
+                                    "</td><td class='text-uppercase'>" + item1.perihal +
+                                    "</td><td class='text-right'>" + (item1.kadar).toFixed(2) +
+                                    "</td><td class='text-right'>" + item1.bil +
+                                    "</td><td class='text-right'>" + item1.bulan +
+                                    "</td><td class='text-right'>" + (item1.jumlah).toFixed(2) +
                                     "</td><td>" +
-                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalUrusniaga' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
                                     "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
-                                $("table tbody#tbodyUrusniaga").append(str);
-                                sum += item1.amaun;
+                                $("table tbody#tbodyPerihal").append(str);
+                                sum += item1.jumlah;
                             }
                         }
-                        jumlah.val(sum.toFixed(2));
+                        jumlahPerihal.val(sum.toFixed(2));
                         checkJumlah();
                     }
                 });
             }
         });
     };
-    //update tbl urusniaga end
+    //update tbl perihal end
 
     //validation form
     (function () {
@@ -616,20 +649,6 @@
             var akCartaId = $(this).find("#akCartaId").html();
             $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', true);
         });
-
-        // disable each JCarabayar that has been picked
-        $('#tbodyUrusniaga tr').each(function () {
-            var jCaraBayarId = $(this).find("#jCaraBayarId").html();
-            $("#ddlCaraBayar option[value=" + jCaraBayarId + "]").prop('disabled', true);
-        });
-
-        // get total amaun perihal for each row in tbl perihal
-        var sum = 0;
-        $('#tbodyUrusniaga tr').each(function () {
-            var amaun = $(this).find(".amaunUrusniaga").html();
-            sum += parseFloat(amaun);
-        });
-        $('#jumlahUrusniaga').val(sum.toFixed(2));
 
         $.validator.setDefaults({
             errorElement: "span",
