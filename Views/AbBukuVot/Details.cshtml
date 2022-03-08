@@ -92,6 +92,9 @@
             </tr>
         </thead>
         <tbody>
+            @{ 
+                decimal baki = 0;
+            }
             @foreach (var item in Model)
             {
                 <tr>
@@ -122,7 +125,10 @@
                         @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
                     </td>
                     <td>
-                        @Convert.ToDecimal(item.Baki).ToString("#,##0.00")
+                        @{ 
+                            baki = baki + item.Kredit - item.Debit - item.Tanggungan - item.Liabiliti;
+                        }
+                        @Convert.ToDecimal(baki).ToString("#,##0.00")
                     </td>
                 </tr>
             }

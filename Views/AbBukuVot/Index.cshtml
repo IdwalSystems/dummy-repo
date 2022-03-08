@@ -136,7 +136,10 @@
                         @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
                     </td>
                     <td>
-                        @Convert.ToDecimal(item.Baki).ToString("#,##0.00")
+                        @{ 
+                            var baki = item.Kredit - item.Debit - item.Tanggungan - item.Liabiliti;
+                        }
+                        @Convert.ToDecimal(baki).ToString("#,##0.00")
                     </td>
                     <td class="action-button">
                         <a asp-action="Details" asp-route-id="@item.Id" asp-route-tahun="@item.Tahun" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>

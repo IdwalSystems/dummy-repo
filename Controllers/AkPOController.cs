@@ -240,7 +240,7 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPO = await _akPORepo.GetById((int)id);
+            var akPO = await _akPORepo.GetByIdIncludeDeletedItems((int)id);
             var kw = await _kwRepo.GetById(akPO.JKWId);
             akPO.JKW = kw;
 
@@ -308,7 +308,7 @@ namespace MSNK.Controllers
             _context.AkPO.Remove(akPO);
 
             //insert applog
-            await AddLogAsync("Hapus", akPO.NoPO, akPO.NoPO, 0, akPO.Jumlah);
+            await AddLogAsync("Hapus", akPO.NoPO, akPO.NoPO, id, akPO.Jumlah);
             //insert applog end
 
             await _context.SaveChangesAsync();

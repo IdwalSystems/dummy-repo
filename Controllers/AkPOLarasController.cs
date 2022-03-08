@@ -1005,6 +1005,12 @@ namespace MSNK.Controllers
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
                 return RedirectToAction(nameof(Index));
             }
+            akPOLaras.FlCetak = 0;
+            _context.AkPOLaras.Update(akPOLaras);
+
+            //insert applog
+            await AddLogAsync("Hapus", akPOLaras.NoRujukan, akPOLaras.NoRujukan, 0, akPOLaras.Jumlah);
+            //insert applog end
 
             _context.AkPOLaras.Remove(akPOLaras);
             await _context.SaveChangesAsync();
@@ -1209,11 +1215,11 @@ namespace MSNK.Controllers
         }
         // unposting function end
 
-        // printing resit rasmi by akPO.Id
+        // printing pelarasan PO 
         [Authorize(Policy = "PT001P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
-            AkPOLaras akPOLaras = await _akPOLarasRepo.GetById(id);
+            AkPOLaras akPOLaras = await _akPOLarasRepo.GetByIdIncludeDeletedItems(id);
 
             string jumlahDalamPerkataan;
 
@@ -1241,7 +1247,7 @@ namespace MSNK.Controllers
             await _akPOLarasRepo.Update(akPOLaras);
 
             //insert applog
-            await AddLogAsync("Cetak", "Cetak Data", akPOLaras.NoRujukan, (int)id, akPOLaras.Jumlah);
+            await AddLogAsync("Cetak", "Cetak Data", akPOLaras.NoRujukan, id, akPOLaras.Jumlah);
 
             //insert applog end
 
@@ -1257,6 +1263,6 @@ namespace MSNK.Controllers
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
         }
-        // printing resit rasmi end
+        // printing pelarasan PO end
     }
 }

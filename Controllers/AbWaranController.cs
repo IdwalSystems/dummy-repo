@@ -8,9 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
+using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -84,7 +88,7 @@ namespace MSNK.Controllers
         {
             List<SelectListItem> columnList = new();
             columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
-            columnList.Add(new SelectListItem() { Text = "No PV", Value = "NoRujukan" });
+            columnList.Add(new SelectListItem() { Text = "No Rujukan", Value = "NoRujukan" });
             columnList.Add(new SelectListItem() { Text = "Tahun", Value = "Tahun" });
 
             if (!String.IsNullOrEmpty(searchColumn))
@@ -157,7 +161,7 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var abWaran = await _abWaranRepo.GetById((int)id);
+            var abWaran = await _abWaranRepo.GetByIdIncludeDeletedItems((int)id);
 
             if (abWaran == null)
             {
@@ -195,7 +199,7 @@ namespace MSNK.Controllers
 
         private string GetNoRujukan(string year)
         {
-            string prefix = year + "/";
+            string prefix = "WR/" + year + "/";
             int x = 1;
             string noRujukan = prefix + "0000";
 
@@ -210,7 +214,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                x = int.Parse(LatestNoRujukan.Substring(6));
+                x = int.Parse(LatestNoRujukan.Substring(9));
                 x++;
                 noRujukan = string.Format("{0:" + prefix + "0000}", x);
             }
@@ -344,7 +348,6 @@ namespace MSNK.Controllers
         //save cart AbWaran1
         public JsonResult SaveCartAbWaran1(AbWaran1 abWaran1)
         {
-
             try
             {
 
@@ -450,14 +453,35 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var abWaran = await _context.AbWaran.FindAsync(id);
+            var abWaran = await _abWaranRepo.GetById((int)id);
+
             if (abWaran == null)
             {
                 return NotFound();
             }
-            ViewData["JBahagianId"] = new SelectList(_context.JBahagian, "Id", "Kod", abWaran.JBahagianId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", abWaran.JKWId);
+            CartEmpty();
+            PopulateList();
+            PopulateTable(id);
+            PopulateCartFromDb(abWaran); 
             return View(abWaran);
+        }
+
+        private void PopulateCartFromDb(AbWaran abWaran)
+        {
+            List<AbWaran1> table1 = _context.AbWaran1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AbWaranId == abWaran.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+
+            foreach (AbWaran1 item in table1)
+            {
+                _cart.AddItem1(item.AbWaranId,
+                               item.Amaun,
+                               item.AkCartaId,
+                               item.TK);
+            }
+
         }
 
         // POST: AbWaran/Edit/5
@@ -465,7 +489,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NoRujukan,Tahun,Tarikh,TarikhPosting,Jumlah,FlJenisWaran,FlHapus,TarHapus,FlPosting,FlCetak,JKWId,JBahagianId,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] AbWaran abWaran)
+        public async Task<IActionResult> Edit(int id, AbWaran abWaran, int JKWId, int JBahagianId)
         {
             if (id != abWaran.Id)
             {
@@ -476,7 +500,48 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    AbWaran dataAsal = await _abWaranRepo.GetById(id);
+
+                    // list of input that cannot be change
+                    abWaran.Tahun = dataAsal.Tahun;
+                    abWaran.TarMasuk = dataAsal.TarMasuk;
+                    abWaran.UserId = dataAsal.UserId;
+                    abWaran.FlCetak = 0;
+                    // list of input that cannot be change end
+
+                    foreach (AbWaran1 item in dataAsal.AbWaran1)
+                    {
+                        var model = _context.AbWaran1.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+                    decimal jumlahAsal = dataAsal.Jumlah;
+                    _context.Entry(dataAsal).State = EntityState.Detached;
+
+                    abWaran.AbWaran1 = _cart.Lines1.ToList();
+
+                    abWaran.UserIdKemaskini = user.UserName;
+                    abWaran.TarKemaskini = DateTime.Now;
+
                     _context.Update(abWaran);
+                    // insert applog
+                    if (jumlahAsal != abWaran.Jumlah)
+                    {
+                        await AddLogAsync("Ubah", "RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" +
+                            Convert.ToDecimal(abWaran.Jumlah).ToString("#,##0.00"), abWaran.NoRujukan, id, abWaran.Jumlah);
+
+                    }
+                    else
+                    {
+                        await AddLogAsync("Ubah", "Ubah Data", abWaran.NoRujukan, id, abWaran.Jumlah);
+                    }
+                    //insert applog end
+
+                    
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -490,10 +555,12 @@ namespace MSNK.Controllers
                         throw;
                     }
                 }
+                CartEmpty();
+                TempData[SD.Success] = "Data berjaya diubah..!";
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["JBahagianId"] = new SelectList(_context.JBahagian, "Id", "Kod", abWaran.JBahagianId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", abWaran.JKWId);
+            PopulateList();
+            PopulateTable(id); 
             return View(abWaran);
         }
 
@@ -505,26 +572,45 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var abWaran = await _context.AbWaran
-                .Include(a => a.JBahagian)
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var abWaran = await _abWaranRepo.GetById((int)id);
+
             if (abWaran == null)
             {
                 return NotFound();
             }
 
+            PopulateTable(id);
             return View(abWaran);
         }
-
+        [Authorize("BJ001D")]
         // POST: AbWaran/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var abWaran = await _context.AbWaran.FindAsync(id);
+
+            var user = await _userManager.GetUserAsync(User);
+
+            abWaran.UserIdKemaskini = user.UserName;
+            abWaran.TarKemaskini = DateTime.Now;
+            // check if already posting redirect back
+            if (abWaran.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            abWaran.FlCetak = 0;
+            _context.AbWaran.Update(abWaran);
+
+            //insert applog
+            await AddLogAsync("Hapus", abWaran.NoRujukan, abWaran.NoRujukan, id, abWaran.Jumlah);
+            //insert applog end
+
             _context.AbWaran.Remove(abWaran);
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -532,5 +618,235 @@ namespace MSNK.Controllers
         {
             return _context.AbWaran.Any(e => e.Id == id);
         }
+
+        // POST: AkPV/Cancel/5
+        [Authorize(Policy = "BJ001R")]
+        public async Task<IActionResult> RollBack(int id)
+        {
+            var obj = await _abWaranRepo.GetByIdIncludeDeletedItems(id);
+            // check if already posting redirect back
+            if (obj.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Batal operation
+
+            obj.FlHapus = 0;
+            obj.FlCetak = 0;
+            _context.AbWaran.Update(obj);
+
+            // Batal operation end
+
+            //insert applog
+            await AddLogAsync("Rollback", "Rollback Data", obj.NoRujukan, (int)id, obj.Jumlah);
+
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // posting function
+        [Authorize(Policy = "BJ001T")]
+        public async Task<IActionResult> Posting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                AbWaran obj = await _abWaranRepo.GetById((int)id);
+
+                var jenisWaran = "";
+
+                switch (obj.FlJenisWaran)
+                {
+                    case 0:
+                        jenisWaran = "PERUNTUKAN ASAL";
+                        break;
+                    case 1:
+                        jenisWaran = "PERUNTUKAN TAMBAH/ TARIK BALIK";
+                        break;
+                    default:
+                        jenisWaran = "PERUNTUKAN PINDAHAN";
+                        break;
+                }
+                //check for print
+                if (obj.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
+
+                List<AbWaran1> abWaran1 = obj.AbWaran1.ToList();
+
+                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(obj.NoRujukan)).FirstOrDefaultAsync();
+                if (abBukuVot != null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //posting operation start here
+
+                    foreach (AbWaran1 item in abWaran1)
+                    {
+                        
+                        //insert into AbBukuVot
+                        AbBukuVot abBukuVotPosting = new AbBukuVot()
+                        {
+                            Tahun = obj.Tahun,
+                            JKWId = obj.JKWId,
+                            Tarikh = obj.Tarikh,
+                            Kod = "",
+                            Penerima = jenisWaran,
+                            VotId = item.AkCartaId,
+                            Rujukan = obj.NoRujukan,
+                            Kredit = item.Amaun
+                        };
+
+                        await _abBukuVotRepo.Insert(abBukuVotPosting);
+                        // insert into AbBukuVot end
+
+                    }
+
+                    //update posting status in akPO
+                    obj.FlPosting = 1;
+                    obj.TarikhPosting = DateTime.Now;
+                    await _abWaranRepo.Update(obj);
+
+                    //insert applog
+                    await AddLogAsync("Posting", "Posting Data", obj.NoRujukan, (int)id, obj.Jumlah);
+
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // posting function end
+
+        // unposting function
+        [Authorize(Policy = "BJ001UT")]
+        public async Task<IActionResult> UnPosting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                AbWaran obj = await _abWaranRepo.GetById((int)id);
+
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(obj.NoRujukan)).ToList();
+                if (abBukuVot == null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
+
+                }
+                else
+                {
+
+                    //unposting operation start here
+                    //delete data from abBukuVot
+                    foreach (AbBukuVot item in abBukuVot)
+                    {
+                        await _abBukuVotRepo.Delete(item.Id);
+                    }
+                    //delete data from abBukuVot end
+
+                    //update posting status in akPOLaras
+                    obj.FlPosting = 0;
+                    obj.TarikhPosting = null;
+                    await _abWaranRepo.Update(obj);
+
+                    //insert applog
+                    await AddLogAsync("UnPosting", "UnPosting Data", obj.NoRujukan, (int)id, obj.Jumlah);
+
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                    //unposting operation end
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // unposting function end
+
+        // printing Waran by akPO.Id
+        [Authorize(Policy = "BJ001P")]
+        public async Task<IActionResult> PrintPdf(int id)
+        {
+            AbWaran obj = await _abWaranRepo.GetByIdIncludeDeletedItems(id);
+
+            string jumlahDalamPerkataan;
+
+            if (obj.Jumlah < 0)
+            {
+                jumlahDalamPerkataan = ("Kurangan Ringgit Malaysia " + Tools.JumlahDalamPerkataan(0 - obj.Jumlah)).ToUpper();
+            }
+            else
+            {
+                jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(obj.Jumlah)).ToUpper();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            WaranPrintModel data = new WaranPrintModel();
+
+            CompanyDetails company = new CompanyDetails();
+            data.CompanyDetail = company;
+            data.AbWaran = obj;
+            data.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            data.Username = user.UserName;
+
+            //update cetak -> 1
+            obj.FlCetak = 1;
+            await _abWaranRepo.Update(obj);
+
+            //insert applog
+            await AddLogAsync("Cetak", "Cetak Data", obj.NoRujukan, id, obj.Jumlah);
+
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+
+            return new ViewAsPdf("WaranPrintPdf", data)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                //CustomSwitches = "--footer-center \"  Tarikh: " +
+                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+        // printing Waran end
     }
 }
