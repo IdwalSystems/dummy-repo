@@ -40,6 +40,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JTahapAktiviti, int, string> _tahapAktivitiRepo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;
+        private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private CartPendahuluan _cart;
@@ -56,6 +57,7 @@ namespace MSNK.Controllers
            IRepository<JTahapAktiviti, int, string> tahapAktivitiRepository,
            IRepository<AkCarta, int, string> akCartaRepository,
            IRepository<JKW, int, string> kwRepository,
+           IRepository<AbBukuVot, int, string> abBukuVotRepository,
            UserManager<IdentityUser> userManager,
            CartPendahuluan cart
            )
@@ -71,6 +73,7 @@ namespace MSNK.Controllers
             _sukanRepo = sukanRepository;
             _jantinaRepo = jantinaRepository;
             _tahapAktivitiRepo = tahapAktivitiRepository;
+            _abBukuVotRepo = abBukuVotRepository;
             _userManager = userManager;
             _cart = cart;
         }
@@ -348,20 +351,20 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId, int AkCartaId)
         {
-            var user = "";
-            if (spPendahuluanPelbagai.UserIdKemaskini == "" || spPendahuluanPelbagai.UserIdKemaskini == null)
-            {
-                user = spPendahuluanPelbagai.UserId;
-            }
-            else
-            {
-                user = spPendahuluanPelbagai.UserIdKemaskini;
-            }
+            //var user = "";
+            //if (spPendahuluanPelbagai.UserIdKemaskini == "" || spPendahuluanPelbagai.UserIdKemaskini == null)
+            //{
+            //    user = spPendahuluanPelbagai.Penyedia;
+            //}
+            //else
+            //{
+            //    user = spPendahuluanPelbagai.UserIdKemaskini;
+            //}
 
             SpPendahuluanPelbagai m = new SpPendahuluanPelbagai();
             var tahap = _context.JTahapAktiviti.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JTahapAktivitiId);
             var sukan = _context.JSukan.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JSukanId);
-            //var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email.ToUpper() == user.ToUpper());
+            var user = await _userManager.GetUserAsync(User);
             //var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
 
             //string Penyedia = namaUser.Nama;
@@ -389,16 +392,20 @@ namespace MSNK.Controllers
                     m.AkCartaId = spPendahuluanPelbagai.AkCartaId;
                     m.JumKeseluruhan = spPendahuluanPelbagai.JumKeseluruhan;
                     m.FlPosting = 0;
-                    //m.TarikhPosting = spPermohonanAktiviti.TarikhPosting;
+                    //m.TarikhPosting = spPendahuluanPelbagai.TarikhPosting;
                     //m.FlHapus = 0;
                     m.FlCetak = 0;
-                    //m.UserId = user.UserName;
+                    m.Penyedia = user.UserName;
                     m.TarMasuk = DateTime.Now;
 
                     m.SpPendahuluanPelbagai1 = _cart.Lines1.ToArray();
                     m.SpPendahuluanPelbagai2 = _cart.Lines2.ToArray();
 
                     await _spPendahuluanPelbagaiRepo.Insert(m);
+
+                    //insert applog
+                    await AddLogAsync("Tambah", m.NoPermohonan, m.NoPermohonan, 0, m.JumKeseluruhan);
+                    //insert applog end
 
                     await _context.SaveChangesAsync();
 
@@ -602,6 +609,79 @@ namespace MSNK.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // posting function
+        public async Task<IActionResult> Posting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                SpPendahuluanPelbagai sp = await _spPendahuluanPelbagaiRepo.GetById((int)id);
+
+                //check for print
+                if (sp.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
+
+                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("SP/" + sp.NoPermohonan)).FirstOrDefaultAsync();
+                if (abBukuVot != null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //posting operation start here
+
+
+                    //insert into AbBukuVot
+                    AbBukuVot abBukuVotPosting = new AbBukuVot()
+                    {
+                        Tahun = sp.TarMasuk.Year.ToString(),
+                        JKWId = sp.JKWId,
+                        Tarikh = sp.TarMasuk,
+                        Kod = sp.Penyedia, // tak pasti tarik dari id pekerja ke?
+                        Penerima = sp.Penyedia,
+                        VotId = sp.AkCartaId,
+                        Rujukan = sp.NoPermohonan,
+                        Tanggungan = sp.JumKeseluruhan
+                    };
+
+                    await _abBukuVotRepo.Insert(abBukuVotPosting);
+                    // insert into AbBukuVot end
+
+                    //update posting status in akPO
+                    sp.FlPosting = 1;
+                    sp.TarikhPosting = DateTime.Now;
+                    await _spPendahuluanPelbagaiRepo.Update(sp);
+
+                    //insert applog
+                    await AddLogAsync("Posting", "Posting Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
+
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // posting function end
         private void PopulateList()
         {
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();

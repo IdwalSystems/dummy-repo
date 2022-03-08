@@ -367,3 +367,7 @@ appsettings.json
 
 # seedData
 # SeedData.cs
+/Migrations/20211221024836_AddInitialTables.cs
+/Migrations/20211221024836_AddInitialTables.Designer.cs
+/Models/Modules/ViewModel/AkBankViewModel.cs
+/Views/AkPembekal/_TableStickyLastColumn.cshtml
