@@ -1290,7 +1290,7 @@ namespace MSNK.Controllers
 
                 List<AkPO1> akPO1 = akPO.AkPO1.ToList();
 
-                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(akPO.NoPO)).FirstOrDefaultAsync();
+                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("PO/" + akPO.NoPO)).FirstOrDefaultAsync();
                 if (abBukuVot != null)
                 {
 

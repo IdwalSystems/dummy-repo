@@ -325,6 +325,15 @@ namespace MSNK.Data
                 .HasForeignKey(m => m.SpPendahuluanPelbagaiId)
                 .OnDelete(DeleteBehavior.NoAction);
             //AKPV end
+
+            //SPPENDAHULUAN
+            modelBuilder.Entity<SpPendahuluanPelbagai>()
+    .HasOne(m => m.SuPekerja!)
+    .WithMany(t => t.SpPendahuluanPelbagai)
+    .HasForeignKey(m => m.SuPekerjaId)
+    .OnDelete(DeleteBehavior.NoAction);
+            //SPPENDAHULUAN END
+
             //AkTunaiRuncit
             modelBuilder.Entity<AkTunaiRuncit>()
                 .HasOne(m => m.JKW)

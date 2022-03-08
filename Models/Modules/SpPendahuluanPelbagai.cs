@@ -23,7 +23,6 @@ namespace MSNK.Models.Modules
         public string Aktiviti { get; set; }
         public string Tempat { get; set; }
 
-        public string Penyedia { get; set; }
         public DateTime TarSedia { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal JumKeseluruhan { get; set; }
@@ -58,6 +57,8 @@ namespace MSNK.Models.Modules
         public JSukan JSukan { get; set; }
         public int JTahapAktivitiId { get; set; }
         public JTahapAktiviti JTahapAktiviti { get; set; }
+        public int? SuPekerjaId { get; set; }
+        public SuPekerja SuPekerja { get; set; }
         public ICollection<SpPendahuluanPelbagai1> SpPendahuluanPelbagai1 { get; set; }
         public ICollection<SpPendahuluanPelbagai2> SpPendahuluanPelbagai2 { get; set; }
         public ICollection<AkPV> AkPV { get; set; }

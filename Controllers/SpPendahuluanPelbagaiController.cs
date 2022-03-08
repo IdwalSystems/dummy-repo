@@ -37,6 +37,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JNegeri, int, string> _negeriRepo;
         private readonly IRepository<JSukan, int, string> _sukanRepo;
         private readonly IRepository<JJantina, int, string> _jantinaRepo;
+        private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
         private readonly IRepository<JTahapAktiviti, int, string> _tahapAktivitiRepo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;
@@ -54,6 +55,7 @@ namespace MSNK.Controllers
            IRepository<JNegeri, int, string> negeriRepository,
            IRepository<JSukan, int, string> sukanRepository,
            IRepository<JJantina, int, string> jantinaRepository,
+           IRepository<SuPekerja, int, string> suPekerjaRepository,
            IRepository<JTahapAktiviti, int, string> tahapAktivitiRepository,
            IRepository<AkCarta, int, string> akCartaRepository,
            IRepository<JKW, int, string> kwRepository,
@@ -72,6 +74,7 @@ namespace MSNK.Controllers
             _negeriRepo = negeriRepository;
             _sukanRepo = sukanRepository;
             _jantinaRepo = jantinaRepository;
+            _suPekerjaRepo = suPekerjaRepository;
             _tahapAktivitiRepo = tahapAktivitiRepository;
             _abBukuVotRepo = abBukuVotRepository;
             _userManager = userManager;
@@ -148,6 +151,24 @@ namespace MSNK.Controllers
         }
         //End Function Running Number
 
+        //Start Function Get Id Pemohon/Penyedia
+        [HttpPost]
+        public JsonResult GetPekerja(SuPekerja suPekerja)
+        {
+            try
+            {
+                var result = _context.SuPekerja.Where(b => b.Id == suPekerja.Id).FirstOrDefault();
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+        //End Function Get Id Pemohon/Penyedia
+
         //Start Function Get Jantina Id
         [HttpPost]
         public JsonResult GetJantina(JJantina jJantina)
@@ -216,13 +237,13 @@ namespace MSNK.Controllers
             foreach (SpPendahuluanPelbagai2 spPendahuluanPelbagai2 in spPendahuluanPelbagai2Table)
             {
                 _cart.AddItem2(spPendahuluanPelbagai2.SpPendahuluanPelbagaiId,
-                         spPendahuluanPelbagai2.Indek,
-                         spPendahuluanPelbagai2.Baris,
-                         spPendahuluanPelbagai2.Perihal,
-                         spPendahuluanPelbagai2.Kadar,
-                         spPendahuluanPelbagai2.Bil,
-                         spPendahuluanPelbagai2.Bulan,
-                         spPendahuluanPelbagai2.Jumlah);
+                               spPendahuluanPelbagai2.Indek,
+                               spPendahuluanPelbagai2.Baris,
+                               spPendahuluanPelbagai2.Perihal,
+                               spPendahuluanPelbagai2.Kadar,
+                               spPendahuluanPelbagai2.Bil,
+                               spPendahuluanPelbagai2.Bulan,
+                               spPendahuluanPelbagai2.Jumlah);
             }
 
             ViewBag.spPendahuluanPelbagai2 = spPendahuluanPelbagai2Table;
@@ -339,6 +360,7 @@ namespace MSNK.Controllers
         // GET: SpPermohonanAktiviti/Create
         public IActionResult Create()
         {
+
             PopulateList();
             CartEmpty();
             return View();
@@ -349,7 +371,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId, int AkCartaId)
+        public async Task<IActionResult> Create(SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId, int AkCartaId, int SuPekerjaId)
         {
             //var user = "";
             //if (spPendahuluanPelbagai.UserIdKemaskini == "" || spPendahuluanPelbagai.UserIdKemaskini == null)
@@ -364,6 +386,7 @@ namespace MSNK.Controllers
             SpPendahuluanPelbagai m = new SpPendahuluanPelbagai();
             var tahap = _context.JTahapAktiviti.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JTahapAktivitiId);
             var sukan = _context.JSukan.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JSukanId);
+            //var pemohon = _context.Users.FirstOrDefault(x => x.UserName == spPendahuluanPelbagai.SuPekerja.Emel );
             var user = await _userManager.GetUserAsync(User);
             //var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
 
@@ -395,7 +418,7 @@ namespace MSNK.Controllers
                     //m.TarikhPosting = spPendahuluanPelbagai.TarikhPosting;
                     //m.FlHapus = 0;
                     m.FlCetak = 0;
-                    m.Penyedia = user.UserName;
+                    m.SuPekerjaId = SuPekerjaId;
                     m.TarMasuk = DateTime.Now;
 
                     m.SpPendahuluanPelbagai1 = _cart.Lines1.ToArray();
@@ -650,10 +673,10 @@ namespace MSNK.Controllers
                         Tahun = sp.TarMasuk.Year.ToString(),
                         JKWId = sp.JKWId,
                         Tarikh = sp.TarMasuk,
-                        Kod = sp.Penyedia, // tak pasti tarik dari id pekerja ke?
-                        Penerima = sp.Penyedia,
+                        Kod = sp.SuPekerja.NoGaji, // tak pasti tarik dari id pekerja ke?
+                        Penerima = sp.SuPekerja.Nama,
                         VotId = sp.AkCartaId,
-                        Rujukan = sp.NoPermohonan,
+                        Rujukan = "SP/" + sp.NoPermohonan,
                         Tanggungan = sp.JumKeseluruhan
                     };
 
@@ -698,6 +721,18 @@ namespace MSNK.Controllers
 
             List<JTahapAktiviti> tahapAktivitiList = _context.JTahapAktiviti.OrderBy(b => b.Id).ToList();
             ViewBag.JTahapAktiviti = tahapAktivitiList;
+
+            var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.UserName == User.Identity.Name);
+
+            if (User.IsInRole("SuperAdmin"))
+            {
+                ViewBag.NamaPekerja = "SuperAdmin";
+            }
+            else
+            {
+                ViewBag.IdPekerja = user.SuPekerjaId;
+                ViewBag.NamaPekerja = user.SuPekerja.Nama;
+            }
 
             List<AkCarta> akCartaList = _context.AkCarta
                 .Include(b => b.JKW)
