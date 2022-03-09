@@ -124,6 +124,7 @@ namespace MSNK
 
             services.AddTransient<IRepository<AbWaran, int, string>, AbWaranRepository>();
             services.AddTransient<ListViewIRepository<AbWaran1, int>, AbWaran1Repository>();
+            services.AddTransient<CustomIRepository<string, int>, CustomRepository>();
 
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPendahuluan.GetCart(ss));

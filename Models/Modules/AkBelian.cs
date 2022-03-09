@@ -53,6 +53,9 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
         [DisplayName("Jenis Kumpulan Wang")]
         public int JKWId { get; set; }
+        [DisplayName("Bahagian")]
+        public int? JBahagianId { get; set; }
+        public JBahagian JBahagian { get; set; }
         [DisplayName("No Pesanan Tempatan")]
         public int? AkPOId { get; set; }
         [Required(ErrorMessage = "Kod Pemiutang Diperlukan.")]

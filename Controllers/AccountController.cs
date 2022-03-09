@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MSNK.Data;
 using MSNK.Models.Administration;
 using MSNK.Models.Login.ViewModel;
@@ -11,6 +15,7 @@ using MSNK.Models.Modules.IRepository;
 using MSNK.Services;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,6 +27,7 @@ namespace MSNK.Controllers
         public const string namamodul = "Sistem Pengguna";
 
         private readonly ApplicationDbContext _db;
+        private readonly IConfiguration _configuration;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         //private readonly IEmailSender _emailSender;
@@ -30,7 +36,8 @@ namespace MSNK.Controllers
         private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         public AccountController(
-            ApplicationDbContext db, 
+            ApplicationDbContext db,
+            IConfiguration configuration,
             UserManager<IdentityUser> userManager, 
             SignInManager<IdentityUser> signInManager,
             //IEmailSender emailSender,
@@ -40,6 +47,7 @@ namespace MSNK.Controllers
             AppLogIRepository<AppLog,int> appLog)
         {
             _db = db;
+            _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
             _mailServices = mailServices;
@@ -296,6 +304,11 @@ namespace MSNK.Controllers
             return View();
         }
 
+        protected IDbConnection CreateConnection()
+        {
+            return new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
@@ -307,19 +320,60 @@ namespace MSNK.Controllers
                 {
                     return RedirectToAction("ForgotPasswordConfirmation");
                 }
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                //var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+
+                await SendMail(model);
 
                 //await _emailSender.SendEmailAsync(model.Emel, "Set Semula Katalaluan - Identity Manager",
                 //    "Sila set semula katalaluan anda dengan melayari pautan ini: <a href=\"" + callbackUrl + "\">link</a>");
-                await _mailServices.SendEmailAsync(model.Emel, "Set Semula Katalaluan Sistem SPMB",
-                    "Sila set semula katalaluan anda dengan melayari pautan ini:<br> <a href=\"" + callbackUrl + "\">"+callbackUrl+"</a>");
+                //await _mailServices.SendEmailAsync(model.Emel, "Set Semula Katalaluan Sistem SPMB",
+                //    "Sila set semula katalaluan anda dengan melayari pautan ini:<br> <a href=\"" + callbackUrl + "\">"+callbackUrl+"</a>");
 
                 return RedirectToAction("ForgotPasswordConfirmation");
             }
 
             return View(model);
+        }
+
+        public async Task<int> SendMail(ForgotPasswordViewModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Emel);
+
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+
+            var profileName = _configuration["ProfileName"];
+
+            var html = "<h4>Set Semula Katalaluan</h4>" +
+                        "</ br>" +
+                        "<p>Sila set semula katalaluan anda dengan melayari pautan ini:</p>" +
+                        "<a href=" + callbackUrl + ">" + callbackUrl + "</a>";
+            try
+            {
+                var query = "EXEC msdb.dbo.sp_send_dbmail " +
+                            "@profile_name = '" + profileName + "', " +
+                            "@recipients = '" + model.Emel + "', " +
+                            "@body = '" + html + "', " +
+                            "@body_format = 'HTML'," +
+                            "@subject = 'Set Semula Katalaluan - Mesej Automatik'; ";
+
+                var parameters = new DynamicParameters();
+                parameters.Add("ProfileName", profileName, DbType.String);
+                parameters.Add("Email", model.Emel, DbType.String);
+                parameters.Add("CallbackUrl", callbackUrl, DbType.String);
+
+                using (var connection = CreateConnection())
+                {
+                    return await connection.ExecuteAsync(query, parameters);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
 
         [HttpGet]

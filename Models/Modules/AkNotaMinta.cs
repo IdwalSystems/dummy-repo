@@ -50,6 +50,11 @@ namespace MSNK.Models.Modules
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
+
+        [DisplayName("Bahagian")]
+        public int? JBahagianId { get; set; }
+        public JBahagian JBahagian { get; set; }
+
         [DisplayName("Kod Pembekal")]
         public int AkPembekalId { get; set; }
         public AkPembekal AkPembekal { get; set; }

@@ -12,8 +12,10 @@ using MSNK.Infrastructure;
 using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
+using MSNK.Models.Modules.EFRepository;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
+using MSNK.Models.Modules.ViewModel;
 using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
@@ -33,6 +35,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JBahagian, int, string> _jBahagianRepo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
+        private readonly CustomIRepository<string, int> _customRepo;
         private CartWaran _cart;
 
         public AbWaranController(
@@ -45,6 +48,7 @@ namespace MSNK.Controllers
             IRepository<JBahagian, int, string> jBahagianRepo,
             IRepository<AkCarta, int, string> akCartaRepo,
             IRepository<AbBukuVot, int, string> abBukuVotRepo,
+            CustomIRepository<string,int> customrepo,
             CartWaran cart)
         {
             _context = context;
@@ -56,6 +60,7 @@ namespace MSNK.Controllers
             _jBahagianRepo = jBahagianRepo;
             _akCartaRepo = akCartaRepo;
             _abBukuVotRepo = abBukuVotRepo;
+            _customRepo = customrepo;
             _cart = cart;
         }
 
@@ -688,6 +693,22 @@ namespace MSNK.Controllers
 
                 List<AbWaran1> abWaran1 = obj.AbWaran1.ToList();
 
+                // check for baki peruntukan
+                foreach (AbWaran1 item in abWaran1)
+                {
+                    decimal sum = await _customRepo.GetBalanceFromAbBukuVot(obj.Tahun,item.AkCartaId);
+
+                    if (item.TK == "-")
+                    {
+                        if(sum < item.Amaun)
+                        {
+                            TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                }
+                // check for baki peruntukan end
+
                 var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(obj.NoRujukan)).FirstOrDefaultAsync();
                 if (abBukuVot != null)
                 {
@@ -702,21 +723,39 @@ namespace MSNK.Controllers
 
                     foreach (AbWaran1 item in abWaran1)
                     {
-                        
-                        //insert into AbBukuVot
-                        AbBukuVot abBukuVotPosting = new AbBukuVot()
+                        if(item.TK == "+")
                         {
-                            Tahun = obj.Tahun,
-                            JKWId = obj.JKWId,
-                            Tarikh = obj.Tarikh,
-                            Kod = "",
-                            Penerima = jenisWaran,
-                            VotId = item.AkCartaId,
-                            Rujukan = obj.NoRujukan,
-                            Kredit = item.Amaun
-                        };
-
-                        await _abBukuVotRepo.Insert(abBukuVotPosting);
+                            //insert into AbBukuVot
+                            AbBukuVot abBukuVotPosting = new AbBukuVot()
+                            {
+                                Tahun = obj.Tahun,
+                                JKWId = obj.JKWId,
+                                Tarikh = obj.Tarikh,
+                                Kod = "",
+                                Penerima = jenisWaran,
+                                VotId = item.AkCartaId,
+                                Rujukan = obj.NoRujukan,
+                                Kredit = item.Amaun
+                            };
+                            await _abBukuVotRepo.Insert(abBukuVotPosting);
+                        }
+                        else
+                        {
+                            //insert into AbBukuVot
+                            AbBukuVot abBukuVotPosting = new AbBukuVot()
+                            {
+                                Tahun = obj.Tahun,
+                                JKWId = obj.JKWId,
+                                Tarikh = obj.Tarikh,
+                                Kod = "",
+                                Penerima = jenisWaran,
+                                VotId = item.AkCartaId,
+                                Rujukan = obj.NoRujukan,
+                                Debit = item.Amaun
+                            };
+                            await _abBukuVotRepo.Insert(abBukuVotPosting);
+                        }
+                        
                         // insert into AbBukuVot end
 
                     }

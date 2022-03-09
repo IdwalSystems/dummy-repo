@@ -126,11 +126,15 @@
                 <td class="text-center text-uppercase font-weight-bold" width="15%">No Rujukan</td>
                 <td class="text-center text-uppercase font-weight-bold" width="15%">Tarikh</td>
                 <td class="text-center text-uppercase font-weight-bold" width="15%">Kumpulan Wang </td>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">
+                    Bahagian
+                </td>
             </tr>
             <tr>
                 <td class="text-center">@Model.AbWaran.NoRujukan.Substring(3)</td>
                 <td class="text-center" width="15%">@Convert.ToDateTime(Model.AbWaran.Tarikh).ToString("dd/MM/yyyy")</td>
-                <td class="text-center">@Model.AbWaran.JKW.Kod - @Model.AbWaran.JKW.Perihal</td>
+                <td class="text-center text-uppercase">@Model.AbWaran.JKW.Kod - @Model.AbWaran.JKW.Perihal</td>
+                <td class="text-center text-uppercase">@Model.AbWaran.JBahagian.Kod - @Model.AbWaran.JBahagian.Perihal</td>
             </tr>
         </tbody>
     </table>

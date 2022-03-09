@@ -6,13 +6,17 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a class="nav-link" href="#">Selamat Datang, @namaUser.Nama</a>
-        </li>
-        <li class="nav-item">
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Selamat Datang, @namaUser.Nama</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" asp-area="" asp-controller="Profile" asp-action="ChangePassword">Tukar Kata Laluan</a>
             <form id="logOutForm" method="post" class="form-inline" asp-controller="Account" asp-action="LogOff">
-                <button type="submit" class="btn nav-link">Log Keluar</button>
-            </form>   
+                <button type="submit" class="btn dropdown-item">Log Keluar</button>
+            </form>
+        </div>
+    </li>
+        <li class="nav-item">
+             
         </li>
     }
     else

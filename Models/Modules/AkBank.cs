@@ -22,6 +22,11 @@ namespace MSNK.Models.Modules
         [Display(Name = "Jenis Kumpulan Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
+
+        [DisplayName("Bahagian")]
+        public int? JBahagianId { get; set; }
+        public JBahagian JBahagian { get; set; }
+
         [Required(ErrorMessage = "Bank Diperlukan")]
         [Display(Name = "Nama Bank")]
         public int JBankId { get; set; }

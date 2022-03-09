@@ -148,6 +148,14 @@ namespace MSNK.Data
                 .OnDelete(DeleteBehavior.Restrict);
             //AbWaran End
 
+            //AbBukuVot
+            modelBuilder.Entity<AbBukuVot>()
+                .HasOne(e => e.JBahagian)
+                .WithMany(c => c.abBukuVot)
+                .HasForeignKey(m => m.JBahagianId)
+                .OnDelete(DeleteBehavior.Restrict);
+            //AbBukuVot end
+
             modelBuilder.Entity<AkCarta>()
                 .HasOne(e => e.JKW)
                 .WithMany(c => c.AkCarta)
@@ -165,6 +173,13 @@ namespace MSNK.Data
                     .WithMany(t => t.AkAkaun2)
                     .HasForeignKey(m => m.AkCartaId2)
                     .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AkAkaun>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.AkAkaun)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
             //AkTerima
             modelBuilder.Entity<AkTerima>()
                     .HasOne(m => m.JKW)
@@ -213,6 +228,12 @@ namespace MSNK.Data
                 .WithMany(t => t.AkPO)
                 .HasForeignKey(m => m.AkNotaMintaId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkPO>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.AkPO)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
             //AkPO end
             //AkPO
             modelBuilder.Entity<AkPOLaras>()
@@ -243,6 +264,12 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.JKWId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
+
+            modelBuilder.Entity<AkNotaMinta>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.AkNotaMinta)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
             //AkNotaMinta end
             //AkJurnal
             modelBuilder.Entity<AkJurnal>()
@@ -279,6 +306,12 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.KodObjekAPId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
+
+            modelBuilder.Entity<AkBelian>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.AkBelian)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
             //AkBelian end
             //AkPV
             modelBuilder.Entity<AkPV>()
@@ -324,15 +357,36 @@ namespace MSNK.Data
                 .WithMany(t => t.AkPV)
                 .HasForeignKey(m => m.SpPendahuluanPelbagaiId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkPV>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.AkPV)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
             //AKPV end
 
             //SPPENDAHULUAN
             modelBuilder.Entity<SpPendahuluanPelbagai>()
-    .HasOne(m => m.SuPekerja!)
-    .WithMany(t => t.SpPendahuluanPelbagai)
-    .HasForeignKey(m => m.SuPekerjaId)
-    .OnDelete(DeleteBehavior.NoAction);
+                    .HasOne(m => m.SuPekerja!)
+                    .WithMany(t => t.SpPendahuluanPelbagai)
+                    .HasForeignKey(m => m.SuPekerjaId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<SpPendahuluanPelbagai>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.SpPendahuluanPelbagai)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
             //SPPENDAHULUAN END
+
+            //AkBank
+            modelBuilder.Entity<AkBank>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.AkBank)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            //AkBank end
 
             //AkTunaiRuncit
             modelBuilder.Entity<AkTunaiRuncit>()
@@ -348,7 +402,21 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.AkCartaId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
+
+            modelBuilder.Entity<AkTunaiRuncit>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.AkTunaiRuncit)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
             //AkTunaiRuncit end
+            //AkTunaiLejar
+            modelBuilder.Entity<AkTunaiLejar>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.AkTunaiLejar)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            //AkTunaiLejar end
             //AkTunaiCV
             modelBuilder.Entity<AkTunaiCV>()
                 .HasOne(m => m.AkPembekal!)
@@ -363,6 +431,13 @@ namespace MSNK.Data
                 .OnDelete(DeleteBehavior.NoAction);
             //AkTunaiCV end
 
+            //AkJurnal
+            modelBuilder.Entity<AkJurnal>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.AkJurnal)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            //AkJurnal End
             //set default value
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan1).HasDefaultValue("");
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan2).HasDefaultValue("");

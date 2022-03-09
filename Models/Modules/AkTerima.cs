@@ -71,6 +71,11 @@ namespace MSNK.Models.Modules
         [DisplayName("Jenis Kumpulan Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
+
+        [DisplayName("Bahagian")]
+        public int? JBahagianId { get; set; }
+        public JBahagian JBahagian { get; set; }
+
         [Required(ErrorMessage = "Negeri Diperlukan.")]
         [DisplayName("Negeri")]
         public int JNegeriId { get; set; }

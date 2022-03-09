@@ -73,7 +73,9 @@
                     <td class="text-right">
                         @Convert.ToDecimal(item.BakiLejarPanjar).ToString("#,##0.00")
                     </td>
-                    <td>
+                    <td class="text-center">
+                        <div class="btn-group" role="group" aria-label="action">
+                        </div>
                         <a asp-action="Details" asp-route-id="@item.Id"
                            class="btn btn-primary btn-sm" type="button"
                            data-toggle="tooltip" data-placement="top"

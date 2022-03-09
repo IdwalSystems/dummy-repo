@@ -49,8 +49,14 @@ namespace MSNK.Models.Modules
         //relationship
         public int AkCartaId { get; set; }
         public AkCarta AkCarta { get; set; }
+        [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
+
+        [DisplayName("Bahagian")]
+        public int? JBahagianId { get; set; }
+        public JBahagian JBahagian { get; set; }
+
         public int JNegeriId { get; set; }
         public JNegeri JNegeri { get; set; }
         public int JSukanId { get; set; }

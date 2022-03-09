@@ -12,6 +12,9 @@ namespace MSNK.Models.Modules
     {
         [Display(Name = "KW")]
         public int JKWId { get; set; }
+        [DisplayName("Bahagian")]
+        public int? JBahagianId { get; set; }
+        public JBahagian JBahagian { get; set; }
         [Display(Name = "Carta 1")]
         public int AkCartaId1 { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm tt}")]

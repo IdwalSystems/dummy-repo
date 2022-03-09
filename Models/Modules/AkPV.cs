@@ -88,6 +88,11 @@ namespace MSNK.Models.Modules
         public int? AkTunaiRuncitId { get; set; }
         [DisplayName("No Permohonan Aktiviti")]
         public int? SpPendahuluanPelbagaiId { get; set; }
+
+        [DisplayName("Bahagian")]
+        public int? JBahagianId { get; set; }
+        public JBahagian JBahagian { get; set; }
+
         public JKW JKW { get; set; }
         
         public AkBank AkBank { get; set; }

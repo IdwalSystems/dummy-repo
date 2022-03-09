@@ -31,8 +31,8 @@
                     <input class="form-control form-control-sm" type="text" id="myInput" style="text-transform:uppercase" />
                 </div>
                 @*<div class="col-sm mb-2">
-            <button class="btn btn-warning btn-sm" id="batalCari" value="Batal Carian"><i class="fas fa-backspace"></i></button>
-        </div>*@
+                        <button class="btn btn-warning btn-sm" id="batalCari" value="Batal Carian"><i class="fas fa-backspace"></i></button>
+                    </div>*@
             </div>
         </div>
     </div>
@@ -64,29 +64,29 @@
                     <td>
                         @item.Perihal
                     </td>
-                    <td width="5%">
-                        @if (item.FlHapus == 0)
-                        {
-                            <a asp-action="Details" asp-route-id="@item.Id"
-                               class="btn btn-primary btn-sm" type="button"
-                               data-toggle="tooltip" data-placement="top"
-                               title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                            <a asp-action="Delete" asp-route-id="@item.Id"
-                               class="btn btn-danger btn-sm" type="button"
-                               data-toggle="tooltip" data-placement="top"
-                               title="Hapus"><i class="fas fa-trash"></i></a>
-                        }
-                        else
-                        {
-                            if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                    <td width="5%" class="text-center">
+                        <div class="btn-group" role="group" aria-label="action">
+                            @if (item.FlHapus == 0)
                             {
-                                <a asp-action="Rollback" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
-                                    <i class="fas fa-trash-restore"></i>
-                                </a>
-
+                                <a asp-action="Details" asp-route-id="@item.Id"
+                                   class="btn btn-primary btn-sm" type="button"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                   class="btn btn-danger btn-sm" type="button"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="Hapus"><i class="fas fa-trash"></i></a>
                             }
-                        }
-
+                            else
+                            {
+                                if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                                {
+                                    <a asp-action="Rollback" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                        <i class="fas fa-trash-restore"></i>
+                                    </a>
+                                }
+                            }
+                        </div>
                     </td>
                 </tr>
             }

@@ -23,5 +23,18 @@ namespace MSNK.Models.Modules
         public DateTime? TarHapus { get; set; }
 
         public ICollection<AbWaran> AbWaran { get; set; }
+        public ICollection<AbBukuVot> abBukuVot { get; set; }
+        public ICollection<AkAkaun> AkAkaun { get; set; }
+        public ICollection<AkBelian> AkBelian { get; set; }
+        public ICollection<AkJurnal> AkJurnal { get; set; }
+        public ICollection<AkNotaMinta> AkNotaMinta { get; set; }
+        public ICollection<AkPO> AkPO { get; set; }
+        public ICollection<AkPOLaras> AkPOLaras { get; set; }
+        public ICollection<AkPV> AkPV { get; set; }
+        public ICollection<AkTerima> AkTerima { get; set; }
+        public ICollection<AkTunaiLejar> AkTunaiLejar { get; set; }
+        public ICollection<AkTunaiRuncit> AkTunaiRuncit { get; set; }
+        public ICollection<SpPendahuluanPelbagai> SpPendahuluanPelbagai { get; set; }
+        public ICollection<AkBank> AkBank { get; set; }
     }
 }

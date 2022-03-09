@@ -15,6 +15,10 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
         [DisplayName("Jenis Kumpulan Wang")]
         public int JKWId { get; set; }
+        [DisplayName("Bahagian")]
+        public int? JBahagianId { get; set; }
+        public JBahagian JBahagian { get; set; }
+
         [DisplayName("No Jurnal")]
         [MaxLength(20)]
         public string NoJurnal { get; set; }

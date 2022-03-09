@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,9 @@ namespace MSNK.Models.Modules
         public string Tahun { get; set; }
         [DisplayName("KW")]
         public int JKWId { get; set; }
+        [DisplayName("Bahagian")]
+        public int? JBahagianId { get; set; }
+        public JBahagian JBahagian { get; set; }
         public DateTime Tarikh { get; set; }
         public string Kod { get; set; }
         public string Penerima { get; set; }
