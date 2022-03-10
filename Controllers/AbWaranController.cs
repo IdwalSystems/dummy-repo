@@ -492,14 +492,14 @@ namespace MSNK.Controllers
                                 .Where(x => x.Tahun == m.Tahun && x.VotId == item.AkCartaId && x.JKWId == m.JKWId && x.JBahagianId == m.JBahagianId)
                                 .AnyAsync();
 
+                            var carta = _context.AkCarta.Find(item.AkCartaId);
+
                             if (IsExistAbBukuVot == true)
                             {
                                 decimal sum = await _customRepo.GetBalanceFromAbBukuVot(m.Tahun, item.AkCartaId, m.JKWId, m.JBahagianId);
 
                                 if (sum < item.Amaun)
                                 {
-                                    var carta = _context.AkCarta.Find(item.AkCartaId);
-
                                     TempData[SD.Error] = "Bajet untuk kod akaun " + carta.Kod + " tidak mencukupi.";
                                     PopulateList();
                                     CartEmpty();
@@ -509,7 +509,7 @@ namespace MSNK.Controllers
                             }
                             else
                             {
-                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
+                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + carta.Kod;
                                 PopulateList();
                                 CartEmpty();
 
@@ -627,13 +627,15 @@ namespace MSNK.Controllers
                                .Where(x => x.Tahun == abWaran.Tahun && x.VotId == item.AkCartaId && x.JKWId == abWaran.JKWId && x.JBahagianId == abWaran.JBahagianId)
                                .AnyAsync();
 
+                            var carta = _context.AkCarta.Find(item.AkCartaId);
+
                             if (IsExistAbBukuVot == true)
                             {
                                 decimal sum = await _customRepo.GetBalanceFromAbBukuVot(abWaran.Tahun, item.AkCartaId, abWaran.JKWId, abWaran.JBahagianId);
 
                                 if (sum < item.Amaun)
                                 {
-                                    TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
+                                    TempData[SD.Error] = "Bajet untuk kod akaun " + carta.Kod + " tidak mencukupi.";
                                     PopulateList();
                                     PopulateTable(id);
 
@@ -642,7 +644,7 @@ namespace MSNK.Controllers
                             }
                             else
                             {
-                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
+                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + carta.Kod;
                                 PopulateList();
                                 PopulateTable(id);
 
@@ -797,6 +799,7 @@ namespace MSNK.Controllers
                 {
                     case 0:
                         jenisWaran = "PERUNTUKAN ASAL";
+                        obj.Tarikh = Convert.ToDateTime("01/01/" + obj.Tahun); 
                         break;
                     case 1:
                         jenisWaran = "PERUNTUKAN TAMBAH/ TARIK BALIK";

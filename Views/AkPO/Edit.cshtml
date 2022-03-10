@@ -21,7 +21,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="Tahun" class="control-label"></label>
-                                <input asp-for="Tahun" class="form-control form-control-sm" required readonly />
+                                <input asp-for="Tahun" id="txtTahun" class="form-control form-control-sm" required readonly />
                                 <span asp-validation-for="Tahun" class="text-danger"></span>
                             </div>
                         </div>
@@ -36,7 +36,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" disabled>
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" id="ddlKW" disabled>
                                     @foreach (var s in ViewBag.JKW)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -49,7 +49,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" disabled>
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" id="ddlBahagian" disabled>
                                     @foreach (var s in ViewBag.JBahagian)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -69,21 +69,29 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="AkNotaMintaId" class="control-label"></label>
-                                <input value="@Model.AkNotaMinta.Tarikh - @Model.AkNotaMinta.NoRujukan" class="form-control form-control-sm text-uppercase" readonly />
+                                @if (Model.AkNotaMintaId == null)
+                                {
+                                    <input value="-" class="form-control form-control-sm text-uppercase" readonly />
+                                }
+                                else
+                                {
+                                    <input value="@Model.AkNotaMinta.Tarikh - @Model.AkNotaMinta.NoRujukan" class="form-control form-control-sm text-uppercase" readonly />
+                                }
+
                             </div>
                         </div>
                         @*<div class="col-md-3">
-            <div class="form-group">
-                <label asp-for="AkPO1" class="control-label"></label><span class="text-danger control-label">*</span>
-                <select class="form-control form-control-sm select2" asp-for="AkPO1" id="ddlAkPOId" disabled>
-                    <option value="" disabled selected>-- Pilih No PO --</option>
-                    @foreach (var s in ViewBag.AkPO1)
-                    {
-                        <option value="@s.Id">@s.NoPO</option>
-                    }
-                </select>
-            </div>
-        </div>*@
+                                <div class="form-group">
+                                    <label asp-for="AkPO1" class="control-label"></label><span class="text-danger control-label">*</span>
+                                    <select class="form-control form-control-sm select2" asp-for="AkPO1" id="ddlAkPOId" disabled>
+                                        <option value="" disabled selected>-- Pilih No PO --</option>
+                                        @foreach (var s in ViewBag.AkPO1)
+                                        {
+                                            <option value="@s.Id">@s.NoPO</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>*@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12 mb-2">
@@ -119,7 +127,7 @@
                                         <tr id="@item.Id">
                                             <td id="akCartaId" hidden>@item.AkCartaId</td>
                                             <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                            <td id="td1Amaun"class="text-right" >@item.Amaun</td>
+                                            <td id="td1Amaun" class="text-right">@item.Amaun</td>
                                             <td>
                                                 <button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
                                                     <i class="fa fa-edit"></i>
@@ -231,7 +239,7 @@
                         <div class="card-footer">
                             <div class="form-group">
                                 <label class="control-label">Jumlah Perihal</label>
-                                <input class="form-control form-control-sm" id="jumlahPerihal" name="JumlahPerihal"  value="0.00" readonly />
+                                <input class="form-control form-control-sm" id="jumlahPerihal" name="JumlahPerihal" value="0.00" readonly />
                             </div>
                         </div>
 
