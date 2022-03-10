@@ -39,6 +39,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JJantina, int, string> _jantinaRepo;
         private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
         private readonly IRepository<JTahapAktiviti, int, string> _tahapAktivitiRepo;
+        private readonly IRepository<JBahagian, int, string> _bahagianRepo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
@@ -57,6 +58,7 @@ namespace MSNK.Controllers
            IRepository<JJantina, int, string> jantinaRepository,
            IRepository<SuPekerja, int, string> suPekerjaRepository,
            IRepository<JTahapAktiviti, int, string> tahapAktivitiRepository,
+           IRepository<JBahagian, int, string> bahagianRepository,
            IRepository<AkCarta, int, string> akCartaRepository,
            IRepository<JKW, int, string> kwRepository,
            IRepository<AbBukuVot, int, string> abBukuVotRepository,
@@ -76,6 +78,7 @@ namespace MSNK.Controllers
             _jantinaRepo = jantinaRepository;
             _suPekerjaRepo = suPekerjaRepository;
             _tahapAktivitiRepo = tahapAktivitiRepository;
+            _bahagianRepo = bahagianRepository;
             _abBukuVotRepo = abBukuVotRepository;
             _userManager = userManager;
             _cart = cart;
@@ -150,6 +153,24 @@ namespace MSNK.Controllers
             }
         }
         //End Function Running Number
+
+        //Start Function Get Id Bahagian
+        [HttpPost]
+        public JsonResult GetBahagian(JBahagian jBahagian)
+        {
+            try
+            {
+                var result = _context.JBahagian.Where(b => b.Id == jBahagian.Id).FirstOrDefault();
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+        //End Function Get Id Bahagian
 
         //Start Function Get Id Pemohon/Penyedia
         [HttpPost]
@@ -384,13 +405,10 @@ namespace MSNK.Controllers
             //}
 
             SpPendahuluanPelbagai m = new SpPendahuluanPelbagai();
+            var bahagian = _context.JBahagian.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JBahagianId);
             var tahap = _context.JTahapAktiviti.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JTahapAktivitiId);
             var sukan = _context.JSukan.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JSukanId);
-            //var pemohon = _context.Users.FirstOrDefault(x => x.UserName == spPendahuluanPelbagai.SuPekerja.Emel );
             var user = await _userManager.GetUserAsync(User);
-            //var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
-
-            //string Penyedia = namaUser.Nama;
 
             if (ModelState.IsValid)
             {
@@ -399,7 +417,6 @@ namespace MSNK.Controllers
 
                     m.JKWId = JKWId;
                     m.JenisPermohonan = spPendahuluanPelbagai.JenisPermohonan;
-                    //m.Penyedia = ;
                     m.NoPermohonan = RunningNumber(spPendahuluanPelbagai);
                     m.Tarikh = spPendahuluanPelbagai.Tarikh;
                     m.Penyertaan = spPendahuluanPelbagai.Penyertaan;
@@ -416,10 +433,11 @@ namespace MSNK.Controllers
                     m.JumKeseluruhan = spPendahuluanPelbagai.JumKeseluruhan;
                     m.FlPosting = 0;
                     //m.TarikhPosting = spPendahuluanPelbagai.TarikhPosting;
-                    //m.FlHapus = 0;
+                    m.FlHapus = 0;
                     m.FlCetak = 0;
                     m.SuPekerjaId = SuPekerjaId;
                     m.TarMasuk = DateTime.Now;
+                    m.JBahagian = bahagian;
 
                     m.SpPendahuluanPelbagai1 = _cart.Lines1.ToArray();
                     m.SpPendahuluanPelbagai2 = _cart.Lines2.ToArray();
@@ -475,7 +493,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId, int JNegeriId, int JJantinaId, decimal JumKeseluruhan)
+        public async Task<IActionResult> Edit(int id, SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId, int JNegeriId, int JJantinaId, decimal JumKeseluruhan, int JBahagian)
         {
             if (id != spPendahuluanPelbagai.Id)
             {
@@ -608,6 +626,7 @@ namespace MSNK.Controllers
             }
 
             var spPendahuluanPelbagai = await _context.SpPendahuluanPelbagai
+                .Include(s => s.JBahagian)
                 .Include(s => s.JNegeri)
                 .Include(s => s.JSukan)
                 .Include(s => s.JTahapAktiviti)
@@ -677,13 +696,14 @@ namespace MSNK.Controllers
                         Penerima = sp.SuPekerja.Nama,
                         VotId = sp.AkCartaId,
                         Rujukan = "SP/" + sp.NoPermohonan,
-                        Tanggungan = sp.JumKeseluruhan
+                        Tanggungan = sp.JumKeseluruhan,
+                        JBahagianId = sp.JBahagianId
                     };
 
                     await _abBukuVotRepo.Insert(abBukuVotPosting);
                     // insert into AbBukuVot end
 
-                    //update posting status in akPO
+                    //update posting status in SPPENDAHULUANPELBAGAI
                     sp.FlPosting = 1;
                     sp.TarikhPosting = DateTime.Now;
                     await _spPendahuluanPelbagaiRepo.Update(sp);
@@ -737,7 +757,7 @@ namespace MSNK.Controllers
                     }
                     //delete data from abBukuVot end
 
-                    //update posting status in akPOLaras
+                    //update posting status in SPPENDAHULUANPELBAGAI
                     obj.FlPosting = 0;
                     obj.TarikhPosting = null;
                     await _spPendahuluanPelbagaiRepo.Update(obj);
@@ -776,6 +796,9 @@ namespace MSNK.Controllers
 
             List<JTahapAktiviti> tahapAktivitiList = _context.JTahapAktiviti.OrderBy(b => b.Id).ToList();
             ViewBag.JTahapAktiviti = tahapAktivitiList;
+
+            List<JBahagian> bahagianList = _context.JBahagian.OrderBy(b => b.Id).ToList();
+            ViewBag.JBahagian = bahagianList;
 
             var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.UserName == User.Identity.Name);
 
