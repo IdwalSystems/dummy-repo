@@ -48,7 +48,7 @@ namespace MSNK.Controllers
             IRepository<JBahagian, int, string> jBahagianRepo,
             IRepository<AkCarta, int, string> akCartaRepo,
             IRepository<AbBukuVot, int, string> abBukuVotRepo,
-            CustomIRepository<string,int> customrepo,
+            CustomIRepository<string, int> customrepo,
             CartWaran cart)
         {
             _context = context;
@@ -289,20 +289,46 @@ namespace MSNK.Controllers
 
         }
 
-        public async Task<JsonResult> SaveAbWaran1(AbWaran1 abWaran1)
+        public async Task<JsonResult> SaveAbWaran1(
+            AbWaran1 abWaran1, 
+            string tahun, 
+            int jKWId, 
+            int jBahagianId)
         {
 
             try
             {
                 if (abWaran1 != null)
                 {
-                    var user = await _userManager.GetUserAsync(User);
+                    // check for baki peruntukan
+                    if (abWaran1.TK == "-")
+                    {
+                        bool IsExistAbBukuVot = await _context.AbBukuVot
+                                .Where(x => x.Tahun == tahun && x.VotId == abWaran1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                                .AnyAsync();
+
+                        if (IsExistAbBukuVot == true)
+                        {
+                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, abWaran1.AkCartaId, jKWId, jBahagianId);
+
+                            if (sum < abWaran1.Amaun)
+                            {
+                                return Json(new { result = "ERROR" });
+                            }
+                        }
+                        else
+                        {
+                            return Json(new { result = "ERROR" });
+                        }
+                    }
+                    // check for baki peruntukan end
 
                     _cart.AddItem1(abWaran1.AbWaranId,
-                                    abWaran1.Amaun,
-                                    abWaran1.AkCartaId,
-                                    abWaran1.TK
-                                    );
+                                abWaran1.Amaun,
+                                abWaran1.AkCartaId,
+                                abWaran1.TK
+                                );
+                    
 
                 }
 
@@ -351,17 +377,42 @@ namespace MSNK.Controllers
         // get an item from cart AbWaran1 end
 
         //save cart AbWaran1
-        public JsonResult SaveCartAbWaran1(AbWaran1 abWaran1)
+        public async Task<JsonResult> SaveCartAbWaran1(
+            AbWaran1 abWaran1,
+            string tahun,
+            int jKWId,
+            int jBahagianId)
         {
             try
             {
 
                 var abW1 = _cart.Lines1.Where(x => x.AkCartaId == abWaran1.AkCartaId).FirstOrDefault();
 
-                var user = _userManager.GetUserName(User);
-
                 if (abW1 != null)
                 {
+                    // check for baki peruntukan
+                    if (abWaran1.TK == "-")
+                    {
+                        bool IsExistAbBukuVot = await _context.AbBukuVot
+                                .Where(x => x.Tahun == tahun && x.VotId == abWaran1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                                .AnyAsync();
+
+                        if (IsExistAbBukuVot == true)
+                        {
+                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, abWaran1.AkCartaId, jKWId, jBahagianId);
+
+                            if (sum < abWaran1.Amaun)
+                            {
+                                return Json(new { result = "ERROR" });
+                            }
+                        }
+                        else
+                        {
+                            return Json(new { result = "ERROR" });
+                        }
+                    }
+                    // check for baki peruntukan end
+
                     _cart.RemoveItem1(abW1.AkCartaId);
 
                     _cart.AddItem1(abWaran1.AbWaranId,
@@ -432,6 +483,43 @@ namespace MSNK.Controllers
 
                     m.AbWaran1 = _cart.Lines1.ToArray();
 
+                    // check for baki peruntukan
+                    foreach (AbWaran1 item in m.AbWaran1)
+                    {
+                        if (item.TK == "-")
+                        {
+                            bool IsExistAbBukuVot = await _context.AbBukuVot
+                                .Where(x => x.Tahun == m.Tahun && x.VotId == item.AkCartaId && x.JKWId == m.JKWId && x.JBahagianId == m.JBahagianId)
+                                .AnyAsync();
+
+                            if (IsExistAbBukuVot == true)
+                            {
+                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(m.Tahun, item.AkCartaId, m.JKWId, m.JBahagianId);
+
+                                if (sum < item.Amaun)
+                                {
+                                    var carta = _context.AkCarta.Find(item.AkCartaId);
+
+                                    TempData[SD.Error] = "Bajet untuk kod akaun " + carta.Kod + " tidak mencukupi.";
+                                    PopulateList();
+                                    CartEmpty();
+
+                                    return View(abWaran);
+                                }
+                            }
+                            else
+                            {
+                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
+                                PopulateList();
+                                CartEmpty();
+
+                                return View(abWaran);
+                            }
+
+                        }
+                    }
+                    // check for baki peruntukan end
+
                     await _abWaranRepo.Insert(m);
 
                     //insert applog
@@ -467,7 +555,7 @@ namespace MSNK.Controllers
             CartEmpty();
             PopulateList();
             PopulateTable(id);
-            PopulateCartFromDb(abWaran); 
+            PopulateCartFromDb(abWaran);
             return View(abWaran);
         }
 
@@ -529,6 +617,41 @@ namespace MSNK.Controllers
 
                     abWaran.AbWaran1 = _cart.Lines1.ToList();
 
+                    // check for baki peruntukan
+                    foreach (AbWaran1 item in _cart.Lines1)
+                    {
+
+                        if (item.TK == "-")
+                        {
+                            bool IsExistAbBukuVot = await _context.AbBukuVot
+                               .Where(x => x.Tahun == abWaran.Tahun && x.VotId == item.AkCartaId && x.JKWId == abWaran.JKWId && x.JBahagianId == abWaran.JBahagianId)
+                               .AnyAsync();
+
+                            if (IsExistAbBukuVot == true)
+                            {
+                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(abWaran.Tahun, item.AkCartaId, abWaran.JKWId, abWaran.JBahagianId);
+
+                                if (sum < item.Amaun)
+                                {
+                                    TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
+                                    PopulateList();
+                                    PopulateTable(id);
+
+                                    return View(abWaran);
+                                }
+                            }
+                            else
+                            {
+                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
+                                PopulateList();
+                                PopulateTable(id);
+
+                                return View(abWaran);
+                            }
+                        }
+                    }
+                    // check for baki peruntukan end
+
                     abWaran.UserIdKemaskini = user.UserName;
                     abWaran.TarKemaskini = DateTime.Now;
 
@@ -546,7 +669,7 @@ namespace MSNK.Controllers
                     }
                     //insert applog end
 
-                    
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -565,7 +688,7 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
             PopulateList();
-            PopulateTable(id); 
+            PopulateTable(id);
             return View(abWaran);
         }
 
@@ -696,13 +819,27 @@ namespace MSNK.Controllers
                 // check for baki peruntukan
                 foreach (AbWaran1 item in abWaran1)
                 {
-                    decimal sum = await _customRepo.GetBalanceFromAbBukuVot(obj.Tahun,item.AkCartaId);
+
 
                     if (item.TK == "-")
                     {
-                        if(sum < item.Amaun)
+                        bool IsExistAbBukuVot = await _context.AbBukuVot
+                               .Where(x => x.Tahun == obj.Tahun && x.VotId == item.AkCartaId && x.JKWId == obj.JKWId && x.JBahagianId == obj.JBahagianId)
+                               .AnyAsync();
+
+                        if (IsExistAbBukuVot == true)
                         {
-                            TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
+                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(obj.Tahun, item.AkCartaId, obj.JKWId, obj.JBahagianId);
+
+                            if (sum < item.Amaun)
+                            {
+                                TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
+                                return RedirectToAction(nameof(Index));
+                            }
+                        }
+                        else
+                        {
+                            TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
                             return RedirectToAction(nameof(Index));
                         }
                     }
@@ -723,13 +860,14 @@ namespace MSNK.Controllers
 
                     foreach (AbWaran1 item in abWaran1)
                     {
-                        if(item.TK == "+")
+                        if (item.TK == "+")
                         {
                             //insert into AbBukuVot
                             AbBukuVot abBukuVotPosting = new AbBukuVot()
                             {
                                 Tahun = obj.Tahun,
                                 JKWId = obj.JKWId,
+                                JBahagianId = obj.JBahagianId,
                                 Tarikh = obj.Tarikh,
                                 //Kod = "",
                                 Penerima = jenisWaran,
@@ -746,6 +884,7 @@ namespace MSNK.Controllers
                             {
                                 Tahun = obj.Tahun,
                                 JKWId = obj.JKWId,
+                                JBahagianId = obj.JBahagianId,
                                 Tarikh = obj.Tarikh,
                                 //Kod = "",
                                 Penerima = jenisWaran,
@@ -755,7 +894,7 @@ namespace MSNK.Controllers
                             };
                             await _abBukuVotRepo.Insert(abBukuVotPosting);
                         }
-                        
+
                         // insert into AbBukuVot end
 
                     }

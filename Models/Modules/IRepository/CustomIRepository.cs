@@ -7,6 +7,6 @@ namespace MSNK.Models.Modules.IRepository
 {
     public interface CustomIRepository<T1, T2>
     {
-        Task<decimal> GetBalanceFromAbBukuVot(T1 tahun, T2 akCartaId);
+        Task<decimal> GetBalanceFromAbBukuVot(T1 tahun, T2 akCartaId, int jKW, int jBahagian);
     }
 }

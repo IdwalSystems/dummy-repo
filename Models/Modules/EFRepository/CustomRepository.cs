@@ -14,10 +14,13 @@ namespace MSNK.Models.Modules.EFRepository
         public readonly ApplicationDbContext context;
         public CustomRepository(ApplicationDbContext context) => this.context = context;
 
-        public async Task<decimal> GetBalanceFromAbBukuVot(string tahun, int akCartaId)
+        public async Task<decimal> GetBalanceFromAbBukuVot(string tahun, int akCartaId, int jKWId, int jBahagianId)
         {
-            var sql = (from tbl in await context.AbBukuVot.Include(x => x.Vot).Include(x => x.JKW)
-                       .Where(x => x.Tahun == tahun && x.VotId == akCartaId)
+            var sql = (from tbl in await context.AbBukuVot
+                       .Include(x => x.Vot)
+                       .Include(x => x.JKW)
+                       .Include(x => x.JBahagian)
+                       .Where(x => x.Tahun == tahun && x.VotId == akCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
                        .ToListAsync()
                        select new
                        {
