@@ -215,6 +215,9 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
+            List<JBahagian> bahagianList = _context.JBahagian.ToList();
+            ViewBag.JBahagian = bahagianList;
+
             List<JNegeri> negeriList = _context.JNegeri.OrderBy(b => b.Kod).ToList();
             ViewBag.JNegeri = negeriList;
 
@@ -613,7 +616,13 @@ namespace MSNK.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "PR001C")]
-        public async Task<IActionResult> Create(AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId, decimal JumlahUrusniaga)
+        public async Task<IActionResult> Create(
+            AkTerima akTerima, 
+            int JKWId, 
+            int JNegeriId, 
+            int AkBankId, 
+            decimal JumlahUrusniaga,
+            int JBahagianId)
         {
             
             AkTerima m = new AkTerima();
@@ -658,10 +667,11 @@ namespace MSNK.Controllers
 
             if (ModelState.IsValid)
             {
-                if (akTerima != null && JNegeriId != 0 && JKWId != 0 && JNegeriId != 0)
+                if (akTerima != null && JNegeriId != 0 && JKWId != 0 && JNegeriId != 0 && JBahagianId != 0)
                 {
                     
                     m.JKWId = JKWId;
+                    m.JBahagianId = JBahagianId;
                     m.JNegeriId = JNegeriId;
                     m.AkBankId = AkBankId;
                     m.Tahun = akTerima.Tahun;
@@ -742,7 +752,14 @@ namespace MSNK.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "PR001E")]
-        public async Task<IActionResult> Edit(int id, AkTerima akTerima, int JKWId, int JNegeriId, int AkBankId, decimal JumlahUrusniaga)
+        public async Task<IActionResult> Edit(
+            int id, 
+            AkTerima akTerima, 
+            int JKWId, 
+            int JNegeriId, 
+            int AkBankId, 
+            decimal JumlahUrusniaga,
+            int JBahagianId)
         {
             if (id != akTerima.Id)
             {
@@ -761,6 +778,7 @@ namespace MSNK.Controllers
                         // list of input that cannot be change
                         akTerima.Tahun = dataAsal.Tahun;
                         akTerima.JKWId = dataAsal.JKWId;
+                        akTerima.JBahagianId = dataAsal.JBahagianId;
                         akTerima.NoRujukan = dataAsal.NoRujukan;
                         akTerima.Nama = dataAsal.Nama;
                         akTerima.TarMasuk = dataAsal.TarMasuk;
@@ -1420,11 +1438,7 @@ namespace MSNK.Controllers
             else
             {
                 
-                AkTerima akTerima = await _context.AkTerima
-                    .Include(x => x.AkBank)
-                    .Include(x => x.AkTerima1).ThenInclude(x => x.AkCarta)
-                    .Include(x => x.AkTerima2).ThenInclude(x=> x.JCaraBayar)
-                    .FirstOrDefaultAsync(x => x.Id == id);
+                AkTerima akTerima = await _akTerimaRepo.GetById((int)id);
 
                 //check if data print status is printed or not
                 if (akTerima.FlCetak == 0)
@@ -1467,10 +1481,11 @@ namespace MSNK.Controllers
                     
                     foreach(AkTerima1 item in akT1)
                     {
-                        AkAkaun akAKodBank = new AkAkaun() 
+                        AkAkaun akAKodBank = new AkAkaun()
                         {
                             NoRujukan = akTerima.NoRujukan,
                             JKWId = akTerima.JKWId,
+                            JBahagianId = akTerima.JBahagianId,
                             AkCartaId1 = akTerima.AkBank.AkCartaId,
                             AkCartaId2 = item.AkCartaId,
                             Tarikh = akTerima.Tarikh,
@@ -1482,6 +1497,7 @@ namespace MSNK.Controllers
                         {
                             NoRujukan = akTerima.NoRujukan,
                             JKWId = akTerima.JKWId,
+                            JBahagianId = akTerima.JBahagianId,
                             AkCartaId1 = item.AkCartaId,
                             AkCartaId2 = akTerima.AkBank.AkCartaId,
                             Tarikh = akTerima.Tarikh,
@@ -1525,7 +1541,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                AkTerima akTerima = await _context.AkTerima.Include(x => x.AkTerima1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == id);
+                AkTerima akTerima = await _akTerimaRepo.GetById((int)id);
 
                 List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akTerima.NoRujukan).ToList();
                 if (akAkaun == null)

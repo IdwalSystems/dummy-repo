@@ -406,6 +406,9 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
+            List<JBahagian> bahagianList = _context.JBahagian.ToList();
+            ViewBag.JBahagian = bahagianList;
+
             List<AkPembekal> PembekalList = _context.AkPembekal.OrderBy(b => b.Id).ToList();
             ViewBag.AkPembekal = PembekalList;
 
@@ -484,6 +487,34 @@ namespace MSNK.Controllers
         [Authorize(Policy = "TG001C")]
         public IActionResult Create()
         {
+            var kwId = 1;
+
+            var kw = _context.JKW.FirstOrDefault(x => x.Id == kwId);
+
+            var kumpulanWang = kw.Kod;
+            var year = DateTime.Now.Year.ToString();
+            //var year = data.Tahun;
+            string prefix = year + "/" + kumpulanWang + "/";
+            int x = 1;
+            string noRujukan = prefix + "000000";
+
+            var LatestNoRujukan = _context.AkPO
+                .IgnoreQueryFilters()
+                .Where(x => x.NoPO.Substring(0, 9) == prefix)
+                .Max(x => x.NoPO);
+            if (LatestNoRujukan == null)
+            {
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+            else
+            {
+                x = int.Parse(LatestNoRujukan.Substring(12));
+                x++;
+                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+            }
+
+            ViewBag.NoRujukan = noRujukan;
+
             CartEmpty();
             PopulateList();
             return View();
@@ -634,7 +665,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "TG001C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkPO akPO, int JKWId, int? AkNotaMintaId)
+        public async Task<IActionResult> Create(AkPO akPO, int JKWId, int? AkNotaMintaId, int JBahagianId)
         {
 
             AkPO m = new AkPO();
@@ -649,10 +680,11 @@ namespace MSNK.Controllers
 
             if (ModelState.IsValid)
             {
-                if (akPO != null && JKWId != 0)
+                if (akPO != null && JKWId != 0 && JBahagianId != 0)
                 {
 
                     m.JKWId = JKWId;
+                    m.JBahagianId = JBahagianId;
                     m.NoPO = noRujukan;
                     m.Tarikh = akPO.Tarikh;
                     m.AkNotaMintaId = AkNotaMintaId;
@@ -736,7 +768,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "TG001E")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkPO akPO, int JKWId, int JNegeriId, int AkBankId, decimal JumlahPerihal, int? AkNotaMintaId)
+        public async Task<IActionResult> Edit(int id, AkPO akPO, int JKWId, int JNegeriId, int AkBankId, decimal JumlahPerihal, int? AkNotaMintaId, int JBahagianId)
         {
             if (id != akPO.Id)
             {
@@ -755,6 +787,8 @@ namespace MSNK.Controllers
                         // list of input that cannot be change
                         akPO.Tahun = dataAsal.Tahun;
                         akPO.JKWId = dataAsal.JKWId;
+                        akPO.JBahagianId = dataAsal.JBahagianId;
+                        akPO.AkNotaMintaId = dataAsal.AkNotaMintaId;
                         akPO.NoPO = dataAsal.NoPO;
                         akPO.TarMasuk = dataAsal.TarMasuk;
                         akPO.UserId = dataAsal.UserId;
@@ -1309,6 +1343,7 @@ namespace MSNK.Controllers
                         {
                             Tahun = akPO.Tahun,
                             JKWId = akPO.JKWId,
+                            JBahagianId = akPO.JBahagianId,
                             Tarikh = akPO.Tarikh,
                             Kod = akPO.AkPembekal.KodSykt,
                             Penerima = akPO.AkPembekal.NamaSykt,
@@ -1378,7 +1413,7 @@ namespace MSNK.Controllers
                     .Include(x => x.AkPO2)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(akPO.NoPO)).ToList();
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("PO/" + akPO.NoPO)).ToList();
                 if (abBukuVot == null)
                 {
 
@@ -1531,6 +1566,18 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            //check if Nota Minta exist && Posting == 1 or not
+            if (obj.AkNotaMintaId != null)
+            {
+                var nm = await _context.AkNotaMinta.FirstOrDefaultAsync(x => x.Id == obj.AkNotaMintaId && x.FlPosting == 1);
+
+                if (nm == null)
+                {
+                    TempData[SD.Error] = "Nota minta belum posting / tidak wujud..!";
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            
             // Batal operation
 
             obj.FlHapus = 0;
@@ -1581,7 +1628,7 @@ namespace MSNK.Controllers
             await _akPORepo.Update(akPO);
 
             //insert applog
-            await AddLogAsync("Cetak", "Cetak Data", akPO.NoPO, (int)id, akPO.Jumlah);
+            await AddLogAsync("Cetak", "Cetak Data", akPO.NoPO, id, akPO.Jumlah);
 
             //insert applog end
 

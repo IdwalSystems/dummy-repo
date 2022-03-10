@@ -25,6 +25,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkTunaiRuncit
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkCarta)
                 .Include(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                 .ToListAsync();
@@ -39,6 +40,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkTunaiRuncit
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkCarta)
                 .Include(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                 .Where(b => b.Id == id)

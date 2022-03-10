@@ -34,6 +34,17 @@
                             <span asp-validation-for="JKWId" class="text-danger"></span>
                         </div>
                         <div class="form-group col-md">
+                            <label asp-for="JBahagianId" class="control-label"></label>
+                            <span class="text-danger control-label">*</span>
+                            <select asp-for="JBahagianId" class="form-control form-control-sm text-uppercase" id="ddlJBahagian">
+                                @foreach (var s in ViewBag.JBahagian)
+                                {
+                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                }
+                            </select>
+                            <span asp-validation-for="JBahagianId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md">
                             <label asp-for="Tarikh" class="control-label"></label>
                             <span class="text-danger control-label">*</span>
                             <input asp-for="Tarikh" class="form-control form-control-sm" type="date" id="txtTarikh" />

@@ -26,6 +26,7 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<AkTunaiLejar>> GetAll()
         {
             return await context.AkTunaiLejar
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
                 .Include(b=> b.AkCarta)
                 .ToListAsync();

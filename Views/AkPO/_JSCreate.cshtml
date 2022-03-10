@@ -21,6 +21,8 @@
                 data: { id: id },
                 dataType: "json",
                 success: function (msg) {
+                    $("#ddlKW").val(msg?.record?.jkw?.id).change();
+                    $("#ddlBahagian").val(msg?.record?.jBahagian?.id).change();
                     $("#ddlPembekal").val(msg?.record?.akPembekal?.id).change();
                     $("ddlPembekal").prop('disabled', false);
                     $("#txtNamaSykt").val(msg.record.akPembekal.namaSykt);

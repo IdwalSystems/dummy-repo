@@ -27,6 +27,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkBelian
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkPO)
                 .ThenInclude(b => b.AkPembekal)
                 .Include(b => b.AkPembekal)
@@ -41,6 +42,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkBelian
                 .IgnoreQueryFilters()
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkPO)
                 .ThenInclude(b => b.AkPembekal)
                 .Include(b => b.AkPembekal)
@@ -53,6 +55,7 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<AkBelian> GetById(int id)
         {
             return await context.AkBelian.Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkPO)
                 .ThenInclude(b => b.AkPembekal)
                 .Include(b => b.AkPembekal)
@@ -67,6 +70,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkBelian.Include(b => b.JKW)
                 .IgnoreQueryFilters()
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkPO)
                 .ThenInclude(b => b.AkPembekal)
                 .Include(b => b.AkPembekal)

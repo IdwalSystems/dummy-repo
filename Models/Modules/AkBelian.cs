@@ -51,7 +51,7 @@ namespace MSNK.Models.Modules
 
         //Relationship
         [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
-        [DisplayName("Jenis Kumpulan Wang")]
+        [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         [DisplayName("Bahagian")]
         public int? JBahagianId { get; set; }

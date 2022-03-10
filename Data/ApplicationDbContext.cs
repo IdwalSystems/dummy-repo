@@ -240,7 +240,7 @@ namespace MSNK.Data
                     .HasOne(m => m.AkPO)
                     .WithMany(t => t.AkPOLaras)
                     .HasForeignKey(m => m.AkPOId)
-                    .OnDelete(DeleteBehavior.Restrict)
+                    .OnDelete(DeleteBehavior.ClientNoAction)
                     .IsRequired();
 
             modelBuilder.Entity<AkPOLaras>()
@@ -291,7 +291,7 @@ namespace MSNK.Data
                 .HasOne(m => m.AkPO!)
                 .WithMany(t => t.AkBelian)
                 .HasForeignKey(m => m.AkPOId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.ClientNoAction);
 
             modelBuilder.Entity<AkBelian>()
                 .HasOne(m => m.AkPembekal)
@@ -322,10 +322,10 @@ namespace MSNK.Data
                 .IsRequired();
 
             modelBuilder.Entity<AkPV2>()
-                .HasOne(m => m.AkBelian!)
+                .HasOne(m => m.AkBelian)
                 .WithMany(t => t.AkPV2)
                 .HasForeignKey(m => m.AkBelianId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.ClientNoAction);
 
             modelBuilder.Entity<AkPV>()
                 .HasOne(m => m.AkPembekal!)

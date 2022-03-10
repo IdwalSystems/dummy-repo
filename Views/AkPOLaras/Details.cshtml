@@ -22,35 +22,48 @@
                         <div class="form-row">
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="control-label">Tahun</label>
+                                    <label asp-for="Tahun" class="control-label"></label>
                                     <input class="form-control form-control-sm" value="@Model.Tahun" readonly />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="control-label">Jenis Kumpulan Wang</label>
-                                    <input class="form-control form-control-sm" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
+                                    <label asp-for="JKWId" class="control-label"></label>
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="JBahagianId" class="control-label"></label>
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label asp-for="Tarikh" class="control-label"></label>
                                     <input class="form-control form-control-sm" value="@Model.Tarikh.ToString("dd/MM/yyyy")" readonly />
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="control-label">No PO</label>
+                                    <label asp-for="NoRujukan" class="control-label"></label>
+                                    <input class="form-control form-control-sm" value="@Model.AkPO.NoPO" readonly />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="AkPOId" class="control-label"></label>
                                     <input class="form-control form-control-sm" value="@Model.AkPO.NoPO" readonly />
                                 </div>
                             </div>
                             @*<div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label">Kod Bank</label>
-                                        <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
-                                    </div>
-                                </div>*@
+            <div class="form-group">
+                <label class="control-label">Kod Bank</label>
+                <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
+            </div>
+        </div>*@
                         </div>
                         <div class="form-row">
                             <div class="col-md-4">
@@ -276,12 +289,12 @@
     {
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
         @*<a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-warning btn-sm" onclick="return confirm('Adakah anda ingin teruskan operasi ini?')">Batal</a>*@
-        if (ViewData["isLastItem"].ToString() == "N")
+        @*if (ViewData["isLastItem"].ToString() == "N")
         {
             <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">
                 Batal
             </button>
-        }
+        }*@
     }
     <a asp-action="Index">Kembali ke Indeks</a>
 </div>

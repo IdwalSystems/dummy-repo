@@ -20,27 +20,33 @@
                 <div class="form-row">
                     <div class="col-lg-10">
                         <div class="form-row">
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label asp-for="Tarikh" class="control-label"></label>
                                     <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Tarikh)" readonly />
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="control-label">Tahun</label>
+                                    <label asp-for="Tahun" class="control-label"></label>
                                     <input class="form-control form-control-sm" value="@Model.Tahun" readonly />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="control-label">Jenis Kumpulan Wang</label>
+                                    <label asp-for="JKWId" class="control-label"></label>
                                     <input class="form-control form-control-sm text-uppercase" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label asp-for="JBahagianId" class="control-label"></label>
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " readonly />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="control-label">Kod Bank</label>
+                                    <label asp-for="AkBankId" class="control-label"></label>
                                     <input class="form-control form-control-sm text-uppercase" value="@Model.AkBank.NoAkaun - @Model.AkBank.JBank.Nama " readonly />
                                 </div>
                             </div>
@@ -48,25 +54,25 @@
                         <div class="form-row">
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="control-label">No Rujukan</label>
+                                    <label asp-for="NoRujukan" class="control-label"></label>
                                     <input value="@Model.NoRujukan.Substring(3)" class="form-control form-control-sm" readonly />
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="control-label">No Kad Pengenalan</label>
+                                    <label asp-for="NoKp" class="control-label"></label>
                                     <input class="form-control form-control-sm" value="@Model.NoKp" readonly />
                                 </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label class="control-label">Nama</label>
+                                    <label asp-for="Nama" class="control-label"></label>
                                     <input class="form-control form-control-sm text-uppercase" value="@Model.Nama " readonly />
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Alamat</label>
+                            <label asp-for="Alamat1" class="control-label"></label>
                             <input class="form-control form-control-sm text-uppercase" value="@Model.Alamat1 " readonly />
                         </div>
                         <div class="form-group">
@@ -78,19 +84,19 @@
                         <div class="form-row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="control-label">Poskod</label>
+                                    <label asp-for="Poskod" class="control-label"></label>
                                     <input class="form-control form-control-sm" value="@Model.Poskod " readonly />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="control-label">Bandar</label>
+                                    <label asp-for="Bandar" class="control-label"></label>
                                     <input class="form-control form-control-sm text-uppercase" value="@Model.Bandar " readonly />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="control-label">Negeri</label>
+                                    <label asp-for="JNegeriId" class="control-label"></label>
                                     <input class="form-control form-control-sm" value="@Model.JNegeri.Kod - @Model.JNegeri.Perihal" readonly />
                                 </div>
                             </div>
@@ -98,19 +104,19 @@
                         <div class="form-row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="control-label">Tel</label>
+                                    <label asp-for="Tel" class="control-label"></label>
                                     <input class="form-control form-control-sm" value="@Model.Tel " readonly />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="control-label">Emel</label>
+                                    <label asp-for="Emel" class="control-label"></label>
                                     <input class="form-control form-control-sm" value="@Model.Emel " readonly />
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Sebab</label>
+                            <label asp-for="Sebab" class="control-label"></label>
                             <textarea class="form-control form-control-sm text-uppercase" readonly rows="2">@Model.Sebab</textarea>
                         </div>
                     </div>
@@ -178,7 +184,7 @@
                                 <thead>
                                     <tr>
                                         <th style="width:40%">Kod</th>
-                                        <th style="width:50%" class="text-right">Amaun</th>
+                                        <th style="width:50%" class="text-right">Amaun RM</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyObjek">
@@ -214,7 +220,7 @@
                                 <thead>
                                     <tr>
                                         <th>Cara Bayar</th>
-                                        <th>Amaun</th>
+                                        <th>Amaun RM</th>
                                         <th>No Cek</th>
                                         <th>Jenis Cek</th>
                                         <th>Kod Bank Cek</th>

@@ -13,7 +13,7 @@ namespace MSNK.Models.Modules
     {
         //field
         public int Id { get; set; }
-        [DisplayName("Tahun Belanjawan")]
+        [DisplayName("Tahun")]
         [Required(ErrorMessage = "Tahun Diperlukan.")]
         [MaxLength(4)]
         public string Tahun { get; set; }

@@ -15,28 +15,34 @@
                 <div class="form-row ">
                     <div class="col-lg-10">
                         <div class="form-row">
-
-                            <div class="col-md-3">
+                            <div class="col-md-1">
                                 <div class="form-group">
-                                    <label class="control-label">Tarikh</label>
-                                    <input class="form-control form-control-sm" value="@Model.Tarikh.ToString("dd/MM/yyyy")" readonly />
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label class="control-label">Tahun</label>
+                                    <label asp-for="Tahun" class="control-label"></label>
                                     <input class="form-control form-control-sm form-control-sm" value="@Model.Tahun" readonly />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label class="control-label">Kumpulan Wang</label>
+                                    <label asp-for="Tarikh" class="control-label"></label>
+                                    <input class="form-control form-control-sm" value="@Model.Tarikh.ToString("dd/MM/yyyy")" readonly />
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="JKWId" class="control-label"></label>
                                     <input class="form-control form-control-sm text-uppercase" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="control-label">Kod Bank</label>
+                                    <label asp-for="JBahagianId" class="control-label"></label>
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="AkBankId" class="control-label"></label>
                                     <input class="form-control form-control-sm text-uppercase" value="@Model.AkBank.NoAkaun - @Model.AkBank.JBank.Nama " readonly />
                                 </div>
                             </div>
@@ -335,13 +341,12 @@
                                 <table id="tblInbois" class="table table-sm nowrap text-nowrap" cellpadding="0" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>No Inbois</th>
-                                            <th>Tarikh Inbois</th>
-                                            <th>Amaun Inbois</th>
-                                            <th>No PO</th>
-                                            <th>Tar PO</th>
-                                            <th>Amaun PO</th>
-                                            <th></th>
+                                            <th width="20%">No Inbois</th>
+                                            <th width="5%">Tarikh Inbois</th>
+                                            <th width="5%">Amaun Inbois RM</th>
+                                            <th width="20%">No PO</th>
+                                            <th width="5%">Tar PO</th>
+                                            <th width="5%">Amaun PO RM</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbodyInbois">
@@ -349,7 +354,7 @@
                                         {
                                             <tr id="@item.Id">
                                                 <td id="akBelianId" hidden>@item.AkBelianId</td>
-                                                <td class="text-left">@item.AkBelian.NoInbois.Substring(3)</td>
+                                                <td class="text-left">@item.AkBelian.NoInbois</td>
                                                 <td>@item.AkBelian.Tarikh.ToString("dd/MM/yyyy")</td>
                                                 <td class="text-right">@item.Amaun</td>
                                                 @if (item.AkBelian.AkPO != null)

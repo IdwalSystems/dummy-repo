@@ -14,7 +14,7 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Kod" class="control-label"></label>
-                <input asp-for="Kod" class="form-control form-control-sm" readonly/>
+                <input asp-for="Kod" class="form-control form-control-sm" readonly />
                 <span asp-validation-for="Kod" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -23,7 +23,7 @@
                 <span asp-validation-for="NoAkaun" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="JBank" class="control-label"></label>
+                <label asp-for="JBankId" class="control-label"></label>
                 <select class="form-control form-control-sm" asp-for="JBankId">
                     @foreach (var s in ViewBag.JBank)
                     {
@@ -32,11 +32,20 @@
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="JKW" class="control-label"></label>
+                <label asp-for="JKWId" class="control-label"></label>
                 <select class="form-control form-control-sm" asp-for="JKWId" disabled>
                     @foreach (var s in ViewBag.JKW)
                     {
                         <option value="@s.Id">@s.Perihal </option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="JBahagianId" class="control-label"></label>
+                <select class="form-control form-control-sm" asp-for="JBahagianId" disabled>
+                    @foreach (var s in ViewBag.JBahagian)
+                    {
+                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
                     }
                 </select>
             </div>

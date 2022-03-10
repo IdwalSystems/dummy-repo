@@ -24,7 +24,7 @@ namespace MSNK.Models.Modules
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
         [MaxLength(4)]
-        [DisplayName("Tahun Belanjawan")]
+        [DisplayName("Tahun")]
         public string Tahun { get; set; }
         public DateTime TempohSiap { get; set; }
         public DateTime TarikhSiap { get; set; }

@@ -132,6 +132,9 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
+            List<JBahagian> bahagianList = _context.JBahagian.ToList();
+            ViewBag.JBahagian = bahagianList;
+
             List<AkCarta> cartaList = _context.AkCarta
                 .Include(z=>z.JKW)
                 .Where(x=>x.JParas.Kod=="4")
@@ -297,7 +300,7 @@ namespace MSNK.Controllers
         // POST: AkJurnal/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkJurnal akJurnal, int JKWId, decimal JumDebit, decimal JumKredit)
+        public async Task<IActionResult> Create(AkJurnal akJurnal, int JKWId, decimal JumDebit, decimal JumKredit, int JBahagianId)
         {
             AkJurnal m = new AkJurnal();
             var user = await _userManager.GetUserAsync(User);
@@ -315,9 +318,10 @@ namespace MSNK.Controllers
                 if (ModelState.IsValid)
                 {
                     string noRujukan = GetNoRujukan(akJurnal);
-                    if (akJurnal != null && JKWId != 0)
+                    if (akJurnal != null && JKWId != 0 && JBahagianId != 0)
                     {
                         m.JKWId = akJurnal.JKWId;
+                        m.JBahagianId = akJurnal.JBahagianId;
                         m.NoJurnal = noRujukan;
                         m.Tarikh = akJurnal.Tarikh;
                         m.JumDebit = debit;
@@ -386,7 +390,7 @@ namespace MSNK.Controllers
         // POST: AkJurnal/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkJurnal akJurnal)
+        public async Task<IActionResult> Edit(int id, AkJurnal akJurnal, int JBahagianId)
         {
             if (id != akJurnal.Id)
             {
@@ -493,9 +497,7 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akJurnal = await _context.AkJurnal
-                .Include(a => a.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akJurnal = await _akJurnalRepo.GetById((int) id);
 
             PopulateTable(id);
             if (akJurnal == null)
@@ -857,6 +859,7 @@ namespace MSNK.Controllers
                             AkAkaun akADebit = new AkAkaun();
                             akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
                             akADebit.JKWId = akJurnal.JKWId;
+                            akADebit.JBahagianId = akJurnal.JBahagianId;
                             akADebit.Tarikh = akJurnal.Tarikh;
                             akADebit.AkCartaId1 = debit1.AkCartaId;
                             akADebit.Debit = kredit1.Kredit;
@@ -876,6 +879,7 @@ namespace MSNK.Controllers
                                 akADebit = new AkAkaun();
                                 akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
                                 akADebit.JKWId = akJurnal.JKWId;
+                                akADebit.JBahagianId = akJurnal.JBahagianId;
                                 akADebit.Tarikh = akJurnal.Tarikh;
                                 akADebit.AkCartaId1 = kredit1.AkCartaId;
                                 akADebit.Debit = 0;
@@ -895,6 +899,7 @@ namespace MSNK.Controllers
                             {
                                 Rujukan = "JR/" + akJurnal.NoJurnal,
                                 JKWId = akJurnal.JKWId,
+                                JBahagianId = akJurnal.JBahagianId,
                                 Tarikh = akJurnal.Tarikh,
                                 VotId = keVot.AkCartaId,
                                 Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length<200? akJurnal.Catatan1.Length:200),

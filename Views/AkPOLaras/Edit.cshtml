@@ -25,24 +25,11 @@
                                 <span asp-validation-for="Tahun" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label asp-for="NoRujukan" class="control-label"></label>
-                                <input value="@Model.NoRujukan.Substring(3)" class="form-control form-control-sm text-uppercase" readonly />
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label asp-for="Tarikh" class="control-label"></label>
-                                <input name="Tarikh" value="@Model.Tarikh.ToString("dd/MM/yyyy")" class="form-control form-control-sm" required readonly />
-                                <span asp-validation-for="Tarikh" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
+
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm" asp-for="JKWId" required disabled>
-                                    <option value="" hidden>-- Pilih Kumpulan Wang --</option>
+                                <select class="form-control form-control-sm" asp-for="JKWId" disabled>
                                     @foreach (var s in ViewBag.JKW)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -53,7 +40,35 @@
 
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" disabled>
+                                    @foreach (var s in ViewBag.JBahagian)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="JBahagianId" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Tarikh" class="control-label"></label>
+                                <input name="Tarikh" value="@Model.Tarikh.ToString("dd/MM/yyyy")" class="form-control form-control-sm" required readonly />
+                                <span asp-validation-for="Tarikh" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="NoRujukan" class="control-label"></label>
+                                <input value="@Model.NoRujukan.Substring(3)" class="form-control form-control-sm text-uppercase" readonly />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="AkPOId" class="control-label"></label><span class="text-danger control-label">*</span>
                                 <select class="form-control form-control-sm select2" asp-for="AkPOId" id="ddlAkPOId">

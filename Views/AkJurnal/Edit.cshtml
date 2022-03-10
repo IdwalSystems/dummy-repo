@@ -14,6 +14,7 @@
             <input type="hidden" asp-for="NoJurnal" />
             <input type="hidden" asp-for="Tarikh" />
             <input type="hidden" asp-for="JKWId" />
+            <input type="hidden" asp-for="JBahagianId" />
 
             <input type="hidden" asp-for="Catatan2" />
             <input type="hidden" asp-for="Catatan3" />
@@ -23,9 +24,6 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h5 class="text-left">Baucer Jurnal - @ViewData["Title"]</h5>
-                        </div>
-                        <div class="col-md-6">
-                            <p class="text-right">No Jurnal : @Model.NoJurnal</p>
                         </div>
                     </div>
                 </div>
@@ -39,16 +37,14 @@
                         <div class="form-group col-md">
                             <label asp-for="JKWId" class="control-label"></label>
                             <span class="text-danger control-label">*</span>
-                            <input class="form-control form-control-sm" id="jkwtxt"
+                            <input class="form-control form-control-sm text-uppercase" id="jkwtxt"
                                    value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
-                            @*<select class="form-control form-control-sm" asp-for="JKWId">
-                            <option value="" hidden>-- Pilih Kumpulan Wang --</option>
-                            @foreach (var s in ViewBag.JKW)
-                            {
-                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                            }
-                        </select>
-                        <span asp-validation-for="JKWId" class="text-danger"></span>*@
+                        </div>
+                        <div class="form-group col-md">
+                            <label asp-for="JBahagianId" class="control-label"></label>
+                            <span class="text-danger control-label">*</span>
+                            <input class="form-control form-control-sm text-uppercase" id="jBahagiantxt"
+                                   value="@Html.DisplayFor(model => model.JBahagian.Kod) - @Html.DisplayFor(model => model.JBahagian.Perihal)" readonly />
                         </div>
                         <div class="form-group col-md">
                             <label asp-for="Tarikh" class="control-label"></label>
@@ -60,7 +56,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Catatan1" class="control-label">Catatan</label>
-                        <textarea class="form-control form-control-sm" maxlength="400" rows="4" asp-for="Catatan1"></textarea>
+                        <textarea class="form-control form-control-sm text-uppercase" maxlength="400" rows="4" asp-for="Catatan1"></textarea>
                         <span asp-validation-for="Catatan1" class="text-danger"></span>
                     </div>
                     @*<div class="form-group">

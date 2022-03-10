@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            
+
                             <div class="input-group mb-2 input-group-sm ">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">Dari</span>
@@ -45,7 +45,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            
+
                             <div class="input-group mb-2 input-group-sm ">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">Hingga</span>
@@ -78,6 +78,9 @@
                 </th>
                 <th>
                     Kump. Wang
+                </th>
+                <th>
+                    Bahagian
                 </th>
                 <th>
                     Kod Akaun
@@ -118,6 +121,9 @@
                         @item.KW
                     </td>
                     <td>
+                        @item.Bahagian
+                    </td>
+                    <td>
                         @item.KodAkaun
                     </td>
                     <td class="text-uppercase">
@@ -136,13 +142,18 @@
                         @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
                     </td>
                     <td>
-                        @{ 
+                        @{
                             var baki = item.Kredit - item.Debit - item.Tanggungan - item.Liabiliti;
                         }
                         @Convert.ToDecimal(baki).ToString("#,##0.00")
                     </td>
                     <td class="action-button">
-                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-tahun="@item.Tahun" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        <a asp-action="Details" 
+                           asp-route-id="@item.Id" 
+                           asp-route-tahun="@item.Tahun"
+                           asp-route-jKWId="@item.JKWId"
+                           asp-route-jBahagianId="@item.JBahagianId"
+                           class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
                     </td>
                 </tr>
             }

@@ -224,6 +224,7 @@
         <tbody>
             <tr style="line-height:0.8rem;">
                 <td class="text-center font-weight-bold" width="5%">KOD KW</td>
+                <td class="text-center font-weight-bold" width="5%">KOD BAHAGIAN</td>
                 <td class="text-center font-weight-bold" width="7%">KOD OBJEK</td>
                 <td class="text-center font-weight-bold" width="55%">PERIHAL OBJEK</td>
                 <td class="text-center font-weight-bold" width="7%">AMAUN RM</td>
@@ -232,6 +233,7 @@
             {
                 <tr>
                     <td class="text-center">@Model.AkNotaMinta.JKW.Kod</td>
+                    <td class="text-center">@Model.AkNotaMinta.JBahagian.Kod</td>
                     <td class="text-center">@item.AkCarta.Kod</td>
                     <td class="text-left text-uppercase">@item.AkCarta.Perihal</td>
                     <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>

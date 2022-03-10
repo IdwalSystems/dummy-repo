@@ -26,30 +26,36 @@
                         <div class="form-row">
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="control-label">Tahun</label>
+                                    <label asp-for="Tahun" class="control-label"></label>
                                     <input class="form-control form-control-sm" value="@Model.Tahun" readonly />
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="control-label">Jenis Kumpulan Wang</label>
-                                    <input class="form-control form-control-sm" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
+                                    <label asp-for="JKWId" class="control-label"></label>
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="JBahagianId" class="control-label"></label>
+                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " readonly />
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label asp-for="Tarikh" class="control-label" ></label>
-                                    <input class="form-control form-control-sm" value="@Model.Tarikh.ToString("yyyy-MM-dd")" readonly />
+                                    <label asp-for="Tarikh" class="control-label"></label>
+                                    <input class="form-control form-control-sm" value="@Model.Tarikh.ToString("dd/MM/yyyy")" readonly />
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="control-label">No PO</label>
                                     <input class="form-control form-control-sm" value="@Model.NoPO" readonly />
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label asp-for="AkNotaMintaId" class="control-label"></label>
                                     <select class="form-control form-control-sm select2" asp-for="AkNotaMintaId" id="ddlNotaMinta" disabled>
@@ -62,11 +68,11 @@
                                 </div>
                             </div>
                             @*<div class="col-md-3">
-                <div class="form-group">
-                    <label class="control-label">Kod Bank</label>
-                    <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
-                </div>
-            </div>*@
+            <div class="form-group">
+                <label class="control-label">Kod Bank</label>
+                <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
+            </div>
+        </div>*@
                         </div>
                         <div class="form-row">
                             <div class="col-md-4">

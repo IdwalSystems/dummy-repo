@@ -20,6 +20,8 @@
                 data: { id: id },
                 dataType: "json",
                 success: function (msg) {
+                    $("#ddlKW").val(msg?.record?.jkw?.id).change();
+                    $("#ddlBahagian").val(msg?.record?.jBahagian?.id).change();
                     $("#txtKodSykt").val(msg.record.akPembekal.kodSykt);
                     $("#txtNamaSykt").val(msg.record.akPembekal.namaSykt);
                     displayObjekList(msg.record.akPO1);

@@ -210,6 +210,9 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
+            List<JBahagian> bahagianList = _context.JBahagian.ToList();
+            ViewBag.JBahagian = bahagianList;
+
             List<AkPO> akPOList = _context.AkPO
                 .Include(b => b.AkPembekal).ThenInclude(b=>b.JBank)
                 .Include(b => b.JKW)
@@ -377,6 +380,8 @@ namespace MSNK.Controllers
             akBelianView.TarikhKewanganTerima = akBelian.TarikhKewanganTerima;
             akBelianView.JKWId = akBelian.JKWId;
             akBelianView.JKW = akBelian.JKW;
+            akBelianView.JBahagianId = akBelian.JBahagianId;
+            akBelianView.JBahagian = akBelian.JBahagian;
             akBelianView.KodObjekAP = kodObjekAkaunPemiutang;
             akBelianView.Jumlah = akBelian.Jumlah;
             akBelianView.TarikhPosting = akBelian.TarikhPosting;
@@ -706,7 +711,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "TG002C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int KodObjekAPId, string NamaPembekal, decimal JumlahPerihal)
+        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int KodObjekAPId, string NamaPembekal, decimal JumlahPerihal, int JBahagianId)
         {
             AkBelian m = new AkBelian();
             var user = await _userManager.GetUserAsync(User);
@@ -746,10 +751,11 @@ namespace MSNK.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (akBelian != null && JKWId != 0 && AkPembekalId != 0 && KodObjekAPId != 0)
+                if (akBelian != null && JKWId != 0 && AkPembekalId != 0 && KodObjekAPId != 0 && JBahagianId != 0)
                 {
                     m.KodObjekAPId = KodObjekAPId;
                     m.JKWId = JKWId;
+                    m.JBahagianId = JBahagianId;
                     m.Tahun = akBelian.Tahun;
                     m.NoInbois = noRujukan;
                     m.Tarikh = akBelian.Tarikh;
@@ -1121,7 +1127,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "TG002E")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkBelian akBelian, int JKWId, int AkBankId, int KodObjekAPId, decimal JumlahPerihal)
+        public async Task<IActionResult> Edit(int id, AkBelian akBelian, int JKWId, int AkBankId, int KodObjekAPId, decimal JumlahPerihal, int JBahagianId)
         {
             if (id != akBelian.Id)
             {
@@ -1141,6 +1147,7 @@ namespace MSNK.Controllers
                         // list of input that cannot be change
                         akBelian.Tahun = akBelianAsal.Tahun;
                         akBelian.JKWId = akBelianAsal.JKWId;
+                        akBelian.JBahagianId = akBelianAsal.JBahagianId;
                         akBelian.NoInbois = akBelianAsal.NoInbois;
                         if (akBelianAsal.AkPOId != null)
                         {
@@ -1237,7 +1244,6 @@ namespace MSNK.Controllers
             }
 
             var akBelian = await _akBelianRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akBelian.JKWId);
 
             var kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
 
@@ -1267,7 +1273,7 @@ namespace MSNK.Controllers
             akBelianView.AkPembekalId = akBelian.AkPembekalId;
             akBelianView.AkPO = akPO;
             akBelianView.AkPembekal = pembekal;
-            akBelianView.JKW = kw;
+            akBelianView.JBahagian = akBelian.JBahagian;
             akBelianView.Id = akBelian.Id;
             akBelianView.Tahun = akBelian.Tahun;
             akBelianView.NoInbois = akBelian.NoInbois;
@@ -1505,6 +1511,7 @@ namespace MSNK.Controllers
                                 {
                                     Tahun = akBelian.Tahun,
                                     JKWId = akBelian.JKWId,
+                                    JBahagianId = akBelian.JBahagianId,
                                     Tarikh = akBelian.Tarikh,
                                     Kod = kodPembekal,
                                     Penerima = penerima,
@@ -1522,6 +1529,7 @@ namespace MSNK.Controllers
                                 {
                                     Tahun = akBelian.Tahun,
                                     JKWId = akBelian.JKWId,
+                                    JBahagianId = akBelian.JBahagianId,
                                     Tarikh = akBelian.Tarikh,
                                     Kod = kodPembekal,
                                     Penerima = penerima,
@@ -1541,6 +1549,7 @@ namespace MSNK.Controllers
                             {
                                 NoRujukan = akBelian.NoInbois,
                                 JKWId = akBelian.JKWId,
+                                JBahagianId = akBelian.JBahagianId,
                                 AkCartaId1 = akBelian.KodObjekAPId,
                                 AkCartaId2 = item.AkCartaId,
                                 Tarikh = akBelian.Tarikh,
@@ -1553,6 +1562,7 @@ namespace MSNK.Controllers
                             {
                                 NoRujukan = akBelian.NoInbois,
                                 JKWId = akBelian.JKWId,
+                                JBahagianId = akBelian.JBahagianId,
                                 AkCartaId1 = item.AkCartaId,
                                 AkCartaId2 = akBelian.KodObjekAPId,
                                 Tarikh = akBelian.Tarikh,

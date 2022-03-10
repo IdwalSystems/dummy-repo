@@ -113,11 +113,13 @@
                 <td class="text-center text-uppercase font-weight-bold" width="15%">No Rujukan</td>
                 <td class="text-center text-uppercase font-weight-bold" width="15%">Tarikh</td>
                 <td class="text-center text-uppercase font-weight-bold" width="15%">Kumpulan Wang </td>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">Bahagian </td>
             </tr>
             <tr>
                 <td class="text-center">@Model.AkPOLaras.NoRujukan</td>
                 <td class="text-center" width="15%">@Convert.ToDateTime(Model.AkPOLaras.Tarikh).ToString("dd/MM/yyyy")</td>
-                <td class="text-center">@Model.AkPOLaras.JKW.Kod - @Model.AkPOLaras.JKW.Perihal</td>
+                <td class="text-center text-uppercase">@Model.AkPOLaras.JKW.Kod - @Model.AkPOLaras.JKW.Perihal</td>
+                <td class="text-center text-uppercase">@Model.AkPOLaras.JBahagian.Kod - @Model.AkPOLaras.JBahagian.Perihal</td>
             </tr>
         </tbody>
     </table>

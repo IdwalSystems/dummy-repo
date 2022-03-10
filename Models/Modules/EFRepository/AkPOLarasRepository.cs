@@ -27,15 +27,23 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkPOLaras
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkPO).ThenInclude(b => b.AkPembekal)
                 .Include(b => b.AkPOLaras1)
                 .Include(b => b.AkPOLaras2)
                 .ToListAsync();
         }
 
-        public Task<IEnumerable<AkPOLaras>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<AkPOLaras>> GetAllIncludeDeletedItems()
         {
-            throw new NotImplementedException();
+            return await context.AkPOLaras
+                .IgnoreQueryFilters()
+                .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
+                .Include(b => b.AkPO).ThenInclude(b => b.AkPembekal)
+                .Include(b => b.AkPOLaras1)
+                .Include(b => b.AkPOLaras2)
+                .ToListAsync();
         }
 
         public async Task<AkPOLaras> GetById(int id)
@@ -43,6 +51,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkPOLaras
                 .Where(d => d.Id == id)
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(d => d.AkPOLaras1).ThenInclude(d => d.AkCarta)
                 .Include(d => d.AkPOLaras2)
                 .Include(d => d.AkPO).ThenInclude(d => d.AkPembekal).ThenInclude(d => d.JBank)
@@ -50,9 +59,18 @@ namespace MSNK.Models.Modules.EFRepository
                 .FirstOrDefaultAsync();
         }
 
-        public Task<AkPOLaras> GetByIdIncludeDeletedItems(int id)
+        public async Task<AkPOLaras> GetByIdIncludeDeletedItems(int id)
         {
-            throw new NotImplementedException();
+            return await context.AkPOLaras
+                .IgnoreQueryFilters()
+                .Where(d => d.Id == id)
+                .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
+                .Include(d => d.AkPOLaras1).ThenInclude(d => d.AkCarta)
+                .Include(d => d.AkPOLaras2)
+                .Include(d => d.AkPO).ThenInclude(d => d.AkPembekal).ThenInclude(d => d.JBank)
+                .Include(d => d.AkPO).ThenInclude(d => d.AkPembekal).ThenInclude(d => d.JNegeri)
+                .FirstOrDefaultAsync();
         }
 
         public Task<AkPOLaras> GetByString(string id)

@@ -192,6 +192,9 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
+            List<JBahagian> bahagianList = _context.JBahagian.ToList();
+            ViewBag.JBahagian = bahagianList;
+
             List<AkPembekal> akPembekalList = _context.AkPembekal
                 .Include(b => b.JBank)
                 .OrderBy(b => b.KodSykt).ToList();
@@ -684,7 +687,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "NM001C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkNotaMinta akNotaMinta,int JKWId, int AkPembekalId, string NamaPembekal, decimal JumlahPerihal)
+        public async Task<IActionResult> Create(AkNotaMinta akNotaMinta,int JKWId, int AkPembekalId, string NamaPembekal, decimal JumlahPerihal, int JBahagianId)
         {
             AkNotaMinta m = new AkNotaMinta();
             var user = await _userManager.GetUserAsync(User);
@@ -728,9 +731,10 @@ namespace MSNK.Controllers
 
             if (ModelState.IsValid)
             {
-                if (akNotaMinta != null && JKWId != 0 && AkPembekalId != 0)
+                if (akNotaMinta != null && JKWId != 0 && AkPembekalId != 0 && JBahagianId != 0)
                 {
                     m.JKWId = JKWId;
+                    m.JBahagianId = JBahagianId;
                     m.Tahun = akNotaMinta.Tahun;
                     m.Tajuk = akNotaMinta.Tajuk;
                     m.AkPembekalId = akNotaMinta.AkPembekalId;
@@ -785,6 +789,8 @@ namespace MSNK.Controllers
             viewModel.Tarikh = akNotaMinta.Tarikh;
             viewModel.JKW = akNotaMinta.JKW;
             viewModel.JKWId = akNotaMinta.JKWId;
+            viewModel.JBahagian = akNotaMinta.JBahagian;
+            viewModel.JBahagianId = akNotaMinta.JBahagianId;
             viewModel.NoRujukan = akNotaMinta.NoRujukan.Substring(3);
             viewModel.Tajuk = akNotaMinta.Tajuk;
             viewModel.NoSiri = akNotaMinta.NoSiri;
@@ -836,7 +842,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "NM001E")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkNotaMinta akNotaMinta, int JKWId, int AkPembekalId, string NamaPembekal, decimal JumlahPerihal)
+        public async Task<IActionResult> Edit(int id, AkNotaMinta akNotaMinta, int JKWId, int AkPembekalId, string NamaPembekal, decimal JumlahPerihal, int JBahagianId)
         {
             if (id != akNotaMinta.Id)
             {
@@ -853,6 +859,7 @@ namespace MSNK.Controllers
                         // list of input that cannot be change
                         akNotaMinta.Tahun = dataAsal.Tahun;
                         akNotaMinta.JKWId = dataAsal.JKWId;
+                        akNotaMinta.JBahagianId = dataAsal.JBahagianId;
                         akNotaMinta.NoRujukan = dataAsal.NoRujukan;
                         akNotaMinta.NoCAS = dataAsal.NoCAS;
                         akNotaMinta.TarikhSeksyenKewangan = dataAsal.TarikhSeksyenKewangan;
@@ -939,6 +946,8 @@ namespace MSNK.Controllers
             viewModel.Tarikh = akNotaMinta.Tarikh;
             viewModel.JKW = akNotaMinta.JKW;
             viewModel.JKWId = akNotaMinta.JKWId;
+            viewModel.JBahagian = akNotaMinta.JBahagian;
+            viewModel.JBahagianId = akNotaMinta.JBahagianId;
             viewModel.NoRujukan = akNotaMinta.NoRujukan.Substring(3);
             viewModel.Tajuk = akNotaMinta.Tajuk;
             viewModel.NoSiri = akNotaMinta.NoSiri;
@@ -1006,7 +1015,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "NM001E1")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditKewangan(int id, AkNotaMinta akNotaMinta, int JKWId, int AkPembekalId, string NamaPembekal, decimal JumlahPerihal)
+        public async Task<IActionResult> EditKewangan(int id, AkNotaMinta akNotaMinta, int JKWId, int AkPembekalId, string NamaPembekal, decimal JumlahPerihal, int JBahagianId)
         {
             if (id != akNotaMinta.Id)
             {
@@ -1054,6 +1063,7 @@ namespace MSNK.Controllers
                     // list of input that cannot be change
                     akNotaMinta.Tahun = dataAsal.Tahun;
                     akNotaMinta.JKWId = dataAsal.JKWId;
+                    akNotaMinta.JBahagianId = dataAsal.JBahagianId;
                     akNotaMinta.NoRujukan = dataAsal.NoRujukan;
                     akNotaMinta.AkPembekalId = dataAsal.AkPembekalId;
                     akNotaMinta.Tajuk = dataAsal.Tajuk;
@@ -1139,6 +1149,8 @@ namespace MSNK.Controllers
             viewModel.Tarikh = akNotaMinta.Tarikh;
             viewModel.JKW = akNotaMinta.JKW;
             viewModel.JKWId = akNotaMinta.JKWId;
+            viewModel.JBahagian = akNotaMinta.JBahagian;
+            viewModel.JBahagianId = akNotaMinta.JBahagianId;
             viewModel.NoRujukan = akNotaMinta.NoRujukan.Substring(3);
             viewModel.Tajuk = akNotaMinta.Tajuk;
             viewModel.NoSiri = akNotaMinta.NoSiri;
@@ -1427,7 +1439,7 @@ namespace MSNK.Controllers
             await _akNotaMintaRepo.Update(akNotaMinta);
 
             //insert applog
-            await AddLogAsync("Cetak", "Cetak Data", akNotaMinta.NoRujukan, (int)id, akNotaMinta.Jumlah);
+            await AddLogAsync("Cetak", "Cetak Data", akNotaMinta.NoRujukan,id, akNotaMinta.Jumlah);
 
             //insert applog end
 

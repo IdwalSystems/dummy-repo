@@ -86,14 +86,17 @@ namespace MSNK.Controllers
             ViewData["searchTo"] = carianHingga;
 
             //Ringkasan Debit group by kod Bank AkTerima
-            var sql = (from tbl in _context.AbBukuVot.Include(x => x.Vot).Include(x => x.JKW)
+            var sql = (from tbl in _context.AbBukuVot.Include(x => x.Vot).Include(x => x.JKW).Include(x=> x.JBahagian)
                        .Where(x => x.Tahun == tahun)
                        .ToList()
                        select new
                        {
                            Id = tbl.VotId,
                            Tahun = tbl.Tahun,
+                           JKWId = tbl.JKWId,
                            KW = tbl.JKW.Kod,
+                           JBahagianId = tbl.JBahagianId,
+                           Bahagian = tbl.JBahagian.Kod,
                            KodAkaun = tbl.Vot.Kod,
                            Perihal = tbl.Vot.Perihal,
                            Debit = tbl.Debit,
@@ -102,13 +105,16 @@ namespace MSNK.Controllers
                            Liabiliti = tbl.Liabiliti,
                            Baki = tbl.Baki
 
-                       }).GroupBy(x => new { x.Tahun, x.Id }).ToList();
+                       }).GroupBy(x => new { x.Tahun,x.KodAkaun, x.KW,x.Bahagian }).ToList();
 
             IEnumerable<AbBukuVotViewModel> vot = sql.Select(l => new AbBukuVotViewModel
             {
                 Id = l.First().Id,
                 Tahun = l.Select(x => x.Tahun).FirstOrDefault(),
                 KW = l.Select(x => x.KW).FirstOrDefault(),
+                JKWId = l.Select(x => x.JKWId).FirstOrDefault(),
+                Bahagian = l.Select(x => x.Bahagian).FirstOrDefault(),
+                JBahagianId = l.Select(x => x.JBahagianId).FirstOrDefault(),
                 KodAkaun = l.Select(x => x.KodAkaun).FirstOrDefault(),
                 Perihal = l.Select(x => x.Perihal).FirstOrDefault(),
                 Debit = l.Sum(c => c.Debit),
@@ -141,6 +147,8 @@ namespace MSNK.Controllers
         public async Task<IActionResult> Details(
                 int? id,
                 string tahun,
+                int jKWId,
+                int jBahagianId,
                 string searchFrom,
                 string searchTo
                 )
@@ -150,14 +158,20 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var abBukuVot = await _abBukuVotRepo.GetById((int)id);
+            var abBukuVot = await _context.AbBukuVot
+                .Include(x => x.Vot)
+                .Include(x => x.JKW)
+                .Include(x => x.JBahagian)
+                .Where(x => x.Tahun == tahun && x.VotId == id && x.JBahagianId == jBahagianId && x.JKWId == jKWId)
+                .FirstOrDefaultAsync();
 
             ViewData["tahun"] = tahun;
             ViewData["Vot"] = abBukuVot.Vot.Kod + " - " + abBukuVot.Vot.Perihal;
 
             var sql = _context.AbBukuVot
                 .Include(x => x.Vot).Include(x => x.JKW)
-                .Where(x=> x.Tahun == tahun && x.VotId == id)
+                .Include(x => x.Vot).Include(x => x.JBahagian)
+                .Where(x => x.Tahun == tahun && x.VotId == id && x.JBahagianId == jBahagianId && x.JKWId == jKWId)
                 .OrderBy(x => x.Tarikh)
                 .ToList();
 

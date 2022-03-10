@@ -27,6 +27,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AbBukuVot
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.Vot)
                 .ToListAsync();
         }
@@ -40,6 +41,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AbBukuVot
                 .Where(d => d.VotId == id)
+                .Include(b => b.JBahagian)
                 .Include(b => b.JKW)
                 .Include(b => b.Vot)
                 .FirstOrDefaultAsync();

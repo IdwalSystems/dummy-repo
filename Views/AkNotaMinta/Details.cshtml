@@ -15,7 +15,7 @@
                 <div class="form-row">
                     <div class="col-lg-10">
                         <div class="form-row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label asp-for="Tarikh" class="control-label"></label>
                                     <input asp-for="Tarikh" class="form-control form-control-sm" type="date" required readonly />
@@ -27,10 +27,10 @@
                                     <input asp-for="Tahun" class="form-control form-control-sm" required id="txtTahun" readonly />
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                    <select class="form-control form-control-sm" asp-for="JKWId" required id="ddlKW" disabled>
+                                    <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" required id="ddlKW" disabled>
                                         @foreach (var s in ViewBag.JKW)
                                         {
                                             <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -39,6 +39,17 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                    <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" required id="ddlBahagian" disabled>
+                                        @foreach (var s in ViewBag.JBahagian)
+                                        {
+                                            <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label asp-for="NoRujukan" class="control-label"></label>
                                     <input asp-for="NoRujukan" class="form-control form-control-sm text-uppercase" required id="txtNoRujukan" disabled />

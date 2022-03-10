@@ -26,6 +26,7 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<AkPO>> GetAll()
         {
             return await context.AkPO
+                .Include(b => b.JBahagian)
                 .Include(b => b.JKW)
                 .Include(b => b.AkPembekal)
                 .Include(b => b.AkNotaMinta)
@@ -38,6 +39,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkPO
                 .IgnoreQueryFilters()
+                .Include(b => b.JBahagian)
                 .Include(b => b.JKW)
                 .Include(b => b.AkPembekal)
                 .Include(b => b.AkNotaMinta)
@@ -50,6 +52,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkPO
                 .Where(d => d.Id == id)
+                .Include(b => b.JBahagian)
                 .Include(b => b.JKW)
                 .Include(b=> b.AkNotaMinta)
                 .Include(d => d.AkPO1).ThenInclude(d => d.AkCarta)
@@ -64,6 +67,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkPO
                 .IgnoreQueryFilters()
                 .Where(d => d.Id == id)
+                .Include(b => b.JBahagian)
                 .Include(b => b.JKW)
                 .Include(b => b.AkNotaMinta)
                 .Include(d => d.AkPO1).ThenInclude(d => d.AkCarta)

@@ -120,6 +120,11 @@ namespace MSNK.Controllers
 
             var akPOLaras = await _akPOLarasRepo.GetAll();
 
+            if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
+            {
+                akPOLaras = await _akPOLarasRepo.GetAllIncludeDeletedItems();
+            }
+
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
@@ -185,9 +190,7 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPOLaras = await _akPOLarasRepo.GetById((int)id);
-
-            var akPO = await _akPORepo.GetById(akPOLaras.AkPOId);
+            var akPOLaras = await _akPOLarasRepo.GetByIdIncludeDeletedItems((int)id);
 
             if (akPOLaras == null)
             {
@@ -198,7 +201,7 @@ namespace MSNK.Controllers
 
             //fill in view model AkPVViewModel from akPV
             viewModel.AkPOId = akPOLaras.AkPOId;
-            viewModel.AkPO = akPO;
+            viewModel.AkPO = akPOLaras.AkPO;
             viewModel.Id = akPOLaras.Id;
             viewModel.Tahun = akPOLaras.Tahun;
             viewModel.NoRujukan = akPOLaras.NoRujukan;
@@ -206,6 +209,8 @@ namespace MSNK.Controllers
             viewModel.Tajuk = akPOLaras.Tajuk;
             viewModel.JKW = akPOLaras.JKW;
             viewModel.JKWId = akPOLaras.JKWId;
+            viewModel.JBahagian = akPOLaras.JBahagian;
+            viewModel.JBahagianId = akPOLaras.JBahagianId;
             viewModel.Jumlah = akPOLaras.Jumlah;
             viewModel.TarikhPosting = akPOLaras.TarikhPosting;
             viewModel.FlPosting = akPOLaras.FlPosting;
@@ -218,19 +223,6 @@ namespace MSNK.Controllers
             }
             viewModel.AkPOLaras1 = akPOLaras.AkPOLaras1;
             viewModel.AkPOLaras2 = akPOLaras.AkPOLaras2;
-
-            // check if this data is the last one (for preventing batal purpose)
-            var lastItem = _context.AkPOLaras.OrderByDescending(x => x.Id).FirstOrDefault();
-
-            if (lastItem.Id == akPOLaras.Id)
-            {
-                ViewData["isLastItem"] = "Y";
-            }
-            else
-            {
-                ViewData["isLastItem"] = "N";
-            }
-            // check end
 
             PopulateTable(id);
             return View(viewModel);
@@ -263,6 +255,7 @@ namespace MSNK.Controllers
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkPOLaras
+                        .IgnoreQueryFilters()
                         .Where(x => x.Tahun == year )
                         .Max(x => x.NoRujukan);
 
@@ -289,6 +282,9 @@ namespace MSNK.Controllers
         {
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
+
+            List<JBahagian> bahagianList = _context.JBahagian.OrderBy(b => b.Kod).ToList();
+            ViewBag.JBahagian = bahagianList;
 
             List<AkPO> akPOList = _context.AkPO.Include(x=> x.AkPembekal).Where(x => x.FlPosting == 1).ToList();
             ViewBag.AkPO = akPOList;
@@ -330,6 +326,7 @@ namespace MSNK.Controllers
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkPOLaras
+                        .IgnoreQueryFilters()
                         .Where(x => x.Tahun == year)
                         .Max(x => x.NoRujukan);
 
@@ -461,7 +458,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "PT001C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkPOLaras akPOLaras, int JKWId, int AkPOId)
+        public async Task<IActionResult> Create(AkPOLaras akPOLaras, int JKWId, int AkPOId, int JBahagianId)
         {
             AkPOLaras m = new AkPOLaras();
             var user = await _userManager.GetUserAsync(User);
@@ -474,10 +471,11 @@ namespace MSNK.Controllers
 
             if (ModelState.IsValid)
             {
-                if (akPOLaras != null && JKWId != 0)
+                if (akPOLaras != null && JKWId != 0 && JBahagianId != 0)
                 {
 
                     m.JKWId = JKWId;
+                    m.JBahagianId = JBahagianId;
                     m.NoRujukan = "PT/" + noRujukan;
                     m.Tarikh = akPOLaras.Tarikh;
                     m.Tajuk = akPOLaras.Tajuk;
@@ -840,7 +838,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "PT001E")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,AkPOLaras akPOLaras, int JKWId, int AkPOId, decimal JumlahPerihal)
+        public async Task<IActionResult> Edit(int id,AkPOLaras akPOLaras, int JKWId, int AkPOId, decimal JumlahPerihal, int JBahagianId)
         {
             if (id != akPOLaras.Id)
             {
@@ -860,6 +858,7 @@ namespace MSNK.Controllers
                         // list of input that cannot be change
                         akPOLaras.Tahun = dataAsal.Tahun;
                         akPOLaras.JKWId = dataAsal.JKWId;
+                        akPOLaras.JBahagianId = dataAsal.JBahagianId;
                         akPOLaras.NoRujukan = dataAsal.NoRujukan;
                         akPOLaras.TarMasuk = dataAsal.TarMasuk;
                         akPOLaras.UserId = dataAsal.UserId;
@@ -949,9 +948,8 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPOLaras = await _akPOLarasRepo.GetById((int)id);
+            var akPOLaras = await _akPOLarasRepo.GetByIdIncludeDeletedItems((int)id);
 
-            var akPO = await _akPORepo.GetById(akPOLaras.AkPOId);
 
             if (akPOLaras == null)
             {
@@ -962,7 +960,7 @@ namespace MSNK.Controllers
 
             //fill in view model AkPVViewModel from akPV
             viewModel.AkPOId = akPOLaras.AkPOId;
-            viewModel.AkPO = akPO;
+            viewModel.AkPO = akPOLaras.AkPO;
             viewModel.Id = akPOLaras.Id;
             viewModel.Tahun = akPOLaras.Tahun;
             viewModel.NoRujukan = akPOLaras.NoRujukan;
@@ -970,6 +968,8 @@ namespace MSNK.Controllers
             viewModel.Tajuk = akPOLaras.Tajuk;
             viewModel.JKW = akPOLaras.JKW;
             viewModel.JKWId = akPOLaras.JKWId;
+            viewModel.JBahagian = akPOLaras.JBahagian;
+            viewModel.JBahagianId = akPOLaras.JBahagianId;
             viewModel.Jumlah = akPOLaras.Jumlah;
             viewModel.TarikhPosting = akPOLaras.TarikhPosting;
             viewModel.FlPosting = akPOLaras.FlPosting;
@@ -1111,6 +1111,7 @@ namespace MSNK.Controllers
                         {
                             Tahun = akPOLaras.Tahun,
                             JKWId = akPOLaras.JKWId,
+                            JBahagianId = akPOLaras.JBahagianId,
                             Tarikh = akPOLaras.Tarikh,
                             Kod = akPOLaras.AkPO.AkPembekal.KodSykt,
                             Penerima = akPOLaras.AkPO.AkPembekal.NamaSykt,
@@ -1157,11 +1158,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                AkPOLaras akPOLaras = await _context.AkPOLaras
-                    .Include(x => x.AkPO)
-                    .Include(x => x.AkPOLaras1).ThenInclude(x => x.AkCarta)
-                    .Include(x => x.AkPOLaras2)
-                    .FirstOrDefaultAsync(x => x.Id == id);
+                AkPOLaras akPOLaras = await _akPOLarasRepo.GetById((int) id);
 
                 List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(akPOLaras.NoRujukan)).ToList();
                 if (abBukuVot == null)

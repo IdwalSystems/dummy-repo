@@ -92,6 +92,9 @@ namespace MSNK.Controllers
             List<JBank> bankList = _context.JBank.ToList();
             bankList.Insert(0, new JBank { Id = 0, Nama = "-- Pilih Bank --" });
             ViewBag.JBank = bankList;
+            List<JBahagian> bahagianList = _context.JBahagian.ToList();
+            bahagianList.Insert(0, new JBahagian { Id = 0, Perihal = "-- Pilih Bahagian --" });
+            ViewBag.JBahagian = bahagianList;
             List<JKW> kwList = _context.JKW.ToList();
             kwList.Insert(0, new JKW { Id = 0, Perihal = "-- Pilih Kumpulan Wang --" });
             ViewBag.JKW = kwList;
@@ -117,18 +120,19 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkBank akBank, int JKWId, int JBankId, int AkCartaId)
+        public async Task<IActionResult> Create(AkBank akBank, int JKWId, int JBankId, int AkCartaId, int JBahagianId)
         {
             AkBank akB = new AkBank();
             var user = await _userManager.GetUserAsync(User);
 
             if (ModelState.IsValid)
             {
-                if (akBank != null && JKWId != 0 && JBankId != 0 && AkCartaId != 0)
+                if (akBank != null && JKWId != 0 && JBankId != 0 && AkCartaId != 0 && JBahagianId != 0)
                 {
                     akB.JBankId = JBankId;
                     akB.JKWId = JKWId;
                     akB.AkCartaId = AkCartaId;
+                    akB.JBahagianId = JBahagianId;
                     akB.Kod = akBank.Kod;
                     akB.NoAkaun = akBank.NoAkaun;
                     akB.UserId = user.UserName;
@@ -178,7 +182,7 @@ namespace MSNK.Controllers
         [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkBank akBank, int JKWId, int JBankId, int AkCartaId)
+        public async Task<IActionResult> Edit(int id, AkBank akBank, int JKWId, int JBankId, int AkCartaId, int JBahagianId)
         {
             if (id != akBank.Id)
             {
@@ -195,6 +199,10 @@ namespace MSNK.Controllers
 
                     var kodAsal = objAsal.Kod;
                     var noAkaunAsal = objAsal.NoAkaun;
+
+                    akBank.JKWId = objAsal.JKWId;
+                    akBank.JBahagianId = objAsal.JBahagianId;
+                    akBank.AkCartaId = objAsal.AkCartaId;
 
                     _context.Entry(objAsal).State = EntityState.Detached;
 

@@ -24,6 +24,7 @@ namespace MSNK.Models.Modules.EFRepository
                            Id = tbl.VotId,
                            Tahun = tbl.Tahun,
                            KW = tbl.JKW.Kod,
+                           Bahagian = tbl.JBahagian.Kod,
                            KodAkaun = tbl.Vot.Kod,
                            Perihal = tbl.Vot.Perihal,
                            Debit = tbl.Debit,
@@ -31,8 +32,7 @@ namespace MSNK.Models.Modules.EFRepository
                            Tanggungan = tbl.Tanggungan,
                            Liabiliti = tbl.Liabiliti,
                            Baki = tbl.Baki
-
-                       }).GroupBy(x => new { x.Tahun, x.Id }).FirstOrDefault();
+                       }).GroupBy(x => new { x.Tahun, x.KodAkaun, x.KW, x.Bahagian }).FirstOrDefault();
 
             return sql.Select(t => t.Baki + t.Kredit - t.Debit - t.Tanggungan - t.Liabiliti).Sum();
         }

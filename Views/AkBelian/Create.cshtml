@@ -24,7 +24,7 @@
                                 <span asp-validation-for="Tahun" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="Tarikh" class="control-label"></label>
                                 <input asp-for="Tarikh" class="form-control form-control-sm" value="@DateTime.Now.ToString("s")" required />
@@ -34,13 +34,25 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm" asp-for="JKWId" required>
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" required>
                                     @foreach (var s in ViewBag.JKW)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
                                     }
                                 </select>
                                 <span asp-validation-for="JKWId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" required>
+                                    @foreach (var s in ViewBag.JBahagian)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="JBahagianId" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -57,7 +69,7 @@
                         </div>
 
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="NoInbois" class="control-label"></label>
                                 <input asp-for="NoInbois" class="form-control form-control-sm text-uppercase" required />

@@ -206,6 +206,9 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
+            List<JBahagian> bahagianList = _context.JBahagian.ToList();
+            ViewBag.JBahagian = bahagianList;
+
             List<AkBelian> akBelianList = _context.AkBelian
                 .Include(b => b.AkPO)
                 .Where(b=> b.FlPosting == 1)
@@ -688,6 +691,9 @@ namespace MSNK.Controllers
             akPVView.NoPV = akPV.NoPV;
             akPVView.Tarikh = akPV.Tarikh;
             akPVView.JKW = akPV.JKW;
+            akPVView.JKWId = akPV.JKWId;
+            akPVView.JBahagian = akPV.JBahagian;
+            akPVView.JBahagianId = akPV.JBahagianId;
             akPVView.AkBank = akPV.AkBank;
             akPVView.Jumlah = akPV.Jumlah;
             akPVView.TarikhPosting = akPV.TarikhPosting;
@@ -932,7 +938,16 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "PV001C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkPV akPV, int JKWId, int? AkPembekalId, int? SuPekerjaId, int AkBankId, int JCaraBayarId, decimal JumlahInbois, int? AkTunaiRuncitId)
+        public async Task<IActionResult> Create(
+            AkPV akPV, 
+            int JKWId, 
+            int? AkPembekalId, 
+            int? SuPekerjaId, 
+            int AkBankId, 
+            int JCaraBayarId, 
+            decimal JumlahInbois, 
+            int? AkTunaiRuncitId,
+            int JBahagianId)
         {
             AkPV m = new AkPV();
             var pembekal = _context.AkPembekal.Find(AkPembekalId);
@@ -1032,10 +1047,11 @@ namespace MSNK.Controllers
 
             if (ModelState.IsValid)
             {
-                if (akPV != null && JKWId != 0 && AkBankId != 0 && akPV.Nama != null)
+                if (akPV != null && JKWId != 0 && AkBankId != 0 && akPV.Nama != null && JBahagianId != 0)
                 {
                     m.AkBankId = AkBankId;
                     m.JKWId = JKWId;
+                    m.JBahagianId = JBahagianId;
 
                     if (AkPembekalId != 0)
                     {
@@ -1133,13 +1149,15 @@ namespace MSNK.Controllers
             akPVView.Tahun = akPV.Tahun;
             akPVView.NoPV = akPV.NoPV;
             akPVView.Tarikh = akPV.Tarikh;
+            akPVView.JKWId = akPV.JKWId;
             akPVView.JKW = akPV.JKW;
+            akPVView.JBahagianId = akPV.JBahagianId;
+            akPVView.JBahagian = akPV.JBahagian;
+            akPVView.AkBankId = akPV.AkBankId;
             akPVView.AkBank = akPV.AkBank;
             akPVView.Jumlah = akPV.Jumlah;
             akPVView.TarikhPosting = akPV.TarikhPosting;
             akPVView.JCaraBayarId = akPV.JCaraBayarId;
-            akPVView.AkBankId = akPV.AkBankId;
-            akPVView.JKWId = akPV.JKWId;
 
             switch (akPV.FlKategoriPenerima)
             {
@@ -1415,7 +1433,15 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "PV001E")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkPV akPV, int JKWId,string Penerima, int AkBankId, int JCaraBayarId, decimal JumlahInbois)
+        public async Task<IActionResult> Edit(
+            int id, 
+            AkPV akPV, 
+            int JKWId,
+            string Penerima, 
+            int AkBankId, 
+            int JCaraBayarId, 
+            decimal JumlahInbois,
+            int JBahagianId)
         {
             if (id != akPV.Id)
             {
@@ -1464,6 +1490,7 @@ namespace MSNK.Controllers
                     // list of input that cannot be change
                     akPV.Tahun = dataAsal.Tahun;
                     akPV.JKWId = dataAsal.JKWId;
+                    akPV.JBahagianId = dataAsal.JBahagianId;
                     akPV.NoPV = dataAsal.NoPV;
                     akPV.SuPekerjaId = dataAsal.SuPekerjaId;
                     akPV.AkPembekalId = dataAsal.AkPembekalId;
@@ -1588,6 +1615,8 @@ namespace MSNK.Controllers
             akPVView.JCaraBayarId = akPV.JCaraBayarId;
             akPVView.AkBankId = akPV.AkBankId;
             akPVView.JKWId = akPV.JKWId;
+            akPVView.JBahagianId = akPV.JBahagianId;
+            akPVView.JBahagian = akPV.JBahagian;
 
             switch (akPV.FlKategoriPenerima)
             {
@@ -1856,6 +1885,7 @@ namespace MSNK.Controllers
                             {
                                 Tahun = akPV.Tahun,
                                 JKWId = akPV.JKWId,
+                                JBahagianId = akPV.JBahagianId,
                                 Tarikh = akPV.Tarikh,
                                 Kod = kod,
                                 Penerima = penerima,
@@ -1873,6 +1903,7 @@ namespace MSNK.Controllers
                             {
                                 Tahun = akPV.Tahun,
                                 JKWId = akPV.JKWId,
+                                JBahagianId = akPV.JBahagianId,
                                 Tarikh = akPV.Tarikh,
                                 Kod = kod,
                                 Penerima = penerima,
@@ -1892,6 +1923,7 @@ namespace MSNK.Controllers
                         {
                             NoRujukan = akPV.NoPV,
                             JKWId = akPV.JKWId,
+                            JBahagianId = akPV.JBahagianId,
                             AkCartaId1 = akPV.AkBank.AkCartaId,
                             AkCartaId2 = item.AkCartaId,
                             Tarikh = akPV.Tarikh,
@@ -1904,6 +1936,7 @@ namespace MSNK.Controllers
                         {
                             NoRujukan = akPV.NoPV,
                             JKWId = akPV.JKWId,
+                            JBahagianId = akPV.JBahagianId,
                             AkCartaId1 = item.AkCartaId,
                             AkCartaId2 = akPV.AkBank.AkCartaId,
                             Tarikh = akPV.Tarikh,
@@ -1934,6 +1967,7 @@ namespace MSNK.Controllers
                             AkTunaiLejar akTunaiLejar = new AkTunaiLejar()
                             {
                                 JKWId = akPV.JKWId,
+                                JBahagianId = akPV.JBahagianId,
                                 AkTunaiRuncitId = (int)akPV.AkTunaiRuncitId,
                                 Tarikh = akPV.Tarikh,
                                 AkCartaId = item.AkCartaId,
@@ -1948,6 +1982,11 @@ namespace MSNK.Controllers
                             await _akTunaiLejarRepo.Insert(akTunaiLejar);
                         }
                     }
+
+                    akPV.FlPosting = 1;
+                    akPV.TarikhPosting = DateTime.Now;
+                    akPV.UserIdKemaskini = user.UserName;
+                    akPV.TarKemaskini = DateTime.Now;
 
                     //insert applog
                     await AddLogAsync("Posting", "Posting Data", akPV.NoPV, (int)id, akPV.Jumlah);

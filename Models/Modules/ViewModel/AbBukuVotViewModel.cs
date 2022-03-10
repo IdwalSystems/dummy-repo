@@ -10,6 +10,9 @@ namespace MSNK.Models.Modules.ViewModel
         public int Id { get; set; }
         public string Tahun { get; set; }
         public string KW { get; set; }
+        public int JKWId { get; set; }
+        public string Bahagian { get; set; }
+        public int? JBahagianId { get; set; }
         public string KodAkaun { get; set; }
         public string Perihal { get; set; }
         public decimal Debit { get; set; }
