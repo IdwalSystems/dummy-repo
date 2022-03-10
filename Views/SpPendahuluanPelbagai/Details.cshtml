@@ -36,6 +36,31 @@
                     <div class="form-row">
                         <div class="col-md-4">
                             <div class="form-group">
+                                <label name="Pemohon" class="control-label">Nama Pemohon</label><span class="text-danger control-label"></span>
+                                <input name="Pemohon" class="form-control form-control-sm" readonly value="@Model.SuPekerja.Nama"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="JBahagianId" class="control-label">Bahagian</label>
+                                <select class="form-control form-control-sm" asp-for="JBahagianId" disabled>
+                                    <option value="" hidden>-- Pilih Bahagian --</option>
+                                    @foreach (var s in ViewBag.JBahagian)
+                                    {
+                                        <option value="@s.Id">@s.Perihal </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input asp-for="SuPekerjaId" class="form-control form-control-sm" value="@ViewBag.IdPekerja" hidden />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
                                 <label class="control-label">Jenis Kumpulan Wang</label>
                                 <input class="form-control form-control-sm" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
                             </div>
@@ -168,7 +193,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label">Jumlah</label><span class="text-danger control-label">*</span>
-                                <input class="form-control form-control-sm form-control-sm-custom" required id="txtJumlahKeseluruhan" value="@Model.JumKeseluruhan" readonly/>
+                                <input class="form-control form-control-sm form-control-sm-custom" required id="txtJumlahKeseluruhan" value="@Model.JumKeseluruhan" readonly />
                             </div>
                         </div>
                     </div>
@@ -205,20 +230,20 @@
                                                 <td id="td1Amaun">@item.Jumlah</td>
                                                 <td>
                                                     @*<button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>*@
+                                            <i class="fa fa-edit"></i>
+                                        </button>*@
                                                 </td>
                                                 <td>
                                                     @*<button class="btn btn-danger btn-sm" type="button" id="btnRemove1" onclick="Remove1(this)">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>*@
+                                            <i class="fas fa-trash"></i>
+                                        </button>*@
                                                 </td>
                                             </tr>
 
                                         }
                                     </tbody>
                                     <tfoot>
-                                        
+
                                     </tfoot>
                                 </table>
                             </div>
@@ -264,19 +289,19 @@
                                                 <td>@item.Jumlah</td>
                                                 <td>
                                                     @*<button class="btn btn-primary btn-sm" type="button" id="btnUpdate2" data-toggle="modal" data-target="#modalPerihal" onclick="Update2(this)">
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>*@
+                                            <i class="fa fa-edit"></i>
+                                        </button>*@
                                                 </td>
                                                 <td>
                                                     @*<button class="btn btn-danger btn-sm" type="button" id="btnRemove2" onclick="Remove2(this)">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>*@
+                                            <i class="fas fa-trash"></i>
+                                        </button>*@
                                                 </td>
                                             </tr>
                                         }
                                     </tbody>
                                     <tfoot>
-                                       
+
                                     </tfoot>
                                 </table>
                             </div>
@@ -284,7 +309,7 @@
                         <div class="card-footer">
                             <div class="form-group">
                                 <label class="control-label">Jumlah Perihal (RM)</label>
-                                <input asp-for="JumKeseluruhan"class="form-control form-control-sm" id="jumlahPerihal" readonly />
+                                <input asp-for="JumKeseluruhan" class="form-control form-control-sm" id="jumlahPerihal" readonly />
                             </div>
                         </div>
                     </div>
