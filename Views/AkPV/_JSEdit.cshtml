@@ -147,6 +147,8 @@
         }
     });
 
+    var FlKategoriPenerima = 0;
+
     function GetCarta(id, akPVId) {
         var Objek = {
             Id: id
@@ -165,42 +167,17 @@
                     var txtAmaunObjek = $("#txtAmaunObjek");
                     var txtJumlah = $("#jumlahObjek");
 
-                    //Sum value to Total text field
-                    var sum = 0;
-                    sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
-                    txtJumlah.val(sum.toFixed(2));
+                    if ($('#ddlKodPembekal').val() != 0) {
+                        FlKategoriPenerima = 1;
+                    }
 
-                    //Get the reference of the Table's TBODY element.
-                    var tBody = $("#tblObjek > TBODY")[0];
-                    //Add Row.
-                    var row = tBody.insertRow(-1);
+                    if ($('#ddlKodPekerja').val() != 0) {
+                        FlKategoriPenerima = 2;
+                    }
 
-                    //Add akCartaId cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
-
-                    //Add kod cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.kod + ' - ' + r.record.perihal);
-
-                    //Add amaun cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(parseFloat(txtAmaunObjek.val()).toFixed(2));
-                    cell.addClass('text-right');
-                    cell.attr("id", "td1Amaun_" + r.record.Id);
-
-                    //Add Edit Button cell.
-                    cell = $(row.insertCell(-1));
-
-                    var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
-                    cell.append(btnUpdate1);
-
-                    //Add Remove Button cell.
-                    cell = $(row.insertCell(-1));
-
-                    var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
-                    cell.append(btnRemove1);
+                    if ($('#ddlPanjar').val() != 0) {
+                        FlKategoriPenerima = 3;
+                    }
 
                     var AkPV1 = {
                         AkPVId: akPVId,
@@ -208,24 +185,77 @@
                         Amaun: txtAmaunObjek.val()
                     }
 
+                    var tahun = $("#txtTahun").val();
+                    var jKWId = $("#ddlKW").val();
+                    var jBahagianId = $("#ddlBahagian").val();
+                    var myData = {};
+                    myData.AkPV1 = AkPV1;
+                    myData.tahun = tahun;
+                    myData.jKWId = jKWId;
+                    myData.jBahagianId = jBahagianId;
+                    myData.FlKategoriPenerima = FlKategoriPenerima;
+
                     $.ajax({
                         type: "POST",
                         //url: "/AkPV/SaveAkPV1",
                         url: '@Url.Action("SaveAkPV1", "AkPV")',
-                        data: AkPV1,
+                        data: myData,
                         dataType: "json",
-                        success: function (r) {
-                            //Clear the TextBoxes.
-                            txtKodAkaun.val("").trigger('change');
-                            txtAmaunObjek.val("0.00");
-                            if ($('#ddlKodPembekal').val()) {
-                                checkJumlah();
+                        success: function (b) {
+
+                            if (b.result == "OK") {
+                                //Sum value to Total text field
+                                var sum = 0;
+                                sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
+                                txtJumlah.val(sum.toFixed(2));
+
+                                //Get the reference of the Table's TBODY element.
+                                var tBody = $("#tblObjek > TBODY")[0];
+                                //Add Row.
+                                var row = tBody.insertRow(-1);
+
+                                //Add akCartaId cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(r.record.id);
+                                cell.prop("hidden", !this.checked);
+
+                                //Add kod cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(r.record.kod + ' - ' + r.record.perihal);
+
+                                //Add amaun cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(parseFloat(txtAmaunObjek.val()).toFixed(2));
+                                cell.addClass('text-right');
+                                cell.attr("id", "td1Amaun_" + r.record.Id);
+
+                                //Add Edit Button cell.
+                                cell = $(row.insertCell(-1));
+
+                                var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                                cell.append(btnUpdate1);
+
+                                //Add Remove Button cell.
+                                cell = $(row.insertCell(-1));
+
+                                var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                                cell.append(btnRemove1);
+
+                                //Clear the TextBoxes.
+                                txtKodAkaun.val("").trigger('change');
+                                txtAmaunObjek.val("0.00");
+
+                                if ($('#ddlKodPembekal').val() != 0) {
+                                    checkJumlah();
+                                }
+                                $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
+                            }
+                            else {
+                                toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
+                                toastr.options.timeOut = 2000; // 2s
                             }
                         }
                     });
-
-                    $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
-
 
                 }
             });
@@ -315,21 +345,45 @@
         var amaun = $("#moAmaun1").val();
         var jumlah = $("#jumlahObjek");
 
+        if ($('#ddlKodPembekal').val() != 0) {
+            FlKategoriPenerima = 1;
+        }
+
+        if ($('#ddlKodPekerja').val() != 0) {
+            FlKategoriPenerima = 2;
+        }
+
+        if ($('#ddlPanjar').val() != 0) {
+            FlKategoriPenerima = 3;
+        }
+
         var AkPV1 = {
             AkPVId: akPVId,
             AkCartaId: id,
             Amaun: amaun
         }
+
+        var tahun = $("#txtTahun").val();
+        var jKWId = $("#ddlKW").val();
+        var jBahagianId = $("#ddlBahagian").val();
+        var myData = {};
+        myData.AkPV1 = AkPV1;
+        myData.tahun = tahun;
+        myData.jKWId = jKWId;
+        myData.jBahagianId = jBahagianId;
+        myData.FlKategoriPenerima = FlKategoriPenerima;
+
         $.ajax({
             type: "POST",
             //url: "/AkPV/SaveCartAkPV1",
             url: '@Url.Action("SaveCartAkPV1", "AkPV")',
-            data: AkPV1,
+            data: myData,
             dataType: "json",
-            success: function (r) {
+            success: function (b) {
                 //insert notification here
 
-                $.ajax({
+                if (b.result == "OK") {
+                    $.ajax({
                     type: "POST",
                     //url: "/AkPV/GetAllItemCartAkPV1",
                     url: '@Url.Action("GetAllItemCartAkPV1", "AkPV")',
@@ -356,13 +410,16 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
-                        if ($('#ddlKodPembekal').val()) {
+                        if ($('#ddlKodPembekal').val() != 0) {
                             checkJumlah();
-                        } else {
-
                         }
                     }
                 });
+                } else {
+                    toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
+                    toastr.options.timeOut = 2000; // 2s
+                }
+
             }
         });
     };
@@ -399,89 +456,106 @@
                     var txtAmaunPO = $("#txtAmaunPO");
                     var txtJumlah = $("#jumlahInbois");
 
-                    //Sum value to Total text field
-                    var sum = 0;
-                    sum = parseFloat(txtAmaun.val()) + parseFloat(txtJumlah.val());
-                    txtJumlah.val(sum.toFixed(2));
-
-                    //Get the reference of the Table's TBODY element.
-                    var tBody = $("#tblInbois > TBODY")[0];
-                    //Add Row.
-                    var row = tBody.insertRow(-1);
-
-                    //Add AkBelianId cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
-
-                    //Add No inbois cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.noInbois);
-
-                    //Add TarInbois cell.
-                    var cell = $(row.insertCell(-1));
-                    if (txtTarInbois.val() == null || txtTarInbois.val() == '') {
-                        cell.html('');
-                    } else {
-                        cell.html(showDate(txtTarInbois.val()));
-                    }
-
-                    //Add amaun inbois cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(parseFloat(txtAmaun.val()).toFixed(2));
-                    cell.addClass('text-right');
-
-                    //Add NoPO cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtNoPO.val());
-
-                    //Add TarPO cell.
-                    var cell = $(row.insertCell(-1));
-                    if (txtTarPO.val() == null || txtTarPO.val() == '') {
-                        cell.html('');
-                    } else {
-
-                        cell.html(showDate(txtTarPO.val()));
-                    }
-
-                    //Add amaun PO cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(parseFloat(txtAmaunPO.val()).toFixed(2));
-                    cell.addClass('text-right');
-
-                    //Add Edit Button cell.
-                    cell = $(row.insertCell(-1));
-
-                    var btnUpdate2 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
-                    cell.append(btnUpdate2);
-
-                    //Add Button cell.
-                    cell = $(row.insertCell(-1));
-                    var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
-                    cell.append(btnRemove2);
-
                     var AkPV2 = {
                         AkBelianId: ddlAkBelian.val(),
                         Amaun: txtAmaun.val()
                     }
+                    var tahun = $("#txtTahun").val();
+                    var jKWId = $("#ddlKW").val();
+                    var jBahagianId = $("#ddlBahagian").val();
+                    var myData = {};
+                    myData.AkPV2 = AkPV2;
+                    myData.tahun = tahun;
+                    myData.jKWId = jKWId;
+                    myData.jBahagianId = jBahagianId;
+
                     $.ajax({
                         type: "POST",
                         //url: "/AkPV/SaveAkPV2",
                         url: '@Url.Action("SaveAkPV2", "AkPV")',
-                        data: AkPV2,
+                        data: myData,
                         dataType: "json",
-                        success: function (r) {
-                            //Clear the TextBoxes.
-                            ddlAkBelian.val("").trigger('change');
-                            txtTarInbois.val("");
-                            txtAmaun.val("0.00");
-                            txtNoPO.val("");
-                            txtTarPO.val("");
-                            txtAmaunPO.val("0.00");
-                            checkJumlah();
+                        success: function (b) {
+                            if (b.result == "OK") {
+                                //Sum value to Total text field
+                                var sum = 0;
+                                sum = parseFloat(txtAmaun.val()) + parseFloat(txtJumlah.val());
+                                txtJumlah.val(sum.toFixed(2));
+
+                                //Get the reference of the Table's TBODY element.
+                                var tBody = $("#tblInbois > TBODY")[0];
+                                //Add Row.
+                                var row = tBody.insertRow(-1);
+
+                                //Add AkBelianId cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(r.record.id);
+                                cell.prop("hidden", !this.checked);
+
+                                //Add No inbois cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(r.record.noInbois);
+
+                                //Add TarInbois cell.
+                                var cell = $(row.insertCell(-1));
+                                if (txtTarInbois.val() == null || txtTarInbois.val() == '') {
+                                    cell.html('');
+                                } else {
+                                    cell.html(showDate(txtTarInbois.val()));
+                                }
+
+                                //Add amaun inbois cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(parseFloat(txtAmaun.val()).toFixed(2));
+                                cell.addClass('text-right');
+
+                                //Add NoPO cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(txtNoPO.val());
+
+                                //Add TarPO cell.
+                                var cell = $(row.insertCell(-1));
+                                if (txtTarPO.val() == null || txtTarPO.val() == '') {
+                                    cell.html('');
+                                } else {
+
+                                    cell.html(showDate(txtTarPO.val()));
+                                }
+
+                                //Add amaun PO cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(parseFloat(txtAmaunPO.val()).toFixed(2));
+                                cell.addClass('text-right');
+
+                                //Add Edit Button cell.
+                                cell = $(row.insertCell(-1));
+
+                                var btnUpdate2 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
+                                cell.append(btnUpdate2);
+
+                                //Add Button cell.
+                                cell = $(row.insertCell(-1));
+                                var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
+                                cell.append(btnRemove2);
+
+                                //Clear the TextBoxes.
+                                ddlAkBelian.val("").trigger('change');
+                                txtTarInbois.val("");
+                                txtAmaun.val("0.00");
+                                txtNoPO.val("");
+                                txtTarPO.val("");
+                                txtAmaunPO.val("0.00");
+                                checkJumlah();
+
+                                $("#txtAkBelian option[value=" + ddlAkBelian.val() + "]").prop('disabled', true);
+                            } else {
+                                toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
+                                toastr.options.timeOut = 2000; // 2s
+                            }
+                            
                         }
                     });
-                    $("#txtAkBelian option[value=" + ddlAkBelian.val() + "]").prop('disabled', true);
+                    
                 }
             });
         }

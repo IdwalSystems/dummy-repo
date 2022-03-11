@@ -1038,8 +1038,6 @@ namespace MSNK.Controllers
 
                 }
 
-
-
                 return Json(new { result = "OK" });
             }
             catch (Exception ex)

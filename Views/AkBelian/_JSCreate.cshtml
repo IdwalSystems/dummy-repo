@@ -87,7 +87,10 @@
                 data: { id: id },
                 dataType: "json",
                 success: function (msg) {
+                    $("#ddlKW").val(msg?.record?.jkw?.id).change();
+                    $("#ddlBahagian").val(msg?.record?.jBahagian?.id).change();
                     $("#ddlKodPembekal").val(msg?.record?.akPembekal?.id).change();
+                    $("#ddlKodPembekal option").prop('disabled', false);
                     displayObjekList(msg.record.akPO1);
                     displayPerihalList(msg.record.akPO2);
                     checkJumlah();

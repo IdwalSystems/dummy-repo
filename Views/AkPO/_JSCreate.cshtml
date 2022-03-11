@@ -24,7 +24,7 @@
                     $("#ddlKW").val(msg?.record?.jkw?.id).change();
                     $("#ddlBahagian").val(msg?.record?.jBahagian?.id).change();
                     $("#ddlPembekal").val(msg?.record?.akPembekal?.id).change();
-                    $("ddlPembekal").prop('disabled', false);
+                    $("#ddlPembekal option").prop('disabled', false);
                     $("#txtNamaSykt").val(msg.record.akPembekal.namaSykt);
                     $("#txtAlamat1").val(msg.record.akPembekal.alamat1);
                     $("#txtAlamat2").val(msg.record.akPembekal.alamat2);

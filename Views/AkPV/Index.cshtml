@@ -243,7 +243,6 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form asp-action="CreateByJenis">
                     <div class="form-group col-sm">
 
                         <div class="custom-control custom-radio">
@@ -271,13 +270,12 @@
 
                     <div class="form-row">
                         <div class="col-6 mb-2">
-                            <button type="submit" class="btn btn-success btn-block btn-lg ">TAMBAH</button>
+                            <a asp-action="CreateByJenis" asp-route-jenis="CreateAm" id="btnTambah" class="btn btn-success btn-block btn-lg ">TAMBAH</a>
                         </div>
                         <div class="col-6">
                             <a data-dismiss="modal" aria-label="Close" class=" btn btn-secondary btn-block btn-lg text-white">BATAL</a>
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer bg-success" style="padding:0px;">
 

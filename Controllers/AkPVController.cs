@@ -41,6 +41,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkBank, int, string> _akBankRepo;
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
+        private readonly CustomIRepository<string, int> _customRepo;
         private CartPV _cart;
 
         public AkPVController(
@@ -60,6 +61,7 @@ namespace MSNK.Controllers
             IRepository<AkBank, int, string> akBankRepository,
             IRepository<AkAkaun, int, string> akAkaunRepository,
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
+            CustomIRepository<string, int> customRepo,
             CartPV cart
             )
         {
@@ -79,6 +81,7 @@ namespace MSNK.Controllers
             _akBankRepo = akBankRepository;
             _akAkaunRepo = akAkaunRepository;
             _abBukuVotRepo = abBukuVotRepository;
+            _customRepo = customRepo;
             _cart = cart;
         }
         private async Task AddLogAsync(
@@ -173,7 +176,7 @@ namespace MSNK.Controllers
             }
 
             List<AkPVViewModel> viewModel = new List<AkPVViewModel>();
-            foreach(AkPV item in akPV)
+            foreach (AkPV item in akPV)
             {
                 decimal jumlahInbois = 0;
                 foreach (AkPV2 item2 in item.AkPV2)
@@ -211,10 +214,10 @@ namespace MSNK.Controllers
 
             List<AkBelian> akBelianList = _context.AkBelian
                 .Include(b => b.AkPO)
-                .Where(b=> b.FlPosting == 1)
+                .Where(b => b.FlPosting == 1)
                 .OrderBy(b => b.Tarikh).ToList();
 
-            foreach(var item in akBelianList)
+            foreach (var item in akBelianList)
             {
                 item.NoInbois = item.NoInbois.Substring(9);
             }
@@ -242,7 +245,7 @@ namespace MSNK.Controllers
             List<AkBank> akBankList = _context.AkBank.Include(b => b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
 
-            List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.Where(b=> b.Kod == "C" || b.Kod == "E" || b.Kod == "JP").ToList();
+            List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.Where(b => b.Kod == "C" || b.Kod == "E" || b.Kod == "JP").ToList();
             ViewBag.JCaraBayar = jCaraBayarList;
 
         }
@@ -264,7 +267,7 @@ namespace MSNK.Controllers
             foreach (AkPV2 item in lines2)
             {
                 var akBelian = _context.AkBelian
-                    .Include(x=> x.AkPO)
+                    .Include(x => x.AkPO)
                     .Where(x => x.Id == item.AkBelianId).FirstOrDefault();
                 item.AkBelian = akBelian;
             }
@@ -289,7 +292,7 @@ namespace MSNK.Controllers
             ViewBag.akPV1 = akPV1Table;
 
             List<AkPV2> akPV2Table = _context.AkPV2
-                .Include(b => b.AkBelian).ThenInclude(b=> b.AkPO)
+                .Include(b => b.AkBelian).ThenInclude(b => b.AkPO)
                 .Where(b => b.AkPVId == akPV.Id)
                 .OrderBy(b => b.Id)
                 .ToList();
@@ -344,14 +347,49 @@ namespace MSNK.Controllers
 
         }
 
-        public async Task<JsonResult> SaveAkPV1(AkPV1 akPV1)
+        public async Task<JsonResult> SaveAkPV1(
+            AkPV1 akPV1,
+            string tahun,
+            int jKWId,
+            int jBahagianId,
+            int FlKategoriPenerima)
         {
 
             try
             {
                 if (akPV1 != null)
                 {
-                    var user = await _userManager.GetUserAsync(User);
+                    // check for baki peruntukan
+                    // note :
+                    // FlKategoriPenerima = 1 (pembekal)
+                    // FlKategoriPenerima = 2 (pekerja)
+                    // FlKategoriPenerima = 3 (panjar)
+                    // FlKategoriPenerima = 0 (other than above)
+                    //if (FlKategoriPenerima == 0 || FlKategoriPenerima == 2)
+                    //{
+                    bool IsExistAbBukuVot = await _context.AbBukuVot
+                       .Where(x => x.Tahun == tahun && x.VotId == akPV1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                       .AnyAsync();
+
+                    if (IsExistAbBukuVot == true)
+                    {
+                        if (FlKategoriPenerima == 0 || FlKategoriPenerima == 2)
+                        {
+                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akPV1.AkCartaId, jKWId, jBahagianId);
+
+                            if (sum < akPV1.Amaun)
+                            {
+                                return Json(new { result = "ERROR" });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return Json(new { result = "ERROR" });
+                    }
+                    //}
+
+                    // check for baki peruntukan end
 
                     _cart.AddItem1(akPV1.AkPVId,
                                    akPV1.Amaun,
@@ -403,7 +441,12 @@ namespace MSNK.Controllers
         // get an item from cart akPV1 end
 
         //save cart akPV1
-        public JsonResult SaveCartAkPV1(AkPV1 akPV1)
+        public async Task<JsonResult> SaveCartAkPV1(
+            AkPV1 akPV1,
+            string tahun,
+            int jKWId,
+            int jBahagianId,
+            int FlKategoriPenerima)
         {
 
             try
@@ -413,6 +456,35 @@ namespace MSNK.Controllers
 
                 if (akT1 != null)
                 {
+                    // check for baki peruntukan
+                    // note :
+                    // FlKategoriPenerima = 1 (pembekal)
+                    // FlKategoriPenerima = 2 (pekerja)
+                    // FlKategoriPenerima = 3 (panjar)
+                    // FlKategoriPenerima = 0 (other than above)
+                    if (FlKategoriPenerima == 0 || FlKategoriPenerima == 2)
+                    {
+                        bool IsExistAbBukuVot = await _context.AbBukuVot
+                           .Where(x => x.Tahun == tahun && x.VotId == akPV1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                           .AnyAsync();
+
+                        if (IsExistAbBukuVot == true)
+                        {
+                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akPV1.AkCartaId, jKWId, jBahagianId);
+
+                            if (sum < akPV1.Amaun)
+                            {
+                                return Json(new { result = "ERROR" });
+                            }
+                        }
+                        else
+                        {
+                            return Json(new { result = "ERROR" });
+                        }
+                    }
+
+                    // check for baki peruntukan end
+
                     _cart.RemoveItem1(akPV1.AkCartaId);
 
                     _cart.AddItem1(akPV1.AkPVId,
@@ -462,8 +534,8 @@ namespace MSNK.Controllers
                 CartEmpty();
 
                 var result = _context.AkBelian
-                    .Include(b=>b.AkPO)
-                    .Include(b=>b.AkBelian1).ThenInclude(b=>b.AkCarta)
+                    .Include(b => b.AkPO)
+                    .Include(b => b.AkBelian1).ThenInclude(b => b.AkCarta)
                     .Where(b => b.Id == akBelian.Id)
                     .FirstOrDefault();
 
@@ -502,23 +574,52 @@ namespace MSNK.Controllers
         //}
         //on change no PO controller end
 
-        public async Task<JsonResult> SaveAkPV2(AkPV2 akPV2)
+        public async Task<JsonResult> SaveAkPV2(
+            AkPV2 akPV2,
+            string tahun,
+            int jKWId,
+            int jBahagianId)
         {
 
             try
             {
                 if (akPV2 != null)
                 {
-                    var user = await _userManager.GetUserAsync(User);
 
                     // check if Inbois has PO or not
-                    var po = _context.AkBelian.Where(b => b.Id == akPV2.AkBelianId).FirstOrDefault();
+                    var po = _context.AkBelian.Include(x => x.AkBelian1).Where(b => b.Id == akPV2.AkBelianId).FirstOrDefault();
 
                     if (po.AkPOId != null)
                     {
                         akPV2.HavePO = true;
                     }
 
+                    // check for baki peruntukan
+                    if (akPV2.HavePO == false)
+                    {
+                        foreach (AkBelian1 item in po.AkBelian1)
+                        {
+                            bool IsExistAbBukuVot = await _context.AbBukuVot
+                           .Where(x => x.Tahun == tahun && x.VotId == item.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                           .AnyAsync();
+
+                            if (IsExistAbBukuVot == true)
+                            {
+                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, item.AkCartaId, jKWId, jBahagianId);
+
+                                if (sum < akPV2.Amaun)
+                                {
+                                    return Json(new { result = "ERROR" });
+                                }
+                            }
+                            else
+                            {
+                                return Json(new { result = "ERROR" });
+                            }
+                        }
+                    }
+
+                    // check for baki peruntukan end
                     // add AkPV2 into cart lines2
                     _cart.AddItem2(akPV2.AkPVId,
                                    akPV2.AkBelianId,
@@ -647,7 +748,7 @@ namespace MSNK.Controllers
                         .FirstOrDefault();
 
                     item.AkBelian = akBelian;
-                    
+
                 }
 
                 return Json(new { result = "OK", record = data });
@@ -751,7 +852,7 @@ namespace MSNK.Controllers
             akPVView.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
 
             akPVView.AkPV1 = akPV.AkPV1;
-            foreach(AkPV2 item in akPV.AkPV2)
+            foreach (AkPV2 item in akPV.AkPV2)
             {
                 akPVView.JumlahInbois += item.Amaun;
             }
@@ -772,7 +873,7 @@ namespace MSNK.Controllers
             ViewBag.akPV1 = akPV1Table;
 
             List<AkPV2> akPV2Table = _context.AkPV2
-                .Include(b=> b.AkBelian).ThenInclude(b=> b.AkPO)
+                .Include(b => b.AkBelian).ThenInclude(b => b.AkPO)
                 .Where(b => b.AkPVId == id)
                 .OrderBy(b => b.Id)
                 .ToList();
@@ -855,6 +956,28 @@ namespace MSNK.Controllers
         }
         //on change kod pembekal controller end
 
+        // on change kod pembekal controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetInboisPembekal(int data)
+        {
+            try
+            {
+                var result = await _context.AkBelian.Where(x => x.AkPembekalId == data).ToListAsync();
+
+                if (result.Count() == 0)
+                {
+                    return Json(new { result = "Error" });
+                }
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change kod pembekal controller end
+
         // on change inbois controller
         [HttpPost]
         public async Task<JsonResult> JsonGetAkBelian(int data)
@@ -867,7 +990,7 @@ namespace MSNK.Controllers
                     .Include(x => x.AkPOLaras1)
                     .Where(x => x.AkPOId == result.AkPOId && x.FlPosting == 1).FirstOrDefault();
 
-                if(akPOLaras != null)
+                if (akPOLaras != null)
                 {
                     result.AkPO.Jumlah += akPOLaras.Jumlah;
                 }
@@ -907,7 +1030,7 @@ namespace MSNK.Controllers
             {
                 CartEmpty();
 
-                return Json(new { result = "OK"});
+                return Json(new { result = "OK" });
             }
             catch (Exception ex)
             {
@@ -916,9 +1039,7 @@ namespace MSNK.Controllers
         }
         // json empty cart end
 
-        [HttpPost]
         [Authorize(Policy = "PV001C")]
-        [ValidateAntiForgeryToken]
         public IActionResult CreateByJenis(string jenis)
         {
             // get latest no rujukan running number  
@@ -938,14 +1059,14 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "PV001C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            AkPV akPV, 
-            int JKWId, 
-            int? AkPembekalId, 
-            int? SuPekerjaId, 
-            int AkBankId, 
-            int JCaraBayarId, 
-            decimal JumlahInbois, 
+        public async Task<IActionResult> CreateByJenis(
+            AkPV akPV,
+            int JKWId,
+            int? AkPembekalId,
+            int? SuPekerjaId,
+            int AkBankId,
+            int JCaraBayarId,
+            decimal JumlahInbois,
             int? AkTunaiRuncitId,
             int JBahagianId)
         {
@@ -953,15 +1074,17 @@ namespace MSNK.Controllers
             var pembekal = _context.AkPembekal.Find(AkPembekalId);
             var pekerja = _context.SuPekerja.Find(SuPekerjaId);
             var tunaiRuncit = _context.AkTunaiRuncit.Find(AkTunaiRuncitId);
+
+            var jenis = "CreateAm";
             //check if user fil in both pekerja and pembekal
-            if (pembekal != null && pekerja != null)
-            {
-                TempData[SD.Error] = "Maklumat gagal disimpan. Sila isi salah satu kod pekerja atau kod pembekal";
-                //PopulateCart();
-                CartEmpty();
-                PopulateList();
-                return View(akPV);
-            }            
+            //if (pembekal != null && pekerja != null)
+            //{
+            //    TempData[SD.Error] = "Maklumat gagal disimpan. Sila isi salah satu kod pekerja atau kod pembekal";
+            //    //PopulateCart();
+            //    CartEmpty();
+            //    PopulateList();
+            //    return View(akPV);
+            //}            
 
             var user = await _userManager.GetUserAsync(User);
 
@@ -969,19 +1092,12 @@ namespace MSNK.Controllers
             {
                 akPV.FlJenisBaucer = 1;
                 akPV.AkTunaiRuncitId = AkTunaiRuncitId;
+                akPV.FlKategoriPenerima = 3;
+                jenis = "CreatePanjar";
             }
 
             if (pembekal != null)
             {
-                // checking for jumlah objek & jumlah perihal
-                if (akPV.Jumlah != JumlahInbois)
-                {
-                    TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Inbois";
-                    //PopulateCart();
-                    CartEmpty();
-                    PopulateList();
-                    return View(akPV);
-                }
 
                 akPV.Nama = pembekal.NamaSykt;
                 akPV.Alamat1 = pembekal.Alamat1;
@@ -991,6 +1107,7 @@ namespace MSNK.Controllers
                 akPV.Emel = pembekal.Emel;
                 akPV.NoAkaunBank = pembekal.AkaunBank;
                 akPV.FlKategoriPenerima = 1;
+                jenis = "CreateAm";
 
                 //check if PV dengan tanggungan or tanpa tanggungan
                 List<AkPV2> akPV2CartList = _cart.Lines2.ToList();
@@ -1015,6 +1132,7 @@ namespace MSNK.Controllers
                 akPV.Emel = pekerja.Emel;
                 akPV.NoAkaunBank = pekerja.NoAkaunBank;
                 akPV.FlKategoriPenerima = 2;
+                jenis = "CreatePekerja";
             }
 
             // get latest no rujukan running number  
@@ -1053,12 +1171,22 @@ namespace MSNK.Controllers
                     m.JKWId = JKWId;
                     m.JBahagianId = JBahagianId;
 
-                    if (AkPembekalId != 0)
+                    if (AkPembekalId != null)
                     {
                         m.AkPembekalId = AkPembekalId;
+
+                        // checking for jumlah objek & jumlah perihal
+                        if (akPV.Jumlah != JumlahInbois)
+                        {
+                            TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Inbois";
+                            //PopulateCart();
+                            CartEmpty();
+                            PopulateList();
+                            return View(jenis, akPV);
+                        }
                     }
-                    
-                    if (SuPekerjaId != 0)
+
+                    if (SuPekerjaId != null)
                     {
                         m.SuPekerjaId = SuPekerjaId;
                     }
@@ -1078,10 +1206,10 @@ namespace MSNK.Controllers
                     m.JCaraBayarId = JCaraBayarId;
                     m.NoCekAtauEFT = akPV.NoCekAtauEFT;
                     m.TarCekAtauEFT = akPV.TarCekAtauEFT;
-                    if(akPV.Perihal == null)
+                    if (akPV.Perihal == null)
                     {
                         m.Perihal = "";
-                    } 
+                    }
                     else
                     {
                         m.Perihal = akPV.Perihal;
@@ -1105,6 +1233,50 @@ namespace MSNK.Controllers
                     m.AkPV1 = _cart.Lines1.ToArray();
                     m.AkPV2 = _cart.Lines2.ToArray();
 
+                    // check for baki peruntukan
+                    // if its pembekal && not invois with PO or if its other than pembekal, pekerja
+                    // note :
+                    // FlKategoriPenerima = 1 (pembekal)
+                    // FlKategoriPenerima = 2 (pekerja)
+                    // FlKategoriPenerima = 3 (panjar)
+                    // FlKategoriPenerima = 0 (other than above)
+                    if ((m.FlKategoriPenerima != 1) || (m.FlKategoriPenerima != 3) || (m.FlKategoriPenerima == 1 && m.denganTanggungan == false))
+                    {
+                        foreach (AkPV1 item in m.AkPV1)
+                        {
+                            bool IsExistAbBukuVot = await _context.AbBukuVot
+                                .Where(x => x.Tahun == m.Tahun && x.VotId == item.AkCartaId && x.JKWId == m.JKWId && x.JBahagianId == m.JBahagianId)
+                                .AnyAsync();
+
+                            var carta = _context.AkCarta.Find(item.AkCartaId);
+
+                            if (IsExistAbBukuVot == true)
+                            {
+                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(m.Tahun, item.AkCartaId, m.JKWId, m.JBahagianId);
+
+                                if (sum < item.Amaun)
+                                {
+                                    TempData[SD.Error] = "Bajet untuk kod akaun " + carta.Kod + " tidak mencukupi.";
+                                    PopulateList();
+                                    CartEmpty();
+
+                                    return View(jenis, akPV);
+                                }
+                            }
+                            else
+                            {
+                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + carta.Kod;
+                                PopulateList();
+                                CartEmpty();
+
+                                return View(jenis, akPV);
+                            }
+                        }
+
+                    }
+
+                    // check for baki peruntukan end
+
                     await _akPVRepo.Insert(m);
 
                     //insert applog
@@ -1120,9 +1292,10 @@ namespace MSNK.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-           
+
             PopulateList();
-            return View(akPV);
+            CartEmpty();
+            return View(jenis, akPV);
         }
 
         // GET: AkPV/Edit/5
@@ -1407,7 +1580,7 @@ namespace MSNK.Controllers
             {
                 if (akPV2 != null)
                 {
-                    var akT2 = await _context.AkPV2.Include(b=>b.AkBelian).ThenInclude(b=>b.AkPO).FirstOrDefaultAsync(x => x.AkBelianId == akPV2.AkBelianId && x.AkPVId == akPV2.AkPVId);
+                    var akT2 = await _context.AkPV2.Include(b => b.AkBelian).ThenInclude(b => b.AkPO).FirstOrDefaultAsync(x => x.AkBelianId == akPV2.AkBelianId && x.AkPVId == akPV2.AkPVId);
                     var user = await _userManager.GetUserAsync(User);
 
                     _context.AkPV2.Remove(akT2);
@@ -1434,12 +1607,12 @@ namespace MSNK.Controllers
         [Authorize(Policy = "PV001E")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
-            int id, 
-            AkPV akPV, 
+            int id,
+            AkPV akPV,
             int JKWId,
-            string Penerima, 
-            int AkBankId, 
-            int JCaraBayarId, 
+            string Penerima,
+            int AkBankId,
+            int JCaraBayarId,
             decimal JumlahInbois,
             int JBahagianId)
         {
@@ -1536,7 +1709,7 @@ namespace MSNK.Controllers
                     //insert applog
                     if (jumlahAsal != akPV.Jumlah)
                     {
-                        await AddLogAsync("Ubah","RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" + 
+                        await AddLogAsync("Ubah", "RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" +
                             Convert.ToDecimal(akPV.Jumlah).ToString("#,##0.00"), akPV.NoPV, id, akPV.Jumlah);
 
                     }
@@ -1574,9 +1747,9 @@ namespace MSNK.Controllers
 
                     return RedirectToAction(nameof(Index));
                 }
-                
+
                 TempData[SD.Success] = "Data berjaya diubah..!";
-                
+
                 return RedirectToAction(nameof(Index));
             }
             PopulateList();
@@ -1727,7 +1900,7 @@ namespace MSNK.Controllers
             PVPrintModel data = new PVPrintModel();
             var user = await _userManager.GetUserAsync(User);
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
-            
+
             string jumlahDalamPerkataan;
 
             if (akPV.Jumlah < 0)
@@ -1738,7 +1911,7 @@ namespace MSNK.Controllers
             {
                 jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPV.Jumlah)).ToUpper();
             }
-            
+
             var noAkaunBank = "";
             var namaBankPenerima = "";
 
@@ -1876,6 +2049,33 @@ namespace MSNK.Controllers
 
                     foreach (AkPV1 item in akPV1)
                     {
+                        // check for baki peruntukan
+                        if ((akPV.FlKategoriPenerima != 1) || (akPV.FlKategoriPenerima != 3) || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false))
+                        {
+                            bool IsExistAbBukuVot = await _context.AbBukuVot
+                                .Where(x => x.Tahun == akPV.Tahun && x.VotId == item.AkCartaId && x.JKWId == akPV.JKWId && x.JBahagianId == akPV.JBahagianId)
+                                .AnyAsync();
+
+                            if (IsExistAbBukuVot == true)
+                            {
+                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akPV.Tahun, item.AkCartaId, akPV.JKWId, akPV.JBahagianId);
+
+                                if (sum < item.Amaun)
+                                {
+                                    TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
+                                    return RedirectToAction(nameof(Index));
+                                }
+                            }
+                            else
+                            {
+                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
+                                return RedirectToAction(nameof(Index));
+                            }
+
+                        }
+
+                        // check for baki peruntukan end
+
                         //insert into AbBukuVot
                         AbBukuVot abBukuVot = new AbBukuVot();
                         if (akPV.FlKategoriPenerima == 1)
@@ -1946,7 +2146,7 @@ namespace MSNK.Controllers
                         await _akAkaunRepo.Insert(akAObjek);
 
                         //insert akTunaiLejar
-                        if(akPV.FlJenisBaucer == 1)
+                        if (akPV.FlJenisBaucer == 1)
                         {
                             //find latest baki
                             AkTunaiLejar akT = _context.AkTunaiLejar

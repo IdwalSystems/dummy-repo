@@ -300,6 +300,8 @@ namespace MSNK.Controllers
             viewModel.Tarikh = akNotaMinta.Tarikh;
             viewModel.JKW = akNotaMinta.JKW;
             viewModel.JKWId = akNotaMinta.JKWId;
+            viewModel.JBahagian = akNotaMinta.JBahagian;
+            viewModel.JBahagianId = akNotaMinta.JBahagianId;
             viewModel.NoRujukan = akNotaMinta.NoRujukan.Substring(3);
             viewModel.Tajuk = akNotaMinta.Tajuk;
             viewModel.NoSiri = akNotaMinta.NoSiri;
