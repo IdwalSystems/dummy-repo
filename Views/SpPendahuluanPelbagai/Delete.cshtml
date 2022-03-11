@@ -50,7 +50,7 @@
                             <div class="form-group">
                                 <label asp-for="JBahagianId" class="control-label">Bahagian</label>
                                 <select class="form-control form-control-sm" asp-for="JBahagianId" disabled>
-                                    <option value="" hidden>-- Pilih Bahagian --</option>
+                                    <option value="" disabled selected>-- Pilih Bahagian --</option>
                                     @foreach (var s in ViewBag.JBahagian)
                                     {
                                         <option value="@s.Id">@s.Perihal </option>

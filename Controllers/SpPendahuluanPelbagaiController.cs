@@ -626,6 +626,7 @@ namespace MSNK.Controllers
             }
 
             var spPendahuluanPelbagai = await _context.SpPendahuluanPelbagai
+                .Include(s => s.SuPekerja)
                 .Include(s => s.JBahagian)
                 .Include(s => s.JNegeri)
                 .Include(s => s.JSukan)
