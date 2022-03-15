@@ -169,33 +169,7 @@
                             <label asp-for="Perihal" class="control-label"></label>
                             <textarea asp-for="Perihal" class="form-control form-control-sm text-uppercase" rows="2" readonly> @Model.Perihal</textarea>
                         </div>
-                        <div class="card box-shadow mb-3 mt-2">
-                            <div class="card-header">
-                                <h6>Maklumat Panjar</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-row">
-                                    <div class="col-md-6">
 
-                                        <label asp-for="AkTunaiRuncitId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                        <select class="form-control form-control-sm" asp-for="AkTunaiRuncitId" disabled id="ddlTunaiRuncit">
-                                            <option value="0" selected>-- Pilih Kaunter Panjar --</option>
-                                            @foreach (var s in ViewBag.AkTunaiRuncit)
-                                            {
-                                                <option value="@s.Id">@s.KaunterPanjar (@s.AkCarta.Kod - @s.AkCarta.Perihal )</option>
-                                            }
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label asp-for="NoRekup" class="control-label"></label>
-                                            <input asp-for="NoRekup" class="form-control form-control-sm text-uppercase" id="txtNoRekup" disabled />
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
                     </div>
                     <div class="col-lg-2 pb-3">
                         <div class="card mb-2">
@@ -209,15 +183,24 @@
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer2" name="FlJenisBaucer" class="custom-control-input" value="1">
-                                        <label class="custom-control-label" for="FlJenisBaucer2">Rekupan</label>
+                                        <label class="custom-control-label" for="FlJenisBaucer2">Inbois</label>
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="2">
-                                        <label class="custom-control-label" for="FlJenisBaucer3">Akruan/AP/AKB</label>
+                                        <label class="custom-control-label" for="FlJenisBaucer3">Gaji</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="3">
+                                        <label class="custom-control-label" for="FlJenisBaucer3">Pendahuluan</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="4">
+                                        <label class="custom-control-label" for="FlJenisBaucer3">Panjar</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="card mb-2">
                             <div class="card-body p-1">
 
@@ -329,63 +312,120 @@
                 </div>
                 @*table Objek end*@
 
-                @*table Inbois*@
-                @if (Model.FlKategoriPenerima == 1)
+
+                @switch (Model.FlJenisBaucer)
                 {
-                    <div class="card box-shadow mb-3" id="cardInbois">
-                        <div class="card-header">
-                            <h6>PO dan Inbois</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="tblInbois" class="table table-sm nowrap text-nowrap" cellpadding="0" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th width="20%">No Inbois</th>
-                                            <th width="5%">Tarikh Inbois</th>
-                                            <th width="5%">Amaun Inbois RM</th>
-                                            <th width="20%">No PO</th>
-                                            <th width="5%">Tar PO</th>
-                                            <th width="5%">Amaun PO RM</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbodyInbois">
-                                        @foreach (var item in ViewBag.AkPV2)
-                                        {
-                                            <tr id="@item.Id">
-                                                <td id="akBelianId" hidden>@item.AkBelianId</td>
-                                                <td class="text-left">@item.AkBelian.NoInbois</td>
-                                                <td>@item.AkBelian.Tarikh.ToString("dd/MM/yyyy")</td>
-                                                <td class="text-right">@item.Amaun</td>
-                                                @if (item.AkBelian.AkPO != null)
-                                                {
-                                                    <td class="text-left">@item.AkBelian.AkPO.NoPO</td>
-                                                    <td>@item.AkBelian.AkPO.Tarikh.ToString("dd/MM/yyyy")</td>
-                                                    <td class="text-right">@item.AkBelian.AkPO.Jumlah</td>
-                                                }
-                                                else
-                                                {
-                                                    <td class="text-left">-</td>
-                                                    <td></td>
-                                                    <td class="text-right">0.00</td>
-                                                }
+                    case 1:
+                        @*table Inbois*@
+                        <div class="card box-shadow mb-3" id="cardInbois">
+                            <div class="card-header">
+                                <h6>PO dan Inbois</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="tblInbois" class="table table-sm nowrap text-nowrap" cellpadding="0" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%">No Inbois</th>
+                                                <th width="5%">Tarikh Inbois</th>
+                                                <th width="5%">Amaun Inbois RM</th>
+                                                <th width="20%">No PO</th>
+                                                <th width="5%">Tar PO</th>
+                                                <th width="5%">Amaun PO RM</th>
                                             </tr>
-                                        }
-                                    </tbody>
-                                    <tfoot>
-                                    </tfoot>
-                                </table>
+                                        </thead>
+                                        <tbody id="tbodyInbois">
+                                            @foreach (var item in ViewBag.AkPV2)
+                                            {
+                                                <tr id="@item.Id">
+                                                    <td id="akBelianId" hidden>@item.AkBelianId</td>
+                                                    <td class="text-left">@item.AkBelian.NoInbois</td>
+                                                    <td>@item.AkBelian.Tarikh.ToString("dd/MM/yyyy")</td>
+                                                    <td class="text-right">@item.Amaun</td>
+                                                    @if (item.AkBelian.AkPO != null)
+                                                    {
+                                                        <td class="text-left">@item.AkBelian.AkPO.NoPO</td>
+                                                        <td>@item.AkBelian.AkPO.Tarikh.ToString("dd/MM/yyyy")</td>
+                                                        <td class="text-right">@item.AkBelian.AkPO.Jumlah</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-left">-</td>
+                                                        <td></td>
+                                                        <td class="text-right">0.00</td>
+                                                    }
+                                                </tr>
+                                            }
+                                        </tbody>
+                                        <tfoot>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="form-group">
+                                    <label class="control-label">Jumlah Inbois</label>
+                                    <input class="form-control form-control-sm" id="jumlahInbois" value="@Model.JumlahInbois" readonly />
+                                </div>
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <div class="form-group">
-                                <label class="control-label">Jumlah Inbois</label>
-                                <input class="form-control form-control-sm" id="jumlahInbois" value="@Model.JumlahInbois" readonly />
+
+                        @*table Inbois end*@
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        @*pendahuluan pelbagai*@
+                        <div class="card box-shadow mb-3" id="cardPendahuluanPelbagai" >
+                            <div class="card-header">
+                                <h6>Pendahuluan Pelbagai</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label asp-for="SpPendahuluanPelbagaiId" class="control-label"></label>
+                                    <input class="form-control form-control-sm" value="@Model.SpPendahuluanPelbagai.NoPermohonan" id="ddlPendahuluanPelbagai" readonly/>
+                                    <span asp-validation-for="SpPendahuluanPelbagaiId" class="text-danger"></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                        @*pendahuluan pelbagai end*@
+                        break;
+                    case 4:
+                        @*maklumat panjar*@
+                        <div class="card box-shadow mb-3 mt-2">
+                            <div class="card-header">
+                                <h6>Maklumat Panjar</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-md-6">
+
+                                        <label asp-for="AkTunaiRuncitId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                        <select class="form-control form-control-sm" asp-for="AkTunaiRuncitId" disabled id="ddlTunaiRuncit">
+                                            <option value="0" selected>-- Pilih Kaunter Panjar --</option>
+                                            @foreach (var s in ViewBag.AkTunaiRuncit)
+                                            {
+                                                <option value="@s.Id">@s.KaunterPanjar (@s.AkCarta.Kod - @s.AkCarta.Perihal )</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="NoRekup" class="control-label"></label>
+                                            <input asp-for="NoRekup" class="form-control form-control-sm text-uppercase" id="txtNoRekup" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        @*maklumat panjar end*@
+                        break;
+                    default:
+                        break;
                 }
-                @*table Inbois end*@
+
             </div>
 
         </div>
@@ -395,11 +435,11 @@
 <div>
     @if (Model.FlHapus == 0)
     {
-        @if (Model.FlPosting == 1)
+                    @if (Model.FlPosting == 1)
         {
-        }
+                    }
         else
-        {
+                    {
             <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
 
             @*<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">

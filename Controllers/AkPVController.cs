@@ -42,6 +42,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly CustomIRepository<string, int> _customRepo;
+        private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPPRepo;
         private CartPV _cart;
 
         public AkPVController(
@@ -62,6 +63,7 @@ namespace MSNK.Controllers
             IRepository<AkAkaun, int, string> akAkaunRepository,
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
             CustomIRepository<string, int> customRepo,
+            IRepository<SpPendahuluanPelbagai, int, string> spPPRepo,
             CartPV cart
             )
         {
@@ -82,6 +84,7 @@ namespace MSNK.Controllers
             _akAkaunRepo = akAkaunRepository;
             _abBukuVotRepo = abBukuVotRepository;
             _customRepo = customRepo;
+            _spPPRepo = spPPRepo;
             _cart = cart;
         }
         private async Task AddLogAsync(
@@ -208,6 +211,9 @@ namespace MSNK.Controllers
         {
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
+
+            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.OrderBy(b => b.NoPermohonan).ToList();
+            ViewBag.SpPendahuluanPelbagai = spList;
 
             List<JBahagian> bahagianList = _context.JBahagian.ToList();
             ViewBag.JBahagian = bahagianList;
@@ -850,6 +856,8 @@ namespace MSNK.Controllers
             akPVView.FlKategoriPenerima = akPV.FlKategoriPenerima;
             akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
             akPVView.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
+            akPVView.SpPendahuluanPelbagaiId = akPV.SpPendahuluanPelbagaiId;
+            akPVView.SpPendahuluanPelbagai = akPV.SpPendahuluanPelbagai;
 
             akPVView.AkPV1 = akPV.AkPV1;
             foreach (AkPV2 item in akPV.AkPV2)
@@ -938,6 +946,28 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
+
+        // on change pendahuluan
+        [HttpPost]
+        public async Task<JsonResult> JsonGetPendahuluan(int data, int AkPVId)
+        {
+            try
+            {
+                CartEmpty();
+                var result = await _spPPRepo.GetById(data);
+                
+                _cart.AddItem1(AkPVId,
+                               result.JumKeseluruhan,
+                               result.AkCartaId);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change pendahuluan end
 
         // on change kod pembekal controller
         [HttpPost]
@@ -1068,12 +1098,28 @@ namespace MSNK.Controllers
             int JCaraBayarId,
             decimal JumlahInbois,
             int? AkTunaiRuncitId,
-            int JBahagianId)
+            int? SpPendahuluanPelbagaiId,
+            int JBahagianId,
+            int FlJenisBaucer)
         {
+            // note :
+            // FlBaucer = 0 ( Am )
+            // FlBaucer = 1 ( Inbois )
+            // FlBaucer = 2 ( Gaji )
+            // FlBaucer = 3 ( Pendahuluan )
+            // FlBaucer = 4 ( Panjar )
+            // ..
+            // FlKategoriPenerima = 0 ( Am / Lain - lain )
+            // FlKategoriPenerima = 1 ( pembekal )
+            // FlKategoriPenerima = 2 ( pekerja )
+            // ..
+
+
             AkPV m = new AkPV();
             var pembekal = _context.AkPembekal.Find(AkPembekalId);
             var pekerja = _context.SuPekerja.Find(SuPekerjaId);
             var tunaiRuncit = _context.AkTunaiRuncit.Find(AkTunaiRuncitId);
+            var spPendahuluan = _context.SpPendahuluanPelbagai.Find(SpPendahuluanPelbagaiId);
 
             var jenis = "CreateAm";
             //check if user fil in both pekerja and pembekal
@@ -1090,9 +1136,9 @@ namespace MSNK.Controllers
 
             if (tunaiRuncit != null)
             {
-                akPV.FlJenisBaucer = 1;
+                akPV.FlJenisBaucer = 4;
+                akPV.FlKategoriPenerima = 2;
                 akPV.AkTunaiRuncitId = AkTunaiRuncitId;
-                akPV.FlKategoriPenerima = 3;
                 jenis = "CreatePanjar";
             }
 
@@ -1106,6 +1152,7 @@ namespace MSNK.Controllers
                 akPV.Telefon = pembekal.Telefon1;
                 akPV.Emel = pembekal.Emel;
                 akPV.NoAkaunBank = pembekal.AkaunBank;
+                akPV.FlJenisBaucer = 1;
                 akPV.FlKategoriPenerima = 1;
                 jenis = "CreateAm";
 
@@ -1171,18 +1218,22 @@ namespace MSNK.Controllers
                     m.JKWId = JKWId;
                     m.JBahagianId = JBahagianId;
 
+                    
                     if (AkPembekalId != null)
                     {
-                        m.AkPembekalId = AkPembekalId;
-
-                        // checking for jumlah objek & jumlah perihal
-                        if (akPV.Jumlah != JumlahInbois)
+                        if (FlJenisBaucer == 1 && AkPembekalId != 0)
                         {
-                            TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Inbois";
-                            //PopulateCart();
-                            CartEmpty();
-                            PopulateList();
-                            return View(jenis, akPV);
+                            m.AkPembekalId = AkPembekalId;
+
+                            // checking for jumlah objek & jumlah perihal
+                            if (akPV.Jumlah != JumlahInbois)
+                            {
+                                TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Inbois";
+                                //PopulateCart();
+                                CartEmpty();
+                                PopulateList();
+                                return View(jenis, akPV);
+                            }
                         }
                     }
 
@@ -1222,9 +1273,13 @@ namespace MSNK.Controllers
                     m.FlJenisBaucer = akPV.FlJenisBaucer;
                     m.NoRekup = akPV.NoRekup;
                     m.denganTanggungan = akPV.denganTanggungan;
-                    if (AkTunaiRuncitId != 0)
+                    if (tunaiRuncit != null )
                     {
                         m.AkTunaiRuncitId = AkTunaiRuncitId;
+                    }
+                    if (spPendahuluan != null )
+                    {
+                        m.SpPendahuluanPelbagaiId = SpPendahuluanPelbagaiId;
                     }
 
                     m.UserId = user.UserName;
@@ -1234,13 +1289,24 @@ namespace MSNK.Controllers
                     m.AkPV2 = _cart.Lines2.ToArray();
 
                     // check for baki peruntukan
-                    // if its pembekal && not invois with PO or if its other than pembekal, pekerja
+                    // if jenis baucer is Am / pembekal && its not pembekal,
+                    // jenis baucer is Am / pembekal && its pembekal that have tanggungan(PO) ,
+                    // jenis baucer is gaji / pekerja && it do not have pendahuluan pelbagai
                     // note :
-                    // FlKategoriPenerima = 1 (pembekal)
-                    // FlKategoriPenerima = 2 (pekerja)
-                    // FlKategoriPenerima = 3 (panjar)
-                    // FlKategoriPenerima = 0 (other than above)
-                    if ((m.FlKategoriPenerima != 1) || (m.FlKategoriPenerima != 3) || (m.FlKategoriPenerima == 1 && m.denganTanggungan == false))
+                    // FlJenisBaucer = 0 ( Am )
+                    // FlJenisBaucer = 1 ( Inbois )
+                    // FlJenisBaucer = 2 ( Gaji )
+                    // FlJenisBaucer = 3 ( Pendahuluan )
+                    // FlJenisBaucer = 4 ( Panjar )
+                    // ..
+                    // FlKategoriPenerima = 0 ( Am / Lain - lain )
+                    // FlKategoriPenerima = 1 ( pembekal )
+                    // FlKategoriPenerima = 2 ( pekerja )
+                    // ..
+
+                    if ((m.FlJenisBaucer == 0 && m.FlKategoriPenerima == 0) 
+                        || (m.FlKategoriPenerima == 1 && m.denganTanggungan == false) 
+                        || (m.FlJenisBaucer == 2))
                     {
                         foreach (AkPV1 item in m.AkPV1)
                         {
@@ -1669,6 +1735,7 @@ namespace MSNK.Controllers
                     akPV.AkPembekalId = dataAsal.AkPembekalId;
                     akPV.FlJenisBaucer = dataAsal.FlJenisBaucer;
                     akPV.AkTunaiRuncitId = dataAsal.AkTunaiRuncitId;
+                    akPV.SpPendahuluanPelbagaiId = dataAsal.SpPendahuluanPelbagaiId;
                     akPV.NoRekup = dataAsal.NoRekup;
                     akPV.TarMasuk = dataAsal.TarMasuk;
                     akPV.UserId = dataAsal.UserId;
@@ -1842,6 +1909,8 @@ namespace MSNK.Controllers
             akPVView.FlKategoriPenerima = akPV.FlKategoriPenerima;
             akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
             akPVView.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
+            akPVView.SpPendahuluanPelbagaiId = akPV.SpPendahuluanPelbagaiId;
+            akPVView.SpPendahuluanPelbagai = akPV.SpPendahuluanPelbagai;
 
             akPVView.AkPV1 = akPV.AkPV1;
             foreach (AkPV2 item in akPV.AkPV2)
@@ -2050,7 +2119,10 @@ namespace MSNK.Controllers
                     foreach (AkPV1 item in akPV1)
                     {
                         // check for baki peruntukan
-                        if ((akPV.FlKategoriPenerima != 1) || (akPV.FlKategoriPenerima != 3) || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false))
+                        //if ((akPV.FlKategoriPenerima != 1) || (akPV.FlKategoriPenerima != 3) || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false))
+                        if((akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == 0)
+                        || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false)
+                        || (akPV.FlJenisBaucer == 2))
                         {
                             bool IsExistAbBukuVot = await _context.AbBukuVot
                                 .Where(x => x.Tahun == akPV.Tahun && x.VotId == item.AkCartaId && x.JKWId == akPV.JKWId && x.JBahagianId == akPV.JBahagianId)
@@ -2095,6 +2167,41 @@ namespace MSNK.Controllers
                                 Liabiliti = 0 - item.Amaun
 
                             };
+                        }
+                        else if (akPV.FlKategoriPenerima == 2)
+                        {
+                            if( akPV.FlJenisBaucer == 3)
+                            {
+                                abBukuVot = new AbBukuVot()
+                                {
+                                    Tahun = akPV.Tahun,
+                                    JKWId = akPV.JKWId,
+                                    JBahagianId = akPV.JBahagianId,
+                                    Tarikh = akPV.Tarikh,
+                                    Kod = kod,
+                                    Penerima = penerima,
+                                    VotId = item.AkCartaId,
+                                    Rujukan = akPV.NoPV,
+                                    Debit = item.Amaun,
+                                    Tanggungan = 0 - item.Amaun
+                                };
+
+                            }
+                            else
+                            {
+                                abBukuVot = new AbBukuVot()
+                                {
+                                    Tahun = akPV.Tahun,
+                                    JKWId = akPV.JKWId,
+                                    JBahagianId = akPV.JBahagianId,
+                                    Tarikh = akPV.Tarikh,
+                                    Kod = kod,
+                                    Penerima = penerima,
+                                    VotId = item.AkCartaId,
+                                    Rujukan = akPV.NoPV,
+                                    Debit = item.Amaun
+                                };
+                            }
                         }
                         else
                         {

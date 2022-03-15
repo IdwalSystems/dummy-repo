@@ -241,6 +241,8 @@
                                 var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                                 cell.append(btnRemove1);
 
+                                $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
+
                                 //Clear the TextBoxes.
                                 txtKodAkaun.val("").trigger('change');
                                 txtAmaunObjek.val("0.00");
@@ -248,7 +250,6 @@
                                 if ($('#ddlKodPembekal').val() != 0) {
                                     checkJumlah();
                                 }
-                                $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
                             }
                             else {
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
@@ -539,7 +540,9 @@
                                 cell.append(btnRemove2);
 
                                 //Clear the TextBoxes.
-                                ddlAkBelian.val("").trigger('change');
+                                $("#txtAkBelian option[value=" + ddlAkBelian.val() + "]").prop('disabled', true);
+
+                                ddlAkBelian.val("0").trigger('change');
                                 txtTarInbois.val("");
                                 txtAmaun.val("0.00");
                                 txtNoPO.val("");
@@ -547,7 +550,6 @@
                                 txtAmaunPO.val("0.00");
                                 checkJumlah();
 
-                                $("#txtAkBelian option[value=" + ddlAkBelian.val() + "]").prop('disabled', true);
                             } else {
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
                                 toastr.options.timeOut = 2000; // 2s

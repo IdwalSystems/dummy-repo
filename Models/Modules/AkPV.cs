@@ -62,7 +62,7 @@ namespace MSNK.Models.Modules
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
         [DisplayName("Jenis Baucer")]
-        // Am = 0; Rekupan = 1; Akruan = 2;
+        // Am = 0; Rekupan = 1; Akruan = 2; Gaji = 3; Pendahuluan = 4;
         public int FlJenisBaucer { get; set; }
         // Am = 0; Pembekal = 1; Pekerja = 2;
         public int FlKategoriPenerima { get; set; }

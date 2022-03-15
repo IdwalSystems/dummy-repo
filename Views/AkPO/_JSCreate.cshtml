@@ -366,12 +366,13 @@
                                 var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                                 cell.append(btnRemove1);
 
+                                $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
+
                                 //Clear the TextBoxes.
                                 txtKodAkaun.val("").trigger('change');
                                 txtAmaunObjek.val("0.00");
                                 checkJumlah();
 
-                                $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
                             } else {
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
                                 toastr.options.timeOut = 2000; // 2s

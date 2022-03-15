@@ -15,6 +15,45 @@
                     <h5>Baucer Pembayaran Am - @ViewData["Title"]</h5>
                 </div>
                 <div class="card-body">
+                    <div class="card mb-2">
+                        <div class="card-body pb-1 pt-1">
+                            <div class="form-group mb-0 mt-1">
+                                <label class="control-label">Jenis Baucer</label>
+                            </div>
+                            <div class="form-row col-sm ml-2">
+                                <div class="custom-control custom-radio col-md-4 " >
+                                    <input class="custom-control-input" type="radio" id="0" name="FlJenisBaucer" value="0" checked>
+                                    <label class="custom-control-label" for="0">
+                                        Am
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-4 " >
+                                    <input class="custom-control-input" type="radio" id="1" name="FlJenisBaucer" value="1">
+                                    <label class="custom-control-label" for="1">
+                                        Inbois
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-4 " hidden>
+                                    <input class="custom-control-input" type="radio" id="2" name="FlJenisBaucer" value="2" >
+                                    <label class="custom-control-label" for="2">
+                                        Gaji
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-4 " hidden>
+                                    <input class="custom-control-input" type="radio" id="3" name="FlJenisBaucer" value="3">
+                                    <label class="custom-control-label" for="3">
+                                        Pendahuluan Pelbagai
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-4" hidden>
+                                    <input class="custom-control-input" type="radio" id="4" name="FlJenisBaucer" value="4">
+                                    <label class="custom-control-label" for="4">
+                                        Panjar
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-row">
                         <div class="col-md-1">
                             <div class="form-group">
@@ -70,7 +109,7 @@
 
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row" id="divPembekal" hidden>
                         <div class="col-md-12">
                             <input id="ddlKodPekerja" value="0" hidden />
                             <input id="ddlPanjar" value="0" hidden />
@@ -84,7 +123,7 @@
                             </select>
                             <span asp-validation-for="AkPembekalId" class="text-danger"></span>
                         </div>
-                        
+
                     </div>
 
                     <div class="form-row">
