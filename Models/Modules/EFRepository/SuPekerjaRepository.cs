@@ -27,7 +27,6 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
-                .Include(b => b.JJawatanPekerja)
                 .Include(b => b.JNegeri)
                 .Include(b => b.SuTanggungan)
                 .ToListAsync();
@@ -40,7 +39,6 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
-                .Include(b => b.JJawatanPekerja)
                 .Include(b => b.JNegeri)
                 .Include(b => b.SuTanggungan)
                 .ToListAsync();
@@ -52,7 +50,6 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
-                .Include(b => b.JJawatanPekerja)
                 .Include(b => b.JNegeri)
                 .Include(b => b.SuTanggungan)
                 .FirstOrDefaultAsync(x=> x.Id == id);
@@ -65,7 +62,6 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
-                .Include(b => b.JJawatanPekerja)
                 .Include(b => b.JNegeri)
                 .Include(b => b.SuTanggungan)
                 .FirstOrDefaultAsync(x => x.Id == id);

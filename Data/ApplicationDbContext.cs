@@ -46,7 +46,6 @@ namespace MSNK.Data
         public DbSet<AkPV2> AkPV2 { get; set; }
         public DbSet<SuPekerja> SuPekerja { get; set; }
         public DbSet<SuTanggunganPekerja> SuTanggunganPekerja { get; set; }
-        public DbSet<JJawatanPekerja>JJawatanPekerja { get; set; }
         public DbSet<JBangsa> JBangsa { get; set; }
         public DbSet<JAgama> JAgama { get; set; }
         public DbSet<AbBukuVot> AbBukuVot { get; set; }
@@ -67,6 +66,7 @@ namespace MSNK.Data
         public DbSet<JBahagian> JBahagian { get; set; }
         public DbSet<AbWaran> AbWaran { get; set; }
         public DbSet<AbWaran1> AbWaran1 { get; set; }
+        public DbSet<JPelulus> JPelulus { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -83,13 +83,13 @@ namespace MSNK.Data
             modelBuilder.Entity<JSukan>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JTahapAktiviti>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JJantina>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
-            modelBuilder.Entity<JJawatanPekerja>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkPembekal>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<SuPekerja>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkCarta>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkTunaiPemegang>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JJenis>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JParas>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JPelulus>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
 
             //Terimaan
             modelBuilder.Entity<AkTerima>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);

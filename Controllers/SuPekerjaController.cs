@@ -28,7 +28,6 @@ namespace MSNK.Controllers
         private readonly IRepository<JNegeri, int, string> _jNegeriRepo;
         private readonly IRepository<JAgama, int, string> _jAgamaRepo;
         private readonly IRepository<JBangsa, int, string> _jBangsaRepo;
-        private readonly IRepository<JJawatanPekerja, int, string> _jJawatanPekerjaRepo;
         private readonly ListViewIRepository<SuTanggunganPekerja, int> _suTanggunganRepo;
         private readonly IRepository<JCaraBayar, int, string> _jCaraBayarRepo;
         private CartPekerja _cart;
@@ -41,7 +40,6 @@ namespace MSNK.Controllers
             IRepository<JNegeri, int, string> jNegeriRepo,
             IRepository<JAgama, int, string> jAgamaRepo,
             IRepository<JBangsa, int, string> jBangsaRepo,
-            IRepository<JJawatanPekerja, int, string> jJawatanPekerjaRepo,
             ListViewIRepository<SuTanggunganPekerja, int> suTanggunganRepo,
             IRepository<JCaraBayar, int, string> jCaraBayarRepo,
             CartPekerja cart
@@ -54,7 +52,6 @@ namespace MSNK.Controllers
             _jNegeriRepo = jNegeriRepo;
             _jAgamaRepo = jAgamaRepo;
             _jBangsaRepo = jBangsaRepo;
-            _jJawatanPekerjaRepo = jJawatanPekerjaRepo;
             _suTanggunganRepo = suTanggunganRepo;
             _jCaraBayarRepo = jCaraBayarRepo;
             _cart = cart;
@@ -95,9 +92,6 @@ namespace MSNK.Controllers
 
             List<JCaraBayar> JCaraBayarList = _context.JCaraBayar.OrderBy(b => b.Kod).ToList();
             ViewBag.JCaraBayar = JCaraBayarList;
-
-            List<JJawatanPekerja> JJawatanPekerjaList = _context.JJawatanPekerja.OrderBy(b => b.Kod).ToList();
-            ViewBag.JJawatanPekerja = JJawatanPekerjaList;
 
         }
 
@@ -229,6 +223,7 @@ namespace MSNK.Controllers
                                     m.Bandar = suPekerja.Bandar;
                                     m.JNegeriId = suPekerja.JNegeriId;
                                     m.JBankId = suPekerja.JBankId;
+                                    m.Jawatan = suPekerja.Jawatan;
                                     //m.TelefonRumah = suPekerja.TelefonRumah;
                                     //m.TelefonBimbit = suPekerja.TelefonBimbit;
                                     m.Emel = suPekerja.Emel;
@@ -240,11 +235,11 @@ namespace MSNK.Controllers
                                     //m.TarikhPencen = suPekerja.TarikhPencen;
                                     //m.JAgamaId = suPekerja.JAgamaId;
                                     //m.JBangsaId = suPekerja.JBangsaId;
-                                    //m.JJawatanPekerjaId = suPekerja.JJawatanPekerjaId;
                                     //m.JCaraBayarId = suPekerja.JCaraBayarId;
                                     m.NoAkaunBank = suPekerja.NoAkaunBank;
                                     m.UserId = username;
                                     m.TarMasuk = DateTime.Now;
+
                                     m.SuTanggungan = _cart.Lines1.ToArray();
 
                                     await _suPekerjaRepo.Insert(m);
@@ -283,7 +278,7 @@ namespace MSNK.Controllers
                 TempData[SD.Error] = "No Kad Pengenalan ini telah wujud..!";
             }
 
-
+            ViewBag.nogaji = GetNoGaji();
             PopulateList();
             return View(suPekerja);
         }

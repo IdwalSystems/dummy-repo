@@ -39,6 +39,12 @@
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Nama)" readonly />
                             </div>
                         </div>
+                        <div class="form-row ">
+                            <div class="form-group col-md">
+                                <label asp-for="Jawatan" class="control-label"></label>
+                                <input value="@Html.DisplayFor(model => model.Jawatan)" class="form-control form-control-sm text-uppercase" readonly/>
+                            </div>
+                        </div>
                         <div class="form-row sorok">
                             <div class="form-group col-md">
                                 <label asp-for="Alamat1" class="control-label"></label>
@@ -109,12 +115,6 @@
                             <div class="form-group col-md">
                                 <label asp-for="TarikhPencen" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhPencen)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md">
-                                <label asp-for="JJawatanPekerja" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JJawatanPekerja.Perihal)" readonly />
                             </div>
                         </div>
                         <div class="form-row">

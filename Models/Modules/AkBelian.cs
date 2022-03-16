@@ -20,6 +20,7 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Tarikh Diperlukan")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Tarikh { get; set; }
+        // Tarikh Terima Bahagian
         [DisplayName("Tarikh Terima")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? TarikhTerima { get; set; }

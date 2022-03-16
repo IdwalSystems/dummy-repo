@@ -57,7 +57,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Bangsa")]
         public int? JBangsaId { get; set; }
         [DisplayName("Jawatan")]
-        public int? JJawatanPekerjaId { get; set; }
+        public string Jawatan { get; set; }
         [DisplayName("Cara Bayar")]
         public int? JCaraBayarId { get; set; }
         [DisplayName("No Akaun Bank")]
@@ -74,8 +74,6 @@ namespace MSNK.Models.Modules
         public JBank JBank { get; set; }
         [DisplayName("Bangsa")]
         public JBangsa JBangsa { get; set; }
-        [DisplayName("Jawatan")]
-        public JJawatanPekerja JJawatanPekerja { get; set; }
         public ICollection<SuTanggunganPekerja> SuTanggungan { get; set; }
         [DisplayName("Cara Bayar")]
         public JCaraBayar JCaraBayar { get; set; }
@@ -83,6 +81,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkTunaiCV> AkTunaiCV { get; set; }
 
         public ICollection<SpPendahuluanPelbagai> SpPendahuluanPelbagai { get; set; }
+        public ICollection<JPelulus> JPelulus { get; set; }
         //relationship end
 
         //soft delete

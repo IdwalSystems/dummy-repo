@@ -10,28 +10,12 @@
                 { orderable: true, className: 'reorder', targets: 2 },
                 { orderable: false, targets: '_all' }
             ],
-            "order": [[2, "asc"]],
+            "order": [[1, "asc"]],
             dom: 'lrt'
         });
 
-        //$('#batalCari').click(function () {
-        //    if (!columnSearchVar) {
-        //        table
-        //            .search('')
-        //            .draw();
-        //    }
-        //    else {
-        //        table
-        //            .columns('')
-        //            .search('')
-        //            .draw();
-        //    }
-        //    $('#myInput').val('');
-        //});
-
         $('#columnSearch').change(function () {
             columnSearchVar = $(this).val();
-            // refresh table
             $('#myInput').val('');
             table.destroy();
 
@@ -43,10 +27,9 @@
                     { orderable: true, className: 'reorder', targets: 2 },
                     { orderable: false, targets: '_all' }
                 ],
-                "order": [[2, "asc"]],
+                "order": [[1, "asc"]],
                 dom: 'lrt'
             });
-            // refresh table end
         });
 
         table.on('order.dt search.dt', function () {

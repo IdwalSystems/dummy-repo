@@ -101,11 +101,12 @@ namespace MSNK
             services.AddTransient<ListViewIRepository<SuTanggunganPekerja, int>, SuTanggunganPekerjaRepository>();
             services.AddTransient<IRepository<JAgama, int, string>, JAgamaRepository>();
             services.AddTransient<IRepository<JBangsa, int, string>, JBangsaRepository>();
-            services.AddTransient<IRepository<JJawatanPekerja, int, string>, JJawatanPekerjaRepository>();
             services.AddTransient<IRepository<JCaraBayar, int, string>, JCaraBayarRepository>();
             services.AddTransient<IRepository<AbBukuVot, int, string>, AbBukuVotRepository>();
             services.AddTransient<IRepository<JJantina, int, string>, JJantinaRepository>();
             services.AddTransient<IRepository<JBahagian, int, string>, JBahagianRepository>();
+            services.AddTransient<IRepository<JPelulus, int, string>, JPelulusRepository>();
+
             //TUNAI RUNCIT
             services.AddTransient<IRepository<AkTunaiRuncit, int, string>, AkTunaiRuncitRepository>();
             services.AddTransient<IRepository<AkTunaiCV, int, string>, AkTunaiCVRepository>();

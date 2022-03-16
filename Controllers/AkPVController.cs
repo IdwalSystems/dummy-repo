@@ -957,7 +957,7 @@ namespace MSNK.Controllers
                 var result = await _spPPRepo.GetById(data);
                 
                 _cart.AddItem1(AkPVId,
-                               result.JumKeseluruhan,
+                               result.JumLulus,
                                result.AkCartaId);
 
                 return Json(new { result = "OK", record = result });

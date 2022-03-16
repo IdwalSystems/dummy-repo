@@ -1,0 +1,96 @@
+﻿@model IEnumerable<MSNK.Models.Modules.JPelulus>
+
+@{
+    ViewData["Title"] = "Indeks";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<partial name="_JSIndex" />
+
+<div class="row mb-2">
+    <div class="col-8">
+        <h3 class="text-left">Pelulus</h3>
+    </div>
+    <div class="col-4 text-right">
+        <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
+    </div>
+</div>
+
+<div class="card mb-2">
+    <div class="card-body pl-3 pb-2">
+        <label class="form-control-plaintext" for="columnSearch">Carian : </label>
+        <div class="form-actions no-color mb-2">
+            <div class="form-row">
+                <div class="col-sm-2 mb-2">
+                    <select class="custom-select form-control-sm" id="columnSearch">
+                        <option value="" selected>Semua</option>
+                        <option value=".noGaji">No Gaji</option>
+                        <option value=".nama">Nama</option>
+                    </select>
+                </div>
+                <div class="col-sm-8 mb-2">
+                    <input class="form-control form-control-sm" type="text" id="myInput" style="text-transform:uppercase" />
+                </div>
+                @*<div class="col-sm mb-2">
+                        <button class="btn btn-warning btn-sm" id="batalCari" value="Batal Carian"><i class="fas fa-backspace"></i></button>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive table-sm">
+    <table class="table table-bordered table-hover display compact nowrap" width="100%">
+        <thead>
+            <tr>
+                <th width="5%">Bil</th>
+                <th class="noGaji" width="10%">
+                    No Gaji
+                </th>
+                <th class="nama">
+                    Nama
+                </th>
+                <th class="jawatan">
+                    Jawatan
+                </th>
+                <th width="10%">
+                    Min. Amaun RM
+                </th>
+                <th width="10%">
+                    Maks. Amaun RM
+                </th>
+                <th width="5%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td></td>
+                <td>
+                    @item.SuPekerja.NoGaji
+                </td>
+                <td class="text-uppercase">
+                    @item.SuPekerja.Nama
+                </td>
+                <td class="text-uppercase">
+                    @item.SuPekerja.Jawatan
+                </td>
+                <td>
+                    @Convert.ToDecimal(item.MinAmaun).ToString("#,##0.00")
+                </td>
+                <td>
+                    @Convert.ToDecimal(item.MaksAmaun).ToString("#,##0.00")
+                </td>
+                <td class="action-button text-center">
+                    <div class="btn-group" role="group" aria-label="action">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                    </div>
+
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
