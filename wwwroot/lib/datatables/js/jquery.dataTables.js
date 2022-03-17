@@ -11474,7 +11474,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "Tiada data wujud buat masa ini",
+			"sEmptyTable": "No data available in table",
 	
 	
 			/**
@@ -11506,7 +11506,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfo": "Paparan dari _START_ hingga _END_ daripada _TOTAL_ entri",
+			"sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
 	
 	
 			/**
@@ -11527,7 +11527,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfoEmpty": "Paparan dari 0 hingga 0 daripada 0 entri",
+			"sInfoEmpty": "Showing 0 to 0 of 0 entries",
 	
 	
 			/**
@@ -11549,7 +11549,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfoFiltered": "(Ditapis dari _MAX_ entri)",
+			"sInfoFiltered": "(filtered from _MAX_ total entries)",
 	
 	
 			/**
@@ -11805,7 +11805,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sZeroRecords": "Tiada data bagi carian ini"
+			"sZeroRecords": "No matching records found"
 		},
 	
 	

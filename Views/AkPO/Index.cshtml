@@ -94,7 +94,7 @@
                 <tr class="@tabletype">
                     <td></td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.NoPO)
+                        @item.NoPO
                     </td>
                     <td>
                         @item.Tarikh.ToString("dd/MM/yyyy")
@@ -102,8 +102,8 @@
                     <td class="text-right">
                         @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AkPembekal.KodSykt) @Html.DisplayFor(modelItem => item.AkPembekal.NamaSykt)
+                    <td class="text-uppercase">
+                        @item.AkPembekal.KodSykt - @item.AkPembekal.NamaSykt
                     </td>
                     <td>
                         @if (item.FlCetak == 0)

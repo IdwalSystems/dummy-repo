@@ -9,21 +9,36 @@ using System.Diagnostics;
 using System.Security.Claims;
 using MSNK.Models.Administration;
 using Microsoft.AspNetCore.Identity;
+using MSNK.Models.Modules.IRepository;
+using System.Dynamic;
+using System.Threading.Tasks;
+using MSNK.Data;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using MSNK.Models.Modules;
 
 namespace MSNK.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IRepository<AkPO, int, string> _poRepo;
 
-        public HomeController(ILogger<HomeController> logger,  UserManager<IdentityUser> userManager)
+        public HomeController(
+            ApplicationDbContext context,
+            ILogger<HomeController> logger,  
+            UserManager<IdentityUser> userManager,
+            IRepository<AkPO, int, string> poRepo)
         {
+            _context = context;
             _logger = logger;
             _userManager = userManager;
+            _poRepo = poRepo;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
             if (userEmail == null)
@@ -32,7 +47,20 @@ namespace MSNK.Controllers
             }
             else
             {
-                return View();
+                // Widget Status PO
+                var akPO = await _context.AkPO
+                    .Include(b => b.AkPembekal)
+                    .Where(b=> b.FlPosting == 0)
+                    .OrderByDescending(b=> b.Tarikh)
+                    .ToListAsync();
+                // filtering day balance
+                var BenchDate = DateTime.Today.AddDays(-5);
+                akPO = akPO.Where(b => b.Tarikh < BenchDate).ToList();
+                // Widget Status PO end
+
+                dynamic dyModel = new ExpandoObject();
+                dyModel.AkPO = akPO;
+                return View(dyModel);
             }
             
         }

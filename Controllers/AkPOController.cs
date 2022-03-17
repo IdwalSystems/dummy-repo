@@ -1556,25 +1556,28 @@ namespace MSNK.Controllers
                 else
                 {
                     // check if already linked with AkBelian
-                    //AkBelian akBelian = _context.AkBelian.Where(x => x.AkPOId == id).FirstOrDefault();
+                    AkBelian Belian = _context.AkBelian.Where(x => x.AkPOId == id).FirstOrDefault();
 
-                    var akBelian = (from tblBelian in _context.AkBelian.ToList()
-                                 join tblPO in _context.AkPO.ToList()
-                                 on tblBelian.AkPOId equals tblPO.Id into tblBelianTblPO
-                                 from tblBelian_tblPO in tblBelianTblPO.DefaultIfEmpty().Where(x => x.FlHapus != 1)
-                                 select new
-                                 {
-                                     Id = tblBelian.Id,
-                                     AkBelianId = tblBelian_tblPO.Id,
-                                     AkPOId = tblBelian.AkPOId,
-                                     NoInbois = tblBelian.NoInbois
-
-                                 }).Where(x => x.AkBelianId == id).FirstOrDefault();
-
-                    if (akBelian != null)
+                    if (Belian != null)
                     {
-                        //linkage id error
-                        TempData[SD.Error] = "Data terkait pada No Inbois " + akBelian.NoInbois.ToUpper() + ". Batal posting tidak dibenarkan";
+                        //var akBelian = (from tblBelian in _context.AkBelian.ToList()
+                        //                join tblPO in _context.AkPO.ToList()
+                        //                on tblBelian.AkPOId equals tblPO.Id into tblBelianTblPO
+                        //                from tblBelian_tblPO in tblBelianTblPO.DefaultIfEmpty().Where(x => x.FlHapus != 1)
+                        //                select new
+                        //                {
+                        //                    Id = tblBelian.Id,
+                        //                    AkBelianId = tblBelian_tblPO.Id,
+                        //                    AkPOId = tblBelian.AkPOId,
+                        //                    NoInbois = tblBelian.NoInbois
+
+                        //                }).Where(x => x.AkBelianId == id).FirstOrDefault();
+
+                        //if (akBelian != null)
+                        //{
+                            //linkage id error
+                            TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoInbois.ToUpper() + ". Batal posting tidak dibenarkan";
+                        //}
                     }
                     else
                     {
@@ -1585,7 +1588,7 @@ namespace MSNK.Controllers
                         {
                             //linkage id error
                             TempData[SD.Error] = "Data terkait pada No Pelarasan Tanggungan " + akPOLaras.NoRujukan.ToUpper() + ". Batal posting tidak dibenarkan";
-                        } 
+                        }
                         else
                         {
                             //unposting operation start here
@@ -1632,8 +1635,9 @@ namespace MSNK.Controllers
                             TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
                             //unposting operation end
                         }
-
                     }
+
+                    
 
                 }
 
