@@ -11,6 +11,18 @@ namespace MSNK.Models.Modules
 {
     public class AkTerima : AppLogHelper, ISoftDelete
     {
+        // note:
+        // FlJenisTerima = 0 ( Am )
+        // FlJenisTerima = 1 ( Inbois )
+        // FlJenisTerima = 2 ( Gaji )
+        // FlJenisTerima = 3 ( Pendahuluan )
+        // FlJenisTerima = 4 ( Panjar )
+        // ..
+        // FlKategoriPenerima = 0 ( Am / Lain - lain )
+        // FlKategoriPenerima = 1 ( pembekal )
+        // FlKategoriPenerima = 2 ( pekerja )
+        // ..
+
         //field
         public int Id { get; set; }
         [Required(ErrorMessage = "Tahun Diperlukan.")]
@@ -54,6 +66,10 @@ namespace MSNK.Models.Modules
         //field end
 
         //flag
+        [DisplayName("Jenis Terimaan")]
+        public int FlJenisTerima { get; set; }
+        [DisplayName("Kategori Pembayar")]
+        public int FlKategoriPembayar { get; set; }
         [DisplayName("Cetak")]
         [DefaultValue("0")]
         public int FlCetak { get; set; }
@@ -68,7 +84,7 @@ namespace MSNK.Models.Modules
 
         //Relationship
         [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
-        [DisplayName("Jenis Kumpulan Wang")]
+        [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
 
@@ -84,6 +100,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Kod Bank")]
         public int AkBankId { get; set; }
         public AkBank AkBank { get; set; }
+        [DisplayName("No Permohonan Aktiviti")]
         public int? SpPendahuluanPelbagaiId { get; set; }
         public SpPendahuluanPelbagai SpPendahuluanPelbagai { get; set; }
         public ICollection<AkTerima1> AkTerima1 { get; set; }

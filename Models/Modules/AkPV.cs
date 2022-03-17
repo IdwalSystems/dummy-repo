@@ -11,6 +11,18 @@ namespace MSNK.Models.Modules
 {
     public class AkPV : AppLogHelper, ISoftDelete
     {
+        // note:
+        // FlJenisBaucer = 0 ( Am )
+        // FlJenisBaucer = 1 ( Inbois )
+        // FlJenisBaucer = 2 ( Gaji )
+        // FlJenisBaucer = 3 ( Pendahuluan )
+        // FlJenisBaucer = 4 ( Panjar )
+        // ..
+        // FlKategoriPenerima = 0 ( Am / Lain - lain )
+        // FlKategoriPenerima = 1 ( pembekal )
+        // FlKategoriPenerima = 2 ( pekerja )
+        // ..
+
         //field
         public int Id { get; set; }
         [DisplayName("Tahun")]
@@ -62,9 +74,8 @@ namespace MSNK.Models.Modules
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
         [DisplayName("Jenis Baucer")]
-        // Am = 0; Rekupan = 1; Akruan = 2; Gaji = 3; Pendahuluan = 4;
         public int FlJenisBaucer { get; set; }
-        // Am = 0; Pembekal = 1; Pekerja = 2;
+        [DisplayName("Kategori Penerima")]
         public int FlKategoriPenerima { get; set; }
         public bool denganTanggungan { get; set; }
         //flag end
@@ -79,7 +90,7 @@ namespace MSNK.Models.Modules
         public int AkBankId { get; set; }
         [DisplayName("Kod Pembekal")]
         public int? AkPembekalId { get; set; }
-        [DisplayName("Kod Pekerja")]
+        [DisplayName("Kod Anggota")]
         public int? SuPekerjaId { get; set; }
         [Required(ErrorMessage = "Cara Bayaran Diperlukan.")]
         [DisplayName("Cara Bayaran")]

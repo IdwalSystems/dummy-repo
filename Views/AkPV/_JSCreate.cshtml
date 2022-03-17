@@ -206,15 +206,15 @@
             JsonKodPendahuluan(kod);
         } else {
             //enable field
-            $("#txtNoKP").prop('disabled', false);
-            $("#Nama").prop('disabled', false);
+            $("#txtNoKP").prop('readonly', false);
+            $("#Nama").prop('readonly', false);
             $("#Nama").prop('required', true);
-            $("#txtAlamat1").prop('disabled', false);
-            $("#txtAlamat2").prop('disabled', false);
-            $("#txtAlamat3").prop('disabled', false);
-            $("#txtNoAkaunBank").prop('disabled', false);
-            $("#txtTelefon").prop('disabled', false);
-            $("#txtEmel").prop('disabled', false);
+            $("#txtAlamat1").prop('readonly', false);
+            $("#txtAlamat2").prop('readonly', false);
+            $("#txtAlamat3").prop('readonly', false);
+            $("#txtNoAkaunBank").prop('readonly', false);
+            $("#txtTelefon").prop('readonly', false);
+            $("#txtEmel").prop('readonly', false);
             $("#ddlKodPekerja").prop('disabled', false);
 
             //empty field
@@ -266,14 +266,14 @@
                         $("#txtTelefon").val(msg.record.suPekerja.telefonBimbit);
                         $("#txtEmel").val(msg.record.suPekerja.emel);
                         // disable fields
-                        $("#txtNoKP").prop('disabled', true);
-                        $("#Nama").prop('disabled', true);
-                        $("#txtAlamat1").prop('disabled', true);
-                        $("#txtAlamat2").prop('disabled', true);
-                        $("#txtAlamat3").prop('disabled', true);
-                        $("#txtNoAkaunBank").prop('disabled', true);
-                        $("#txtTelefon").prop('disabled', true);
-                        $("#txtEmel").prop('disabled', true);
+                        $("#txtNoKP").prop('readonly', true);
+                        $("#Nama").prop('readonly', true);
+                        $("#txtAlamat1").prop('readonly', true);
+                        $("#txtAlamat2").prop('readonly', true);
+                        $("#txtAlamat3").prop('readonly', true);
+                        $("#txtNoAkaunBank").prop('readonly', true);
+                        $("#txtTelefon").prop('readonly', true);
+                        $("#txtEmel").prop('readonly', true);
                         //$("#ddlKodPekerja").prop('disabled', true);
                         $("#Nama").prop('required', false);
 
@@ -282,14 +282,14 @@
                         var sum = 0;
                         var str = "<tr><td id='akCartaId' hidden>" + msg.record.akCartaId +
                             "</td><td>" + msg.record.akCarta.kod + " - " + msg.record.akCarta.perihal +
-                            "</td><td class='text-right'>" + (msg.record.jumKeseluruhan).toFixed(2) +
+                            "</td><td class='text-right'>" + (msg.record.jumLulus).toFixed(2) +
                                 "</td><td>" +
                                 "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                 "</td><td>" +
                                 "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                 "</td><tr>";
                             $("table tbody#tbodyObjek").append(str);
-                        sum += msg.record.jumKeseluruhan;
+                        sum += msg.record.jumLulus;
 
                         $("#txtKodAkaun option[value=" + msg.record.akCartaId + "]").prop('disabled', true);
 

@@ -27,6 +27,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkTerima
                 .Include(b => b.JKW)
                 .Include(b => b.JBahagian)
+                .Include(b => b.SpPendahuluanPelbagai)
                 .Include(b => b.AkBank)
                 .Include(b => b.JNegeri)
                 .Include(b => b.AkTerima1)
@@ -40,6 +41,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .IgnoreQueryFilters()
                 .Include(b => b.JKW)
                 .Include(b => b.JBahagian)
+                .Include(b => b.SpPendahuluanPelbagai)
                 .Include(b => b.AkBank)
                 .Include(b => b.JNegeri)
                 .Include(b => b.AkTerima1)
@@ -52,6 +54,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkTerima
                 .Include(b => b.JKW)
                 .Include(b => b.JBahagian)
+                .Include(b => b.SpPendahuluanPelbagai)
                 .Include(b => b.AkBank)
                 .Include(b => b.JNegeri)
                 .Include(b => b.AkTerima1).ThenInclude(b=> b.AkCarta)
@@ -66,6 +69,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .IgnoreQueryFilters()
                 .Include(b => b.JKW)
                 .Include(b => b.JBahagian)
+                .Include(b => b.SpPendahuluanPelbagai)
                 .Include(b => b.AkBank)
                 .Include(b => b.JNegeri)
                 .Include(b => b.AkTerima1).ThenInclude(b => b.AkCarta)

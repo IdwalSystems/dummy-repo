@@ -172,11 +172,12 @@
 
                     </div>
                     <div class="col-lg-2 pb-3">
+                        
                         <div class="card mb-2">
                             <div class="card-body p-1">
 
                                 <div class="form-group col-sm">
-                                    <label class="control-label">Jenis Baucer</label>
+                                    <label asp-for="FlJenisBaucer" class="control-label"></label>
                                     <div class="custom-control custom-radio">
                                         <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer1" name="FlJenisBaucer" class="custom-control-input" value="0" checked>
                                         <label class="custom-control-label" for="FlJenisBaucer1">Am</label>
@@ -185,7 +186,7 @@
                                         <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer2" name="FlJenisBaucer" class="custom-control-input" value="1">
                                         <label class="custom-control-label" for="FlJenisBaucer2">Inbois</label>
                                     </div>
-                                    <div class="custom-control custom-radio">
+                                    <div class="custom-control custom-radio" hidden>
                                         <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="2">
                                         <label class="custom-control-label" for="FlJenisBaucer3">Gaji</label>
                                     </div>
@@ -193,7 +194,7 @@
                                         <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="3">
                                         <label class="custom-control-label" for="FlJenisBaucer3">Pendahuluan</label>
                                     </div>
-                                    <div class="custom-control custom-radio">
+                                    <div class="custom-control custom-radio" hidden>
                                         <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="4">
                                         <label class="custom-control-label" for="FlJenisBaucer3">Panjar</label>
                                     </div>
@@ -205,7 +206,7 @@
                             <div class="card-body p-1">
 
                                 <div class="form-group col-sm">
-                                    <label class="control-label">Kategori Penerima</label>
+                                    <label asp-for="FlKategoriPenerima" class="control-label"></label>
                                     <div class="custom-control custom-radio">
                                         <input asp-for="FlKategoriPenerima" type="radio" id="FlKategoriPenerima1" name="FlKategoriPenerima" class="custom-control-input" value="0" checked>
                                         <label class="custom-control-label" for="FlKategoriPenerima1">Am</label>

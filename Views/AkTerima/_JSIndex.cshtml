@@ -57,5 +57,24 @@
                 $("#myInputDate2").hide();
             }
         });
+
+        $('input[type=radio][name=jenis]').on('change', function () {
+            switch ($(this).val()) {
+                case 'CreateAm':
+                    $('#btnTambah').removeAttr('href');
+                    $('#btnTambah').attr('href', "/AkTerima/CreateByJenis?jenis=CreateAm");
+                    break;
+                case 'CreatePekerja':
+                    $('#btnTambah').removeAttr('href');
+                    /**/
+                    $('#btnTambah').attr('href', "/AkTerima/CreateByJenis?jenis=CreatePekerja");
+                    /**/
+                    break;
+                case 'CreatePanjar':
+                    $('#btnTambah').removeAttr('href');
+                    $('#btnTambah').attr('href', "/AkTerima/CreateByJenis?jenis=CreatePanjar");
+                    break;
+            }
+        });
     });
 </script>

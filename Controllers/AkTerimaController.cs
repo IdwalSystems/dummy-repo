@@ -37,6 +37,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly ListViewIRepository<AkTerima2, int> _akTerima2Repo;
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
+        private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPPRepo;
         private CartTerima _cart;
 
         public AkTerimaController(
@@ -51,6 +52,7 @@ namespace MSNK.Controllers
             IRepository<JNegeri, int, string> negeriRepository,
             IRepository<AkCarta, int, string> akCartaRepository,
             IRepository<AkAkaun, int, string> akAkaunRepository,
+            IRepository<SpPendahuluanPelbagai, int, string> spPPRepo,
             CartTerima cart
             )
         {
@@ -65,6 +67,7 @@ namespace MSNK.Controllers
             _akTerima2Repo = akTerima2Repository;
             _akCartaRepo = akCartaRepository;
             _akAkaunRepo = akAkaunRepository;
+            _spPPRepo = spPPRepo;
             _cart = cart;
         }
 
@@ -221,6 +224,9 @@ namespace MSNK.Controllers
             List<JNegeri> negeriList = _context.JNegeri.OrderBy(b => b.Kod).ToList();
             ViewBag.JNegeri = negeriList;
 
+            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.OrderBy(b => b.NoPermohonan).ToList();
+            ViewBag.SpPendahuluanPelbagai = spList;
+
             List<AkBank> akBankList = _context.AkBank.Include(b=> b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
 
@@ -351,22 +357,41 @@ namespace MSNK.Controllers
             }
             return noRujukan;
         }
-            // GET: AkTerima/Create
-            [Authorize(Policy = "PR001C")]
-        public IActionResult Create()
+
+        // AK COMMENT 17-03-2022
+        // GET: AkTerima/Create
+        //[Authorize(Policy = "PR001C")]
+        //public IActionResult Create()
+        //{
+        //    // get latest no rujukan running number 
+        //    var year = DateTime.Now.Year.ToString();
+        //    var data = 1;
+
+        //    ViewBag.NoRujukan = GetNoRujukan(data,year);
+        //    // get latest no rujukan running number end
+
+        //    PopulateList();
+        //    CartEmpty();
+        //    return View();
+        //}
+        // function json get no rujukan (running number)
+        // AK COMMENT 17-03-2022 END
+
+        [Authorize(Policy = "PR001C")]
+        public IActionResult CreateByJenis(string jenis)
         {
-            // get latest no rujukan running number 
+            // get latest no rujukan running number  
             var year = DateTime.Now.Year.ToString();
             var data = 1;
 
-            ViewBag.NoRujukan = GetNoRujukan(data,year);
+            ViewBag.NoRujukan = GetNoRujukan(data, year);
             // get latest no rujukan running number end
 
             PopulateList();
             CartEmpty();
-            return View();
+            return View(jenis);
         }
-        // function json get no rujukan (running number)
+
         [HttpPost]
         public JsonResult JsonGetKod(int data, string year)
         {
@@ -439,6 +464,28 @@ namespace MSNK.Controllers
             }
         }
         //on change CaraBayar controller end
+
+        // on change pendahuluan
+        [HttpPost]
+        public async Task<JsonResult> JsonGetPendahuluan(int data, int AkTerimaId)
+        {
+            try
+            {
+                CartEmpty();
+                var result = await _spPPRepo.GetById(data);
+
+                _cart.AddItem1(AkTerimaId,
+                               result.JumLulus,
+                               result.AkCartaId);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change pendahuluan end
 
         // get an item from cart akTerima1
         public JsonResult GetAnItemCartAkTerima1(AkTerima1 akTerima1)
@@ -616,17 +663,42 @@ namespace MSNK.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "PR001C")]
-        public async Task<IActionResult> Create(
-            AkTerima akTerima, 
-            int JKWId, 
-            int JNegeriId, 
-            int AkBankId, 
+        public async Task<IActionResult> CreateByJenis(
+            AkTerima akTerima,
+            int JKWId,
+            int JNegeriId,
+            int AkBankId,
             decimal JumlahUrusniaga,
-            int JBahagianId)
+            int JBahagianId,
+            int? SpPendahuluanPelbagaiId,
+            int FlJenisTerima,
+            int FlKategoriPenerima = 0)
         {
-            
+
+            // note:
+            // FlJenisTerima = 0 ( Am )
+            // FlJenisTerima = 1 ( Inbois )
+            // FlJenisTerima = 2 ( Gaji )
+            // FlJenisTerima = 3 ( Pendahuluan )
+            // FlJenisTerima = 4 ( Panjar )
+            // ..
+            // FlKategoriPenerima = 0 ( Am / Lain - lain )
+            // FlKategoriPenerima = 1 ( pembekal )
+            // FlKategoriPenerima = 2 ( pekerja )
+            // ..
+
             AkTerima m = new AkTerima();
             var user = await _userManager.GetUserAsync(User);
+            var spPendahuluan = _context.SpPendahuluanPelbagai.Find(SpPendahuluanPelbagaiId);
+
+            var jenis = "CreateAm";
+            if (spPendahuluan != null)
+            {
+                var pekerja = _context.SuPekerja.Find(spPendahuluan.SuPekerjaId);
+                jenis = "CreatePekerja";
+                akTerima.FlKategoriPembayar = 2;
+            }
+            
 
             // checking for jumlah objek & jumlah perihal
             if (akTerima.Jumlah != JumlahUrusniaga)
@@ -635,7 +707,7 @@ namespace MSNK.Controllers
                 //PopulateCart();
                 CartEmpty();
                 PopulateList();
-                return View(akTerima);
+                return View(jenis, akTerima);
             }
 
             // get latest no rujukan running number  
@@ -669,7 +741,7 @@ namespace MSNK.Controllers
             {
                 if (akTerima != null && JNegeriId != 0 && JKWId != 0 && JNegeriId != 0 && JBahagianId != 0)
                 {
-                    
+
                     m.JKWId = JKWId;
                     m.JBahagianId = JBahagianId;
                     m.JNegeriId = JNegeriId;
@@ -691,6 +763,14 @@ namespace MSNK.Controllers
                     m.Tel = akTerima.Tel;
                     m.Emel = akTerima.Emel;
                     m.Sebab = akTerima.Sebab;
+
+                    m.FlKategoriPembayar = akTerima.FlKategoriPembayar;
+                    m.FlJenisTerima = akTerima.FlJenisTerima;
+                    if (spPendahuluan != null)
+                    {
+                        m.SpPendahuluanPelbagaiId = SpPendahuluanPelbagaiId;
+                    }
+
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
                     //m.TarKemaskini = akTerima.TarKemaskini;
@@ -713,8 +793,116 @@ namespace MSNK.Controllers
             }
 
             PopulateList();
-            return View(akTerima);
+            return View(jenis, akTerima);
         }
+
+        // AK COMMENT 17-03-2022
+        // POST: AkTerima/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Policy = "PR001C")]
+        //public async Task<IActionResult> Create(
+        //    AkTerima akTerima, 
+        //    int JKWId, 
+        //    int JNegeriId, 
+        //    int AkBankId, 
+        //    decimal JumlahUrusniaga,
+        //    int JBahagianId)
+        //{
+
+        //    AkTerima m = new AkTerima();
+        //    var user = await _userManager.GetUserAsync(User);
+
+        //    // checking for jumlah objek & jumlah perihal
+        //    if (akTerima.Jumlah != JumlahUrusniaga)
+        //    {
+        //        TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Perihal";
+        //        //PopulateCart();
+        //        CartEmpty();
+        //        PopulateList();
+        //        return View(akTerima);
+        //    }
+
+        //    // get latest no rujukan running number  
+        //    var kw = _context.JKW.FirstOrDefault(x => x.Id == akTerima.JKWId);
+
+        //    var kumpulanWang = kw.Kod;
+        //    var year = akTerima.Tahun;
+        //    string prefix = "RR/" + kumpulanWang + year;
+        //    int x = 1;
+        //    string noRujukan = prefix + "000000";
+
+        //    var LatestNoRujukan = _context.AkTerima
+        //        .IgnoreQueryFilters()
+        //                .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
+        //                .Max(x => x.NoRujukan);
+
+        //    if (LatestNoRujukan == null)
+        //    {
+        //        noRujukan = string.Format("{0:" + prefix + "000000}", x);
+        //    }
+        //    else
+        //    {
+        //        x = int.Parse(LatestNoRujukan.Substring(10));
+        //        x++;
+        //        noRujukan = string.Format("{0:" + prefix + "000000}", x);
+        //    }
+
+        //    // get latest no rujukan running number end
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (akTerima != null && JNegeriId != 0 && JKWId != 0 && JNegeriId != 0 && JBahagianId != 0)
+        //        {
+
+        //            m.JKWId = JKWId;
+        //            m.JBahagianId = JBahagianId;
+        //            m.JNegeriId = JNegeriId;
+        //            m.AkBankId = AkBankId;
+        //            m.Tahun = akTerima.Tahun;
+        //            m.NoRujukan = noRujukan;
+        //            m.Tarikh = akTerima.Tarikh;
+        //            m.Jumlah = akTerima.Jumlah;
+        //            m.FlCetak = 0;
+        //            m.FlPosting = 0;
+        //            m.KodPembayar = akTerima.KodPembayar;
+        //            m.NoKp = akTerima.NoKp;
+        //            m.Nama = akTerima.Nama;
+        //            m.Alamat1 = akTerima.Alamat1;
+        //            m.Alamat2 = akTerima.Alamat2;
+        //            m.Alamat3 = akTerima.Alamat3;
+        //            m.Poskod = akTerima.Poskod;
+        //            m.Bandar = akTerima.Bandar;
+        //            m.Tel = akTerima.Tel;
+        //            m.Emel = akTerima.Emel;
+        //            m.Sebab = akTerima.Sebab;
+        //            m.UserId = user.UserName;
+        //            m.TarMasuk = DateTime.Now;
+        //            //m.TarKemaskini = akTerima.TarKemaskini;
+
+        //            m.AkTerima1 = _cart.Lines1.ToArray();
+        //            m.AkTerima2 = _cart.Lines2.ToArray();
+
+        //            await _akTerimaRepo.Insert(m);
+
+        //            //insert applog
+        //            await AddLogAsync("Tambah", m.NoRujukan, m.NoRujukan, 0, m.Jumlah);
+        //            //insert applog end
+
+        //            await _context.SaveChangesAsync();
+
+        //            CartEmpty();
+        //            TempData[SD.Success] = "Maklumat berjaya ditambah. No rujukan pendaftaran adalah " + noRujukan;
+        //            return RedirectToAction(nameof(Index));
+        //        }
+        //    }
+
+        //    PopulateList();
+        //    return View(akTerima);
+        //}
+        // AK COMMENT 17-03-2022 END
 
         // GET: AkTerima/Edit/5
         [Authorize(Policy = "PR001E")]
