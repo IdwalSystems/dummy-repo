@@ -1483,7 +1483,7 @@ namespace MSNK.Controllers
                 {
 
                     //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+                    TempData[SD.Error] = "Data gagal diluluskan.";
 
                 }
                 else
@@ -1585,7 +1585,7 @@ namespace MSNK.Controllers
                         await _context.SaveChangesAsync();
 
 
-                        TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                        TempData[SD.Success] = "Data berjaya diluluskan.";
                     }
                     else
                     {
@@ -1622,7 +1622,7 @@ namespace MSNK.Controllers
                 {
 
                     //duplicate id error
-                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
+                    TempData[SD.Error] = "Data belum diluluskan.";
 
                 }
                 else
@@ -1675,7 +1675,7 @@ namespace MSNK.Controllers
 
                         await _context.SaveChangesAsync();
 
-                        TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                        TempData[SD.Success] = "Data berjaya batal kelulusan.";
                         //unposting operation end
                     }
 

@@ -6,8 +6,8 @@
 
 <div class="row mb-2">
     <div class="col-8">
-        <h3>Buku Vot - @ViewData["Title"]</h3>
-        <h5 class="text-info"> @ViewData["Vot"]</h5>
+        <h5>Buku Vot - @ViewData["Title"]</h5>
+        <p class="text-info"> @ViewData["Vot"]</p>
     </div>
 </div>
 <partial name="_JSDetails" />
@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i></button>
+                            <button type="submit" class="btn text-info btn-sm" data-toggle="tooltip" data-placement="top" title="Cari"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
 

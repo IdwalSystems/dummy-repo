@@ -1632,7 +1632,7 @@ namespace MSNK.Controllers
                 if (akTerima.FlCetak == 0)
                 {
                     //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila Cetak data dahulu sebelum menjalani operasi ini.";
+                    TempData[SD.Error] = "Data gagal diluluskan. Sila Cetak data dahulu sebelum menjalani operasi ini.";
                     return RedirectToAction(nameof(Index));
                 }
                 // check if data print status is printed or not end
@@ -1649,7 +1649,7 @@ namespace MSNK.Controllers
                 if (akTerima.Jumlah != jumlahPerihal)
                 {
                     //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Jumlah Objek tidak sama dengan Jumlah Perihal.";
+                    TempData[SD.Error] = "Data gagal diluluskan. Jumlah Objek tidak sama dengan Jumlah Perihal.";
                     return RedirectToAction(nameof(Index));
                 }
                 // checking end
@@ -1659,7 +1659,7 @@ namespace MSNK.Controllers
                 {
 
                     //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+                    TempData[SD.Error] = "Data gagal diluluskan.";
                    
                 }
                 else
@@ -1708,7 +1708,7 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
 
-                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                    TempData[SD.Success] = "Data berjaya diluluskan.";
                 }
 
                 
@@ -1736,7 +1736,7 @@ namespace MSNK.Controllers
                 {
 
                     //duplicate id error
-                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
+                    TempData[SD.Error] = "Data belum diluluskan.";
 
                 }
                 else
@@ -1761,7 +1761,7 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                    TempData[SD.Success] = "Data berjaya batal kelulusan.";
                     //unposting operation end
                 }
 

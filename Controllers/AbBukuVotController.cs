@@ -166,7 +166,7 @@ namespace MSNK.Controllers
                 .FirstOrDefaultAsync();
 
             ViewData["tahun"] = tahun;
-            ViewData["Vot"] = abBukuVot.Vot.Kod + " - " + abBukuVot.Vot.Perihal;
+            ViewData["Vot"] = abBukuVot.JKW.Kod + " / " + abBukuVot.JBahagian.Kod + " / " + abBukuVot.Vot.Kod + " - " + abBukuVot.Vot.Perihal;
 
             var sql = _context.AbBukuVot
                 .Include(x => x.Vot).Include(x => x.JKW)

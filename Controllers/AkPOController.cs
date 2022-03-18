@@ -1424,7 +1424,7 @@ namespace MSNK.Controllers
                 if (akPO.FlCetak == 0)
                 {
                     //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    TempData[SD.Error] = "Data gagal diluluskan. Sila cetak data dahulu sebelum menjalani operasi ini.";
                     return RedirectToAction(nameof(Index));
                 }
                 //check for print end
@@ -1461,7 +1461,7 @@ namespace MSNK.Controllers
                 {
 
                     //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+                    TempData[SD.Error] = "Data gagal diluluskan.";
 
                 }
                 else
@@ -1518,7 +1518,7 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
 
-                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                    TempData[SD.Success] = "Data berjaya diluluskan.";
                 }
 
 
@@ -1550,7 +1550,7 @@ namespace MSNK.Controllers
                 {
 
                     //duplicate id error
-                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
+                    TempData[SD.Error] = "Data belum diluluskan.";
 
                 }
                 else
@@ -1576,7 +1576,7 @@ namespace MSNK.Controllers
                         //if (akBelian != null)
                         //{
                             //linkage id error
-                            TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoInbois.ToUpper() + ". Batal posting tidak dibenarkan";
+                            TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoInbois.ToUpper() + ". Batal kelulusan tidak dibenarkan";
                         //}
                     }
                     else
@@ -1587,7 +1587,7 @@ namespace MSNK.Controllers
                         if (akPOLaras != null)
                         {
                             //linkage id error
-                            TempData[SD.Error] = "Data terkait pada No Pelarasan Tanggungan " + akPOLaras.NoRujukan.ToUpper() + ". Batal posting tidak dibenarkan";
+                            TempData[SD.Error] = "Data terkait pada No Pelarasan Tanggungan " + akPOLaras.NoRujukan.ToUpper() + ". Batal kelulusan tidak dibenarkan";
                         }
                         else
                         {
@@ -1632,7 +1632,7 @@ namespace MSNK.Controllers
 
                             await _context.SaveChangesAsync();
 
-                            TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                            TempData[SD.Success] = "Data berjaya batal kelulusan.";
                             //unposting operation end
                         }
                     }

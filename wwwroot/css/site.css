@@ -1,5 +1,15 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+/*new sidebar*/
+
+/*new aside bar end*/
+.navbar-collapse-main {
+    flex-basis: 100%;
+    flex-grow: 1;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
 .flex-scroll-x {
     overflow-x: auto;
     white-space: nowrap;

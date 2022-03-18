@@ -42,7 +42,7 @@
         });
 
         $('#lebih14hari').on('click', function () {
-            tablePO.columns(4).search('Lebih Tempoh').draw();
+            tablePO.columns(4).search('Tamat Tempoh').draw();
         });
 
         $('#reset').on('click', function () {
@@ -80,7 +80,7 @@
             </div>
             <div class="col-md-6 float-right text-right">
                 <button class='btn text-warning' id="lebih5hari">Lebih 5 Hari</button>
-                <button class='btn text-danger' id="lebih14hari">Lebih Tempoh</button>
+                <button class='btn text-danger' id="lebih14hari">Tamat Tempoh</button>
                 <button class='btn text-primary' id="reset">Reset Jadual</button>
             </div>
 
@@ -114,7 +114,7 @@
 
                         var tabletype = bakiTarikh > 14 ? "table-danger" : null;
                         var badgeType = bakiTarikh > 14 ? "bg-danger" : "bg-warning";
-                        var statusPo = bakiTarikh > 14 ? "Lebih Tempoh" : "Lebih 5 hari";
+                        var statusPo = bakiTarikh > 14 ? "Tamat Tempoh" : "Lebih 5 hari";
                         <tr class="@tabletype text-uppercase ">
                             <td width="5%" data-sort='YYYYMMDD'>
                                 @item.Tarikh.ToString("dd/MM/yyyy")
@@ -137,18 +137,18 @@
                             </td>
                             <td class="action-button">
                                 <div class="btn-group" role="group" aria-label="action">
-                                    <a asp-action="Details" asp-controller="AkPO" asp-route-id="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                                    <a asp-action="PrintPdf" asp-controller="AkPO" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                                    <a asp-action="Details" asp-controller="AkPO" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                    <a asp-action="PrintPdf" asp-controller="AkPO" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
                                     @if (item.FlPosting == 0)
                                     {
                                         @if (item.FlCetak != 0)
                                         {
-                                            <a asp-action="Posting" asp-controller="AkPO" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
-                                                <i class="fas fa-sync"></i>
+                                            <a asp-action="Posting" asp-controller="AkPO" asp-route-id="@item.Id" class="btn text-success btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Lulus">
+                                                <i class="fas fa-file-signature"></i>
                                             </a>
                                         }
 
-                                        <a asp-action="Delete" asp-controller="AkPO" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                                        <a asp-action="Delete" asp-controller="AkPO" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
 
                                     }
                                 </div>

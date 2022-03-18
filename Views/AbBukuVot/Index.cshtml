@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i></button>
+                            <button type="submit" class="btn text-info btn-sm" data-toggle="tooltip" data-placement="top" title="Cari"><i class="fas fa-search"></i></button>
                             @*<a asp-action="Index" class="btn btn-warning btn-sm"><i class="fas fa-times"></i></a>*@
                         </div>
                     </div>
@@ -153,7 +153,7 @@
                            asp-route-tahun="@item.Tahun"
                            asp-route-jKWId="@item.JKWId"
                            asp-route-jBahagianId="@item.JBahagianId"
-                           class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                           class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
                     </td>
                 </tr>
             }

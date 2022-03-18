@@ -2,33 +2,41 @@
     ViewData["Title"] = "Halaman Utama";
 }
 
+@*div Header*@
+<div class="row mb-0">
+    <div class="col-12">
+        <h3 class="text-left">Dashboard</h3>
+    </div>
+</div>
+<hr class="mt-0" />
+@*div Header end*@
 @*<div class="text-center">
-    <h1 class="display-4">Selamat Datang</h1>
-    <p>
-        @ViewBag.json
-    </p>
-    @if (User.Identity.IsAuthenticated)
-    {
+        <h1 class="display-4">Selamat Datang</h1>
+        <p>
+            @ViewBag.json
+        </p>
+        @if (User.Identity.IsAuthenticated)
+        {
 
-        @if (User.IsInRole("Admin"))
-        {
-            <h2>Peranan anda - Admin</h2>
+            @if (User.IsInRole("Admin"))
+            {
+                <h2>Peranan anda - Admin</h2>
 
+            }
+            else if (User.IsInRole("Supervisor"))
+            {
+                <h2>Peranan anda - Supervisor</h2>
+            }
+            else if (User.IsInRole("User"))
+            {
+                <h2>Peranan anda - User</h2>
+            }
+            else
+            {
+                <h2>Peranan anda - SuperAdmin</h2>
+            }
         }
-        else if (User.IsInRole("Supervisor"))
-        {
-            <h2>Peranan anda - Supervisor</h2>
-        }
-        else if (User.IsInRole("User"))
-        {
-            <h2>Peranan anda - User</h2>
-        }
-        else
-        {
-            <h2>Peranan anda - SuperAdmin</h2>
-        }
-    }
-</div>*@
+    </div>*@
 <div class="row">
     <div class="col-md-12">
         <partial name="_StatusPOWidget" />

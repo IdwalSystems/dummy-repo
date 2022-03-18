@@ -1223,7 +1223,7 @@ namespace MSNK.Controllers
                 if (akNotaMinta.FlCetak == 0)
                 {
                     //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    TempData[SD.Error] = "Data gagal diluluskan. Sila cetak data dahulu sebelum menjalani operasi ini.";
                     return RedirectToAction(nameof(Index));
                 }
                 //check for print end
@@ -1235,7 +1235,7 @@ namespace MSNK.Controllers
                 {
 
                     //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke Pesanan Tempatan.";
+                    TempData[SD.Error] = "Data gagal diluluskan.";
 
                 }
                 else
@@ -1255,7 +1255,7 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
 
-                    TempData[SD.Success] = "Data berjaya dikemaskini ke Pesanan Tempatan.";
+                    TempData[SD.Success] = "Data berjaya diluluskan. Sila terus ke modul Pesanan Tempatan.";
                 }
 
 
@@ -1284,7 +1284,7 @@ namespace MSNK.Controllers
                 {
 
                     //duplicate id error
-                    TempData[SD.Error] = "Data belum dikemaskini ke Pesanan Tempatan.";
+                    TempData[SD.Error] = "Data belum diluluskan.";
 
                 }
                 else
@@ -1303,7 +1303,7 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    TempData[SD.Success] = "Data berjaya batal kemaskini dari Pesanan Tempatan.";
+                    TempData[SD.Success] = "Data berjaya batal kelulusan dari Pesanan Tempatan.";
                     //unposting operation end
                 }
 
