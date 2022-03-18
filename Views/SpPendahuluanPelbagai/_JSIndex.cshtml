@@ -1,4 +1,5 @@
 ﻿<script type="text/javascript">
+
     var columnSearchVar;
     $(document).ready(function () {
 
@@ -54,4 +55,20 @@
             }
         });
     });
+
+    //update tbl Peserta
+    function Posting(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var id = $("TD", row).eq(1).html();
+        var noPermohonan = $("TD", row).eq(2).html();
+        var jumKeseluruhan = $("TD", row).eq(6).html();
+        //alert(noPermohonan);
+        $("#moId").val(id);
+        $("#moPermohonan").val(noPermohonan.trim());
+        $("#moJumlah").val(jumKeseluruhan);
+        $("#moSokong").val(jumKeseluruhan);
+
+        
+    };
 </script>

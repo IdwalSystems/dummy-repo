@@ -64,6 +64,9 @@
             <tr>
                 <th width="5%">Bil</th>
                 <th>
+                    Id
+                </th>
+                <th>
                     No Permohonan
                 </th>
                 <th>
@@ -74,6 +77,9 @@
                 </th>
                 <th>
                     Aktiviti
+                </th>
+                <th>
+                    Jumlah RM
                 </th>
                 <th>
                     Tempat
@@ -97,6 +103,9 @@
                 <tr class="@tabletype">
                     <td></td>
                     <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.NoPermohonan)
                     </td>
                     <td>
@@ -108,6 +117,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Aktiviti)
                     </td>
+                    <td align="right">@Convert.ToDecimal(item.JumKeseluruhan).ToString("#,##0.00")</td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Tempat)
                     </td>
@@ -150,9 +160,16 @@
                             {
                                 @if (item.FlCetak != 0)
                                 {
-                                    <a asp-action="Posting" asp-route-id="@item.Id" class="btn btn-success btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
-                                        <i class="fas fa-sync"></i>
-                                    </a>
+                                    <button data-toggle="modal" data-target="#modalSokong" class="btn btn-success btn-sm" type="button" data-placement="top" title="Lulus" onclick="Posting(this)">
+                                        <i class="fas fa-file-signature"></i>
+                                    </button>
+                                    @if (item.StatusSokong != 0)
+                                    {
+                                        <button data-toggle="modal" data-target="#modalPosting" class="btn btn-success btn-sm" type="button" data-placement="top" title="Lulus" onclick="Posting(this)">
+                                            <i class="fas fa-file-signature"></i>
+                                        </button>
+                                    }
+
                                 }
 
                                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
@@ -160,8 +177,8 @@
                             }
                             else
                             {
-                                <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Batal Kemaskini Lejar">
-                                    <i class="fas fa-sync"></i>
+                                <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn btn-warning btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Baatal Lulus">
+                                    <i class="fas fa-file"></i>
                                 </a>
                             }
                         }
@@ -181,3 +198,105 @@
         </tbody>
     </table>
 </div>
+
+<!-- Modal Sokong -->
+<div class="modal fade bd-example-modal-lg" id="modalSokong" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sokong Permohonan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Sokong" asp-controller="SpPendahuluanPelbagai" class="needs-validation">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="modal-body">
+
+                    <input id="moId" hidden name="id" />
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-form-label">No Permohonan</label>
+                                <input type="text" class="form-control form-control-sm" id="moPermohonan" name="noPermohonan" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah RM</label>
+                                <input type="text" class="form-control form-control-sm" id="moJumlah" name="jumKeseluruhan" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah Sokong RM</label>
+                                <input type="text" class="form-control form-control-sm" id="moSokong" name="jumSokong">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-success">Sokong</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Sokong End -->z
+
+<!-- Modal Posting -->
+<div class="modal fade bd-example-modal-lg" id="modalPosting" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Kelulusan Permohonan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Posting" asp-controller="SpPendahuluanPelbagai" class="needs-validation">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="modal-body">
+
+                    <input id="moId" hidden name="id" />
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-form-label">No Permohonan</label>
+                                <input type="text" class="form-control form-control-sm" id="moPermohonan" name="noPermohonan" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah RM</label>
+                                <input type="text" class="form-control form-control-sm" id="moJumlah" name="jumKeseluruhan" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah Sokong RM</label>
+                                <input type="text" class="form-control form-control-sm" id="moSokong" name="jumSokong" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah Lulus RM</label>
+                                <input type="number" class="form-control form-control-sm" id="moLulus" name="jumLulus">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-success">Lulus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Posting End -->

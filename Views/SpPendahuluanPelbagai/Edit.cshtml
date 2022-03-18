@@ -47,7 +47,7 @@
                                     <option value="" disabled selected>-- Pilih Bahagian --</option>
                                     @foreach (var s in ViewBag.JBahagian)
                                     {
-                                        <option value="@s.Id">@s.Perihal </option>
+                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
                                     }
                                 </select>
                             </div>

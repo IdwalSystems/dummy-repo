@@ -45,6 +45,8 @@ namespace MSNK.Controllers
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly CustomIRepository<string, int> _customRepo;
+        private readonly IRepository<JPelulus, int, string> _pelulusRepo;
         private CartPendahuluan _cart;
 
         public SpPendahuluanPelbagaiController(
@@ -63,6 +65,8 @@ namespace MSNK.Controllers
            IRepository<JKW, int, string> kwRepository,
            IRepository<AbBukuVot, int, string> abBukuVotRepository,
            UserManager<IdentityUser> userManager,
+           CustomIRepository<string, int> customRepo,
+           IRepository<JPelulus, int, string> pelulusRepo,
            CartPendahuluan cart
            )
         {
@@ -81,6 +85,8 @@ namespace MSNK.Controllers
             _bahagianRepo = bahagianRepository;
             _abBukuVotRepo = abBukuVotRepository;
             _userManager = userManager;
+            _customRepo = customRepo;
+            _pelulusRepo = pelulusRepo;
             _cart = cart;
         }
 
@@ -153,6 +159,46 @@ namespace MSNK.Controllers
             }
         }
         //End Function Running Number
+
+        //Start Function Get Baki Vot
+        [HttpPost]
+        public async Task<JsonResult> GetBakiVot(SpPendahuluanPelbagai spPendahuluanPelbagai, 
+            int jKWId,
+            int jBahagianId)
+        {
+
+                try
+                {
+                // check for baki peruntukan
+                var tahun = DateTime.Now.Year.ToString();
+                        bool IsExistAbBukuVot = await _context.AbBukuVot
+                                .Where(x => x.Tahun == tahun && x.VotId == spPendahuluanPelbagai.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                                .AnyAsync();
+
+                        if (IsExistAbBukuVot == true)
+                        {
+                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, spPendahuluanPelbagai.AkCartaId, jKWId, jBahagianId);
+
+                            if (sum < spPendahuluanPelbagai.JumKeseluruhan)
+                            {
+                                return Json(new { result = "ERROR" });
+                            }
+                        }
+                        else
+                        {
+                            return Json(new { result = "ERROR" });
+                        }
+                        // check for baki peruntukan end
+
+                    return Json(new { result = "OK" });
+                }
+                catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+        //End Function Get Baki Vot
 
         //Start Function Get Id Bahagian
         [HttpPost]
@@ -438,6 +484,7 @@ namespace MSNK.Controllers
                     m.SuPekerjaId = SuPekerjaId;
                     m.TarMasuk = DateTime.Now;
                     m.JBahagian = bahagian;
+                    m.UserId = user.UserName;
 
                     m.SpPendahuluanPelbagai1 = _cart.Lines1.ToArray();
                     m.SpPendahuluanPelbagai2 = _cart.Lines2.ToArray();
@@ -508,7 +555,8 @@ namespace MSNK.Controllers
                     {
                         var user = await _userManager.GetUserAsync(User);
                         SpPendahuluanPelbagai spPendahuluanPelbagaiAsal = await _spPendahuluanPelbagaiRepo.GetById(id);
-
+                        //var user = UserManager.GetUserAsync(User);
+                        //var namaUser = _context.applicationUsers.FirstOrDefault(x => x.Email == user.Result.Email);
                         // list of input that cannot be change
                         //spPendahuluanPelbagai.Tahun = spPendahuluanPelbagaiAsal.Tahun;
                         spPendahuluanPelbagai.JKWId = spPendahuluanPelbagaiAsal.JKWId;
@@ -652,8 +700,10 @@ namespace MSNK.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // posting function
-        public async Task<IActionResult> Posting(int? id)
+        // Sokong function
+        [HttpPost, ActionName("Sokong")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Sokong(int? id, decimal jumSokong)
         {
             if (id == null)
             {
@@ -662,6 +712,74 @@ namespace MSNK.Controllers
             else
             {
                 var user = await _userManager.GetUserAsync(User);
+                //var user = UserManager.GetUserAsync(User);
+                //var namaUser = _context.applicationUsers.FirstOrDefault(x => x.Email == user.Result.Email);
+                //var pelulus = await _context.JPelulus.Include(x => x.SuPekerja).Where(x => x.IsPendahuluan == true).FirstOrDefaultAsync();
+                //var sokong = Convert.ToDecimal(jumSokong);
+
+                SpPendahuluanPelbagai sp = await _spPendahuluanPelbagaiRepo.GetById((int)id);
+
+                //check for print
+                if (sp.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
+
+                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("SP/" + sp.NoPermohonan)).FirstOrDefaultAsync();
+                if (abBukuVot != null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+
+                }
+                else
+                {
+                    //posting operation start here
+
+                    //update posting status in SPPENDAHULUANPELBAGAI
+                    sp.FlPosting = 1;
+                    sp.TarikhPosting = DateTime.Now;
+                    sp.JumSokong = jumSokong;
+                    //sp.Pelulus = penyokong.SuPekerja.Nama;
+
+                    await _spPendahuluanPelbagaiRepo.Update(sp);
+
+                    //insert applog
+                    await AddLogAsync("Posting", "Posting Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
+
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // Sokong function end
+
+        // posting function
+        [HttpPost, ActionName("Posting")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Posting(int? id, string jumSokong, decimal jumLulus)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var user = await _userManager.GetUserAsync(User);
+                var pelulus = await _context.JPelulus.Include(x=>x.SuPekerja).Where(x => x.IsPendahuluan == true).FirstOrDefaultAsync();
+                var sokong = Convert.ToDecimal(jumSokong);
 
                 SpPendahuluanPelbagai sp = await _spPendahuluanPelbagaiRepo.GetById((int)id);
 
@@ -697,7 +815,7 @@ namespace MSNK.Controllers
                         Penerima = sp.SuPekerja.Nama,
                         VotId = sp.AkCartaId,
                         Rujukan = "SP/" + sp.NoPermohonan,
-                        Tanggungan = sp.JumKeseluruhan,
+                        Tanggungan = jumLulus,
                         JBahagianId = sp.JBahagianId
                     };
 
@@ -707,6 +825,10 @@ namespace MSNK.Controllers
                     //update posting status in SPPENDAHULUANPELBAGAI
                     sp.FlPosting = 1;
                     sp.TarikhPosting = DateTime.Now;
+                    sp.JumSokong = sokong;
+                    sp.JumLulus = jumLulus;
+                    sp.Pelulus = pelulus.SuPekerja.Nama;
+    
                     await _spPendahuluanPelbagaiRepo.Update(sp);
 
                     //insert applog
@@ -761,6 +883,8 @@ namespace MSNK.Controllers
                     //update posting status in SPPENDAHULUANPELBAGAI
                     obj.FlPosting = 0;
                     obj.TarikhPosting = null;
+                    obj.JumSokong = 0;
+                    obj.JumLulus = 0;
                     await _spPendahuluanPelbagaiRepo.Update(obj);
 
                     //insert applog

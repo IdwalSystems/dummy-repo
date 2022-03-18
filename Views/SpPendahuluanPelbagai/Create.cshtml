@@ -47,7 +47,7 @@
                                     <option value="" hidden>-- Pilih Bahagian --</option>
                                     @foreach (var s in ViewBag.JBahagian)
                                     {
-                                        <option value="@s.Id">@s.Perihal </option>
+                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
                                     }
                                 </select>
                             </div>
@@ -201,7 +201,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="JumKeseluruhan" class="control-label">Jumlah</label><span class="text-danger control-label">*</span>
-                                    <input asp-for="JumKeseluruhan" class="form-control form-control-sm form-control-sm-custom" required id="txtJumlahKeseluruhan" />
+                                    <input asp-for="JumKeseluruhan" class="form-control form-control-sm form-control-sm-custom" type="number" value="0.00" required id="txtJumlahKeseluruhan" />
                                 </div>
                             </div>
                         </div>
@@ -306,7 +306,7 @@
                     </div>
                 </div>
             <div class="form-group">
-                <input type="submit" value="Tambah" class="btn btn-primary" />
+                <input type="submit"  id="btnSave" value="Tambah" class="btn btn-primary" />
             </div>
         </form>
     </div>
