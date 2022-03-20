@@ -1,8 +1,16 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
-/*new sidebar*/
 
-/*new aside bar end*/
+/*AK CODE*/
+.text-tertiary {
+    color: #a54ea8;
+}
+
+a.text-tertiary:hover, a.text-tertiary:focus {
+    color: #7c3480;
+}
+/*AK CODE*/
+
 .navbar-collapse-main {
     flex-basis: 100%;
     flex-grow: 1;
@@ -33,6 +41,15 @@ a {
 
 span, li, .dropdown-item, .navbar-light .navbar-nav .nav-link, .table, .col-form-label, a, .btn-sm {
     font-size: 0.8rem;
+}
+
+.navbar-dark .nav-link {
+    color: white !important;
+}
+
+.navbar-dark .navbar-toggler {
+    color: white !important;
+    border-color: white !important;
 }
 
 .btn {
@@ -211,4 +228,48 @@ h1, h2, h3, h4, h5, h6, p, td, th,a, button, input, select, label, textarea, spa
     animation-fill-mode: backwards;
 }
 
+/*new sidebar*/
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+    .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 15px;
+        display: block;
+        transition: 0.3s;
+    }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+    .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 15px;
+        font-size: 25px;
+        margin-left: 50px;
+    }
+
+
+@media screen and (max-height: 450px) {
+    .sidenav {
+        padding-top: 15px;
+    }
+
+        .sidenav a {
+            font-size: 15px;
+        }
+}
+/*new aside bar end*/
 

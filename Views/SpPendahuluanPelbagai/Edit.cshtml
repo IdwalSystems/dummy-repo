@@ -7,8 +7,12 @@
     <div class="col-md-12">
         <form asp-action="Edit" class="needs-validation">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="card box-shadow border-success mb-3">
-                <div class="card-header bg-success text-white">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="JKWId" id="ddlKW" />
+            <input type="hidden" asp-for="JBahagianId" id="ddlBahagian" />
+            <input type="hidden" asp-for="SuPekerjaId" />
+            <div class="card box-shadow border-primary mb-3">
+                <div class="card-header bg-primary text-white">
                     <h5>Permohonan Pendahuluan Pelbagai - @ViewData["Title"]</h5>
                 </div>
                 <div class="card-body">
@@ -47,7 +51,7 @@
                                     <option value="" disabled selected>-- Pilih Bahagian --</option>
                                     @foreach (var s in ViewBag.JBahagian)
                                     {
-                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
                                     }
                                 </select>
                             </div>
@@ -353,7 +357,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Simpan" class="btn btn-primary" />
+                <input type="submit" value="Simpan" class="btn btn-primary" id="btnSave" />
             </div>
         </form>
     </div>

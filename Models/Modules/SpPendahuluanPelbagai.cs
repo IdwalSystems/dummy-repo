@@ -23,19 +23,19 @@ namespace MSNK.Models.Modules
         public string Aktiviti { get; set; }
         public string Tempat { get; set; }
 
-        public DateTime TarSedia { get; set; }
+        public DateTime? TarSedia { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal JumKeseluruhan { get; set; }
 
         public string Penyokong { get; set; }
-        public int StatusSokong { get; set; }
-        public DateTime TarSokong { get; set; }
+        public int FlStatusSokong { get; set; }
+        public DateTime? TarSokong { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal JumSokong { get; set; }
 
         public string Pelulus { get; set; }
-        public int StatusLulus { get; set; }
-        public DateTime TarLulus { get; set; }
+        public int FlStatusLulus { get; set; }
+        public DateTime? TarLulus { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal JumLulus { get; set; }
         [DisplayName("Tarikh Posting")]

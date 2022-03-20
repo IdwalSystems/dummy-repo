@@ -19,6 +19,7 @@ using Rotativa.AspNetCore;
 using MSNK.Infrastructure;
 using MSNK.Models.Modules.ViewModel;
 
+
 namespace MSNK.Controllers
 {
     [Authorize(Roles = "SuperAdmin,Supervisor,User")]
@@ -555,8 +556,6 @@ namespace MSNK.Controllers
                     {
                         var user = await _userManager.GetUserAsync(User);
                         SpPendahuluanPelbagai spPendahuluanPelbagaiAsal = await _spPendahuluanPelbagaiRepo.GetById(id);
-                        //var user = UserManager.GetUserAsync(User);
-                        //var namaUser = _context.applicationUsers.FirstOrDefault(x => x.Email == user.Result.Email);
                         // list of input that cannot be change
                         //spPendahuluanPelbagai.Tahun = spPendahuluanPelbagaiAsal.Tahun;
                         spPendahuluanPelbagai.JKWId = spPendahuluanPelbagaiAsal.JKWId;
@@ -596,6 +595,18 @@ namespace MSNK.Controllers
 
                         spPendahuluanPelbagai.SpPendahuluanPelbagai1 = _cart.Lines1.ToList();
                         spPendahuluanPelbagai.SpPendahuluanPelbagai2 = _cart.Lines2.ToList();
+
+                        // AK CODE 19/03/2022
+                        spPendahuluanPelbagai.TarSokong = null;
+                        spPendahuluanPelbagai.Penyokong = null;
+                        spPendahuluanPelbagai.JumSokong = 0;
+                        spPendahuluanPelbagai.FlStatusSokong = 0;
+
+                        spPendahuluanPelbagai.TarLulus = null;
+                        spPendahuluanPelbagai.Pelulus = null;
+                        spPendahuluanPelbagai.JumLulus = 0;
+                        spPendahuluanPelbagai.FlStatusLulus = 0;
+                        // Ak CODE 19/03/2022 END
 
                         spPendahuluanPelbagai.UserIdKemaskini = user.UserName;
                         spPendahuluanPelbagai.TarKemaskini = DateTime.Now;
@@ -713,7 +724,8 @@ namespace MSNK.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 //var user = UserManager.GetUserAsync(User);
-                //var namaUser = _context.applicationUsers.FirstOrDefault(x => x.Email == user.Result.Email);
+                var namaUser = _context.
+                    applicationUsers.Include(x=> x.SuPekerja).FirstOrDefault(x => x.Email == user.UserName);
                 //var pelulus = await _context.JPelulus.Include(x => x.SuPekerja).Where(x => x.IsPendahuluan == true).FirstOrDefaultAsync();
                 //var sokong = Convert.ToDecimal(jumSokong);
 
@@ -723,41 +735,36 @@ namespace MSNK.Controllers
                 if (sp.FlCetak == 0)
                 {
                     //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    TempData[SD.Error] = "Data gagal disokong. Sila cetak data dahulu sebelum menjalani operasi ini.";
                     return RedirectToAction(nameof(Index));
                 }
                 //check for print end
 
-                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("SP/" + sp.NoPermohonan)).FirstOrDefaultAsync();
-                if (abBukuVot != null)
+                //posting operation start here
+
+                //update posting status in SPPENDAHULUANPELBAGAI
+                sp.FlStatusSokong = 1;
+                sp.TarSokong = DateTime.Now;
+                sp.JumSokong = jumSokong;
+                if (User.IsInRole("SuperAdmin"))
                 {
-
-                    //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
-
-                }
-                else
+                    sp.Penyokong = namaUser.Nama;
+                } else
                 {
-                    //posting operation start here
-
-                    //update posting status in SPPENDAHULUANPELBAGAI
-                    sp.FlPosting = 1;
-                    sp.TarikhPosting = DateTime.Now;
-                    sp.JumSokong = jumSokong;
-                    //sp.Pelulus = penyokong.SuPekerja.Nama;
-
-                    await _spPendahuluanPelbagaiRepo.Update(sp);
-
-                    //insert applog
-                    await AddLogAsync("Posting", "Posting Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
-
-                    //insert applog end
-
-                    await _context.SaveChangesAsync();
-
-                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                    sp.Penyokong = namaUser.SuPekerja.Nama;
                 }
+                
 
+                await _spPendahuluanPelbagaiRepo.Update(sp);
+
+                //insert applog
+                await AddLogAsync("Posting", "Posting Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
+
+                //insert applog end
+
+                await _context.SaveChangesAsync();
+
+                TempData[SD.Success] = "Data berjaya disokong.";
 
             }
 
@@ -769,7 +776,7 @@ namespace MSNK.Controllers
         // posting function
         [HttpPost, ActionName("Posting")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Posting(int? id, string jumSokong, decimal jumLulus)
+        public async Task<IActionResult> Posting(int? id, decimal jumSokong, decimal jumLulus)
         {
             if (id == null)
             {
@@ -777,69 +784,86 @@ namespace MSNK.Controllers
             }
             else
             {
-                var user = await _userManager.GetUserAsync(User);
-                var pelulus = await _context.JPelulus.Include(x=>x.SuPekerja).Where(x => x.IsPendahuluan == true).FirstOrDefaultAsync();
-                var sokong = Convert.ToDecimal(jumSokong);
-
-                SpPendahuluanPelbagai sp = await _spPendahuluanPelbagaiRepo.GetById((int)id);
-
-                //check for print
-                if (sp.FlCetak == 0)
+                if(jumLulus != 0)
                 {
-                    //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar. Sila cetak data dahulu sebelum menjalani operasi ini.";
-                    return RedirectToAction(nameof(Index));
-                }
-                //check for print end
+                    if(jumLulus < jumSokong)
+                    {
+                        var user = await _userManager.GetUserAsync(User);
+                        var pelulus = await _context.JPelulus.Include(x => x.SuPekerja).Where(x => x.IsPendahuluan == true).FirstOrDefaultAsync();
 
-                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("SP/" + sp.NoPermohonan)).FirstOrDefaultAsync();
-                if (abBukuVot != null)
-                {
+                        SpPendahuluanPelbagai sp = await _spPendahuluanPelbagaiRepo.GetById((int)id);
 
-                    //duplicate id error
-                    TempData[SD.Error] = "Data gagal dikemaskini ke lejar.";
+                        //check for print
+                        if (sp.FlCetak == 0)
+                        {
+                            //duplicate id error
+                            TempData[SD.Error] = "Data gagal diluluskan. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                            return RedirectToAction(nameof(Index));
+                        }
+                        //check for print end
 
+                        var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("SP/" + sp.NoPermohonan)).FirstOrDefaultAsync();
+                        if (abBukuVot != null)
+                        {
+
+                            //duplicate id error
+                            TempData[SD.Error] = "Data gagal diluluskan.";
+
+                        }
+                        else
+                        {
+                            //posting operation start here
+
+
+                            //insert into AbBukuVot
+                            AbBukuVot abBukuVotPosting = new AbBukuVot()
+                            {
+                                Tahun = sp.TarMasuk.Year.ToString(),
+                                JKWId = sp.JKWId,
+                                Tarikh = sp.TarMasuk,
+                                Kod = sp.SuPekerja.NoGaji, // tak pasti tarik dari id pekerja ke?
+                                Penerima = sp.SuPekerja.Nama,
+                                VotId = sp.AkCartaId,
+                                Rujukan = "SP/" + sp.NoPermohonan,
+                                Tanggungan = jumLulus,
+                                JBahagianId = sp.JBahagianId
+                            };
+
+                            await _abBukuVotRepo.Insert(abBukuVotPosting);
+                            // insert into AbBukuVot end
+
+                            //update posting status in SPPENDAHULUANPELBAGAI
+                            sp.FlPosting = 1;
+                            sp.TarikhPosting = DateTime.Now;
+                            sp.JumSokong = jumSokong;
+                            sp.JumLulus = jumLulus;
+                            sp.Pelulus = pelulus.SuPekerja.Nama;
+
+                            await _spPendahuluanPelbagaiRepo.Update(sp);
+
+                            //insert applog
+                            await AddLogAsync("Posting", "Posting Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
+
+                            //insert applog end
+
+                            await _context.SaveChangesAsync();
+
+                            TempData[SD.Success] = "Data berjaya diluluskan.";
+                        }
+                    }
+                    else
+                    {
+                        TempData[SD.Error] = "Jumlah lulus tidak boleh lebih dari jumlah disokong.";
+                        return RedirectToAction(nameof(Index));
+                    }
+                    
                 }
                 else
                 {
-                    //posting operation start here
-
-
-                    //insert into AbBukuVot
-                    AbBukuVot abBukuVotPosting = new AbBukuVot()
-                    {
-                        Tahun = sp.TarMasuk.Year.ToString(),
-                        JKWId = sp.JKWId,
-                        Tarikh = sp.TarMasuk,
-                        Kod = sp.SuPekerja.NoGaji, // tak pasti tarik dari id pekerja ke?
-                        Penerima = sp.SuPekerja.Nama,
-                        VotId = sp.AkCartaId,
-                        Rujukan = "SP/" + sp.NoPermohonan,
-                        Tanggungan = jumLulus,
-                        JBahagianId = sp.JBahagianId
-                    };
-
-                    await _abBukuVotRepo.Insert(abBukuVotPosting);
-                    // insert into AbBukuVot end
-
-                    //update posting status in SPPENDAHULUANPELBAGAI
-                    sp.FlPosting = 1;
-                    sp.TarikhPosting = DateTime.Now;
-                    sp.JumSokong = sokong;
-                    sp.JumLulus = jumLulus;
-                    sp.Pelulus = pelulus.SuPekerja.Nama;
-    
-                    await _spPendahuluanPelbagaiRepo.Update(sp);
-
-                    //insert applog
-                    await AddLogAsync("Posting", "Posting Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
-
-                    //insert applog end
-
-                    await _context.SaveChangesAsync();
-
-                    TempData[SD.Success] = "Data berjaya dikemaskini ke lejar.";
+                    TempData[SD.Error] = "Jumlah RM0.00 tidak dibenarkan.";
+                    return RedirectToAction(nameof(Index));
                 }
+                
 
 
             }
@@ -861,12 +885,27 @@ namespace MSNK.Controllers
             {
                 SpPendahuluanPelbagai obj = await _spPendahuluanPelbagaiRepo.GetById((int)id);
 
+                var akPV = await _context.AkPV.Where(x => x.SpPendahuluanPelbagaiId == id).FirstOrDefaultAsync();
+                if (akPV != null)
+                {
+                    TempData[SD.Error] = "Data terkait dengan No Baucer " + akPV.NoPV + ". Batal lulus tidak dibenarkan.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var akTerima = await _context.AkTerima.Where(x => x.SpPendahuluanPelbagaiId == id).FirstOrDefaultAsync();
+
+                if (akTerima != null)
+                {
+                    TempData[SD.Error] = "Data terkait dengan Terimaan " +akTerima.NoRujukan+". Batal lulus tidak dibenarkan.";
+                    return RedirectToAction(nameof(Index));
+                }
                 List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(obj.NoPermohonan)).ToList();
                 if (abBukuVot == null)
                 {
 
                     //duplicate id error
-                    TempData[SD.Error] = "Data belum dikemaskini ke lejar.";
+                    TempData[SD.Error] = "Data belum diluluskan.";
+                    return RedirectToAction(nameof(Index));
 
                 }
                 else
@@ -883,8 +922,14 @@ namespace MSNK.Controllers
                     //update posting status in SPPENDAHULUANPELBAGAI
                     obj.FlPosting = 0;
                     obj.TarikhPosting = null;
-                    obj.JumSokong = 0;
+
+                    // AK CODE 19/03/2022
+                    obj.FlStatusLulus = 0;
+                    obj.TarLulus = null;
+                    obj.Pelulus = null;
                     obj.JumLulus = 0;
+                    // AK CODE 19/03/2022
+
                     await _spPendahuluanPelbagaiRepo.Update(obj);
 
                     //insert applog
@@ -894,7 +939,7 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    TempData[SD.Success] = "Data berjaya batal kemaskini dari lejar.";
+                    TempData[SD.Success] = "Data berjaya batal kelulusan.";
                     //unposting operation end
                 }
 
@@ -1241,6 +1286,7 @@ namespace MSNK.Controllers
 
             //update cetak -> 1
             sp.FlCetak = 1;
+            sp.TarSedia = DateTime.Now;
             await _spPendahuluanPelbagaiRepo.Update(sp);
 
             //insert applog
@@ -1254,7 +1300,9 @@ namespace MSNK.Controllers
                 PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
                 //CustomSwitches = "--footer-center \"  Tarikh: " +
-                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    DateTime.Now.ToString("g",
+                //  CultureInfo.CreateSpecificCulture("en-us")) + 
+                //  "            Mukasurat: [page]/[toPage]\"" +
                 //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };

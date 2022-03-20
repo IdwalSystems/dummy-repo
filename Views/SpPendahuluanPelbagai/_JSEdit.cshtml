@@ -35,7 +35,7 @@
         var bil = $("#txtBil").val();
         var bulan = $("#txtBulan").val();
 
-        $("#txtJumlahPerihal").val((countTotalPerihal(kadar, bil, bulan)));
+        $("#txtJumlahPerihal").val((countTotalPerihal(kadar, bil, bulan)).toFixed(2));
         //main body end
 
         //modal peserta
@@ -53,7 +53,7 @@
         var mobil = $("#moBil").val();
         var mobulan = $("#moBulan").val();
 
-        $("#moJumlahPerihal").val((countTotalPerihal(mokadar, mobil, mobulan)));
+        $("#moJumlahPerihal").val((countTotalPerihal(mokadar, mobil, mobulan)).toFixed(2));
         //modal Perihal end
     });
 
@@ -676,15 +676,65 @@
     });
     //validation form end
 
+    //Check Baki Vot
+    $("body").on('change', "#txtJumlahKeseluruhan", function () {
+        GetBakiVot();
+        checkJumlah();
+    });
+
+    function GetBakiVot() {
+
+        //var tahun = $("#txtTahun").val();
+        var bakivot = $("#txtJumlahKeseluruhan").val();
+
+        parseFloat(bakivot).toFixed(2);
+
+        if (bakivot != 0) {
+            var kw = $("#ddlKW").val();
+            var bahagian = $("#ddlBahagian").val();
+            var kodvot = $("#ddlAkCarta").val();
+            var SpPendahuluanPelbagai = {
+                //Tahun: tahun,
+                JumKeseluruhan: bakivot,
+                AkCartaId : kodvot
+            };
+
+            var bakiarray = {};
+            bakiarray.jKWId = kw;
+            bakiarray.jBahagianId = bahagian;
+            bakiarray.spPendahuluanPelbagai = SpPendahuluanPelbagai;
+
+            $.ajax({
+                type: "POST",
+                //url: "/AkPO/JsonGetKod",
+                url: '@Url.Action("GetBakiVot", "SpPendahuluanPelbagai")',
+                data: bakiarray,
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.result == "OK") { }
+                    else {
+                        toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
+                        $("#txtJumlahKeseluruhan").val("0.00");
+                        toastr.options.timeOut = 2000; // 2s
+                    }
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+    //End Check Baki Vot
+
     // check if jumlahObjek is equal to jumlahUrusniaga
     function checkJumlah() {
-        var jumlahObjek = $("#jumlahObjek").val();
-        var jumlahUrusniaga = $("#jumlahUrusniaga").val();
+        var jumlahObjek = $("#txtJumlahKeseluruhan").val();
+        var jumlahPerihal = $("#jumlahPerihal").val();
 
-        if (jumlahObjek == 0.00 && jumlahUrusniaga == 0.00) {
+        if (jumlahObjek == 0.00 && jumlahPerihal == 0.00) {
             $("#btnSave").show();
         } else {
-            if (jumlahObjek == jumlahUrusniaga) {
+            if (jumlahObjek == jumlahPerihal) {
                 $("#btnSave").show();
             }
             else {

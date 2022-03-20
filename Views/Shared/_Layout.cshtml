@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MSNK</title>
+    <link href="~/css/site.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
@@ -14,6 +15,8 @@
     <link href="~/lib/select2/css/select2.css" rel="stylesheet" />
     <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
     <link href="~/lib/select2-bootstrap-theme/select2-bootstrap.css" rel="stylesheet" />
+
+
     <link href="~/lib/animate.css/animate.min.css" rel="stylesheet" />
     <partial name="_Favicons" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -46,7 +49,17 @@
                 color: white;
             }
     </style>
+    <nav class="navbar navbar-expand-lg navbar-toggleable-lg bg-light navbar-light mb-0 border-bottom" style="height: fit-content;">
 
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-home" hidden></i></a>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" style="width: 40px; height: 40px; align-content: center; height: 100%;" class="border border-light rounded-circle" />
+            </a>
+            MSNK
+            <partial name="_LoginPartialNavbar" />
+        </div>
+    </nav>
     <header>
         @{
             var navtype = "";
@@ -68,18 +81,13 @@
             navtype = "bg-super navbar-dark";
         }
 
-        <nav class="navbar navbar-expand-lg navbar-toggleable-lg bg-light navbar-light mb-0 border-bottom" style="height: fit-content;">
-            <div class="container">
-                    <partial name="_LoginPartialNavbar" />
-            </div>
-        </nav>
+
         <nav class="navbar navbar-expand-lg navbar-toggleable-lg @navtype border-bottom mb-3">
             <div class="container">
-
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" ><i class="fas fa-home" hidden></i></a>
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" style="width: 40px; height: 40px; align-content: center; height: 100%;" class="border border-light rounded-circle" />
-                </a>
+                @*<button class="navbar-toggler" type="button" style="cursor:pointer" onclick="openNav()">
+                    <span class="navbar-toggler-icon"  ></span>
+                </button>*@
+                
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -117,7 +125,7 @@
                                 <partial name="_TerimaanPartialNavbar" />
                                 <partial name="_TanggunganPartialNavbar" />
                                 <partial name="_BaucerPartialNavbar" />
-                                <partial name="_TunaiRuncitPartialNavbar" />
+                                @*<partial name="_TunaiRuncitPartialNavbar" />*@
                                 <partial name="_PermohonanPartialNavbar" />
                             }
                             else
@@ -125,7 +133,7 @@
                                 <partial name="_TerimaanPartialNavbar" />
                                 <partial name="_TanggunganPartialNavbar" />
                                 <partial name="_BaucerPartialNavbar" />
-                                <partial name="_TunaiRuncitPartialNavbar" />
+                                @*<partial name="_TunaiRuncitPartialNavbar" />*@
                                 <partial name="_PermohonanPartialNavbar" />
                             }
                         }
@@ -135,6 +143,21 @@
         </nav>
     </header>
     <div class="container">
+        @*AK TEST*@
+        @*<div id="mySidenav" class="sidenav @navtype">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="#">
+                        About
+                    </a>
+                    <a href="#">
+                        About
+                    </a>
+                </li>
+            </ul>
+        </div>*@
+        @*AK TEST END*@
         <main role="main" class="pb-3">
             <partial name="_Notifications" />
             <partial name="_ToTopButton" />

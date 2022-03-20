@@ -313,7 +313,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Kembali Ke Indeks</a>
 </div>
 
 <!-- Modal Objek -->
@@ -330,17 +330,16 @@
                 <form>
                     <input id="moId" hidden />
                     <div class="form-row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <select class="form-control form-control-sm" id="moJJantina">
-                                    <option value="" selected>-- Pilih --</option>
-                                    @foreach (var s in ViewBag.JJantina)
-                                    {
-                                        <option value="@s.Id">@s.Perihal </option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
+                            <label class="col-form-label">Jantina</label>
+                            <select class="form-control form-control-sm" id="moJJantina" disabled>
+                                <option value="" selected>-- Pilih --</option>
+                                @foreach (var s in ViewBag.JJantina)
+                                {
+                                    <option value="@s.Id">@s.Perihal </option>
+                                }
+                            </select>
+                    </div>
+                    <div class="form-row">
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="col-form-label">Atlet</label>
@@ -353,16 +352,12 @@
                                 <input type="number" class="form-control form-control-sm jurulatih" id="moBilJul">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="col-form-label">Pegawai</label>
                                 <input type="number" class="form-control form-control-sm pegawai" id="moBilPeg">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="col-form-label">Teknikal</label>
@@ -378,10 +373,11 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="col-form-label">Jumlah</label>
-                                <input type="number" class="form-control form-control-sm" id="moJumlahPeserta">
+                                <input type="number" class="form-control form-control-sm" id="moJumlahPeserta" readonly>
                             </div>
                         </div>
                     </div>
+                        
                 </form>
             </div>
             <div class="modal-footer">

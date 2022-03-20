@@ -212,7 +212,7 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
-            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.OrderBy(b => b.NoPermohonan).ToList();
+            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.Where(x=> x.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
             ViewBag.SpPendahuluanPelbagai = spList;
 
             List<JBahagian> bahagianList = _context.JBahagian.ToList();

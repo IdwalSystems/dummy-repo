@@ -213,7 +213,7 @@ namespace MSNK.Controllers
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
 
-                    _context.Add(jBahagian);
+                    _context.Add(m);
                     await AddLogAsync("Tambah", m.Kod + " - " + m.Perihal,m.Kod,0, 0);
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = "Data berjaya ditambah..!";

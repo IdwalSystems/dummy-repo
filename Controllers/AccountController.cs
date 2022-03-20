@@ -318,7 +318,7 @@ namespace MSNK.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Emel);
                 if (user == null)
                 {
-                    return RedirectToAction("ForgotPasswordConfirmation");
+                    return RedirectToAction("ForgotPasswordError");
                 }
                 //var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -376,6 +376,11 @@ namespace MSNK.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult ForgotPasswordError()
+        {
+            return View();
+        }
         [HttpGet]
         public IActionResult ForgotPasswordConfirmation()
         {

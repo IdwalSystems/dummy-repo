@@ -85,6 +85,7 @@
         <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1 , @Model.CompanyDetail.AlamatSyarikat2</p>
         <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat3</p>
         <p class="mb-0"> Tel: @Model.CompanyDetail.TelSyarikat   Faks: @Model.CompanyDetail.FaksSyarikat</p>
+        <p class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</p>
     </div>
 
     <div class="col-2 text-right">

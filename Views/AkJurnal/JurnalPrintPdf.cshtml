@@ -69,23 +69,27 @@
         font-weight: normal
     }
 </style>
-<div class="row flexrow mb-1">
+<div class="row flexrow mb-1 ml-1">
     <div class="col-2 image-container">
         <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
     </div>
-    <div class="col-8 text-uppercase text-center">
+    <div class="col-8 text-uppercase">
         <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
-        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1</p>
-        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat2</p>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1 , @Model.CompanyDetail.AlamatSyarikat2</p>
         <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat3</p>
+        <p class="mb-0"> Tel: @Model.CompanyDetail.TelSyarikat   Faks: @Model.CompanyDetail.FaksSyarikat</p>
+        <p class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</p>
     </div>
-    <div class="col-2 image-container"></div>
-</div>
-<div class="row flexrow mb-1">
-    <div class="col text-center">
-        <h4><strong>BAUCER JURNAL</strong></h4>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0"><strong>BAUCER JURNAL</strong></h6>
+
+        @*<h6 class="mb-0">NO PO:</h6>
+            <h6 class="mb-0 ">@Model.AkPO.NoPO</h6>
+            <h6 class="mb-0">TARIKH PESANAN TEMPATAN: @Html.DisplayFor(x => x.AkPO.Tarikh, "{0:dd/MM/yyyy}")</h6>*@
     </div>
 </div>
+<br />
 <div class="table-responsive-sm mb-0">
     <table class="table table-bordered table-sm topic">
         <tbody>

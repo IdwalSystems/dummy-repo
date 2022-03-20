@@ -29,12 +29,15 @@
     //Check Baki Vot
     $("body").on('change', "#txtJumlahKeseluruhan", function () {
         GetBakiVot();
+        checkJumlah();
     });
 
     function GetBakiVot() {
 
         //var tahun = $("#txtTahun").val();
-        var bakivot = $("#txtJumlahKeseluruhan").val().toFixed(2);
+        var bakivot = $("#txtJumlahKeseluruhan").val();
+
+        parseFloat(bakivot).toFixed(2);
 
         if (bakivot != 0) {
             var kw = $("#ddlKW").val();
@@ -61,7 +64,7 @@
                     if (msg.result == "OK") { }
                     else {
                         toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
-                        $("#txtJumlahKeseluruhan").val(0.00).toFixed(2);
+                        $("#txtJumlahKeseluruhan").val("0.00");
                         toastr.options.timeOut = 2000; // 2s
                     }
                 },
@@ -135,7 +138,7 @@
         var bil = $("#txtBil").val();
         var bulan = $("#txtBulan").val();
 
-        $("#txtJumlahPerihal").val((countTotalPerihal(kadar, bil, bulan)));
+        $("#txtJumlahPerihal").val((countTotalPerihal(kadar, bil, bulan)).toFixed(2));
         //main body end
 
         //modal peserta
@@ -153,7 +156,7 @@
         var mobil = $("#moBil").val();
         var mobulan = $("#moBulan").val();
 
-        $("#moJumlahPerihal").val((countTotalPerihal(mokadar, mobil, mobulan)));
+        $("#moJumlahPerihal").val((countTotalPerihal(mokadar, mobil, mobulan)).toFixed(2));
         //modal Perihal end
     });
 
@@ -357,7 +360,7 @@
 
         //Add Kadar cell.
         var cell = $(row.insertCell(-1));
-        cell.html(txtKadar.val());
+        cell.html(parseFloat(txtKadar.val()).toFixed(2));
 
         //Add Bil cell.
         var cell = $(row.insertCell(-1));
@@ -369,7 +372,7 @@
 
         //Add Jumlah cell.
         var cell = $(row.insertCell(-1));
-        cell.html(txtJumlahPerihal.val());
+        cell.html(parseFloat(txtJumlahPerihal.val()).toFixed(2));
 
         //Add Edit Button cell.
         cell = $(row.insertCell(-1));
