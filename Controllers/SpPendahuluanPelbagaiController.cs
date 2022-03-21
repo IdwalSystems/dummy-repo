@@ -163,43 +163,80 @@ namespace MSNK.Controllers
 
         //Start Function Get Baki Vot
         [HttpPost]
-        public async Task<JsonResult> GetBakiVot(SpPendahuluanPelbagai spPendahuluanPelbagai, 
+        public async Task<JsonResult> GetBakiVot(SpPendahuluanPelbagai spPendahuluanPelbagai,
             int jKWId,
             int jBahagianId)
         {
 
-                try
-                {
+            try
+            {
+
                 // check for baki peruntukan
                 var tahun = DateTime.Now.Year.ToString();
-                        bool IsExistAbBukuVot = await _context.AbBukuVot
-                                .Where(x => x.Tahun == tahun && x.VotId == spPendahuluanPelbagai.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
-                                .AnyAsync();
+                bool IsExistAbBukuVot = await _context.AbBukuVot
+                        .Where(x => x.Tahun == tahun && x.VotId == spPendahuluanPelbagai.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                        .AnyAsync();
 
-                        if (IsExistAbBukuVot == true)
-                        {
-                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, spPendahuluanPelbagai.AkCartaId, jKWId, jBahagianId);
+                if (IsExistAbBukuVot == true)
+                {
+                    decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, spPendahuluanPelbagai.AkCartaId, jKWId, jBahagianId);
 
-                            if (sum < spPendahuluanPelbagai.JumKeseluruhan)
-                            {
-                                return Json(new { result = "ERROR" });
-                            }
-                        }
-                        else
-                        {
-                            return Json(new { result = "ERROR" });
-                        }
-                        // check for baki peruntukan end
-
-                    return Json(new { result = "OK" });
+                    if (sum < spPendahuluanPelbagai.JumKeseluruhan)
+                    {
+                        return Json(new { result = "ERROR" });
+                    }
                 }
-                catch (Exception ex)
+                else
+                {
+                    return Json(new { result = "ERROR" });
+                }
+                // check for baki peruntukan end
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
             {
                 return Json(new { result = "Error", message = ex.Message });
             }
 
         }
         //End Function Get Baki Vot
+
+        //Start Function Get Baki Amaun Vot
+        [HttpPost]
+        public async Task<JsonResult> GetBakiAmaunVot(int akCartaId, int jKWId, int jBahagianId)
+        {
+
+            try
+            {
+
+                // check for baki peruntukan
+                var tahun = DateTime.Now.Year.ToString();
+                bool IsExistAbBukuVot = await _context.AbBukuVot
+                        .Where(x => x.Tahun == tahun && x.VotId == akCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                        .AnyAsync();
+
+                if (IsExistAbBukuVot == true)
+                {
+                    var sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akCartaId, jKWId, jBahagianId);
+
+                    return Json(new { result = "OK" , record = sum});
+                }
+                else
+                {
+                    return Json(new { result = "ERROR" });
+                }
+                // check for baki peruntukan end
+
+                
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+        //End Function Get Baki Amaun Vot
 
         //Start Function Get Id Bahagian
         [HttpPost]
@@ -741,30 +778,45 @@ namespace MSNK.Controllers
                 //check for print end
 
                 //posting operation start here
+                if (jumSokong != 0)
+                {
+                    if (jumSokong <= sp.JumKeseluruhan)
+                    {
+                        //update posting status in SPPENDAHULUANPELBAGAI
+                        sp.FlStatusSokong = 1;
+                        sp.TarSokong = DateTime.Now;
+                        sp.JumSokong = jumSokong;
+                        if (User.IsInRole("SuperAdmin"))
+                        {
+                            sp.Penyokong = namaUser.Nama;
+                        }
+                        else
+                        {
+                            sp.Penyokong = namaUser.SuPekerja.Nama;
+                        }
 
-                //update posting status in SPPENDAHULUANPELBAGAI
-                sp.FlStatusSokong = 1;
-                sp.TarSokong = DateTime.Now;
-                sp.JumSokong = jumSokong;
-                if (User.IsInRole("SuperAdmin"))
-                {
-                    sp.Penyokong = namaUser.Nama;
-                } else
-                {
-                    sp.Penyokong = namaUser.SuPekerja.Nama;
+
+                        await _spPendahuluanPelbagaiRepo.Update(sp);
+
+                        //insert applog
+                        await AddLogAsync("Posting", "Posting Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
+
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
+
+                        TempData[SD.Success] = "Data berjaya disokong.";
+                    }
+                    else
+                    {
+                        TempData[SD.Error] = "Jumlah sokong tidak boleh lebih dari jumlah dicadang.";
+                    }
                 }
-                
-
-                await _spPendahuluanPelbagaiRepo.Update(sp);
-
-                //insert applog
-                await AddLogAsync("Posting", "Posting Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
-
-                //insert applog end
-
-                await _context.SaveChangesAsync();
-
-                TempData[SD.Success] = "Data berjaya disokong.";
+                else
+                {
+                    TempData[SD.Error] = "Jumlah RM0.00 tidak dibenarkan.";
+                }
+                    
 
             }
 
@@ -786,7 +838,7 @@ namespace MSNK.Controllers
             {
                 if(jumLulus != 0)
                 {
-                    if(jumLulus < jumSokong)
+                    if(jumLulus <= jumSokong)
                     {
                         var user = await _userManager.GetUserAsync(User);
                         var pelulus = await _context.JPelulus.Include(x => x.SuPekerja).Where(x => x.IsPendahuluan == true).FirstOrDefaultAsync();
@@ -833,6 +885,7 @@ namespace MSNK.Controllers
                             // insert into AbBukuVot end
 
                             //update posting status in SPPENDAHULUANPELBAGAI
+                            sp.FlStatusLulus = 1;
                             sp.FlPosting = 1;
                             sp.TarikhPosting = DateTime.Now;
                             sp.JumSokong = jumSokong;
@@ -854,14 +907,12 @@ namespace MSNK.Controllers
                     else
                     {
                         TempData[SD.Error] = "Jumlah lulus tidak boleh lebih dari jumlah disokong.";
-                        return RedirectToAction(nameof(Index));
                     }
                     
                 }
                 else
                 {
                     TempData[SD.Error] = "Jumlah RM0.00 tidak dibenarkan.";
-                    return RedirectToAction(nameof(Index));
                 }
                 
 

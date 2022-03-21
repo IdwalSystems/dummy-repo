@@ -148,9 +148,73 @@ namespace MSNK.Controllers
                 }
                 reportModel.JumlahDebit = jumlahDebit;
             }
-            else
+            else if (kodLaporan == "LPV00102")
             {
+                tajuk = "Laporan Daftar Bil Kump Wang :";
 
+                IEnumerable<AkPV> akT = _context.AkPV
+                    .Include(b => b.JKW)
+                    .Include(b => b.JCaraBayar)
+                    .Include(b => b.AkBank).ThenInclude(b => b.AkCarta)
+                    .Include(b => b.AkPembekal)
+                    .Include(b => b.SuPekerja)
+                    .Include(b => b.AkPV1).ThenInclude(b => b.AkCarta)
+                    .Include(b => b.AkPV2).ThenInclude(b => b.AkBelian).ThenInclude(b => b.AkPO)
+                    .ToList();
+
+                // date condition
+                DateTime date1 = DateTime.Parse(tarikhDari);
+                DateTime date2 = DateTime.Parse(tarikhHingga).AddHours(23.99);
+                akT = akT.Where(x => x.Tarikh >= date1
+                      && x.Tarikh <= date2)
+                    .ToList();
+                //date condition end
+
+                //status condition
+                switch (status)
+                {
+                    // belum posting
+                    case 1:
+                        akT = akT.Where(x => x.FlPosting == 0).ToList();
+                        break;
+                    // sudah posting
+                    case 2:
+                        akT = akT.Where(x => x.FlPosting == 1).ToList();
+                        break;
+                    // semua
+                    default:
+                        break;
+                }
+                //status condition end
+
+                //susunan condition
+                if (susunan == 1)
+                {
+                    akT = akT.OrderBy(x => x.NoPV).ToList();
+                }
+                else
+                {
+                    akT = akT.OrderBy(x => x.Tarikh).ThenBy(x => x.NoPV).ToList();
+                }
+                //susunan condition end
+
+                decimal jumlahDebit = 0;
+
+                reportModel.AkPV = akT;
+
+                foreach (AkPV item in reportModel.AkPV)
+                {
+                    if (item.FlHapus == 1)
+                    {
+                        jumlahDebit += 0;
+                    }
+                    else
+                    {
+                        jumlahDebit += item.Jumlah;
+                    }
+
+                }
+                reportModel.JumlahDebit = jumlahDebit;
             }
 
             var user = await _userManager.GetUserAsync(User);

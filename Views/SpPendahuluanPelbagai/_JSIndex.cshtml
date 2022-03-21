@@ -63,10 +63,11 @@
         var id = $("TD", row).eq(1).html();
         var noPermohonan = $("TD", row).eq(2).html();
         var jumKeseluruhan = $("TD", row).eq(6).html();
+        //var jumSokong = Number(jumKeseluruhan.replace(/[^0-9.-]+/g, ""));
         //alert(noPermohonan);
         $(".moId").val(id);
         $(".moPermohonan").val(noPermohonan.trim());
         $(".moJumlah").val(jumKeseluruhan);
-        $(".moSokong").val(jumKeseluruhan); 
+        $(".moSokong").val(jumKeseluruhan);
     };
 </script>

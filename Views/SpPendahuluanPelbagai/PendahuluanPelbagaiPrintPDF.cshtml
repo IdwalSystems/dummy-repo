@@ -6,6 +6,16 @@
 
     CompanyDetails company = new CompanyDetails();
     var bil = 0;
+    var namaPekerja = "";
+
+    if (Model.SpPendahuluanPelbagai.SuPekerja == null)
+    {
+        namaPekerja = "SuperAdmin";
+    }
+    else
+    {
+        namaPekerja = Model.SpPendahuluanPelbagai.SuPekerja.Nama;
+    }
 
 }
 <style>
@@ -159,7 +169,7 @@
             </tr>
             <tr>
                 <td>PPN</td>
-                <td class="text-uppercase" colspan="7">@Model.Username</td>
+                <td class="text-uppercase" colspan="7">@Model.SpPendahuluanPelbagai.SuPekerja.Nama</td>
             </tr>
 
             <tr>
@@ -285,130 +295,7 @@
     </table>
 
 </div>
-@*<div class="row flexrow">
-        <div class="col-6 text-left">
-            <div class="table-responsive-sm">
-                <table class="table table-borderless table-sm topic">
-                    <tbody>
-                        <tr>
-                            <td width="10%">PPN</td>
-                            <td class="text-uppercase">: @Model.Username</td>
-                        </tr>
 
-                        <tr>
-                            <td width="10%">NEGERI</td>
-                            <td class="text-uppercase">: @Model.SpPendahuluanPelbagai.JNegeri.Perihal</td>
-                        </tr>
-                        <tr>
-                            <td width="10%">SUKAN</td>
-                            <td class="text-uppercase">: @Model.SpPendahuluanPelbagai.JSukan.Perihal</td>
-                        </tr>
-                        <tr>
-                            <td width="10%">TARIKH</td>
-                            <td class="text-uppercase">: @Model.SpPendahuluanPelbagai.Tarikh</td>
-                        </tr>
-                        <tr>
-                            <td width="10%">AKTIVITI/KEJOHANAN</td>
-                            <td class="text-uppercase">: @Model.SpPendahuluanPelbagai.Aktiviti</td>
-                        </tr>
-                        <tr>
-                            <td width="10%">TEMPAT</td>
-                            <td class="text-uppercase">: @Model.SpPendahuluanPelbagai.Tempat</td>
-                        </tr>
-
-                    </tbody>
-                </table>
-
-            </div>
-        </div>
-        <div class="col-6 text-left">
-            <div class="table-responsive-sm">
-                <table class="table table-striped table-sm topic">
-                    <tbody>
-                        <tr>
-                            <td rowspan="2" colspan="2">TAHAP</td>
-                            <td>DAE.</td>
-                            <td></td>
-                            <td>NEG.</td>
-                            <td></td>
-                            <td>KEB.</td>
-                            <td>/</td>
-                        </tr>
-                        <tr>
-                            <td>ATL.</td>
-                            <td>JUL.</td>
-                            <td>PEG.</td>
-                            <td>TEK.</td>
-                            <td>URU.</td>
-                            <td>JUM.</td>
-                        </tr>
-                        @foreach (var item in Model.SpPendahuluanPelbagai.SpPendahuluanPelbagai1)
-                        {
-                            <tr>
-                                <td colspan="2">@item.JJantina.Perihal</td>
-                                <td align="center">@item.BilAtl</td>
-                                <td align="center">@item.BilJul</td>
-                                <td align="center">@item.BilPeg</td>
-                                <td align="center">@item.BilTek</td>
-                                <td align="center">@item.BilUru</td>
-                                <td align="center">@item.Jumlah</td>
-                            </tr>
-                        }
-                        <tr>
-                            <td colspan="2">JUMLAH</td>
-                            <td align="center">@Model.BilAtl</td>
-                            <td align="center">@Model.BilJul</td>
-                            <td align="center">@Model.BilPeg</td>
-                            <td align="center">@Model.BilTek</td>
-                            <td align="center">@Model.BilUru</td>
-                            <td align="center">@Model.Jumlah</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">PENYERTAAN</td>
-                            @if (Model.SpPendahuluanPelbagai.Penyertaan == true)
-                            {
-                                <td class="text-uppercase">( / )</td>
-                            }
-                            else
-                            {
-                                <td></td>
-                            }
-                            <td colspan="3" class="text-uppercase">PENGELOLAAN</td>
-                            @if (Model.SpPendahuluanPelbagai.Pengelolaan == true)
-                            {
-                                <td class="text-uppercase">( / )</td>
-                            }
-                            else
-                            {
-                                <td></td>
-                            }
-                        </tr>
-                        <tr>
-                            <td colspan="3">PERTANDINGAN</td>
-                            @if (Model.SpPendahuluanPelbagai.Pertandingan == true)
-                            {
-                                <td class="text-uppercase">( / )</td>
-                            }
-                            else
-                            {
-                                <td></td>
-                            }
-                            <td colspan="3" class="text-uppercase">PROGRAM BINAAN</td>
-                            @if (Model.SpPendahuluanPelbagai.ProgramBinaan == true)
-                            {
-                                <td class="text-uppercase">( / )</td>
-                            }
-                            else
-                            {
-                                <td></td>
-                            }
-                        </tr>
-                    </tbody>
-                </table>
-
-            </div>
-        </div>
-    </div>*@
 <div class="table-responsive-sm">
     <table class="table table-bordered table-sm topic">
         <tbody>
@@ -422,7 +309,7 @@
 </div>
 
 <div class="row flexrow">
-    <div class="col-6 text-left">
+    <div class="col-12 text-left">
         <div class="table-responsive-sm">
             <table class="table table-striped table-sm topic">
                 <tbody>
@@ -441,7 +328,7 @@
                         bil++;
                         <tr>
                             <td>@bil</td>
-                            <td>@item.Perihal</td>
+                            <td class="text-uppercase">@item.Perihal</td>
                             <td align="right">@Convert.ToDecimal(item.Kadar).ToString("#,##0.00")</td>
                             <td align="center">@((int)item.Bil)</td>
                             <td align="center">@item.Bulan</td>
@@ -455,46 +342,6 @@
                     </tr>
 
 
-                </tbody>
-            </table>
-
-        </div>
-    </div>
-    <div class="col-6 text-left">
-        <div class="table-responsive-sm">
-            <table class="table table-bordered table-sm topic">
-                <tbody>
-                    <tr>
-                        <td colspan="5" align="center">LAMPIRAN OLEH USPTN:</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">i. Cadangan Bajet</td>
-                        <td width="10%"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">ii. Senarai nama peserta dan sasaran (pertandingan)</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">iii. Senarai Nama peserta (program binaan)</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">iv. Jadual aktiviti (program binaan)</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"><strong>Lampiran tidak lengkap</strong></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"><strong>Lampiran tidak lengkap</strong></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"><strong>Lampiran tidak lengkap</strong></td>
-                        <td></td>
-                    </tr>
                 </tbody>
             </table>
 

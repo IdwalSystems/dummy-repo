@@ -314,7 +314,7 @@ namespace MSNK.Controllers
         }
         // function json get no rujukan (running number)
         [HttpPost]
-        public JsonResult JsonGetKod(int data, string year)
+        public JsonResult JsonGetKod(int data, string year, string month)
         {
             try
             {
@@ -325,8 +325,13 @@ namespace MSNK.Controllers
                 }
                 else
                 {
+                    if(year != null)
+                    {
+                        year = year.Substring(2, 2);
+
+                    }
                     // get latest no rujukan running number  
-                    result = GetNoRujukan(data, year);
+                    result = GetNoRujukan(data, year, month);
                     // get latest no rujukan running number end
                 }
                 return Json(new { result = "OK", record = result });
@@ -788,6 +793,7 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
+
             AkPVViewModel akPVView = new AkPVViewModel();
 
             //fill in view model AkPVViewModel from akPV
@@ -888,30 +894,32 @@ namespace MSNK.Controllers
             ViewBag.akPV2 = akPV2Table;
         }
 
-        private string GetNoRujukan(int data, string year)
+        private string GetNoRujukan(int data, string year, string month)
         {
             var kw = _context.JKW.FirstOrDefault(x => x.Id == data);
 
             var kumpulanWang = kw.Kod;
 
-            string prefix = year + "/" + kumpulanWang + "/";
+            string prefix = "PV/" + kumpulanWang + "-" + year + "/" + month + "/";
             int x = 1;
-            string noRujukan = prefix + "000000";
+            string noRujukan = prefix + "000";
+            int tahun = int.Parse("20" + year);
+            int bulan = int.Parse(month);
 
             var LatestNoRujukan = _context.AkPV
                        .IgnoreQueryFilters()
-                       .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
+                       .Where(x => x.Tarikh.Year ==  tahun && x.Tarikh.Month == bulan && x.JKW.Kod == kw.Kod)
                        .Max(x => x.NoPV);
 
             if (LatestNoRujukan == null)
             {
-                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+                noRujukan = string.Format("{0:" + prefix + "000}", x);
             }
             else
             {
-                x = int.Parse(LatestNoRujukan.Substring(10));
+                x = int.Parse(LatestNoRujukan.Substring(13));
                 x++;
-                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+                noRujukan = string.Format("{0:" + prefix + "000}", x);
             }
             return noRujukan;
         }
@@ -923,8 +931,9 @@ namespace MSNK.Controllers
             // get latest no rujukan running number  
             var year = DateTime.Now.Year.ToString();
             var data = 1;
+            var month = DateTime.Now.Month.ToString();
 
-            ViewBag.NoRujukan = GetNoRujukan(data, year);
+            ViewBag.NoRujukan = GetNoRujukan(data, year, month);
             // get latest no rujukan running number end
 
             PopulateList();
@@ -1073,10 +1082,11 @@ namespace MSNK.Controllers
         public IActionResult CreateByJenis(string jenis)
         {
             // get latest no rujukan running number  
-            var year = DateTime.Now.Year.ToString();
+            var year = DateTime.Now.ToString("yy");
+            var month = DateTime.Now.ToString("MM");
             var data = 1;
 
-            ViewBag.NoRujukan = GetNoRujukan(data, year);
+            ViewBag.NoRujukan = GetNoRujukan(data, year, month);
             // get latest no rujukan running number end
 
             PopulateList();
@@ -1185,28 +1195,11 @@ namespace MSNK.Controllers
             // get latest no rujukan running number  
             var kw = _context.JKW.FirstOrDefault(x => x.Id == akPV.JKWId);
 
-            var kumpulanWang = kw.Kod;
-            var year = akPV.Tahun;
-            string prefix = "PV/" + kumpulanWang + year;
-            int x = 1;
-            string noRujukan = prefix + "000000";
+            var year = akPV.Tarikh.ToString("yy");
+            var month = akPV.Tarikh.ToString("MM");
 
-            var LatestNoRujukan = _context.AkPV
-                .IgnoreQueryFilters()
-                        .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
-                        .Max(x => x.NoPV);
-
-            if (LatestNoRujukan == null)
-            {
-                noRujukan = string.Format("{0:" + prefix + "000000}", x);
-            }
-            else
-            {
-                x = int.Parse(LatestNoRujukan.Substring(10));
-                x++;
-                noRujukan = string.Format("{0:" + prefix + "000000}", x);
-            }
-
+            var noRujukan = GetNoRujukan(akPV.JKWId, year, month);
+            
             // get latest no rujukan running number end
 
 
@@ -2253,7 +2246,7 @@ namespace MSNK.Controllers
                         await _akAkaunRepo.Insert(akAObjek);
 
                         //insert akTunaiLejar
-                        if (akPV.FlJenisBaucer == 1)
+                        if (akPV.FlJenisBaucer == 4)
                         {
                             //find latest baki
                             AkTunaiLejar akT = _context.AkTunaiLejar

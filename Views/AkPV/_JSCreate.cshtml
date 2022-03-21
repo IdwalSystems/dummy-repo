@@ -1,21 +1,23 @@
 ﻿<script type="text/javascript">
 
     // on change no Rujukan
-    $("body").on('change', "#ddlKW , #txtTahun", function () {
+    $("body").on('change', "#ddlKW , #Tarikh", function () {
         var kodkw = $("#ddlKW").val();
-        var year = $("#txtTahun").val();
+        var date = $('#Tarikh').val().split("-");
+        var year = date[0];
+        var month = date[1];
         if (kodkw != 0) {
-            JsonKod(kodkw, year);
+            JsonKod(kodkw, year,month);
         }
 
     });
 
-    function JsonKod(id, year) {
+    function JsonKod(id, year, month) {
         $.ajax({
             type: "POST",
             //url: "/AkPV/JsonGetKod",
             url: '@Url.Action("JsonGetKod", "AkPV")',
-            data: { data: id, year: year },
+            data: { data: id, year: year, month: month },
             dataType: "json",
             success: function (msg) {
                 $("#txtNoRujukan").val(msg.record);
@@ -161,8 +163,8 @@
                                 $("#txtAlamat1").val(msg.record.alamat1);
                                 $("#txtAlamat2").val(msg.record.alamat2);
                                 $("#txtAlamat3").val(msg.record.alamat3);
-                                $("#txtNoAkaunBank").val(msg.record.noAkaunBank);
-                                $("#txtTelefon").val(msg.record.telefon);
+                                $("#txtNoAkaunBank").val(msg.record.akaunBank);
+                                $("#txtTelefon").val(msg.record.telefon1);
                                 $("#txtEmel").val(msg.record.emel);
                                 // disable fields
                                 $("#txtNoKP").prop('disabled', true);

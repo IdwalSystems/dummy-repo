@@ -44,7 +44,7 @@
                             <div class="form-group">
                                 <label asp-for="JBahagianId" class="control-label">Bahagian</label>
                                 <select class="form-control form-control-sm" asp-for="JBahagianId" id="ddlBahagian">
-                                    <option value="" hidden>-- Pilih Bahagian --</option>
+                                    <option value="0" hidden>-- Pilih Bahagian --</option>
                                     @foreach (var s in ViewBag.JBahagian)
                                     {
                                 <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -63,7 +63,7 @@
                                 <div class="form-group">
                                     <label asp-for="JKWId" class="control-label">Kumpulan Wang</label>
                                     <select class="form-control form-control-sm" asp-for="JKWId" id="ddlKW">
-                                        <option value="" hidden>-- Pilih Kumpulan Wang --</option>
+                                        <option value="0" hidden>-- Pilih Kumpulan Wang --</option>
                                         @foreach (var s in ViewBag.JKW)
                                         {
                                             <option value="@s.Id">@s.Perihal </option>
@@ -201,7 +201,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="JumKeseluruhan" class="control-label">Jumlah</label><span class="text-danger control-label">*</span>
-                                    <input asp-for="JumKeseluruhan" class="form-control form-control-sm form-control-sm-custom" type="number" value="0.00" required id="txtJumlahKeseluruhan" />
+                                    <input asp-for="JumKeseluruhan" class="form-control form-control-sm form-control-sm-custom" type="number" value="0.00" required id="txtJumlahKeseluruhan" /><span class="text-danger control-label" id="spanJumKeseluruhan"></span>
                                 </div>
                             </div>
                         </div>

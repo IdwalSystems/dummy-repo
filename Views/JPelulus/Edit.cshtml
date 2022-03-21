@@ -12,6 +12,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input asp-for="SuPekerjaId" hidden/>
             <div class="card box-shadow border-primary mb-3">
                 <div class="card-header bg-primary text-white">
                     <h5>Pelulus - @ViewData["Title"]</h5>
@@ -21,13 +22,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label asp-for="SuPekerjaId" class="control-label"></label>
-                                <select asp-for="SuPekerjaId" class="form-control form-control-sm select2 text-uppercase" disabled>
-                                    <option value="0" hidden>-- Pilih Anggota --</option>
-                                    @foreach (var s in ViewBag.SuPekerja)
-                                    {
-                                        <option value="@s.Id">@s.NoGaji - @s.Nama</option>
-                                    }
-                                </select>
+                                <input value="@Model.SuPekerja.NoGaji - @Model.SuPekerja.Nama" class="form-control form-control-sm text-uppercase" disabled/>
                                 <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
                             </div>
                         </div>

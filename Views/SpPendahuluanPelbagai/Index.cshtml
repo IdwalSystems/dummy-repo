@@ -108,17 +108,17 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.NoPermohonan)
                     </td>
-                    <td>
+                    <td class="text-uppercase">
                         @Html.DisplayFor(modelItem => item.SuPekerja.Nama)
                     </td>
                     <td>
                         @item.TarMasuk.ToString("dd/MM/yyyy")
                     </td>
-                    <td>
+                    <td class="text-uppercase">
                         @Html.DisplayFor(modelItem => item.Aktiviti)
                     </td>
                     <td align="right">@Convert.ToDecimal(item.JumKeseluruhan).ToString("#,##0.00")</td>
-                    <td>
+                    <td class="text-uppercase">
                         @Html.DisplayFor(modelItem => item.Tempat)
                     </td>
                     <td>
