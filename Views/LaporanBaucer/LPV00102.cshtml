@@ -112,23 +112,27 @@
         </tr>
         <tr class="bg-secondary">
             <th class="text-center font-weight-bold text-white">BIL  </th>
-            <th class="text-center font-weight-bold text-white">TARIKH </th>
-            <th class="text-center font-weight-bold text-white">NO BAUCER</th>
+            <th class="text-center font-weight-bold text-white">TARIKH TERIMA</th>
+            <th class="text-center font-weight-bold text-white">TARIKH SAH</th>
+            <th class="text-center font-weight-bold text-white">TARIKH KEW</th>
             <th class="text-center font-weight-bold text-white">NAMA PEMBEKAL </th>
-
-            <th class="text-center font-weight-bold text-white">KOD AKAUN</th>
-            <th class="text-center font-weight-bold text-white">PERIHALAN AKAUN</th>
-            <th class="text-center font-weight-bold text-white">CARA BAYAR</th>
-            <th class="text-center font-weight-bold text-white">NO CEK</th>
-            <th class="text-center font-weight-bold text-white">TARIKH CEK</th>
+            <th class="text-center font-weight-bold text-white">NO NOTA MINTA</th>
+            <th class="text-center font-weight-bold text-white">NO INVOIS</th>
             <th class="text-center font-weight-bold text-white">AMAUN RM</th>
+
+            <th class="text-center font-weight-bold text-white">NO PO</th>
+            <th class="text-center font-weight-bold text-white">TARIKH BAUCER</th>
+            <th class="text-center font-weight-bold text-white">NO BAUCER</th>
+            <th class="text-center font-weight-bold text-white">TARIKH SAH BAUCER</th>
+            <th class="text-center font-weight-bold text-white">TARIKH CEK</th>
+            <th class="text-center font-weight-bold text-white">NO CEK</th>
 
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.AkPV)
         {
-            @foreach (var item1 in item.AkPV1)
+            @foreach (var item1 in item.AkPV2)
             {
 
                 // if data is Batal, change row color to red
@@ -138,37 +142,51 @@
                     tabletype = "table-danger";
                 }
                 // end
+
                 bil++;
-                <tr class="@tabletype" style="line-height:0.8rem; page-break-before:avoid;">
+        <tr class="@tabletype" style="line-height:0.8rem; page-break-before:avoid;">
 
-                    <td class="text-right" style="border-bottom:none;">@bil</td>
-                    <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
-                    <td class="text-center" style="border-bottom:none;">@item.NoPV.Substring(3)</td>
-                    <td class="text-left text-uppercase" style="border-bottom:none;">@item.Nama</td>
+            <td class="text-right" style="border-bottom:none;">@bil</td>
+            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item1.AkBelian.AkPO.AkNotaMinta.Tarikh).ToString("dd/MM/yyyy")</td>
+            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item1.AkBelian.AkPO.AkNotaMinta.Tarikh).ToString("dd/MM/yyyy")</td>
+            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item1.AkBelian.AkPO.AkNotaMinta.TarikhSeksyenKewangan).ToString("dd/MM/yyyy")</td>
+            <td class="text-left text-uppercase" style="border-bottom:none;">@item.Nama</td>
+            <td class="text-center" style="border-bottom:none;">@item1.AkBelian.AkPO.AkNotaMinta.NoSiri</td>
+            <td class="text-center" style="border-bottom:none;">@item1.AkBelian.NoInbois.Substring(3)</td>
+            <td class="text-right ">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+            <td class="text-center" style="border-bottom:none;">@item1.AkBelian.AkPO.NoPO.Substring(3)</td>
+            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
+            <td class="text-center" style="border-bottom:none;">@item.NoPV.Substring(3)</td>
+            @if (item.TarikhPosting != null)
+            {
+                <td class="text-center text-uppercase">@Convert.ToDateTime(item.TarikhPosting).ToString("dd/MM/yyyy")</td>
+            }
+            else
+            {
+                <td class="text-center">-</td>
+            }
+            @if (item.TarCekAtauEFT != null)
+            {
+                <td class="text-center text-uppercase">@Convert.ToDateTime(item.TarCekAtauEFT).ToString("dd/MM/yyyy")</td>
+            }
+            else
+            {
+                <td class="text-center">-</td>
+            }
+            <td class="text-center text-uppercase">@item.JCaraBayar.Perihal</td>
+            @if (item.NoCekAtauEFT != null)
+            {
+                <td class="text-center text-uppercase">@item.NoCekAtauEFT</td>
+            }
+            else
+            {
+                <td class="text-center">-</td>
+            }
 
-                    <td class="text-center text-uppercase">@item1.AkCarta.Kod</td>
-                    <td class="text-left text-uppercase">@item1.AkCarta.Perihal</td>
-                    <td class="text-center text-uppercase">@item.JCaraBayar.Perihal</td>
-                    @if (item.NoCekAtauEFT != null)
-                    {
-                        <td class="text-center text-uppercase">@item.NoCekAtauEFT</td>
-                    }
-                    else
-                    {
-                        <td class="text-center">-</td>
-                    }
-                    @if (item.TarCekAtauEFT != null)
-                    {
-                        <td class="text-center text-uppercase">@Convert.ToDateTime(item.TarCekAtauEFT).ToString("dd/MM/yyyy")</td>
-                    }
-                    else
-                    {
-                        <td class="text-center">-</td>
-                    }
 
 
-                    <td class="text-right ">@Convert.ToDecimal(item1.Amaun).ToString("#,##0.00")</td>
-                </tr>
+            <td class="text-right ">@Convert.ToDecimal(item1.Amaun).ToString("#,##0.00")</td>
+        </tr>
             }
 
         }

@@ -159,7 +159,8 @@ namespace MSNK.Controllers
                     .Include(b => b.AkPembekal)
                     .Include(b => b.SuPekerja)
                     .Include(b => b.AkPV1).ThenInclude(b => b.AkCarta)
-                    .Include(b => b.AkPV2).ThenInclude(b => b.AkBelian).ThenInclude(b => b.AkPO)
+                    .Include(b => b.AkPV2).ThenInclude(b => b.AkBelian).ThenInclude(b => b.AkPO).ThenInclude(b=> b.AkNotaMinta)
+                    .Where(b=> b.denganTanggungan == true)
                     .ToList();
 
                 // date condition

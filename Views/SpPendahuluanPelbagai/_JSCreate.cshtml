@@ -54,12 +54,14 @@
                         toastr.error("Tiada bajet bagi kod akaun ini.", "Ralat");
                         $("#txtJumlahKeseluruhan").val("0.00");
                         toastr.options.timeOut = 2000; // 2s
+                        
                     }
                 },
                 error: function (req, status, error) {
                     alert(error);
                 }
             });
+            checkJumlah();
         }
     });
     // on change akCarta end

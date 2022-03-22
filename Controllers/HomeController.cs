@@ -58,8 +58,17 @@ namespace MSNK.Controllers
                 akPO = akPO.Where(b => b.Tarikh < BenchDate).ToList();
                 // Widget Status PO end
 
+                // Widget Status Nota Minta
+                var akNotaMinta = await _context.AkNotaMinta
+                    .Include(b => b.AkPembekal)
+                    .Where(b => b.NoSiri == null )
+                    .OrderByDescending(b => b.Tarikh)
+                    .ToListAsync();
+                // Widget Status PO end
+
                 dynamic dyModel = new ExpandoObject();
                 dyModel.AkPO = akPO;
+                dyModel.AkNotaMinta = akNotaMinta;
                 return View(dyModel);
             }
             

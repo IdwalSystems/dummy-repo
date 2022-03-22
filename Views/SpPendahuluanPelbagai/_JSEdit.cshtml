@@ -19,6 +19,45 @@
 
     });
 
+    // on change akCarta
+    $("body").on('change', "#ddlAkCarta", function () {
+        var akCarta = $("#ddlAkCarta").val();
+        var kw = $("#ddlKW").val();
+        var bahagian = $("#ddlBahagian").val();
+
+        var bakiarray = {
+            akCartaId: akCarta,
+            jKWId: kw,
+            jBahagianId: bahagian
+        }
+        if ((akCarta != null || akCarta != 0) && kw != 0 && bahagian != 0) {
+            $.ajax({
+                type: "POST",
+                //url: "/AkPO/JsonGetKod",
+                url: '@Url.Action("GetBakiAmaunVot", "SpPendahuluanPelbagai")',
+                data: bakiarray,
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.result == "OK") {
+                        var bakiVot = parseFloat(msg.record).toFixed(2);
+                        $("#spanJumKeseluruhan").text("Baki semasa : RM" + bakiVot);
+                    }
+                    else {
+                        $("#spanJumKeseluruhan").text("");
+                        toastr.error("Tiada bajet bagi kod akaun ini.", "Ralat");
+                        $("#txtJumlahKeseluruhan").val("0.00");
+                        toastr.options.timeOut = 2000; // 2s
+                        
+                    }
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+    });
+    // on change akCarta end
+
     // onchange harga/unit and kuantiti
     $("body").on('change', ".atlet, .jurulatih, .pegawai, .teknikal, .urusetia, .kadar, .bil, .bulan", function () {
         //main body -peserta

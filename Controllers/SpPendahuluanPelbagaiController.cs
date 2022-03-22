@@ -567,6 +567,7 @@ namespace MSNK.Controllers
             }
 
             ViewData["jumlahPeserta"] = jumlahPeserta;
+            CartEmpty();
             PopulateList();
             PopulateTable(id);
             PopulateCartFromDb(spPendahuluanPelbagai);
