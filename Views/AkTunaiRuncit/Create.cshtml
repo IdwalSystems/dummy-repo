@@ -24,27 +24,30 @@
                 <div class="card-body">
                     <div class="form-row">
                         <div class="col-md-6 pr-md-3">
-                            <div class="form-row">
-                                <div class="col-md-6">
-
-                                    <div class="form-group">
-                                        <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                        <select class="form-control form-control-sm" asp-for="JKWId" required id="ddlKW">
-                                            @foreach (var s in ViewBag.JKW)
-                                            {
-                                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                            }
-                                        </select>
-                                        <span asp-validation-for="JKWId" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label asp-for="KaunterPanjar" class="control-label"></label>
-                                        <input id="txtNoRujukan" asp-for="KaunterPanjar" value="@ViewBag.NoRujukan" class="form-control form-control-sm" readonly />
-                                        <span asp-validation-for="KaunterPanjar" class="text-danger"></span>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" required id="ddlKW">
+                                    @foreach (var s in ViewBag.JKW)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="JKWId" class="text-danger"></span>
+                            </div>
+                            @*<div class="form-group" >
+                                <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagian" required id="ddlBahagian">
+                                    @foreach (var s in ViewBag.JBahagian)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="JBahagianId" class="text-danger"></span>
+                            </div>*@
+                            <div class="form-group">
+                                <label asp-for="KaunterPanjar" class="control-label"></label>
+                                <input id="txtNoRujukan" asp-for="KaunterPanjar" value="@ViewBag.NoRujukan" class="form-control form-control-sm" readonly />
+                                <span asp-validation-for="KaunterPanjar" class="text-danger"></span>
                             </div>
                             <div class="form-row">
                                 <div class="col-md-12">
@@ -63,7 +66,7 @@
 
                             <div class="form-group">
                                 <label class="control-label">Catatan</label>
-                                <textarea asp-for="Catatan" class="form-control form-control-sm" rows="2"></textarea>
+                                <textarea asp-for="Catatan" class="form-control form-control-sm text-uppercase" rows="2"></textarea>
                             </div>
                             <div class="form-row" hidden>
                                 <div class="col-md-6">

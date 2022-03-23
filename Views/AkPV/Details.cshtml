@@ -194,7 +194,7 @@
                                         <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="3">
                                         <label class="custom-control-label" for="FlJenisBaucer3">Pendahuluan</label>
                                     </div>
-                                    <div class="custom-control custom-radio" hidden>
+                                    <div class="custom-control custom-radio">
                                         <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="4">
                                         <label class="custom-control-label" for="FlJenisBaucer3">Panjar</label>
                                     </div>
@@ -218,6 +218,10 @@
                                     <div class="custom-control custom-radio">
                                         <input asp-for="FlKategoriPenerima" type="radio" id="FlKategoriPenerima3" name="FlKategoriPenerima" class="custom-control-input" value="2">
                                         <label class="custom-control-label" for="FlKategoriPenerima3">Pekerja</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlKategoriPenerima" type="radio" id="FlKategoriPenerima3" name="FlKategoriPenerima" class="custom-control-input" value="3">
+                                        <label class="custom-control-label" for="FlKategoriPenerima3">Pemegang Panjar</label>
                                     </div>
                                 </div>
                             </div>
@@ -414,7 +418,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label asp-for="NoRekup" class="control-label"></label>
-                                            <input asp-for="NoRekup" class="form-control form-control-sm text-uppercase" id="txtNoRekup" disabled />
+                                            <input value="@Model.NoRekup" class="form-control form-control-sm text-uppercase" id="txtNoRekup" readonly />
                                         </div>
                                     </div>
                                 </div>

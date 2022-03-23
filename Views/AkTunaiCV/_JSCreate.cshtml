@@ -26,6 +26,29 @@
     }
     // onchange no Rujukan end
 
+    // on change jenis baucer
+    $("body").on('change', ".KategoriPenerima", function () {
+        $("#ddlKodPekerja").val(0).change();
+        $("#ddlKodPembekal").val(0).change();
+        switch ($(this).val()) {
+            case "0":
+                $("#divPembekal").prop('hidden', true);
+                $("#divPekerja").prop('hidden', true);
+                break;
+            case "1":
+                $("#divPembekal").removeAttr('hidden');
+                $("#divPekerja").prop('hidden', true);
+                break;
+            case "2":
+                $("#divPekerja").removeAttr('hidden');
+                $("#divPembekal").prop('hidden', true);
+                break;
+        }
+
+    });
+
+        //on change jenis baucer end
+
     // onchange kod pembekal
     $("body").on('change', "#ddlKodPembekal", function () {
         var kodPembekal = $("#ddlKodPembekal").val();

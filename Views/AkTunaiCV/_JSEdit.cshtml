@@ -309,7 +309,7 @@
                     //insert data in modal objek
                     $("#moId1").val(r.record.akCartaId);
                     $("#moKodAkaun").val(r.record.akCartaId);
-                    $("#moAmaun1").val(r.record.amaun);
+                    $("#moAmaun1").val(r.record.amaun.toFixed(2));
 
                     //show modal objek
                     $("#modalObjek").modal({ backdrop: 'static', keyboard: false });

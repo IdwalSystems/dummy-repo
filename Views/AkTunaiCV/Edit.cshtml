@@ -17,6 +17,34 @@
                     <h5>Tunai Keluar - @ViewData["Title"]</h5>
                 </div>
                 <div class="card-body">
+                    @*<div class="card mb-2">
+            <div class="card-body pb-1 pt-1">
+                <div class="form-group mb-0 mt-1">
+                    <label class="control-label">Kategori Penerima</label>
+                </div>
+                <div class="form-row col-sm ml-2">
+                    <div class="custom-control custom-radio col-md-4 ">
+                        <input class="custom-control-input KategoriPenerima" type="radio" id="0" asp-for="KategoriPenerima" value="0" checked>
+                        <label class="custom-control-label" for="0">
+                            Am
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio col-md-4 ">
+                        <input class="custom-control-input KategoriPenerima" type="radio" id="1" asp-for="KategoriPenerima" value="1">
+                        <label class="custom-control-label" for="1">
+                            Pembekal
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio col-md-4 ">
+                        <input class="custom-control-input KategoriPenerima" type="radio" id="2" asp-for="KategoriPenerima" value="2">
+                        <label class="custom-control-label" for="2">
+                            Anggota
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+                    <input asp-for="KategoriPenerima" hidden />
                     <div class="form-row">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -56,143 +84,54 @@
                     {
                         case 1:
                             <div class="form-row">
-                                <div class="col-md-6">
-                                    <label asp-for="SuPekerjaId" class="control-label"></label>
-                                    <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPekerja" disabled>
-                                        <option value="0" selected>-- Pilih Kod Pekerja --</option>
-                                        @foreach (var s in ViewBag.SuPekerja)
-                                        {
-                                            <option value="@s.Id">@s.NoGaji - @s.Nama</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label asp-for="AkPembekalId" class="control-label"></label>
-                                    <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal">
-                                        <option value="0" selected>-- Pilih Kod Pembekal --</option>
-                                        @foreach (var s in ViewBag.AkPembekal)
-                                        {
-                                            <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="AkPembekalId" class="text-danger"></span>
-                                </div>
-                            </div>
 
-                            <div class="form-row">
-                                <div class="col-md-12">
-                                    <label asp-for="Penerima" class="control-label"></label><span class="text-danger control-label">*</span>
-                                    <input asp-for="Penerima" class="form-control form-control-sm text-uppercase" required disabled />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Alamat1" class="control-label">Alamat</label>
-                                <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" id="txtAlamat1" disabled />
-                                <span asp-validation-for="Alamat1" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase" id="txtAlamat2" disabled />
-                                <span asp-validation-for="Alamat2" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" id="txtAlamat3" disabled />
-                                <span asp-validation-for="Alamat3" class="text-danger"></span>
+                                <label asp-for="AkPembekalId" class="control-label"></label>
+                                <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal">
+                                    <option value="0" selected>-- Pilih Kod Pembekal --</option>
+                                    @foreach (var s in ViewBag.AkPembekal)
+                                    {
+                                        <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="AkPembekalId" class="text-danger"></span>
                             </div>
                             break;
                         case 2:
                             <div class="form-row">
-                                <div class="col-md-6">
-                                    <label asp-for="SuPekerjaId" class="control-label"></label>
-                                    <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPekerja">
-                                        <option value="0" selected>-- Pilih Kod Pekerja --</option>
-                                        @foreach (var s in ViewBag.SuPekerja)
-                                        {
-                                            <option value="@s.Id">@s.NoGaji - @s.Nama</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label asp-for="AkPembekalId" class="control-label"></label>
-                                    <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" disabled>
-                                        <option value="0" selected>-- Pilih Kod Pembekal --</option>
-                                        @foreach (var s in ViewBag.AkPembekal)
-                                        {
-                                            <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="AkPembekalId" class="text-danger"></span>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="col-md-12">
-                                    <label asp-for="Penerima" class="control-label"></label><span class="text-danger control-label">*</span>
-                                    <input asp-for="Penerima" class="form-control form-control-sm text-uppercase" required disabled />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Alamat1" class="control-label">Alamat</label>
-                                <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" id="txtAlamat1" disabled />
-                                <span asp-validation-for="Alamat1" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase" id="txtAlamat2" disabled />
-                                <span asp-validation-for="Alamat2" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" id="txtAlamat3" disabled />
-                                <span asp-validation-for="Alamat3" class="text-danger"></span>
+                                <label asp-for="SuPekerjaId" class="control-label"></label>
+                                <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPekerja">
+                                    <option value="0" selected>-- Pilih Kod Pekerja --</option>
+                                    @foreach (var s in ViewBag.SuPekerja)
+                                    {
+                                        <option value="@s.Id">@s.NoGaji - @s.Nama</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
                             </div>
                             break;
                         default:
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <label asp-for="SuPekerjaId" class="control-label"></label>
-                                    <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPekerja">
-                                        <option value="0" selected>-- Pilih Kod Pekerja --</option>
-                                        @foreach (var s in ViewBag.SuPekerja)
-                                        {
-                                            <option value="@s.Id">@s.NoGaji - @s.Nama</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label asp-for="AkPembekalId" class="control-label"></label>
-                                    <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal">
-                                        <option value="0" selected>-- Pilih Kod Pembekal --</option>
-                                        @foreach (var s in ViewBag.AkPembekal)
-                                        {
-                                            <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="AkPembekalId" class="text-danger"></span>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="col-md-12">
-                                    <label asp-for="Penerima" class="control-label"></label><span class="text-danger control-label">*</span>
-                                    <input asp-for="Penerima" class="form-control form-control-sm text-uppercase" required />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Alamat1" class="control-label">Alamat</label>
-                                <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" id="txtAlamat1" />
-                                <span asp-validation-for="Alamat1" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase" id="txtAlamat2" />
-                                <span asp-validation-for="Alamat2" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" id="txtAlamat3" />
-                                <span asp-validation-for="Alamat3" class="text-danger"></span>
-                            </div>
                             break;
                     }
+
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <label asp-for="Penerima" class="control-label"></label><span class="text-danger control-label">*</span>
+                            <input asp-for="Penerima" class="form-control form-control-sm text-uppercase" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Alamat1" class="control-label">Alamat</label>
+                        <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" id="txtAlamat1" />
+                        <span asp-validation-for="Alamat1" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase" id="txtAlamat2" />
+                        <span asp-validation-for="Alamat2" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" id="txtAlamat3" />
+                        <span asp-validation-for="Alamat3" class="text-danger"></span>
+                    </div>
 
                     <div class="form-group">
                         <label asp-for="Catatan" class="control-label"></label>

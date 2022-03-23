@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Papar";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal baki = 0;
 }
 <partial name="_JSDetails"/>
 <div class="row">
@@ -49,7 +50,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Catatan</label>
-                            <textarea asp-for="Catatan" class="form-control form-control-sm" rows="2" readonly></textarea>
+                            <textarea  class="form-control form-control-sm text-uppercase" rows="2" readonly>@Model.Catatan</textarea>
                         </div>
 
                         <div class="form-row" hidden>
@@ -98,47 +99,51 @@
                         <h6>Lejar Tunai Runcit</h6>
                     </div>
                     <div class="card-body">
-                        <table id="tblTunaiLejar" class="table table-bordered table-hover text-nowrap table-sm nowrap compact table-responsive" width="100%">
-                            <thead class="table-secondary">
-                                <tr>
-                                    <th>Bil</th>
-                                    <th>Tarikh</th>
-                                    <th>KW</th>
-                                    <th>Akaun</th>
-                                    <th>Rujukan</th>
-                                    <th>Debit RM</th>
-                                    <th>Kredit RM</th>
-                                    <th>Baki RM</th>
-                                    <th>No Rekup</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyTunaiLejar">
-                                @foreach (var item in ViewBag.akTunaiLejar)
-                                {
-                                <tr id="@item.Id">
-                                    <td></td>
-                                    <td>@item.Tarikh.ToString("dd/MM/yyyy")</td>
-                                    <td>@item.JKW.Kod</td>
-                                    <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                    <td>@item.NoRujukan</td>
-                                    <td class="text-right">
-                                        @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
-                                    </td>
-                                    <td class="text-right">
-                                        @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
-                                    </td>
-                                    <td class="text-right">
-                                        @Convert.ToDecimal(item.Baki).ToString("#,##0.00")
-                                    </td>
-                                    <td>@item.Rekup</td>
-                                </tr>
-                                }
-                            </tbody>
-                            <tfoot>
-                            </tfoot>
-                        </table>
+                        <div class="table-responsive table-sm">
+                            <table id="tblTunaiLejar" class="table table-bordered table-hover display compact nowrap" width="100%">
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th>Tarikh</th>
+                                        <th>KW</th>
+                                        <th>Akaun</th>
+                                        <th>Rujukan</th>
+                                        <th>Debit RM</th>
+                                        <th>Kredit RM</th>
+                                        <th>Baki RM</th>
+                                        <th>No Rekup</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyTunaiLejar">
+
+                                    @foreach (var item in ViewBag.akTunaiLejar)
+                                    {
+                                            baki = baki + item.Debit - item.Kredit;
+                                        <tr id="@item.Id">
+                                            <td hidden>@item.Id</td>
+                                            <td width="5%" data-sort='YYYYMMDD'>@item.Tarikh.ToString("dd/MM/yyyy")</td>
+                                            <td>@item.JKW.Kod</td>
+                                            <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
+                                            <td>@item.NoRujukan</td>
+                                            <td class="text-right">
+                                                @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
+                                            </td>
+                                            <td class="text-right">
+                                                @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
+                                            </td>
+                                            <td class="text-right">
+                                                @Convert.ToDecimal(baki).ToString("#,##0.00")
+                                            </td>
+                                            <td>@item.Rekup</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>    
+                        </div>
+                            
+                        </div>
                     </div>
-                </div>
                 @*table Tunai Pemegang end*@
 
 

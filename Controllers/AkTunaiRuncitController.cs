@@ -73,22 +73,48 @@ namespace MSNK.Controllers
         {
             var akTunaiRuncit = await _akTunaiRuncitRepo.GetAll();
 
+            if (User.IsInRole("SuperAdmin"))
+            {
+                akTunaiRuncit = await _akTunaiRuncitRepo.GetAllIncludeDeletedItems();
+            }
+
             List<AkTunaiRuncitViewModel> viewModel = new List<AkTunaiRuncitViewModel>();
 
             foreach (AkTunaiRuncit item in akTunaiRuncit)
             {
-                AkTunaiLejar akTunaiLejar = _context.AkTunaiLejar
-                    .Where(x => x.AkTunaiRuncitId == item.Id)
-                    .OrderByDescending(x => x.NoRujukan)
-                    .ThenByDescending(x=> x.Tarikh)
-                    .ThenByDescending(x=> x.Id)
-                    .FirstOrDefault();
+                // baki awal
+                List<AkTunaiLejar> tunaiLejar = _context.AkTunaiLejar
+                    .Include(b => b.AkTunaiRuncit)
+                    .Where(b => b.AkTunaiRuncit.Id == item.Id && b.Rekup == "BAKI AWAL")
+                    .OrderBy(b => b.Tarikh)
+                    .ToList();
+
+                // rekupan
+                List<AkTunaiLejar> tunaiLejarRekup = _context.AkTunaiLejar
+                    .Include(b => b.AkTunaiRuncit)
+                    .Where(b => b.AkTunaiRuncit.Id == item.Id && b.Rekup != "BAKI AWAL" && b.Rekup != null)
+                    .OrderBy(b => b.Rekup).ThenBy(b => b.Tarikh)
+                    .ToList();
+
+                tunaiLejar.AddRange(tunaiLejarRekup);
+                // belum rekup
+                List<AkTunaiLejar> tunaiLejarBelumRekup = _context.AkTunaiLejar
+                    .Include(b => b.AkTunaiRuncit)
+                    .Where(b => b.AkTunaiRuncit.Id == item.Id && b.Rekup == null)
+                    .OrderBy(b => b.Tarikh)
+                    .ToList();
+
+                tunaiLejar.AddRange(tunaiLejarBelumRekup);
 
                 decimal baki = 0;
 
-                if (akTunaiLejar != null)
+                if (tunaiLejar != null)
                 {
-                    baki = akTunaiLejar.Baki;
+                    foreach(var balance in tunaiLejar)
+                    {
+                        baki = baki + balance.Debit - balance.Kredit;
+                    }
+                    
                 }
 
                 viewModel.Add(new AkTunaiRuncitViewModel
@@ -98,7 +124,8 @@ namespace MSNK.Controllers
                     KodRujukan = item.KaunterPanjar,
                     KodAkaun = item.AkCarta.Kod,
                     Perihal = item.AkCarta.Perihal,
-                    BakiLejarPanjar = baki
+                    BakiLejarPanjar = baki,
+                    FlHapus = item.FlHapus
                 });
             }
             return View(viewModel);
@@ -130,6 +157,9 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
+            List<JBahagian> bahagianList = _context.JBahagian.OrderBy(b => b.Kod).ToList();
+            ViewBag.JBahagian = bahagianList;
+
             List<AkCarta> akCartaList = _context.AkCarta
                 .Include(b => b.JKW)
                 .Include(b => b.JParas)
@@ -155,13 +185,31 @@ namespace MSNK.Controllers
                 .ToList();
             ViewBag.akTunaiPemegang = akTunaiPemegangTable;
 
-            List<AkTunaiLejar> akTunaiLejarTable = _context.AkTunaiLejar
+            // baki awal
+            List<AkTunaiLejar> tunaiLejar = _context.AkTunaiLejar
                 .Include(b => b.AkTunaiRuncit)
-                .Where(b=> b.AkTunaiRuncit.Id == id)
+                .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup == "BAKI AWAL")
+                .OrderBy(b => b.Tarikh)
+                .ToList();
+
+            // rekupan
+            List<AkTunaiLejar> tunaiLejarRekup = _context.AkTunaiLejar
+                .Include(b => b.AkTunaiRuncit)
+                .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup != "BAKI AWAL" && b.Rekup != null)
+                .OrderBy(b => b.Rekup).ThenBy(b=> b.Tarikh)
+                .ToList();
+
+            tunaiLejar.AddRange(tunaiLejarRekup);
+            // belum rekup
+            List<AkTunaiLejar> tunaiLejarBelumRekup = _context.AkTunaiLejar
+                .Include(b => b.AkTunaiRuncit)
+                .Where(b=> b.AkTunaiRuncit.Id == id && b.Rekup == null)
                 .OrderBy(b=> b.Tarikh)
                 .ToList();
 
-            ViewBag.akTunaiLejar = akTunaiLejarTable;
+            tunaiLejar.AddRange(tunaiLejarBelumRekup);
+
+            ViewBag.akTunaiLejar = tunaiLejar;
 
         }
 
@@ -361,6 +409,7 @@ namespace MSNK.Controllers
                     m.JKWId = JKWId;
                     m.AkCartaId = AkCartaId;
                     m.KaunterPanjar = noRujukan;
+                    m.Catatan = akTunaiRuncit.Catatan;
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
 
@@ -527,6 +576,26 @@ namespace MSNK.Controllers
         {
             var akTunaiRuncit = await _context.AkTunaiRuncit.FindAsync(id);
 
+            // check if already made a transaction in tunaiCV
+            var akTunaiCV = await _context.AkTunaiCV.Where(b => b.AkTunaiRuncitId == id).FirstOrDefaultAsync();
+
+            if (akTunaiCV != null)
+            {
+                TempData[SD.Error] = "Data terkait dengan No CV " +akTunaiCV.NoCV+ ". Data gagal dihapuskan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            // check end
+
+            // check if already made a transaction in akPV
+            var akPV = await _context.AkPV.Where(b => b.AkTunaiRuncitId == id).FirstOrDefaultAsync();
+
+            if (akPV != null)
+            {
+                TempData[SD.Error] = "Data terkait dengan No Baucer " + akPV.NoPV + ". Data gagal dihapuskan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            // check end
+
             var user = await _userManager.GetUserAsync(User);
             akTunaiRuncit.UserIdKemaskini = user.UserName;
             akTunaiRuncit.TarKemaskini = DateTime.Now;
@@ -540,6 +609,35 @@ namespace MSNK.Controllers
 
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: AkPV/Cancel/5
+        [Authorize(Policy = "TR001R")]
+        public async Task<IActionResult> RollBack(int id)
+        {
+            var obj = await _akTunaiRuncitRepo.GetByIdIncludeDeletedItems(id);
+            // check if already posting redirect back
+            if (obj.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // rollback operation
+
+            obj.FlHapus = 0;
+            obj.FlCetak = 0;
+            _context.AkTunaiRuncit.Update(obj);
+
+            // rollback operation end
+
+            //insert applog
+            await AddLogAsync("Posting", "Posting Data", obj.KaunterPanjar, id, 0);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
         }
 

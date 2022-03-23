@@ -9,7 +9,7 @@
     <div class="col-md-12">
         <div class="card box-shadow border-dark mb-3">
             <div class="card-header bg-dark text-white">
-                <h5 class="text-left"> TunaiKeluar - @ViewData["Title"]</h5>
+                <h5 class="text-left"> Tunai Keluar - @ViewData["Title"]</h5>
             </div>
             <div class="card-body">
                 <div class="form-row">
@@ -49,29 +49,15 @@
                         @switch (Model.KategoriPenerima)
                         {
                             case 1:
-                                <div class="form-row">
-                                    <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                    <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" disabled>
-                                        <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
-                                        @foreach (var s in ViewBag.AkPembekal)
-                                        {
-                                            <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="AkPembekalId" class="text-danger"></span>
+                                <div class="form-group">
+                                    <label asp-for="AkPembekalId" class="control-label"></label>
+                                    <input value="@Model.AkPembekal.KodSykt - @Model.AkPembekal.NamaSykt"  class="form-control form-control-sm" readonly />
                                 </div>
                                 break;
                             case 2:
-                                <div class="form-row">
-                                    <label asp-for="SuPekerjaId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                    <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPembekal" disabled>
-                                        <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
-                                        @foreach (var s in ViewBag.SuPekerja)
-                                        {
-                                            <option value="@s.Id">@s.NoGaji - @s.Nama</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
+                                <div class="form-group">
+                                    <label asp-for="SuPekerjaId" class="control-label"></label>
+                                    <input value="@Model.SuPekerja.NoGaji - @Model.SuPekerja.Nama" class="form-control form-control-sm" readonly />
                                 </div>
                                 break;
                             default:
@@ -101,7 +87,7 @@
                             <div class="card-body p-1">
 
                                 <div class="form-group col-sm">
-                                    <label class="control-label">Jenis Baucer</label>
+                                    <label class="control-label">Kategori Penerima</label>
                                     <div class="custom-control custom-radio">
                                         <input asp-for="KategoriPenerima" type="radio" id="KategoriPenerima1" name="KategoriPenerima" class="custom-control-input" value="0" checked>
                                         <label class="custom-control-label" for="KategoriPenerima1">Am</label>
@@ -213,18 +199,18 @@
 
 </div>
 <div>
-    @if (Model.FlPosting == 1)
+    @if (Model.FlHapus == 0)
     {
-    }
-    else
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
-        @*<a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-warning btn-sm" onclick="return confirm('Adakah anda ingin teruskan operasi ini?')">Batal</a>*@
-        if (ViewData["isLastItem"].ToString() == "N")
+        @if (Model.FlPosting == 1)
         {
-            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">
-                Batal
-            </button>
+        }
+        else
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
+
+            @*<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">
+                    Batal
+                </button>*@
         }
     }
     <a asp-action="Index">Kembali ke Indeks</a>

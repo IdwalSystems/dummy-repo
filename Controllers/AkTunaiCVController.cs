@@ -8,10 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
+using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
 using MSNK.Models.Modules.ViewModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -104,6 +108,11 @@ namespace MSNK.Controllers
 
             var akTunaiCV = await _akTunaiCVRepo.GetAll();
 
+            if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
+            {
+                akTunaiCV = await _akTunaiCVRepo.GetAllIncludeDeletedItems();
+            }
+
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
@@ -187,19 +196,6 @@ namespace MSNK.Controllers
             }
 
             var akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
-
-            // check if this data is the last one (for preventing batal purpose)
-            var lastItem = _context.AkTunaiCV.OrderByDescending(x => x.Id).FirstOrDefault();
-
-            if (lastItem.Id == akTunaiCV.Id)
-            {
-                ViewData["isLastItem"] = "Y";
-            }
-            else
-            {
-                ViewData["isLastItem"] = "N";
-            }
-            // check end
 
             if (akTunaiCV == null)
             {
@@ -551,7 +547,7 @@ namespace MSNK.Controllers
             }
 
             // get latest no rujukan running number  
-            var kodKaunter = _context.AkTunaiRuncit.FirstOrDefault(x => x.KaunterPanjar == "10001");
+            var kodKaunter = _context.AkTunaiRuncit.FirstOrDefault(x => x.Id == AkTunaiRuncitId);
 
             if (kodKaunter == null)
             {
@@ -873,6 +869,7 @@ namespace MSNK.Controllers
                 {
                     //duplicate id error
                     TempData[SD.Error] = "Data gagal diluluskan.";
+                    return RedirectToAction(nameof(Index));
                 }
                 else
                 {
@@ -889,11 +886,17 @@ namespace MSNK.Controllers
                     if (akT != null)
                     {
                         bakiAkhir = akT.Baki;
+
+                        if (bakiAkhir < akTunaiCV.Jumlah)
+                        {
+                            TempData[SD.Warning] = "Baki akhir lejar tunai bagi kod kaunter panjar " + akTunaiCV.AkTunaiRuncit.KaunterPanjar + " tidak mencukupi.";
+                            return RedirectToAction(nameof(Index));
+                        }
                     }
                     else
                     {
-                        TempData[SD.Warning] = "Baki awal belum dimasukkan ke dalam lejar tunai bagi kod kaunter panjar " + akTunaiCV.AkTunaiRuncit.KaunterPanjar+ ". Anda diminta untuk membuat baucer pembayaran melalui paparan ini.";
-                        return RedirectToAction(nameof(AkPVController.Create), "AkPV");
+                        TempData[SD.Error] = "Baki awal belum dimasukkan ke dalam lejar tunai bagi kod kaunter panjar " + akTunaiCV.AkTunaiRuncit.KaunterPanjar+ ". Anda perlu membuat baucer pembayaran terlebih dahulu.";
+                        return RedirectToAction(nameof(Index));
                     }
                     
                     //posting operation start here
@@ -904,6 +907,7 @@ namespace MSNK.Controllers
                         AkTunaiLejar akTunaiLejar = new AkTunaiLejar()
                         {
                             JKWId = akTunaiCV.AkTunaiRuncit.JKWId,
+
                             AkTunaiRuncitId = akTunaiCV.AkTunaiRuncitId,
                             Tarikh = akTunaiCV.Tarikh,
                             AkCartaId = item.AkCartaId,
@@ -992,6 +996,85 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
+
+        // printing pelarasan PO 
+        [Authorize(Policy = "TR002P")]
+        public async Task<IActionResult> PrintPdf(int id)
+        {
+            AkTunaiCV obj = await _akTunaiCVRepo.GetByIdIncludeDeletedItems(id);
+
+            string jumlahDalamPerkataan;
+
+            if (obj.Jumlah < 0)
+            {
+                jumlahDalamPerkataan = ("Kurangan Ringgit Malaysia " + Tools.JumlahDalamPerkataan(0 - obj.Jumlah)).ToUpper();
+            }
+            else
+            {
+                jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(obj.Jumlah)).ToUpper();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            TunaiCVPrintModel data = new TunaiCVPrintModel();
+
+            CompanyDetails company = new CompanyDetails();
+            data.CompanyDetail = company;
+            data.AkTunaiCV = obj;
+            data.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            data.Username = user.UserName;
+
+            //update cetak -> 1
+            obj.FlCetak = 1;
+            await _akTunaiCVRepo.Update(obj);
+
+            //insert applog
+            await AddLogAsync("Cetak", "Cetak Data", obj.NoCV, id, obj.Jumlah);
+
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+
+            return new ViewAsPdf("TunaiCVPrintPdf", data)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                //CustomSwitches = "--footer-center \"  Tarikh: " +
+                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+
+        // POST: AkPV/Cancel/5
+        [Authorize(Policy = "TR002R")]
+        public async Task<IActionResult> RollBack(int id)
+        {
+            var obj = await _akTunaiCVRepo.GetByIdIncludeDeletedItems(id);
+            // check if already posting redirect back
+            if (obj.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // rollback operation
+
+            obj.FlHapus = 0;
+            obj.FlCetak = 0;
+            _context.AkTunaiCV.Update(obj);
+
+            // rollback operation end
+
+            //insert applog
+            await AddLogAsync("Posting", "Posting Data", obj.NoCV, id, obj.Jumlah);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
+            return RedirectToAction(nameof(Index));
+        }
+        // printing pelarasan PO end
 
         //// POST: AkTunaiCV/Cancel/5
         //[Authorize(Policy = "TR002B")]

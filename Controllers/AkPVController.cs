@@ -218,6 +218,11 @@ namespace MSNK.Controllers
             List<JBahagian> bahagianList = _context.JBahagian.ToList();
             ViewBag.JBahagian = bahagianList;
 
+            List<AkTunaiRuncit> tunaiRuncitList = _context.AkTunaiRuncit
+                .Include(c => c.AkTunaiPemegang)
+                .ThenInclude(c=> c.SuPekerja).ToList();
+            ViewBag.AkTunaiRuncit = tunaiRuncitList;
+
             List<AkBelian> akBelianList = _context.AkBelian
                 .Include(b => b.AkPO)
                 .Where(b => b.FlPosting == 1)
@@ -342,6 +347,51 @@ namespace MSNK.Controllers
             }
         }
         // function json get no rujukan (running number) end
+
+        // function json get panjar 
+        [HttpPost]
+        public async Task<JsonResult> JsonGetPanjar(int data)
+        {
+            try
+            {
+                
+                var akTunaiRuncit = await _context.AkTunaiRuncit
+                    .Include(b => b.AkTunaiPemegang)
+                    .ThenInclude(b => b.SuPekerja).ThenInclude(b => b.JBank)
+                    .FirstOrDefaultAsync(b => b.Id == data);
+
+                return Json(new { result = "OK", record = akTunaiRuncit });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        // function json get panjar end
+
+        // function json get panjar 
+        [HttpPost]
+        public async Task<JsonResult> JsonGetNoRekup(int data)
+        {
+            try
+            {
+
+                var akTunaiRuncit = await _context.AkTunaiRuncit
+                    .Include(b => b.AkTunaiPemegang)
+                    .ThenInclude(b => b.SuPekerja).ThenInclude(b => b.JBank)
+                    .FirstOrDefaultAsync(b => b.Id == data);
+
+                string noRekup = "BAKI AWAL";
+                
+                return Json(new { result = "OK", record = noRekup });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        // function json get panjar end
+
         // function  json Create akPV1
         public JsonResult GetCarta(AkCarta akCarta)
         {
@@ -837,6 +887,20 @@ namespace MSNK.Controllers
                     akPVView.Telefon = akPV.SuPekerja.TelefonBimbit;
                     akPVView.Emel = akPV.SuPekerja.Emel;
                     break;
+                // panjar
+                case 3:
+                    akPVView.AkTunaiRuncit = akPV.AkTunaiRuncit;
+                    akPVView.KodPenerima = akPV.AkTunaiRuncit.KaunterPanjar;
+                    akPVView.NoKP = akPV.NoKP;
+                    akPVView.Penerima = akPV.Nama;
+                    akPVView.Alamat1 = akPV.Alamat1;
+                    akPVView.Alamat2 = akPV.Alamat2;
+                    akPVView.Alamat3 = akPV.Alamat3;
+                    akPVView.NoAkaunBank = akPV.NoAkaunBank;
+                    akPVView.Telefon = akPV.Telefon;
+                    akPVView.Emel = akPV.Emel;
+                    akPVView.NoRekup = akPV.NoRekup;
+                    break;
                 //Am
                 default:
                     akPVView.denganTanggungan = akPV.denganTanggungan;
@@ -849,6 +913,7 @@ namespace MSNK.Controllers
                     akPVView.NoAkaunBank = akPV.NoAkaunBank;
                     akPVView.Telefon = akPV.Telefon;
                     akPVView.Emel = akPV.Emel;
+                    
                     break;
             }
 
@@ -1122,13 +1187,14 @@ namespace MSNK.Controllers
             // FlKategoriPenerima = 0 ( Am / Lain - lain )
             // FlKategoriPenerima = 1 ( pembekal )
             // FlKategoriPenerima = 2 ( pekerja )
+            // FlKategoriPenerima = 3 ( pemegang tunai runcit )
             // ..
 
 
             AkPV m = new AkPV();
             var pembekal = _context.AkPembekal.Find(AkPembekalId);
             var pekerja = _context.SuPekerja.Find(SuPekerjaId);
-            var tunaiRuncit = _context.AkTunaiRuncit.Find(AkTunaiRuncitId);
+            var tunaiRuncit = _akTunaiRuncitRepo.GetById((int) AkTunaiRuncitId);
             var spPendahuluan = _context.SpPendahuluanPelbagai.Find(SpPendahuluanPelbagaiId);
 
             var jenis = "CreateAm";
@@ -1147,14 +1213,13 @@ namespace MSNK.Controllers
             if (tunaiRuncit != null)
             {
                 akPV.FlJenisBaucer = 4;
-                akPV.FlKategoriPenerima = 2;
+                akPV.FlKategoriPenerima = 3;
                 akPV.AkTunaiRuncitId = AkTunaiRuncitId;
                 jenis = "CreatePanjar";
             }
 
             if (pembekal != null)
             {
-
                 akPV.Nama = pembekal.NamaSykt;
                 akPV.Alamat1 = pembekal.Alamat1;
                 akPV.Alamat2 = pembekal.Alamat2;
@@ -1181,6 +1246,7 @@ namespace MSNK.Controllers
 
             if (pekerja != null)
             {
+                akPV.NoKP = pekerja.NoKp;
                 akPV.Nama = pekerja.Nama;
                 akPV.Alamat1 = pekerja.Alamat1;
                 akPV.Alamat2 = pekerja.Alamat2;
@@ -2196,6 +2262,59 @@ namespace MSNK.Controllers
                                 };
                             }
                         }
+                        else if (akPV.FlKategoriPenerima == 3)
+                        {
+                            //insert akTunaiLejar
+                            if (akPV.FlJenisBaucer == 4)
+                            {
+                                //find latest baki
+                                AkTunaiLejar akT = _context.AkTunaiLejar
+                                .Where(x => x.AkTunaiRuncitId == akPV.AkTunaiRuncitId)
+                                .OrderByDescending(x => x.NoRujukan)
+                                .ThenByDescending(x => x.Tarikh)
+                                .ThenByDescending(x => x.Id)
+                                .FirstOrDefault();
+
+                                decimal bakiAkhir = 0;
+
+                                if (akT != null)
+                                {
+                                    bakiAkhir = akT.Baki;
+                                }
+
+                                //insert into AkTunaiLejar
+                                AkTunaiLejar akTunaiLejar = new AkTunaiLejar()
+                                {
+                                    JKWId = akPV.JKWId,
+                                    JBahagianId = akPV.JBahagianId,
+                                    AkTunaiRuncitId = (int)akPV.AkTunaiRuncitId,
+                                    Tarikh = akPV.Tarikh,
+                                    AkCartaId = item.AkCartaId,
+                                    NoRujukan = akPV.NoPV,
+                                    Debit = item.Amaun,
+                                    Kredit = 0,
+                                    Baki = bakiAkhir + item.Amaun,
+                                    Rekup = akPV.NoRekup
+                                };
+                                // insert into AkTunaiLejar end
+
+                                await _akTunaiLejarRepo.Insert(akTunaiLejar);
+                            }
+
+                            abBukuVot = new AbBukuVot()
+                            {
+                                Tahun = akPV.Tahun,
+                                JKWId = akPV.JKWId,
+                                JBahagianId = akPV.JBahagianId,
+                                Tarikh = akPV.Tarikh,
+                                Kod = kod,
+                                Penerima = penerima,
+                                VotId = item.AkCartaId,
+                                Rujukan = akPV.NoPV,
+                                Debit = item.Amaun
+
+                            };
+                        }
                         else
                         {
                             //tanpa tanggungan
@@ -2245,42 +2364,7 @@ namespace MSNK.Controllers
 
                         await _akAkaunRepo.Insert(akAObjek);
 
-                        //insert akTunaiLejar
-                        if (akPV.FlJenisBaucer == 4)
-                        {
-                            //find latest baki
-                            AkTunaiLejar akT = _context.AkTunaiLejar
-                            .Where(x => x.AkTunaiRuncitId == akPV.AkTunaiRuncitId)
-                            .OrderByDescending(x => x.NoRujukan)
-                            .ThenByDescending(x => x.Tarikh)
-                            .ThenByDescending(x => x.Id)
-                            .FirstOrDefault();
-
-                            decimal bakiAkhir = 0;
-
-                            if (akT != null)
-                            {
-                                bakiAkhir = akT.Baki;
-                            }
-
-                            //insert into AkTunaiLejar
-                            AkTunaiLejar akTunaiLejar = new AkTunaiLejar()
-                            {
-                                JKWId = akPV.JKWId,
-                                JBahagianId = akPV.JBahagianId,
-                                AkTunaiRuncitId = (int)akPV.AkTunaiRuncitId,
-                                Tarikh = akPV.Tarikh,
-                                AkCartaId = item.AkCartaId,
-                                NoRujukan = akPV.NoPV,
-                                Debit = item.Amaun,
-                                Kredit = 0,
-                                Baki = bakiAkhir + item.Amaun,
-                                Rekup = akPV.NoRekup
-                            };
-                            // insert into AkTunaiLejar end
-
-                            await _akTunaiLejarRepo.Insert(akTunaiLejar);
-                        }
+                        
                     }
 
                     akPV.FlPosting = 1;

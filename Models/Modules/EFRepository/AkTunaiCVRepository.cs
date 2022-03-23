@@ -30,30 +30,49 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPembekal)
                 .Include(b=> b.AkTunaiRuncit).ThenInclude(b=> b.AkTunaiPemegang).ThenInclude(b=> b.SuPekerja)
                 .Include(b=> b.AkTunaiRuncit).ThenInclude(b=> b.JKW)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
                 .Include(b => b.AkTunaiCV1).ThenInclude(b=> b.AkCarta)
                 .ToListAsync();
         }
 
-        public Task<IEnumerable<AkTunaiCV>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<AkTunaiCV>> GetAllIncludeDeletedItems()
         {
-            throw new NotImplementedException();
+            return await context.AkTunaiCV
+                .IgnoreQueryFilters()
+                .Include(b => b.SuPekerja)
+                .Include(b => b.AkPembekal)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
+                .ToListAsync();
         }
 
         public async Task<AkTunaiCV> GetById(int id)
         {
             return await context.AkTunaiCV
-                .Include(b => b.SuPekerja)
-                .Include(b => b.AkPembekal)
+                .Include(b => b.SuPekerja).ThenInclude(b=> b.JBank)
+                .Include(b => b.AkPembekal).ThenInclude(b => b.JBank)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
                 .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
         }
 
-        public Task<AkTunaiCV> GetByIdIncludeDeletedItems(int id)
+        public async Task<AkTunaiCV> GetByIdIncludeDeletedItems(int id)
         {
-            throw new NotImplementedException();
+            return await context.AkTunaiCV
+                .IgnoreQueryFilters()
+                .Include(b => b.SuPekerja).ThenInclude(b => b.JBank)
+                .Include(b => b.AkPembekal).ThenInclude(b => b.JBank)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
+                .Where(b => b.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public Task<AkTunaiCV> GetByString(string id)

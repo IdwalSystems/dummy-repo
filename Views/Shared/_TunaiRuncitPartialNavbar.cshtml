@@ -5,7 +5,7 @@
     @if (User.Identity.IsAuthenticated)
     {
 
-        @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
+        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
         {
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" asp-area="" asp-controller="AkTunaiRuncit" asp-action="Index">Pemegang Tunai Runcit</a>

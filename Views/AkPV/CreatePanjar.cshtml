@@ -15,6 +15,47 @@
                     <h5>Baucer Pembayaran Panjar - @ViewData["Title"]</h5>
                 </div>
                 <div class="card-body">
+                    @*radio button jenis baucer*@
+                    <div class="card mb-2">
+                        <div class="card-body pb-1 pt-1">
+                            <div class="form-group mb-0 mt-1">
+                                <label class="control-label">Jenis Baucer</label>
+                            </div>
+                            <div class="form-row col-sm ml-2">
+                                <div class="custom-control custom-radio col-md-4 " hidden>
+                                    <input class="custom-control-input" type="radio" id="0" name="FlJenisBaucer" value="0">
+                                    <label class="custom-control-label" for="0">
+                                        Am
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-4 " hidden>
+                                    <input class="custom-control-input" type="radio" id="1" name="FlJenisBaucer" value="1">
+                                    <label class="custom-control-label" for="1">
+                                        Inbois
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-4 " hidden>
+                                    <input class="custom-control-input" type="radio" id="2" name="FlJenisBaucer" value="2">
+                                    <label class="custom-control-label" for="2">
+                                        Gaji
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-4 " hidden>
+                                    <input class="custom-control-input" type="radio" id="3" name="FlJenisBaucer" value="3" >
+                                    <label class="custom-control-label" for="3">
+                                        Pendahuluan Pelbagai
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-4" >
+                                    <input class="custom-control-input" type="radio" id="4" name="FlJenisBaucer" value="4" checked>
+                                    <label class="custom-control-label" for="4">
+                                        Panjar
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*radio button jenis baucer end*@
                     <div class="form-row">
 
                         <div class="col-md-2">
@@ -74,15 +115,35 @@
                         <div class="col-md-12">
                             <input id="ddlKodPembekal" value="0" hidden />
                             <input id="ddlPanjar" value="1" hidden />
-                            <label asp-for="SuPekerjaId" class="control-label"></label>
-                            <select class="form-control form-control-sm select2" asp-for="SuPekerjaId" id="ddlKodPekerja">
-                                <option value="0" selected>-- Pilih Kod Pekerja --</option>
-                                @foreach (var s in ViewBag.SuPekerja)
-                                {
-                                    <option value="@s.Id">@s.NoGaji - @s.Nama</option>
-                                }
-                            </select>
-                            <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
+                            <div class="card box-shadow mb-3">
+                                <div class="card-header">
+                                    <h6>Maklumat Panjar</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-row">
+                                        <div class="col-md-6">
+
+                                            <label asp-for="AkTunaiRuncitId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                            <select class="form-control form-control-sm" asp-for="AkTunaiRuncitId" required id="ddlTunaiRuncit">
+                                                <option value="0" selected>-- Pilih Kaunter Panjar --</option>
+                                                @foreach (var s in ViewBag.AkTunaiRuncit)
+                                                {
+
+                                                    <option value="@s.Id">@s.KaunterPanjar (@s.AkCarta.Kod - @s.AkCarta.Perihal )</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="NoRekup" class="control-label"></label>
+                                                <input asp-for="NoRekup" class="form-control form-control-sm text-uppercase" id="txtNoRekup" readonly />
+                                                <span asp-validation-for="NoRekup" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -102,7 +163,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label asp-for="Nama" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" required />
+                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" />
                             </div>
                         </div>
                     </div>
@@ -174,34 +235,7 @@
                         <textarea asp-for="Perihal" class="form-control form-control-sm text-uppercase" rows="2" id="txtPerihal"></textarea>
                         <span asp-validation-for="Perihal" class="text-danger"></span>
                     </div>
-                    <div class="card box-shadow mb-3 mt-2">
-                        <div class="card-header">
-                            <h6>Maklumat Panjar</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-row">
-                                <div class="col-md-6">
-
-                                    <label asp-for="AkTunaiRuncitId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                    <select class="form-control form-control-sm" asp-for="AkTunaiRuncitId" required id="ddlTunaiRuncit">
-                                        <option value="0" selected>-- Pilih Kaunter Panjar --</option>
-                                        @foreach (var s in ViewBag.AkTunaiRuncit)
-                                        {
-                                            <option value="@s.Id">@s.KaunterPanjar (@s.AkCarta.Kod - @s.AkCarta.Perihal )</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label asp-for="NoRekup" class="control-label"></label>
-                                        <input asp-for="NoRekup" class="form-control form-control-sm text-uppercase" id="txtNoRekup" disabled />
-                                        <span asp-validation-for="NoRekup" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
+                    
                     <br />
                     @*table Objek*@
                     <div class="card box-shadow mb-3 mt-2">
