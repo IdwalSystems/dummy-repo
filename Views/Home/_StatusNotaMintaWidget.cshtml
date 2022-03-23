@@ -85,7 +85,19 @@
                     <tbody>
                         @foreach (var item in Model.AkNotaMinta)
                         {
+                            var tindakan = "";
+                            var badgeType = "badge-warning";
 
+                            if(item.NoSiri == null)
+                            {
+                                tindakan = "KEWANGAN";
+
+                            }
+                            else
+                            {
+                                tindakan = "LULUS";
+                                badgeType = "badge-secondary";
+                            }
                             <tr class="text-uppercase ">
                                 <td width="5%" data-sort='YYYYMMDD'>
                                     @item.Tarikh.ToString("dd/MM/yyyy")
@@ -98,8 +110,8 @@
                                 </td>
                                 <td>
                                     <div class="mt-sm-1 d-block" width="5%">
-                                        <span class="badge badge-warning rounded-pill text-white p-1 px-2">
-                                            Kewangan
+                                        <span class="badge @badgeType rounded-pill text-white p-1 px-2">
+                                            @tindakan
                                         </span>
                                     </div>
                                 </td>

@@ -61,7 +61,7 @@ namespace MSNK.Controllers
                 // Widget Status Nota Minta
                 var akNotaMinta = await _context.AkNotaMinta
                     .Include(b => b.AkPembekal)
-                    .Where(b => b.NoSiri == null )
+                    .Where(b => b.FlPosting == 0 )
                     .OrderByDescending(b => b.Tarikh)
                     .ToListAsync();
                 // Widget Status PO end
