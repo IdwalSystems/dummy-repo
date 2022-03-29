@@ -72,6 +72,11 @@ namespace MSNK.Models.Modules.EFRepository
                 entity.LgModule = modul + "R";
                 entity.LgOperation = "Rollback";
             }
+            else if (operasi == "Rekup")
+            {
+                entity.LgModule = modul + "T";
+                entity.LgOperation = "Rekup";
+            }
             await context.AppLog.AddAsync(entity);
 
             return entity;

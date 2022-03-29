@@ -37,7 +37,48 @@
             }
         }
     </div>*@
-<div class="form-row mb-3">
+<div class="container mt-3">
+    <div class="card box-shadow">
+        <div class="card-body">
+            <h5 class="text-tertiary">Status Terkini</h5>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#statusNotaMinta" id="tabNM">Nota Minta</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#StatusPO" id="tabPO">Pesanan Tempatan</a>
+                </li>
+            </ul>
+            @*Tab panes*@
+            <div class="tab-content">
+                <div id="statusNotaMinta" class="container tab-pane active">
+                    <br>
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            <partial name="_StatusNotaMintaWidget" />
+                        </div>
+                    </div>
+                </div>
+                <div id="StatusPO" class="container tab-pane fade">
+                    <br>
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            <partial name="_StatusPOWidget" />
+                        </div>
+                    </div>
+                </div>
+                <div id="menu2" class="container tab-pane fade" hidden>
+                    <br>
+                    <h3>Menu 2</h3>
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+@*<div class="form-row mb-3">
     <div class="col-md-12">
         <partial name="_StatusNotaMintaWidget" />
     </div>
@@ -46,5 +87,5 @@
     <div class="col-md-12">
         <partial name="_StatusPOWidget" />
     </div>
-</div>
+</div>*@
 

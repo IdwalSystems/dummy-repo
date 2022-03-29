@@ -4,6 +4,10 @@
     var columnSearchVar;
     $(document).ready(function () {
 
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            tableNM.columns.adjust();
+        });
+
         var tableNM = $('.tableNM').DataTable({
             "paging": false,
             rowReorder: false,
@@ -21,6 +25,8 @@
                 "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
             }
         });
+
+        tableNM.columns.adjust();
 
         $('#columnSearch').change(function () {
             columnSearchVar = $(this).val();
@@ -44,13 +50,11 @@
                     "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
                 }
             });
+
             // refresh table end
         });
 
     });
-
-
-
 </script>
 
 @if (Model.AkNotaMinta.Count > 0)

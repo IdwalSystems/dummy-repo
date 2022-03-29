@@ -82,12 +82,6 @@ namespace MSNK.Controllers
             }
 
             var akCarta = await _akCartaRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akCarta.JKWId);
-            akCarta.JKW = kw;
-            var jenis = _context.JJenis.FirstOrDefault(b => b.Id == akCarta.JJenisId);
-            akCarta.JJenis = jenis;
-            var paras = _context.JParas.FirstOrDefault(b => b.Id == akCarta.JParasId);
-            akCarta.JParas = paras;
 
             if (akCarta == null)
             {
@@ -200,13 +194,14 @@ namespace MSNK.Controllers
                         akC.JKWId = JKWId;
                         akC.Kod = akCarta.Kod;
                         akC.JJenisId = JJenisId;
-                        akC.Perihal = akCarta.Perihal;
+                        akC.Perihal = akCarta.Perihal.ToUpper();
                         akC.JParasId = JParasId;
                         akC.DebitKredit = akCarta.DebitKredit;
                         akC.UmumDetail = akCarta.UmumDetail;
                         akC.Baki = akCarta.Baki;
-                        akC.Catatan1 = akCarta.Catatan1;
+                        akC.Catatan1 = akCarta.Catatan1.ToUpper();
                         akC.Catatan2 = akCarta.Catatan2;
+                        akC.IsBajet = akCarta.IsBajet;
                         try {
                             await _akCartaRepo.Insert(akC);
                             //insert applog
@@ -253,12 +248,7 @@ namespace MSNK.Controllers
 
             PopulateList();
             var akCarta = await _akCartaRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akCarta.JKWId);
-            akCarta.JKW = kw;
-            var jenis = _context.JJenis.FirstOrDefault(b => b.Id == akCarta.JJenisId);
-            akCarta.JJenis = jenis;
-            var paras = _context.JParas.FirstOrDefault(b => b.Id == akCarta.JParasId);
-            akCarta.JParas = paras;
+
             if (akCarta == null)
             {
                 return NotFound();
@@ -369,6 +359,7 @@ namespace MSNK.Controllers
                         carta.Baki = akCarta.Baki;
                         carta.Catatan1 = akCarta.Catatan1;
                         carta.Catatan2 = akCarta.Catatan2;
+                        carta.IsBajet = akCarta.IsBajet;
                         var user = await _userManager.GetUserAsync(User);
                         carta.UserIdKemaskini = user.UserName;
                         carta.TarKemaskini = DateTime.Now;
@@ -441,12 +432,6 @@ namespace MSNK.Controllers
             }
 
             var akCarta = await _akCartaRepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akCarta.JKWId);
-            akCarta.JKW = kw;
-            var jenis = _context.JJenis.FirstOrDefault(b => b.Id == akCarta.JJenisId);
-            akCarta.JJenis = jenis;
-            var paras = _context.JParas.FirstOrDefault(b => b.Id == akCarta.JParasId);
-            akCarta.JParas = paras;
 
             if (akCarta == null)
             {

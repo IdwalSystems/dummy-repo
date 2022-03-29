@@ -85,7 +85,7 @@ namespace MSNK.Data
             new Claim("TR001P","TR001 Pemegang Tunai Runcit - Cetak"),
             new Claim("TR001R","TR001 Pemegang Tunai Runcit - Rollback"),
             //new Claim("TR001B","TR001 Pemegang Tunai Runcit - Batal"),
-            //new Claim("TR001T","TR001 Pemegang Tunai Runcit - Posting"),
+            new Claim("TR001T","TR001 Pemegang Tunai Runcit - Rekup"),
             //new Claim("TR001UT","TR001 Pemegang Tunai Runcit - UnPosting"),
             //Pemegang Tunai Runcit end
             //Tunai Keluar

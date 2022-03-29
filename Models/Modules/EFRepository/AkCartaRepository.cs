@@ -24,7 +24,10 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<IEnumerable<AkCarta>> GetAll()
         {
-            return await context.AkCarta.Include(b => b.JKW).Include(b =>b.JParas).Include(b => b.JJenis)
+            return await context.AkCarta
+                .Include(b => b.JKW)
+                .Include(b =>b.JParas)
+                .Include(b => b.JJenis)
                 .OrderBy(b=> b.Kod)
                 .ToListAsync();
         }
@@ -33,7 +36,9 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkCarta
                 .IgnoreQueryFilters()
-                .Include(b => b.JKW).Include(b => b.JParas).Include(b => b.JJenis)
+                .Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Include(b => b.JJenis)
                 .OrderBy(b => b.Kod)
                 .ToListAsync();
         }
@@ -41,7 +46,9 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<AkCarta> GetById(int id)
         {
             return await context.AkCarta
-                .Include(b => b.JKW).Include(b => b.JParas).Include(b => b.JJenis)
+                .Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Include(b => b.JJenis)
                 .Where(x => x.Id == id)
                 .FirstOrDefaultAsync();
         }
@@ -50,7 +57,9 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkCarta
                 .IgnoreQueryFilters()
-                .Include(b => b.JKW).Include(b => b.JParas).Include(b => b.JJenis)
+                .Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Include(b => b.JJenis)
                 .Where(x=> x.Id == id)
                 .FirstOrDefaultAsync();
         }

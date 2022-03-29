@@ -4,6 +4,34 @@
     var columnSearchVar;
     $(document).ready(function () {
 
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            tablePO.columns.adjust();
+        });
+
+        // onchange no KP
+        $("body").on('click', "#tabPO", function () {
+            // refresh table
+            tablePO.destroy();
+
+            tablePO = $('.tablePO').DataTable({
+                "paging": false,
+                rowReorder: false,
+                columnDefs: [
+                    { orderable: false, targets: '_all' }
+                ],
+                "scrollY": "40vh",
+                "scrollX": true,
+                "scrollCollapse": true,
+                "paging": false,
+                dom: 'lrtip',
+                "language": {
+                    "info": "_TOTAL_ entri yang dipamerkan",
+                    "infoEmpty": "Tiada data untuk dipamerkan",
+                    "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
+                }
+            });
+            // refresh table end
+        });
         var tablePO = $('.tablePO').DataTable({
             "paging": false,
             rowReorder: false,
@@ -105,11 +133,11 @@
     <div class="card-body">
         <div class="table-responsive table-sm">
             <table class="table tablePO table-bordered table-hover display compact nowrap" width="100%">
-                <thead>
+                <thead >
                     <tr>
                         <th width="5%">Tarikh</th>
-                        <th>No PO</th>
-                        <th>
+                        <th width="10%">No PO</th>
+                        <th width="65%">
                             Pembekal
                         </th>
                         <th width="10%">

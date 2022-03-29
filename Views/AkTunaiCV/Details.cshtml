@@ -61,10 +61,21 @@
                                 </div>
                                 break;
                             default:
-                                <div class="form-group">
-                                    <label class="control-label">Nama</label>
-                                    <input class="form-control form-control-sm text-uppercase" value="@Model.Penerima" readonly />
+                                <div class="form-row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label asp-for="NoKP" class="control-label"></label>
+                                            <input class="form-control form-control-sm text-uppercase" value="@Model.NoKP" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <label asp-for="Penerima" class="control-label"></label>
+                                            <input class="form-control form-control-sm text-uppercase" value="@Model.Penerima" readonly />
+                                        </div>
+                                    </div>
                                 </div>
+                                
                                 break;
                         }
                         <div class="form-group">

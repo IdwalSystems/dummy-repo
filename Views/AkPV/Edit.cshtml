@@ -10,6 +10,7 @@
     <div class="col-md-12">
         <form asp-action="Edit" class="needs-validation">
             <input type="hidden" asp-for="Id" />
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="card box-shadow border-primary mb-3">
                 <div class="card-header bg-primary text-white">
@@ -127,9 +128,9 @@
                                 <div class="card-body">
                                     <div class="form-row">
                                         <div class="col-md-6">
-
+                                            <input type="hidden" asp-for="AkTunaiRuncitId" />
                                             <label asp-for="AkTunaiRuncitId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                            <select class="form-control form-control-sm" asp-for="AkTunaiRuncitId" required id="ddlTunaiRuncit">
+                                            <select class="form-control form-control-sm" asp-for="AkTunaiRuncitId" required id="ddlTunaiRuncit" disabled>
                                                 <option value="0" selected>-- Pilih Kaunter Panjar --</option>
                                                 @foreach (var s in ViewBag.AkTunaiRuncit)
                                                 {

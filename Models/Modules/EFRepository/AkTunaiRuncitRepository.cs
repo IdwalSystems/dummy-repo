@@ -49,6 +49,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JBahagian)
                 .Include(b => b.AkCarta)
                 .Include(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkTunaiLejar)
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
         }
@@ -61,6 +62,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JBahagian)
                 .Include(b => b.AkCarta)
                 .Include(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkTunaiLejar)
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
         }

@@ -423,7 +423,10 @@ namespace MSNK.Controllers
         {
             try
             {
-                var result = await _context.AkTerima.Where(x=> x.NoKp == data).FirstOrDefaultAsync();
+                var result = await _context.AkTerima
+                    .Where(x=> x.NoKp == data)
+                    .OrderByDescending(x => x.Id)
+                    .FirstOrDefaultAsync();
 
                 if (result == null)
                 {

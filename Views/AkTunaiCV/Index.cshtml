@@ -131,6 +131,7 @@
                             <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
                             @if (item.FlHapus == 0)
                             {
+
                                 @if (item.FlPosting == 0)
                                 {
                                     @if (item.FlCetak != 0)

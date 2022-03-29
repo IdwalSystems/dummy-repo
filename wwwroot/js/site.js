@@ -9,11 +9,28 @@
 ////    // for warning - orange box
 ////    toastr.warning("Masa anda telah tamat. Sila tekan butang 'Refresh' untuk log in semula.");
 ////}
-$(function () {
-    $("body").on('click keypress', function () {
-        ResetThisSession();
-    });
-});
+
+// stop users from entering source code
+//document.addEventListener("contextmenu", function (e) {
+//    e.preventDefault();
+//}, false);
+
+//$(function () {
+//    $("body").on('click keypress', function () {
+//        ResetThisSession();
+//    });
+//});
+
+//document.addEventListener("keydown", (e) => {
+//    // USE THIS TO DISABLE CONTROL AND ALL FUNCTION KEYS
+//    // if (e.ctrlKey || (e.keyCode>=112 && e.keyCode<=123)) {
+//    // THIS WILL ONLY DISABLE CONTROL AND F12
+//    if (e.ctrlKey || e.keyCode == 123) {
+//        e.stopPropagation();
+//        e.preventDefault();
+//    }
+//});
+// stop users from entering source code end
 
 var timeInSecondsAfterSessionOut = 600; // change this to change session time out (in seconds).
 var secondTick = 0;

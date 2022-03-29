@@ -26,6 +26,8 @@ namespace MSNK.Models.Modules
         [DisplayName("Kod Pembekal")]
         public int? AkPembekalId { get; set; }
         public AkPembekal AkPembekal { get; set; }
+        [DisplayName("No KP")]
+        public string NoKP { get; set; }
         public string Penerima { get; set; }
         [DisplayName("Alamat")]
         public string Alamat1 { get; set; }

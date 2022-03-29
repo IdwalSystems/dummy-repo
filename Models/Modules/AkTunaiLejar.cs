@@ -37,6 +37,7 @@ namespace MSNK.Models.Modules
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Baki { get; set; }
         public string Rekup { get; set; }
+        public bool IsPaid { get; set; }
 
     }
 }

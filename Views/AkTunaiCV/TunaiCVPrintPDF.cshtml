@@ -27,7 +27,7 @@
             noAkaunBank = Model.AkTunaiCV.AkPembekal.AkaunBank;
             break;
         case 2:
-            kod = Model.AkTunaiCV.SuPekerja.NoGaji;
+            kod = Model.AkTunaiCV.NoKP;
             nama = Model.AkTunaiCV.SuPekerja.Nama;
             alamat1 = Model.AkTunaiCV.SuPekerja.Alamat1;
             alamat2 = Model.AkTunaiCV.SuPekerja.Alamat2;
@@ -36,13 +36,13 @@
             noAkaunBank = Model.AkTunaiCV.SuPekerja.NoAkaunBank;
             break;
         default:
-            kod = "";
+            kod = Model.AkTunaiCV.NoKP; ;
             nama = Model.AkTunaiCV.Penerima;
             alamat1 = Model.AkTunaiCV.Alamat1;
             alamat2 = Model.AkTunaiCV.Alamat2;
             alamat3 = Model.AkTunaiCV.Alamat3;
-            namaBank = "";
-            noAkaunBank = "";
+            namaBank = "-";
+            noAkaunBank = "-";
             break;
     }
         }
@@ -138,7 +138,7 @@
     </div>
 
     <div class="col-2 text-right">
-        <h6 class="mb-0"><strong>TUNAI KELUAR</strong></h6>
+        <h6 class="mb-0"><strong>BAUCER KECIL</strong></h6>
         @*<h6 class="mb-0">NO PO:</h6>
             <h6 class="mb-0 ">@Model.AkPO.NoPO</h6>
             <h6 class="mb-0">TARIKH PESANAN TEMPATAN: @Html.DisplayFor(x => x.AkPO.Tarikh, "{0:dd/MM/yyyy}")</h6>*@
@@ -179,25 +179,25 @@
                 <td class="text-center" style="font-size:0.8rem;" colspan="2"><strong>MAKLUMAT PEMBEKAL</strong></td>
             </tr>
             <tr>
-                <td class="text-left" width="15%">Kod </td>
+                <td class="text-left" width="15%">Kod / No KP</td>
                 <td class="text-left">@kod</td>
             </tr>
             <tr>
                 <td class="text-left" width="15%" rowspan="4">Penerima</td>
-                <td class="text-left">@nama</td>
+                <td class="text-left text-uppercase">@nama</td>
             </tr>
             <tr>
-                <td class="text-left">@alamat1</td>
+                <td class="text-left text-uppercase">@alamat1</td>
             </tr>
             <tr>
-                <td class="text-left">@alamat2</td>
+                <td class="text-left text-uppercase">@alamat2</td>
             </tr>
             <tr>
-                <td class="text-left">@alamat3</td>
+                <td class="text-left text-uppercase">@alamat3</td>
             </tr>
             <tr>
                 <td class="text-left">Nama Bank</td>
-                <td class="text-left">@namaBank</td>
+                <td class="text-left text-uppercase">@namaBank</td>
             </tr>
             <tr>
                 <td class="text-left">No Akaun Bank</td>

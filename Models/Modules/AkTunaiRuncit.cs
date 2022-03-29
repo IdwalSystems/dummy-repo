@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,6 +15,9 @@ namespace MSNK.Models.Modules
         [DisplayName("Kod Kaunter Panjar")]
         public string KaunterPanjar { get; set; }
         public string Catatan { get; set; }
+        [DisplayName("Had Maksimum RM")]
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal HadMaksimum { get; set; }
 
         //relationship
         [DisplayName("Kumpulan Wang")]

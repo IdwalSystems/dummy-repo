@@ -8,10 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
 using MSNK.Models.Modules.ViewModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -27,6 +30,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkTunaiRuncit, int, string> _akTunaiRuncitRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
+        private readonly CustomIRepository<string, int> _customRepo;
         private CartTunaiRuncit _cart;
 
         public AkTunaiRuncitController(
@@ -36,6 +40,7 @@ namespace MSNK.Controllers
             IRepository<AkTunaiRuncit, int, string> akTunaiRuncitRepository,
             IRepository<JKW, int, string> kwRepository,
             IRepository<AkCarta, int, string> akCartaRepository,
+            CustomIRepository<string, int> customRepo,
             CartTunaiRuncit cart
             )
         {
@@ -45,6 +50,7 @@ namespace MSNK.Controllers
             _kwRepo = kwRepository;
             _akCartaRepo = akCartaRepository;
             _akTunaiRuncitRepo = akTunaiRuncitRepository;
+            _customRepo = customRepo;
             _cart = cart;
         }
 
@@ -82,40 +88,7 @@ namespace MSNK.Controllers
 
             foreach (AkTunaiRuncit item in akTunaiRuncit)
             {
-                // baki awal
-                List<AkTunaiLejar> tunaiLejar = _context.AkTunaiLejar
-                    .Include(b => b.AkTunaiRuncit)
-                    .Where(b => b.AkTunaiRuncit.Id == item.Id && b.Rekup == "BAKI AWAL")
-                    .OrderBy(b => b.Tarikh)
-                    .ToList();
-
-                // rekupan
-                List<AkTunaiLejar> tunaiLejarRekup = _context.AkTunaiLejar
-                    .Include(b => b.AkTunaiRuncit)
-                    .Where(b => b.AkTunaiRuncit.Id == item.Id && b.Rekup != "BAKI AWAL" && b.Rekup != null)
-                    .OrderBy(b => b.Rekup).ThenBy(b => b.Tarikh)
-                    .ToList();
-
-                tunaiLejar.AddRange(tunaiLejarRekup);
-                // belum rekup
-                List<AkTunaiLejar> tunaiLejarBelumRekup = _context.AkTunaiLejar
-                    .Include(b => b.AkTunaiRuncit)
-                    .Where(b => b.AkTunaiRuncit.Id == item.Id && b.Rekup == null)
-                    .OrderBy(b => b.Tarikh)
-                    .ToList();
-
-                tunaiLejar.AddRange(tunaiLejarBelumRekup);
-
-                decimal baki = 0;
-
-                if (tunaiLejar != null)
-                {
-                    foreach(var balance in tunaiLejar)
-                    {
-                        baki = baki + balance.Debit - balance.Kredit;
-                    }
-                    
-                }
+                decimal baki = await _customRepo.GetBalanceFromKaunterPanjar("BAKI AWAL", item.Id);
 
                 viewModel.Add(new AkTunaiRuncitViewModel
                 {
@@ -311,6 +284,67 @@ namespace MSNK.Controllers
         }
         // function json get no rujukan (running number) end
 
+        //function get latest date rekup (noPV) in tunai lejar
+        public async Task<JsonResult> GetLastDateRekupInTunaiLejar(int id)
+        {
+            try
+            {
+                // cari baucer yang tak direkup lagi paling latest
+                var result = await _context.AkTunaiLejar
+                .Include(b => b.AkTunaiRuncit)
+                .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup == null && b.NoRujukan.Contains("PV"))
+                .OrderBy(b => b.Tarikh)
+                .FirstOrDefaultAsync();
+
+                if( result == null)
+                {
+                    result = await _context.AkTunaiLejar
+                                    .Include(b => b.AkTunaiRuncit)
+                                    .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup == "BAKI AWAL")
+                                    .OrderBy(b => b.Tarikh)
+                                    .FirstOrDefaultAsync();
+
+                    if(result == null)
+                    {
+                        return Json(new { result = "ERROR" });
+                    }
+                }
+
+                var tarikh = result.Tarikh.ToString("yyyy-MM-dd");
+
+                return Json(new { result = "OK", tarikh = tarikh, record = result});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+        //function get latest date rekup (noPV) in tunai lejar end
+
+        // get list of no rekup based on AkTunaiRuncitId
+        public JsonResult GetListOfNoRekup(int id)
+        {
+            try
+            {
+                // cari baucer yang tak direkup lagi paling latest
+                var result = (from tbl1 in _context.AkTunaiLejar
+                            .Where(x => x.AkTunaiRuncitId == id && x.Rekup != "BAKI AWAL" && x.Rekup != null).ToList()
+                           select new
+                           {
+                               tbl1.Rekup
+                           }).GroupBy(x=> x.Rekup).Select(x=> x.First());
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+        // get list of no rekup based on AkTunaiRuncitId end
+
         public JsonResult GetSuPekerja(SuPekerja suPekerja)
         {
             try
@@ -495,6 +529,7 @@ namespace MSNK.Controllers
                     // list of input that cannot be change
                     akTunaiRuncit.JKWId = akTunaiRuncitAsal.JKWId;
                     akTunaiRuncit.KaunterPanjar = akTunaiRuncitAsal.KaunterPanjar;
+                    akTunaiRuncit.HadMaksimum = akTunaiRuncitAsal.HadMaksimum;
                     akTunaiRuncit.AkCartaId = akTunaiRuncitAsal.AkCartaId;
                     akTunaiRuncit.TarMasuk = akTunaiRuncitAsal.TarMasuk;
                     akTunaiRuncit.UserId = akTunaiRuncitAsal.UserId;
@@ -639,6 +674,228 @@ namespace MSNK.Controllers
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
+        }
+
+        // rekup function
+        [Authorize(Policy = "TR001T")]
+        public async Task<IActionResult> Rekup(int? id, string tarikhDari, string tarikhHingga)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var user = await _userManager.GetUserAsync(User);
+                var akTunaiRuncit = await _akTunaiRuncitRepo.GetById((int) id);
+                DateTime date1 = DateTime.Parse(tarikhDari);
+                DateTime date2 = DateTime.Parse(tarikhHingga).AddHours(23.99);
+
+                // check if date 2 less than date 1
+                if (date2 < date1)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Tarikh Hingga tidak boleh kurang dari Tarikh Dari.";
+                    return RedirectToAction(nameof(Index));
+                }
+                // check end
+                // step:
+                //1. cari latest no rekup.
+                //2. define running number untuk no rekup.
+                //3. ambil latest no baucer dan list of tunai keluar yang tiada no rekup(range tarikhDari -> tarikhHingga) ikut input user.
+                //4. update latest no rekup untuk list of (3) ikut running number (2)
+
+                // 1
+                // cari latest no rekup
+                var LatestTunaiLejarRekup = _context.AkTunaiLejar
+                    .Include(b => b.AkTunaiRuncit)
+                    .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup != null)
+                    .OrderByDescending(b => b.Rekup).ThenByDescending(b => b.Tarikh)
+                    .FirstOrDefault();
+
+                // 2
+                // define running number 
+                var year = DateTime.Now.ToString("yyyy");
+                string prefix = year + "/";
+                int x = 1;
+                string noRekup = prefix + "0000";
+
+                // kalau tiada
+                if (LatestTunaiLejarRekup == null)
+                {
+                    // cari baki awal (sebab tak pernah buat rekupan lagi)
+                    //LatestTunaiLejarRekup = await _context.AkTunaiLejar
+                    //    .Include(b => b.AkTunaiRuncit)
+                    //    .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup == "BAKI AWAL")
+                    //    .OrderByDescending(b => b.Rekup).ThenByDescending(b => b.Tarikh)
+                    //    .FirstOrDefaultAsync();
+
+                    noRekup = string.Format("{0:" + prefix + "0000}", x);
+                }
+                else
+                {
+                    x = int.Parse(LatestTunaiLejarRekup.Rekup.Substring(5));
+                    x++;
+                    noRekup = string.Format("{0:" + prefix + "000}", x);
+                }
+                // 1 & 2 end
+
+
+                List<AkTunaiLejar> tunaiLejarBelumRekup = await _context.AkTunaiLejar
+                    .Include(b => b.AkTunaiRuncit)
+                    .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup == null &&
+                    b.Tarikh >= date1 && b.Tarikh <= date2)
+                    .OrderBy(b => b.Tarikh)
+                    .ToListAsync();
+
+                if (tunaiLejarBelumRekup.Count == 0)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Tiada tunai keluar untuk direkup.";
+
+                }
+                else
+                {
+                    decimal jumlahRekupan = 0;
+                    //unposting operation start here
+                    //delete data from akTunaiLejar
+                    foreach (AkTunaiLejar item in tunaiLejarBelumRekup)
+                    {
+                        jumlahRekupan = jumlahRekupan + item.Kredit;
+                        //var tunaiLejar = await _context.AkTunaiLejar.Where(b => b.Id == item.Id).FirstOrDefaultAsync();
+                        item.Rekup = noRekup;
+                        _context.Update(item);
+                    }
+
+                    //update posting status in akTunaiCV
+                    akTunaiRuncit.UserIdKemaskini = user.UserName;
+                    await _akTunaiRuncitRepo.Update(akTunaiRuncit);
+
+                    //insert applog
+                    await AddLogAsync("Rekup", "Rekup Data", akTunaiRuncit.KaunterPanjar + " - No Rekup : " + noRekup, (int)id, jumlahRekupan);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Rekupan tunai keluar berjaya.";
+                    //unposting operation end
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // rekup function end
+
+        // printing Rekupan Tunai Runcit
+        [Authorize(Policy = "TR001P")]
+        public async Task<IActionResult> PrintPdf(int id, string kodKaunter, string rekup)
+        {
+            if (rekup == null)
+            {
+                TempData[SD.Error] = "Tiada pilihan rekupan"; 
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                var userManager = _userManager.GetUserAsync(User);
+
+                var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.Email == userManager.Result.Email);
+
+                var rekupanList = (from tblTunaiLejar in _context.AkTunaiLejar
+                                       .Include(x => x.AkTunaiRuncit)
+                                       .Where(x => x.AkTunaiRuncitId == id && x.Rekup == rekup).ToList()
+                                   join tblTunaiCV in _context.AkTunaiCV
+                                       .Include(x => x.AkTunaiCV1).ThenInclude(x => x.AkCarta).ToList()
+                                   on tblTunaiLejar.NoRujukan equals tblTunaiCV.NoCV into tblTunaiLejarTblTunaiCV
+                                   from tbl_1 in tblTunaiLejarTblTunaiCV.DefaultIfEmpty()
+                                   select new
+                                   {
+                                       Tarikh = tblTunaiLejar.Tarikh,
+                                       Butiran = tbl_1?.Penerima ?? string.Empty,
+                                       NoRujukan = tblTunaiLejar.NoRujukan,
+                                       Debit = tblTunaiLejar.Debit,
+                                       Kredit = tblTunaiLejar.Kredit,
+                                       Baki = tblTunaiLejar.Baki
+                                   }).OrderBy(x => x.Tarikh).ToList();
+
+
+                RekupTunaiRuncitPrintModel data = new RekupTunaiRuncitPrintModel();
+
+                List<Rekupan> rekupans = new List<Rekupan>();
+
+
+                foreach (var item in rekupanList)
+                {
+                    rekupans.Add(
+                        new Rekupan
+                        {
+                            Tarikh = item.Tarikh,
+                            Butiran = item.Butiran,
+                            NoRujukan = item.NoRujukan,
+                            Debit = item.Debit,
+                            Kredit = item.Kredit,
+                            Baki = item.Baki
+                        }
+                        );
+                }
+
+                data.RekupanList = rekupans;
+
+                CompanyDetails company = new CompanyDetails();
+                data.CompanyDetail = company;
+                if (User.IsInRole("SuperAdmin"))
+                {
+                    data.Penyedia = user.UserName;
+                }
+                else
+                {
+                    data.Penyedia = user.SuPekerja.Nama;
+                }
+                data.NoRekup = rekup;
+
+                string customSwitches = string.Format(" --header-html  \"{0}\" " +
+                                       "--header-spacing \"-12\" " +
+                                       "--header-font-size \"10\" " +
+                                       "--footer-center \"[page]/[toPage]\" " +
+                                       "--footer-font-size \"7\" --footer-spacing 1",
+                                       Url.Action("Header", "AkTunaiRuncit",
+                                       new
+                                       {
+                                           NoRekup = rekup,
+                                           KodKaunter = kodKaunter
+                                       },
+                                       "https"));
+
+                //insert applog
+                await AddLogAsync("Cetak", "Cetak Rekupan", "Kod Kaunter Panjar : " + kodKaunter + ", No Rekup : " + rekup, id, 0);
+
+                //insert applog end
+                await _context.SaveChangesAsync();
+
+                //return View("TunaiRuncitPrintPdf");
+                return new ViewAsPdf("TunaiRuncitPrintPdf", data)
+                {
+                    PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                    PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                    CustomSwitches = customSwitches,
+                    //CustomSwitches = "--footer-center \"  Tarikh: " +
+                    //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                    //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                    PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                };
+            }
+           
+        }
+        // printing Rekupan Tunai Runcit end
+
+        [AllowAnonymous]
+        public ActionResult Header(RekupTunaiRuncitPrintModel reportModel)
+        {
+            return View(reportModel);
         }
 
         private bool AkTunaiRuncitExists(int id)

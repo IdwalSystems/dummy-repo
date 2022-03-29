@@ -227,7 +227,7 @@ namespace MSNK
                 options.AddPolicy("TR001P", policy => policy.RequireClaim("TR001P"));
                 options.AddPolicy("TR001R", policy => policy.RequireClaim("TR001R"));
                 //options.AddPolicy("TR001B", policy => policy.RequireClaim("TR001B"));
-                //options.AddPolicy("TR001T", policy => policy.RequireClaim("TR001T"));
+                options.AddPolicy("TR001T", policy => policy.RequireClaim("TR001T"));
                 //options.AddPolicy("TR001UT", policy => policy.RequireClaim("TR001UT"));
                 //Pemegang Tunai Runcit End
                 //Tunai Keluar

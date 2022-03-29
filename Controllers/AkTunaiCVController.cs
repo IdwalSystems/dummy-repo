@@ -36,6 +36,7 @@ namespace MSNK.Controllers
         private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
         private readonly IRepository<AkPembekal, int, string> _akPembekalRepo;
         private readonly IRepository<AkBank, int, string> _akBankRepo;
+        private readonly CustomIRepository<string, int> _customRepo;
         private CartTunaiCV _cart;
 
         public AkTunaiCVController(
@@ -49,6 +50,7 @@ namespace MSNK.Controllers
             IRepository<JKW, int, string> kwRepository,
             IRepository<AkPembekal, int, string> akPembekalRepository,
             IRepository<AkBank, int, string> akBankRepository,
+            CustomIRepository<string, int> customRepo,
              CartTunaiCV cart
             )
         {
@@ -62,6 +64,7 @@ namespace MSNK.Controllers
             _kwRepo = kwRepository;
             _akPembekalRepo = akPembekalRepository;
             _akBankRepo = akBankRepository;
+            _customRepo = customRepo;
             _cart = cart;
         }
 
@@ -195,7 +198,7 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
+            var akTunaiCV = await _akTunaiCVRepo.GetByIdIncludeDeletedItems((int)id);
 
             if (akTunaiCV == null)
             {
@@ -395,13 +398,19 @@ namespace MSNK.Controllers
 
         }
 
-        public async Task<JsonResult> SaveAkTunaiCV1(AkTunaiCV1 akTunaiCV1)
+        public async Task<JsonResult> SaveAkTunaiCV1(AkTunaiCV1 akTunaiCV1, int akTunaiRuncitId)
         {
 
             try
             {
                 if (akTunaiCV1 != null)
                 {
+                    // check baki
+                    decimal baki = await _customRepo.GetBalanceFromKaunterPanjar("BAKI AWAL", akTunaiRuncitId);
+                    if(baki < akTunaiCV1.Amaun)
+                    {
+                        return Json(new { result = "ERROR" });
+                    }
                     var user = await _userManager.GetUserAsync(User);
 
                     _cart.AddItem1(akTunaiCV1.AkTunaiCVId,
@@ -504,6 +513,36 @@ namespace MSNK.Controllers
         }
         // get all item from cart akPV1 end
 
+        // on change NoKP controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetNoKP(string data)
+        {
+            try
+            {
+                var result = await _context.AkTunaiCV
+                    .Where(x => x.NoKP == data)
+                    .OrderByDescending(x => x.Id)
+                    .FirstOrDefaultAsync();
+
+                if (result == null)
+                {
+                    result = new AkTunaiCV
+                    {
+                        Penerima = "",
+                        Alamat1 = "",
+                        Alamat2 = "",
+                        Alamat3 = "",
+                    };
+                }
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change NoKP controller end
+
         // POST: AkTunaiCV/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -539,6 +578,7 @@ namespace MSNK.Controllers
 
             if (pekerja != null)
             {
+                akTunaiCV.NoKP = pekerja.NoKp;
                 akTunaiCV.Penerima = pekerja.Nama;
                 akTunaiCV.Alamat1 = pekerja.Alamat1;
                 akTunaiCV.Alamat2 = pekerja.Alamat2;
@@ -597,6 +637,7 @@ namespace MSNK.Controllers
                     m.Tahun = akTunaiCV.Tahun;
                     m.Tarikh = akTunaiCV.Tarikh;
                     m.NoCV = noRujukan;
+                    m.NoKP = akTunaiCV.NoKP;
                     m.Penerima = akTunaiCV.Penerima;
                     m.Alamat1 = akTunaiCV.Alamat1;
                     m.Alamat2 = akTunaiCV.Alamat2;
@@ -714,6 +755,7 @@ namespace MSNK.Controllers
                         case 2:
                             var pekerja = _context.SuPekerja.Find(akTunaiCV.SuPekerjaId);
                             akTunaiCV.AkPembekalId = null;
+                            akTunaiCV.NoKP = pekerja.NoKp;
                             akTunaiCV.Penerima = pekerja.Nama;
                             akTunaiCV.Alamat1 = pekerja.Alamat1;
                             akTunaiCV.Alamat2 = pekerja.Alamat2;

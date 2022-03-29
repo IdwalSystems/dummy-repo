@@ -38,6 +38,7 @@
                                        value="PARAS @Html.DisplayFor(model => model.JParas.Kod)" readonly />
                             </div>
                         </div>
+
                         <div class="form-row">
                             <div class="form-group col-md">
                                 <label asp-for="Perihal" class="control-label"></label>
@@ -51,11 +52,25 @@
                         <div class="form-row">
                             <div class="form-group col-md">
                                 <label class="control-label">Catatan</label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan1)" readonly />
+                                <textarea class="form-control form-control-sm" rows="2">@Html.DisplayFor(model => model.Catatan1)</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="card mb-2">
+                                <div class="card-body pl-3 pr-3 pt-2">
+
+                                    <label class="control-label">Maklumat Tambahan : </label>
+                                    <div class="custom-control custom-radio">
+                                        <input type="checkbox" data-val="true" id="IsBajet" asp-for="IsBajet" value="@Model.IsBajet" disabled>
+                                        <input name="IsBajet" hidden value="false">
+                                        <label class="control-label">Kod akaun ini terlibat dengan peruntukan</label>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-md">
+                            <div class="form-group col-md" hidden>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan2)" readonly />
                             </div>
                         </div>

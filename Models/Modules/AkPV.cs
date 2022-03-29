@@ -16,7 +16,8 @@ namespace MSNK.Models.Modules
         // FlJenisBaucer = 1 ( Inbois )
         // FlJenisBaucer = 2 ( Gaji )
         // FlJenisBaucer = 3 ( Pendahuluan )
-        // FlJenisBaucer = 4 ( Panjar )
+        // FlJenisBaucer = 4 ( Rekupan )
+        // FlJenisBaucer = 5 ( Tambah Had Panjar )
         // ..
         // FlKategoriPenerima = 0 ( Am / Lain - lain )
         // FlKategoriPenerima = 1 ( pembekal )

@@ -32,68 +32,147 @@
      // on change kod Panjar
     $("body").on('change', "#ddlTunaiRuncit", function () {
         var kodKaunter = $("#ddlTunaiRuncit").val();
-        if (kodKaunter != 0) {
 
-            $.ajax({
-                type: "POST",
-                //url: "/AkPV/JsonGetKod",
-                url: '@Url.Action("JsonGetPanjar", "AkPV")',
-                data: { data: kodKaunter },
-                dataType: "json",
-                success: function (msg) {
-                    $.ajax({
-                        type: "POST",
-                        //url: "/AkPV/JsonGetKod",
-                        url: '@Url.Action("JsonGetNoRekup", "AkPV")',
-                        data: { data: kodKaunter },
-                        dataType: "json",
-                        success: function (r) {
-                            $("#txtPerihal").val("WANG PANJAR");
-                            $("#txtNoRekup").val(r.record);
-                            $("#ddlKW").val(msg?.record?.jkwId).change();
-                            if (msg.record.akTunaiPemegang.length > 0) {
-                                for (var i = 0; i < msg.record.akTunaiPemegang.length; i++) {
-                                    var item1 = msg.record.akTunaiPemegang[i];
+        $("table tbody#tbodyObjek").empty();
+        // radio button panjar is checked
+        if ($("#4").prop("checked")) {
+            if (kodKaunter != 0) {
+                $.ajax({
+                    type: "POST",
+                    //url: "/AkPV/JsonGetKod",
+                    url: '@Url.Action("JsonGetPanjar", "AkPV")',
+                    data: { data: kodKaunter },
+                    dataType: "json",
+                    success: function (msg) {
+                        $.ajax({
+                            type: "POST",
+                            //url: "/AkPV/JsonGetKod",
+                            url: '@Url.Action("JsonGetNoRekup", "AkPV")',
+                            data: { data: kodKaunter },
+                            dataType: "json",
+                            success: function (r) {
+                                $("#txtPerihal").val("WANG PANJAR");
+                                $("#txtNoRekup").val(r.record);
 
-                                    $("#Nama").val(item1.suPekerja.nama);
-                                    $("#txtNoKP").val(item1.suPekerja.noKp);
-                                    $("#txtNoAkaunBank").val(item1.suPekerja.noAkaunBank);
-                                    $("#txtTelefon").val(item1.suPekerja.telefonBimbit);
-                                    $("#txtEmel").val(item1.suPekerja.emel);
-                                    $("#txtAlamat1").val(item1.suPekerja.alamat1);
-                                    $("#txtAlamat2").val(item1.suPekerja.alamat2);
-                                    $("#txtAlamat3").val(item1.suPekerja.alamat3);
-
+                                if (r.objek === undefined) {
+                                } else {
+                                    displayObjekListFromRekup(r.objek);
                                 }
+
+                                $("#ddlKW").val(msg?.record?.jkwId).change();
+                                if (msg.record.akTunaiPemegang.length > 0) {
+                                    for (var i = 0; i < msg.record.akTunaiPemegang.length; i++) {
+                                        var item1 = msg.record.akTunaiPemegang[i];
+
+                                        $("#Nama").val(item1.suPekerja.nama);
+                                        $("#txtNoKP").val(item1.suPekerja.noKp);
+                                        $("#txtNoAkaunBank").val(item1.suPekerja.noAkaunBank);
+                                        $("#txtTelefon").val(item1.suPekerja.telefonBimbit);
+                                        $("#txtEmel").val(item1.suPekerja.emel);
+                                        $("#txtAlamat1").val(item1.suPekerja.alamat1);
+                                        $("#txtAlamat2").val(item1.suPekerja.alamat2);
+                                        $("#txtAlamat3").val(item1.suPekerja.alamat3);
+
+                                    }
+                                }
+
+
+                                //$("#txtNoRekup").prop('disabled', false);
+                            },
+                            error: function (req, status, error) {
+                                alert(error);
                             }
+                        });
+
+                    },
+                    error: function (req, status, error) {
+                        alert(error);
+                    }
+                });
+            }
+            else {
+                $("#txtPerihal").val("");
+                $("#Nama").val("");
+                $("#txtNoKP").val("");
+                $("#txtNoAkaunBank").val("");
+                $("#txtTelefon").val("");
+                $("#txtEmel").val("");
+                $("#txtNoRekup").val("");
+
+                $("#txtNoRekup").prop('readonly', true);
+
+            }
+        } else if ($("#5").prop("checked")) {
+            if (kodKaunter != 0) {
+
+                $.ajax({
+                    type: "POST",
+                    //url: "/AkPV/JsonGetKod",
+                    url: '@Url.Action("JsonGetPanjar", "AkPV")',
+                    data: { data: kodKaunter },
+                    dataType: "json",
+                    success: function (msg) {
+                        $("#txtPerihal").val("TAMBAH HAD WANG PANJAR");
+                        $("#txtNoRekup").val("");
 
 
-                            //$("#txtNoRekup").prop('disabled', false);
-                        },
-                        error: function (req, status, error) {
-                            alert(error);
+                        $("#ddlKW").val(msg?.record?.jkwId).change();
+                        if (msg.record.akTunaiPemegang.length > 0) {
+                            for (var i = 0; i < msg.record.akTunaiPemegang.length; i++) {
+                                var item1 = msg.record.akTunaiPemegang[i];
+
+                                $("#Nama").val(item1.suPekerja.nama);
+                                $("#txtNoKP").val(item1.suPekerja.noKp);
+                                $("#txtNoAkaunBank").val(item1.suPekerja.noAkaunBank);
+                                $("#txtTelefon").val(item1.suPekerja.telefonBimbit);
+                                $("#txtEmel").val(item1.suPekerja.emel);
+                                $("#txtAlamat1").val(item1.suPekerja.alamat1);
+                                $("#txtAlamat2").val(item1.suPekerja.alamat2);
+                                $("#txtAlamat3").val(item1.suPekerja.alamat3);
+
+                            }
                         }
-                    });
-                    
-                },
-                error: function (req, status, error) {
-                    alert(error);
-                }
-            });
+
+                    },
+                    error: function (req, status, error) {
+                        alert(error);
+                    }
+                });
+            } else {
+                $("#txtPerihal").val("");
+                $("#Nama").val("");
+                $("#txtNoKP").val("");
+                $("#txtNoAkaunBank").val("");
+                $("#txtTelefon").val("");
+                $("#txtEmel").val("");
+                $("#txtNoRekup").val("");
+
+                $("#txtNoRekup").prop('readonly', true);
+
+            }
         }
-        else {
-            $("#txtPerihal").val("");
-            $("#Nama").val("");
-            $("#txtNoKP").val("");
-            $("#txtNoAkaunBank").val("");
-            $("#txtTelefon").val("");
-            $("#txtEmel").val("");
-
-            $("#txtNoRekup").prop('readonly', true);
-
-        }
-
     });
+
+    function displayObjekListFromRekup(data) {
+
+        var jumlah = $("#jumlahObjek");
+        var sum = 0;
+
+        var str = "<tr><td id='akCartaId' hidden>" + data.akCartaId +
+            "</td><td>" + data.akCarta.kod + " - " + data.akCarta.perihal +
+            "</td><td class='text-right'>" + (data.amaun).toFixed(2) +
+            "</td><td>" +
+            "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+            "</td><td hidden>" +
+            "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)' ><i class='fas fa-trash' ></i></button>" +
+            "</td><tr>";
+        $("table tbody#tbodyObjek").append(str);
+        sum += data.amaun;
+
+        $("#txtKodAkaun option[value=" + data.akCartaId + "]").prop('disabled', true);
+
+        jumlah.val(sum.toFixed(2));
+    }
 
     // on change kod Panjar end
 
@@ -541,6 +620,9 @@
         $('input[type=radio][name=FlJenisBaucer]').on('change', function () {
             $("#ddlPendahuluanPelbagai").val(0).change();
             $("#ddlKodPembekal").val(0).change();
+            $("#ddlTunaiRuncit").val(0).change();
+            $("#txtPerihal").val("");
+            EmptyCart();
             switch ($(this).val()) {
                 case "0":
                     $("#divPembekal").prop('hidden', true);
@@ -553,6 +635,10 @@
                     break;
                 case "3":
                     $("#cardPendahuluanPelbagai").removeAttr('hidden');
+                    break;
+                case "4":
+                    break;
+                case "5":
                     break;
             }
         });

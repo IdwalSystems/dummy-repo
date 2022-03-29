@@ -36,6 +36,96 @@
     }
     // check end
 
+    // on change kod Panjar
+    $("body").on('change', "#ddlTunaiRuncit", function () {
+        var kodKaunter = $("#ddlTunaiRuncit").val();
+        if (kodKaunter != 0) {
+
+            $.ajax({
+                type: "POST",
+                //url: "/AkPV/JsonGetKod",
+                url: '@Url.Action("JsonGetPanjar", "AkPV")',
+                data: { data: kodKaunter },
+                dataType: "json",
+                success: function (msg) {
+                    $.ajax({
+                        type: "POST",
+                        //url: "/AkPV/JsonGetKod",
+                        url: '@Url.Action("JsonGetNoRekup", "AkPV")',
+                        data: { data: kodKaunter },
+                        dataType: "json",
+                        success: function (r) {
+                            $("#txtPerihal").val("WANG PANJAR");
+                            $("#txtNoRekup").val(r.record);
+                            displayObjekListFromRekup(r.objek);
+                            $("#ddlKW").val(msg?.record?.jkwId).change();
+                            if (msg.record.akTunaiPemegang.length > 0) {
+                                for (var i = 0; i < msg.record.akTunaiPemegang.length; i++) {
+                                    var item1 = msg.record.akTunaiPemegang[i];
+
+                                    $("#Nama").val(item1.suPekerja.nama);
+                                    $("#txtNoKP").val(item1.suPekerja.noKp);
+                                    $("#txtNoAkaunBank").val(item1.suPekerja.noAkaunBank);
+                                    $("#txtTelefon").val(item1.suPekerja.telefonBimbit);
+                                    $("#txtEmel").val(item1.suPekerja.emel);
+                                    $("#txtAlamat1").val(item1.suPekerja.alamat1);
+                                    $("#txtAlamat2").val(item1.suPekerja.alamat2);
+                                    $("#txtAlamat3").val(item1.suPekerja.alamat3);
+
+                                }
+                            }
+
+
+                            //$("#txtNoRekup").prop('disabled', false);
+                        },
+                        error: function (req, status, error) {
+                            alert(error);
+                        }
+                    });
+
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+        else {
+            $("#txtPerihal").val("");
+            $("#Nama").val("");
+            $("#txtNoKP").val("");
+            $("#txtNoAkaunBank").val("");
+            $("#txtTelefon").val("");
+            $("#txtEmel").val("");
+
+            $("#txtNoRekup").prop('readonly', true);
+
+        }
+
+    });
+
+    function displayObjekListFromRekup(data) {
+        $("table tbody#tbodyObjek").empty();
+        var jumlah = $("#jumlahObjek");
+        var sum = 0;
+
+        var str = "<tr><td id='akCartaId' hidden>" + data.akCartaId +
+            "</td><td>" + data.akCarta.kod + " - " + data.akCarta.perihal +
+            "</td><td class='text-right'>" + (data.amaun).toFixed(2) +
+            "</td><td>" +
+            "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+            "</td><td hidden>" +
+            "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)' ><i class='fas fa-trash' ></i></button>" +
+            "</td><tr>";
+        $("table tbody#tbodyObjek").append(str);
+        sum += data.amaun;
+
+        $("#txtKodAkaun option[value=" + data.akCartaId + "]").prop('disabled', true);
+
+        jumlah.val(sum.toFixed(2));
+    }
+
+    // on change kod Panjar end
+
     // onchange Cara Bayaran
     $("body").on('change', "#ddlJCaraBayar", function () {
         var value = $("#ddlJCaraBayar option:selected");
@@ -554,10 +644,10 @@
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
                                 toastr.options.timeOut = 2000; // 2s
                             }
-                            
+
                         }
                     });
-                    
+
                 }
             });
         }
