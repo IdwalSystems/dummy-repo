@@ -46,6 +46,20 @@ namespace MSNK.Models.Modules
         public DateTime? TarikhSeksyenKewangan { get; set; }
         // untuk kewangan end
 
+        //untuk kelulusan
+        [DisplayName("Penyemak")]
+        public int? JPenyemakId { get; set; }
+        public JPenyemak JPenyemak { get; set; }
+        [DisplayName("Status Semak")]
+        public int FlStatusSemak { get; set; }
+        public DateTime? TarSemak { get; set; }
+        [DisplayName("Pelulus")]
+        public int? JPelulusId { get; set; }
+        public JPelulus JPelulus { get; set; }
+        [DisplayName("Status Lulus")]
+        public int FlStatusLulus { get; set; }
+        public DateTime? TarLulus { get; set; }
+        //untuk kelulusan end 
 
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }

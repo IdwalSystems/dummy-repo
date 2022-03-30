@@ -54,6 +54,40 @@
                     .draw();
             }
         });
+
+        var scol = $('#searchColumn').val();
+
+        $("#myInput").hide();
+        $("#myInputDate1").hide();
+        $("#myInputDate2").hide();
+
+        if (scol === "Tarikh") {
+            $("#myInput").hide();
+            $("#myInputDate1").show();
+            $("#myInputDate2").show();
+        }
+        if (scol === "Nama" || scol === "NoRujukan") {
+            $("#myInput").show();
+            $("#myInputDate1").hide();
+            $("#myInputDate2").hide();
+        }
+
+        $("#searchColumn").change(function () {
+            $("#myInput").val("");
+            $("#inputTarikh1").val("");
+            $("#inputTarikh2").val("");
+
+            if (this.value === "Tarikh") {
+                $("#myInput").hide();
+                $("#myInputDate1").show();
+                $("#myInputDate2").show();
+            }
+            if (this.value === "Nama" || this.value === "NoRujukan") {
+                $("#myInput").show();
+                $("#myInputDate1").hide();
+                $("#myInputDate2").hide();
+            }
+        });
     });
 
     //modal click

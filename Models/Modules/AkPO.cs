@@ -42,6 +42,9 @@ namespace MSNK.Models.Modules
         [DisplayName("Cetak")]
         [DefaultValue("0")]
         public int FlCetak { get; set; }
+        // untuk cek po tersebut ada di kewangan atau tidak
+        [DefaultValue(true)]
+        public bool? IsInKewangan { get; set; }
         //flag end
 
         //relationship

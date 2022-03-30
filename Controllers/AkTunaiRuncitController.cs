@@ -736,7 +736,7 @@ namespace MSNK.Controllers
                 {
                     x = int.Parse(LatestTunaiLejarRekup.Rekup.Substring(5));
                     x++;
-                    noRekup = string.Format("{0:" + prefix + "000}", x);
+                    noRekup = string.Format("{0:" + prefix + "0000}", x);
                 }
                 // 1 & 2 end
 
@@ -778,7 +778,7 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    TempData[SD.Success] = "Rekupan tunai keluar berjaya.";
+                    TempData[SD.Success] = "Rekupan berjaya. No Rekup yang berdaftar adalah " + noRekup;
                     //unposting operation end
                 }
 

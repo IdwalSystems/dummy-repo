@@ -362,21 +362,40 @@ namespace MSNK.Controllers
              string searchDate2,
              string searchColumn)
         {
+            List<SelectListItem> columnList = new();
+            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
+            columnList.Add(new SelectListItem() { Text = "No Permohonan", Value = "NoRujukan" });
+            columnList.Add(new SelectListItem() { Text = "Nama Pemohon", Value = "Nama" });
+
+            if (!String.IsNullOrEmpty(searchColumn))
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
+            }
+            else
+            {
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
+            }
+
             var searchResult = await _spPendahuluanPelbagaiRepo.GetAll();
+
+            if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
+            {
+                searchResult = await _spPendahuluanPelbagaiRepo.GetAllIncludeDeletedItems();
+            }
 
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
                 if (!String.IsNullOrEmpty(searchString))
                 {
-                    if (searchColumn == "NoPermohonan")
+                    if (searchColumn == "NoRujukan")
                     {
                         searchResult = searchResult.Where(s => s.NoPermohonan.ToUpper().Contains(searchString.ToUpper())).ToList();
                     }
-                    //else if (searchColumn == "Pembekal")
-                    //{
-                    //    spPermohonanAktiviti = spPermohonanAktiviti.Where(s => s.AkPembekal.NamaSykt.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    //}
+                    else if (searchColumn == "Nama")
+                    {
+                        searchResult = searchResult.Where(s => s.SuPekerja.Nama.ToUpper().Contains(searchString.ToUpper())).ToList();
+                    }
 
                     ViewBag.SearchData1 = searchString;
 
@@ -398,13 +417,23 @@ namespace MSNK.Controllers
                     ViewBag.SearchData2 = searchDate2;
                 }
 
-                ViewBag.SearchColumn = searchColumn;
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
             // searching with date range condition end
             else
             {
-                ViewBag.SearchColumn = "Tarikh";
+                ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
             }
+
+            List<JPenyemak> penyemak = _context.JPenyemak
+                .Include(x=> x.SuPekerja)
+                .Where(x=> x.IsPendahuluan == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+            ViewBag.JPenyemak = penyemak;
+
+            List<JPelulus> pelulus = _context.JPelulus
+                .Include(x => x.SuPekerja)
+                .Where(x => x.IsPendahuluan == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+            ViewBag.JPelulus = pelulus;
 
             return View(searchResult);
         }
@@ -636,12 +665,12 @@ namespace MSNK.Controllers
 
                         // AK CODE 19/03/2022
                         spPendahuluanPelbagai.TarSokong = null;
-                        spPendahuluanPelbagai.Penyokong = null;
+                        spPendahuluanPelbagai.JPenyemakId = null;
                         spPendahuluanPelbagai.JumSokong = 0;
                         spPendahuluanPelbagai.FlStatusSokong = 0;
 
                         spPendahuluanPelbagai.TarLulus = null;
-                        spPendahuluanPelbagai.Pelulus = null;
+                        spPendahuluanPelbagai.JPelulusId = null;
                         spPendahuluanPelbagai.JumLulus = 0;
                         spPendahuluanPelbagai.FlStatusLulus = 0;
                         // Ak CODE 19/03/2022 END
@@ -752,7 +781,7 @@ namespace MSNK.Controllers
         // Sokong function
         [HttpPost, ActionName("Sokong")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Sokong(int? id, decimal jumSokong)
+        public async Task<IActionResult> Sokong(int? id, decimal jumSokong, int penyemakId)
         {
             if (id == null)
             {
@@ -787,15 +816,9 @@ namespace MSNK.Controllers
                         sp.FlStatusSokong = 1;
                         sp.TarSokong = DateTime.Now;
                         sp.JumSokong = jumSokong;
-                        if (User.IsInRole("SuperAdmin"))
-                        {
-                            sp.Penyokong = namaUser.Nama;
-                        }
-                        else
-                        {
-                            sp.Penyokong = namaUser.SuPekerja.Nama;
-                        }
 
+                        sp.JPenyemakId = penyemakId;
+                        
 
                         await _spPendahuluanPelbagaiRepo.Update(sp);
 
@@ -829,7 +852,7 @@ namespace MSNK.Controllers
         // posting function
         [HttpPost, ActionName("Posting")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Posting(int? id, decimal jumSokong, decimal jumLulus)
+        public async Task<IActionResult> Posting(int? id, decimal jumSokong, decimal jumLulus, int pelulusId)
         {
             if (id == null)
             {
@@ -891,7 +914,7 @@ namespace MSNK.Controllers
                             sp.TarikhPosting = DateTime.Now;
                             sp.JumSokong = jumSokong;
                             sp.JumLulus = jumLulus;
-                            sp.Pelulus = pelulus.SuPekerja.Nama;
+                            sp.JPelulusId = pelulusId;
 
                             await _spPendahuluanPelbagaiRepo.Update(sp);
 
@@ -978,7 +1001,7 @@ namespace MSNK.Controllers
                     // AK CODE 19/03/2022
                     obj.FlStatusLulus = 0;
                     obj.TarLulus = null;
-                    obj.Pelulus = null;
+                    obj.JPelulusId = null;
                     obj.JumLulus = 0;
                     // AK CODE 19/03/2022
 

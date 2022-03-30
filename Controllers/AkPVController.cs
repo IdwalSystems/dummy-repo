@@ -2457,6 +2457,17 @@ namespace MSNK.Controllers
                                     // insert into AkTunaiLejar end
 
                                     await _akTunaiLejarRepo.Insert(akTunaiLejar);
+
+                                    List<AkTunaiLejar> TunaiLejarPaid = await _context.AkTunaiLejar
+                                        .Where(x => x.AkTunaiRuncitId == akPV.AkTunaiRuncitId && x.Rekup == akPV.NoRekup)
+                                        .ToListAsync(); 
+                                    
+                                    foreach(var list in TunaiLejarPaid)
+                                    {
+                                        list.IsPaid = true;
+
+                                        await _akTunaiLejarRepo.Update(list);
+                                    }
                                 }
                                 
                             }
@@ -2595,6 +2606,20 @@ namespace MSNK.Controllers
                     foreach (AkTunaiLejar item in akTunaiLejar)
                     {
                         await _akTunaiLejarRepo.Delete(item.Id);
+
+                        if (akPV.FlJenisBaucer == 4)
+                        {
+                            List<AkTunaiLejar> TunaiLejarPaid = await _context.AkTunaiLejar
+                                        .Where(x => x.AkTunaiRuncitId == akPV.AkTunaiRuncitId && x.Rekup == akPV.NoRekup)
+                                        .ToListAsync();
+
+                            foreach (var list in TunaiLejarPaid)
+                            {
+                                list.IsPaid = false;
+
+                                await _akTunaiLejarRepo.Update(list);
+                            }
+                        }
                     }
                     //delete data from akTunaiLejar
 

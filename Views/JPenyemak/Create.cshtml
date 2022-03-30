@@ -1,4 +1,4 @@
-﻿@model MSNK.Models.Modules.JPelulus
+﻿@model MSNK.Models.Modules.JPenyemak
 
 @{
     ViewData["Title"] = "Tambah";
@@ -13,18 +13,18 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="card box-shadow border-success mb-3">
                 <div class="card-header bg-success text-white">
-                    <h5>Pelulus - @ViewData["Title"]</h5>
+                    <h5>Penyemak - @ViewData["Title"]</h5>
                 </div>
                 <div class="card-body">
                     <div class="form-row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label asp-for="SuPekerjaId" class="control-label"></label><span class="text-danger">*</span>
-                                <select asp-for="SuPekerjaId" class="form-control form-control-sm select2" required>
+                                <select asp-for="SuPekerjaId" class="form-control form-control-sm select2 text-uppercase" required>
                                     <option value="0" hidden>-- Pilih Anggota --</option>
                                     @foreach (var s in ViewBag.SuPekerja)
                                     {
-                                        <option value="@s.Id" >@s.NoGaji - @s.Nama</option>
+                                        <option value="@s.Id">@s.NoGaji - @s.Nama</option>
                                     }
                                 </select>
                                 <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
@@ -52,7 +52,7 @@
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <h6>Modul yang diluluskan</h6>
+                            <h6>Modul yang disemak</h6>
                         </div>
                         <div class="card-body">
                             <div class="form-group form-check">

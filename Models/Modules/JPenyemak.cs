@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class JPelulus : AppLogHelper, ISoftDelete
+    public class JPenyemak : AppLogHelper, ISoftDelete
     {
         public int Id { get; set; }
         [DisplayName("Anggota")]

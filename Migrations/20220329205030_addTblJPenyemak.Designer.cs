@@ -4,14 +4,16 @@ using MSNK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220329205030_addTblJPenyemak")]
+    partial class addTblJPenyemak
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -495,7 +497,7 @@ namespace MSNK.Migrations
                     b.Property<int>("FlHapus")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsBajet")
+                    b.Property<bool>("IsBajet")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
@@ -687,22 +689,10 @@ namespace MSNK.Migrations
                     b.Property<int>("FlPosting")
                         .HasColumnType("int");
 
-                    b.Property<int>("FlStatusLulus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FlStatusSemak")
-                        .HasColumnType("int");
-
                     b.Property<int?>("JBahagianId")
                         .HasColumnType("int");
 
                     b.Property<int>("JKWId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("JPelulusId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("JPenyemakId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Jumlah")
@@ -731,13 +721,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime?>("TarKemaskini")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("TarLulus")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("TarMasuk")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("TarSemak")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("Tarikh")
@@ -762,10 +746,6 @@ namespace MSNK.Migrations
                     b.HasIndex("JBahagianId");
 
                     b.HasIndex("JKWId");
-
-                    b.HasIndex("JPelulusId");
-
-                    b.HasIndex("JPenyemakId");
 
                     b.ToTable("AkNotaMinta");
                 });
@@ -864,9 +844,6 @@ namespace MSNK.Migrations
 
                     b.Property<int>("FlPosting")
                         .HasColumnType("int");
-
-                    b.Property<bool?>("IsInKewangan")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("JBahagianId")
                         .HasColumnType("int");
@@ -1188,12 +1165,6 @@ namespace MSNK.Migrations
                     b.Property<int>("FlPosting")
                         .HasColumnType("int");
 
-                    b.Property<int>("FlStatusLulus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FlStatusSemak")
-                        .HasColumnType("int");
-
                     b.Property<int?>("JBahagianId")
                         .HasColumnType("int");
 
@@ -1201,12 +1172,6 @@ namespace MSNK.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("JKWId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("JPelulusId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("JPenyemakId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Jumlah")
@@ -1256,13 +1221,7 @@ namespace MSNK.Migrations
                     b.Property<DateTime?>("TarKemaskini")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("TarLulus")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("TarMasuk")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("TarSemak")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("Tarikh")
@@ -1296,10 +1255,6 @@ namespace MSNK.Migrations
                     b.HasIndex("JCaraBayarId");
 
                     b.HasIndex("JKWId");
-
-                    b.HasIndex("JPelulusId");
-
-                    b.HasIndex("JPenyemakId");
 
                     b.HasIndex("SpPendahuluanPelbagaiId");
 
@@ -2570,12 +2525,6 @@ namespace MSNK.Migrations
                     b.Property<int>("JNegeriId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("JPelulusId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("JPenyemakId")
-                        .HasColumnType("int");
-
                     b.Property<int>("JSukanId")
                         .HasColumnType("int");
 
@@ -2597,11 +2546,17 @@ namespace MSNK.Migrations
                     b.Property<string>("NoPermohonan")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Pelulus")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Pengelolaan")
                         .HasColumnType("bit");
 
                     b.Property<bool>("Penyertaan")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Penyokong")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Pertandingan")
                         .HasColumnType("bit");
@@ -2654,10 +2609,6 @@ namespace MSNK.Migrations
                     b.HasIndex("JKWId");
 
                     b.HasIndex("JNegeriId");
-
-                    b.HasIndex("JPelulusId");
-
-                    b.HasIndex("JPenyemakId");
 
                     b.HasIndex("JSukanId");
 
@@ -3381,23 +3332,11 @@ namespace MSNK.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MSNK.Models.Modules.JPelulus", "JPelulus")
-                        .WithMany()
-                        .HasForeignKey("JPelulusId");
-
-                    b.HasOne("MSNK.Models.Modules.JPenyemak", "JPenyemak")
-                        .WithMany()
-                        .HasForeignKey("JPenyemakId");
-
                     b.Navigation("AkPembekal");
 
                     b.Navigation("JBahagian");
 
                     b.Navigation("JKW");
-
-                    b.Navigation("JPelulus");
-
-                    b.Navigation("JPenyemak");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.AkNotaMinta1", b =>
@@ -3571,14 +3510,6 @@ namespace MSNK.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MSNK.Models.Modules.JPelulus", "JPelulus")
-                        .WithMany()
-                        .HasForeignKey("JPelulusId");
-
-                    b.HasOne("MSNK.Models.Modules.JPenyemak", "JPenyemak")
-                        .WithMany()
-                        .HasForeignKey("JPenyemakId");
-
                     b.HasOne("MSNK.Models.Modules.SpPendahuluanPelbagai", "SpPendahuluanPelbagai")
                         .WithMany("AkPV")
                         .HasForeignKey("SpPendahuluanPelbagaiId")
@@ -3600,10 +3531,6 @@ namespace MSNK.Migrations
                     b.Navigation("JCaraBayar");
 
                     b.Navigation("JKW");
-
-                    b.Navigation("JPelulus");
-
-                    b.Navigation("JPenyemak");
 
                     b.Navigation("SpPendahuluanPelbagai");
 
@@ -3913,14 +3840,6 @@ namespace MSNK.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MSNK.Models.Modules.JPelulus", "JPelulus")
-                        .WithMany("SpPendahuluanPelbagai")
-                        .HasForeignKey("JPelulusId");
-
-                    b.HasOne("MSNK.Models.Modules.JPenyemak", "JPenyemak")
-                        .WithMany("SpPendahuluanPelbagai")
-                        .HasForeignKey("JPenyemakId");
-
                     b.HasOne("MSNK.Models.Modules.JSukan", "JSukan")
                         .WithMany("SpPermohonanAktiviti")
                         .HasForeignKey("JSukanId")
@@ -3945,10 +3864,6 @@ namespace MSNK.Migrations
                     b.Navigation("JKW");
 
                     b.Navigation("JNegeri");
-
-                    b.Navigation("JPelulus");
-
-                    b.Navigation("JPenyemak");
 
                     b.Navigation("JSukan");
 
@@ -4323,16 +4238,6 @@ namespace MSNK.Migrations
             modelBuilder.Entity("MSNK.Models.Modules.JParas", b =>
                 {
                     b.Navigation("AkCarta");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.JPelulus", b =>
-                {
-                    b.Navigation("SpPendahuluanPelbagai");
-                });
-
-            modelBuilder.Entity("MSNK.Models.Modules.JPenyemak", b =>
-                {
-                    b.Navigation("SpPendahuluanPelbagai");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.JSukan", b =>

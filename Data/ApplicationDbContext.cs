@@ -67,6 +67,7 @@ namespace MSNK.Data
         public DbSet<AbWaran> AbWaran { get; set; }
         public DbSet<AbWaran1> AbWaran1 { get; set; }
         public DbSet<JPelulus> JPelulus { get; set; }
+        public DbSet<JPenyemak> JPenyemak { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -90,6 +91,7 @@ namespace MSNK.Data
             modelBuilder.Entity<JJenis>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JParas>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JPelulus>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JPenyemak>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
 
             //Terimaan
             modelBuilder.Entity<AkTerima>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);

@@ -113,7 +113,7 @@ namespace MSNK.Controllers
         // POST: AkCarta/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkCarta akCarta, int JKWId, int JJenisId, int JParasId)
+        public async Task<IActionResult> Create(AkCarta akCarta, int JKWId, int JJenisId, int JParasId, bool IsBajet)
         {
             string paras = _context.JParas.FirstOrDefault(q => q.Id == JParasId).Kod;
             int kodman = Convert.ToInt32(akCarta.Kod.Substring(1, 1));
@@ -194,12 +194,12 @@ namespace MSNK.Controllers
                         akC.JKWId = JKWId;
                         akC.Kod = akCarta.Kod;
                         akC.JJenisId = JJenisId;
-                        akC.Perihal = akCarta.Perihal.ToUpper();
+                        akC.Perihal = akCarta.Perihal?.ToUpper() ?? null;
                         akC.JParasId = JParasId;
                         akC.DebitKredit = akCarta.DebitKredit;
                         akC.UmumDetail = akCarta.UmumDetail;
                         akC.Baki = akCarta.Baki;
-                        akC.Catatan1 = akCarta.Catatan1.ToUpper();
+                        akC.Catatan1 = akCarta.Catatan1?.ToUpper() ?? null;
                         akC.Catatan2 = akCarta.Catatan2;
                         akC.IsBajet = akCarta.IsBajet;
                         try {

@@ -1,7 +1,7 @@
-﻿@model MSNK.Models.Modules.JPelulus
+﻿@model MSNK.Models.Modules.JPenyemak
 
 @{
-    ViewData["Title"] = "Tambah";
+    ViewData["Title"] = "Ubah";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,24 +9,20 @@
 
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Create" class="needs-validation">
+        <form asp-action="Edit">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="card box-shadow border-success mb-3">
-                <div class="card-header bg-success text-white">
-                    <h5>Pelulus - @ViewData["Title"]</h5>
+            <input type="hidden" asp-for="Id" />
+            <input asp-for="SuPekerjaId" hidden />
+            <div class="card box-shadow border-primary mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h5>Penyemak - @ViewData["Title"]</h5>
                 </div>
                 <div class="card-body">
                     <div class="form-row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label asp-for="SuPekerjaId" class="control-label"></label><span class="text-danger">*</span>
-                                <select asp-for="SuPekerjaId" class="form-control form-control-sm select2" required>
-                                    <option value="0" hidden>-- Pilih Anggota --</option>
-                                    @foreach (var s in ViewBag.SuPekerja)
-                                    {
-                                        <option value="@s.Id" >@s.NoGaji - @s.Nama</option>
-                                    }
-                                </select>
+                                <label asp-for="SuPekerjaId" class="control-label"></label>
+                                <input value="@Model.SuPekerja.NoGaji - @Model.SuPekerja.Nama" class="form-control form-control-sm text-uppercase" disabled />
                                 <span asp-validation-for="SuPekerjaId" class="text-danger"></span>
                             </div>
                         </div>
@@ -38,7 +34,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <input asp-for="MinAmaun" class="form-control form-control-sm" type="number" value="0.00" />
+                            <input asp-for="MinAmaun" class="form-control form-control-sm" type="number" />
                             <span asp-validation-for="MinAmaun" class="text-danger"></span>
 
                         </div>
@@ -46,13 +42,13 @@
                             <p class="text-center mb-0"><i class="fas fa-angle-right"></i></p>
                         </div>
                         <div class="col-md-3">
-                            <input asp-for="MaksAmaun" class="form-control form-control-sm" type="number" value="0.00" />
+                            <input asp-for="MaksAmaun" class="form-control form-control-sm" type="number" />
                             <span asp-validation-for="MaksAmaun" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <h6>Modul yang diluluskan</h6>
+                            <h6>Modul yang disemak</h6>
                         </div>
                         <div class="card-body">
                             <div class="form-group form-check">
@@ -84,6 +80,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Simpan" class="btn btn-primary" />
             </div>

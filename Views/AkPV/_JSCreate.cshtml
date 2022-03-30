@@ -314,7 +314,7 @@
                             else {
                                 $("#ddlKodPembekal").val(0).change();
                                 toastr.error("Tiada inbois untuk pembekal ini", "Ralat");
-                                toastr.options.timeOut = 2000; // 2s
+                                toastr.options.timeOut = 5000; // 5s
                             }
 
 
@@ -432,7 +432,7 @@
                     else {
                         $("#ddlPendahuluanPelbagai").val(0).change();
                         toastr.error("Peruntukan untuk kod akaun ini tidak mencukupi", "Ralat");
-                        toastr.options.timeOut = 2000; // 2s
+                        toastr.options.timeOut = 5000; // 5s
                     }
                 },
                 error: function (req, status, error) {
@@ -758,7 +758,7 @@
                             }
                             else {
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
-                                toastr.options.timeOut = 2000; // 2s
+                                toastr.options.timeOut = 5000; // 5s
                             }
 
                         }
@@ -923,7 +923,7 @@
                 }
                 else {
                     toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
-                    toastr.options.timeOut = 2000; // 2s
+                    toastr.options.timeOut = 5000; // 2s
                 }
 
             }
@@ -1062,7 +1062,7 @@
                             }
                             else {
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
-                                toastr.options.timeOut = 2000; // 2s
+                                toastr.options.timeOut = 5000; // 5s
                             }
 
                         }

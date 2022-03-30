@@ -167,18 +167,6 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
             }
 
-            var lastItem = akPOLaras.OrderByDescending(x => x.Id).FirstOrDefault();
-
-            if (lastItem != null)
-            {
-                ViewData["lastItem"] = lastItem.NoRujukan;
-            }
-            else
-            {
-                ViewData["lastItem"] = "NaN";
-            }
-
-
             return View(akPOLaras);
         }
 

@@ -38,9 +38,10 @@ namespace MSNK.Models.Modules
         [Display(Name = "Baki RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Baki { get; set; }
-        [Display(Name = "Dalam Peruntukan")]
+        // cek if kod akaun is in bajet or not
+        [Display(Name = "Tidak Dikira Dalam Peruntukan")]
         [DefaultValue(true)]
-        public bool IsBajet { get; set; }
+        public bool? IsBajet { get; set; }
         //field end
 
         //Relationship

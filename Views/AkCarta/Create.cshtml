@@ -90,15 +90,15 @@
                             <span asp-validation-for="UmumDetail" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group col-sm-6">
+                        <div class="form-group col-sm-6" >
                             <div class="card mb-2">
                                 <div class="card-body pl-3 pr-3 pt-2">
 
                                     <label class="control-label">Maklumat Tambahan : </label>
                                     <div class="custom-control custom-radio">
-                                        <input type="checkbox" data-val="true" id="Penyertaan" name="Penyertaan" value="true" checked>
+                                        <input type="checkbox" data-val="true" id="Penyertaan" name="IsBajet" value="true" checked>
                                         <label class="control-label">Kod akaun ini terlibat dengan peruntukan</label>
-                                        <input asp-for="IsBajet" hidden value="true">
+                                        <input asp-for="IsBajet" hidden value="false">
                                     </div>
                                 </div>
                             </div>

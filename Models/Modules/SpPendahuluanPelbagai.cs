@@ -27,17 +27,23 @@ namespace MSNK.Models.Modules
         [Column(TypeName = "decimal(18, 2)")]
         public decimal JumKeseluruhan { get; set; }
 
-        public string Penyokong { get; set; }
+        // untuk kelulusan
+        [DisplayName("Penyokong")]
+        public int? JPenyemakId { get; set; }
+        public JPenyemak JPenyemak { get; set; }
         public int FlStatusSokong { get; set; }
         public DateTime? TarSokong { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal JumSokong { get; set; }
-
-        public string Pelulus { get; set; }
+        [DisplayName("Pelulus")]
+        public int? JPelulusId { get; set; }
+        public JPelulus JPelulus { get; set; }
         public int FlStatusLulus { get; set; }
         public DateTime? TarLulus { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal JumLulus { get; set; }
+        // untuk kelulusan end 
+
         [DisplayName("Tarikh Posting")]
         public DateTime? TarikhPosting { get; set; }
 

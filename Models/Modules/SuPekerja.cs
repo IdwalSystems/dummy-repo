@@ -82,6 +82,7 @@ namespace MSNK.Models.Modules
 
         public ICollection<SpPendahuluanPelbagai> SpPendahuluanPelbagai { get; set; }
         public ICollection<JPelulus> JPelulus { get; set; }
+        public ICollection<JPenyemak> JPenyemak { get; set; }
         //relationship end
 
         //soft delete

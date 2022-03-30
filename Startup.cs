@@ -106,6 +106,7 @@ namespace MSNK
             services.AddTransient<IRepository<JJantina, int, string>, JJantinaRepository>();
             services.AddTransient<IRepository<JBahagian, int, string>, JBahagianRepository>();
             services.AddTransient<IRepository<JPelulus, int, string>, JPelulusRepository>();
+            services.AddTransient<IRepository<JPenyemak, int, string>, JPenyemakRepository>();
 
             //TUNAI RUNCIT
             services.AddTransient<IRepository<AkTunaiRuncit, int, string>, AkTunaiRuncitRepository>();
