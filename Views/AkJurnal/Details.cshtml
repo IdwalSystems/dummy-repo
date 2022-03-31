@@ -44,21 +44,31 @@
                                 <textarea class="form-control form-control-sm text-uppercase" rows="4" readonly>@Html.DisplayFor(model => model.Catatan1)</textarea>
                             </div>
                         </div>
+                        @if (Model.FlJenisJurnal == 4)
+                        {
+                            <div class="form-row">
+                                <div class="form-group col-md">
+                                    <label asp-for="AkTunaiRuncitId" class="control-label"></label>
+                                    <input class="form-control form-control-sm" value="@Model.AkTunaiRuncit.KaunterPanjar  ( @Model.AkTunaiRuncit.AkCarta.Kod - @Model.AkTunaiRuncit.AkCarta.Perihal )" readonly />
+                                </div>
+                            </div>
+                        }
+                        
                         @*<div class="form-row">
-                            <div class="form-group col-md">
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan2)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md">
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan3)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md">
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan4)" readonly />
-                            </div>
-                        </div>*@
+                    <div class="form-group col-md">
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan2)" readonly />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md">
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan3)" readonly />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md">
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Catatan4)" readonly />
+                    </div>
+                </div>*@
 
                     </div>
                     <div class="col-lg-2">
@@ -130,13 +140,13 @@
                                 <tbody id="tbodyObjek">
                                     @foreach (var item in ViewBag.akJurnal1)
                                     {
-                                    <tr id="@item.Id">
-                                        <td>@(item.Indeks.ToString().Length<2?"0"+ item.Indeks.ToString(): item.Indeks.ToString())</td>
-                                        <td id="akCartaId" hidden>@item.AkCartaId</td>
-                                        <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                        <td class="editable-txt text-right" id="td1Amaun">@item.Debit</td>
-                                        <td class="editable-txt text-right" id="td1Amaun">@item.Kredit</td>
-                                    </tr>
+                                        <tr id="@item.Id">
+                                            <td>@(item.Indeks.ToString().Length<2?"0"+ item.Indeks.ToString(): item.Indeks.ToString())</td>
+                                            <td id="akCartaId" hidden>@item.AkCartaId</td>
+                                            <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
+                                            <td class="editable-txt text-right" id="td1Amaun">@item.Debit</td>
+                                            <td class="editable-txt text-right" id="td1Amaun">@item.Kredit</td>
+                                        </tr>
 
                                     }
                                 </tbody>
@@ -166,6 +176,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

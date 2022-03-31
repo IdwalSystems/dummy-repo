@@ -11,6 +11,18 @@ namespace MSNK.Models.Modules
 {
     public class AkJurnal : AppLogHelper, ISoftDelete
     {
+        // note:
+        // FlJenisJurnal = 0 ( Am )
+        // FlJenisJurnal = 1 ( Inbois )
+        // FlJenisJurnal = 2 ( Gaji )
+        // FlJenisJurnal = 3 ( Pendahuluan )
+        // FlJenisJurnal = 4 ( Panjar )
+        // ..
+        // FlKategoriPenerima = 0 ( Am / Lain - lain )
+        // FlKategoriPenerima = 1 ( pembekal )
+        // FlKategoriPenerima = 2 ( pekerja )
+        // FlKategoriPenerima = 3 ( pemegang panjar )
+        // ..
         public int Id { get; set; }
         [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
         [DisplayName("Jenis Kumpulan Wang")]
@@ -62,6 +74,8 @@ namespace MSNK.Models.Modules
         //Relationship
         [DisplayName("KW")]
         public JKW JKW { get; set; }
+        public int FlJenisJurnal { get; set; }
+        public int FlKategoriPenerima { get; set; }
         [DisplayName("Objek")]
         public ICollection<AkJurnal1> AkJurnal1 { get; set; }
 

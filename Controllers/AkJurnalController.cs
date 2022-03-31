@@ -34,6 +34,8 @@ namespace MSNK.Controllers
         private readonly ListViewIRepository<AkJurnal1, int> _akJurnal1Repo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
+        private readonly IRepository<AkTunaiRuncit, int, string> _akTunaiRuncitRepo;
+        private readonly IRepository<AkTunaiLejar, int, string> _akTunaiLejarRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVot;
         private CartJurnal _cart;
 
@@ -46,6 +48,8 @@ namespace MSNK.Controllers
             ListViewIRepository<AkJurnal1, int> akJurnal1Repository,
             IRepository<AkCarta, int, string> akCartaRepository,
             IRepository<AkAkaun, int, string> akAkaunRepository,
+            IRepository<AkTunaiRuncit, int, string> akTunaiRuncitRepository,
+            IRepository<AkTunaiLejar, int, string> akTunaiLejarRepository,
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
             CartJurnal cart
             )
@@ -58,6 +62,8 @@ namespace MSNK.Controllers
             _akJurnal1Repo = akJurnal1Repository;
             _akCartaRepo = akCartaRepository;
             _akAkaunRepo = akAkaunRepository;
+            _akTunaiRuncitRepo = akTunaiRuncitRepository;
+            _akTunaiLejarRepo = akTunaiLejarRepository;
             _abBukuVot = abBukuVotRepository;
             _cart = cart;
         }
@@ -129,6 +135,9 @@ namespace MSNK.Controllers
         }
         private void PopulateList()
         {
+            List<AkTunaiRuncit> tunaiRuncitList = _context.AkTunaiRuncit.Include(x=> x.AkTunaiPemegang).OrderBy(b => b.KaunterPanjar).ToList();
+            ViewBag.AkTunaiRuncit = tunaiRuncitList;
+
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
@@ -300,10 +309,17 @@ namespace MSNK.Controllers
         // POST: AkJurnal/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkJurnal akJurnal, int JKWId, decimal JumDebit, decimal JumKredit, int JBahagianId)
+        public async Task<IActionResult> Create(AkJurnal akJurnal, int JKWId, decimal JumDebit, decimal JumKredit, int JBahagianId, int? AkTunaiRuncitId = 0)
         {
             AkJurnal m = new AkJurnal();
             var user = await _userManager.GetUserAsync(User);
+
+            if (AkTunaiRuncitId != 0 )
+            {
+                m.AkTunaiRuncitId = AkTunaiRuncitId;
+                m.FlJenisJurnal = 4;
+                m.FlKategoriPenerima = 3;
+            }
 
             decimal debit = 0;
             decimal kredit = 0;
@@ -390,7 +406,7 @@ namespace MSNK.Controllers
         // POST: AkJurnal/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkJurnal akJurnal, int JBahagianId)
+        public async Task<IActionResult> Edit(int id, AkJurnal akJurnal, int JBahagianId, int? AkTunaiRuncitId = 0)
         {
             if (id != akJurnal.Id)
             {
@@ -440,7 +456,14 @@ namespace MSNK.Controllers
                         akJurnal.UserIdKemaskini = user.UserName;
                         akJurnal.TarKemaskini = DateTime.Now;
                         akJurnal.Cetak = 0;
-
+                        
+                        if (AkTunaiRuncitId != 0)
+                        {
+                            akJurnal.FlJenisJurnal = 4;
+                            akJurnal.FlKategoriPenerima = 3;
+                            akJurnal.AkTunaiRuncitId = AkTunaiRuncitId;
+                        }
+                        
                         _context.Update(akJurnal);
                         //insert applog
                         if (kreditAsal != akJurnal.JumKredit)
@@ -851,9 +874,13 @@ namespace MSNK.Controllers
                     //insert into akAkaun
                     int currentIdx = 0;
                     decimal currentDebit = 0;
+                    decimal HadMaksimumDitolak = 0;
                     foreach (AkJurnal1 debit1 in akJ1.Where(z => z.Debit > 0))
                     {
                         currentDebit = debit1.Debit;
+
+                        HadMaksimumDitolak = HadMaksimumDitolak + debit1.Debit;
+
                         foreach (AkJurnal1 kredit1 in akJ1.Where(z => z.Kredit > 0&&z.Indeks>currentIdx&&currentDebit>0))
                         {
                             AkAkaun akADebit = new AkAkaun();
@@ -911,6 +938,64 @@ namespace MSNK.Controllers
                         }
                     }
 
+
+                    // update AkTunaiLejar
+                    // had maksimum at AkTunaiRuncit if FlJenisJurnal == 4
+
+                    if (akJurnal.FlJenisJurnal == 4)
+                    {
+                        var akTunaiRuncit = await _akTunaiRuncitRepo.GetById((int)akJurnal.AkTunaiRuncitId);
+
+                        akTunaiRuncit.HadMaksimum = akTunaiRuncit.HadMaksimum - HadMaksimumDitolak;
+
+                        await _akTunaiRuncitRepo.Update(akTunaiRuncit);
+
+                        //find latest baki
+                        AkTunaiLejar akT = _context.AkTunaiLejar
+                        .Where(x => x.AkTunaiRuncitId == akJurnal.AkTunaiRuncitId)
+                        .OrderByDescending(x => x.NoRujukan)
+                        .ThenByDescending(x => x.Tarikh)
+                        .ThenByDescending(x => x.Id)
+                        .FirstOrDefault();
+
+                        decimal bakiAkhir = 0;
+
+                        if (akT != null)
+                        {
+                            bakiAkhir = akT.Baki;
+
+                            if (bakiAkhir < HadMaksimumDitolak)
+                            {
+                                TempData[SD.Warning] = "Baki akhir lejar tunai bagi kod kaunter panjar " + akJurnal.AkTunaiRuncit.KaunterPanjar + " tidak mencukupi.";
+                                return RedirectToAction(nameof(Index));
+                            }
+                        }
+                        else
+                        {
+                            TempData[SD.Error] = "Baki awal belum dimasukkan ke dalam lejar tunai bagi kod kaunter panjar " + akJurnal.AkTunaiRuncit.KaunterPanjar + ". Anda perlu membuat baucer pembayaran terlebih dahulu.";
+                            return RedirectToAction(nameof(Index));
+                        }
+
+                        //insert into AkTunaiLejar
+                        AkTunaiLejar akTunaiLejar = new AkTunaiLejar()
+                        {
+                            JKWId = akJurnal.JKWId,
+                            AkTunaiRuncitId = (int)akJurnal.AkTunaiRuncitId,
+                            Tarikh = akJurnal.Tarikh,
+                            AkCartaId = akTunaiRuncit.AkCartaId,
+                            NoRujukan = "JR/" +akJurnal.NoJurnal,
+                            Debit = 0,
+                            Kredit = HadMaksimumDitolak,
+                            Baki = bakiAkhir - HadMaksimumDitolak
+                        };
+                        // insert into AkTunaiLejar end
+
+                        await _akTunaiLejarRepo.Insert(akTunaiLejar);
+
+                        
+                    }
+                    // update AkTunaiLejar end
+
                     //update posting status in akTerima
                     akJurnal.Posting = 1;
                     akJurnal.TarikhPosting = DateTime.Now;
@@ -959,6 +1044,46 @@ namespace MSNK.Controllers
                     {
                         await _abBukuVot.Delete(vot.Id);
                     }
+                    // update had maksimum at AkTunaiRuncit if FlJenisJurnal == 4
+                    decimal HadMaksimumDitambah = 0;
+                    foreach(var akJ1 in akJurnal.AkJurnal1)
+                    {
+                        if (akJ1.Debit > 0)
+                        {
+                            HadMaksimumDitambah = HadMaksimumDitambah + akJ1.Debit;
+                        }
+                    }
+
+                    if (akJurnal.FlJenisJurnal == 4)
+                    {
+                        var akTunaiRuncit = await _akTunaiRuncitRepo.GetById((int)akJurnal.AkTunaiRuncitId);
+
+                        akTunaiRuncit.HadMaksimum = akTunaiRuncit.HadMaksimum - HadMaksimumDitambah;
+
+                        await _akTunaiRuncitRepo.Update(akTunaiRuncit);
+                    }
+
+                    // update end
+
+                    //delete from tbl AkTunaiLejar
+                    if (akJurnal.FlJenisJurnal == 4)
+                    {
+                        List<AkTunaiLejar> akTunaiLejar = _context.AkTunaiLejar.Where(x => x.NoRujukan == "JR/" + akJurnal.NoJurnal).ToList();
+
+                        if (akTunaiLejar == null)
+                        {
+                            //duplicate id error
+                            TempData[SD.Error] = "Data belum diluluskan.";
+                            return RedirectToAction(nameof(Index));
+                        }
+                        foreach (AkTunaiLejar item in akTunaiLejar)
+                        {
+                            await _akTunaiLejarRepo.Delete(item.Id);
+                        }
+
+                    }
+                   
+                    //delete from tbl AkTunaiLejar end
 
                     //update posting status in akTerima
                     akJurnal.Posting = 0;

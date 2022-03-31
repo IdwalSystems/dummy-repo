@@ -26,6 +26,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkJurnal
                 .Include(b => b.JBahagian)
+                .Include(b => b.AkTunaiRuncit)
                 .Include(b => b.JKW)
                 .Include(b => b.AkJurnal1)
                 .ToListAsync();
@@ -36,6 +37,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkJurnal
                 .IgnoreQueryFilters()
                 .Include(b => b.JBahagian)
+                .Include(b => b.AkTunaiRuncit)
                 .Include(b => b.JKW)
                 .Include(b => b.AkJurnal1).ThenInclude(b => b.AkCarta)
                 .ToListAsync();
@@ -45,6 +47,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkJurnal
                 .Include(b => b.JBahagian)
+                .Include(b => b.AkTunaiRuncit)
                 .Include(b => b.JKW)
                 .Include(b => b.AkJurnal1).ThenInclude(b => b.AkCarta)
                 .Where(x => x.Id == id).FirstOrDefaultAsync();
@@ -55,6 +58,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkJurnal
                 .IgnoreQueryFilters()
                 .Include(b => b.JBahagian)
+                .Include(b => b.AkTunaiRuncit)
                 .Include(b => b.JKW)
                 .Include(b => b.AkJurnal1).ThenInclude(b=> b.AkCarta)
                 .Where(x=>x.Id == id).FirstOrDefaultAsync();

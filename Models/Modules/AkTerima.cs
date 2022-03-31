@@ -21,6 +21,7 @@ namespace MSNK.Models.Modules
         // FlKategoriPenerima = 0 ( Am / Lain - lain )
         // FlKategoriPenerima = 1 ( pembekal )
         // FlKategoriPenerima = 2 ( pekerja )
+        // FlKategoriPenerima = 3 ( pemegang panjar )
         // ..
 
         //field

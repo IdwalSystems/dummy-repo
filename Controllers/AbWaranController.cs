@@ -479,6 +479,23 @@ namespace MSNK.Controllers
             abWaran.NoRujukan = GetNoRujukan(abWaran.Tahun);
             var user = await _userManager.GetUserAsync(User);
 
+            // check if Tahun, FlJenisWaran ,JBahagianId, JKWId already exist or not 
+            var w = await _context.AbWaran.Where(x => x.Tahun == abWaran.Tahun
+                                                && x.FlJenisWaran == FlJenisWaran 
+                                                && x.JKWId == JKWId 
+                                                && x.JBahagianId == JBahagianId)
+                    .FirstOrDefaultAsync();
+
+            if (w != null)
+            {
+                TempData[SD.Error] = "Data bagi Tahun, Jenis Waran, Kump. Wang dan Bahagian telah wujud.";
+                PopulateList();
+                CartEmpty();
+
+                return View(abWaran);
+            }
+            // check end
+
             if (ModelState.IsValid)
             {
                 if (abWaran != null && JKWId != 0 && JBahagianId != 0)
@@ -611,6 +628,9 @@ namespace MSNK.Controllers
 
                     // list of input that cannot be change
                     abWaran.Tahun = dataAsal.Tahun;
+                    abWaran.JKWId = dataAsal.JKWId;
+                    abWaran.JBahagianId = dataAsal.JBahagianId;
+                    abWaran.FlJenisWaran = dataAsal.FlJenisWaran;
                     abWaran.TarMasuk = dataAsal.TarMasuk;
                     abWaran.UserId = dataAsal.UserId;
                     abWaran.FlCetak = 0;
