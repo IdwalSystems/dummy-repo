@@ -179,10 +179,22 @@ namespace MSNK.Controllers
                     FlHapus = item.FlHapus,
                     FlCetak = item.FlCetak,
                     FlPosting = item.FlPosting,
+                    FlStatusSemak = item.FlStatusSemak,
+                    FlStatusLulus = item.FlStatusLulus,
                     JumlahPerihal = jumlahPerihal
                 }
                 );
             }
+
+            List<JPenyemak> penyemak = _context.JPenyemak
+                .Include(x => x.SuPekerja)
+                .Where(x => x.IsNotaMinta == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+            ViewBag.JPenyemak = penyemak;
+
+            List<JPelulus> pelulus = _context.JPelulus
+                .Include(x => x.SuPekerja)
+                .Where(x => x.IsNotaMinta == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+            ViewBag.JPelulus = pelulus;
 
             return View(viewModel);
         }
@@ -887,6 +899,14 @@ namespace MSNK.Controllers
                         akNotaMinta.AkNotaMinta1 = dataAsal.AkNotaMinta1;
                         akNotaMinta.AkNotaMinta2 = _cart.Lines2.ToList();
 
+                        akNotaMinta.TarSemak = null;
+                        akNotaMinta.JPenyemakId = null;
+                        akNotaMinta.FlStatusSemak = 0;
+
+                        akNotaMinta.TarLulus = null;
+                        akNotaMinta.JPelulusId = null;
+                        akNotaMinta.FlStatusLulus = 0;
+
                         akNotaMinta.UserIdKemaskini = user.UserName;
                         akNotaMinta.TarKemaskini = DateTime.Now;
 
@@ -1205,9 +1225,72 @@ namespace MSNK.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Semak function
+        [HttpPost, ActionName("Semak")]
+        [Authorize(Policy = "NM001T")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Semak(int? id, int penyemakId, DateTime? tarikhSemak)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+
+                if (tarikhSemak == null)
+                {
+                    TempData[SD.Error] = "Tarikh Semak diperlukan.";
+                    return RedirectToAction(nameof(Index));
+
+                }
+
+                var user = await _userManager.GetUserAsync(User);
+                //var user = UserManager.GetUserAsync(User);
+                var namaUser = _context.
+                    applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.Email == user.UserName);
+                //var pelulus = await _context.JPelulus.Include(x => x.SuPekerja).Where(x => x.IsPendahuluan == true).FirstOrDefaultAsync();
+                //var sokong = Convert.ToDecimal(jumSokong);
+
+                AkNotaMinta sp = await _akNotaMintaRepo.GetById((int)id);
+
+                //check for print
+                if (sp.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal disemak. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
+
+                //semak operation start here
+                //update semak status
+                sp.FlStatusSemak = 1;
+                sp.TarSemak = tarikhSemak;
+
+                sp.JPenyemakId = penyemakId;
+
+
+                await _akNotaMintaRepo.Update(sp);
+
+                //insert applog
+                await AddLogAsync("Posting", "Semak Data", sp.NoRujukan, (int)id, sp.Jumlah);
+
+                //insert applog end
+
+                await _context.SaveChangesAsync();
+
+                TempData[SD.Success] = "Data berjaya disemak.";
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // Semak function end
+
         // posting function
         [Authorize(Policy = "NM001T")]
-        public async Task<IActionResult> Posting(int? id)
+        public async Task<IActionResult> Posting(int? id, int pelulusId, DateTime? tarikhLulus)
         {
             if (id == null)
             {
@@ -1228,6 +1311,13 @@ namespace MSNK.Controllers
                 }
                 //check for print end
 
+                if (tarikhLulus == null)
+                {
+                    TempData[SD.Error] = "Tarikh Lulus diperlukan.";
+                    return RedirectToAction(nameof(Index));
+
+                }
+
                 List<AkNotaMinta1> akNM1 = akNotaMinta.AkNotaMinta1.ToList();
 
                 var akPO = await _context.AkPO.Where(x => x.AkNotaMintaId == id && x.FlHapus == 0).FirstOrDefaultAsync();
@@ -1241,8 +1331,12 @@ namespace MSNK.Controllers
                 else
                 {
                     //posting operation start here
-                    
+
                     //update posting status in akTerima
+                    akNotaMinta.FlStatusLulus = 1;
+                    akNotaMinta.TarLulus = tarikhLulus;
+                    akNotaMinta.JPelulusId = pelulusId;
+
                     akNotaMinta.FlPosting = 1;
                     akNotaMinta.TarikhPosting = DateTime.Now;
                     await _akNotaMintaRepo.Update(akNotaMinta);
@@ -1292,6 +1386,10 @@ namespace MSNK.Controllers
                     //unposting operation start here
 
                     //update posting status in akTerima
+                    akNotaMinta.FlStatusLulus = 0;
+                    akNotaMinta.TarLulus = null;
+                    akNotaMinta.JPelulusId = null;
+
                     akNotaMinta.FlPosting = 0;
                     akNotaMinta.TarikhPosting = null;
                     await _akNotaMintaRepo.Update(akNotaMinta);
@@ -1374,6 +1472,14 @@ namespace MSNK.Controllers
 
             obj.FlHapus = 0;
             obj.FlCetak = 0;
+            obj.TarSemak = null;
+            obj.JPenyemakId = null;
+            obj.FlStatusSemak = 0;
+
+            obj.TarLulus = null;
+            obj.JPelulusId = null;
+            obj.FlStatusLulus = 0;
+
             _context.AkNotaMinta.Update(obj);
 
             // Rollback operation end

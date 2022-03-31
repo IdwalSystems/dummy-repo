@@ -117,7 +117,7 @@
                         }
 
 
-                        <div class="form-group"hidden>
+                        <div class="form-group" hidden>
                             <label class="control-label">Alamat</label>
                             <input class="form-control form-control-sm text-uppercase" value="@Model.Alamat1" readonly />
                         </div>
@@ -172,7 +172,7 @@
 
                     </div>
                     <div class="col-lg-2 pb-3">
-                        
+
                         <div class="card mb-2">
                             <div class="card-body p-1">
 
@@ -385,14 +385,14 @@
                         break;
                     case 3:
                         @*pendahuluan pelbagai*@
-                        <div class="card box-shadow mb-3" id="cardPendahuluanPelbagai" >
+                        <div class="card box-shadow mb-3" id="cardPendahuluanPelbagai">
                             <div class="card-header">
                                 <h6>Pendahuluan Pelbagai</h6>
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
                                     <label asp-for="SpPendahuluanPelbagaiId" class="control-label"></label>
-                                    <input class="form-control form-control-sm" value="@Model.SpPendahuluanPelbagai.NoPermohonan" id="ddlPendahuluanPelbagai" readonly/>
+                                    <input class="form-control form-control-sm" value="@Model.SpPendahuluanPelbagai.NoPermohonan" id="ddlPendahuluanPelbagai" readonly />
                                     <span asp-validation-for="SpPendahuluanPelbagaiId" class="text-danger"></span>
                                 </div>
                             </div>
@@ -444,38 +444,48 @@
 <div>
     @if (Model.FlHapus == 0)
     {
-                    @if (Model.FlPosting == 1)
+        @if (Model.FlPosting == 1)
         {
-                    }
-        else
-                    {
-            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
-
-            @*<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">
-                    Batal
-                </button>*@
         }
+        else
+        {
+            @if (Model.FlStatusSemak == 1)
+            {
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalUbah">
+                    Ubah
+                </button>
+            }
+            else
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
+            }
+        }
+
+        @*<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">
+                Batal
+            </button>*@
+    }
     }
     <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
-<!-- Modal Batal -->
-<div class="modal fade" id="modalBatal" tabindex="-1" role="dialog" aria-hidden="true">
+<!-- Modal Semak -->
+<div class="modal fade" id="modalUbah" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-md modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0">
+        <div class="modal-content ">
             <div class="modal-header bg-warning text-white">
 
-                <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i>  Batal</h5>
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i>  Ubah</h5>
 
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times text-white"></i>
                 </button>
             </div>
             <div class="modal-body">
-                <p class="text-center">Anda pasti untuk meneruskan operasi ini?</p>
+                <p class="text-center">Permohonan ini telahpun disemak. Anda pasti untuk meneruskan operasi ini?</p>
                 <div class="form-row">
                     <div class="col-6 mb-2">
-                        <a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-danger btn-block btn-lg ">YA</a>
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-danger btn-block btn-lg ">YA</a>
                     </div>
                     <div class="col-6">
                         <a data-dismiss="modal" aria-label="Close" class=" btn btn-secondary btn-block btn-lg text-white">TIDAK</a>
@@ -491,4 +501,4 @@
         </div>
     </div>
 </div>
-<!-- Modal Batal End -->
+<!-- Modal Semak End -->

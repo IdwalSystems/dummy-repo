@@ -34,6 +34,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkTunaiPemegang> AkTunaiPemegang { get; set; }
         public ICollection<AkTunaiLejar> AkTunaiLejar { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
+        public ICollection<AkJurnal> AkJurnal { get; set; }
 
         //flag
         [DisplayName("Cetak")]

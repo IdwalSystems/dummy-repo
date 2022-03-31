@@ -1,12 +1,35 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+/*AK code 31/03/2022*/
+.table-purple,
+.table-purple > th,
+.table-purple > td {
+    background-color: #DFC8FF;
+}
+
+    .table-purple th,
+    .table-purple td,
+    .table-purple thead th,
+    .table-purple tbody + tbody {
+        border-color: #C7A5F7;
+    }
+
+.table-hover .table-purple:hover {
+    background-color: #DFC8FF;
+}
+
+    .table-hover .table-purple:hover > td,
+    .table-hover .table-purple:hover > th {
+        background-color: #DFC8FF;
+    }
+
 /*AK CODE*/
-.text-tertiary {
+.text-purple {
     color: #a54ea8;
 }
 
-a.text-tertiary:hover, a.text-tertiary:focus {
+a.text-purple:hover, a.text-tertiary:focus {
     color: #7c3480;
 }
 /*AK CODE*/

@@ -69,6 +69,7 @@
                 <th>
                     Bil
                 </th>
+                <th hidden>Id</th>
                 <th>
                     @Html.DisplayNameFor(model => model.Tahun)
                 </th>
@@ -107,6 +108,7 @@
                 <tr class="@tabletype">
                     <td>
                     </td>
+                    <td hidden> @item.Id</td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Tahun)
                     </td>
@@ -167,9 +169,19 @@
                                     {
                                         @if (item.Jumlah == item.JumlahPerihal && item.FlCetak != 0)
                                         {
-                                            <a asp-action="Posting" asp-route-id="@item.Id" class="btn text-success btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Lulus">
-                                                <i class="fas fa-file-signature"></i>
-                                            </a>
+
+                                            @if (item.FlStatusSemak != 0)
+                                            {
+                                                <button data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
+                                                    <i class="fas fa-file-signature"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button data-toggle="modal" data-target="#modalSemak" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Semak" onclick="ModalClick(this)">
+                                                    <i class="fas fa-file-signature"></i>
+                                                </button>
+                                            }
                                         }
                                     }
 
@@ -202,3 +214,121 @@
     </table>
 </div>
 @*div table end*@
+<!-- Modal Semak -->
+<div class="modal fade bd-example-modal-lg" id="modalSemak" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#a54ea8;">
+                <h5 class="modal-title">Semak Nota Minta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Semak" asp-controller="AkNotaMinta" class="needs-validation">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="modal-body">
+
+                    <input hidden name="id" class="moId" />
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">No Nota Minta</label>
+                                <input type="text" class="form-control form-control-sm moNoRujukan" name="noRujukan" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah RM</label>
+                                <input type="text" class="form-control form-control-sm moJumlah" name="jumlah" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label name="penyemakId" class="col-form-label">Penyemak</label>
+                                <select class="form-control form-control-sm text-uppercase" name="penyemakId" id="ddlPenyemak">
+                                    @foreach (var s in ViewBag.JPenyemak)
+                                    {
+                                        <option value="@s.Id">@s.SuPekerja.Nama </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Tarikh Disemak</label>
+                                <input type="datetime-local" class="form-control form-control-sm moTarikhSemak" name="tarikhSemak">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-success">Semak</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Semak End -->
+<!-- Modal Posting -->
+<div class="modal fade bd-example-modal-lg" id="modalPosting" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#a54ea8;">
+                <h5 class="modal-title">Kelulusan Nota Minta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Posting" asp-controller="AkNotaMinta" class="needs-validation">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="modal-body">
+
+                    <input hidden name="id" class="moId" />
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">No Nota Minta</label>
+                                <input type="text" class="form-control form-control-sm moNoRujukan" name="noRujukan" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah RM</label>
+                                <input type="text" class="form-control form-control-sm moJumlah" name="jumlah" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label name="pelulusId" class="col-form-label">Pelulus</label>
+                                <select class="form-control form-control-sm text-uppercase" name="pelulusId" id="ddlPelulus">
+                                    @foreach (var s in ViewBag.JPelulus)
+                                    {
+                                        <option value="@s.Id">@s.SuPekerja.Nama </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Tarikh Diluluskan</label>
+                                <input type="datetime-local" class="form-control form-control-sm moTarikhLulus" name="tarikhLulus">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-success">Lulus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Posting End -->

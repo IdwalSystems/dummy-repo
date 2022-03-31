@@ -199,11 +199,23 @@ namespace MSNK.Controllers
                     FlHapus = item.FlHapus,
                     FlPosting = item.FlPosting,
                     FlCetak = item.FlCetak,
+                    FlStatusSemak = item.FlStatusSemak,
+                    FlStatusLulus = item.FlStatusLulus,
                     JumlahInbois = jumlahInbois,
                     FlKategoriPenerima = item.FlKategoriPenerima
                 }
                 );
             }
+
+            List<JPenyemak> penyemak = _context.JPenyemak
+                .Include(x => x.SuPekerja)
+                .Where(x => x.IsPV == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+            ViewBag.JPenyemak = penyemak;
+
+            List<JPelulus> pelulus = _context.JPelulus
+                .Include(x => x.SuPekerja)
+                .Where(x => x.IsPV == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+            ViewBag.JPelulus = pelulus;
 
             return View(viewModel);
         }
@@ -1273,7 +1285,9 @@ namespace MSNK.Controllers
             AkPV m = new AkPV();
             var pembekal =await _context.AkPembekal.FirstOrDefaultAsync(x=> x.Id == AkPembekalId);
             var pekerja = await _context.SuPekerja.FirstOrDefaultAsync(x=> x.Id == SuPekerjaId);
-            var tunaiRuncit =await _akTunaiRuncitRepo.GetById((int) AkTunaiRuncitId);
+            var tunaiRuncit =await _context.AkTunaiRuncit
+                .Include(x=> x.AkTunaiPemegang).ThenInclude(x=> x.SuPekerja)
+                .FirstOrDefaultAsync(x => x.Id == AkTunaiRuncitId);
             var spPendahuluan = await _context.SpPendahuluanPelbagai.FirstOrDefaultAsync(x => x.Id == SpPendahuluanPelbagaiId );
 
             var jenis = "CreateAm";
@@ -1383,10 +1397,10 @@ namespace MSNK.Controllers
                     m.NoPV = noRujukan;
                     m.Tarikh = akPV.Tarikh;
                     m.NoKP = akPV.NoKP;
-                    m.Nama = akPV.Nama;
-                    m.Alamat1 = akPV.Alamat1;
-                    m.Alamat2 = akPV.Alamat2;
-                    m.Alamat3 = akPV.Alamat3;
+                    m.Nama = akPV.Nama?.ToUpper() ?? null;
+                    m.Alamat1 = akPV.Alamat1?.ToUpper() ?? null;
+                    m.Alamat2 = akPV.Alamat2?.ToUpper() ?? null;
+                    m.Alamat3 = akPV.Alamat3?.ToUpper() ?? null;
                     m.NoAkaunBank = akPV.NoAkaunBank;
                     m.Telefon = akPV.Telefon;
                     m.Emel = akPV.Emel;
@@ -1394,14 +1408,7 @@ namespace MSNK.Controllers
                     m.JCaraBayarId = JCaraBayarId;
                     m.NoCekAtauEFT = akPV.NoCekAtauEFT;
                     m.TarCekAtauEFT = akPV.TarCekAtauEFT;
-                    if (akPV.Perihal == null)
-                    {
-                        m.Perihal = "";
-                    }
-                    else
-                    {
-                        m.Perihal = akPV.Perihal;
-                    }
+                    m.Perihal = akPV.Perihal?.ToUpper() ?? null;
                     m.Jumlah = akPV.Jumlah;
                     m.FlPosting = 0;
                     m.FlHapus = 0;
@@ -1915,12 +1922,17 @@ namespace MSNK.Controllers
                     akPV.AkPV1 = _cart.Lines1.ToList();
                     akPV.AkPV2 = _cart.Lines2.ToList();
 
+                    akPV.TarSemak = null;
+                    akPV.JPenyemakId = null;
+                    akPV.FlStatusSemak = 0;
+
+                    akPV.TarLulus = null;
+                    akPV.JPelulusId = null;
+                    akPV.FlStatusLulus = 0;
+
                     akPV.UserIdKemaskini = user.UserName;
                     akPV.TarKemaskini = DateTime.Now;
-                    if (akPV.Perihal == null)
-                    {
-                        akPV.Perihal = "";
-                    }
+                    akPV.Perihal = akPV.Perihal?.ToUpper() ?? null;
                     _context.Update(akPV);
 
                     //insert applog
@@ -2164,14 +2176,14 @@ namespace MSNK.Controllers
                     break;
                 //pekerja
                 case 2:
-                    data.KodPenerima = akPV.SuPekerja.NoGaji;
+                    data.KodPenerima = akPV.SuPekerja.NoGaji + " - "+ akPV.SuPekerja.NoKp;
                     namaBankPenerima = akPV.SuPekerja.JBank.Nama;
                     noAkaunBank = akPV.SuPekerja.NoAkaunBank;
 
                     break;
                 //am
                 default:
-                    data.KodPenerima = "";
+                    data.KodPenerima = akPV.NoKP;
                     noAkaunBank = akPV.NoAkaunBank;
                     break;
             }
@@ -2205,10 +2217,73 @@ namespace MSNK.Controllers
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
         }
+        // Semak function
+        [HttpPost, ActionName("Semak")]
+        [Authorize(Policy = "PV001T")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Semak(int? id, int penyemakId, DateTime? tarikhSemak)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+
+                if (tarikhSemak == null)
+                {
+                    TempData[SD.Error] = "Tarikh Semak diperlukan.";
+                    return RedirectToAction(nameof(Index));
+
+                }
+
+                var user = await _userManager.GetUserAsync(User);
+                //var user = UserManager.GetUserAsync(User);
+                var namaUser = _context.
+                    applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.Email == user.UserName);
+                //var pelulus = await _context.JPelulus.Include(x => x.SuPekerja).Where(x => x.IsPendahuluan == true).FirstOrDefaultAsync();
+                //var sokong = Convert.ToDecimal(jumSokong);
+
+                AkPV sp = await _akPVRepo.GetById((int)id);
+
+                //check for print
+                if (sp.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal disemak. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
+
+                //semak operation start here
+                //update semak status
+                sp.FlStatusSemak = 1;
+                sp.TarSemak = tarikhSemak;
+
+                sp.JPenyemakId = penyemakId;
+
+
+                await _akPVRepo.Update(sp);
+
+                //insert applog
+                await AddLogAsync("Posting", "Semak Data", sp.NoPV, (int)id, sp.Jumlah);
+
+                //insert applog end
+
+                await _context.SaveChangesAsync();
+
+                TempData[SD.Success] = "Data berjaya disemak.";
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // Semak function end
 
         // posting function
         [Authorize(Policy = "PV001T")]
-        public async Task<IActionResult> Posting(int? id)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Posting(int? id, int pelulusId, DateTime? tarikhLulus)
         {
             if (id == null)
             {
@@ -2228,6 +2303,13 @@ namespace MSNK.Controllers
                     return RedirectToAction(nameof(Index));
                 }
                 //check for print end
+
+                if (tarikhLulus == null)
+                {
+                    TempData[SD.Error] = "Tarikh Lulus diperlukan.";
+                    return RedirectToAction(nameof(Index));
+
+                }
 
                 List<AkPV1> akPV1 = akPV.AkPV1.ToList();
 
@@ -2538,6 +2620,10 @@ namespace MSNK.Controllers
                         
                     }
 
+                    akPV.FlStatusLulus = 1;
+                    akPV.TarLulus = tarikhLulus;
+                    akPV.JPelulusId = pelulusId;
+
                     akPV.FlPosting = 1;
                     akPV.TarikhPosting = DateTime.Now;
                     akPV.UserIdKemaskini = user.UserName;
@@ -2626,6 +2712,13 @@ namespace MSNK.Controllers
                     //update posting status in akTerima
                     akPV.FlPosting = 0;
                     akPV.TarikhPosting = null;
+
+                    // AK CODE 19/03/2022
+                    akPV.FlStatusLulus = 0;
+                    akPV.TarLulus = null;
+                    akPV.JPelulusId = null;
+                    // AK CODE 19/03/2022
+
                     await _akPVRepo.Update(akPV);
 
                     //insert applog
@@ -2708,12 +2801,19 @@ namespace MSNK.Controllers
 
             obj.FlHapus = 0;
             obj.FlCetak = 0;
-            _context.AkPV.Update(obj);
+            obj.TarSemak = null;
+            obj.JPenyemakId = null;
+            obj.FlStatusSemak = 0;
 
+            obj.TarLulus = null;
+            obj.JPelulusId = null;
+            obj.FlStatusLulus = 0;
+
+            _context.AkPV.Update(obj);
             // rollback operation end
 
             //insert applog
-            await AddLogAsync("Posting", "Posting Data", obj.NoPV, id, obj.Jumlah);
+            await AddLogAsync("Rollback", "Rollback Data", obj.NoPV, id, obj.Jumlah);
             //insert applog end
 
             await _context.SaveChangesAsync();

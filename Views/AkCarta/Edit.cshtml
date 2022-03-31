@@ -124,8 +124,9 @@
                                 <label class="control-label">Maklumat Tambahan : </label>
                                 <div class="custom-control custom-radio">
                                     <div class="custom-control custom-radio">
-                                        <input type="checkbox" data-val="true" id="IsBajet" asp-for="IsBajet" value="@Model.IsBajet">
+                                        <input type="checkbox" data-val="true" id="IsBajet" asp-for="IsBajet" >
                                         <label class="control-label">Kod akaun ini terlibat dengan peruntukan</label>
+                                        <input type="hidden" name="IsBajet" value="false"/>
                                     </div>
                                 </div>
                             </div>

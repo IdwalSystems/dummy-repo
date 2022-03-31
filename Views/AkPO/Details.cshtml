@@ -64,11 +64,11 @@
                                 </div>
                             </div>
                             @*<div class="col-md-3">
-            <div class="form-group">
-                <label class="control-label">Kod Bank</label>
-                <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
-            </div>
-        </div>*@
+                <div class="form-group">
+                    <label class="control-label">Kod Bank</label>
+                    <input class="form-control form-control-sm" value="@Model.AkBank.Kod - @Model.AkBank.JBank.Nama " readonly />
+                </div>
+            </div>*@
                         </div>
                         <div class="form-row">
                             <div class="col-md-4">
@@ -120,11 +120,25 @@
                                 </div>
                             </div>
                             @*<div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="control-label">Negeri</label>
-                                        <input class="form-control form-control-sm" value="@Model.JNegeri.Kod - @Model.JNegeri.Perihal" readonly />
+                <div class="form-group">
+                    <label class="control-label">Negeri</label>
+                    <input class="form-control form-control-sm" value="@Model.JNegeri.Kod - @Model.JNegeri.Perihal" readonly />
+                </div>
+            </div>*@
+                        </div>
+                        <div class="form-group">
+                            <div class="card mb-2">
+                                <div class="card-body pl-3 pr-3 pt-2">
+
+                                    <label class="control-label">Maklumat Tambahan : </label>
+                                    <div class="custom-control custom-radio">
+                                        <input type="checkbox" data-val="true" id="IsInKewangan" asp-for="IsInKewangan" disabled>
+                                        <label class="control-label">PO ini berada di kewangan</label>
+                                        <input type="hidden" name="IsInKewangan" value="false" />
+
                                     </div>
-                                </div>*@
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-2 mb-2">

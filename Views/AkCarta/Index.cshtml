@@ -84,7 +84,7 @@
         <tbody>
             @foreach (var item in Model)
             {
-                var tabletype = item.JParas.Kod == "1" ? "table-danger" :
+                var tabletype = item.JParas.Kod == "1" ? "table-purple" :
                 item.JParas.Kod == "2" ? "table-warning" :
                 item.JParas.Kod == "3" ? "table-info" : null;
                 <tr class="@tabletype">

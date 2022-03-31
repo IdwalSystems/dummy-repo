@@ -35,6 +35,10 @@ namespace MSNK.Controllers
         private readonly IRepository<JBahagian, int, string> _jBahagianRepo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
+        private readonly IRepository<AkPO, int, string> _akPORepo;
+        private readonly IRepository<AkPV, int, string> _akPVRepo;
+        private readonly IRepository<AkTerima, int, string> _akTerimaRepo;
+        private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPPRepo;
         private readonly CustomIRepository<string, int> _customRepo;
         private CartWaran _cart;
 
@@ -48,6 +52,10 @@ namespace MSNK.Controllers
             IRepository<JBahagian, int, string> jBahagianRepo,
             IRepository<AkCarta, int, string> akCartaRepo,
             IRepository<AbBukuVot, int, string> abBukuVotRepo,
+            IRepository<AkPO, int, string> akPORepo,
+            IRepository<AkPV, int, string> akPVRepo,
+            IRepository<AkTerima, int, string> akTerimaRepo,
+            IRepository<SpPendahuluanPelbagai, int, string> spPPRepo,
             CustomIRepository<string, int> customrepo,
             CartWaran cart)
         {
@@ -60,6 +68,10 @@ namespace MSNK.Controllers
             _jBahagianRepo = jBahagianRepo;
             _akCartaRepo = akCartaRepo;
             _abBukuVotRepo = abBukuVotRepo;
+            _akPORepo = akPORepo;
+            _akPVRepo = akPVRepo;
+            _akTerimaRepo = akTerimaRepo;
+            _spPPRepo = spPPRepo;
             _customRepo = customrepo;
             _cart = cart;
         }
@@ -936,6 +948,88 @@ namespace MSNK.Controllers
             else
             {
                 AbWaran obj = await _abWaranRepo.GetById((int)id);
+
+                //check
+                // dah ada po atau tidak
+                foreach (var waran in obj.AbWaran1)
+                {
+                    var akPO = await _akPORepo.GetAll();
+
+                    foreach (var i in akPO)
+                    {
+                        var akPO1 = await _context.AkPO1
+                            .Where(x => x.AkPOId == i.Id && x.AkCartaId == waran.AkCartaId)
+                            .FirstOrDefaultAsync();
+
+                        if (akPO1 != null)
+                        {
+                            //duplicate id error
+                            TempData[SD.Error] = "Batal kelulusan tidak dibenarkan. Terlibat dengan No PO " + i.NoPO;
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                }
+                //
+                // dah ada baucer atau tidak
+                foreach (var waran in obj.AbWaran1)
+                {
+                    var akPV = await _akPVRepo.GetAll();
+
+                    foreach (var i in akPV)
+                    {
+                        var akPV1 = await _context.AkPV1
+                            .Where(x => x.AkPVId == i.Id && x.AkCartaId == waran.AkCartaId)
+                            .FirstOrDefaultAsync();
+
+                        if (akPV1 != null)
+                        {
+                            //duplicate id error
+                            TempData[SD.Error] = "Batal kelulusan tidak dibenarkan. Terlibat dengan No PV " + i.NoPV;
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                }
+                //
+                // dah ada resit atau tidak
+                foreach (var waran in obj.AbWaran1)
+                {
+                    var akTerima = await _akTerimaRepo.GetAll();
+
+                    foreach (var i in akTerima)
+                    {
+                        var akTerima1 = await _context.AkTerima1
+                            .Where(x => x.AkTerimaId == i.Id && x.AkCartaId == waran.AkCartaId)
+                            .FirstOrDefaultAsync();
+
+                        if (akTerima1 != null)
+                        {
+                            //duplicate id error
+                            TempData[SD.Error] = "Batal kelulusan tidak dibenarkan. Terlibat dengan No Resit " + i.NoRujukan;
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                }
+                //
+                // dah ada pendahuluan pelbagai atau tidak
+                foreach (var waran in obj.AbWaran1)
+                {
+                    var sp = await _spPPRepo.GetAll();
+
+                    foreach (var i in sp)
+                    {
+                        var sp1 = await _context.SpPendahuluanPelbagai
+                            .Where(x => x.Id == i.Id && x.AkCartaId == waran.AkCartaId)
+                            .FirstOrDefaultAsync();
+
+                        if (sp1 != null)
+                        {
+                            //duplicate id error
+                            TempData[SD.Error] = "Batal kelulusan tidak dibenarkan. Terlibat dengan No Permohonan " + i.NoPermohonan;
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                }
+                //
 
                 List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(obj.NoRujukan)).ToList();
                 if (abBukuVot == null)

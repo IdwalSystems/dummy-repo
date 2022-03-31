@@ -690,7 +690,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "TG001C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkPO akPO, int JKWId, int? AkNotaMintaId, int JBahagianId)
+        public async Task<IActionResult> Create(AkPO akPO, int JKWId, int? AkNotaMintaId, int JBahagianId, bool IsInKewangan)
         {
 
             AkPO m = new AkPO();
@@ -719,6 +719,7 @@ namespace MSNK.Controllers
                     m.FlPosting = 0;
                     m.FlHapus = 0;
                     m.FlCetak = 0;
+                    m.IsInKewangan = IsInKewangan;
                     m.Tahun = akPO.Tahun;
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
@@ -873,6 +874,7 @@ namespace MSNK.Controllers
                         decimal jumlahAsal = dataAsal.Jumlah;
                         _context.Entry(dataAsal).State = EntityState.Detached;
 
+                        
                         akPO.AkPO1 = _cart.Lines1.ToList();
                         akPO.AkPO2 = _cart.Lines2.ToList();
 

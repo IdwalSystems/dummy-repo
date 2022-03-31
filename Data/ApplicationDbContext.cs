@@ -118,7 +118,7 @@ namespace MSNK.Data
             //Belanjawan end
 
             //default bool to true
-            modelBuilder.Entity<AkCarta>().Property(b => b.IsBajet).HasDefaultValue(true);
+
             //default bool to true end
             //load item without soft delete end
 

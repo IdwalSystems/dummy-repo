@@ -356,6 +356,7 @@ namespace MSNK.Controllers
         //Function PopulateCartfromDb end
 
         // GET: SpPermohonanAktiviti
+        [Authorize(Policy = "SP001")]
         public async Task<IActionResult> Index(
              string searchString,
              string searchDate1,
@@ -504,6 +505,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "SP001C")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId, int AkCartaId, int SuPekerjaId)
         {
@@ -538,9 +540,8 @@ namespace MSNK.Controllers
                     m.ProgramBinaan = spPendahuluanPelbagai.ProgramBinaan;
                     m.JNegeriId = spPendahuluanPelbagai.JNegeriId;
                     m.JSukan = sukan;
-                    m.Tarikh = spPendahuluanPelbagai.Tarikh;
-                    m.Aktiviti = spPendahuluanPelbagai.Aktiviti;
-                    m.Tempat = spPendahuluanPelbagai.Tempat;
+                    m.Aktiviti = spPendahuluanPelbagai.Aktiviti?.ToUpper() ?? null;
+                    m.Tempat = spPendahuluanPelbagai.Tempat?.ToUpper() ?? null;
                     m.JTahapAktiviti = tahap;
                     m.AkCartaId = spPendahuluanPelbagai.AkCartaId;
                     m.JumKeseluruhan = spPendahuluanPelbagai.JumKeseluruhan;
@@ -575,6 +576,7 @@ namespace MSNK.Controllers
         }
 
         // GET: SpPermohonanAktiviti/Edit/5
+        [Authorize(Policy = "SP001E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -608,6 +610,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "SP001E")]
         public async Task<IActionResult> Edit(int id, SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId, int JNegeriId, int JJantinaId, decimal JumKeseluruhan, int JBahagian)
         {
             if (id != spPendahuluanPelbagai.Id)
@@ -744,6 +747,7 @@ namespace MSNK.Controllers
         }
 
         // GET: SpPermohonanAktiviti/Delete/5
+        [Authorize(Policy = "SP001D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -769,6 +773,7 @@ namespace MSNK.Controllers
 
         // POST: SpPermohonanAktiviti/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "SP001D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -780,8 +785,9 @@ namespace MSNK.Controllers
 
         // Sokong function
         [HttpPost, ActionName("Sokong")]
+        [Authorize(Policy = "SP001T")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Sokong(int? id, decimal jumSokong, int penyemakId)
+        public async Task<IActionResult> Sokong(int? id, decimal jumSokong, int penyemakId, DateTime? tarikhSokong)
         {
             if (id == null)
             {
@@ -814,7 +820,7 @@ namespace MSNK.Controllers
                     {
                         //update posting status in SPPENDAHULUANPELBAGAI
                         sp.FlStatusSokong = 1;
-                        sp.TarSokong = DateTime.Now;
+                        sp.TarSokong = tarikhSokong;
                         sp.JumSokong = jumSokong;
 
                         sp.JPenyemakId = penyemakId;
@@ -823,7 +829,7 @@ namespace MSNK.Controllers
                         await _spPendahuluanPelbagaiRepo.Update(sp);
 
                         //insert applog
-                        await AddLogAsync("Posting", "Posting Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
+                        await AddLogAsync("Posting", "Sokong Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
 
                         //insert applog end
 
@@ -851,8 +857,9 @@ namespace MSNK.Controllers
 
         // posting function
         [HttpPost, ActionName("Posting")]
+        [Authorize(Policy = "PV001T")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Posting(int? id, decimal jumSokong, decimal jumLulus, int pelulusId)
+        public async Task<IActionResult> Posting(int? id, decimal jumSokong, decimal jumLulus, int pelulusId, DateTime tarikhLulus)
         {
             if (id == null)
             {
@@ -914,7 +921,13 @@ namespace MSNK.Controllers
                             sp.TarikhPosting = DateTime.Now;
                             sp.JumSokong = jumSokong;
                             sp.JumLulus = jumLulus;
+                            sp.TarLulus = tarikhLulus;
                             sp.JPelulusId = pelulusId;
+
+                            // AK CODE 31/03/2022
+                            sp.UserIdKemaskini = user.UserName;
+                            sp.TarKemaskini = DateTime.Now;
+                            // AK CODE END 31/03/2022
 
                             await _spPendahuluanPelbagaiRepo.Update(sp);
 
@@ -1322,6 +1335,46 @@ namespace MSNK.Controllers
         {
             return _context.SpPendahuluanPelbagai.Any(e => e.Id == id);
         }
+
+        // AK CODE 31/03/2022
+        [Authorize(Policy = "SP001R")]
+        public async Task<IActionResult> RollBack(int id)
+        {
+            var obj = await _spPendahuluanPelbagaiRepo.GetByIdIncludeDeletedItems(id);
+            // check if already posting redirect back
+            if (obj.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // rollback operation
+
+            obj.FlHapus = 0;
+            obj.FlCetak = 0;
+            obj.TarSokong = null;
+            obj.JPenyemakId = null;
+            obj.JumSokong = 0;
+            obj.FlStatusSokong = 0;
+
+            obj.TarLulus = null;
+            obj.JPelulusId = null;
+            obj.JumLulus = 0;
+            obj.FlStatusLulus = 0;
+
+            _context.SpPendahuluanPelbagai.Update(obj);
+
+            // rollback operation end
+
+            //insert applog
+            await AddLogAsync("Rollback", "Rollback Data", obj.NoPermohonan, id, obj.JumKeseluruhan);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
+            return RedirectToAction(nameof(Index));
+        }
+        // AK CODE 31/03/2022 END
 
         public async Task<IActionResult> PrintPdf(int id)
         {

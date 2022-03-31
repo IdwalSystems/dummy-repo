@@ -41,7 +41,7 @@ namespace MSNK.Models.Modules
         // cek if kod akaun is in bajet or not
         [Display(Name = "Tidak Dikira Dalam Peruntukan")]
         [DefaultValue(true)]
-        public bool? IsBajet { get; set; }
+        public bool IsBajet { get; set; }
         //field end
 
         //Relationship

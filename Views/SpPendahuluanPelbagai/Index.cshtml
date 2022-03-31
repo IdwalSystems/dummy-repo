@@ -105,7 +105,7 @@
         <thead>
             <tr>
                 <th width="5%">Bil</th>
-                <th>
+                <th hidden>
                     Id
                 </th>
                 <th>
@@ -144,7 +144,7 @@
                 var tabletype = item.FlHapus == 1 ? "table-danger" : null;
                 <tr class="@tabletype">
                     <td></td>
-                    <td>
+                    <td hidden>
                         @Html.DisplayFor(modelItem => item.Id)
                     </td>
                     <td>
@@ -211,7 +211,7 @@
                                     }
                                     else
                                     {
-                                        <button data-toggle="modal" data-target="#modalSokong" class="btn btn-sm bg-white text-tertiary" type="button" data-placement="top" title="Sokong" onclick="ModalClick(this)">
+                                        <button data-toggle="modal" data-target="#modalSokong" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Sokong" onclick="ModalClick(this)">
                                             <i class="fas fa-file-signature"></i>
                                         </button>
                                     }
@@ -282,15 +282,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label name="penyemakId" class="control-label">Penyokong</label>
-                        <select class="form-control form-control-sm text-uppercase" name="penyemakId" id="ddlPenyemak">
-                            @foreach (var s in ViewBag.JPenyemak)
-                            {
-                                <option value="@s.Id">@s.SuPekerja.Nama </option>
-                            }
-                        </select>
+                    <div class="form-row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label name="penyemakId" class="control-label">Penyokong</label>
+                                <select class="form-control form-control-sm text-uppercase" name="penyemakId" id="ddlPenyemak">
+                                    @foreach (var s in ViewBag.JPenyemak)
+                                    {
+                                        <option value="@s.Id">@s.SuPekerja.Nama </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Tarikh Disokong</label>
+                                <input type="datetime-local" class="form-control form-control-sm moTarikhSemak" name="tarikhSokong">
+                            </div>
+                        </div>
                     </div>
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
@@ -344,15 +355,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label name="pelulusId" class="control-label">Pelulus</label>
-                        <select class="form-control form-control-sm text-uppercase" name="pelulusId" id="ddlPelulus">
-                            @foreach (var s in ViewBag.JPelulus)
-                            {
-                                <option value="@s.Id">@s.SuPekerja.Nama </option>
-                            }
-                        </select>
+                    <div class="form-row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label name="pelulusId" class="control-label">Pelulus</label>
+                                <select class="form-control form-control-sm text-uppercase" name="pelulusId" id="ddlPelulus">
+                                    @foreach (var s in ViewBag.JPelulus)
+                                    {
+                                        <option value="@s.Id">@s.SuPekerja.Nama </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Tarikh Diluluskan</label>
+                                <input type="datetime-local" class="form-control form-control-sm moTarikhLulus" name="tarikhLulus">
+                            </div>
+                        </div>
                     </div>
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>

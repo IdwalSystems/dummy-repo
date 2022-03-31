@@ -18,6 +18,9 @@ namespace MSNK.Models.Modules
         [DisplayName("Bahagian")]
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
+        [DisplayName("Kod Kaunter Panjar")]
+        public int? AkTunaiRuncitId { get; set; }
+        public AkTunaiRuncit AkTunaiRuncit { get; set; }
 
         [DisplayName("No Jurnal")]
         [MaxLength(20)]
