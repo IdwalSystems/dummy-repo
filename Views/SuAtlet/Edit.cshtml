@@ -1,0 +1,240 @@
+﻿@model MSNK.Models.Modules.SuAtlet
+@{
+    ViewData["Title"] = "Ubah";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<partial name="_JSEdit" />
+
+<style>
+    .sorok {
+        display: none;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit" class="needs-validation">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="KodAtlet" />
+            <div class="card box-shadow border-primary mb-3">
+                <div class="card-header bg-primary text-white ">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-left">Daftar Atlet - @ViewData["Title"]</h5>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="text-right">Kod Atlet : @Model.KodAtlet</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    <label asp-for="KodAtlet" class="control-label"></label>
+                                    <input asp-for="KodAtlet" class="form-control form-control-sm" readonly />
+                                    <span asp-validation-for="KodAtlet" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label asp-for="NoKp" class="control-label"></label>
+                                    <input asp-for="NoKp" class="form-control form-control-sm" readonly />
+                                    <span asp-validation-for="NoKp" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md">
+                                    <label asp-for="Nama" class="control-label"></label>
+                                    <input asp-for="Nama" class="form-control form-control-sm text-uppercase text-uppercase" required />
+                                    <span asp-validation-for="Nama" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-row ">
+                                <div class="form-group col-md">
+                                    <label asp-for="Jawatan" class="control-label"></label>
+                                    <input asp-for="Jawatan" class="form-control form-control-sm text-uppercase"/>
+                                    <span asp-validation-for="Jawatan" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label asp-for="JSukanId" class="control-label"></label>
+                                <select asp-for="JSukanId" class="form-control form-control-sm" required>
+                                    <option value="" hidden>-- Pilih Sukan --</option>
+                                    @foreach (var s in ViewBag.JSukan)
+                                    {
+                                        <option value="@s.Id">@s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="JSukanId" class="text-danger"></span>
+                            </div>
+                            <div class="form-row ">
+                                <div class="form-group col-md">
+                                    <label asp-for="Alamat1" class="control-label"></label>
+                                    <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase"/>
+                                    <span asp-validation-for="Alamat1" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-row ">
+                                <div class="form-group col-md">
+                                    <label asp-for="Alamat2" class="control-label"></label>
+                                    <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase"/>
+                                    <span asp-validation-for="Alamat2" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-row ">
+                                <div class="form-group col-md">
+                                    <label asp-for="Alamat3" class="control-label"></label>
+                                    <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase"/>
+                                    <span asp-validation-for="Alamat3" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md">
+                                    <label asp-for="Poskod" class="control-label"></label>
+                                    <input asp-for="Poskod" class="form-control form-control-sm" />
+                                    <span asp-validation-for="Poskod" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md">
+                                    <label asp-for="Bandar" class="control-label"></label>
+                                    <input asp-for="Bandar" class="form-control form-control-sm text-uppercase" />
+                                    <span asp-validation-for="Bandar" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label asp-for="JNegeriId" class="control-label"></label>
+                                    <select asp-for="JNegeriId" class="form-control form-control-sm">
+                                        <option value="" hidden>-- Pilih Negeri --</option>
+                                        @foreach (var s in ViewBag.JNegeri)
+                                        {
+                                            <option value="@s.Id">@s.Perihal </option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="JNegeriId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md">
+                                    <label asp-for="TarikhAktif" class="control-label"></label>
+                                    <input asp-for="TarikhAktif" class="form-control form-control-sm" />
+                                    <span asp-validation-for="TarikhAktif" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md">
+                                    <label asp-for="TarikhBerhenti" class="control-label"></label>
+                                    <input asp-for="TarikhBerhenti" class="form-control form-control-sm" />
+                                    <span asp-validation-for="TarikhBerhenti" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md">
+                                    <label asp-for="Emel" class="control-label"></label>
+                                    <input asp-for="Emel" class="form-control form-control-sm text-lowercase" />
+                                    <span asp-validation-for="Emel" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md">
+                                    <label asp-for="Telefon" class="control-label"></label>
+                                    <input asp-for="Telefon" class="form-control form-control-sm" />
+                                    <span asp-validation-for="Telefon" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md">
+                                    <label asp-for="JAgamaId" class="control-label"></label>
+                                    <select asp-for="JAgamaId" class="form-control form-control-sm">
+                                        <option value="" hidden>-- Pilih Aama --</option>
+                                        @foreach (var s in ViewBag.JAgama)
+                                        {
+                                            <option value="@s.Id">@s.Perihal </option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="JAgamaId" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md">
+                                    <label asp-for="JBangsaId" class="control-label"></label>
+                                    <select asp-for="JBangsaId" class="form-control form-control-sm">
+                                        <option value="" hidden>-- Pilih Bangsa --</option>
+                                        @foreach (var s in ViewBag.JBangsa)
+                                        {
+                                            <option value="@s.Id">@s.Perihal </option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="JBangsaId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label asp-for="NoAkaunBank" class="control-label"></label>
+                                    <input asp-for="NoAkaunBank" class="form-control form-control-sm" />
+                                    <span asp-validation-for="NoAkaunBank" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label asp-for="JBankId" class="control-label"></label>
+                                    <select asp-for="JBankId" class="form-control form-control-sm">
+                                        <option value="" hidden>-- Pilih Nama Bank --</option>
+                                        @foreach (var s in ViewBag.JBank)
+                                        {
+                                            <option value="@s.Id">@s.Kod - @s.Nama </option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label asp-for="JCaraBayarId" class="control-label"></label>
+                                    <select asp-for="JCaraBayarId" class="form-control form-control-sm" required>
+                                        <option value="" hidden>-- Pilih Cara Bayar --</option>
+                                        @foreach (var s in ViewBag.JCaraBayar)
+                                        {
+                                            <option value="@s.Id">@s.Perihal </option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="JCaraBayarId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Simpan" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Kembali Ke Indeks</a>
+</div>
+
+<!-- Modal Objek -->
+@*<div class="modal fade bd-example-modal-lg" id="modalObjek" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tanggungan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input id="moId1" hidden />
+                    <div class="form-group">
+                        <label class="col-form-label">Nama</label>
+                        <input class="form-control form-control-sm" id="moNama">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">No KP</label>
+                        <input class="form-control form-control-sm" readonly id="moNokp">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Hubungan</label>
+                        <input class="form-control form-control-sm" id="moHubungan">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate1()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>*@
+<!-- Modal Objek End -->
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

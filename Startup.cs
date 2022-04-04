@@ -98,6 +98,8 @@ namespace MSNK
             services.AddTransient<ListViewIRepository<AkPV1, int>, AkPV1Repository>();
             services.AddTransient<ListViewIRepository<AkPV2, int>, AkPV2Repository>();
             services.AddTransient<IRepository<SuPekerja, int, string>, SuPekerjaRepository>();
+            services.AddTransient<IRepository<SuAtlet, int, string>, SuAtletRepository>();
+            services.AddTransient<IRepository<SuJurulatih, int, string>, SuJurulatihRepository>();
             services.AddTransient<ListViewIRepository<SuTanggunganPekerja, int>, SuTanggunganPekerjaRepository>();
             services.AddTransient<IRepository<JAgama, int, string>, JAgamaRepository>();
             services.AddTransient<IRepository<JBangsa, int, string>, JBangsaRepository>();

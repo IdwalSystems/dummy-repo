@@ -1,0 +1,261 @@
+﻿<script type="text/javascript">
+    //add tbl tanggungan
+    $("body").on("click", "#btnAdd1", function () {
+        //Reference the Name and Country TextBoxes.
+        var txtnokp = $("#txtNokp");
+        InsertRow();
+    });
+
+    function InsertRow() {
+        //Reference the TextBoxes.
+        var txtSuPekerja = $("#txtSuPekerja");
+        var txtNama = $("#txtNama");
+        var txtNokp = $("#txtNokp");
+        var txtHubungan = $("#txtHubungan");
+
+        if (txtNokp.val()) {
+            //Get the reference of the Table's TBODY element.
+            var tBody = $("#tblObjek > TBODY")[0];
+            var check = false;
+            var table = $("#tblObjek tbody");
+            table.find('tr').each(function (i, el) {
+                var $tds = $(this).find('td');
+                var loop = $tds.eq(2).text();
+                console.log('loop : ' + loop);
+                console.log('txtNokp : ' + txtNokp.val());
+                if (txtNokp.val().trim() === loop.trim()) {
+                    check = true;
+                };
+            });
+            if (!check) {
+                //Add Row.
+                var row = tBody.insertRow(-1);
+
+                //Add nokp cell.
+                var cell = $(row.insertCell(-1));
+                cell.html(txtNokp.val());
+                cell.prop("hidden", !this.checked);
+
+                //Add nama cell.
+                var cell = $(row.insertCell(-1));
+                cell.html(txtNama.val());
+
+                //Add nokp cell.
+                var cell = $(row.insertCell(-1));
+                cell.html(txtNokp.val());
+                cell.attr("class", "editable-txt");
+                cell.attr("id", "td1Debit_" + txtNokp.val());
+
+                //Add hubungan cell.
+                var cell = $(row.insertCell(-1));
+                cell.html(txtHubungan.val());
+                cell.attr("class", "editable-txt");
+                cell.attr("id", "td1Kredit_" + txtNokp.val());
+
+                //Add Edit Button cell.
+                cell = $(row.insertCell(-1));
+
+                var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                cell.append(btnUpdate1);
+
+                //Add Remove Button cell.
+                cell = $(row.insertCell(-1));
+
+                var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                cell.append(btnRemove1);
+
+                var suT = {
+                    SuPekerjaId: txtSuPekerja.val(),
+                    NoKP: txtNokp.val(),
+                    Nama: txtNama.val(),
+                    Hubungan: txtHubungan.val()
+                }
+
+                if (txtNokp.val) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/SuPekerja/InsertUpdateSuTanggungan",
+                        data: suT,
+                        dataType: "json",
+                        success: function (r) {
+                            //Clear the TextBoxes.
+                            txtNokp.val("");
+                            txtNama.val("");
+                            txtHubungan.val("");
+                        }
+                    });
+                }
+            }
+        }
+    }
+    //add tbl tanggungan end
+
+    function Update1(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var SuPekerjaId = $('#Id').val();
+        var NoKP = $("TD", row).eq(0).html();
+        var idSuT1 = row.attr('id');
+
+        var sut = {
+            SuPekerjaId: SuPekerjaId,
+            NoKP: NoKP,
+            Id: idSuT1
+        }
+        if (name != null) {
+            $.ajax({
+                type: "POST",
+                url: "/SuPekerja/UpdateSuTanggungan",
+                data: sut,
+                dataType: "json",
+                success: function (r) {
+                    //Delete the Table row using it's Index.
+                    $("#moId1").val(r.record.id);
+                    $("#moNama").val(r.record.nama);
+                    $("#moNokp").val(r.record.noKP);
+                    $("#moHubungan").val(r.record.hubungan);
+                }
+            });
+        }
+    };
+    function modalUpdate1() {
+        var id = $("#moId1").val();
+        var nama = $("#moNama").val();
+        var hubungan = $("#moHubungan").val();
+        var suTId = $("#Id").val();
+
+        var suT = {
+            Id: id,
+            SuPekerjaId: suTId,
+            Nama: nama,
+            Hubungan: hubungan
+        }
+
+        $("table tbody#tbodyObjek").empty();
+
+        $.ajax({
+            type: "POST",
+            url: "/SuPekerja/SaveUpdateSuTanggungan",
+            data: suT,
+            dataType: "json",
+            beforeSend: function () {
+                $('#tblObjek').addClass('d-none');
+                $('#loader').removeClass('d-none');
+            },
+            success: function (r) {
+                //insert notification here
+                $.ajax({
+                    type: "POST",
+                    url: "/SuPekerja/GetCart1",
+                    data: suT,
+                    dataType: "json",
+                    success: function (r) {
+                        //refresh updated table objek
+                        if (r.data.suTanggungan.length > 0) {
+                            console.log(r.data.suTanggungan);
+                            for (var i = 0; i < r.data.suTanggungan.length; i++) {
+                                var item1 = r.data.suTanggungan[i];
+                                var str =
+                                    "<tr id='" + item1.id + "'><td id='tdNokp' hidden>" + item1.noKP +
+                                    "</td><td id='tdNama'>" + item1.nama +
+                                    "</td><td>" + item1.noKP +
+                                    "</td><td id='tdHubungan'>" + item1.hubungan +
+                                    "</td><td>" +
+                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "</td><td>" +
+                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "</td><tr>";
+                                $("table tbody#tbodyObjek").append(str);
+                            }
+                        }
+                    }
+                });
+            },
+            complete: function () {
+                $('#tblObjek').removeClass('d-none');
+                $('#loader').addClass('d-none');
+            },
+        });
+    };
+
+    //remove tbl objek
+    function Remove1(button) {
+        var row = $(button).closest("TR");
+        var nama = $("TD", row).eq(1).html();
+        var nokp = $("TD", row).eq(0).html();
+        var SuPekerjaId = $('#Id').val();
+        var NoKP = $("TD", row).eq(0).html();
+        var idSuT1 = row.attr('id');
+
+        if (confirm("Hapus maklumat : " + nokp + " - " + nama + "?")) {
+            //Get the reference of the Table.
+            var table = $("#tblObjek")[0];
+
+            var sut = {
+                SuPekerjaId: SuPekerjaId,
+                NoKP: NoKP,
+                Id: idSuT1
+            }
+            if (nokp != null) {
+                $.ajax({
+                    type: "POST",
+                    url: "/SuPekerja/RemoveUpdateSuTanggungan",
+                    data: sut,
+                    dataType: "json",
+                    success: function (r) {
+                        //Delete the Table row using it's Index.
+                        table.deleteRow(row[0].rowIndex);
+                    }
+                });
+            }
+        }
+    };
+    //remove tbl objek end
+
+    //validation form
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    $(document).ready(function () {
+        $.validator.setDefaults({
+            errorElement: "span",
+            errorClass: "help-block",
+            //	validClass: 'stay',
+            highlight: function (element, errorClass) {
+                $(element).addClass(errorClass); //.removeClass(errorClass);
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            unhighlight: function (element, errorClass) {
+                $(element).removeClass(errorClass); //.addClass(validClass);
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+            },
+
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+
+            },
+
+        });
+    });
+    //validation form end
+
+</script>

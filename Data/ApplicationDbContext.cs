@@ -46,6 +46,8 @@ namespace MSNK.Data
         public DbSet<AkPV2> AkPV2 { get; set; }
         public DbSet<SuPekerja> SuPekerja { get; set; }
         public DbSet<SuTanggunganPekerja> SuTanggunganPekerja { get; set; }
+        public DbSet<SuAtlet> SuAtlet { get; set; }
+        public DbSet<SuJurulatih> SuJurulatih { get; set; }
         public DbSet<JBangsa> JBangsa { get; set; }
         public DbSet<JAgama> JAgama { get; set; }
         public DbSet<AbBukuVot> AbBukuVot { get; set; }
