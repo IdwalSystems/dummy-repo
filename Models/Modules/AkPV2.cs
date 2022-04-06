@@ -25,6 +25,7 @@ namespace MSNK.Models.Modules
         [DisplayName("No Inbois Pembekal")]
         public int? AkBelianId { get; set; }
         public AkBelian AkBelian { get; set; }
+        public AkPV AkPV { get; set; }
         //relationship end
 
     }

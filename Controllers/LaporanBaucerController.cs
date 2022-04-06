@@ -82,7 +82,7 @@ namespace MSNK.Controllers
             if (kodLaporan == "LPV00101")
             {
                 
-                tajuk = "Laporan Daftar Bil Kump Wang :";
+                tajuk = "Laporan Daftar Baucer Kump Wang :";
 
                 IEnumerable<AkPV> akT = _context.AkPV
                     .Include(b => b.JKW)
@@ -150,7 +150,7 @@ namespace MSNK.Controllers
             }
             else if (kodLaporan == "LPV00102")
             {
-                tajuk = "Laporan Daftar Bil Kump Wang :";
+                tajuk = "Laporan Daftar Baucer Kump Wang :";
 
                 IEnumerable<AkPV> akT = _context.AkPV
                     .Include(b => b.JKW)

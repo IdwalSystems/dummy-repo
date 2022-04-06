@@ -1,0 +1,263 @@
+﻿@model MSNK.Models.Modules.PrintModel.Reporting.LPN001PrintModel
+
+@{
+    ViewData["Title"] = "Cetakan LPN00101";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    CompanyDetails company = new CompanyDetails();
+
+    var bil = 0;
+}
+<style>
+    .flexrow {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex !important;
+    }
+
+        .flexrow > div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+    .image-container {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    h6 {
+        font-size: 0.8rem;
+    }
+
+    p {
+        font-size: 0.6rem;
+    }
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    table tbody tr td {
+        font-size: 0.8rem;
+        line-height: 1.0rem;
+    }
+
+    table thead tr th {
+        font-size: 0.8rem;
+        line-height: 1.0rem;
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+
+<table class="table table-bordered table-sm topic">
+    <thead>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-secondary">
+            <th class="text-center font-weight-bold text-white" width="2%">BIL  </th>
+            @*tarikh NM*@
+            <th class="text-center font-weight-bold text-white" width="5%">TARIKH </th>
+            @*tarikh posting NM*@
+            <th class="text-center font-weight-bold text-white" width="5%">TARIKH SAH</th>
+            @*tarikh PO*@
+            <th class="text-center font-weight-bold text-white" width="5%">TARIKH TERIMA KEWANGAN</th>
+            <th class="text-center font-weight-bold text-white">NAMA PEMBEKAL</th>
+            <th class="text-center font-weight-bold text-white" width="5%">NO SIRI</th>
+            <th class="text-center font-weight-bold text-white" width="5%">AMAUN RM</th>
+            <th class="text-center font-weight-bold text-white">NO PO</th>
+            <th class="text-center font-weight-bold text-white">TARIKH BAUCER</th>
+            <th class="text-center font-weight-bold text-white">NO BAUCER</th>
+            <th class="text-center font-weight-bold text-white">TARIKH SAH BAUCER</th>
+            <th class="text-center font-weight-bold text-white">TARIKH CEK</th>
+            <th class="text-center font-weight-bold text-white">NO CEK</th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.AkNotaMinta)
+        {
+
+            // if data is in kewangan, change row color to blue
+            var tabletype = "";
+            // cek if po is in kewangan or not
+
+            if (item.AkPO.Count > 0)
+            {
+                foreach (var itemPO in item.AkPO)
+                {
+                    if (itemPO.IsInKewangan == false)
+                    {
+                        tabletype = "table-primary";
+                    }
+                }
+            }
+            // cek end
+            // end
+
+            // if data is Batal, change row color to red
+            if (item.FlHapus == 1)
+            {
+                tabletype = "table-danger";
+            }
+            // end
+
+
+
+            bil++;
+
+            var tarikhPosting = Convert.ToDateTime(item.TarikhPosting).ToString("dd/MM/yyyy");
+            tarikhPosting = (tarikhPosting != "01/01/0001") ? tarikhPosting : "-";
+
+            var tarikhKewangan = Convert.ToDateTime(item.TarikhSeksyenKewangan).ToString("dd/MM/yyyy");
+            tarikhKewangan = (tarikhKewangan != "01/01/0001") ? tarikhKewangan : "-";
+
+        <tr class="@tabletype" style="line-height:0.8rem; page-break-before:avoid;">
+
+            <td class="text-right" style="border-bottom:none;">@bil</td>
+            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
+            <td class="text-center" style="border-bottom:none;">@tarikhPosting</td>
+            <td class="text-center" style="border-bottom:none;">@tarikhKewangan</td>
+            <td class="text-left text-uppercase" style="border-bottom:none;">@item.AkPembekal.NamaSykt</td>
+            <td class="text-center" style="border-bottom:none;">@item.NoSiri</td>
+            <td class="text-right ">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+            @if (item.AkPO.Count > 0)
+            {
+                @foreach (var itemPO in item.AkPO)
+                {
+                    <td class="text-center" style="border-bottom:none;">@itemPO.NoPO</td>
+
+                    if (itemPO.AkBelian.Count > 0)
+                    {
+                        foreach (var itemBelian in itemPO.AkBelian)
+                        {
+                            if (itemBelian.AkPV2.Count > 0)
+                            {
+                                foreach (var itemPV2 in itemBelian.AkPV2)
+                                {
+                                    var tarikhPostingPV = Convert.ToDateTime(itemPV2.AkPV.TarikhPosting).ToString("dd/MM/yyyy");
+                                    tarikhPostingPV = (tarikhPostingPV != "01/01/0001") ? tarikhPostingPV : "-";
+                                    var tarikhCek = Convert.ToDateTime(itemPV2.AkPV.TarCekAtauEFT).ToString("dd/MM/yyyy");
+                                    tarikhCek = (tarikhCek != "01/01/0001") ? tarikhCek : "-";
+
+                                    <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(itemPV2.AkPV.Tarikh).ToString("dd/MM/yyyy")</td>
+                                    <td class="text-center" style="border-bottom:none;">@itemPV2.AkPV.NoPV</td>
+                                    <td class="text-center" style="border-bottom:none;">@tarikhPostingPV</td>
+                                    <td class="text-center" style="border-bottom:none;">@tarikhCek</td>
+                                    <td class="text-center" style="border-bottom:none;">@itemPV2.AkPV.JCaraBayar.Perihal</td>
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <td class="text-center" style="border-bottom:none;">-</td>
+                        <td class="text-center" style="border-bottom:none;">-</td>
+                        <td class="text-center" style="border-bottom:none;">-</td>
+                        <td class="text-center" style="border-bottom:none;">-</td>
+                        <td class="text-center" style="border-bottom:none;">-</td>
+                    }
+                }
+            }
+            else
+            {
+                <td class="text-center" style="border-bottom:none;">-</td>
+                <td class="text-center" style="border-bottom:none;">-</td>
+                <td class="text-center" style="border-bottom:none;">-</td>
+                <td class="text-center" style="border-bottom:none;">-</td>
+                <td class="text-center" style="border-bottom:none;">-</td>
+                <td class="text-center" style="border-bottom:none;">-</td>
+            }
+
+        </tr>
+
+        }
+
+    </tbody>
+</table>
+
+<div class="row flexrow mb-3 ml-0">
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disediakan Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+        <h6>@Model.Username</h6>
+    </div>
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disemak Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+    </div>
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disahkan Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+    </div>
+</div>
+
