@@ -98,8 +98,6 @@ namespace MSNK
             services.AddTransient<ListViewIRepository<AkPV1, int>, AkPV1Repository>();
             services.AddTransient<ListViewIRepository<AkPV2, int>, AkPV2Repository>();
             services.AddTransient<IRepository<SuPekerja, int, string>, SuPekerjaRepository>();
-            services.AddTransient<IRepository<SuAtlet, int, string>, SuAtletRepository>();
-            services.AddTransient<IRepository<SuJurulatih, int, string>, SuJurulatihRepository>();
             services.AddTransient<ListViewIRepository<SuTanggunganPekerja, int>, SuTanggunganPekerjaRepository>();
             services.AddTransient<IRepository<JAgama, int, string>, JAgamaRepository>();
             services.AddTransient<IRepository<JBangsa, int, string>, JBangsaRepository>();
@@ -115,13 +113,21 @@ namespace MSNK
             services.AddTransient<IRepository<AkTunaiCV, int, string>, AkTunaiCVRepository>();
             services.AddTransient<IRepository<AkTunaiLejar, int, string>, AkTunaiLejarRepository>();
             //TUNAI RUNCIT END
-            //Pendahuluan Pelbagai
+
+            //PENDAHULUAN PELBAGAI
             services.AddTransient<IRepository<JTahapAktiviti, int, string>, JTahapAktivitiRepository>();
             services.AddTransient<IRepository<JSukan, int, string>, JSukanRepository>();
             services.AddTransient<IRepository<SpPendahuluanPelbagai, int, string>, SpPendahuluanPelbagaiRepository>();
             services.AddTransient<ListViewIRepository<SpPendahuluanPelbagai1, int>, SpPendahuluanPelbagai1Repository>();
             services.AddTransient<ListViewIRepository<SpPendahuluanPelbagai2, int>, SpPendahuluanPelbagai2Repository>();
-            //Pendahuluan Pelbagai END
+            //PENDAHULUAN PELBAGAI END
+
+            //SKIM KECEMERLANGAN ATLET DAN ELAUN JURURULATIH
+            services.AddTransient<IRepository<SuAtlet, int, string>, SuAtletRepository>();
+            services.AddTransient<IRepository<SuJurulatih, int, string>, SuJurulatihRepository>();
+            //services.AddTransient<IRepository<SuProfil, int, string>, SuProfilRepository>();
+            //services.AddTransient<IRepository<SuProfil1, int, string>, SuProfil1Repository>();
+            //SKIM KECEMERLANGAN ATLET DAN ELAUN JURURULATIH END
             services.AddTransient<IRepository<AkNotaMinta, int, string>, AkNotaMintaRepository>();
             services.AddTransient<ListViewIRepository<AkNotaMinta1, int>, AkNotaMinta1Repository>();
             services.AddTransient<ListViewIRepository<AkNotaMinta2, int>, AkNotaMinta2Repository>();

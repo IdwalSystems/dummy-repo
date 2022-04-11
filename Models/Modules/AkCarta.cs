@@ -75,8 +75,8 @@ namespace MSNK.Models.Modules
         public ICollection<AkTunaiRuncit> AkTunaiRuncit { get; set; }
         public ICollection<AkTunaiCV1> AkTunaiCV1 { get; set; }
         public ICollection<AkNotaMinta1> AkNotaMinta1 { get; set; }
-
         public ICollection<AbWaran1> AbWaran1 { get; set; }
+        public ICollection<SuProfil> SuProfil { get; set; }
         //relationship end
 
         //soft delete

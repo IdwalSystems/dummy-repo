@@ -36,5 +36,6 @@ namespace MSNK.Models.Modules
         public ICollection<AkTunaiRuncit> AkTunaiRuncit { get; set; }
         public ICollection<SpPendahuluanPelbagai> SpPendahuluanPelbagai { get; set; }
         public ICollection<AkBank> AkBank { get; set; }
+        public ICollection<SuProfil> SuProfil { get; set; }
     }
 }

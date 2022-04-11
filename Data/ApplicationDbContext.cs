@@ -48,6 +48,8 @@ namespace MSNK.Data
         public DbSet<SuTanggunganPekerja> SuTanggunganPekerja { get; set; }
         public DbSet<SuAtlet> SuAtlet { get; set; }
         public DbSet<SuJurulatih> SuJurulatih { get; set; }
+        public DbSet<SuProfil> SuProfil { get; set; }
+        public DbSet<SuProfil1> SuProfil1 { get; set; }
         public DbSet<JBangsa> JBangsa { get; set; }
         public DbSet<JAgama> JAgama { get; set; }
         public DbSet<AbBukuVot> AbBukuVot { get; set; }
@@ -446,6 +448,29 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.JBahagianId)
                     .OnDelete(DeleteBehavior.Restrict);
             //AkJurnal End
+
+            // SUPROFIL
+            modelBuilder.Entity<SuProfil>()
+            .HasOne(m => m.JKW)
+            .WithMany(t => t.SuProfil)
+            .HasForeignKey(m => m.JKWId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
+
+            modelBuilder.Entity<SuProfil>()
+            .HasOne(m => m.AkCarta)
+            .WithMany(t => t.SuProfil)
+            .HasForeignKey(m => m.AkCartaId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
+
+            modelBuilder.Entity<SuProfil>()
+            .HasOne(m => m.JBahagian)
+            .WithMany(t => t.SuProfil)
+            .HasForeignKey(m => m.JBahagianId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
+            // SUPROFIL END
             //set default value
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan1).HasDefaultValue("");
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan2).HasDefaultValue("");

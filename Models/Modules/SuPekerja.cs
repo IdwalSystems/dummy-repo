@@ -65,11 +65,9 @@ namespace MSNK.Models.Modules
 
         //relationship
         [DisplayName("Negeri")]
-        
         public JNegeri JNegeri { get; set; }
         [DisplayName("Agama")]
         public JAgama JAgama { get; set; }
-        
         [DisplayName("Nama Bank")]
         public JBank JBank { get; set; }
         [DisplayName("Bangsa")]
@@ -79,7 +77,6 @@ namespace MSNK.Models.Modules
         public JCaraBayar JCaraBayar { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
         public ICollection<AkTunaiCV> AkTunaiCV { get; set; }
-
         public ICollection<SpPendahuluanPelbagai> SpPendahuluanPelbagai { get; set; }
         public ICollection<JPelulus> JPelulus { get; set; }
         public ICollection<JPenyemak> JPenyemak { get; set; }

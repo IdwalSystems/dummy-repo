@@ -18,7 +18,7 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin,Supervisor")]
     public class SuJurulatihController : Controller
     {
-        public const string modul = "FL003";
+        public const string modul = "FL004";
         public const string namamodul = "Jurulatih";
 
         private readonly ApplicationDbContext _context;
