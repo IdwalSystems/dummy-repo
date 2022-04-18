@@ -1,4 +1,4 @@
-﻿<li class="nav-item dropdown">
+﻿@*<li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Terimaan
     </a>
@@ -6,5 +6,14 @@
         <a class="dropdown-item" asp-area="" asp-controller="AkTerima" asp-action="Index">Resit Rasmi</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" asp-area="" asp-controller="LaporanTerimaan" asp-action="Index">LPR001 Laporan Daftar Resit</a>
+    </div>
+</li>*@
+
+<li class="nav-item">
+    <a class="nav-link collapsed text-truncate" href="#submenuTerimaan" data-toggle="collapse" data-target="#submenuTerimaan"><i class="fas fa-hand-holding-usd mr-2"></i> Terimaan</a>
+    <div class="collapse" id="submenuTerimaan" aria-expanded="false">
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-controller="AkTerima" asp-action="Index"><span>Resit Rasmi</span></a></li>
+        </ul>
     </div>
 </li>

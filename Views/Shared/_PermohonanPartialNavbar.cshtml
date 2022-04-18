@@ -1,9 +1,18 @@
-﻿<li class="nav-item dropdown">
+﻿@*<li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Permohonan
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         <a class="dropdown-item" asp-area="" asp-controller="SpPendahuluanPelbagai" asp-action="Index">Pendahuluan Pelbagai</a>
         
+    </div>
+</li>*@
+
+<li class="nav-item">
+    <a class="nav-link collapsed text-truncate" href="#submenuPermohonan" data-toggle="collapse" data-target="#submenuPermohonan"><i class="far fa-file-alt mr-2"></i> Permohonan</a>
+    <div class="collapse" id="submenuPermohonan" aria-expanded="false">
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-controller="SpPendahuluanPelbagai" asp-action="Index"><span>Pendahuluan Pelbagai</span></a></li>
+        </ul>
     </div>
 </li>

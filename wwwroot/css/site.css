@@ -1,6 +1,120 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+/*navbar test*/
+/* width */
+.sticky-top {
+    top: 15px;
+}
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+.vertical-nav {
+    min-width: 17rem;
+    width: 17rem;
+    height: 85vh;
+    position: fixed;
+    top: 80px;
+    left: 10px;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s;
+    padding-bottom: 2vh;
+}
+
+
+.page-content {
+    width: calc(100% - 0rem);
+    margin-left: 17rem;
+    transition: all 0.4s;
+}
+
+/* for toggle behavior */
+
+#sidebar.active {
+    margin-left: -20rem;
+}
+
+#content.active {
+    width: 100%;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -20rem;
+    }
+
+        #sidebar.active {
+            margin-left: 0;
+        }
+
+    #content {
+        width: 100%;
+        margin: 0;
+    }
+
+        #content.active {
+            margin-left: 17rem;
+            width: calc(100% - 0rem);
+        }
+}
+
+/*
+*
+* ==========================================
+* FOR DEMO PURPOSE
+* ==========================================
+*
+*/
+
+body {
+    /*background: #599fd9;*/
+    /*background: -webkit-linear-gradient(to right, #599fd9, #c2e59c);*/
+    /*background: linear-gradient(to right, #599fd9, #c2e59c);*/
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.separator {
+    margin: 3rem 0;
+    border-bottom: 1px dashed #fff;
+}
+
+.text-uppercase {
+    letter-spacing: 0.1em;
+}
+
+.text-gray {
+    color: #aaa;
+}
+
+.nav-link[data-toggle].collapsed:after {
+    content: " ▾";
+}
+
+.nav-link[data-toggle]:not(.collapsed):after {
+    content: " ▴";
+}
+/**/
+
 /*AK code 31/03/2022*/
 .table-purple,
 .table-purple > th,

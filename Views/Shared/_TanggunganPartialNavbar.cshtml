@@ -1,4 +1,4 @@
-﻿<li class="nav-item dropdown">
+﻿@*<li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Tanggungan
     </a>
@@ -9,5 +9,17 @@
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" asp-area="" asp-controller="AkPOLaras" asp-action="Index">Pelarasan Pesanan Tempatan</a>
 
+    </div>
+</li>*@
+
+<li class="nav-item">
+    <a class="nav-link collapsed text-truncate" href="#submenuTanggungan" data-toggle="collapse" data-target="#submenuTanggungan"><i class="far fa-handshake mr-2"></i> Tanggungan</a>
+    <div class="collapse" id="submenuTanggungan" aria-expanded="false">
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-controller="AkNotaMinta" asp-action="Index"><span>Nota Minta</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-area="" asp-controller="AkPO" asp-action="Index"><span>Pesanan Tempatan</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-area="" asp-controller="AkBelian" asp-action="Index"><span>Inbois Pembekal</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-area="" asp-controller="AkPOLaras" asp-action="Index"><span>Pelarasan Pesanan Tempatan</span></a></li>
+        </ul>
     </div>
 </li>

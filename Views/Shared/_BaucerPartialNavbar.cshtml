@@ -1,4 +1,4 @@
-﻿<li class="nav-item dropdown">
+﻿@*<li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Baucer
     </a>
@@ -7,5 +7,15 @@
         <a class="dropdown-item" asp-area="" asp-controller="AkJurnal" asp-action="Index">Baucer Jurnal</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" asp-area="" asp-controller="LaporanBaucer" asp-action="Index">LPV001 Laporan Daftar Bil</a>
+    </div>
+</li>*@
+
+<li class="nav-item">
+    <a class="nav-link collapsed text-truncate" href="#submenuBaucer" data-toggle="collapse" data-target="#submenuBaucer"><i class="fas fa-money-bill mr-2"></i> Baucer</a>
+    <div class="collapse" id="submenuBaucer" aria-expanded="false">
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-controller="AkPV" asp-action="Index"><span>Baucer Pembayaran</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-area="" asp-controller="AkJurnal" asp-action="Index"><span>Baucer Jurnal</span></a></li>
+        </ul>
     </div>
 </li>

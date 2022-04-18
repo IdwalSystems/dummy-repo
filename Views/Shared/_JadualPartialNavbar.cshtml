@@ -1,4 +1,4 @@
-﻿<li class="nav-item dropdown ">
+﻿<!--<li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Jadual
     </a>
@@ -26,9 +26,9 @@
             <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Permohonan Pendahuluan
             </a>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu">-->
                 @*<a class="dropdown-item" asp-area="" asp-controller="JJantina" asp-action="Index">Jantina</a>*@
-                <a class="dropdown-item" asp-area="" asp-controller="JSukan" asp-action="Index">Sukan</a>
+                <!--<a class="dropdown-item" asp-area="" asp-controller="JSukan" asp-action="Index">Sukan</a>
                 <a class="dropdown-item" asp-area="" asp-controller="JTahapAktiviti" asp-action="Index">Tahap Aktiviti</a>
             </div>
         </div>
@@ -46,8 +46,79 @@
 
         <a class="dropdown-item" asp-area="" asp-controller="JPenyemak" asp-action="Index">Penyemak</a>
 
-        <a class="dropdown-item" asp-area="" asp-controller="JPelulus" asp-action="Index">Pelulus</a>
+        <a class="dropdown-item" asp-area="" asp-controller="JPelulus" asp-action="Index">Pelulus</a>-->
 
         @*<a class="dropdown-item" asp-area="" asp-controller="JJawatanPekerja" asp-action="Index">Jawatan Pekerja</a>*@
+    <!--</div>
+</li>-->
+
+<li class="nav-item">
+    <a class="nav-link collapsed text-truncate" href="#submenuJadual" data-toggle="collapse" data-target="#submenuJadual"><i class="fas fa-columns mr-2"></i> Jadual</a>
+    <div class="collapse" id="submenuJadual" aria-expanded="false">
+        <ul class="flex-column pl-2 nav">
+
+            <li class="nav-item">
+                <a class="nav-link  text-truncate collapsed py-1 ml-3" href="#submenuJadualsub1" data-toggle="collapse" data-target="#submenuJadualsub1"><span>Belanjawan</span></a>
+                <div class="collapse" id="submenuJadualsub1" aria-expanded="false">
+                    <ul class="flex-column nav pl-4">
+                        <li class="nav-item">
+                            <a class="nav-link p-1 text-truncate pl-4" asp-area="" asp-controller="JBahagian" asp-action="Index">
+                                Bahagian
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link p-1 text-truncate pl-4" asp-area="" asp-controller="JKW" asp-action="Index">
+                                Kumpulan Wang
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link  text-truncate collapsed py-1 ml-3" href="#submenuJadualsub2" data-toggle="collapse" data-target="#submenuJadualsub2"><span>Pembayaran / Penerimaan</span></a>
+                <div class="collapse" id="submenuJadualsub2" aria-expanded="false">
+                    <ul class="flex-column nav pl-4">
+                        <li class="nav-item">
+                            <a class="nav-link p-1 text-truncate pl-4" asp-area="" asp-controller="AkBank" asp-action="Index">
+                                Akaun Bank
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link p-1 text-truncate pl-4" asp-area="" asp-controller="JBank" asp-action="Index">
+                                Bank
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link p-1 text-truncate pl-4" asp-area="" asp-controller="JCaraBayar" asp-action="Index">
+                                Cara Bayar
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link  text-truncate collapsed py-1 ml-3" href="#submenuJadualsub3" data-toggle="collapse" data-target="#submenuJadualsub3"><span>Pendaftaran</span></a>
+                <div class="collapse" id="submenuJadualsub3" aria-expanded="false">
+                    <ul class="flex-column nav pl-4">
+                        <li class="nav-item">
+                            <a class="nav-link p-1 text-truncate pl-4" asp-area="" asp-controller="JAgama" asp-action="Index">
+                                Agama
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link p-1 text-truncate pl-4" asp-area="" asp-controller="JBangsa" asp-action="Index">
+                                Bangsa
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-area="" asp-controller="JNegeri" asp-action="Index"><span>Negeri</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-area="" asp-controller="JPenyemak" asp-action="Index"><span>Penyemak</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-area="" asp-controller="JPelulus" asp-action="Index"><span>Pelulus</span></a></li>
+        </ul>
     </div>
 </li>

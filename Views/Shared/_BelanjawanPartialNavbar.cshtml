@@ -1,8 +1,17 @@
-﻿<li class="nav-item dropdown">
+﻿@*<li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Belanjawan
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         <a class="dropdown-item" asp-area="" asp-controller="AbWaran" asp-action="Index">Waran</a>
+    </div>
+</li>*@
+
+<li class="nav-item">
+    <a class="nav-link collapsed text-truncate" href="#submenuBelanjawan" data-toggle="collapse" data-target="#submenuBelanjawan"><i class="fas  fa-donate pr-2"></i> Belanjawan</a>
+    <div class="collapse" id="submenuBelanjawan" aria-expanded="false">
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-area="" asp-controller="AbWaran" asp-action="Index"><span>Waran</span></a></li>
+        </ul>
     </div>
 </li>

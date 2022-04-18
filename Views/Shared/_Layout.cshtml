@@ -39,6 +39,14 @@
 
 
 <body>
+    <script type="text/javascript">
+        $(function () {
+            // Sidebar toggle behavior
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar, #content').toggleClass('active');
+            });
+        });
+    </script>
     <style>
         .bg-super {
             background: rgb(238,174,202);
@@ -49,130 +57,196 @@
                 color: white;
             }
     </style>
-    <nav class="navbar navbar-expand-lg navbar-toggleable-lg bg-light navbar-light mb-0 border-bottom" style="height: fit-content;">
 
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-home" hidden></i></a>
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" style="width: 40px; height: 40px; align-content: center; height: 100%;" class="border border-light rounded-circle" />
-            </a>
-            MSNK
-            <partial name="_LoginPartialNavbar" />
-        </div>
-    </nav>
-    <header>
-        @{
-            var navtype = "";
-        }
-        @if (User.IsInRole("Admin"))
+    @{
+        var navtype = "";
+        var texttype = "";
+
+        var user = UserManager.GetUserAsync(User);
+        var namaUser = _context.applicationUsers.FirstOrDefault(x => x.Email == user.Result.Email);
+        var pekerja = _context.SuPekerja.FirstOrDefault(x => x.Id == namaUser.SuPekerjaId);
+        var jawatan = "Super Admin";
+        if (pekerja != null)
         {
-            navtype = "bg-dark navbar-dark";
-        }
-        else if (User.IsInRole("Supervisor"))
-        {
-            navtype = "bg-info navbar-dark";
-        }
-        else if (User.IsInRole("User"))
-        {
-            navtype = "bg-light navbar-light";
-        }
-        else
-        {
-            navtype = "bg-super navbar-dark";
+            jawatan = pekerja.Jawatan;
         }
 
 
-        <nav class="navbar navbar-expand-lg navbar-toggleable-lg @navtype border-bottom mb-3">
-            <div class="container">
-                @*<button class="navbar-toggler" type="button" style="cursor:pointer" onclick="openNav()">
-                    <span class="navbar-toggler-icon"  ></span>
-                </button>*@
-                
+    }
+    @if (User.IsInRole("Admin"))
+    {
+        navtype = "bg-dark navbar-dark";
+        texttype = "text-light";
+    }
+    else if (User.IsInRole("Supervisor"))
+    {
+        navtype = "bg-info navbar-dark";
+        texttype = "text-light";
+    }
+    else if (User.IsInRole("User"))
+    {
+        navtype = "bg-light navbar-light";
+    }
+    else
+    {
+        navtype = "bg-super navbar-dark";
+        texttype = "text-light";
+    }
+    <!-- horizontal navbar -->
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-toggleable-lg @navtype box-shadow">
+            <div class="container-fluid">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">
+                    <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" style="width: 40px; height: 40px; align-content: center; height: 100%;" class="border border-light rounded-circle" />
+                </a>
+                <h5 class="@texttype mb-0">MSNK</h5>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between ">
-                    <ul class="navbar-nav text-nowrap flex-nowrap " style="overflow-x: auto; width: 120vh; overflow:visible;">
-
-                        @if (User.Identity.IsAuthenticated)
-                        {
-
-                            @if (User.IsInRole("SuperAdmin"))
-                            {
-                                <partial name="_SistemPartialNavbar" />
-                                <partial name="_JadualPartialNavbar" />
-                                <partial name="_DaftarPartialNavbar" />
-                                <partial name="_BelanjawanPartialNavbar" />
-                                <partial name="_LejarPartialNavbar" />
-                                <partial name="_TerimaanPartialNavbar" />
-                                <partial name="_TanggunganPartialNavbar" />
-                                <partial name="_BaucerPartialNavbar" />
-                                <partial name="_TunaiRuncitPartialNavbar" />
-                                <partial name="_PermohonanPartialNavbar" />
-                                <partial name="_LaporanPartialNavbar" />
-
-                            }
-                            else if (User.IsInRole("Admin"))
-                            {
-                                <partial name="_SistemPartialNavbar" />
-                            }
-                            else if (User.IsInRole("Supervisor"))
-                            {
-                                <partial name="_JadualPartialNavbar" />
-                                <partial name="_DaftarPartialNavbar" />
-                                <partial name="_BelanjawanPartialNavbar" />
-                                <partial name="_LejarPartialNavbar" />
-                                <partial name="_TerimaanPartialNavbar" />
-                                <partial name="_TanggunganPartialNavbar" />
-                                <partial name="_BaucerPartialNavbar" />
-                                <partial name="_TunaiRuncitPartialNavbar" />
-                                <partial name="_PermohonanPartialNavbar" />
-                                <partial name="_ProfilPartialNavbar" />
-                            }
-                            else
-                            {
-                                <partial name="_TerimaanPartialNavbar" />
-                                <partial name="_TanggunganPartialNavbar" />
-                                <partial name="_BaucerPartialNavbar" />
-                                @*<partial name="_TunaiRuncitPartialNavbar" />*@
-                                <partial name="_PermohonanPartialNavbar" />
-                                <partial name="_ProfilPartialNavbar" />
-                            }
-                        }
-                    </ul>
+                    <div class="col-6 navbar-nav">
+                    </div>
+                    <div class="col-6 navbar-nav ms-auto float-right">
+                        <partial name="_LoginPartialNavbar" />
+                    </div>
                 </div>
             </div>
         </nav>
-    </header>
-    <div class="container">
-        @*AK TEST*@
-        @*<div id="mySidenav" class="sidenav @navtype">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <ul class="list-unstyled components">
-                <li>
-                    <a href="#">
-                        About
-                    </a>
-                    <a href="#">
-                        About
-                    </a>
-                </li>
-            </ul>
-        </div>*@
-        @*AK TEST END*@
-        <main role="main" class="pb-3">
-            <partial name="_Notifications" />
-            <partial name="_ToTopButton" />
-            @RenderBody()
-        </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - MSNK - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privasi</a>
+    <!-- horizontal navbar end -->
+    <!-- Vertical navbar -->
+    <div class="vertical-nav bg-white card" id="sidebar">
+        <div class="py-4 px-3 @navtype card-header">
+            <div class="media d-flex align-items-center">
+
+                <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" width="65" class="mr-3 rounded-circle img-thumbnail shadow-sm">
+                <div class="media-body">
+                    <h5 class="m-0 @texttype">@namaUser.Nama</h5>
+                    <p class="font-weight-light @texttype mb-0">@jawatan</p>
+                </div>
+            </div>
         </div>
-    </footer>
+        <div class="card-body" style="overflow-y: scroll;">
+            @if (User.Identity.IsAuthenticated)
+            {
+
+                @if (User.IsInRole("SuperAdmin"))
+                {
+                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Menu Utama</p>
+
+                    <ul class="nav flex-column bg-white mb-0">
+                        <partial name="_SistemPartialNavbar" />
+                        <partial name="_JadualPartialNavbar" />
+                        <partial name="_DaftarPartialNavbar" />
+                        <partial name="_BelanjawanPartialNavbar" />
+                        <partial name="_LejarPartialNavbar" />
+                    </ul>
+
+                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Transaksi</p>
+
+                    <ul class="nav flex-column bg-white mb-0">
+                        <partial name="_TerimaanPartialNavbar" />
+                        <partial name="_TanggunganPartialNavbar" />
+                        <partial name="_BaucerPartialNavbar" />
+                        <partial name="_TunaiRuncitPartialNavbar" />
+                        <partial name="_PermohonanPartialNavbar" />
+                    </ul>
+
+                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Laporan</p>
+
+                    <ul class="nav flex-column bg-white mb-0">
+                        <partial name="_LaporanPartialNavbar" />
+                    </ul>
+                }
+                else if (User.IsInRole("Admin"))
+                {
+                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Menu Utama</p>
+
+                    <ul class="nav flex-column bg-white mb-0">
+                        <partial name="_SistemPartialNavbar" />
+                    </ul>
+                }
+                else if (User.IsInRole("Supervisor"))
+                {
+                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Menu Utama</p>
+
+                    <ul class="nav flex-column bg-white mb-0">
+                        <partial name="_JadualPartialNavbar" />
+                        <partial name="_DaftarPartialNavbar" />
+                        <partial name="_BelanjawanPartialNavbar" />
+                        <partial name="_LejarPartialNavbar" />
+                    </ul>
+
+                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Transaksi</p>
+
+                    <ul class="nav flex-column bg-white mb-0">
+                        <partial name="_TerimaanPartialNavbar" />
+                        <partial name="_TanggunganPartialNavbar" />
+                        <partial name="_BaucerPartialNavbar" />
+                        <partial name="_TunaiRuncitPartialNavbar" />
+                        <partial name="_PermohonanPartialNavbar" />
+                    </ul>
+
+                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Laporan</p>
+
+                    <ul class="nav flex-column bg-white mb-0">
+                        <partial name="_LaporanPartialNavbar" />
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Transaksi</p>
+
+                    <ul class="nav flex-column bg-white mb-0">
+                        <partial name="_TerimaanPartialNavbar" />
+                        <partial name="_TanggunganPartialNavbar" />
+                        <partial name="_BaucerPartialNavbar" />
+                        <partial name="_TunaiRuncitPartialNavbar" />
+                        <partial name="_PermohonanPartialNavbar" />
+                    </ul>
+
+                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Laporan</p>
+
+                    <ul class="nav flex-column bg-white mb-0">
+                        <partial name="_LaporanPartialNavbar" />
+                    </ul>
+                }
+            }
+
+        </div>
+        
+    </div>
+    <!-- End vertical navbar -->
+    <!-- Page content holder -->
+    <div class="page-content p-3" id="content">
+        <!-- Toggle button -->
+
+        <div class="container-fluid">
+            <button id="sidebarCollapse" type="button" class="btn bg-white shadow-sm mb-3 sticky-top"><i class="fa fa-bars"></i> Menu Utama</button>
+
+
+            <main role="main" class="pb-3">
+                <partial name="_Notifications" />
+                <partial name="_ToTopButton" />
+                @RenderBody()
+            </main>
+        </div>
+
+
+
+        <footer class="border-top footer text-muted">
+            <div class="container-fluid">
+                &copy; 2022 - MSNK - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privasi</a>
+            </div>
+        </footer>
+
+    </div>
+    <!-- End demo content -->
+
+
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

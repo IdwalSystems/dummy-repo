@@ -7,7 +7,7 @@
     @if (SignInManager.IsSignedIn(User))
     {
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Selamat Datang, @namaUser.Nama </a>
+        <a class="nav-link" href="#"  aria-haspopup="true" aria-expanded="false">Selamat Datang, @namaUser.Nama  <i class="fas fa-angle-down"></i> </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <a class="dropdown-item" asp-area="" asp-controller="Profile" asp-action="ChangePassword">Tukar Kata Laluan</a>
             <form id="logOutForm" method="post" class="form-inline" asp-controller="Account" asp-action="LogOff">

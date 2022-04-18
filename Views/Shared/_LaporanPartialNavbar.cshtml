@@ -1,4 +1,4 @@
-﻿<li class="nav-item dropdown ">
+﻿@*<li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Laporan
     </a>
@@ -28,5 +28,53 @@
             </div>
         </div>
 
+    </div>
+</li>*@
+
+<li class="nav-item">
+    <a class="nav-link collapsed text-truncate" href="#submenuLaporan" data-toggle="collapse" data-target="#submenuLaporan"><i class="fa fa-table mr-2"></i> Laporan</a>
+    <div class="collapse" id="submenuLaporan" aria-expanded="false">
+        <ul class="flex-column pl-2 nav">
+
+            <li class="nav-item">
+                <a class="nav-link  text-truncate collapsed py-1 ml-3" href="#submenuLaporansub1" data-toggle="collapse" data-target="#submenuLaporansub1"><span>Laporan Nota Minta</span></a>
+                <div class="collapse" id="submenuLaporansub1" aria-expanded="false">
+                    <ul class="flex-column nav pl-4">
+                        <li class="nav-item">
+                            <a class="nav-link p-1 text-truncate pl-4" asp-area="" asp-controller="LaporanNotaMinta" asp-action="Index">
+                                LPN001 Laporan Daftar Bil / Nota Minta
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link  text-truncate collapsed py-1 ml-3" href="#submenuLaporansub2" data-toggle="collapse" data-target="#submenuLaporansub2"><span>Laporan Baucer</span></a>
+                <div class="collapse" id="submenuLaporansub2" aria-expanded="false">
+                    <ul class="flex-column nav pl-4">
+                        <li class="nav-item">
+                            <a class="nav-link p-1 text-truncate pl-4" asp-area="" asp-controller="LaporanBaucer" asp-action="Index">
+                                LPV001 Laporan Daftar Baucer
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link  text-truncate collapsed py-1 ml-3" href="#submenuLaporansub3" data-toggle="collapse" data-target="#submenuLaporansub3"><span>Laporan Penerimaan</span></a>
+                <div class="collapse" id="submenuLaporansub3" aria-expanded="false">
+                    <ul class="flex-column nav pl-4">
+                        <li class="nav-item">
+                            <a class="nav-link p-1 text-truncate pl-4" asp-area="" asp-controller="LaporanTerimaan" asp-action="Index">
+                                LPR001 Laporan Daftar Resit
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+        </ul>
     </div>
 </li>
