@@ -1,0 +1,22 @@
+﻿@model MSNK.Models.Modules.JSukan
+
+@{
+    ViewData["Title"] = "Papar";
+}
+
+<div>
+    <h4>Sukan - Papar</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Perihal)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.Perihal.ToUpper()
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a> |
+    <a asp-action="Index">Kembali ke Indeks</a>
+</div>

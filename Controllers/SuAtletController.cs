@@ -30,6 +30,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JBangsa, int, string> _jBangsaRepo;
         private readonly IRepository<JSukan, int, string> _jSukanRepo;
         private readonly IRepository<JCaraBayar, int, string> _jCaraBayarRepo;
+        private CartAtlet _cart;
 
         public SuAtletController(
             ApplicationDbContext context,
@@ -40,7 +41,8 @@ namespace MSNK.Controllers
             IRepository<JAgama, int, string> jAgamaRepo,
             IRepository<JBangsa, int, string> jBangsaRepo,
             IRepository<JSukan, int, string> jSukanRepo,
-            IRepository<JCaraBayar, int, string> jCaraBayarRepo
+            IRepository<JCaraBayar, int, string> jCaraBayarRepo,
+            CartAtlet cart
 
             )
         {
@@ -53,6 +55,7 @@ namespace MSNK.Controllers
             _jBangsaRepo = jBangsaRepo;
             _jSukanRepo = jSukanRepo;
             _jCaraBayarRepo = jCaraBayarRepo;
+            _cart = cart;
 
         }
 
@@ -115,6 +118,25 @@ namespace MSNK.Controllers
             }
             return no.ToString("D5");
         }
+
+        //Function Cart Empty
+        public JsonResult CartEmpty()
+        {
+            try
+            {
+                ViewBag.suAtlet1 = new List<int>();
+                //ViewBag.spPendahuluanPelbagai2 = new List<int>();
+                _cart.Clear1();
+                //_cart.Clear2();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //Function Cart Empty end
 
         // GET: SuAtlet
         public async Task<IActionResult> Index()
