@@ -16,6 +16,9 @@ namespace MSNK.Models.Modules
         public string NoRujukan { get; set; }
         public string Bulan { get; set; }
         public string Tahun { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        [DisplayName("Jumlah RM")]
+        public decimal Jumlah { get; set; }
         //Kategori
         //  0 = Atlet 
         //  1 = Jurulatih

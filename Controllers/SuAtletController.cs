@@ -215,6 +215,7 @@ namespace MSNK.Controllers
                                     m.JSukanId = suAtlet.JSukanId;
                                     m.Telefon = suAtlet.Telefon;
                                     m.Emel = suAtlet.Emel;
+                                    m.FlStatus = 1;
                                     m.TarikhAktif = suAtlet.TarikhAktif;
                                    m.TarikhBerhenti = suAtlet.TarikhBerhenti;
                                     //m.FlStatus = suAtlet.FlStatus;
@@ -313,6 +314,14 @@ namespace MSNK.Controllers
                     suAtlet.UserId = dataAsal.UserId;
                     suAtlet.NoKp = dataAsal.NoKp;
                     suAtlet.KodAtlet = dataAsal.KodAtlet;
+                    if (suAtlet.TarikhBerhenti != null)
+                    {
+                        suAtlet.FlStatus = 0;
+                    }
+                    else
+                    {
+                        suAtlet.FlStatus = 1;
+                    }
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
                     // list of input that cannot be change end

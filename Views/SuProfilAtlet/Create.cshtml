@@ -1,0 +1,217 @@
+@model MSNK.Models.Modules.SuProfil
+
+@{
+    ViewData["Title"] = "Tambah";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<partial name="_JSCreate" />
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create" class="needs-validation">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="card box-shadow border-success mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5>Profil Atlet - @ViewData["Title"]</h5>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="form-row">
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label asp-for="Tahun" class="control-label"></label>
+                                <input asp-for="Tahun" class="form-control form-control-sm" maxlength="4" id="txtTahun" value="@DateTime.Now.Year.ToString()" required />
+                                <span asp-validation-for="Tahun" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label asp-for="Bulan" class="control-label"></label>
+                                <input asp-for="Bulan" class="form-control form-control-sm" maxlength="2" id="txtBulan" value="@DateTime.Now.ToString("MM")" required />
+                                <span asp-validation-for="Bulan" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm" disabled asp-for="JKWId" required>
+                                    @foreach (var s in ViewBag.JKW)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="JKWId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" required>
+                                    @foreach (var s in ViewBag.JBahagian)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="JBahagianId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group" >
+                                <label asp-for="NoRujukan" class="control-label"></label>
+                                <input id="txtNoRujukan" asp-for="NoRujukan" value="@ViewBag.NoRujukan" class="form-control form-control-sm" readonly />
+                                <span asp-validation-for="NoRujukan" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="AkCartaId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" required>
+                                    @foreach (var s in ViewBag.AkCarta)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="AkCartaId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*table Objek*@
+                    <div class="card box-shadow mb-3 mt-2">
+                        <div class="card-header">
+                            <h6>Objek</h6>
+                        </div>
+                        <div class="card-body">
+                            <table id="tblObjek" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th style="width:60%" hidden>Atlet Id</th>
+                                        <th style="width:60%">Nama</th>
+                                        <th style="width:10%">Amaun RM</th>
+                                        <th style="width:10%">Amaun Sebelum RM</th>
+                                        <th style="width:10%">Tunggakan RM</th>
+                                        <th style="width:10%">Jumlah RM</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyObjek">
+                                    @foreach (var item in ViewBag.suProfil1)
+                                    {
+                                        <tr>
+                                            <td hidden>
+                                                @item.Id
+                                            </td>
+                                            <td class="text-uppercase">
+                                                @item.Nama
+                                            </td>
+                                            <td>
+                                                0.00
+                                            </td>
+                                            <td>
+                                                0.00
+                                            </td>
+                                            <td>
+                                                0.00
+                                            </td>
+                                            <td>
+                                                0.00
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="card-footer">
+                            <div class="form-group pb-2">
+                                <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
+                                <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly value="0.00" />
+                                <span asp-validation-for="Jumlah" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    @*table Objek end*@
+
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" id="btnSave" value="Simpan" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+
+</div>
+<div>
+    <a asp-action="Index">Kembali ke Indeks</a>
+</div>
+
+<!-- Modal Objek -->
+<div class="modal fade bd-example-modal-lg" id="modalObjek" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Objek</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input id="moId1" hidden />
+                    <input id="moSuAtletId" hidden />
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-form-label">Nama</label>
+                                <input type="text" class="form-control form-control-sm text-uppercase" id="moNama">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Amaun RM</label>
+                                <input type="number" class="form-control form-control-sm" id="moAmaun1">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Amaun Sebelum RM</label>
+                                <input type="number" class="form-control form-control-sm" id="moAmaunSebelum">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Tunggakan RM</label>
+                                <input type="number" class="form-control form-control-sm" id="moTunggakan">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah RM</label>
+                                <input type="number" class="form-control form-control-sm" id="moJumlah1">
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate1()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Objek End -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

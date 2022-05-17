@@ -33,6 +33,9 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Emel Diperlukan")]
         [EmailAddress(ErrorMessage = "Emel Tidak Sah."), MaxLength(100)]
         public string Emel { get; set; }
+        //FlStatus
+        //  0 = Tidak Aktif 
+        //  1 = Aktif
         [DisplayName("Status Aktif")]
         public int FlStatus { get; set; }
         [DisplayName("Tarikh Aktif")]

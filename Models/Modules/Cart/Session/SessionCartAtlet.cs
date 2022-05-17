@@ -21,6 +21,7 @@ namespace MSNK.Models.Modules.Cart.Session
         //Atlet
         public override void AddItem1(
             int suProfilId,
+            int? suAtletId,
             decimal amaun,
             decimal amaunsebelum,
             decimal tunggakan,
@@ -28,6 +29,7 @@ namespace MSNK.Models.Modules.Cart.Session
            )
         {
             base.AddItem1(suProfilId,
+            suAtletId,
             amaun,
             amaunsebelum,
             tunggakan,
@@ -37,7 +39,7 @@ namespace MSNK.Models.Modules.Cart.Session
             Session.SetJson("CartAtlet", this);
         }
 
-        public override void RemoveItem1(int id)
+        public override void RemoveItem1(int? id)
         {
             base.RemoveItem1(id);
             Session.SetJson("CartAtlet", this);

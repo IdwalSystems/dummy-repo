@@ -148,6 +148,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartTunaiCV.GetCart(ss));
             services.AddScoped(ss => SessionCartNotaMinta.GetCart(ss));
             services.AddScoped(ss => SessionCartWaran.GetCart(ss));
+            services.AddScoped(ss => SessionCartAtlet.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -287,6 +288,18 @@ namespace MSNK
                 options.AddPolicy("BJ001T", policy => policy.RequireClaim("BJ001T"));
                 options.AddPolicy("BJ001UT", policy => policy.RequireClaim("BJ001UT"));
                 //Waran End
+                //Menu Profil
+                //Profil
+                options.AddPolicy("SU001", policy => policy.RequireClaim("SU001"));
+                options.AddPolicy("SU001C", policy => policy.RequireClaim("SU001C"));
+                options.AddPolicy("SU001E", policy => policy.RequireClaim("SU001E"));
+                options.AddPolicy("SU001D", policy => policy.RequireClaim("SU001D"));
+                options.AddPolicy("SU001P", policy => policy.RequireClaim("SU001P"));
+                options.AddPolicy("SU001B", policy => policy.RequireClaim("SU001B"));
+                options.AddPolicy("SU001R", policy => policy.RequireClaim("SU001R"));
+                options.AddPolicy("SU001T", policy => policy.RequireClaim("SU001T"));
+                options.AddPolicy("SU001UT", policy => policy.RequireClaim("SU001UT"));
+                //Profil End
             });
 
             services.AddMvc(f =>

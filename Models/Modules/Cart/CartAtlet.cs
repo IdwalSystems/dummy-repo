@@ -13,6 +13,7 @@ namespace MSNK.Models.Modules.Cart
 
         public virtual void AddItem1(
             int suProfilId,
+            int? suAtletId,
             decimal amaun,
             decimal amaunsebelum,
             decimal tunggakan,
@@ -28,6 +29,7 @@ namespace MSNK.Models.Modules.Cart
                 collection1.Add(new SuProfil1
                 {
                     SuProfilId = suProfilId,
+                    SuAtletId = suAtletId,
                     Amaun = amaun,
                     AmaunSebelum = amaunsebelum,
                     Tunggakan = tunggakan,
@@ -36,8 +38,8 @@ namespace MSNK.Models.Modules.Cart
             }
         }
 
-        public virtual void RemoveItem1(int id) =>
-            collection1.RemoveAll(l => l.SuProfilId == id);
+        public virtual void RemoveItem1(int? id) =>
+            collection1.RemoveAll(l => l.SuAtletId == id);
 
 
         public virtual void Clear1() => collection1.Clear();

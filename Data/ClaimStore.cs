@@ -134,6 +134,18 @@ namespace MSNK.Data
             new Claim("BJ001T","BJ001 Waran - Posting"),
             new Claim("BJ001UT","BJ001 Waran - UnPosting"),
             //Waran end
+            //Menu Profil
+            //Profil Atlet
+            new Claim("SU001","SU001 Profil Atlet"),
+            new Claim("SU001C","SU001 Profil Atlet - Tambah"),
+            new Claim("SU001E","SU001 Profil Atlet - Ubah"),
+            new Claim("SU001D","SU001 Profil Atlet - Hapus"),
+            new Claim("SU001P","SU001 Profil Atlet - Cetak"),
+            new Claim("SU001B","SU001 Profil Atlet - Batal"),
+            new Claim("SU001R","SU001 Profil Atlet - Rollback"),
+            new Claim("SU001T","SU001 Profil Atlet - Posting"),
+            new Claim("SU001UT","SU001 Profil Atlet - UnPosting"),
+            //Profil Atlet end
         };
     }
 }
