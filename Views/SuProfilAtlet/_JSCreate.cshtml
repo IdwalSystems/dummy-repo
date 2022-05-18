@@ -28,7 +28,7 @@
     }
     // onchange no Rujukan end
 
-    //update tbl objek
+    //update tbl Atlet
     function Update1(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
@@ -44,7 +44,7 @@
             data: SuProfil1,
             dataType: "json",
             success: function (r) {
-                //insert data in modal objek
+                //insert data in modal Atlet
                 $("#moId1").val(r.record.id);
                 $("#moSuAtletId").val(r.record.suAtletId);
                 $("#moNama").val(r.suAtlet.nama);
@@ -53,8 +53,8 @@
                 $("#moTunggakan").val(r.record.tunggakan.toFixed(2));
                 $("#moJumlah1").val(r.record.jumlah);
 
-                //show modal objek
-                $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
+                //show modal Atlet
+                $("#modalAtlet").modal({ backdrop: 'static', keyboard: false });
 
             }
         });
@@ -66,7 +66,7 @@
         var tunggakan = $("#moTunggakan").val();
         var suAtletId = $("#moSuAtletId").val();
         var jumlah1 = $("#moJumlah1").val();
-        var jumlah = $("#jumlahObjek");
+        var jumlah = $("#jumlahKeseluruhan");
 
         var SuProfil1 = {
             suAtletId: suAtletId,
@@ -93,22 +93,25 @@
                         dataType: "json",
                         success: function (r) {
 
-                            //refresh updated table objek
-                            $("table tbody#tbodyObjek").empty();
+                            //refresh updated table atlet
+                            $("table tbody#tbodyAtlet").empty();
                             var sum = 0;
                             if (r.record.length > 0) {
                                 for (var i = 0; i < r.record.length; i++) {
                                     var item1 = r.record[i];
                                     var str = "<tr><td id='suAtletId' hidden>" + item1.suAtletId +
-                                        "</td><td>" + item1.suAtlet.nama +
+                                        "</td><td class='text-uppercase'>" + item1.suAtlet.nama +
+                                        "</td><td class='text-uppercase'>" + item1.jSukan.perihal +
+                                        "</td><td class='text-uppercase'>" + item1.suAtlet.noKp +
+                                        "</td><td class='text-uppercase'>" + item1.suAtlet.noAkaunBank +
                                         "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                         "</td><td class='text-right'>" + (item1.amaunSebelum).toFixed(2) +
                                         "</td><td class='text-right'>" + (item1.tunggakan).toFixed(2) +
                                         "</td><td class='text-right'>" + (item1.jumlah).toFixed(2) +
                                         "</td><td>" +
-                                        "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                        "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalAtlet' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                         "</td><tr>";
-                                    $("table tbody#tbodyObjek").append(str);
+                                    $("table tbody#tbodyAtlet").append(str);
                                     sum += item1.jumlah;
                                 }
                             }
@@ -122,7 +125,25 @@
             }
         });
     };
-    //update tbl objek end
+    //update tbl atlet end
+
+    // on change amaun and tunggakan
+    $("body").on('change', ".amaun, .tunggakan", function () {
+        //main body
+        var moAmaun = $("#moAmaun1").val();
+        var moTunggakan = $("#moTunggakan").val();
+        
+        $("#moJumlah1").val((countTotalAmountPerItem(moAmaun, moTunggakan)).toFixed(2));
+        //main body end
+
+    });
+
+    function countTotalAmountPerItem(moAmaun, moTunggakan) {
+        if (moAmaun != null && moTunggakan != null) {
+            return total = parseFloat(moAmaun)// + parseFloat(moTunggakan);
+        }
+    }
+    //on change amaun and tunggakan end
 
     //validation form
     (function () {

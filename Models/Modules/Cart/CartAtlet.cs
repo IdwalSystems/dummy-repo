@@ -14,6 +14,7 @@ namespace MSNK.Models.Modules.Cart
         public virtual void AddItem1(
             int suProfilId,
             int? suAtletId,
+            int jSukanId,
             decimal amaun,
             decimal amaunsebelum,
             decimal tunggakan,
@@ -21,7 +22,7 @@ namespace MSNK.Models.Modules.Cart
             )
         {
             SuProfil1 line = collection1
-            .Where(p => p.SuProfilId == suProfilId)
+            .Where(p => p.SuAtletId == suAtletId)
             .FirstOrDefault();
 
             if (line == null)
@@ -30,6 +31,7 @@ namespace MSNK.Models.Modules.Cart
                 {
                     SuProfilId = suProfilId,
                     SuAtletId = suAtletId,
+                    JSukanId = jSukanId,
                     Amaun = amaun,
                     AmaunSebelum = amaunsebelum,
                     Tunggakan = tunggakan,

@@ -22,6 +22,7 @@ namespace MSNK.Models.Modules.Cart.Session
         public override void AddItem1(
             int suProfilId,
             int? suAtletId,
+            int jSukanId,
             decimal amaun,
             decimal amaunsebelum,
             decimal tunggakan,
@@ -30,6 +31,7 @@ namespace MSNK.Models.Modules.Cart.Session
         {
             base.AddItem1(suProfilId,
             suAtletId,
+            jSukanId,
             amaun,
             amaunsebelum,
             tunggakan,

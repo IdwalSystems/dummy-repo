@@ -40,11 +40,6 @@ namespace MSNK.Models.Modules
         [DisplayName("Sukan")]
         public int JSukanId { get; set; }
 
-
-        public JBank JBank { get; set; }
-        [DisplayName("Nama Bank")]
-        public int JBankId { get; set; }
-
         //relationship end
 
         //soft delete

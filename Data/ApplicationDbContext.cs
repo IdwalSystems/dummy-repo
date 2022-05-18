@@ -120,6 +120,9 @@ namespace MSNK.Data
             //Belanjawan
             modelBuilder.Entity<AbWaran>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Belanjawan end
+            //Profil Atlet
+            modelBuilder.Entity<SuProfil>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            //Profil Atlet end
 
             //default bool to true
 

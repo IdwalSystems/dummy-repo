@@ -125,24 +125,70 @@ namespace MSNK.Controllers
 
         private void PopulateTable(int status=1)
         {
-            List<SuAtlet> suProfil1Table = _context.SuAtlet
+            List<SuAtlet> data = _context.SuAtlet
+                .Include(x => x.JSukan)
                 .Where(b => b.FlStatus == status)
-                .OrderBy(b => b.Id)
+                .OrderBy(x => x.JSukanId).ThenBy(x => x.Nama)
                 .ToList();
-            ViewBag.suProfil1 = suProfil1Table;
 
+            List<SuProfil1> suProfil1Table = new List<SuProfil1>();
+
+            foreach (var item in data)
+            {
+                suProfil1Table.Add(
+                    new SuProfil1
+                    {
+                        SuAtlet = item,
+                        SuAtletId = item.Id,
+                        JSukan = item.JSukan,
+                        JSukanId = item.JSukanId,
+                        Amaun = 0,
+                        AmaunSebelum = 0,
+                        Tunggakan = 0,
+                        Jumlah = 0
+                    });
+            }
+
+            ViewBag.suProfil1 = suProfil1Table;
         }
+
+
+        private void PopulateTableFromCart()
+        {
+            List<SuProfil1> suProfil1Table = _cart.Lines1
+                .ToList();
+
+            foreach (SuProfil1 item in suProfil1Table)
+            {
+                var suAtlet = _context.SuAtlet.Find(item.SuAtletId);
+
+                item.SuAtlet = suAtlet;
+
+                var jSukan = _context.JSukan.Find(item.JSukanId);
+
+                item.JSukan = jSukan;
+            }
+
+            suProfil1Table = suProfil1Table.OrderBy(x => x.JSukanId)
+                .ThenBy(x => x.SuAtlet.Nama).ToList();
+
+            ViewBag.suProfil1 = suProfil1Table;
+        }
+
         private void PopulateCartFromSuAtlet()
         {
             List<SuAtlet> suAtlet = _context.SuAtlet
+                .Include(x => x.JSukan)
                 .Where(b => b.FlStatus == 1)
-                .OrderBy(b => b.Id)
+                .OrderBy(x => x.JSukanId)
+                .ThenBy(x => x.Nama)
                 .ToList();
 
             foreach (SuAtlet item in suAtlet)
             {
                 _cart.AddItem1(0,
                                item.Id,
+                               item.JSukanId,
                                0,
                                0,
                                0,
@@ -195,21 +241,12 @@ namespace MSNK.Controllers
 
             ViewBag.NoRujukan = bahagian.Kod + "/" + year + "/" + month;
 
-            var IsExistNoRujukan = _context.SuProfil.Where(x => x.Tahun == year && x.Bulan == month).FirstOrDefault();
-            if (IsExistNoRujukan == null)
-            {
-                PopulateList();
-                CartEmpty();
-                PopulateTable();
-                PopulateCartFromSuAtlet();
-                return View();
-            }
-            // get latest no rujukan running number end
-            else
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            
+            PopulateList();
+            CartEmpty();
+            PopulateTable();
+            PopulateCartFromSuAtlet();
+            return View();
+
         }
 
         // get an item from cart abWaran1
@@ -241,17 +278,20 @@ namespace MSNK.Controllers
 
                 var suP1 = _cart.Lines1.FirstOrDefault(x => x.SuAtletId == suProfil1.SuAtletId);
 
+                var jSukanId = suP1.JSukanId;
+
                 if (suP1 != null)
                 {
                     
                     _cart.RemoveItem1(suP1.SuAtletId);
 
                     _cart.AddItem1(0,
-                        suP1.SuAtletId,
-                        suP1.Amaun,
-                        suP1.AmaunSebelum,
-                        suP1.Tunggakan,
-                        suP1.Jumlah);
+                        suProfil1.SuAtletId,
+                        jSukanId,
+                        suProfil1.Amaun,
+                        suProfil1.AmaunSebelum,
+                        suProfil1.Tunggakan,
+                        suProfil1.Jumlah);
                 }
 
                 return Json(new { result = "OK" });
@@ -276,7 +316,14 @@ namespace MSNK.Controllers
                     var suAtlet = _context.SuAtlet.Find(item.SuAtletId);
 
                     item.SuAtlet = suAtlet;
+
+                    var jSukan = _context.JSukan.Find(item.JSukanId);
+
+                    item.JSukan = jSukan;
                 }
+
+                data = data.OrderBy(x => x.JSukanId)
+                    .ThenBy(x => x.SuAtlet.Nama).ToList();
 
                 return Json(new { result = "OK", record = data });
             }
@@ -291,18 +338,69 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "SU001C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NoRujukan,Bulan,Tahun,FlKategori,AkCartaId,JKWId,JBahagianId,FlHapus,TarHapus,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] SuProfil suProfil)
+        public async Task<IActionResult> Create(SuProfil suProfil, int JKWId, int JBahagianId, int AkCartaId)
         {
+            SuProfil m = new SuProfil();
+            var IsExistNoRujukan = _context.SuProfil.Where(x => x.NoRujukan == suProfil.NoRujukan).FirstOrDefault();
+
+            // check if Tahun, Bulan ,JBahagianId, JKWId already exist or not 
+            if (IsExistNoRujukan != null)
+            {
+                TempData[SD.Error] = "Data bagi Kump. Wang dan Bahagian telah wujud bagi Tahun dan Bulan ini.";
+                PopulateList();
+                CartEmpty();
+
+                // get latest no rujukan running number 
+                var year = DateTime.Now.Year.ToString();
+                var month = DateTime.Now.ToString("MM");
+                var bahagian = _context.JBahagian.Where(x => x.Id == 1).FirstOrDefault();
+
+                ViewBag.NoRujukan = bahagian.Kod + "/" + year + "/" + month;
+
+                PopulateCartFromSuAtlet();
+                PopulateTableFromCart();
+                return View(suProfil);
+            }
+            // check end
+
+            var user = await _userManager.GetUserAsync(User);
+
+
             if (ModelState.IsValid)
             {
-                _context.Add(suProfil);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (suProfil != null && JKWId != 0 && JBahagianId != 0 && AkCartaId != 0)
+                {
+                    m.FlKategori = 0;
+                    m.Tahun = suProfil.Tahun;
+                    m.Bulan = suProfil.Bulan;
+                    m.NoRujukan = suProfil.NoRujukan;
+                    m.JKWId = JKWId;
+                    m.JBahagianId = JBahagianId;
+                    m.AkCartaId = AkCartaId;
+                    m.Jumlah = suProfil.Jumlah;
+                    m.UserId = user.UserName;
+                    m.TarMasuk = DateTime.Now;
+
+                    m.SuProfil1 = _cart.Lines1.ToArray();
+
+                    await _suProfilRepo.Insert(m);
+
+                    //insert applog
+                    await AddLogAsync("Tambah", m.NoRujukan, m.NoRujukan, 0, suProfil.Jumlah);
+                    //insert applog end
+                    await _suProfilRepo.Save();
+                    TempData[SD.Success] = "Maklumat berjaya ditambah. No Rujukan adalah " + m.NoRujukan;
+
+                    return RedirectToAction(nameof(Index));
+                }
+                
             }
-            ViewData["AkCartaId"] = new SelectList(_context.AkCarta, "Id", "DebitKredit", suProfil.AkCartaId);
-            ViewData["JBahagianId"] = new SelectList(_context.JBahagian, "Id", "Kod", suProfil.JBahagianId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", suProfil.JKWId);
+            PopulateList();
+            CartEmpty();
+            PopulateCartFromSuAtlet();
+            PopulateTableFromCart();
             return View(suProfil);
         }
 
