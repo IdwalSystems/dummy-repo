@@ -1,34 +1,7 @@
 ﻿<script type="text/javascript">
-    // onchange no Rujukan
-    $("body").on('change', "#txtTahun, #txtBulan, #JBahagianId", function () {
-        var year = $("#txtTahun").val();
-        var month = $("#txtBulan").val();
-        var bahagianId = $("#JBahagianId").val();
-        if (year != null && month != null && bahagianId != null) {
-            JsonKod(year, month, bahagianId);
-        }
 
-    });
 
-    function JsonKod(year, month, bahagianId) {
-        $.ajax({
-            type: "POST",
-            //url: "/AkPV/JsonGetKod",
-            url: '@Url.Action("JsonGetKod", "SuProfilAtlet")',
-            data: {year: year, month: month, bahagianId:bahagianId },
-            dataType: "json",
-            success: function (msg) {
-                $("#txtNoRujukan").val(msg.record);
-                $("#JKWId").val(msg.kw);
-            },
-            error: function (req, status, error) {
-                alert(error);
-            }
-        });
-    }
-    // onchange no Rujukan end
-
-    //update tbl Atlet
+    //update tbl atlet
     function Update1(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
@@ -37,31 +10,34 @@
         var SuProfil1 = {
             SuAtletId: suAtletId
         }
-        $.ajax({
-            type: "POST",
-            //url: "/AbWaran/GetAnItemCartAbWaran1",
-            url: '@Url.Action("GetAnItemCartSuProfil1", "SuProfilAtlet")',
-            data: SuProfil1,
-            dataType: "json",
-            success: function (r) {
-                //insert data in modal Atlet
-                $("#moId1").val(r.record.id);
-                $("#moSuAtletId").val(r.record.suAtletId);
-                $("#moNama").val(r.suAtlet.nama);
-                //$("#moAmaun1 option : selected").val(r.record.amaun);
-                $("#moAmaun1").val(r.record.amaun);
-                $("#moAmaunSebelum").val(r.record.amaunSebelum.toFixed(2));
-                $("#moTunggakan").val(r.record.tunggakan.toFixed(2));
-                $("#moJumlah1").val(r.record.jumlah);
+        if (SuProfil1 != null) {
+            $.ajax({
+                type: "POST",
+                //url: "/AbWaran/GetAnItemCartAbWaran1",
+                url: '@Url.Action("GetAnItemCartSuProfil1", "SuProfilAtlet")',
+                data: SuProfil1,
+                dataType: "json",
+                success: function (r) {
+                    //insert data in modal Atlet
+                    $("#moId1").val(r.record.id);
+                    $("#moSuAtletId").val(r.record.suAtletId);
+                    $("#moNama").val(r.suAtlet.nama);
+                    $("#moAmaun1").val(r.record.amaun);
+                    $("#moAmaunSebelum").val(r.record.amaunSebelum.toFixed(2));
+                    $("#moTunggakan").val(r.record.tunggakan.toFixed(2));
+                    $("#moJumlah1").val(r.record.jumlah);
 
-                //show modal Atlet
-                $("#modalAtlet").modal({ backdrop: 'static', keyboard: false });
+                    //show modal atlet
+                    $("#modalAtlet").modal({ backdrop: 'static', keyboard: false });
 
-            }
-        });
+                }
+            });
+        }
     };
 
     function modalUpdate1() {
+        var id = $("#moId1").val();
+        var suProfilId = $("#Id").val();
         var amaun = $("#moAmaun1").val();
         var amaunSebelum = $("#moAmaunSebelum").val();
         var tunggakan = $("#moTunggakan").val();
@@ -70,6 +46,8 @@
         var jumlah = $("#jumlahKeseluruhan");
 
         var SuProfil1 = {
+            Id: id,
+            SuProfilId: suProfilId,
             SuAtletId: suAtletId,
             Amaun: amaun,
             AmaunSebelum: amaunSebelum,
@@ -88,19 +66,20 @@
 
                 if (b.result == "OK") {
                     $.ajax({
-                        type: "POST",
-                        //url: "/AbWaran/GetAllItemCartAbWaran1",
-                        url: '@Url.Action("GetAllItemCartSuProfil1", "SuProfilAtlet")',
-                        dataType: "json",
-                        success: function (r) {
+                    type: "POST",
+                    //url: "/AbWaran/GetAllItemCartAbWaran1",
+                    url: '@Url.Action("GetAllItemCartSuProfil1", "SuProfilAtlet")',
+                    data: SuProfil1,
+                    dataType: "json",
+                    success: function (r) {
 
-                            //refresh updated table atlet
-                            $("table tbody#tbodyAtlet").empty();
-                            var sum = 0;
-                            if (r.record.length > 0) {
-                                for (var i = 0; i < r.record.length; i++) {
-                                    var item1 = r.record[i];
-                                    var str = "<tr><td id='suAtletId' hidden>" + item1.suAtletId +
+                        //refresh updated table atlet
+                        $("table tbody#tbodyAtlet").empty();
+                        var sum = 0;
+                        if (r.record.length > 0) {
+                            for (var i = 0; i < r.record.length; i++) {
+                                var item1 = r.record[i];
+                                 var str = "<tr><td id='suAtletId' hidden>" + item1.suAtletId +
                                         "</td><td class='text-uppercase'>" + item1.suAtlet.nama +
                                         "</td><td class='text-uppercase'>" + item1.jSukan.perihal +
                                         "</td><td class='text-uppercase'>" + item1.suAtlet.noKp +
@@ -112,17 +91,19 @@
                                         "</td><td>" +
                                         "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalAtlet' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                         "</td><tr>";
-                                    $("table tbody#tbodyAtlet").append(str);
-                                    sum += item1.jumlah;
-                                }
+                                $("table tbody#tbodyAtlet").append(str);
+                                sum += item1.jumlah;
                             }
-                            jumlah.val(sum.toFixed(2));
                         }
-                    });
+
+                        jumlah.val(sum.toFixed(2));
+                    }
+                });
                 } else {
-                    toastr.error("Sistem ralat ketika ubah Cart Atlet.", "Ralat");
+                    toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
                     toastr.options.timeOut = 2000; // 2s
                 }
+
             }
         });
     };
@@ -166,6 +147,7 @@
     })();
 
     $(document).ready(function () {
+
         $.validator.setDefaults({
             errorElement: "span",
             errorClass: "help-block",

@@ -44,6 +44,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly CustomIRepository<string, int> _customRepo;
         private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPPRepo;
+        private readonly IRepository<SuProfil, int, string> _suProfilRepo;
         private CartPV _cart;
 
         public AkPVController(
@@ -65,6 +66,7 @@ namespace MSNK.Controllers
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
             CustomIRepository<string, int> customRepo,
             IRepository<SpPendahuluanPelbagai, int, string> spPPRepo,
+            IRepository<SuProfil, int, string> suProfilRepo,
             CartPV cart
             )
         {
@@ -86,6 +88,7 @@ namespace MSNK.Controllers
             _abBukuVotRepo = abBukuVotRepository;
             _customRepo = customRepo;
             _spPPRepo = spPPRepo;
+            _suProfilRepo = suProfilRepo;
             _cart = cart;
         }
         private async Task AddLogAsync(
@@ -227,6 +230,9 @@ namespace MSNK.Controllers
 
             List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.Where(x=> x.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
             ViewBag.SpPendahuluanPelbagai = spList;
+
+            List<SuProfil> suProfilList = _context.SuProfil.Where(x => x.FlPosting == 1).OrderBy(b => b.NoRujukan).ToList();
+            ViewBag.SuProfil = suProfilList;
 
             List<JBahagian> bahagianList = _context.JBahagian.ToList();
             ViewBag.JBahagian = bahagianList;
@@ -976,6 +982,8 @@ namespace MSNK.Controllers
                     akPVView.NoAkaunBank = akPV.SuPekerja.NoAkaunBank;
                     akPVView.Telefon = akPV.SuPekerja.TelefonBimbit;
                     akPVView.Emel = akPV.SuPekerja.Emel;
+                    akPVView.SpPendahuluanPelbagai = akPV.SpPendahuluanPelbagai;
+                    akPVView.SuProfil = akPV.SuProfil;
                     break;
                 // panjar
                 case 3:
@@ -1133,6 +1141,29 @@ namespace MSNK.Controllers
         }
         //on change pendahuluan end
 
+        // on change Profil
+        [HttpPost]
+        public async Task<JsonResult> JsonGetProfil(int data, int AkPVId)
+        {
+            try
+            {
+                CartEmpty();
+                var result = await _suProfilRepo.GetById(data);
+
+                _cart.AddItem1(AkPVId,
+                               result.Jumlah,
+                               result.AkCartaId);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change pendahuluan end
+
+
         // on change kod pembekal controller
         [HttpPost]
         public async Task<JsonResult> JsonGetPembekal(int data)
@@ -1264,6 +1295,7 @@ namespace MSNK.Controllers
             decimal JumlahInbois,
             int? AkTunaiRuncitId,
             int? SpPendahuluanPelbagaiId,
+            int? SuProfilId,
             int JBahagianId,
             int FlJenisBaucer)
         {
@@ -1274,6 +1306,7 @@ namespace MSNK.Controllers
             // FlJenisBaucer = 3 ( Pendahuluan )
             // FlJenisBaucer = 4 ( Rekupan )
             // FlJenisBaucer = 5 ( Tambah Had Panjar )
+            // FlJenisBaucer = 6 ( Profil Atlet / Jurulatih )
             // ..
             // FlKategoriPenerima = 0 ( Am / Lain - lain )
             // FlKategoriPenerima = 1 ( pembekal )
@@ -1289,6 +1322,8 @@ namespace MSNK.Controllers
                 .Include(x=> x.AkTunaiPemegang).ThenInclude(x=> x.SuPekerja)
                 .FirstOrDefaultAsync(x => x.Id == AkTunaiRuncitId);
             var spPendahuluan = await _context.SpPendahuluanPelbagai.FirstOrDefaultAsync(x => x.Id == SpPendahuluanPelbagaiId );
+
+            var suProfil = await _context.SuProfil.FirstOrDefaultAsync(x => x.Id == SuProfilId);
 
             var jenis = "CreateAm";
             //check if user fil in both pekerja and pembekal
@@ -1424,6 +1459,10 @@ namespace MSNK.Controllers
                     if (spPendahuluan != null )
                     {
                         m.SpPendahuluanPelbagaiId = SpPendahuluanPelbagaiId;
+                    }
+                    if (suProfil != null)
+                    {
+                        m.SuProfilId = SuProfilId;
                     }
 
                     m.UserId = user.UserName;
@@ -1893,6 +1932,7 @@ namespace MSNK.Controllers
                     akPV.FlKategoriPenerima = dataAsal.FlKategoriPenerima;
                     akPV.AkTunaiRuncitId = dataAsal.AkTunaiRuncitId;
                     akPV.SpPendahuluanPelbagaiId = dataAsal.SpPendahuluanPelbagaiId;
+                    akPV.SuProfilId = dataAsal.SuProfilId;
                     akPV.NoRekup = dataAsal.NoRekup;
                     akPV.TarMasuk = dataAsal.TarMasuk;
                     akPV.UserId = dataAsal.UserId;

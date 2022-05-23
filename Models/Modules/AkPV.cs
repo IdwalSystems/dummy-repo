@@ -18,6 +18,7 @@ namespace MSNK.Models.Modules
         // FlJenisBaucer = 3 ( Pendahuluan )
         // FlJenisBaucer = 4 ( Rekupan )
         // FlJenisBaucer = 5 ( Tambah Had Panjar )
+        // FlJenisBaucer = 6 ( Profil Atlet / Jurulatih )
         // ..
         // FlKategoriPenerima = 0 ( Am / Lain - lain )
         // FlKategoriPenerima = 1 ( pembekal )
@@ -116,6 +117,8 @@ namespace MSNK.Models.Modules
         public int? AkTunaiRuncitId { get; set; }
         [DisplayName("No Permohonan Aktiviti")]
         public int? SpPendahuluanPelbagaiId { get; set; }
+        [DisplayName("No Profil Atlet / Jurulatih")]
+        public int? SuProfilId { get; set; }
 
         [DisplayName("Bahagian")]
         public int? JBahagianId { get; set; }
@@ -129,6 +132,7 @@ namespace MSNK.Models.Modules
         public JCaraBayar JCaraBayar { get; set; }
         public AkTunaiRuncit AkTunaiRuncit { get; set; }
         public SpPendahuluanPelbagai SpPendahuluanPelbagai { get; set; }
+        public SuProfil SuProfil { get;set; }
         public ICollection<AkPV1> AkPV1 { get; set; }
         public ICollection<AkPV2> AkPV2 { get; set; }
         //relationship end

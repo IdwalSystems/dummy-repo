@@ -179,28 +179,32 @@
                                 <div class="form-group col-sm">
                                     <label asp-for="FlJenisBaucer" class="control-label"></label>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer1" name="FlJenisBaucer" class="custom-control-input" value="0" checked>
+                                        <input asp-for="FlJenisBaucer" type="radio" id="0" name="FlJenisBaucer" class="custom-control-input" value="0" checked>
                                         <label class="custom-control-label" for="FlJenisBaucer1">Am</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer2" name="FlJenisBaucer" class="custom-control-input" value="1">
+                                        <input asp-for="FlJenisBaucer" type="radio" id="1" name="FlJenisBaucer" class="custom-control-input" value="1">
                                         <label class="custom-control-label" for="FlJenisBaucer2">Inbois</label>
                                     </div>
                                     <div class="custom-control custom-radio" hidden>
-                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="2">
+                                        <input asp-for="FlJenisBaucer" type="radio" id="2" name="FlJenisBaucer" class="custom-control-input" value="2">
                                         <label class="custom-control-label" for="FlJenisBaucer3">Gaji</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="3">
+                                        <input asp-for="FlJenisBaucer" type="radio" id="3" name="FlJenisBaucer" class="custom-control-input" value="3">
                                         <label class="custom-control-label" for="FlJenisBaucer3">Pendahuluan</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="4">
+                                        <input asp-for="FlJenisBaucer" type="radio" id="4" name="FlJenisBaucer" class="custom-control-input" value="4">
                                         <label class="custom-control-label" for="FlJenisBaucer3">Rekupan</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlJenisBaucer" type="radio" id="FlJenisBaucer3" name="FlJenisBaucer" class="custom-control-input" value="5">
+                                        <input asp-for="FlJenisBaucer" type="radio" id="5" name="FlJenisBaucer" class="custom-control-input" value="5">
                                         <label class="custom-control-label" for="FlJenisBaucer3">Tambah Had Panjar</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input asp-for="FlJenisBaucer" type="radio" id="6" name="FlJenisBaucer" class="custom-control-input" value="6">
+                                        <label class="custom-control-label" for="FlJenisBaucer3">Profil Atlet / Jurulatih</label>
                                     </div>
                                 </div>
                             </div>
@@ -224,7 +228,7 @@
                                         <label class="custom-control-label" for="FlKategoriPenerima3">Pekerja</label>
                                     </div>
                                     <div class="custom-control custom-radio">
-                                        <input asp-for="FlKategoriPenerima" type="radio" id="FlKategoriPenerima3" name="FlKategoriPenerima" class="custom-control-input" value="3">
+                                        <input asp-for="FlKategoriPenerima" type="radio" id="FlKategoriPenerima4" name="FlKategoriPenerima" class="custom-control-input" value="3">
                                         <label class="custom-control-label" for="FlKategoriPenerima3">Pemegang Panjar</label>
                                     </div>
                                 </div>
@@ -431,6 +435,23 @@
                         </div>
                         @*maklumat panjar end*@
                         break;
+                    case 6:
+                        @*profil atlet / jurulatih*@
+                        <div class="card box-shadow mb-3" id="cardProfil">
+                            <div class="card-header">
+                                <h6>Profil Atlet / Jurulatihi</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label asp-for="SuProfilId" class="control-label"></label>
+                                    <input class="form-control form-control-sm" value="@Model.SuProfil.NoRujukan" id="ddlProfil" readonly />
+                                    <span asp-validation-for="SuProfilId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*profil atlet / jurulatih end*@
+                        break;
                     default:
                         break;
                 }
@@ -464,7 +485,6 @@
         @*<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">
                 Batal
             </button>*@
-    }
     }
     <a asp-action="Index">Kembali ke Indeks</a>
 </div>

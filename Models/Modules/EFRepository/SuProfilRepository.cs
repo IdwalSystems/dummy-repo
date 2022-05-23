@@ -30,19 +30,35 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<SuProfil>> GetAllIncludeDeletedItems()
         {
             return await context.SuProfil
+                .Include(b => b.JKW)
+                .Include(b => b.AkCarta)
+                .Include(b => b.JBahagian)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
+                .Include(b => b.SuProfil1).ThenInclude(b=> b.JSukan)
                 .IgnoreQueryFilters()
                 .ToListAsync();
         }
 
         public async Task<SuProfil> GetById(int id)
         {
-            return await context.SuProfil.FindAsync(id);
+            return await context.SuProfil
+                .Include(b => b.JKW)
+                .Include(b => b.AkCarta)
+                .Include(b => b.JBahagian)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.JSukan)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
         }
 
         public async Task<SuProfil> GetByIdIncludeDeletedItems(int id)
         {
             return await context.SuProfil
+                .Include(b => b.JKW)
+                .Include(b => b.AkCarta)
+                .Include(b => b.JBahagian)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.JSukan)
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }

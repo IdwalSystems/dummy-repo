@@ -1,0 +1,271 @@
+﻿@*@model MSNK.Models.Modules.PrintModel.SuProfilAtletPrintModel*@
+
+@model dynamic;
+
+@{
+    ViewData["Title"] = "Cetakan Profil Atlet";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+
+    var jum100 = 0;
+    var jum300 = 0;
+    var jum500 = 0;
+    var bilSukan = 0;
+    var bil = 0;
+
+}
+<style>
+    .flexrow {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex !important;
+    }
+
+        .flexrow > div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+    .image-container {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    h4 {
+        font-size: 1.1rem;
+    }
+
+    h5 {
+        font-size: 1rem;
+    }
+
+    h6 {
+        font-size: 0.8rem;
+    }
+
+    p {
+        font-size: 0.6rem;
+    }
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    table tbody tr td {
+        font-size: 0.8rem;
+        line-height: 1.0rem;
+    }
+
+    table thead tr th {
+        font-size: 0.8rem;
+        line-height: 1.0rem;
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    
+</style>
+
+<div class="row flexrow mb-1">
+    <div class="col-8 text-center text-uppercase">
+        <h3 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h3>
+    </div>
+</div>
+<div class="row flexrow mb-3">
+    <div class="col-8 text-center text-uppercase">
+        <h4 class="mb-1"><strong>Skim Kecemerlangan Atlet Bagi Bulan @Model.SuProfil.Bulan Tahun @Model.SuProfil.Tahun</strong></h4>
+    </div>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <thead class="text-center">
+            <tr class="table-warning">
+                <th>BIL</th>
+                <th>NAMA</th>
+                <th>NO KP</th>
+                <th>NO AKAUN BANK</th>
+                <th>BANK</th>
+                <th>TUNGGAKAN RM</th>
+                <th>AMAUN RM</th>
+                <th>JUMLAH RM</th>
+            </tr>
+        </thead>
+
+        @foreach (var group in Model.SuProfil1Grouped)
+        {
+             
+            var sum = 0;
+            bilSukan++;
+
+            <tr><th colspan="8" class="text-uppercase bg-secondary text-white">@bilSukan) @group.Key</th></tr>
+            foreach (var item in group)
+            {
+                bil++;
+
+                var tabletype = item.Tunggakan != 0 ? "table-primary" : null;
+
+                <tr class="@tabletype">
+                    <td>@bil</td>
+                    <td class="text-uppercase">@item.SuAtlet.Nama</td>
+                    <td class="text-uppercase">@item.SuAtlet.NoKp</td>
+                    <td class="text-uppercase">@item.SuAtlet.NoAkaunBank</td>
+                    <td class="text-uppercase">@item.SuAtlet.JBank.Kod</td>
+                    <td align="right">@Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")</td>
+                    <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                    <td align="right">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+                </tr>
+
+                sum += item.Amaun;
+
+                //count for 100, 300, 500
+                if (item.Amaun == 100)
+                {
+                    jum100++;
+                } else if (item.Amaun == 300)
+                {
+                    jum300++;
+                } else if (item.Amaun == 500)
+                {
+                    jum500++;
+                } else
+                {
+                }
+                //count end
+                
+            }
+             <tr class="font-weight-bold text-uppercase">
+                <td class="text-right bg-light" colspan="7">@group.Key RM</td>
+                <td class="text-right">@Convert.ToDecimal(sum).ToString("#,##0.00")</td>
+            </tr>
+            <tr>
+                <td class="text-right border-white" colspan="8">
+                </td>
+            </tr>
+        }
+
+       @* @foreach (var item in Model.SuProfil.SuProfil1)
+        {
+
+            <tr>
+                <td class="text-uppercase">@item.SuAtlet.Nama</td>
+                <td class="text-uppercase">@item.SuAtlet.NoKp</td>
+                <td class="text-uppercase">@item.SuAtlet.NoAkaunBank</td>
+                <td class="text-uppercase">@item.SuAtlet.JBank.Kod</td>
+                <td align="right">@Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")</td>
+                <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                <td align="right">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+            </tr>
+        }*@
+        <tr class="font-weight-bold table-warning">
+            <td class="text-right text-uppercase" colspan="7">Jumlah Keseluruhan RM</td>
+            <td class="text-right">@Convert.ToDecimal(Model.SuProfil.Jumlah).ToString("#,##0.00")</td>
+        </tr>
+        <tfoot>
+
+        </tfoot>
+    </table>
+</div>
+
+<div class="row flexrow mb-1">
+    <div class="col-8 text-center text-uppercase">
+    </div>
+    <div class="col-3 text-center text-uppercase">
+       <div class="table-responsive-sm ">
+    <table class="table table-sm topic table-info table-borderless">
+        <thead class="table-dark">
+
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-right">** Bil. Atlet Skim RM 100 - @jum100 Orang </td>
+            </tr>
+            <tr>
+                <td class="text-right">Bil. Atlet Skim RM 300 - @jum300 Orang </td>
+
+            </tr>
+            <tr>
+                <td class="text-right">Bil. Atlet Skim RM 500 - @jum500 Orang </td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>
+    </div>
+</div>
+
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <thead class="table-dark">
+
+        </thead>
+        <tbody>
+            <tr class="bg-dark text-white font-weight-bold">
+
+                <td class="text-center" colspan="4"><h6 class="mb-0"><strong>UNTUK KEGUNAAN BAHAGIAN KEWANGAN</strong></h6></td>
+            </tr>
+            <tr>
+                <td class="text-center" width="25%">Disedia </td>
+                <td class="text-center" width="25%">Disemak </td>
+                <td class="text-center" width="25%">Disemak </td>
+                <td class="text-center" width="25%">Diluluskan </td>
+            </tr>
+            <tr>
+                <td class="text-center" height="50px"></td>
+                <td class="text-center" height="50px"></td>
+                <td class="text-center" height="50px"></td>
+                <td class="text-center" height="50px"></td>
+
+            </tr>
+            <tr>
+                <td class="text-left">Nama:</td>
+                <td class="text-left">Nama:</td>
+                <td class="text-left">Nama:</td>
+                <td class="text-left">Nama:</td>
+
+            </tr>
+            <tr>
+                <td class="text-left">Jawatan:</td>
+                <td class="text-left">Jawatan:</td>
+                <td class="text-left">Jawatan:</td>
+                <td class="text-left">Jawatan:</td>
+
+            </tr>
+            <tr>
+                <td class="text-left">Tarikh: @DateTime.Now</td>
+                <td class="text-left">Tarikh:</td>
+                <td class="text-left">Tarikh:</td>
+                <td class="text-left">Tarikh:</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

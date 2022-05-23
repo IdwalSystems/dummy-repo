@@ -149,6 +149,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartNotaMinta.GetCart(ss));
             services.AddScoped(ss => SessionCartWaran.GetCart(ss));
             services.AddScoped(ss => SessionCartAtlet.GetCart(ss));
+            services.AddScoped(ss => SessionCartJurulatih.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -289,7 +290,7 @@ namespace MSNK
                 options.AddPolicy("BJ001UT", policy => policy.RequireClaim("BJ001UT"));
                 //Waran End
                 //Menu Profil
-                //Profil
+                //Profil Atlet
                 options.AddPolicy("SU001", policy => policy.RequireClaim("SU001"));
                 options.AddPolicy("SU001C", policy => policy.RequireClaim("SU001C"));
                 options.AddPolicy("SU001E", policy => policy.RequireClaim("SU001E"));
@@ -299,7 +300,18 @@ namespace MSNK
                 options.AddPolicy("SU001R", policy => policy.RequireClaim("SU001R"));
                 options.AddPolicy("SU001T", policy => policy.RequireClaim("SU001T"));
                 options.AddPolicy("SU001UT", policy => policy.RequireClaim("SU001UT"));
-                //Profil End
+                //Profil Atlet End
+                //Profil Jurulatih
+                options.AddPolicy("SU002", policy => policy.RequireClaim("SU002"));
+                options.AddPolicy("SU002C", policy => policy.RequireClaim("SU002C"));
+                options.AddPolicy("SU002E", policy => policy.RequireClaim("SU002E"));
+                options.AddPolicy("SU002D", policy => policy.RequireClaim("SU002D"));
+                options.AddPolicy("SU002P", policy => policy.RequireClaim("SU002P"));
+                options.AddPolicy("SU002B", policy => policy.RequireClaim("SU002B"));
+                options.AddPolicy("SU002R", policy => policy.RequireClaim("SU002R"));
+                options.AddPolicy("SU002T", policy => policy.RequireClaim("SU002T"));
+                options.AddPolicy("SU002UT", policy => policy.RequireClaim("SU002UT"));
+                //Profil Jurulatih End
             });
 
             services.AddMvc(f =>

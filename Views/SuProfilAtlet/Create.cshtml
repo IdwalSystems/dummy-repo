@@ -56,14 +56,14 @@
                                 <span asp-validation-for="JBahagianId" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <div class="form-group" >
                                 <label asp-for="NoRujukan" class="control-label"></label>
                                 <input id="txtNoRujukan" asp-for="NoRujukan" value="@ViewBag.NoRujukan" class="form-control form-control-sm" readonly />
                                 <span asp-validation-for="NoRujukan" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="AkCartaId" class="control-label"></label><span class="text-danger control-label">*</span>
                                 <select class="form-control form-control-sm text-uppercase" asp-for="AkCartaId" required>
@@ -183,7 +183,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="col-form-label">Nama</label>
-                                <input type="text" class="form-control form-control-sm text-uppercase" id="moNama">
+                                <input type="text" class="form-control form-control-sm text-uppercase" id="moNama" readonly>
                             </div>
                         </div>
                     </div>
@@ -191,7 +191,11 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-form-label">Amaun RM</label>
-                                <input type="number" class="form-control form-control-sm amaun" id="moAmaun1">
+                                <select class="form-control form-control-sm text-uppercase amaun" id="moAmaun1">
+                                    <option value="100">100 </option>
+                                    <option value="300">300 </option>
+                                    <option value="500">500 </option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-4">

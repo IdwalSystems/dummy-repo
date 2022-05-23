@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,9 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
+using MSNK.Models.Administration;
+using MSNK.Models.Helper;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -70,6 +76,17 @@ namespace MSNK.Controllers
             return View(obj);
         }
 
+        private void PopulateTableDetails(int? id)
+        {
+            List<SuProfil1> table1 = _context.SuProfil1
+                .Include(b => b.JSukan)
+                .Include(b => b.SuAtlet)
+                .Where(b => b.SuProfilId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            ViewBag.suProfil1 = table1;
+        }
+
         // GET: SuProfilAtlet/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -78,16 +95,14 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var suProfil = await _context.SuProfil
-                .Include(s => s.AkCarta)
-                .Include(s => s.JBahagian)
-                .Include(s => s.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var suProfil = await _suProfilRepo.GetByIdIncludeDeletedItems((int)id);
+
             if (suProfil == null)
             {
                 return NotFound();
             }
 
+            PopulateTableDetails(id);
             return View(suProfil);
         }
 
@@ -123,7 +138,7 @@ namespace MSNK.Controllers
             }
         }
 
-        private void PopulateTable(int status=1)
+        private void PopulateTableCreate(int status=1)
         {
             List<SuAtlet> data = _context.SuAtlet
                 .Include(x => x.JSukan)
@@ -210,7 +225,7 @@ namespace MSNK.Controllers
 
                 var kw = bahagian.JKWId;
 
-                var result = bahagian.Kod + "/" + year + "/" + month;
+                var result = "A" + bahagian.Kod + "/" + year + "/" + month;
 
                 var IsExistNoRujukan = _context.SuProfil.Where(x => x.NoRujukan == result).FirstOrDefault();
 
@@ -239,11 +254,11 @@ namespace MSNK.Controllers
             var month = DateTime.Now.ToString("MM");
             var bahagian = _context.JBahagian.Where(x => x.Id == 1).FirstOrDefault();
 
-            ViewBag.NoRujukan = bahagian.Kod + "/" + year + "/" + month;
+            ViewBag.NoRujukan = "A" + bahagian.Kod + "/" + year + "/" + month;
 
             PopulateList();
             CartEmpty();
-            PopulateTable();
+            PopulateTableCreate();
             PopulateCartFromSuAtlet();
             return View();
 
@@ -285,7 +300,7 @@ namespace MSNK.Controllers
                     
                     _cart.RemoveItem1(suP1.SuAtletId);
 
-                    _cart.AddItem1(0,
+                    _cart.AddItem1(suProfil1.SuProfilId,
                         suProfil1.SuAtletId,
                         jSukanId,
                         suProfil1.Amaun,
@@ -357,7 +372,7 @@ namespace MSNK.Controllers
                 var month = DateTime.Now.ToString("MM");
                 var bahagian = _context.JBahagian.Where(x => x.Id == 1).FirstOrDefault();
 
-                ViewBag.NoRujukan = bahagian.Kod + "/" + year + "/" + month;
+                ViewBag.NoRujukan = "A" + bahagian.Kod + "/" + year + "/" + month;
 
                 PopulateCartFromSuAtlet();
                 PopulateTableFromCart();
@@ -405,6 +420,7 @@ namespace MSNK.Controllers
         }
 
         // GET: SuProfilAtlet/Edit/5
+        [Authorize(Policy = "SU001E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -412,23 +428,48 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var suProfil = await _context.SuProfil.FindAsync(id);
+            var suProfil = await _suProfilRepo.GetById((int)id);
+
             if (suProfil == null)
             {
                 return NotFound();
             }
-            ViewData["AkCartaId"] = new SelectList(_context.AkCarta, "Id", "DebitKredit", suProfil.AkCartaId);
-            ViewData["JBahagianId"] = new SelectList(_context.JBahagian, "Id", "Kod", suProfil.JBahagianId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", suProfil.JKWId);
+            CartEmpty();
+            PopulateList();
+            PopulateTableDetails(id);
+            PopulateCartFromDb(suProfil);
             return View(suProfil);
+        }
+
+        private void PopulateCartFromDb(SuProfil suProfil)
+        {
+            List<SuProfil1> table1 = _context.SuProfil1
+                .Include(b => b.JSukan)
+                .Include(b => b.SuAtlet)
+                .Where(b => b.SuProfilId == suProfil.Id)
+                .OrderBy(b => b.Id)
+                .ToList();
+
+            foreach (SuProfil1 item in table1)
+            {
+                _cart.AddItem1(item.SuProfilId,
+                                item.SuAtletId,
+                                item.JSukanId,
+                                item.Amaun,
+                                item.AmaunSebelum,
+                                item.Tunggakan,
+                                item.Jumlah);
+            }
+
         }
 
         // POST: SuProfilAtlet/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "SU001E")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NoRujukan,Bulan,Tahun,FlKategori,AkCartaId,JKWId,JBahagianId,FlHapus,TarHapus,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] SuProfil suProfil)
+        public async Task<IActionResult> Edit(int id, SuProfil suProfil, int JKWId, int JBahagianId, int AkCartaId)
         {
             if (id != suProfil.Id)
             {
@@ -439,7 +480,53 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(User);
+
+                    SuProfil dataAsal = await _suProfilRepo.GetById(id);
+
+                    // list of input that cannot be change
+                    suProfil.Tahun = dataAsal.Tahun;
+                    suProfil.Bulan = dataAsal.Bulan;
+                    suProfil.NoRujukan = dataAsal.NoRujukan;
+                    suProfil.AkCartaId = dataAsal.AkCartaId;
+                    suProfil.JKWId = dataAsal.JKWId;
+                    suProfil.JBahagianId = dataAsal.JBahagianId;
+                    suProfil.TarMasuk = dataAsal.TarMasuk;
+                    suProfil.UserId = dataAsal.UserId;
+                    suProfil.FlCetak = 0;
+                    // list of input that cannot be change end
+
+                    foreach (SuProfil1 item in dataAsal.SuProfil1)
+                    {
+                        var model = _context.SuProfil1.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+                    decimal jumlahAsal = dataAsal.Jumlah;
+                    _context.Entry(dataAsal).State = EntityState.Detached;
+
+                    suProfil.SuProfil1 = _cart.Lines1.ToList();
+
+                    suProfil.UserIdKemaskini = user.UserName;
+                    suProfil.TarKemaskini = DateTime.Now;
+
                     _context.Update(suProfil);
+                    // insert applog
+                    if (jumlahAsal != suProfil.Jumlah)
+                    {
+                        await AddLogAsync("Ubah", "RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" +
+                            Convert.ToDecimal(suProfil.Jumlah).ToString("#,##0.00"), suProfil.NoRujukan, id, suProfil.Jumlah);
+
+                    }
+                    else
+                    {
+                        await AddLogAsync("Ubah", "Ubah Data", suProfil.NoRujukan, id, suProfil.Jumlah);
+                    }
+                    //insert applog end
+
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -453,15 +540,17 @@ namespace MSNK.Controllers
                         throw;
                     }
                 }
+                CartEmpty();
+                TempData[SD.Success] = "Data berjaya diubah..!";
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AkCartaId"] = new SelectList(_context.AkCarta, "Id", "DebitKredit", suProfil.AkCartaId);
-            ViewData["JBahagianId"] = new SelectList(_context.JBahagian, "Id", "Kod", suProfil.JBahagianId);
-            ViewData["JKWId"] = new SelectList(_context.JKW, "Id", "Kod", suProfil.JKWId);
+            PopulateList();
+            PopulateTableFromCart();
             return View(suProfil);
         }
 
         // GET: SuProfilAtlet/Delete/5
+        [Authorize(Policy = "SU001D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -469,28 +558,256 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var suProfil = await _context.SuProfil
-                .Include(s => s.AkCarta)
-                .Include(s => s.JBahagian)
-                .Include(s => s.JKW)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var suProfil = await _suProfilRepo.GetByIdIncludeDeletedItems((int)id);
+
             if (suProfil == null)
             {
                 return NotFound();
             }
 
+            PopulateTableDetails(id);
             return View(suProfil);
         }
 
         // POST: SuProfilAtlet/Delete/5
+        [Authorize(Policy = "SU001D")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var suProfil = await _context.SuProfil.FindAsync(id);
-            _context.SuProfil.Remove(suProfil);
+            var obj = await _context.SuProfil.FindAsync(id);
+
+            var user = await _userManager.GetUserAsync(User);
+
+            obj.UserIdKemaskini = user.UserName;
+            obj.TarKemaskini = DateTime.Now;
+            // check if already posting redirect back
+            if (obj.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            obj.FlCetak = 0;
+            _context.SuProfil.Update(obj);
+
+            //insert applog
+            await AddLogAsync("Hapus", obj.NoRujukan, obj.NoRujukan, id, obj.Jumlah);
+            //insert applog end
+
+            _context.SuProfil.Remove(obj);
             await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
+
             return RedirectToAction(nameof(Index));
+        }
+
+        // POST: AkPV/Cancel/5
+        [Authorize(Policy = "SU001R")]
+        public async Task<IActionResult> RollBack(int id)
+        {
+            var obj = await _suProfilRepo.GetByIdIncludeDeletedItems(id);
+            // check if already posting redirect back
+            if (obj.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // check if already have same no rujukan
+            if (SuProfilExistsByNoRujukan(obj.NoRujukan) == true)
+            {
+                TempData[SD.Error] = "No Rujukan bagi data ini telah wujud..!";
+                return RedirectToAction(nameof(Index));
+            }
+            // check end
+
+            // Batal operation
+
+            obj.FlHapus = 0;
+            obj.FlCetak = 0;
+            _context.SuProfil.Update(obj);
+
+            // Batal operation end
+
+            //insert applog
+            await AddLogAsync("Rollback", "Rollback Data", obj.NoRujukan, (int)id, obj.Jumlah);
+
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dikembalikan..!";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // printing SuProfil
+        [Authorize(Policy = "SU001P")]
+        public async Task<IActionResult> PrintPdf(int id)
+        {
+            SuProfil obj = await _suProfilRepo.GetByIdIncludeDeletedItems(id);
+
+            string jumlahDalamPerkataan;
+
+            if (obj.Jumlah < 0)
+            {
+                jumlahDalamPerkataan = ("Kurangan Ringgit Malaysia " + Tools.JumlahDalamPerkataan(0 - obj.Jumlah)).ToUpper();
+            }
+            else
+            {
+                jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(obj.Jumlah)).ToUpper();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+
+            SuProfilAtletPrintModel data = new SuProfilAtletPrintModel();
+
+            CompanyDetails company = new CompanyDetails();
+            data.CompanyDetail = company;
+            data.SuProfil = obj;
+            data.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            data.Username = user.UserName;
+
+            dynamic dyModel = new ExpandoObject();
+            dyModel.SuProfil = obj;
+            dyModel.SuProfil1Grouped = obj.SuProfil1.GroupBy(p => p.JSukan.Perihal);
+            dyModel.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            dyModel.Username = user.UserName;
+            dyModel.CompanyDetail = company;
+
+            //update cetak -> 1
+            obj.FlCetak = 1;
+            await _suProfilRepo.Update(obj);
+
+            //insert applog
+            await AddLogAsync("Cetak", "Cetak Data", obj.NoRujukan, id, obj.Jumlah);
+
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+
+            return new ViewAsPdf("SuProfilAtletPrintPdf", dyModel)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                //CustomSwitches = "--footer-center \"  Tarikh: " +
+                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+        // printing SuProfil end
+
+        // posting function
+        [Authorize(Policy = "SU001T")]
+        public async Task<IActionResult> Posting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                SuProfil obj = await _suProfilRepo.GetById((int)id);
+
+                //check for print
+                if (obj.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal diluluskan. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
+
+                List<SuProfil1> suProfil1 = obj.SuProfil1.ToList();
+
+                // check for zero amaun
+                foreach (SuProfil1 item in suProfil1)
+                {
+                    if (item.Amaun == 0)
+                    {
+                        TempData[SD.Error] = "Data gagal diluluskan. Terdapat Amaun Yang Tidak Diisi.";
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                // check for zero amaun end
+
+                //posting operation start here
+
+                //update posting status in akPO
+                obj.FlPosting = 1;
+                obj.TarikhPosting = DateTime.Now;
+                await _suProfilRepo.Update(obj);
+
+                //insert applog
+                await AddLogAsync("Posting", "Posting Data", obj.NoRujukan, (int)id, obj.Jumlah);
+
+                //insert applog end
+
+                await _context.SaveChangesAsync();
+
+                TempData[SD.Success] = "Data berjaya diluluskan.";
+
+                return RedirectToAction(nameof(Index));
+
+            }
+        }
+        // posting function end
+
+        // unposting function
+        [Authorize(Policy = "SU001UT")]
+        public async Task<IActionResult> UnPosting(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                SuProfil obj = await _suProfilRepo.GetById((int)id);
+
+                //check
+                // dah ada baucer atau tidak
+                foreach (var suProfil in obj.SuProfil1)
+                {
+                    var akPV = await _context.AkPV.Where(b => b.SuProfilId == id).FirstOrDefaultAsync();
+
+                    if (akPV != null)
+                    {
+                        //duplicate id error
+                        TempData[SD.Error] = "Batal kelulusan tidak dibenarkan. Terlibat dengan No PV " + akPV.NoPV;
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                //
+
+
+                //unposting operation start here
+
+                //update posting status in akPOLaras
+                obj.FlPosting = 0;
+                obj.TarikhPosting = null;
+                await _suProfilRepo.Update(obj);
+
+                //insert applog
+                await AddLogAsync("UnPosting", "UnPosting Data", obj.NoRujukan, (int)id, obj.Jumlah);
+
+                //insert applog end
+
+                await _context.SaveChangesAsync();
+
+                TempData[SD.Success] = "Data berjaya batal kelulusan.";
+                //unposting operation end
+
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
+        // unposting function end
+
+        private bool SuProfilExistsByNoRujukan(string noRujukan)
+        {
+            return _context.SuProfil.Where(e => e.NoRujukan == noRujukan).Any();
         }
 
         private bool SuProfilExists(int id)

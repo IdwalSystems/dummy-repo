@@ -568,6 +568,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AbWaran/Edit/5
+        [Authorize(Policy = "BJ001E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -610,6 +611,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "BJ001E")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AbWaran abWaran, int JKWId, int JBahagianId)
         {
@@ -727,6 +729,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AbWaran/Delete/5
+        [Authorize("BJ001D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

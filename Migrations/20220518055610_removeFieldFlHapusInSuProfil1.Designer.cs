@@ -4,14 +4,16 @@ using MSNK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220518055610_removeFieldFlHapusInSuProfil1")]
+    partial class removeFieldFlHapusInSuProfil1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1255,9 +1257,6 @@ namespace MSNK.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("SuPekerjaId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SuProfilId")
                         .HasColumnType("int");
 
                     b.Property<string>("Tahun")
@@ -3122,16 +3121,10 @@ namespace MSNK.Migrations
                     b.Property<string>("Bulan")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FlCetak")
-                        .HasColumnType("int");
-
                     b.Property<int>("FlHapus")
                         .HasColumnType("int");
 
                     b.Property<int>("FlKategori")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FlPosting")
                         .HasColumnType("int");
 
                     b.Property<int>("JBahagianId")
@@ -3156,9 +3149,6 @@ namespace MSNK.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("TarMasuk")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("TarikhPosting")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")

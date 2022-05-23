@@ -38,9 +38,19 @@ namespace MSNK.Models.Modules
         public ICollection<SuProfil1> SuProfil1 { get; set; }
         //relationship end
 
-        //soft delete
+        //flag
+        [DisplayName("Status Batal")]
+        [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
-        //soft delete end
+        [DisplayName("Posting")]
+        [DefaultValue("0")]
+        public int FlPosting { get; set; }
+        [DisplayName("Tarikh Posting")]
+        public DateTime? TarikhPosting { get; set; }
+        [DisplayName("Cetak")]
+        [DefaultValue("0")]
+        public int FlCetak { get; set; }
+        //flag end
     }
 }
