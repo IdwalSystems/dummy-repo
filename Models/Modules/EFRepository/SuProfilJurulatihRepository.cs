@@ -1,18 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules.IRepository;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
 {
-    public class SuProfilRepository : IRepository<SuProfil, int, string>
+    public class SuProfilJurulatihRepository : IRepository<SuProfil, int, string>
     {
         public readonly ApplicationDbContext context;
 
-        public SuProfilRepository(ApplicationDbContext context) => this.context = context;
+        public SuProfilJurulatihRepository(ApplicationDbContext context) => this.context = context;
         public async Task Delete(int id)
         {
             var model = await context.SuProfil.FirstOrDefaultAsync(b => b.Id == id);
@@ -24,7 +23,7 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<IEnumerable<SuProfil>> GetAll()
         {
-            return await context.SuProfil.ToListAsync();
+            return await context.SuProfil.Where(x => x.FlKategori == 1).ToListAsync();
         }
 
         public async Task<IEnumerable<SuProfil>> GetAllIncludeDeletedItems()
@@ -34,7 +33,8 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkCarta)
                 .Include(b => b.JBahagian)
                 .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
-                .Include(b => b.SuProfil1).ThenInclude(b=> b.JSukan)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.JSukan)
+                .Where(x => x.FlKategori == 1)
                 .IgnoreQueryFilters()
                 .ToListAsync();
         }
@@ -47,8 +47,8 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JBahagian)
                 .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
                 .Include(b => b.SuProfil1).ThenInclude(b => b.JSukan)
+                .Where(x => x.FlKategori == 1)
                 .FirstOrDefaultAsync(x => x.Id == id);
-
         }
 
         public async Task<SuProfil> GetByIdIncludeDeletedItems(int id)
@@ -59,13 +59,14 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JBahagian)
                 .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
                 .Include(b => b.SuProfil1).ThenInclude(b => b.JSukan)
+                .Where(x => x.FlKategori == 1)
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public Task<SuProfil> GetByString(string id)
         {
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
         }
 
         public async Task<SuProfil> Insert(SuProfil entity)

@@ -85,7 +85,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label asp-for="JNegeriId" class="control-label"></label>
-                            <select asp-for="JNegeriId" class="form-control form-control-sm" required>
+                            <select asp-for="JNegeriId" class="form-control form-control-sm select2" required>
                                 <option value="" hidden>-- Pilih Negeri --</option>
                                 @foreach (var s in ViewBag.JNegeri)
                                 {
@@ -108,7 +108,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label asp-for="Emel" class="control-label"></label>
-                            <input asp-for="Emel" class="form-control form-control-sm text-lowercase" type="email" required />
+                            <input asp-for="Emel" class="form-control form-control-sm text-lowercase" type="email" />
                             <span asp-validation-for="Emel" class="text-danger"></span>
                         </div>
                     </div>                    
@@ -149,7 +149,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label asp-for="JBankId" class="control-label"></label>
-                        <select asp-for="JBankId" class="form-control form-control-sm">
+                        <select asp-for="JBankId" class="form-control form-control-sm select2">
                             <option value="" hidden>-- Pilih Nama Bank --</option>
                             @foreach (var s in ViewBag.JBank)
                             {

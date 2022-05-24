@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,16 +14,16 @@ using MSNK.Models.Modules.IRepository;
 namespace MSNK.Controllers
 {
     [Authorize(Roles = "SuperAdmin,Supervisor")]
-    public class JSukanController : Controller
+    public class JProfilKategoriController : Controller
     {
-            public const string modul = "JD008";
-            public const string namamodul = "Jadual Sukan";
+        public const string modul = "JD012";
+        public const string namamodul = "Jadual Profil Kategori";
 
-            private readonly ApplicationDbContext _context;
-            private readonly UserManager<IdentityUser> _userManager;
-            private readonly AppLogIRepository<AppLog, int> _appLog;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly AppLogIRepository<AppLog, int> _appLog;
 
-        public JSukanController(ApplicationDbContext context,
+        public JProfilKategoriController(ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
             AppLogIRepository<AppLog, int> appLog)
         {
@@ -33,11 +33,11 @@ namespace MSNK.Controllers
         }
 
         private async Task AddLogAsync(
-            string operasi,
-            string nota,
-            string rujukan,
-            int idRujukan,
-            decimal jumlah)
+           string operasi,
+           string nota,
+           string rujukan,
+           int idRujukan,
+           decimal jumlah)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -51,20 +51,20 @@ namespace MSNK.Controllers
             await _appLog.Insert(appLog, modul, operasi);
         }
 
-        // GET: JSukan
+        // GET: JProfilKategori
         public async Task<IActionResult> Index()
         {
-            var obj = await _context.JSukan.ToListAsync();
+            var obj = await _context.JProfilKategori.ToListAsync();
 
             if (User.IsInRole("SuperAdmin"))
             {
-                obj = await _context.JSukan.IgnoreQueryFilters().ToListAsync();
+                obj = await _context.JProfilKategori.IgnoreQueryFilters().ToListAsync();
             }
 
             return View(obj);
         }
 
-        // GET: JSukan/Details/5
+        // GET: JProfilKategori/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -72,42 +72,41 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var jSukan = await _context.JSukan
+            var jProfilKategori = await _context.JProfilKategori
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (jSukan == null)
+            if (jProfilKategori == null)
             {
                 return NotFound();
             }
 
-            return View(jSukan);
+            return View(jProfilKategori);
         }
 
-        // GET: JSukan/Create
+        // GET: JProfilKategori/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: JSukan/Create
+        // POST: JProfilKategori/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Perihal,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] JSukan jSukan)
+        public async Task<IActionResult> Create([Bind("Id,Kod,Perihal,KadarGeran,FlHapus,TarHapus,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] JProfilKategori jProfilKategori)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(jSukan);
-                await AddLogAsync("Tambah", jSukan.Perihal, jSukan.Perihal, 0, 0); 
+                _context.Add(jProfilKategori);
+                await AddLogAsync("Tambah", jProfilKategori.Perihal, jProfilKategori.Perihal, 0, 0);
                 await _context.SaveChangesAsync();
                 TempData[SD.Success] = "Data berjaya ditambah..!";
                 return RedirectToAction(nameof(Index));
-                
             }
-            return View(jSukan);
+            return View(jProfilKategori);
         }
 
-        // GET: JSukan/Edit/5
+        // GET: JProfilKategori/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -115,22 +114,22 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var jSukan = await _context.JSukan.FindAsync(id);
-            if (jSukan == null)
+            var jProfilKategori = await _context.JProfilKategori.FindAsync(id);
+            if (jProfilKategori == null)
             {
                 return NotFound();
             }
-            return View(jSukan);
+            return View(jProfilKategori);
         }
 
-        // POST: JSukan/Edit/5
+        // POST: JProfilKategori/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Perihal,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] JSukan jSukan)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Kod,Perihal,KadarGeran,FlHapus,TarHapus,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] JProfilKategori jProfilKategori)
         {
-            if (id != jSukan.Id)
+            if (id != jProfilKategori.Id)
             {
                 return NotFound();
             }
@@ -139,16 +138,17 @@ namespace MSNK.Controllers
             {
                 try
                 {
-                    var objAsal = await _context.JSukan.FirstOrDefaultAsync(x => x.Id == jSukan.Id);
+                    var objAsal = await _context.JProfilKategori.FirstOrDefaultAsync(x => x.Id == jProfilKategori.Id);
+                    jProfilKategori.Kod = objAsal.Kod;
                     var perihalAsal = objAsal.Perihal;
 
                     _context.Entry(objAsal).State = EntityState.Detached;
 
-                    _context.Update(jSukan);
+                    _context.Update(jProfilKategori);
 
-                    if (perihalAsal != jSukan.Perihal)
+                    if (perihalAsal != jProfilKategori.Perihal)
                     {
-                        await AddLogAsync("Ubah", perihalAsal + " -> " + jSukan.Perihal,jSukan.Perihal,id, 0);
+                        await AddLogAsync("Ubah", perihalAsal + " -> " + jProfilKategori.Perihal, jProfilKategori.Perihal, id, 0);
                     }
 
                     await _context.SaveChangesAsync();
@@ -156,7 +156,7 @@ namespace MSNK.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!JSukanExists(jSukan.Id))
+                    if (!JProfilKategoriExists(jProfilKategori.Id))
                     {
                         return NotFound();
                     }
@@ -167,10 +167,10 @@ namespace MSNK.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(jSukan);
+            return View(jProfilKategori);
         }
 
-        // GET: JSukan/Delete/5
+        // GET: JProfilKategori/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -178,29 +178,28 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var jSukan = await _context.JSukan
+            var jProfilKategori = await _context.JProfilKategori
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (jSukan == null)
+            if (jProfilKategori == null)
             {
                 return NotFound();
             }
 
-            return View(jSukan);
+            return View(jProfilKategori);
         }
 
-        // POST: JSukan/Delete/5
+        // POST: JProfilKategori/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var jSukan = await _context.JSukan.FindAsync(id);
-
+            var jProfilKategori = await _context.JProfilKategori.FindAsync(id);
             var user = await _userManager.GetUserAsync(User);
-            jSukan.UserIdKemaskini = user.UserName;
-            jSukan.TarKemaskini = DateTime.Now;
+            jProfilKategori.UserIdKemaskini = user.UserName;
+            jProfilKategori.TarKemaskini = DateTime.Now;
 
-            _context.JSukan.Remove(jSukan);
-            await AddLogAsync("Hapus", jSukan.Perihal,jSukan.Perihal,id, 0);
+            _context.JProfilKategori.Remove(jProfilKategori);
+            await AddLogAsync("Hapus", jProfilKategori.Perihal, jProfilKategori.Perihal, id, 0);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
@@ -208,13 +207,13 @@ namespace MSNK.Controllers
 
         public async Task<IActionResult> RollBack(int id)
         {
-            var obj = await _context.JSukan.IgnoreQueryFilters()
+            var obj = await _context.JProfilKategori.IgnoreQueryFilters()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             // Batal operation
 
             obj.FlHapus = 0;
-            _context.JSukan.Update(obj);
+            _context.JProfilKategori.Update(obj);
 
             // Batal operation end
 
@@ -222,9 +221,10 @@ namespace MSNK.Controllers
             TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
         }
-        private bool JSukanExists(int id)
+
+        private bool JProfilKategoriExists(int id)
         {
-            return _context.JSukan.Any(e => e.Id == id);
+            return _context.JProfilKategori.Any(e => e.Id == id);
         }
     }
 }

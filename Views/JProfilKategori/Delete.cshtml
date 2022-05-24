@@ -1,0 +1,39 @@
+@model MSNK.Models.Modules.JProfilKategori
+
+@{
+    ViewData["Title"] = "Hapus";
+}
+
+<h3>Hapus</h3>
+
+<h5 class="text-danger">Anda pasti untuk menghapuskan maklumat berikut?</h5>
+<div>
+    <h5>Profil Kategori</h5>
+    <hr />
+    <dl class="row">
+         <dt class = "col-sm-2">
+            KOD
+        </dt>
+        <dd class = "col-sm-10 text-uppercase">
+            @Model.Kod
+        </dd>
+        <dt class = "col-sm-2">
+            PERIHAL
+        </dt>
+        <dd class = "col-sm-10 text-uppercase">
+            @Model.Perihal
+        </dd>
+        <dt class = "col-sm-2">
+            KADAR GERAN RM
+        </dt>
+        <dd class = "col-sm-10 text-uppercase">
+             @Convert.ToDecimal(Model.KadarGeran).ToString("#,##0.00")
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Hapus" class="btn btn-danger btn-sm" /> |
+        <a asp-action="Index">Kembali ke Indeks</a>
+    </form>
+</div>

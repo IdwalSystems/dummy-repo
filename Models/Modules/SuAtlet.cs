@@ -30,7 +30,6 @@ namespace MSNK.Models.Modules
         public int JNegeriId { get; set; }
         [DisplayName("No Telefon")]
         public string Telefon { get; set; }
-        [Required(ErrorMessage = "Emel Diperlukan")]
         [EmailAddress(ErrorMessage = "Emel Tidak Sah."), MaxLength(100)]
         public string Emel { get; set; }
         //FlStatus

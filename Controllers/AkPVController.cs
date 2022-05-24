@@ -2113,6 +2113,8 @@ namespace MSNK.Controllers
             akPVView.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
             akPVView.SpPendahuluanPelbagaiId = akPV.SpPendahuluanPelbagaiId;
             akPVView.SpPendahuluanPelbagai = akPV.SpPendahuluanPelbagai;
+            akPVView.SuProfilId = akPV.SuProfilId;
+            akPVView.SuProfil = akPV.SuProfil;
 
             akPVView.AkPV1 = akPV.AkPV1;
             foreach (AkPV2 item in akPV.AkPV2)

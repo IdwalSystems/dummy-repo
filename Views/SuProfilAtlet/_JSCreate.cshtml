@@ -1,5 +1,5 @@
 ﻿<script type="text/javascript">
-    // onchange no Rujukan
+    // on change no Rujukan
     $("body").on('change', "#txtTahun, #txtBulan, #JBahagianId", function () {
         var year = $("#txtTahun").val();
         var month = $("#txtBulan").val();
@@ -11,6 +11,7 @@
     });
 
     function JsonKod(year, month, bahagianId) {
+        var jumlah = $("#jumlahKeseluruhan");
         $.ajax({
             type: "POST",
             //url: "/AkPV/JsonGetKod",
@@ -20,13 +21,76 @@
             success: function (msg) {
                 $("#txtNoRujukan").val(msg.record);
                 $("#JKWId").val(msg.kw);
+
+                //refresh updated table atlet
+                $("table tbody#tbodyAtlet").empty();
+                var sum = 0;
+                if (msg.table.length > 0) {
+                    for (var i = 0; i < msg.table.length; i++) {
+                        var item1 = msg.table[i];
+                        var str = "<tr><td id='suAtletId' hidden>" + item1.suAtletId +
+                            "</td><td class='text-uppercase'>" + item1.suAtlet.nama +
+                            "</td><td class='text-uppercase'>" + item1.jSukan.perihal +
+                            "</td><td class='text-uppercase'>" + item1.suAtlet.noKp +
+                            "</td><td class='text-uppercase'>" + item1.suAtlet.noAkaunBank +
+                            "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                            "</td><td class='text-right'>" + (item1.amaunSebelum).toFixed(2) +
+                            "</td><td class='text-right'>" + (item1.tunggakan).toFixed(2) +
+                            "</td><td class='text-right'>" + (item1.jumlah).toFixed(2) +
+                            "</td><td>" +
+                            "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalAtlet' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                            "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                            "</td><tr>";
+                        $("table tbody#tbodyAtlet").append(str);
+                        sum += item1.jumlah;
+                    }
+                }
+                jumlah.val(sum.toFixed(2));
+
             },
             error: function (req, status, error) {
                 alert(error);
             }
         });
     }
-    // onchange no Rujukan end
+    // on change no Rujukan end
+
+    //remove tbl Atlet
+    function Remove1(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var atletId = $("TD", row).eq(0).html();
+        var name = $("TD", row).eq(1).html();
+        var amaun = $("TD", row).eq(8).html();
+        var txtJumlah = $("#jumlahKeseluruhan");
+        if (confirm("Hapus Atlet : " + name.trim() + " ?")) {
+            //Get the reference of the Table.
+            var table = $("#tblAtlet")[0];
+
+            //Sum value to Total text field
+            var sum = 0;
+            sum = parseFloat(txtJumlah.val() - parseFloat(amaun));
+            txtJumlah.val(sum.toFixed(2));
+
+            var SuProfil1 = {
+                SuAtletId: atletId,
+            }
+            if (atletId != null) {
+                $.ajax({
+                    type: "POST",
+                    //url: "/AkPO/RemoveAkPO1",
+                    url: '@Url.Action("RemoveSuProfil1", "SuProfilAtlet")',
+                    data: SuProfil1,
+                    dataType: "json",
+                    success: function (r) {
+                        //Delete the Table row using it's Index.
+                        table.deleteRow(row[0].rowIndex);
+                    }
+                });
+            }
+        }
+    };
+    //remove tbl atlet end
 
     //update tbl Atlet
     function Update1(button) {
@@ -111,6 +175,7 @@
                                         "</td><td class='text-right'>" + (item1.jumlah).toFixed(2) +
                                         "</td><td>" +
                                         "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalAtlet' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                        "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                         "</td><tr>";
                                     $("table tbody#tbodyAtlet").append(str);
                                     sum += item1.jumlah;

@@ -81,7 +81,7 @@
         <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
     </div>
     <div class="col-8 text-uppercase">
-        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+        <h3 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h3>
         <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1 , @Model.CompanyDetail.AlamatSyarikat2</p>
         <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat3</p>
         <p class="mb-0"> Tel: @Model.CompanyDetail.TelSyarikat   Faks: @Model.CompanyDetail.FaksSyarikat</p>
@@ -91,12 +91,11 @@
     <div class="col-2 text-right">
 
 
-        <h6 class="mb-0"><strong>RESIT RASMI</strong></h6>
-        <h6 class="mb-0">NO RESIT:</h6>
-        <h6 class="mb-0 ">@Model.AkTerima.NoRujukan.Substring(3)</h6>
+        <h4 class="mb-0"><strong>RESIT RASMI</strong></h4>
+        <h5 class="mb-0">NO RESIT:</h5>
+        <h5 class="mb-0 "><strong>@Model.AkTerima.NoRujukan.Substring(3)</strong></h5>
         TARIKH: @Html.DisplayFor(x => x.AkTerima.Tarikh, "{0:dd/MM/yyyy}")
-        <h6 class="mb-0 text-white">-</h6>
-        <h6 class="mb-0"><strong>ASAL</strong></h6>
+        <h5 class="mb-0"><strong>ASAL</strong></h5>
     </div>
 </div>
 <hr class="bg-dark"/>
@@ -113,10 +112,13 @@
 <div class="row flexrow mb-1">
     <div class="col-6 text-left text-uppercase">
         <h6 class="mb-0">@Model.AkTerima.Nama</h6>
-        <h6 class="mb-0">@Model.AkTerima.Alamat1</h6>
-        <h6 class="mb-0">@Model.AkTerima.Alamat2</h6>
-        <h6 class="mb-0">@Model.AkTerima.Alamat3</h6>
-        <h6 class="mb-0">@Model.AkTerima.Poskod, @Model.AkTerima.Bandar, @Model.AkTerima.JNegeri.Perihal</h6>
+        @if(!string.IsNullOrEmpty(Model.AkTerima.Alamat1))
+        {
+          <h6 class="mb-0">@Model.AkTerima.Alamat1</h6>
+            <h6 class="mb-0">@Model.AkTerima.Alamat2</h6>
+            <h6 class="mb-0">@Model.AkTerima.Alamat3</h6>
+            <h6 class="mb-0">@Model.AkTerima.Poskod, @Model.AkTerima.Bandar, @Model.AkTerima.JNegeri.Perihal</h6>  
+        }
     </div>
 
     <div class="col-6">
@@ -201,19 +203,21 @@
         <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
     </div>
     <div class="col-8 text-uppercase">
-        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+        <h3 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h3>
         <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1 , @Model.CompanyDetail.AlamatSyarikat2</p>
         <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat3</p>
         <p class="mb-0"> Tel: @Model.CompanyDetail.TelSyarikat   Faks: @Model.CompanyDetail.FaksSyarikat</p>
+        <p class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</p>
     </div>
 
     <div class="col-2 text-right">
-        <h6 class="mb-0"><strong>RESIT RASMI</strong></h6>
-        <h6 class="mb-0">NO RESIT:</h6>
-        <h6 class="mb-0 ">@Model.AkTerima.NoRujukan.Substring(3)</h6>
+
+
+        <h4 class="mb-0"><strong>RESIT RASMI</strong></h4>
+        <h5 class="mb-0">NO RESIT:</h5>
+        <h5 class="mb-0 "><strong>@Model.AkTerima.NoRujukan.Substring(3)</strong></h5>
         TARIKH: @Html.DisplayFor(x => x.AkTerima.Tarikh, "{0:dd/MM/yyyy}")
-        <h6 class="mb-0 text-white">-</h6>
-        <h6 class="mb-0"><strong>SALINAN</strong></h6>
+        <h5 class="mb-0"><strong>SALINAN</strong></h5>
     </div>
 </div>
 <hr class="bg-dark"/>
@@ -230,10 +234,13 @@
 <div class="row flexrow mb-1">
     <div class="col-6 text-left text-uppercase">
         <h6 class="mb-0">@Model.AkTerima.Nama</h6>
-        <h6 class="mb-0">@Model.AkTerima.Alamat1</h6>
-        <h6 class="mb-0">@Model.AkTerima.Alamat2</h6>
-        <h6 class="mb-0">@Model.AkTerima.Alamat3</h6>
-        <h6 class="mb-0">@Model.AkTerima.Poskod, @Model.AkTerima.Bandar, @Model.AkTerima.JNegeri.Perihal</h6>
+        @if(!string.IsNullOrEmpty(Model.AkTerima.Alamat1))
+        {
+          <h6 class="mb-0">@Model.AkTerima.Alamat1</h6>
+            <h6 class="mb-0">@Model.AkTerima.Alamat2</h6>
+            <h6 class="mb-0">@Model.AkTerima.Alamat3</h6>
+            <h6 class="mb-0">@Model.AkTerima.Poskod, @Model.AkTerima.Bandar, @Model.AkTerima.JNegeri.Perihal</h6>  
+        }
     </div>
 
     <div class="col-6">

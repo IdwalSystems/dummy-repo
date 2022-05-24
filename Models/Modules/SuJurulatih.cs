@@ -30,7 +30,6 @@ namespace MSNK.Models.Modules
         public int JNegeriId { get; set; }
         [DisplayName("No Telefon")]
         public string Telefon { get; set; }
-        [Required(ErrorMessage = "Emel Diperlukan")]
         [EmailAddress(ErrorMessage = "Emel Tidak Sah."), MaxLength(100)]
         public string Emel { get; set; }
         [DisplayName("Status Aktif")]
@@ -51,6 +50,9 @@ namespace MSNK.Models.Modules
         public int? JCaraBayarId { get; set; }
         [DisplayName("No Akaun Bank")]
         public string NoAkaunBank { get; set; }
+        [DisplayName("Profil Kategori")]
+        public int? JProfilKategoriId { get; set; }
+        public JProfilKategori JProfilKategori { get; set; }
 
         //relationship
         [DisplayName("Cara Bayar")]

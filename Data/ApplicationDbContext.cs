@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Models.Administration;
 using MSNK.Models.Modules;
@@ -72,6 +72,7 @@ namespace MSNK.Data
         public DbSet<AbWaran1> AbWaran1 { get; set; }
         public DbSet<JPelulus> JPelulus { get; set; }
         public DbSet<JPenyemak> JPenyemak { get; set; }
+        public DbSet<JProfilKategori> JProfilKategori { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -96,6 +97,7 @@ namespace MSNK.Data
             modelBuilder.Entity<JParas>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JPelulus>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JPenyemak>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JProfilKategori>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
 
             //Terimaan
             modelBuilder.Entity<AkTerima>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
@@ -138,6 +140,11 @@ namespace MSNK.Data
             //        new IdentityRole { Name = "Supervisor", NormalizedName = "Supervisor".ToUpper() },
             //        new IdentityRole { Name = "User", NormalizedName = "User".ToUpper() }
             //    );
+
+            modelBuilder.Entity<SuJurulatih>()
+                .HasOne(e => e.JProfilKategori)
+                .WithMany(c => c.SuJurulatih)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AkBank>()
                 .HasOne(e => e.JBank)
@@ -480,6 +487,5 @@ namespace MSNK.Data
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan3).HasDefaultValue("");
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan4).HasDefaultValue("");
         }
-        
     }
 }

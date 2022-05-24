@@ -66,7 +66,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="AkCartaId" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <select class="form-control form-control-sm text-uppercase" asp-for="AkCartaId" required>
+                                <select class="form-control form-control-sm text-uppercase select2" asp-for="AkCartaId" required>
                                     @foreach (var s in ViewBag.AkCarta)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -95,7 +95,7 @@
                                         <th style="width:8%">Amaun Sebelum RM</th>
                                         <th style="width:8%">Tunggakan RM</th>
                                         <th style="width:8%">Jumlah RM</th>
-                                        <th style="width:5%"></th>
+                                        <th style="width:10%"></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyAtlet">
@@ -133,6 +133,7 @@
                                                 <button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalAtlet" onclick="Update1(this)">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
+                                                <button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>
                                             </td>
                                         </tr>
                                     }
@@ -144,7 +145,7 @@
                         <div class="card-footer">
                             <div class="form-group pb-2">
                                 <label asp-for="Jumlah" class="control-label">Jumlah Keseluruhan RM</label>
-                                <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahKeseluruhan" readonly value="0.00" />
+                                <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahKeseluruhan" readonly value="@ViewBag.Jumlah" />
                                 <span asp-validation-for="Jumlah" class="text-danger"></span>
                             </div>
                         </div>

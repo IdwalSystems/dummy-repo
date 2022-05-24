@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -138,7 +139,7 @@ namespace MSNK.Controllers
             }
         }
 
-        private void PopulateTableCreate(int status=1)
+        private void PopulateTableCreate(int status,int month, int year)
         {
             List<SuAtlet> data = _context.SuAtlet
                 .Include(x => x.JSukan)
@@ -146,25 +147,74 @@ namespace MSNK.Controllers
                 .OrderBy(x => x.JSukanId).ThenBy(x => x.Nama)
                 .ToList();
 
+            // check if already create for previous month
+            string monthInStr = (month -1).ToString("D2");
+            var yearInStr = year.ToString();
+            if (month == 1)
+            {
+                monthInStr = "12";
+                yearInStr = (year - 1).ToString();
+            }
+            
+
+            var suProfil = _context.SuProfil
+                .Include(b=> b.SuProfil1).ThenInclude(b=> b.SuAtlet)
+                    .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr)
+                    .FirstOrDefault();
+            
             List<SuProfil1> suProfil1Table = new List<SuProfil1>();
 
-            foreach (var item in data)
+            decimal jumlahKeseluruhan = 0;
+
+            if (suProfil != null)
             {
-                suProfil1Table.Add(
-                    new SuProfil1
-                    {
-                        SuAtlet = item,
-                        SuAtletId = item.Id,
-                        JSukan = item.JSukan,
-                        JSukanId = item.JSukanId,
-                        Amaun = 0,
-                        AmaunSebelum = 0,
-                        Tunggakan = 0,
-                        Jumlah = 0
-                    });
+                List<SuProfil1> data2 = _context.SuProfil1
+                .Include(x => x.JSukan).Include(x => x.SuAtlet)
+                .Where(x => x.SuProfilId == suProfil.Id)
+                .OrderBy(x => x.JSukanId).ThenBy(x => x.SuAtlet.Nama)
+                .ToList();
+
+                
+                foreach (var item in data2)
+                {
+                    jumlahKeseluruhan = jumlahKeseluruhan + item.Amaun;
+
+                    suProfil1Table.Add(
+                        new SuProfil1
+                        {
+                            SuAtlet = item.SuAtlet,
+                            SuAtletId = item.SuAtletId,
+                            JSukan = item.JSukan,
+                            JSukanId = item.JSukanId,
+                            Amaun = item.Amaun,
+                            AmaunSebelum = item.Amaun,
+                            Tunggakan = 0,
+                            Jumlah = item.Amaun
+                        });
+                }
             }
+            else
+            {
+                foreach (var item in data)
+                {
+                    suProfil1Table.Add(
+                        new SuProfil1
+                        {
+                            SuAtlet = item,
+                            SuAtletId = item.Id,
+                            JSukan = item.JSukan,
+                            JSukanId = item.JSukanId,
+                            Amaun = 0,
+                            AmaunSebelum = 0,
+                            Tunggakan = 0,
+                            Jumlah = 0
+                        });
+                }
+            }
+            
 
             ViewBag.suProfil1 = suProfil1Table;
+            ViewBag.Jumlah = jumlahKeseluruhan;
         }
 
 
@@ -190,7 +240,7 @@ namespace MSNK.Controllers
             ViewBag.suProfil1 = suProfil1Table;
         }
 
-        private void PopulateCartFromSuAtlet()
+        private void PopulateCartFromSuAtlet(int month, int year)
         {
             List<SuAtlet> suAtlet = _context.SuAtlet
                 .Include(x => x.JSukan)
@@ -199,16 +249,53 @@ namespace MSNK.Controllers
                 .ThenBy(x => x.Nama)
                 .ToList();
 
-            foreach (SuAtlet item in suAtlet)
+            // check if already create for previous month
+            string monthInStr = (month -1).ToString("D2");
+            var yearInStr = year.ToString();
+            if (month == 1)
             {
-                _cart.AddItem1(0,
-                               item.Id,
-                               item.JSukanId,
-                               0,
-                               0,
-                               0,
-                               0);
+                monthInStr = "12";
+                yearInStr = (year - 1).ToString();
             }
+
+
+            var suProfil = _context.SuProfil
+                .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet)
+                    .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr)
+                    .FirstOrDefault();
+
+            if (suProfil != null)
+            {
+                List<SuProfil1> data2 = _context.SuProfil1
+                .Include(x => x.JSukan).Include(x => x.SuAtlet)
+                .Where(x => x.SuProfilId == suProfil.Id)
+                .OrderBy(x => x.JSukanId).ThenBy(x => x.SuAtlet.Nama)
+                .ToList();
+
+                foreach (SuProfil1 item in data2)
+                {
+                    _cart.AddItem1(0,
+                                   item.SuAtletId,
+                                   item.JSukanId,
+                                   item.Amaun,
+                                   item.Amaun,
+                                   0,
+                                   item.Amaun);
+                }
+            } else
+            {
+                foreach (SuAtlet item in suAtlet)
+                {
+                    _cart.AddItem1(0,
+                                   item.Id,
+                                   item.JSukanId,
+                                   0,
+                                   0,
+                                   0,
+                                   0);
+                }
+            }
+            
 
 
         }
@@ -229,9 +316,79 @@ namespace MSNK.Controllers
 
                 var IsExistNoRujukan = _context.SuProfil.Where(x => x.NoRujukan == result).FirstOrDefault();
 
+                CartEmpty();
+                PopulateCartFromSuAtlet(int.Parse(month),int.Parse(year));
+
+                List<SuAtlet> data = _context.SuAtlet
+                .Include(x => x.JSukan)
+                .Where(b => b.FlStatus == 1)
+                .OrderBy(x => x.JSukanId).ThenBy(x => x.Nama)
+                .ToList();
+
+                // check if already create for previous month
+                string monthInStr = (int.Parse(month) -1).ToString("D2");
+                var yearInStr = year.ToString();
+                if (int.Parse(month) == 1)
+                {
+                    monthInStr = "12";
+                    yearInStr = (int.Parse(year) - 1).ToString();
+                }
+
+
+                var suProfil = _context.SuProfil
+                    .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet)
+                        .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr)
+                        .FirstOrDefault();
+
+                List<SuProfil1> suProfil1Table = new List<SuProfil1>();
+
+                if (suProfil != null)
+                {
+                    List<SuProfil1> data2 = _context.SuProfil1
+                    .Include(x => x.JSukan).Include(x => x.SuAtlet)
+                    .Where(x => x.SuProfilId == suProfil.Id)
+                    .OrderBy(x => x.JSukanId).ThenBy(x => x.SuAtlet.Nama)
+                    .ToList();
+
+
+                    foreach (var item in data2)
+                    {
+                        suProfil1Table.Add(
+                            new SuProfil1
+                            {
+                                SuAtlet = item.SuAtlet,
+                                SuAtletId = item.SuAtletId,
+                                JSukan = item.JSukan,
+                                JSukanId = item.JSukanId,
+                                Amaun = item.Amaun,
+                                AmaunSebelum = item.Amaun,
+                                Tunggakan = 0,
+                                Jumlah = item.Amaun
+                            });
+                    }
+                }
+                else
+                {
+                    foreach (var item in data)
+                    {
+                        suProfil1Table.Add(
+                            new SuProfil1
+                            {
+                                SuAtlet = item,
+                                SuAtletId = item.Id,
+                                JSukan = item.JSukan,
+                                JSukanId = item.JSukanId,
+                                Amaun = 0,
+                                AmaunSebelum = 0,
+                                Tunggakan = 0,
+                                Jumlah = 0
+                            });
+                    }
+                }
+
                 if (IsExistNoRujukan == null)
                 {
-                    return Json(new { result = "OK", record = result, kw = kw });
+                    return Json(new { result = "OK", record = result, kw = kw, table = suProfil1Table });
                 }
                 else
                 {
@@ -258,10 +415,29 @@ namespace MSNK.Controllers
 
             PopulateList();
             CartEmpty();
-            PopulateTableCreate();
-            PopulateCartFromSuAtlet();
+            PopulateTableCreate(1,int.Parse(month),int.Parse(year));
+            PopulateCartFromSuAtlet(int.Parse(month), int.Parse(year));
             return View();
 
+        }
+
+        public JsonResult RemoveSuProfil1(SuProfil1 suProfil1)
+        {
+
+            try
+            {
+                if (suProfil1 != null)
+                {
+
+                    _cart.RemoveItem1(suProfil1.SuAtletId);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
         }
 
         // get an item from cart abWaran1
@@ -360,6 +536,11 @@ namespace MSNK.Controllers
             SuProfil m = new SuProfil();
             var IsExistNoRujukan = _context.SuProfil.Where(x => x.NoRujukan == suProfil.NoRujukan).FirstOrDefault();
 
+            // get latest no rujukan running number 
+            var year = DateTime.Now.Year.ToString();
+            var month = DateTime.Now.ToString("MM");
+            var bahagian = _context.JBahagian.Where(x => x.Id == 1).FirstOrDefault();
+
             // check if Tahun, Bulan ,JBahagianId, JKWId already exist or not 
             if (IsExistNoRujukan != null)
             {
@@ -367,14 +548,9 @@ namespace MSNK.Controllers
                 PopulateList();
                 CartEmpty();
 
-                // get latest no rujukan running number 
-                var year = DateTime.Now.Year.ToString();
-                var month = DateTime.Now.ToString("MM");
-                var bahagian = _context.JBahagian.Where(x => x.Id == 1).FirstOrDefault();
-
                 ViewBag.NoRujukan = "A" + bahagian.Kod + "/" + year + "/" + month;
 
-                PopulateCartFromSuAtlet();
+                PopulateCartFromSuAtlet(int.Parse(month), int.Parse(year));
                 PopulateTableFromCart();
                 return View(suProfil);
             }
@@ -414,7 +590,7 @@ namespace MSNK.Controllers
             }
             PopulateList();
             CartEmpty();
-            PopulateCartFromSuAtlet();
+            PopulateCartFromSuAtlet(int.Parse(month), int.Parse(year));
             PopulateTableFromCart();
             return View(suProfil);
         }

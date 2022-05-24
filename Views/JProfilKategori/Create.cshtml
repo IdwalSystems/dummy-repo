@@ -1,0 +1,39 @@
+@model MSNK.Models.Modules.JProfilKategori
+
+@{
+    ViewData["Title"] = "Tambah";
+}
+
+<h4>Profil Kategori - Tambah</h4>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Kod" class="control-label"></label>
+                <input asp-for="Kod" class="form-control form-control-sm text-uppercase" />
+                <span asp-validation-for="Kod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Perihal" class="control-label"></label>
+                <input asp-for="Perihal" class="form-control form-control-sm text-uppercase" />
+                <span asp-validation-for="Perihal" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="KadarGeran" class="control-label"></label>
+                <input asp-for="KadarGeran" type="number" value="0.00" class="form-control form-control-sm text-uppercase" />
+                <span asp-validation-for="KadarGeran" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Simpan" class="btn btn-primary btn-sm" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Kembali ke Indeks</a>
+</div>
+
