@@ -33,7 +33,7 @@ for details on configuring this project to bundle and minify static web assets. 
     height: 85vh;
     position: fixed;
     top: 80px;
-    left: 10px;
+    left: -20rem;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.4s;
     padding-bottom: 2vh;
@@ -42,19 +42,20 @@ for details on configuring this project to bundle and minify static web assets. 
 
 .page-content {
     width: calc(100% - 0rem);
-    margin-left: 17rem;
+    /*margin-left: 17rem;*/
     transition: all 0.4s;
 }
 
 /* for toggle behavior */
 
 #sidebar.active {
-    margin-left: -20rem;
+    left: 1rem;
+    /*margin-left: -20rem;*/
 }
 
 #content.active {
-    width: 100%;
-    margin: 0;
+    /*width: 100%;*/
+    margin-left: 17rem;
 }
 
 @media (max-width: 768px) {

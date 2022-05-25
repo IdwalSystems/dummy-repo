@@ -111,10 +111,10 @@
                         @Html.DisplayFor(modelItem => item.NoRujukan)
                     </td>
                     <td class="debit">
-                        @Html.DisplayFor(modelItem => item.Debit)
+                        @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
                     </td>
                     <td class="kredit">
-                        @Html.DisplayFor(modelItem => item.Kredit)
+                        @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
                     </td>
                     <td class="total">
                     </td>

@@ -664,7 +664,7 @@ namespace MSNK.Controllers
                     suProfil.Tahun = dataAsal.Tahun;
                     suProfil.Bulan = dataAsal.Bulan;
                     suProfil.NoRujukan = dataAsal.NoRujukan;
-                    suProfil.AkCartaId = dataAsal.AkCartaId;
+                    //suProfil.AkCartaId = dataAsal.AkCartaId;
                     suProfil.JKWId = dataAsal.JKWId;
                     suProfil.JBahagianId = dataAsal.JBahagianId;
                     suProfil.TarMasuk = dataAsal.TarMasuk;

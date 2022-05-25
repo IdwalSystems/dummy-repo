@@ -983,7 +983,6 @@ namespace MSNK.Controllers
                     akPVView.Telefon = akPV.SuPekerja.TelefonBimbit;
                     akPVView.Emel = akPV.SuPekerja.Emel;
                     akPVView.SpPendahuluanPelbagai = akPV.SpPendahuluanPelbagai;
-                    akPVView.SuProfil = akPV.SuProfil;
                     break;
                 // panjar
                 case 3:
@@ -1011,7 +1010,7 @@ namespace MSNK.Controllers
                     akPVView.NoAkaunBank = akPV.NoAkaunBank;
                     akPVView.Telefon = akPV.Telefon;
                     akPVView.Emel = akPV.Emel;
-                    
+
                     break;
             }
 
@@ -1027,6 +1026,8 @@ namespace MSNK.Controllers
             akPVView.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
             akPVView.SpPendahuluanPelbagaiId = akPV.SpPendahuluanPelbagaiId;
             akPVView.SpPendahuluanPelbagai = akPV.SpPendahuluanPelbagai;
+            akPVView.SuProfilId = akPV.SuProfilId;
+            akPVView.SuProfil = akPV.SuProfil;
 
             akPVView.AkPV1 = akPV.AkPV1;
             foreach (AkPV2 item in akPV.AkPV2)
@@ -1489,7 +1490,7 @@ namespace MSNK.Controllers
 
                     if ((m.FlJenisBaucer == 0 && m.FlKategoriPenerima == 0) 
                         || (m.FlKategoriPenerima == 1 && m.denganTanggungan == false) 
-                        || (m.FlJenisBaucer == 2))
+                        || (m.FlJenisBaucer == 2) || (m.FlJenisBaucer == 6))
                     {
                         foreach (AkPV1 item in m.AkPV1)
                         {

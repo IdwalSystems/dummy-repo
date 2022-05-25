@@ -192,60 +192,55 @@ namespace MSNK.Controllers
             {
                 if (AkaunAtletExists(suAtlet.NoAkaunBank) == false)
                 {
-                    if (EmelAtletExists(suAtlet.Emel) == false)
+                    if (ModelState.IsValid)
                     {
-                        if (suAtlet.Emel != null)
+                        //string noRujukan = GetKod(akJurnal.JKWId);
+                        if (suAtlet != null)
                         {
-                            if (ModelState.IsValid)
-                            {
-                                //string noRujukan = GetKod(akJurnal.JKWId);
-                                if (suAtlet != null)
-                                {
-                                    m.KodAtlet = GetKodAtlet();
-                                    m.Nama = suAtlet.Nama;
-                                    m.NoKp = suAtlet.NoKp;
-                                    m.Alamat1 = suAtlet.Alamat1;
-                                    m.Alamat2 = suAtlet.Alamat2;
-                                    m.Alamat3 = suAtlet.Alamat3;
-                                    m.Poskod = suAtlet.Poskod;
-                                    m.Bandar = suAtlet.Bandar;
-                                    m.JNegeriId = suAtlet.JNegeriId;
-                                    m.JBankId = suAtlet.JBankId;
-                                    m.Jawatan = suAtlet.Jawatan;
-                                    m.JSukanId = suAtlet.JSukanId;
-                                    m.Telefon = suAtlet.Telefon;
-                                    m.Emel = suAtlet.Emel;
-                                    m.FlStatus = 1;
-                                    m.TarikhAktif = suAtlet.TarikhAktif;
-                                   m.TarikhBerhenti = suAtlet.TarikhBerhenti;
-                                    //m.FlStatus = suAtlet.FlStatus;
-                                    m.JAgamaId = suAtlet.JAgamaId;
-                                    m.JBangsaId = suAtlet.JBangsaId;
-                                    m.JCaraBayarId = suAtlet.JCaraBayarId;
-                                    m.NoAkaunBank = suAtlet.NoAkaunBank;
-                                    m.UserId = username;
-                                    m.TarMasuk = DateTime.Now;
+                            m.KodAtlet = GetKodAtlet();
+                            m.Nama = suAtlet.Nama;
+                            m.NoKp = suAtlet.NoKp;
+                            m.Alamat1 = suAtlet.Alamat1;
+                            m.Alamat2 = suAtlet.Alamat2;
+                            m.Alamat3 = suAtlet.Alamat3;
+                            m.Poskod = suAtlet.Poskod;
+                            m.Bandar = suAtlet.Bandar;
+                            m.JNegeriId = suAtlet.JNegeriId;
+                            m.JBankId = suAtlet.JBankId;
+                            m.Jawatan = suAtlet.Jawatan;
+                            m.JSukanId = suAtlet.JSukanId;
+                            m.Telefon = suAtlet.Telefon;
+                            m.Emel = suAtlet.Emel;
+                            m.FlStatus = 1;
+                            m.TarikhAktif = suAtlet.TarikhAktif;
+                            m.TarikhBerhenti = suAtlet.TarikhBerhenti;
+                            //m.FlStatus = suAtlet.FlStatus;
+                            m.JAgamaId = suAtlet.JAgamaId;
+                            m.JBangsaId = suAtlet.JBangsaId;
+                            m.JCaraBayarId = suAtlet.JCaraBayarId;
+                            m.NoAkaunBank = suAtlet.NoAkaunBank;
+                            m.UserId = username;
+                            m.TarMasuk = DateTime.Now;
 
-                                    //m.SuTanggungan = _cart.Lines1.ToArray();
+                            //m.SuTanggungan = _cart.Lines1.ToArray();
 
-                                    await _suAtletRepo.Insert(m);
+                            await _suAtletRepo.Insert(m);
 
-                                    //insert applog
-                                    await AddLogAsync("Tambah", m.KodAtlet + " - " + suAtlet.NoKp,m.KodAtlet,0, 0);
-                                    //insert applog end
+                            //insert applog
+                            await AddLogAsync("Tambah", m.KodAtlet + " - " + suAtlet.NoKp, m.KodAtlet, 0, 0);
+                            //insert applog end
 
-                                    //await AddLogAsync("Tambah", noRujukan, kredit);
-                                    await _context.SaveChangesAsync();
+                            //await AddLogAsync("Tambah", noRujukan, kredit);
+                            await _context.SaveChangesAsync();
 
-                                    //CartEmpty();
-                                    TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Atlet adalah " + m.KodAtlet;
-                                    return RedirectToAction(nameof(Index));
-                                }
-                                //_context.Add(suAtlet);
-                                //await _context.SaveChangesAsync();
-                                //return RedirectToAction(nameof(Index));
-                            }
+                            //CartEmpty();
+                            TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Atlet adalah " + m.KodAtlet;
+                            return RedirectToAction(nameof(Index));
                         }
+                        //_context.Add(suAtlet);
+                        //await _context.SaveChangesAsync();
+                        //return RedirectToAction(nameof(Index));
+
                     }
                     else
                     {
@@ -257,7 +252,7 @@ namespace MSNK.Controllers
                 {
                     TempData[SD.Error] = "No Akaun ini telah wujud..!";
                 }
-                
+
             }
             else
             {
@@ -309,7 +304,7 @@ namespace MSNK.Controllers
                     SuAtlet dataAsal = await _suAtletRepo.GetById(id);
 
                     // list of input that cannot be change
-                    suAtlet.Emel = dataAsal.Emel;
+                    //suAtlet.Emel = dataAsal.Emel
                     suAtlet.TarMasuk = dataAsal.TarMasuk;
                     suAtlet.UserId = dataAsal.UserId;
                     suAtlet.NoKp = dataAsal.NoKp;
@@ -337,11 +332,11 @@ namespace MSNK.Controllers
                     if (namaAsal != suAtlet.Nama || noAkaunAsal != suAtlet.NoAkaunBank)
                     {
                         await AddLogAsync("Ubah", namaAsal + " -> " + suAtlet.Nama
-                            + ", " + noAkaunAsal + " -> " + suAtlet.NoAkaunBank,suAtlet.KodAtlet,id, 0);
+                            + ", " + noAkaunAsal + " -> " + suAtlet.NoAkaunBank, suAtlet.KodAtlet, id, 0);
                     }
                     else
                     {
-                        await AddLogAsync("Ubah", "Ubah Data", suAtlet.KodAtlet,id, 0);
+                        await AddLogAsync("Ubah", "Ubah Data", suAtlet.KodAtlet, id, 0);
                     }
                     //insert applog end
 
@@ -391,7 +386,7 @@ namespace MSNK.Controllers
         {
             var suAtlet = await _context.SuAtlet.FindAsync(id);
             _context.SuAtlet.Remove(suAtlet);
-            await AddLogAsync("Hapus", suAtlet.NoKp + " - " + suAtlet.NoAkaunBank, suAtlet.KodAtlet,id, 0);
+            await AddLogAsync("Hapus", suAtlet.NoKp + " - " + suAtlet.NoAkaunBank, suAtlet.KodAtlet, id, 0);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
@@ -401,7 +396,7 @@ namespace MSNK.Controllers
         private bool SuAtletExists(int id)
         {
             return _context.SuAtlet.Any(e => e.Id == id);
-        }    
+        }
 
         public async Task<IActionResult> RollBack(int id)
         {

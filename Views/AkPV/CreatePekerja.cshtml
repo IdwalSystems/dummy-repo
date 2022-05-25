@@ -53,12 +53,6 @@
                                         Panjar
                                     </label>
                                 </div>
-                                <div class="custom-control custom-radio col-md-4 ">
-                                    <input class="custom-control-input" type="radio" id="6" name="FlJenisBaucer" value="6">
-                                    <label class="custom-control-label" for="6">
-                                        Profil Atlet / Jurulatih
-                                    </label>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -85,26 +79,7 @@
 
                     @*pendahuluan pelbagai end*@
 
-                    @*profil Atlet / Jurulatih*@
-                    <div class="card box-shadow mb-3" id="cardSuProfil" hidden>
-                        <div class="card-header">
-                            <h6>Profil Atlet / Jurulatih</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label asp-for="SuProfilId" class="control-label"></label>
-                                <select class="form-control form-control-sm select2" asp-for="SuProfilId" id="ddlProfil">
-                                    <option value="0" selected>-- Pilih No Profil --</option>
-                                    @foreach (var s in ViewBag.SuProfil)
-                                    {
-                                        <option value="@s.Id">@s.NoRujukan</option>
-                                    }
-                                </select>
-                                <span asp-validation-for="SuProfilId" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                    @*profil Atlet / Jurulatih end*@
+                    
 
                     <div class="form-row">
                         <div class="col-md-1">

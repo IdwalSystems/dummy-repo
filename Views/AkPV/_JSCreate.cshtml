@@ -731,6 +731,7 @@
             switch ($(this).val()) {
                 case "0":
                     $("#divPembekal").prop('hidden', true);
+                    $("#cardSuProfil").prop('hidden', true);
                     break;
                 case "1":
                     $("#divPembekal").removeAttr('hidden');
@@ -745,7 +746,7 @@
                 case "4":
                     break;
                 case "6":
-                    $("#cardPendahuluanPelbagai").prop('hidden', true);
+                    $("#divPembekal").prop('hidden', true);
                     $("#cardSuProfil").removeAttr('hidden');
                     break;
             }

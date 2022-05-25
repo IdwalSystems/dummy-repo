@@ -170,59 +170,54 @@ namespace MSNK.Controllers
             {
                 if (AkaunJurulatihExists(suJurulatih.NoAkaunBank) == false)
                 {
-                    if (EmelJurulatihExists(suJurulatih.Emel) == false)
+                    if (ModelState.IsValid)
                     {
-                        if (suJurulatih.Emel != null)
+                        //string noRujukan = GetKod(akJurnal.JKWId);
+                        if (suJurulatih != null)
                         {
-                            if (ModelState.IsValid)
-                            {
-                                //string noRujukan = GetKod(akJurnal.JKWId);
-                                if (suJurulatih != null)
-                                {
-                                    m.KodJurulatih = GetKodJurulatih();
-                                    m.Nama = suJurulatih.Nama;
-                                    m.NoKp = suJurulatih.NoKp;
-                                    m.Alamat1 = suJurulatih.Alamat1;
-                                    m.Alamat2 = suJurulatih.Alamat2;
-                                    m.Alamat3 = suJurulatih.Alamat3;
-                                    m.Poskod = suJurulatih.Poskod;
-                                    m.Bandar = suJurulatih.Bandar;
-                                    m.JNegeriId = suJurulatih.JNegeriId;
-                                    m.JBankId = suJurulatih.JBankId;
-                                    m.Jawatan = suJurulatih.Jawatan;
-                                    m.JSukanId = suJurulatih.JSukanId;
-                                    m.Telefon = suJurulatih.Telefon;
-                                    m.Emel = suJurulatih.Emel;
-                                    m.TarikhAktif = suJurulatih.TarikhAktif;
-                                   m.TarikhBerhenti = suJurulatih.TarikhBerhenti;
-                                    //m.FlStatus = suJurulatih.FlStatus;
-                                    m.JAgamaId = suJurulatih.JAgamaId;
-                                    m.JBangsaId = suJurulatih.JBangsaId;
-                                    m.JCaraBayarId = suJurulatih.JCaraBayarId;
-                                    m.NoAkaunBank = suJurulatih.NoAkaunBank;
-                                    m.UserId = username;
-                                    m.TarMasuk = DateTime.Now;
+                            m.KodJurulatih = GetKodJurulatih();
+                            m.Nama = suJurulatih.Nama;
+                            m.NoKp = suJurulatih.NoKp;
+                            m.Alamat1 = suJurulatih.Alamat1;
+                            m.Alamat2 = suJurulatih.Alamat2;
+                            m.Alamat3 = suJurulatih.Alamat3;
+                            m.Poskod = suJurulatih.Poskod;
+                            m.Bandar = suJurulatih.Bandar;
+                            m.JNegeriId = suJurulatih.JNegeriId;
+                            m.JBankId = suJurulatih.JBankId;
+                            m.Jawatan = suJurulatih.Jawatan;
+                            m.JSukanId = suJurulatih.JSukanId;
+                            m.Telefon = suJurulatih.Telefon;
+                            m.Emel = suJurulatih.Emel;
+                            m.TarikhAktif = suJurulatih.TarikhAktif;
+                            m.TarikhBerhenti = suJurulatih.TarikhBerhenti;
+                            //m.FlStatus = suJurulatih.FlStatus;
+                            m.JAgamaId = suJurulatih.JAgamaId;
+                            m.JBangsaId = suJurulatih.JBangsaId;
+                            m.JCaraBayarId = suJurulatih.JCaraBayarId;
+                            m.NoAkaunBank = suJurulatih.NoAkaunBank;
+                            m.UserId = username;
+                            m.TarMasuk = DateTime.Now;
 
-                                    //m.SuTanggungan = _cart.Lines1.ToArray();
+                            //m.SuTanggungan = _cart.Lines1.ToArray();
 
-                                    await _suJurulatihRepo.Insert(m);
+                            await _suJurulatihRepo.Insert(m);
 
-                                    //insert applog
-                                    await AddLogAsync("Tambah", m.KodJurulatih + " - " + suJurulatih.NoKp,m.KodJurulatih,0, 0);
-                                    //insert applog end
+                            //insert applog
+                            await AddLogAsync("Tambah", m.KodJurulatih + " - " + suJurulatih.NoKp, m.KodJurulatih, 0, 0);
+                            //insert applog end
 
-                                    //await AddLogAsync("Tambah", noRujukan, kredit);
-                                    await _context.SaveChangesAsync();
+                            //await AddLogAsync("Tambah", noRujukan, kredit);
+                            await _context.SaveChangesAsync();
 
-                                    //CartEmpty();
-                                    TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Jurulatih adalah " + m.KodJurulatih;
-                                    return RedirectToAction(nameof(Index));
-                                }
-                                //_context.Add(suJurulatih);
-                                //await _context.SaveChangesAsync();
-                                //return RedirectToAction(nameof(Index));
-                            }
+                            //CartEmpty();
+                            TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Jurulatih adalah " + m.KodJurulatih;
+                            return RedirectToAction(nameof(Index));
                         }
+                        //_context.Add(suJurulatih);
+                        //await _context.SaveChangesAsync();
+                        //return RedirectToAction(nameof(Index));
+
                     }
                     else
                     {
@@ -234,7 +229,7 @@ namespace MSNK.Controllers
                 {
                     TempData[SD.Error] = "No Akaun ini telah wujud..!";
                 }
-                
+
             }
             else
             {
@@ -286,7 +281,7 @@ namespace MSNK.Controllers
                     SuJurulatih dataAsal = await _suJurulatihRepo.GetById(id);
 
                     // list of input that cannot be change
-                    suJurulatih.Emel = dataAsal.Emel;
+                    //suJurulatih.Emel = dataAsal.Emel;
                     suJurulatih.TarMasuk = dataAsal.TarMasuk;
                     suJurulatih.UserId = dataAsal.UserId;
                     suJurulatih.NoKp = dataAsal.NoKp;
@@ -306,11 +301,11 @@ namespace MSNK.Controllers
                     if (namaAsal != suJurulatih.Nama || noAkaunAsal != suJurulatih.NoAkaunBank)
                     {
                         await AddLogAsync("Ubah", namaAsal + " -> " + suJurulatih.Nama
-                            + ", " + noAkaunAsal + " -> " + suJurulatih.NoAkaunBank,suJurulatih.KodJurulatih,id, 0);
+                            + ", " + noAkaunAsal + " -> " + suJurulatih.NoAkaunBank, suJurulatih.KodJurulatih, id, 0);
                     }
                     else
                     {
-                        await AddLogAsync("Ubah", "Ubah Data", suJurulatih.KodJurulatih,id, 0);
+                        await AddLogAsync("Ubah", "Ubah Data", suJurulatih.KodJurulatih, id, 0);
                     }
                     //insert applog end
 
@@ -360,7 +355,7 @@ namespace MSNK.Controllers
         {
             var suJurulatih = await _context.SuJurulatih.FindAsync(id);
             _context.SuJurulatih.Remove(suJurulatih);
-            await AddLogAsync("Hapus", suJurulatih.NoKp + " - " + suJurulatih.NoAkaunBank, suJurulatih.KodJurulatih,id, 0);
+            await AddLogAsync("Hapus", suJurulatih.NoKp + " - " + suJurulatih.NoAkaunBank, suJurulatih.KodJurulatih, id, 0);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
@@ -370,7 +365,7 @@ namespace MSNK.Controllers
         private bool SuJurulatihExists(int id)
         {
             return _context.SuJurulatih.Any(e => e.Id == id);
-        }    
+        }
 
         public async Task<IActionResult> RollBack(int id)
         {

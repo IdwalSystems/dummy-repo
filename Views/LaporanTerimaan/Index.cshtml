@@ -73,6 +73,18 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group form-row">
+                            <label for="Susunan" class="col-sm-2 col-form-label">Bank Penerima</label>
+                            <div class="col-sm-5">
+                                <select class="form-control form-control-sm input-group-sm" name="AkBankId" required>
+                                    <option value="0">SEMUA</option>
+                                    @foreach (var s in ViewBag.AkBank)
+                                    {
+                                        <option value="@s.Id">@s.NoAkaun - @s.JBank.Nama</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
