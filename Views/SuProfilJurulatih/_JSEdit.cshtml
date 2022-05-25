@@ -1,0 +1,176 @@
+﻿<script type="text/javascript">
+
+
+    //update tbl Jurulatih
+    function Update1(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var suJurulatihId = $("TD", row).eq(0).html();
+
+        var SuProfil1 = {
+            SuJurulatihId: suJurulatihId
+        }
+        if (SuProfil1 != null) {
+            $.ajax({
+                type: "POST",
+                //url: "/AbWaran/GetAnItemCartAbWaran1",
+                url: '@Url.Action("GetAnItemCartSuProfil1", "SuProfilJurulatih")',
+                data: SuProfil1,
+                dataType: "json",
+                success: function (r) {
+                    //insert data in modal Jurulatih
+                    $("#moId1").val(r.record.id);
+                    $("#moSuJurulatihId").val(r.record.suJurulatihId);
+                    $("#moNama").val(r.suJurulatih.nama);
+                    $("#moAmaun1").val(r.record.amaun);
+                    $("#moAmaunSebelum").val(r.record.amaunSebelum.toFixed(2));
+                    $("#moTunggakan").val(r.record.tunggakan.toFixed(2));
+                    $("#moJumlah1").val(r.record.jumlah);
+
+                    //show modal Jurulatih
+                    $("#modalJurulatih").modal({ backdrop: 'static', keyboard: false });
+
+                }
+            });
+        }
+    };
+
+    function modalUpdate1() {
+        var id = $("#moId1").val();
+        var suProfilId = $("#Id").val();
+        var amaun = $("#moAmaun1").val();
+        var amaunSebelum = $("#moAmaunSebelum").val();
+        var tunggakan = $("#moTunggakan").val();
+        var suJurulatihId = $("#moSuJurulatihId").val();
+        var jumlah1 = $("#moJumlah1").val();
+        var jumlah = $("#jumlahKeseluruhan");
+
+        var SuProfil1 = {
+            Id: id,
+            SuProfilId: suProfilId,
+            SuJurulatihId: suJurulatihId,
+            Amaun: amaun,
+            AmaunSebelum: amaunSebelum,
+            Tunggakan: tunggakan,
+            Jumlah: jumlah1
+        }
+
+        $.ajax({
+            type: "POST",
+            //url: "/AbWaran/SaveCartAbWaran1",
+            url: '@Url.Action("SaveCartSuProfil1", "SuProfilJurulatih")',
+            data: SuProfil1,
+            dataType: "json",
+            success: function (b) {
+                //insert notification here
+
+                if (b.result == "OK") {
+                    $.ajax({
+                    type: "POST",
+                    //url: "/AbWaran/GetAllItemCartAbWaran1",
+                    url: '@Url.Action("GetAllItemCartSuProfil1", "SuProfilJurulatih")',
+                    data: SuProfil1,
+                    dataType: "json",
+                    success: function (r) {
+
+                        //refresh updated table Jurulatih
+                        $("table tbody#tbodyJurulatih").empty();
+                        var sum = 0;
+                        if (r.record.length > 0) {
+                            for (var i = 0; i < r.record.length; i++) {
+                                var item1 = r.record[i];
+                                 var str = "<tr><td id='suJurulatihId' hidden>" + item1.suJurulatihId +
+                                        "</td><td class='text-uppercase'>" + item1.suJurulatih.nama +
+                                        "</td><td class='text-uppercase'>" + item1.jSukan.perihal +
+                                        "</td><td class='text-uppercase'>" + item1.suJurulatih.noKp +
+                                        "</td><td class='text-uppercase'>" + item1.suJurulatih.noAkaunBank +
+                                        "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                                        "</td><td class='text-right'>" + (item1.amaunSebelum).toFixed(2) +
+                                        "</td><td class='text-right'>" + (item1.tunggakan).toFixed(2) +
+                                        "</td><td class='text-right'>" + (item1.jumlah).toFixed(2) +
+                                        "</td><td>" +
+                                        "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalJurulatih' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                        "</td><tr>";
+                                $("table tbody#tbodyJurulatih").append(str);
+                                sum += item1.jumlah;
+                            }
+                        }
+
+                        jumlah.val(sum.toFixed(2));
+                    }
+                });
+                } else {
+                    toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
+                    toastr.options.timeOut = 2000; // 2s
+                }
+
+            }
+        });
+    };
+    //update tbl Jurulatih end
+
+    // on change amaun and tunggakan
+    $("body").on('change', ".amaun, .tunggakan", function () {
+        //main body
+        var moAmaun = $("#moAmaun1").val();
+        var moTunggakan = $("#moTunggakan").val();
+        
+        $("#moJumlah1").val((countTotalAmountPerItem(moAmaun, moTunggakan)).toFixed(2));
+        //main body end
+
+    });
+
+    function countTotalAmountPerItem(moAmaun, moTunggakan) {
+        if (moAmaun != null && moTunggakan != null) {
+            return total = parseFloat(moAmaun) + parseFloat(moTunggakan);
+        }
+    }
+    //on change amaun and tunggakan end
+
+    //validation form
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    $(document).ready(function () {
+
+        $.validator.setDefaults({
+            errorElement: "span",
+            errorClass: "help-block",
+            //	validClass: 'stay',
+            highlight: function (element, errorClass) {
+                $(element).addClass(errorClass); //.removeClass(errorClass);
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            unhighlight: function (element, errorClass) {
+                $(element).removeClass(errorClass); //.addClass(validClass);
+                $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+            },
+
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+
+            },
+
+        });
+    });
+    //validation form end
+</script>

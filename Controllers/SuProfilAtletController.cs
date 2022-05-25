@@ -21,7 +21,7 @@ using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin,Supervisor")]
+    [Authorize(Roles = "SuperAdmin,Supervisor,User")]
     public class SuProfilAtletController : Controller
     {
         public const string modul = "SU001";
@@ -67,14 +67,10 @@ namespace MSNK.Controllers
         // GET: SuProfilAtlet
         public async Task<IActionResult> Index()
         {
-            var obj = await _suProfilRepo.GetAll();
-
-            if (User.IsInRole("SuperAdmin"))
-            {
-                obj = await _suProfilRepo.GetAllIncludeDeletedItems();
-            }
-
-            return View(obj);
+            var applicationDbContext = _context.SuProfil
+                .Include(s => s.AkCarta).Include(s => s.JBahagian).Include(s => s.JKW)
+                .Where(s => s.FlKategori == 0);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         private void PopulateTableDetails(int? id)
@@ -159,7 +155,7 @@ namespace MSNK.Controllers
 
             var suProfil = _context.SuProfil
                 .Include(b=> b.SuProfil1).ThenInclude(b=> b.SuAtlet)
-                    .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr)
+                    .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr && c.FlKategori == 0)
                     .FirstOrDefault();
             
             List<SuProfil1> suProfil1Table = new List<SuProfil1>();
@@ -261,7 +257,7 @@ namespace MSNK.Controllers
 
             var suProfil = _context.SuProfil
                 .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet)
-                    .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr)
+                    .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr && c.FlKategori == 0)
                     .FirstOrDefault();
 
             if (suProfil != null)
@@ -337,7 +333,7 @@ namespace MSNK.Controllers
 
                 var suProfil = _context.SuProfil
                     .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet)
-                        .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr)
+                        .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr && c.FlKategori == 0)
                         .FirstOrDefault();
 
                 List<SuProfil1> suProfil1Table = new List<SuProfil1>();
@@ -440,7 +436,7 @@ namespace MSNK.Controllers
             }
         }
 
-        // get an item from cart abWaran1
+        // get an item from cart SuProfil1
         public JsonResult GetAnItemCartSuProfil1(SuProfil1 suProfil1)
         {
 
@@ -458,9 +454,9 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get an item from cart AbWaran1 end
+        // get an item from cart SuProfil1 end
 
-        //save cart AbWaran1
+        //save cart SuProfil1
         public JsonResult SaveCartSuProfil1(
             SuProfil1 suProfil1)
         {
@@ -492,9 +488,9 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        //save cart akPOLaras1 end
+        //save cart suProfil1 end
 
-        // get all item from cart akPOLaras1
+        // get all item from cart suProfil1
         public JsonResult GetAllItemCartSuProfil1()
         {
 
@@ -523,7 +519,7 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get all item from cart akPOLaras1 end
+        // get all item from cart SuProfil1 end
 
         // POST: SuProfilAtlet/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -661,6 +657,7 @@ namespace MSNK.Controllers
                     SuProfil dataAsal = await _suProfilRepo.GetById(id);
 
                     // list of input that cannot be change
+                    suProfil.FlKategori = dataAsal.FlKategori;
                     suProfil.Tahun = dataAsal.Tahun;
                     suProfil.Bulan = dataAsal.Bulan;
                     suProfil.NoRujukan = dataAsal.NoRujukan;

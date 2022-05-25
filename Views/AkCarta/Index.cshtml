@@ -125,7 +125,7 @@
                         }
                     </td>
                     <td align="right">
-                        @Html.DisplayFor(modelItem => item.Baki)
+                        @Convert.ToDecimal(item.Baki).ToString("#,##0.00")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Catatan1)

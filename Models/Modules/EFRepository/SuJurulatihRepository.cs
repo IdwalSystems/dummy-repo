@@ -28,6 +28,8 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
                 .Include(b => b.JNegeri)
+                .Include(b => b.JProfilKategori)
+                .OrderBy(b => b.KodJurulatih)
                 //.Include(b => b.SuTanggungan)
                 .ToListAsync();
         }
@@ -40,6 +42,8 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
                 .Include(b => b.JNegeri)
+                .Include(b => b.JProfilKategori)
+                .OrderBy(b => b.KodJurulatih)
                 //.Include(b => b.SuTanggungan)
                 .ToListAsync();
         }
@@ -51,6 +55,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
                 .Include(b => b.JNegeri)
+                .Include(b => b.JProfilKategori)
                 //.Include(b => b.SuTanggungan)
                 .FirstOrDefaultAsync(x=> x.Id == id);
         }
@@ -63,6 +68,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
                 .Include(b => b.JNegeri)
+                .Include(b => b.JProfilKategori)
                 //.Include(b => b.SuTanggungan)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }

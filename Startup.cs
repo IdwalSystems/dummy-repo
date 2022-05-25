@@ -126,6 +126,7 @@ namespace MSNK
             services.AddTransient<IRepository<SuAtlet, int, string>, SuAtletRepository>();
             services.AddTransient<IRepository<SuJurulatih, int, string>, SuJurulatihRepository>();
             services.AddTransient<IRepository<SuProfil, int, string>, SuProfilAtletRepository>();
+            services.AddTransient<IRepository<SuProfil, int, string>, SuProfilJurulatihRepository>();
             services.AddTransient<IRepository<SuProfil1, int, string>, SuProfil1Repository>();
             //SKIM KECEMERLANGAN ATLET DAN ELAUN JURURULATIH END
             services.AddTransient<IRepository<AkNotaMinta, int, string>, AkNotaMintaRepository>();

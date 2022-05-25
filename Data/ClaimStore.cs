@@ -147,15 +147,15 @@ namespace MSNK.Data
             new Claim("SU001UT","SU001 Profil Atlet - UnPosting"),
             //Profil Atlet end
             //Profil Jurulatih
-            new Claim("SU001","SU002 Profil Jurulatih"),
-            new Claim("SU001C","SU002 Profil Jurulatih - Tambah"),
-            new Claim("SU001E","SU002 Profil Jurulatih - Ubah"),
-            new Claim("SU001D","SU002 Profil Jurulatih - Hapus"),
-            new Claim("SU001P","SU002 Profil Jurulatih - Cetak"),
-            new Claim("SU001B","SU002 Profil Jurulatih - Batal"),
-            new Claim("SU001R","SU002 Profil Jurulatih - Rollback"),
-            new Claim("SU001T","SU002 Profil Jurulatih - Posting"),
-            new Claim("SU001UT","SU002 Profil Jurulatih - UnPosting"),
+            new Claim("SU002","SU002 Profil Jurulatih"),
+            new Claim("SU002C","SU002 Profil Jurulatih - Tambah"),
+            new Claim("SU002E","SU002 Profil Jurulatih - Ubah"),
+            new Claim("SU002D","SU002 Profil Jurulatih - Hapus"),
+            new Claim("SU002P","SU002 Profil Jurulatih - Cetak"),
+            new Claim("SU002B","SU002 Profil Jurulatih - Batal"),
+            new Claim("SU002R","SU002 Profil Jurulatih - Rollback"),
+            new Claim("SU002T","SU002 Profil Jurulatih - Posting"),
+            new Claim("SU002UT","SU002 Profil Jurulatih - UnPosting"),
             //Profil Jurulatih end
         };
     }

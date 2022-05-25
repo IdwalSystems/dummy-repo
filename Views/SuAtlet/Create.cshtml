@@ -46,7 +46,7 @@
                     </div>
                     <div class="form-row">
                         <label asp-for="JSukanId" class="control-label"></label>
-                        <select asp-for="JSukanId" class="form-control form-control-sm" required>
+                        <select asp-for="JSukanId" class="form-control form-control-sm select2" required>
                             <option value="" hidden>-- Pilih Sukan --</option>
                             @foreach (var s in ViewBag.JSukan)
                             {

@@ -15,7 +15,7 @@ using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin,Supervisor")]
+    [Authorize(Roles = "SuperAdmin,Supervisorm,User")]
     public class SuJurulatihController : Controller
     {
         public const string modul = "FL004";
@@ -94,6 +94,9 @@ namespace MSNK.Controllers
 
             List<JCaraBayar> JCaraBayarList = _context.JCaraBayar.OrderBy(b => b.Kod).ToList();
             ViewBag.JCaraBayar = JCaraBayarList;
+
+            List<JProfilKategori> JProfilKategoriList = _context.JProfilKategori.OrderBy(b => b.Kod).ToList();
+            ViewBag.JProfilKategori = JProfilKategoriList;
         }
 
         private string GetKodJurulatih()
@@ -185,12 +188,14 @@ namespace MSNK.Controllers
                             m.Bandar = suJurulatih.Bandar;
                             m.JNegeriId = suJurulatih.JNegeriId;
                             m.JBankId = suJurulatih.JBankId;
+                            m.JProfilKategoriId = suJurulatih.JProfilKategoriId;
                             m.Jawatan = suJurulatih.Jawatan;
                             m.JSukanId = suJurulatih.JSukanId;
                             m.Telefon = suJurulatih.Telefon;
                             m.Emel = suJurulatih.Emel;
                             m.TarikhAktif = suJurulatih.TarikhAktif;
                             m.TarikhBerhenti = suJurulatih.TarikhBerhenti;
+                            m.FlStatus = 1;
                             //m.FlStatus = suJurulatih.FlStatus;
                             m.JAgamaId = suJurulatih.JAgamaId;
                             m.JBangsaId = suJurulatih.JBangsaId;
@@ -288,6 +293,14 @@ namespace MSNK.Controllers
                     suJurulatih.KodJurulatih = dataAsal.KodJurulatih;
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
+                    if (suJurulatih.TarikhBerhenti != null)
+                    {
+                        suJurulatih.FlStatus = 0;
+                    }
+                    else
+                    {
+                        suJurulatih.FlStatus = 1;
+                    }
                     // list of input that cannot be change end
 
                     _context.Entry(dataAsal).State = EntityState.Detached;
