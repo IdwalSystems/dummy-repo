@@ -969,7 +969,7 @@ namespace MSNK.Controllers
                         // list of input that cannot be change
                         akTerima.Tahun = dataAsal.Tahun;
                         akTerima.JKWId = dataAsal.JKWId;
-                        akTerima.JBahagianId = dataAsal.JBahagianId;
+                        //akTerima.JBahagianId = dataAsal.JBahagianId;
                         akTerima.NoRujukan = dataAsal.NoRujukan;
                         akTerima.Nama = dataAsal.Nama;
                         akTerima.TarMasuk = dataAsal.TarMasuk;

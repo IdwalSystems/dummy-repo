@@ -62,6 +62,7 @@ namespace MSNK.Models.Modules
         public int? JCaraBayarId { get; set; }
         [DisplayName("No Akaun Bank")]
         public string NoAkaunBank { get; set; }
+        public bool IsAdmin { get; set; }
 
         //relationship
         [DisplayName("Negeri")]

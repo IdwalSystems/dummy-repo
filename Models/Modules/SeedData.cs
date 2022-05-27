@@ -38,6 +38,38 @@ namespace MSNK.Models.Modules
         {
             context.Database.EnsureCreated();
 
+            if (context.SiAppInfo.Any())
+            {
+                //return;   // DB has been seeded
+            }
+            else
+            {
+                CompanyDetails company = new CompanyDetails();
+
+                context.SiAppInfo.AddRange(
+                    new SiAppInfo
+                    {
+                        KodSistem = company.KodSistem,
+                        TarVersi = DateTime.Today,
+                        NamaSyarikat = company.NamaSyarikat,
+                        NoPendaftaran = company.NoPendaftaran,
+                        AlamatSyarikat1 = company.AlamatSyarikat1,
+                        AlamatSyarikat2 = company.AlamatSyarikat2,
+                        AlamatSyarikat3 = company.AlamatSyarikat3,
+                        Bandar = company.Bandar,
+                        Poskod = company.Poskod,
+                        Daerah = company.Daerah,
+                        Negeri = company.Negeri,
+                        TelSyarikat = company.TelSyarikat,
+                        FaksSyarikat = company.FaksSyarikat,
+                        EmelSyarikat = company.EmelSyarikat,
+                        TarMula = DateTime.Today,
+                        LogoSyarikat = company.LogoSyarikat
+
+            }
+                );
+            }
+
             //// Look for any movies.
             //if (context.JKW.Any())
             //{

@@ -1,0 +1,209 @@
+﻿@model MSNK.Models.Login.ViewModel.AppInfoViewModel
+
+<div class="container">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h6>Ubah Info Syarikat</h6>
+        </div>
+          <div class="card-body box-shadow">
+            <form asp-action="Edit" method="post" class="needs-validation" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" hidden/>
+            <input asp-for="GambarSediaAda" hidden/>
+                <div class="form-row">
+                    <div class="col-lg-12">
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="form-row mb-2 ">
+                                    <div class="col-md-3">
+                                        <label class="form-control-label" asp-for="NoPendaftaran"></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-sm">
+                                            <input asp-for="NoPendaftaran" class="form-control form-control-sm text-uppercase" />
+                                        </div>
+                                        <span asp-validation-for="NoPendaftaran" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                    <div class="form-row mb-2 ">
+                                    <div class="col-md-3">
+                                        <label class="form-control-label" asp-for="NamaSyarikat"></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-sm">
+                                            <input asp-for="NamaSyarikat" class="form-control form-control-sm text-uppercase" />
+                                        </div>
+                                        <span asp-validation-for="NamaSyarikat" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row mb-2 ">
+                            <div class="col-md-1">
+                                <label class="form-control-label" asp-for="AlamatSyarikat1"></label>
+                            </div>
+                            <div class="col-md-11">
+                                <div class="input-group input-group-sm">
+                                    <input asp-for="AlamatSyarikat1" class="form-control form-control-sm text-uppercase" />
+                                </div>
+                                <span asp-validation-for="AlamatSyarikat1" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-1">
+                                <label class="form-control-label"></label>
+                            </div>
+                            <div class="col-md-11">
+                                <div class="input-group input-group-sm">
+                                    <input asp-for="AlamatSyarikat2" class="form-control form-control-sm text-uppercase" />
+                                </div>
+                                <span asp-validation-for="AlamatSyarikat2" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-1">
+                                <label class="form-control-label" ></label>
+                            </div>
+                            <div class="col-md-11">
+                                <div class="input-group input-group-sm">
+                                    <input asp-for="AlamatSyarikat3" class="form-control form-control-sm text-uppercase" />
+                                </div>
+                                <span asp-validation-for="AlamatSyarikat3" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-row mb-2 ">
+                                    <div class="col-md-4">
+                                        <label class="form-control-label" asp-for="Bandar"></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="input-group input-group-sm">
+                                            <input asp-for="Bandar" class="form-control form-control-sm text-uppercase" />
+                                        </div>
+                                        <span asp-validation-for="Bandar" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                    <div class="form-row mb-2 ">
+                                    <div class="col-md-3">
+                                        <label class="form-control-label" asp-for="Poskod"></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-sm">
+                                            <input asp-for="Poskod" class="form-control form-control-sm text-uppercase" />
+                                        </div>
+                                        <span asp-validation-for="Poskod" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            <div class="form-row mb-2 ">
+                                    <div class="col-md-3">
+                                        <label class="form-control-label" asp-for="Daerah"></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-sm">
+                                            <input asp-for="Daerah" class="form-control form-control-sm text-uppercase" />
+                                        </div>
+                                        <span asp-validation-for="Daerah" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-row mb-2 ">
+                                    <div class="col-md-3">
+                                        <label class="form-control-label" asp-for="Negeri"></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-sm">
+                                            <input asp-for="Negeri" class="form-control form-control-sm text-uppercase" />
+                                        </div>
+                                        <span asp-validation-for="Negeri" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="form-row mb-2 ">
+                                    <div class="col-md-3">
+                                        <label class="form-control-label" asp-for="TelSyarikat"></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-sm">
+                                            <input asp-for="TelSyarikat" class="form-control form-control-sm text-uppercase" />
+                                        </div>
+                                        <span asp-validation-for="TelSyarikat" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                    <div class="form-row mb-2 ">
+                                    <div class="col-md-3">
+                                        <label class="form-control-label" asp-for="FaksSyarikat"></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-sm">
+                                            <input asp-for="FaksSyarikat" class="form-control form-control-sm text-uppercase" />
+                                        </div>
+                                        <span asp-validation-for="FaksSyarikat" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                            <div class="form-row mb-2 ">
+                                    <div class="col-md-3">
+                                        <label class="form-control-label" asp-for="EmelSyarikat"></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-sm">
+                                            <input asp-for="EmelSyarikat" class="form-control form-control-sm" />
+                                        </div>
+                                        <span asp-validation-for="EmelSyarikat" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                    <div class="form-row mb-2 ">
+                                    <div class="col-md-3">
+                                        <label class="form-control-label" asp-for="TarMula"></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-sm">
+                                            <input type="date" asp-for="TarMula" class="form-control form-control-sm text-uppercase" />
+                                        </div>
+                                        <span asp-validation-for="TarMula" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-row mb-2 ">
+                                    <div class="col-md-1">
+                                        <label class="form-control-label" asp-for="Gambar"></label>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <div class="input-group input-group-sm">
+                                            <input type="file" asp-for="Gambar" placeholder="Sila pilih fail.."/>
+                                        </div>
+                                        <span asp-validation-for="Gambar" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                
+                        </div>
+                    </div>
+                
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <a asp-action="Index" asp-controller="SiAppInfo" class="btn btn-warning" style="width:auto">Batal</a>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+
+
+</div>

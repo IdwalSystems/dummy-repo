@@ -73,6 +73,7 @@ namespace MSNK.Data
         public DbSet<JPelulus> JPelulus { get; set; }
         public DbSet<JPenyemak> JPenyemak { get; set; }
         public DbSet<JProfilKategori> JProfilKategori { get; set; }
+        public DbSet<SiAppInfo> SiAppInfo { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -397,7 +398,6 @@ namespace MSNK.Data
                     .WithMany(t => t.SpPendahuluanPelbagai)
                     .HasForeignKey(m => m.JBahagianId)
                     .OnDelete(DeleteBehavior.Restrict);
-
             //SPPENDAHULUAN END
 
             //AkBank
@@ -437,6 +437,7 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.JBahagianId)
                     .OnDelete(DeleteBehavior.Restrict);
             //AkTunaiLejar end
+
             //AkTunaiCV
             modelBuilder.Entity<AkTunaiCV>()
                 .HasOne(m => m.AkPembekal!)
@@ -486,6 +487,7 @@ namespace MSNK.Data
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan2).HasDefaultValue("");
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan3).HasDefaultValue("");
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan4).HasDefaultValue("");
+
         }
     }
 }

@@ -32,9 +32,9 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JKW)
                 .Include(b => b.AkCarta)
                 .Include(b => b.JBahagian)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
                 .Include(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih).ThenInclude(b => b.JBank)
                 .Include(b => b.SuProfil1).ThenInclude(b => b.JSukan)
-                .Where(x => x.FlKategori == 1)
                 .IgnoreQueryFilters()
                 .ToListAsync();
         }
@@ -45,9 +45,9 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JKW)
                 .Include(b => b.AkCarta)
                 .Include(b => b.JBahagian)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
                 .Include(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih).ThenInclude(b => b.JBank)
                 .Include(b => b.SuProfil1).ThenInclude(b => b.JSukan)
-                .Where(x => x.FlKategori == 1)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -57,9 +57,9 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JKW)
                 .Include(b => b.AkCarta)
                 .Include(b => b.JBahagian)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
                 .Include(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih).ThenInclude(b => b.JBank)
                 .Include(b => b.SuProfil1).ThenInclude(b => b.JSukan)
-                .Where(x => x.FlKategori == 1)
                 .IgnoreQueryFilters()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
