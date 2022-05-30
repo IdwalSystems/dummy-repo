@@ -6,7 +6,6 @@ namespace MSNK.Models.Login.ViewModel
 {
     public class AppInfoViewModel : EditImageViewModel
     {
-        public int Id { get; set; }
         [DisplayName("Kod Sistem")]
         public string KodSistem { get; set; }
         [DisplayName("Tarikh Versi")]

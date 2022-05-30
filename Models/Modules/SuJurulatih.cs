@@ -50,9 +50,15 @@ namespace MSNK.Models.Modules
         public int? JCaraBayarId { get; set; }
         [DisplayName("No Akaun Bank")]
         public string NoAkaunBank { get; set; }
-        [DisplayName("Profil Kategori")]
-        public int? JProfilKategoriId { get; set; }
-        public JProfilKategori JProfilKategori { get; set; }
+        //[DisplayName("Profil Kategori")]
+        //public int? JProfilKategoriId { get; set; }
+        //public JProfilKategori JProfilKategori { get; set; }
+        [DisplayName("JSM Bakat")]
+        public bool IsJSMBakat { get; set; }
+        [DisplayName("JSM Pelapis")]
+        public bool IsJSMPelapis { get; set; }
+        [DisplayName("SUKMA")]
+        public bool IsSukma { get; set; }
 
         //relationship
         [DisplayName("Cara Bayar")]

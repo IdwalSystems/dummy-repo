@@ -181,6 +181,9 @@ namespace MSNK.Controllers
                             m.KodJurulatih = GetKodJurulatih();
                             m.Nama = suJurulatih.Nama;
                             m.NoKp = suJurulatih.NoKp;
+                            m.IsJSMBakat = suJurulatih.IsJSMBakat;
+                            m.IsJSMPelapis = suJurulatih.IsJSMPelapis;
+                            m.IsSukma = suJurulatih.IsSukma;
                             m.Alamat1 = suJurulatih.Alamat1;
                             m.Alamat2 = suJurulatih.Alamat2;
                             m.Alamat3 = suJurulatih.Alamat3;
@@ -188,7 +191,6 @@ namespace MSNK.Controllers
                             m.Bandar = suJurulatih.Bandar;
                             m.JNegeriId = suJurulatih.JNegeriId;
                             m.JBankId = suJurulatih.JBankId;
-                            m.JProfilKategoriId = suJurulatih.JProfilKategoriId;
                             m.Jawatan = suJurulatih.Jawatan;
                             m.JSukanId = suJurulatih.JSukanId;
                             m.Telefon = suJurulatih.Telefon;
@@ -293,14 +295,6 @@ namespace MSNK.Controllers
                     suJurulatih.KodJurulatih = dataAsal.KodJurulatih;
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
-                    if (suJurulatih.TarikhBerhenti != null)
-                    {
-                        suJurulatih.FlStatus = 0;
-                    }
-                    else
-                    {
-                        suJurulatih.FlStatus = 1;
-                    }
                     // list of input that cannot be change end
 
                     _context.Entry(dataAsal).State = EntityState.Detached;

@@ -309,14 +309,6 @@ namespace MSNK.Controllers
                     suAtlet.UserId = dataAsal.UserId;
                     suAtlet.NoKp = dataAsal.NoKp;
                     suAtlet.KodAtlet = dataAsal.KodAtlet;
-                    if (suAtlet.TarikhBerhenti != null)
-                    {
-                        suAtlet.FlStatus = 0;
-                    }
-                    else
-                    {
-                        suAtlet.FlStatus = 1;
-                    }
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
                     // list of input that cannot be change end

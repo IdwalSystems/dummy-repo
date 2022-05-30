@@ -24,11 +24,11 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<SuJurulatih>> GetAll()
         {
             return await context.SuJurulatih
+                .Include(b => b.JSukan)
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
                 .Include(b => b.JNegeri)
-                .Include(b => b.JProfilKategori)
                 .OrderBy(b => b.KodJurulatih)
                 //.Include(b => b.SuTanggungan)
                 .ToListAsync();
@@ -38,11 +38,11 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.SuJurulatih
                 .IgnoreQueryFilters()
+                .Include(b => b.JSukan)
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
                 .Include(b => b.JNegeri)
-                .Include(b => b.JProfilKategori)
                 .OrderBy(b => b.KodJurulatih)
                 //.Include(b => b.SuTanggungan)
                 .ToListAsync();
@@ -51,11 +51,11 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<SuJurulatih> GetById(int id)
         {
             return await context.SuJurulatih
+                .Include(b => b.JSukan)
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
                 .Include(b => b.JNegeri)
-                .Include(b => b.JProfilKategori)
                 //.Include(b => b.SuTanggungan)
                 .FirstOrDefaultAsync(x=> x.Id == id);
         }
@@ -64,11 +64,11 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.SuJurulatih
                 .IgnoreQueryFilters()
+                .Include(b => b.JSukan)
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
                 .Include(b => b.JNegeri)
-                .Include(b => b.JProfilKategori)
                 //.Include(b => b.SuTanggungan)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }

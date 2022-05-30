@@ -21,7 +21,7 @@
                     <h5>Jurulatih - @ViewData["Title"]</h5>
                 </div>
                 <div class="card-body">
-                    <div class="form-row">
+                    <div class="form-row mb-2">
                         <div class="form-group col-md-4">
                             <label asp-for="KodJurulatih" class="control-label"></label>
                             <input asp-for="KodJurulatih" class="form-control form-control-sm" readonly value="@ViewBag.KodJurulatih" />
@@ -38,20 +38,57 @@
                             <span asp-validation-for="Nama" class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="form-row ">
-                        <div class="form-group col-md">
-                            <label asp-for="JProfilKategoriId" class="control-label"></label>
-                            <select asp-for="JProfilKategoriId" class="form-control form-control-sm" required>
-                                <option value="" hidden>-- Pilih Kategori Jurulatih --</option>
-                                @foreach (var s in ViewBag.JProfilKategori)
-                                {
-                                    <option value="@s.Id">@s.Perihal </option>
-                                }
-                            </select>
-                            <span asp-validation-for="JSukanId" class="text-danger"></span>
+                    <div class="form-group">
+                        <div class="card mb-2">
+                            <div class="card-header">
+                                Profil Kategori
+                            </div>
+                            <div class="form-row">               
+                                <div class="card-body p-1">
+                                    <div class="form-row mb-2 ml-4">
+                                        <div class="col-md-3">
+                                            <label asp-for="IsJSMBakat"></label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-group input-group-sm ">
+                                                <input type="checkbox" data-val="true" id="IsJSMBakat" asp-for="IsJSMBakat" value="true" class="form-control-sm">
+                                                <input asp-for="IsJSMBakat" type="hidden" value="false">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-1">
+                                    <div class="form-row mb-2 ml-4">
+                                        <div class="col-md-3">
+                                            <label asp-for="IsJSMPelapis"></label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-group input-group-sm ">
+                                                <input type="checkbox" data-val="true" id="IsJSMPelapis" asp-for="IsJSMPelapis" value="true" class="form-control-sm">
+                                                <input asp-for="IsJSMPelapis" type="hidden" value="false">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="card-body p-1">
+                                    <div class="form-row mb-2 ml-4">
+                                        <div class="col-md-3">
+                                            <label asp-for="IsSukma"></label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-group input-group-sm ">
+                                                <input type="checkbox" data-val="true" id="IsSukma" asp-for="IsSukma" value="true" class="form-control-sm">
+                                                <input asp-for="IsSukma" type="hidden" value="false">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-row">
+                        <div class="form-group col-md">
                         <label asp-for="JSukanId" class="control-label"></label>
                         <select asp-for="JSukanId" class="form-control form-control-sm select2" required>
                             <option value="" hidden>-- Pilih Sukan --</option>
@@ -61,6 +98,7 @@
                             }
                         </select>
                         <span asp-validation-for="JSukanId" class="text-danger"></span>
+                        </div>
                     </div>
                     <div class="form-row ">
                         <div class="form-group col-md">

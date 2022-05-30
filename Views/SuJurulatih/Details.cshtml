@@ -22,7 +22,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="form-row">
+                        <div class="form-row mb-2">
                             <div class="form-group col-md-2">
                                 <label asp-for="KodJurulatih" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.KodJurulatih)" readonly />
@@ -36,12 +36,57 @@
                                 <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Nama)" readonly />
                             </div>
                         </div>
-                        <div class="form-row ">
-                            <div class="form-group col-md">
-                                <label asp-for="JProfilKategoriId" class="control-label"></label>
-                                <input value="@Model.JProfilKategori.Kod - @Model.JProfilKategori.Perihal" class="form-control form-control-sm text-uppercase" readonly />
+
+                        <div class="form-group">
+                        <div class="card mb-2">
+                            <div class="card-header">
+                                Profil Kategori
+                            </div>
+                            <div class="form-row">               
+                                <div class="card-body p-1">
+                                    <div class="form-row mb-2 ml-4">
+                                        <div class="col-md-3">
+                                            <label asp-for="IsJSMBakat"></label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-group input-group-sm ">
+                                                <input type="checkbox" data-val="true" id="IsJSMBakat" asp-for="IsJSMBakat" value="true" class="form-control-sm" disabled>
+                                                <input asp-for="IsJSMBakat" type="hidden" value="false">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-1">
+                                    <div class="form-row mb-2 ml-4">
+                                        <div class="col-md-3">
+                                            <label asp-for="IsJSMPelapis"></label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-group input-group-sm ">
+                                                <input type="checkbox" data-val="true" id="IsJSMPelapis" asp-for="IsJSMPelapis" value="true" class="form-control-sm" disabled>
+                                                <input asp-for="IsJSMPelapis" type="hidden" value="false">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="card-body p-1">
+                                    <div class="form-row mb-2 ml-4">
+                                        <div class="col-md-3">
+                                            <label asp-for="IsSukma"></label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="input-group input-group-sm ">
+                                                <input type="checkbox" data-val="true" id="IsSukma" asp-for="IsSukma" value="true" class="form-control-sm" disabled>
+                                                <input asp-for="IsSukma" type="hidden" value="false">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+
                         <div class="form-row">
                             <div class="form-group col-md">
                                 <label asp-for="JSukanId" class="control-label"></label>

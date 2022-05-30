@@ -24,6 +24,7 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<SuAtlet>> GetAll()
         {
             return await context.SuAtlet
+                .Include(b => b.JSukan)
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
@@ -36,6 +37,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.SuAtlet
                 .IgnoreQueryFilters()
+                .Include(b => b.JSukan)
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
@@ -47,6 +49,7 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<SuAtlet> GetById(int id)
         {
             return await context.SuAtlet
+                .Include(b => b.JSukan)
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)
@@ -59,6 +62,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.SuAtlet
                 .IgnoreQueryFilters()
+                .Include(b => b.JSukan)
                 .Include(b => b.JAgama)
                 .Include(b => b.JBangsa)
                 .Include(b => b.JCaraBayar)

@@ -1,5 +1,41 @@
 ﻿<script type="text/javascript">
 
+    //remove tbl Jurulatih
+    function Remove1(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var jurulatihId = $("TD", row).eq(0).html();
+        var name = $("TD", row).eq(1).html();
+        var amaun = $("TD", row).eq(8).html();
+        var txtJumlah = $("#jumlahKeseluruhan");
+        if (confirm("Hapus Jurulatih : " + name.trim() + " ?")) {
+            //Get the reference of the Table.
+            var table = $("#tblJurulatih")[0];
+
+            //Sum value to Total text field
+            var sum = 0;
+            sum = parseFloat(txtJumlah.val() - parseFloat(amaun));
+            txtJumlah.val(sum.toFixed(2));
+
+            var SuProfil1 = {
+                SuJurulatihId: jurulatihId,
+            }
+            if (jurulatihId != null) {
+                $.ajax({
+                    type: "POST",
+                    //url: "/AkPO/RemoveAkPO1",
+                    url: '@Url.Action("RemoveSuProfil1", "SuProfilJurulatih")',
+                    data: SuProfil1,
+                    dataType: "json",
+                    success: function (r) {
+                        //Delete the Table row using it's Index.
+                        table.deleteRow(row[0].rowIndex);
+                    }
+                });
+            }
+        }
+    };
+    //remove tbl Jurulatih end
 
     //update tbl Jurulatih
     function Update1(button) {
@@ -90,6 +126,7 @@
                                         "</td><td class='text-right'>" + (item1.jumlah).toFixed(2) +
                                         "</td><td>" +
                                         "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalJurulatih' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                        "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                         "</td><tr>";
                                 $("table tbody#tbodyJurulatih").append(str);
                                 sum += item1.jumlah;

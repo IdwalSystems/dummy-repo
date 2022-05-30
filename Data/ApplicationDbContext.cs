@@ -142,10 +142,6 @@ namespace MSNK.Data
             //        new IdentityRole { Name = "User", NormalizedName = "User".ToUpper() }
             //    );
 
-            modelBuilder.Entity<SuJurulatih>()
-                .HasOne(e => e.JProfilKategori)
-                .WithMany(c => c.SuJurulatih)
-                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AkBank>()
                 .HasOne(e => e.JBank)

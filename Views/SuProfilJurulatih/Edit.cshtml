@@ -1,113 +1,231 @@
 @model MSNK.Models.Modules.SuProfil
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Ubah";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Edit</h1>
-
-<h4>SuProfil</h4>
-<hr />
+<partial name="_JSEdit" />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-md-12">
+        <form asp-action="Edit" class="needs-validation">
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="NoRujukan" class="control-label"></label>
-                <input asp-for="NoRujukan" class="form-control" />
-                <span asp-validation-for="NoRujukan" class="text-danger"></span>
+            <div asp-validation-summary="ModelOnly" class="text-danger">
             </div>
-            <div class="form-group">
-                <label asp-for="Bulan" class="control-label"></label>
-                <input asp-for="Bulan" class="form-control" />
-                <span asp-validation-for="Bulan" class="text-danger"></span>
+            <div class="card box-shadow border-primary mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h5>Profil Jurulatih - @ViewData["Title"]</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label asp-for="Tahun" class="control-label"></label>
+                                <input asp-for="Tahun" class="form-control form-control-sm" id="txtTahun" readonly />
+                                <span asp-validation-for="Tahun" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label asp-for="Bulan" class="control-label"></label>
+                                <input asp-for="Bulan" class="form-control form-control-sm" readonly />
+                                <span asp-validation-for="Bulan" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" required>
+                                    @foreach (var s in ViewBag.JKW)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="JKWId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" required>
+                                    @foreach (var s in ViewBag.JBahagian)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="JBahagianId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label asp-for="NoRujukan" class="control-label"></label>
+                                <input id="txtNoRujukan" asp-for="NoRujukan" class="form-control form-control-sm" readonly />
+                                <span asp-validation-for="NoRujukan" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="AkCartaId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <select class="form-control form-control-sm text-uppercase select2" asp-for="AkCartaId" required>
+                                    @foreach (var s in ViewBag.AkCarta)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="AkCartaId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*table Jurulatih*@
+                    <div class="card box-shadow mb-3 mt-2">
+                        <div class="card-header">
+                            <h6>Jurulatih</h6>
+                        </div>
+                        <div class="card-body">
+                            <table id="tblJurulatih" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th hidden>Jurulatih Id</th>
+                                        <th style="width:30%">Nama</th>
+                                        <th style="width:10%">Jenis Sukan</th>
+                                        <th style="width:5%">No KP</th>
+                                        <th style="width:5%">No Akaun</th>
+                                        <th style="width:8%">Amaun RM</th>
+                                        <th style="width:8%">Amaun Sebelum RM</th>
+                                        <th style="width:8%">Tunggakan RM</th>
+                                        <th style="width:8%">Jumlah RM</th>
+                                        <th style="width:10%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyJurulatih">
+                                    @foreach (var item in ViewBag.suProfil1)
+                                    {
+                                        <tr>
+                                            <td hidden>
+                                                @item.SuJurulatih.Id
+                                            </td>
+                                            <td class="text-uppercase">
+                                                @item.SuJurulatih.Nama
+                                            </td>
+                                            <td class="text-uppercase">
+                                                @item.JSukan.Perihal
+                                            </td>
+                                            <td class="text-uppercase">
+                                                @item.SuJurulatih.NoKp
+                                            </td>
+                                            <td class="text-uppercase">
+                                                @item.SuJurulatih.NoAkaunBank
+                                            </td>
+                                            <td>
+                                                @Convert.ToDecimal(item.Amaun).ToString("#,##0.00")
+                                            </td>
+                                            <td>
+                                                @Convert.ToDecimal(item.AmaunSebelum).ToString("#,##0.00")
+                                            </td>
+                                            <td>
+                                                @Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")
+                                            </td>
+                                            <td>
+                                                @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalJurulatih" onclick="Update1(this)">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="card-footer">
+                            <div class="form-group pb-2">
+                                <label asp-for="Jumlah" class="control-label">Jumlah Keseluruhan RM</label>
+                                <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahKeseluruhan" readonly  />
+                                <span asp-validation-for="Jumlah" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    @*table Jurulatih end*@
+
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Tahun" class="control-label"></label>
-                <input asp-for="Tahun" class="form-control" />
-                <span asp-validation-for="Tahun" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Jumlah" class="control-label"></label>
-                <input asp-for="Jumlah" class="form-control" />
-                <span asp-validation-for="Jumlah" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FlKategori" class="control-label"></label>
-                <input asp-for="FlKategori" class="form-control" />
-                <span asp-validation-for="FlKategori" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AkCartaId" class="control-label"></label>
-                <select asp-for="AkCartaId" class="form-control" asp-items="ViewBag.AkCartaId"></select>
-                <span asp-validation-for="AkCartaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="JKWId" class="control-label"></label>
-                <select asp-for="JKWId" class="form-control" asp-items="ViewBag.JKWId"></select>
-                <span asp-validation-for="JKWId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="JBahagianId" class="control-label"></label>
-                <select asp-for="JBahagianId" class="form-control" asp-items="ViewBag.JBahagianId"></select>
-                <span asp-validation-for="JBahagianId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FlHapus" class="control-label"></label>
-                <input asp-for="FlHapus" class="form-control" />
-                <span asp-validation-for="FlHapus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TarHapus" class="control-label"></label>
-                <input asp-for="TarHapus" class="form-control" />
-                <span asp-validation-for="TarHapus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FlPosting" class="control-label"></label>
-                <input asp-for="FlPosting" class="form-control" />
-                <span asp-validation-for="FlPosting" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TarikhPosting" class="control-label"></label>
-                <input asp-for="TarikhPosting" class="form-control" />
-                <span asp-validation-for="TarikhPosting" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FlCetak" class="control-label"></label>
-                <input asp-for="FlCetak" class="form-control" />
-                <span asp-validation-for="FlCetak" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TarMasuk" class="control-label"></label>
-                <input asp-for="TarMasuk" class="form-control" />
-                <span asp-validation-for="TarMasuk" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserIdKemaskini" class="control-label"></label>
-                <input asp-for="UserIdKemaskini" class="form-control" />
-                <span asp-validation-for="UserIdKemaskini" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TarKemaskini" class="control-label"></label>
-                <input asp-for="TarKemaskini" class="form-control" />
-                <span asp-validation-for="TarKemaskini" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="form-group ">
+                <input type="submit" id="btnSave" value="Simpan" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Kembali Ke Indeks</a>
 </div>
+
+<!-- Modal Jurulatih -->
+<div class="modal fade bd-example-modal-lg" id="modalJurulatih" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Jurulatih</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input id="moId1" hidden />
+                    <input id="moSuJurulatihId" hidden />
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-form-label">Nama</label>
+                                <input type="text" class="form-control form-control-sm text-uppercase" id="moNama" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Amaun RM</label>
+                                <select class="form-control form-control-sm text-uppercase amaun" id="moAmaun1">
+                                    <option value="100">100 </option>
+                                    <option value="300">300 </option>
+                                    <option value="500">500 </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Amaun Sebelum RM</label>
+                                <input type="number" class="form-control form-control-sm" id="moAmaunSebelum" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Tunggakan RM</label>
+                                <input type="number" class="form-control form-control-sm tunggakan" id="moTunggakan">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah RM</label>
+                                <input type="text" class="form-control form-control-sm moJumlah1" id="moJumlah1" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate1()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Jurulatih End -->
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -15,7 +15,7 @@ namespace MSNK.Models.Modules
         [Column(TypeName = "decimal(18, 2)")]
         [DisplayName("Kadar Geran RM")]
         public decimal KadarGeran { get;set; }
-        public ICollection<SuJurulatih> SuJurulatih { get; set; }
+        //public ICollection<SuJurulatih> SuJurulatih { get; set; }
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
     }
