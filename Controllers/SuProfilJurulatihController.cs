@@ -69,6 +69,12 @@ namespace MSNK.Controllers
             var applicationDbContext = _context.SuProfil
                 .Include(s => s.AkCarta).Include(s => s.JBahagian).Include(s => s.JKW)
                 .Where(s => s.FlKategori == 1);
+
+            if (User.IsInRole("SuperAdmin"))
+            {
+                applicationDbContext = applicationDbContext.IgnoreQueryFilters();
+            }
+
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -172,20 +178,26 @@ namespace MSNK.Controllers
 
                 foreach (var item in data2)
                 {
+
                     jumlahKeseluruhan = jumlahKeseluruhan + item.Amaun;
 
-                    suProfil1Table.Add(
-                        new SuProfil1
-                        {
-                            SuJurulatih = item.SuJurulatih,
-                            SuJurulatihId = item.SuJurulatihId,
-                            JSukan = item.JSukan,
-                            JSukanId = item.JSukanId,
-                            Amaun = item.Amaun,
-                            AmaunSebelum = item.Amaun,
-                            Tunggakan = 0,
-                            Jumlah = item.Amaun
-                        });
+                    var Jurulatih = _context.SuJurulatih.FirstOrDefault(b => b.Id == item.SuJurulatihId && b.FlStatus == 1);
+                    if (Jurulatih != null)
+                    {
+                        suProfil1Table.Add(
+                            new SuProfil1
+                            {
+                                SuJurulatih = item.SuJurulatih,
+                                SuJurulatihId = item.SuJurulatihId,
+                                JSukan = item.JSukan,
+                                JSukanId = item.JSukanId,
+                                Amaun = item.Amaun,
+                                AmaunSebelum = item.Amaun,
+                                Tunggakan = 0,
+                                Jumlah = item.Amaun
+                            });
+                    }
+                    
                 }
             }
             else
@@ -349,7 +361,11 @@ namespace MSNK.Controllers
 
                     foreach (var item in data2)
                     {
-                        suProfil1Table.Add(
+                        var Jurulatih = _context.SuJurulatih.FirstOrDefault(b => b.Id == item.SuJurulatihId && b.FlStatus == 1);
+
+                        if (Jurulatih != null)
+                        {
+                            suProfil1Table.Add(
                             new SuProfil1
                             {
                                 SuJurulatih = item.SuJurulatih,
@@ -361,6 +377,8 @@ namespace MSNK.Controllers
                                 Tunggakan = 0,
                                 Jumlah = item.Amaun
                             });
+                        }
+                        
                     }
                 }
                 else

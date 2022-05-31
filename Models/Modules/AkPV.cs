@@ -81,6 +81,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Kategori Penerima")]
         public int FlKategoriPenerima { get; set; }
         public bool denganTanggungan { get; set; }
+        public bool IsAKB { get; set; }
         //flag end
 
         //untuk kelulusan

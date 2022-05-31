@@ -1,5 +1,4 @@
-﻿@model MSNK.Models.Modules.SuPekerja
-
+﻿@model MSNK.Models.Modules.SuAtlet
 @{
     ViewData["Title"] = "Hapus";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -19,10 +18,7 @@
             <div class="card-header bg-danger text-white">
                 <div class="row">
                     <div class="col-md-6">
-                        <h5 class="text-left">Daftar Anggota - @ViewData["Title"]</h5>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="text-right">No Gaji : @Model.NoGaji</p>
+                        <h5 class="text-left">Daftar Atlet - @ViewData["Title"]</h5>
                     </div>
                 </div>
             </div>
@@ -36,7 +32,7 @@
                             </div>
                             <div class="form-group col-md">
                                 <label asp-for="Nama" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Nama)" readonly />
+                                <input class="form-control form-control-sm text-uppercase" value="@Model.Nama" readonly />
                             </div>
                         </div>
                         <div class="form-row ">
@@ -45,34 +41,34 @@
                                 <input value="@Html.DisplayFor(model => model.Jawatan)" class="form-control form-control-sm text-uppercase" readonly/>
                             </div>
                         </div>
-                        <div class="form-row sorok">
+                        <div class="form-row ">
                             <div class="form-group col-md">
                                 <label asp-for="Alamat1" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Alamat1)" readonly />
+                                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat1)" readonly />
                             </div>
                         </div>
-                        <div class="form-row sorok">
+                        <div class="form-row ">
                             <div class="form-group col-md">
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Alamat2)" readonly />
+                                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat2)" readonly />
                             </div>
                         </div>
-                        <div class="form-row sorok">
+                        <div class="form-row ">
                             <div class="form-group col-md">
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Alamat3)" readonly />
+                                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat3)" readonly />
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-md sorok">
+                            <div class="form-group col-md ">
                                 <label asp-for="Poskod" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Poskod)" readonly />
                             </div>
-                            <div class="form-group col-md sorok">
+                            <div class="form-group col-md ">
                                 <label asp-for="Bandar" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Bandar)" readonly />
+                                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Bandar)" readonly />
                             </div>
                             <div class="form-group col-md">
                                 <label asp-for="JNegeri" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JNegeri.Perihal)" readonly />
+                                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.JNegeri.Perihal)" readonly />
                             </div>
                         </div>
                         <div class="form-row sorok">
@@ -84,19 +80,11 @@
                                 <label asp-for="JBangsa" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JBangsa.Perihal)" readonly />
                             </div>
-                            <div class="form-group col-md">
-                                <label asp-for="StatusKahwin" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.StatusKahwin)" readonly />
-                            </div>
                         </div>
                         <div class="form-row sorok">
                             <div class="form-group col-md">
-                                <label asp-for="TelefonRumah" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TelefonRumah)" readonly />
-                            </div>
-                            <div class="form-group col-md">
-                                <label asp-for="TelefonBimbit" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TelefonBimbit)" readonly />
+                                <label asp-for="Telefon" class="control-label"></label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Telefon)" readonly />
                             </div>
                             <div class="form-group col-md">
                                 <label asp-for="Emel" class="control-label"></label>
@@ -105,24 +93,16 @@
                         </div>
                         <div class="form-row sorok">
                             <div class="form-group col-md">
-                                <label asp-for="TarikhMasukKerja" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhMasukKerja)" readonly />
+                                <label asp-for="TarikhAktif" class="control-label"></label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhAktif)" readonly />
                             </div>
                             <div class="form-group col-md">
-                                <label asp-for="TarikhBerhentiKerja" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhBerhentiKerja)" readonly />
-                            </div>
-                            <div class="form-group col-md">
-                                <label asp-for="TarikhPencen" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhPencen)" readonly />
+                                <label asp-for="TarikhBerhenti" class="control-label"></label>
+                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhBerhenti)" readonly />
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group col-md sorok">
-                                <label asp-for="GajiPokok" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.GajiPokok)" readonly />
-                            </div>
-                            <div class="form-group col-md sorok">
+                            <div class="form-group col-md ">
                                 <label asp-for="JCaraBayar" class="control-label"></label>
                                 <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JCaraBayar.Perihal)" readonly />
                             </div>
@@ -134,39 +114,6 @@
                     </div>
                 </div>
                 <br />
-                <div class="card box-shadow mb-3 sorok">
-                    <div class="card-header">
-                        <h6>Tanggungan</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th style="width:50%">Nama</th>
-                                        <th style="width: 25%">No KP</th>
-                                        <th style="width: 25%">Hubungan</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyObjek">
-                                    @foreach (var item in ViewBag.suTanggungan)
-                                    {
-                                        <tr id="@item.Id">
-                                            <td id="nokp" hidden>@item.NoKP</td>
-                                            <td>@item.Nama</td>
-                                            <td id="td1Amaun">@item.NoKP</td>
-                                            <td id="td1Amaun">@item.Hubungan</td>
-                                        </tr>
-
-                                    }
-                                </tbody>
-                                <tfoot>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

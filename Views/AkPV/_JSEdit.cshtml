@@ -278,12 +278,14 @@
                     var tahun = $("#txtTahun").val();
                     var jKWId = $("#ddlKW").val();
                     var jBahagianId = $("#ddlBahagian").val();
+                    var IsAKB = $('input[type="radio"][name="IsAKB"]:checked').val();
                     var myData = {};
                     myData.AkPV1 = AkPV1;
                     myData.tahun = tahun;
                     myData.jKWId = jKWId;
                     myData.jBahagianId = jBahagianId;
                     myData.FlKategoriPenerima = FlKategoriPenerima;
+                    myData.IsAKB = IsAKB;
 
                     $.ajax({
                         type: "POST",
@@ -457,12 +459,14 @@
         var tahun = $("#txtTahun").val();
         var jKWId = $("#ddlKW").val();
         var jBahagianId = $("#ddlBahagian").val();
+        var IsAKB = $('input[type="radio"][name="IsAKB"]:checked').val();
         var myData = {};
         myData.AkPV1 = AkPV1;
         myData.tahun = tahun;
         myData.jKWId = jKWId;
         myData.jBahagianId = jBahagianId;
         myData.FlKategoriPenerima = FlKategoriPenerima;
+        myData.IsAKB = IsAKB;
 
         $.ajax({
             type: "POST",

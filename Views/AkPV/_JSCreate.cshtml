@@ -753,6 +753,26 @@
         });
         //on change jenis baucer end
 
+                // on change jenis baucer
+        $('input[type=radio][name=IsAKB]').on('change', function () {
+            var tahun = new Date().getFullYear().toString();
+            var tahunAKB = (parseInt(tahun) - 1).toString();
+            EmptyCart();
+            $("#txtPerihal").val("");
+            EmptyCart();
+            switch ($(this).val()) {
+                case "false":
+                    $("#txtTahun").val(tahun);
+                    $("#txtTahun").prop('readonly',false);
+                    break;
+                case "true":
+                    $("#txtTahun").val(tahunAKB);
+                    $("#txtTahun").prop('readonly',true);
+                    break;
+            }
+        });
+        //on change jenis baucer end
+
     });
     //validation form end
 
@@ -805,12 +825,14 @@
                     var tahun = $("#txtTahun").val();
                     var jKWId = $("#ddlKW").val();
                     var jBahagianId = $("#ddlBahagian").val();
+                    var IsAKB = $('input[type="radio"][name="IsAKB"]:checked').val();
                     var myData = {};
                     myData.AkPV1 = AkPV1;
                     myData.tahun = tahun;
                     myData.jKWId = jKWId;
                     myData.jBahagianId = jBahagianId;
                     myData.FlKategoriPenerima = FlKategoriPenerima;
+                    myData.IsAKB = IsAKB;
 
                     $.ajax({
                         type: "POST",
@@ -980,12 +1002,14 @@
         var tahun = $("#txtTahun").val();
         var jKWId = $("#ddlKW").val();
         var jBahagianId = $("#ddlBahagian").val();
+        var IsAKB = $('input[type="radio"][name="IsAKB"]:checked').val();
         var myData = {};
         myData.AkPV1 = AkPV1;
         myData.tahun = tahun;
         myData.jKWId = jKWId;
         myData.jBahagianId = jBahagianId;
         myData.FlKategoriPenerima = FlKategoriPenerima;
+        myData.IsAKB =IsAKB;
 
         $.ajax({
             type: "POST",

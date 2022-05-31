@@ -166,7 +166,8 @@
                     </div>
                         <div class="form-group">
                             <label asp-for="Aktiviti" class="control-label">Aktiviti/Kejohanan</label><span class="text-danger control-label">*</span>
-                            <input asp-for="Aktiviti" class="form-control form-control-sm text-uppercase" required />
+                            <textarea asp-for="Aktiviti" class="form-control form-control-sm text-uppercase" cols="2" required >
+                            </textarea>
                             <span asp-validation-for="Aktiviti" class="text-danger"></span>
                         </div>
  
@@ -273,7 +274,7 @@
                                                 <th width="30%">Perihal</th>
                                                 <th>Kadar (RM)</th>
                                                 <th>Bil</th>
-                                                <th>Bulan</th>
+                                                <th>Bulan / Hari</th>
                                                 <th>Jumlah (RM)</th>
                                                 <th></th>
                                             </tr>
@@ -433,7 +434,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="col-form-label">Bulan</label>
+                                <label class="col-form-label">Bulan / Hari</label>
                                 <input type="number" class="form-control form-control-sm bulan" id="moBulan">
                             </div>
                         </div>

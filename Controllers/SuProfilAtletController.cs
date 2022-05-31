@@ -70,6 +70,11 @@ namespace MSNK.Controllers
             var applicationDbContext = _context.SuProfil
                 .Include(s => s.AkCarta).Include(s => s.JBahagian).Include(s => s.JKW)
                 .Where(s => s.FlKategori == 0);
+
+            if (User.IsInRole("SuperAdmin"))
+            {
+                applicationDbContext = applicationDbContext.IgnoreQueryFilters();
+            }
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -175,18 +180,23 @@ namespace MSNK.Controllers
                 {
                     jumlahKeseluruhan = jumlahKeseluruhan + item.Amaun;
 
-                    suProfil1Table.Add(
-                        new SuProfil1
-                        {
-                            SuAtlet = item.SuAtlet,
-                            SuAtletId = item.SuAtletId,
-                            JSukan = item.JSukan,
-                            JSukanId = item.JSukanId,
-                            Amaun = item.Amaun,
-                            AmaunSebelum = item.Amaun,
-                            Tunggakan = 0,
-                            Jumlah = item.Amaun
-                        });
+                    var Atlet = _context.SuAtlet.FirstOrDefault(b => b.Id == item.SuAtletId && b.FlStatus == 1);
+                    if (Atlet != null)
+                    {
+                        suProfil1Table.Add(
+                            new SuProfil1
+                            {
+                                SuAtlet = item.SuAtlet,
+                                SuAtletId = item.SuAtletId,
+                                JSukan = item.JSukan,
+                                JSukanId = item.JSukanId,
+                                Amaun = item.Amaun,
+                                AmaunSebelum = item.Amaun,
+                                Tunggakan = 0,
+                                Jumlah = item.Amaun
+                            });
+                    }
+                    
                 }
             }
             else
@@ -349,18 +359,24 @@ namespace MSNK.Controllers
 
                     foreach (var item in data2)
                     {
-                        suProfil1Table.Add(
-                            new SuProfil1
-                            {
-                                SuAtlet = item.SuAtlet,
-                                SuAtletId = item.SuAtletId,
-                                JSukan = item.JSukan,
-                                JSukanId = item.JSukanId,
-                                Amaun = item.Amaun,
-                                AmaunSebelum = item.Amaun,
-                                Tunggakan = 0,
-                                Jumlah = item.Amaun
-                            });
+                        var Atlet = _context.SuAtlet.FirstOrDefault(b => b.Id == item.SuAtletId && b.FlStatus == 1);
+
+                        if (Atlet != null)
+                        {
+                            suProfil1Table.Add(
+                                new SuProfil1
+                                {
+                                    SuAtlet = item.SuAtlet,
+                                    SuAtletId = item.SuAtletId,
+                                    JSukan = item.JSukan,
+                                    JSukanId = item.JSukanId,
+                                    Amaun = item.Amaun,
+                                    AmaunSebelum = item.Amaun,
+                                    Tunggakan = 0,
+                                    Jumlah = item.Amaun
+                                });
+                        }
+                        
                     }
                 }
                 else
