@@ -23,7 +23,7 @@
         <h3 class="text-left">Lejar Am</h3>
     </div>
 </div>
-<div class="card mb-2">
+<div class="card mb-3">
     <div class="card-body pl-3 pb-2 ">
         <label class="form-control-plaintext" for="searchselect">Carian : </label>
         <div class="form-actions no-color mb-2">
@@ -32,15 +32,15 @@
                     <div class="form-row">
                         <div class="col-md">
                             <div class="input-group mb-2 input-group-sm ">
-                                <select class="custom-select" name="searchKW" asp-items="@ViewBag.Kw" required id="ddlKW"></select>
+                                <select class="custom-select" name="searchKW" asp-items="@ViewBag.Kw" required id="searchKW"></select>
                                 <label class="invalid-feedback">Kumpulan Wang Diperlukan.</label>
                             </div>
                             <div class="input-group mb-2 input-group-sm ">
-                                <select class="custom-select select2" name="searchCarta" asp-items="@ViewBag.AkCarta1" style="width:100%" required></select>
+                                <select class="custom-select select2" name="searchCarta" asp-items="@ViewBag.AkCarta1" id="searchCarta" style="width:100%" required></select>
                                 <label class="invalid-feedback">Carta Diperlukan.</label>
                             </div>
                         </div>
-                        <div class="col-md">
+                        <div class="col-md mb-2">
                             <div class="input-group mb-2 input-group-sm ">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">Daripada</span>
@@ -65,7 +65,15 @@
         </div>
     </div>
 </div>
-
+<div class="mb-3">
+    <div class="text-center">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <button class="btn btn-info" disabled="disabled"><i class="fas fa-print"></i></button>
+            <a class="btn btn-info" onclick="printPDF()" style="color: white;" href="" id="printButton" target="_blank"> Cetak Lejar Akaun </a>
+        </div>
+        @*<a class="text-right btn btn-info text-white" asp-action="PrintCarta">Cetak Carta</a>*@
+    </div>
+</div>
 <div class="table-responsive table-sm">
     <table class="table table-bordered table-hover display compact nowrap" width="100%">
         <thead>

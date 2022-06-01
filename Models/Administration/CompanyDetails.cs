@@ -23,6 +23,8 @@ namespace MSNK.Models.Administration
         public string EmelSyarikat { get; set; }
         public DateTime TarMula { get; set; }
         public string LogoSyarikat { get; set; }
+
+        
         public CompanyDetails()
         {
             KodSistem = "SPMB";

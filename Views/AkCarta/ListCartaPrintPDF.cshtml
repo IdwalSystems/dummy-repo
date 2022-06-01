@@ -9,55 +9,6 @@
     var bil = 0;
 }
 <style>
-    .flexrow {
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: flex !important;
-    }
-
-        .flexrow > div {
-            -webkit-box-flex: 1;
-            -webkit-flex: 1;
-            flex: 1;
-        }
-
-    .image-container {
-        width: 50px;
-        height: 50px;
-        text-align: center;
-    }
-
-        .image-container img {
-            height: 100%;
-        }
-
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    h2 {
-        font-size: 1.3rem;
-    }
-
-    h3 {
-        font-size: 1.2rem;
-    }
-
-    h4 {
-        font-size: 1.1rem;
-    }
-
-    h5 {
-        font-size: 1rem;
-    }
-
-    h6 {
-        font-size: 0.8rem;
-    }
-
-    p {
-        font-size: 0.6rem;
-    }
 
     .topic tr {
         line-height: 0.5rem;
@@ -183,26 +134,24 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.JParas.Kod)
                     </td>
-                    <td>
+                    
                         @if (item.DebitKredit.ToString() == "D")
                         {
-                            <label class="mb-0">DEBIT</label>
+                            <td>DEBIT</td>
                         }
                         else if (item.DebitKredit.ToString() == "K")
                         {
-                            <label class="mb-0">KREDIT</label>
+                            <td>KREDIT</td>
                         }
-                    </td>
-                    <td>
+
                         @if (item.UmumDetail.ToString() == "U")
                         {
-                            <label class="mb-0">UMUM</label>
+                            <td>UMUM</td>
                         }
                         else if (item.UmumDetail.ToString() == "D")
                         {
-                            <label class="mb-0">DETAIL</label>
+                            <td>DETAIL</td>
                         }
-                    </td>
                     <td align="right">
                         @Html.DisplayFor(modelItem => item.Baki)
                     </td>

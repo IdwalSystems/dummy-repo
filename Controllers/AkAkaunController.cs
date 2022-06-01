@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -150,5 +152,106 @@ namespace MSNK.Controllers
                 ViewBag.AkCarta1 = new SelectList(carta1Select, "Value", "Text", "");
             }
         }
+
+        // printing List of Carta
+        [AllowAnonymous]
+        public async Task<IActionResult> PrintLejarAkaun(
+            string searchKW,
+            string searchCarta,
+            string tarDari,
+            string tarHingga)
+        {
+            //IEnumerable<AkAkaun> akAkaun = await _akAkaunRepo.GetAll();
+            
+            var akAkaun = await _context.AkAkaun
+                .Include(b => b.JKW)
+                .Include(b => b.AkCarta1)
+                .Include(b => b.AkCarta2)
+                .ToListAsync();
+
+            List<AkAkaun> akAkBakiAwal = new List<AkAkaun>();
+            decimal bakiawalDebit = 0;
+            decimal bakiawalKredit = 0;
+
+            if (!String.IsNullOrEmpty(searchKW))
+            {
+                akAkaun = akAkaun.Where(q => q.JKW.Kod == searchKW).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(searchCarta))
+            {
+                akAkaun = akAkaun.Where(q => q.AkCarta1.Kod == searchCarta).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(tarDari) && !String.IsNullOrEmpty(tarHingga))
+            {
+                DateTime date1 = DateTime.Parse(tarDari);
+                DateTime date2 = DateTime.Parse(tarHingga).AddHours(23.99);
+                foreach (var i in akAkaun.Where(q => q.Tarikh<date1))
+                {
+                    bakiawalDebit += i.Debit;
+                    bakiawalKredit += i.Kredit;
+                };
+                akAkaun = akAkaun.Where(x => x.Tarikh >= date1 && x.Tarikh <= date2).ToList();
+                //akAkaun = akAkaun.OrderByDescending(c => c.Tarikh.Date).ThenBy(c => c.Tarikh.TimeOfDay);
+
+                if (bakiawalDebit>0 || bakiawalKredit > 0)
+                {
+                    akAkBakiAwal.Add(new AkAkaun()
+                    {
+                        Tarikh = date1,
+                        NoRujukan = "Baki Awal",
+                        Debit = bakiawalDebit,
+                        Kredit = bakiawalKredit
+                    });
+                    foreach (var i in akAkaun)
+                    {
+                        akAkBakiAwal.Add(new AkAkaun()
+                        {
+                            JKWId = i.JKWId,
+                            AkCartaId1=i.AkCartaId1,
+                            Tarikh = i.Tarikh,
+                            AkCartaId2=i.AkCartaId2,
+                            Id=i.Id,
+                            NoRujukan=i.NoRujukan,
+                            Debit=i.Debit,
+                            Kredit=i.Kredit,
+                            JKW=i.JKW,
+                            AkCarta1 = i.AkCarta1,
+                            AkCarta2 = i.AkCarta2
+                        });
+                    }
+                };
+            }
+            if (bakiawalDebit > 0 || bakiawalKredit > 0)
+            {
+                akAkBakiAwal = akAkBakiAwal.OrderBy(c => c.Tarikh).ToList();
+
+                akAkaun = akAkBakiAwal;
+            }
+            else
+            {
+                akAkaun = akAkaun.OrderBy(c => c.Tarikh).ToList();
+            }
+
+            var kw = await _context.JKW.FirstOrDefaultAsync(x => x.Kod == searchKW);
+
+            searchKW = kw.Kod + " - " + kw.Perihal;
+            //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
+
+            return new ViewAsPdf("LejarAkaunPrintPDF", akAkaun, 
+                new ViewDataDictionary(ViewData) { {"searchKW", searchKW },
+                {"searchCarta", searchCarta },
+                {"tarDari", tarDari },
+                {"tarHingga", tarHingga } })
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
+                        " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+        // printing List of Carta end
     }
 }

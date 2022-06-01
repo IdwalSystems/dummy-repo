@@ -17,6 +17,15 @@
         return val;
     }
 
+    function printPDF() {
+        var searchKW = $("#searchKW").val();
+        var searchCarta = $("#searchCarta").val();
+        var tarDari = $("#tarDari").val();
+        var tarHingga = $("#tarHingga").val();
+        var URL = "AkAkaun/PrintLejarAkaun?searchKW=" + searchKW + "&searchCarta=" + searchCarta + "&tarDari=" + tarDari + "&tarHingga=" + tarHingga;
+        $('<a href="'+ URL +'" target="_blank"></a>')[0].click();        
+    }
+
     $(document).ready(function () {
         $(".select2").select2({
             theme: "bootstrap"

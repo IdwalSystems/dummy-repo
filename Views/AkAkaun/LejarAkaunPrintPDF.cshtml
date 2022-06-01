@@ -1,0 +1,174 @@
+﻿@model IEnumerable<MSNK.Models.Modules.AkAkaun>
+
+@{
+    ViewData["Title"] = "Cetakan Senarai Carta";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+
+    CompanyDetails company = new CompanyDetails();
+
+    int rowNo = 0; 
+    decimal baki = 0;
+    decimal jDebit = 0;
+    decimal jKredit = 0;
+
+    DateTime tarDari = Convert.ToDateTime(ViewData["tarDari"]);
+    
+    DateTime tarHingga = Convert.ToDateTime(ViewData["tarHingga"]);
+}
+<style>
+    
+    .image-container {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+
+    .topic tr {
+        line-height: 1rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .max-lines {
+        display: block; /* or inline-block */
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 5.8em;
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+
+    
+</style>
+
+<div class="row flexrow mb-1 text-center">
+    <div class="col-12 text-uppercase">
+        <img class="image-container mb-2" src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
+        <h3 class="mb-1"><strong>@company.NamaSyarikat</strong></h3>
+        <h4 class="mb-0"> @company.AlamatSyarikat1 , @company.AlamatSyarikat2</h4>
+        <h4 class="mb-0"> @company.AlamatSyarikat3</h4>
+        <h4 class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</h4>
+    </div>
+
+    <!--<div class="col-2 text-right">-->
+        @*<h6 class="mb-0"><strong>SENARAI CARTA AKAUN</strong></h6>*@
+    <!--</div>-->
+</div>
+@*<div class="form-row flexrow mb-1 text-center">
+    <div class="col-12 image-container text-uppercase text-center">
+        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" class="mb-3" />
+        <h5 class="mb-1"><strong>@company.NamaSyarikat</strong></h5>
+        <p class="mb-2"> @company.AlamatSyarikat1 , @company.AlamatSyarikat2, @company.AlamatSyarikat3</p>
+        <h5 class="mb-0 bg-dark text-white"> <strong>SENARAI CARTA AKAUN</strong></h5>
+    </div>
+</div>*@
+<br />
+    <table class="table table-bordered table-sm topic">
+        <thead>
+            <tr class="bg-dark text-white">
+                <th colspan="11" class="text-center bg-dark text-white" style="line-height: 1.8rem;">
+                    <strong>SENARAI LEJAR AKAUN @ViewData["searchCarta"] BAGI KW @ViewData["searchKW"] DARI TARIKH : @tarDari.ToString("dd/MM/yyyy") -> @tarHingga.ToString("dd/MM/yyyy")</strong>
+                    </th>
+            </tr>
+            <tr style="line-height:0.8rem;" class="bg-secondary text-white">
+
+                <th class="thbil">
+                    BIL
+                </th>
+                <th>
+                    TARIKH
+                </th>
+                <th>
+                    OBJEK
+                </th>
+                <th>
+                    NO RUJUKAN
+                </th>
+                <th class="thdebit">
+                    DEBIT RM
+                </th>
+                <th class="thkredit">
+                    KREDIT RM
+                </th>
+                <th class="thtotal">
+                    BAKI RM
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                
+                if (item.Debit > 0)
+                {
+                    baki += item.Debit;
+                    jDebit += item.Debit;
+                }
+
+                if (item.Kredit > 0)
+                {
+                    baki -= item.Kredit;
+                    jKredit += item.Kredit;
+                }
+                <tr>
+                    <td class="bil">
+                        @(rowNo += 1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tarikh)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AkCarta2.Kod) - @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoRujukan)
+                    </td>
+                    <td class="debit text-right">
+                        @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
+                    </td>
+                    <td class="kredit text-right">
+                        @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
+                    </td>
+                    <td class="total text-right">
+                        @Convert.ToDecimal(baki).ToString("#,##0.00")
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="table-warning">
+                <td colspan="4" class="text-right"><strong>JUMLAH KESELURUHAN RM</strong></td>
+                <td class="text-right"><strong>@Convert.ToDecimal(jDebit).ToString("#,##0.00")</strong></td>
+                <td class="text-right"><strong>@Convert.ToDecimal(jKredit).ToString("#,##0.00")</strong></td>
+                <td class="text-right"><strong>@Convert.ToDecimal(baki).ToString("#,##0.00")</strong></td>
+            </tr>
+        </tfoot>
+    </table>
