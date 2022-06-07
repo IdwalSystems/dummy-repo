@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MSNK.Models.Modules.Cart
@@ -13,6 +14,9 @@ namespace MSNK.Models.Modules.Cart
             int suProfilId,
             int? suJurulatihId,
             int jSukanId,
+            int? jCaraBayarId,
+            string noCekEFT,
+            DateTime? tarCekEFT,
             decimal amaun,
             decimal amaunsebelum,
             decimal tunggakan,
@@ -30,6 +34,9 @@ namespace MSNK.Models.Modules.Cart
                     SuProfilId = suProfilId,
                     SuJurulatihId = suJurulatihId,
                     JSukanId = jSukanId,
+                    JCaraBayarId = jCaraBayarId,
+                    NoCekEFT = noCekEFT,
+                    TarCekEFT = tarCekEFT,
                     Amaun = amaun,
                     AmaunSebelum = amaunsebelum,
                     Tunggakan = tunggakan,

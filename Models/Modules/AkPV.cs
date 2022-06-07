@@ -136,6 +136,7 @@ namespace MSNK.Models.Modules
         public SuProfil SuProfil { get;set; }
         public ICollection<AkPV1> AkPV1 { get; set; }
         public ICollection<AkPV2> AkPV2 { get; set; }
+        public ICollection<AkCimbEFT1> AkCimbEFT1 { get; set; }
         //relationship end
 
     }

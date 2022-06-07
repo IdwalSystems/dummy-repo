@@ -83,6 +83,7 @@ namespace MSNK.Controllers
             List<SuProfil1> table1 = _context.SuProfil1
                 .Include(b => b.JSukan)
                 .Include(b => b.SuJurulatih)
+                .Include(b => b.JCaraBayar)
                 .Where(b => b.SuProfilId == id)
                 .OrderBy(b => b.Id)
                 .ToList();
@@ -123,6 +124,9 @@ namespace MSNK.Controllers
                 .ToList();
             ViewBag.AkCarta = akCartaList;
 
+            List<JCaraBayar> carabayarList = _context.JCaraBayar.ToList();
+            ViewBag.JCaraBayar = carabayarList;
+
         }
 
         public JsonResult CartEmpty()
@@ -143,7 +147,7 @@ namespace MSNK.Controllers
         private void PopulateTableCreate(int status, int month, int year)
         {
             List<SuJurulatih> data = _context.SuJurulatih
-                .Include(x => x.JSukan)
+                .Include(x => x.JSukan).Include(b => b.JCaraBayar)
                 .Where(b => b.FlStatus == status)
                 .OrderBy(x => x.JSukanId).ThenBy(x => x.Nama)
                 .ToList();
@@ -159,7 +163,8 @@ namespace MSNK.Controllers
 
 
             var suProfil = _context.SuProfil
-                .Include(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih).ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.JCaraBayar)
                     .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr && c.FlKategori == 1)
                     .FirstOrDefault();
 
@@ -170,7 +175,7 @@ namespace MSNK.Controllers
             if (suProfil != null)
             {
                 List<SuProfil1> data2 = _context.SuProfil1
-                .Include(x => x.JSukan).Include(x => x.SuJurulatih)
+                .Include(x => x.JSukan).Include(x => x.SuJurulatih).ThenInclude(b => b.JCaraBayar)
                 .Where(x => x.SuProfilId == suProfil.Id)
                 .OrderBy(x => x.JSukanId).ThenBy(x => x.SuJurulatih.Nama)
                 .ToList();
@@ -179,11 +184,11 @@ namespace MSNK.Controllers
                 foreach (var item in data2)
                 {
 
-                    jumlahKeseluruhan = jumlahKeseluruhan + item.Amaun;
-
                     var Jurulatih = _context.SuJurulatih.FirstOrDefault(b => b.Id == item.SuJurulatihId && b.FlStatus == 1);
                     if (Jurulatih != null)
                     {
+                        jumlahKeseluruhan = jumlahKeseluruhan + item.Amaun;
+
                         suProfil1Table.Add(
                             new SuProfil1
                             {
@@ -191,14 +196,50 @@ namespace MSNK.Controllers
                                 SuJurulatihId = item.SuJurulatihId,
                                 JSukan = item.JSukan,
                                 JSukanId = item.JSukanId,
+                                JCaraBayar = item.SuJurulatih.JCaraBayar,
+                                JCaraBayarId = item.SuJurulatih.JCaraBayarId,
+                                NoCekEFT = "",
+                                TarCekEFT = null,
                                 Amaun = item.Amaun,
                                 AmaunSebelum = item.Amaun,
                                 Tunggakan = 0,
                                 Jumlah = item.Amaun
                             });
                     }
+
+                    if (data2.Count() < data.Count())
+                    {
+                        // check if have balance of Jurulatih not inserted
+                        foreach (var item1 in data)
+                        {
+                            var containsJurulatih = data2.Any(d => d.SuJurulatihId == item1.Id);
+                            // if there is, insert into table
+                            if (containsJurulatih == false)
+                            {
+                                suProfil1Table.Add(
+                                new SuProfil1
+                                {
+                                    SuJurulatih = item1,
+                                    SuJurulatihId = item1.Id,
+                                    JSukan = item1.JSukan,
+                                    JSukanId = item1.JSukanId,
+                                    JCaraBayar = item1.JCaraBayar,
+                                    JCaraBayarId = item1.JCaraBayarId,
+                                    NoCekEFT = "",
+                                    TarCekEFT = null,
+                                    Amaun = 0,
+                                    AmaunSebelum = 0,
+                                    Tunggakan = 0,
+                                    Jumlah = 0
+                                });
+                            }
+                        }
+                    }
                     
-                }
+
+                } 
+
+
             }
             else
             {
@@ -211,6 +252,10 @@ namespace MSNK.Controllers
                             SuJurulatihId = item.Id,
                             JSukan = item.JSukan,
                             JSukanId = item.JSukanId,
+                            JCaraBayar = item.JCaraBayar,
+                            JCaraBayarId = item.JCaraBayarId,
+                            NoCekEFT = "",
+                            TarCekEFT = null,
                             Amaun = 0,
                             AmaunSebelum = 0,
                             Tunggakan = 0,
@@ -250,7 +295,7 @@ namespace MSNK.Controllers
         private void PopulateCartFromSuJurulatih(int month, int year)
         {
             List<SuJurulatih> suJurulatih = _context.SuJurulatih
-                .Include(x => x.JSukan)
+                .Include(x => x.JSukan).Include(x => x.JCaraBayar)
                 .Where(b => b.FlStatus == 1)
                 .OrderBy(x => x.JSukanId)
                 .ThenBy(x => x.Nama)
@@ -267,27 +312,61 @@ namespace MSNK.Controllers
 
 
             var suProfil = _context.SuProfil
-                .Include(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih).ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.JCaraBayar)
                     .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr && c.FlKategori == 1)
                     .FirstOrDefault();
 
             if (suProfil != null)
             {
                 List<SuProfil1> data2 = _context.SuProfil1
-                .Include(x => x.JSukan).Include(x => x.SuJurulatih)
+                .Include(x => x.JSukan).Include(x => x.SuJurulatih).ThenInclude(x => x.JCaraBayar)
                 .Where(x => x.SuProfilId == suProfil.Id)
                 .OrderBy(x => x.JSukanId).ThenBy(x => x.SuJurulatih.Nama)
                 .ToList();
 
                 foreach (SuProfil1 item in data2)
                 {
-                    _cart.AddItem1(0,
+                    var Jurulatih = _context.SuJurulatih.FirstOrDefault(b => b.Id == item.SuJurulatihId && b.FlStatus == 1);
+                    if (Jurulatih != null)
+                    {
+                        _cart.AddItem1(0,
                                    item.SuJurulatihId,
                                    item.JSukanId,
+                                   item.JCaraBayarId,
+                                   "",
+                                   null,
                                    item.Amaun,
                                    item.Amaun,
                                    0,
                                    item.Amaun);
+                    }
+
+                    if (data2.Count() < suJurulatih.Count())
+                    {
+                        // check if have balance of Jurulatih not inserted
+                        foreach (var item1 in suJurulatih)
+                        {
+                            var containsJurulatih = data2.Any(d => d.SuJurulatihId == item1.Id);
+                            // if there is, insert into table
+                            if (containsJurulatih == false)
+                            {
+                                _cart.AddItem1(0,
+                                       item1.Id,
+                                       item1.JSukanId,
+                                       item1.JCaraBayarId,
+                                       "",
+                                       null,
+                                       0,
+                                       0,
+                                       0,
+                                       0);
+
+                            }
+                        }
+                    }
+                    
+
                 }
             }
             else
@@ -297,6 +376,9 @@ namespace MSNK.Controllers
                     _cart.AddItem1(0,
                                    item.Id,
                                    item.JSukanId,
+                                   item.JCaraBayarId,
+                                   "",
+                                   null,
                                    0,
                                    0,
                                    0,
@@ -329,6 +411,7 @@ namespace MSNK.Controllers
 
                 List<SuJurulatih> data = _context.SuJurulatih
                 .Include(x => x.JSukan)
+                .Include(x => x.JCaraBayar)
                 .Where(b => b.FlStatus == 1)
                 .OrderBy(x => x.JSukanId).ThenBy(x => x.Nama)
                 .ToList();
@@ -344,7 +427,8 @@ namespace MSNK.Controllers
 
 
                 var suProfil = _context.SuProfil
-                    .Include(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih)
+                    .Include(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih).ThenInclude(b => b.JCaraBayar)
+                    .Include(b => b.SuProfil1).ThenInclude(b => b.JCaraBayar)
                         .Where(c => c.Bulan == monthInStr && c.Tahun == yearInStr && c.FlKategori == 1)
                         .FirstOrDefault();
 
@@ -353,7 +437,7 @@ namespace MSNK.Controllers
                 if (suProfil != null)
                 {
                     List<SuProfil1> data2 = _context.SuProfil1
-                    .Include(x => x.JSukan).Include(x => x.SuJurulatih)
+                    .Include(x => x.JSukan).Include(x => x.SuJurulatih).ThenInclude(x => x.JCaraBayar)
                     .Where(x => x.SuProfilId == suProfil.Id)
                     .OrderBy(x => x.JSukanId).ThenBy(x => x.SuJurulatih.Nama)
                     .ToList();
@@ -372,13 +456,46 @@ namespace MSNK.Controllers
                                 SuJurulatihId = item.SuJurulatihId,
                                 JSukan = item.JSukan,
                                 JSukanId = item.JSukanId,
+                                JCaraBayar = item.SuJurulatih.JCaraBayar,
+                                JCaraBayarId = item.SuJurulatih.JCaraBayarId,
+                                NoCekEFT = "",
+                                TarCekEFT = null,
                                 Amaun = item.Amaun,
                                 AmaunSebelum = item.Amaun,
                                 Tunggakan = 0,
                                 Jumlah = item.Amaun
                             });
                         }
-                        
+                        if (data2.Count() < data.Count())
+                        {
+                            // check if have balance of Jurulatih not inserted
+                            foreach (var item1 in data)
+                            {
+                                var containsJurulatih = data2.Any(d => d.SuJurulatihId == item1.Id);
+                                // if there is, insert into table
+                                if (containsJurulatih == false)
+                                {
+                                    suProfil1Table.Add(
+                                    new SuProfil1
+                                    {
+                                        SuJurulatih = item1,
+                                        SuJurulatihId = item1.Id,
+                                        JSukan = item1.JSukan,
+                                        JSukanId = item1.JSukanId,
+                                        JCaraBayar = item1.JCaraBayar,
+                                        JCaraBayarId = item1.JCaraBayarId,
+                                        NoCekEFT = "",
+                                        TarCekEFT = null,
+                                        Amaun = 0,
+                                        AmaunSebelum = 0,
+                                        Tunggakan = 0,
+                                        Jumlah = 0
+                                    });
+                                }
+                            }
+                        }
+                            
+
                     }
                 }
                 else
@@ -392,6 +509,10 @@ namespace MSNK.Controllers
                                 SuJurulatihId = item.Id,
                                 JSukan = item.JSukan,
                                 JSukanId = item.JSukanId,
+                                JCaraBayar = item.JCaraBayar,
+                                JCaraBayarId = item.JCaraBayarId,
+                                NoCekEFT = "",
+                                TarCekEFT = null,
                                 Amaun = 0,
                                 AmaunSebelum = 0,
                                 Tunggakan = 0,
@@ -492,6 +613,9 @@ namespace MSNK.Controllers
                     _cart.AddItem1(suProfil1.SuProfilId,
                         suProfil1.SuJurulatihId,
                         jSukanId,
+                        suProfil1.JCaraBayarId,
+                        suProfil1.NoCekEFT,
+                        suProfil1.TarCekEFT,
                         suProfil1.Amaun,
                         suProfil1.AmaunSebelum,
                         suProfil1.Tunggakan,
@@ -524,6 +648,10 @@ namespace MSNK.Controllers
                     var jSukan = _context.JSukan.Find(item.JSukanId);
 
                     item.JSukan = jSukan;
+
+                    var jCaraBayar = _context.JCaraBayar.Find(item.JCaraBayarId);
+
+                    item.JCaraBayar = jCaraBayar;
                 }
 
                 data = data.OrderBy(x => x.JSukanId)
@@ -643,6 +771,9 @@ namespace MSNK.Controllers
                 _cart.AddItem1(item.SuProfilId,
                                 item.SuJurulatihId,
                                 item.JSukanId,
+                                item.JCaraBayarId,
+                                item.NoCekEFT,
+                                item.TarCekEFT,
                                 item.Amaun,
                                 item.AmaunSebelum,
                                 item.Tunggakan,

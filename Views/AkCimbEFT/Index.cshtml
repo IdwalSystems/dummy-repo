@@ -1,0 +1,125 @@
+@model IEnumerable<MSNK.Models.Modules.AkCimbEFT>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NoPBI)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarJana)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarBayar)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jumlah)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NamaFail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BilPV)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlKategori)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SuPekerja)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AkBank)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlHapus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarHapus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarMasuk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserIdKemaskini)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarKemaskini)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoPBI)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TarJana)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TarBayar)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Jumlah)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NamaFail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BilPV)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlKategori)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SuPekerja.Emel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AkBank.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlHapus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TarHapus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TarMasuk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserIdKemaskini)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TarKemaskini)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

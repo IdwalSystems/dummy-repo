@@ -58,6 +58,9 @@
                     $("#moId1").val(r.record.id);
                     $("#moSuJurulatihId").val(r.record.suJurulatihId);
                     $("#moNama").val(r.suJurulatih.nama);
+                    $("#moCarabayar").val(r.record.jCaraBayarId);
+                    $("#moNoCekEFT").val(r.record.noCekEFT);
+                    $("#moTarCekEFT").val(r.record.tarCekEFT);
                     $("#moAmaun1").val(r.record.amaun);
                     $("#moAmaunSebelum").val(r.record.amaunSebelum.toFixed(2));
                     $("#moTunggakan").val(r.record.tunggakan.toFixed(2));
@@ -72,6 +75,9 @@
     };
 
     function modalUpdate1() {
+        var carabayar = $("#moCarabayar").val();
+        var noCekEFT = $("#moNoCekEFT").val();
+        var tarCekEFT = $("#moTarCekEFT").val();
         var id = $("#moId1").val();
         var suProfilId = $("#Id").val();
         var amaun = $("#moAmaun1").val();
@@ -85,6 +91,9 @@
             Id: id,
             SuProfilId: suProfilId,
             SuJurulatihId: suJurulatihId,
+            JCarabayarId: carabayar,
+            NoCekEFT: noCekEFT,
+            TarCekEFT: tarCekEFT,
             Amaun: amaun,
             AmaunSebelum: amaunSebelum,
             Tunggakan: tunggakan,
@@ -115,11 +124,24 @@
                         if (r.record.length > 0) {
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
+                                var noCekEFT = "";
+                                var tarCekEFT = "";
+                                if (!(item1.noCekEFT == null ))
+                                {
+                                    noCekEFT = item1.noCekEFT; 
+                                }
+                                if (!(item1.tarCekEFT == null ))
+                                {
+                                    tarCekEFT = item1.tarCekEFT; 
+                                }
                                  var str = "<tr><td id='suJurulatihId' hidden>" + item1.suJurulatihId +
                                         "</td><td class='text-uppercase'>" + item1.suJurulatih.nama +
                                         "</td><td class='text-uppercase'>" + item1.jSukan.perihal +
                                         "</td><td class='text-uppercase'>" + item1.suJurulatih.noKp +
                                         "</td><td class='text-uppercase'>" + item1.suJurulatih.noAkaunBank +
+                                        "</td><td class='text-uppercase'>" + item1.jCaraBayar.perihal +
+                                        "</td><td class='text-uppercase'>" + noCekEFT +
+                                        "</td><td >" + tarCekEFT +
                                         "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                         "</td><td class='text-right'>" + (item1.amaunSebelum).toFixed(2) +
                                         "</td><td class='text-right'>" + (item1.tunggakan).toFixed(2) +

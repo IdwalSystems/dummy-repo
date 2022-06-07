@@ -313,6 +313,16 @@ namespace MSNK
                 options.AddPolicy("SU002T", policy => policy.RequireClaim("SU002T"));
                 options.AddPolicy("SU002UT", policy => policy.RequireClaim("SU002UT"));
                 //Profil Jurulatih End
+                //Menu EFT
+                //Biz Channel
+                options.AddPolicy("BC001", policy => policy.RequireClaim("SU001"));
+                options.AddPolicy("BC001C", policy => policy.RequireClaim("SU001C"));
+                options.AddPolicy("BC001E", policy => policy.RequireClaim("SU001E"));
+                options.AddPolicy("BC001D", policy => policy.RequireClaim("SU001D"));
+                options.AddPolicy("BC001P", policy => policy.RequireClaim("SU001P"));
+                options.AddPolicy("BC001B", policy => policy.RequireClaim("SU001B"));
+                options.AddPolicy("BC001R", policy => policy.RequireClaim("SU001R"));
+                //Biz Channel End
             });
 
             services.AddMvc(f =>

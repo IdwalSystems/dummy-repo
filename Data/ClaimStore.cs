@@ -157,6 +157,17 @@ namespace MSNK.Data
             new Claim("SU002T","SU002 Profil Jurulatih - Posting"),
             new Claim("SU002UT","SU002 Profil Jurulatih - UnPosting"),
             //Profil Jurulatih end
+            //Menu EFT
+            //Biz Channel
+            new Claim("BC001","SU001 Biz Channel"),
+            new Claim("BC001C","SU001 Biz Channel - Jana (Tambah)"),
+            new Claim("BC001E","SU001 Biz Channel - Ubah Status"),
+            new Claim("BC001D","SU001 Biz Channel - Hapus"),
+            new Claim("BC001P","SU001 Biz Channel - Cetak"),
+            new Claim("BC001B","SU001 Biz Channel - Batal"),
+            new Claim("BC001R","SU001 Biz Channel - Rollback"),
+            //Profil Atlet end
+
         };
     }
 }

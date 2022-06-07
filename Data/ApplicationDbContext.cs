@@ -74,6 +74,8 @@ namespace MSNK.Data
         public DbSet<JPenyemak> JPenyemak { get; set; }
         public DbSet<JProfilKategori> JProfilKategori { get; set; }
         public DbSet<SiAppInfo> SiAppInfo { get; set; }
+        public DbSet<AkCimbEFT> AkCimbEFT { get; set; }
+        public DbSet<AkCimbEFT1> AkCimbEFT1 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -123,9 +125,12 @@ namespace MSNK.Data
             //Belanjawan
             modelBuilder.Entity<AbWaran>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Belanjawan end
-            //Profil Atlet
+            //Profil Atlet & Jurulatih
             modelBuilder.Entity<SuProfil>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
-            //Profil Atlet end
+            //Profil Atlet & Jurulatih end
+            //Biz Channel
+            modelBuilder.Entity<AkCimbEFT>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            //Biz Channel end
 
             //default bool to true
 
@@ -382,6 +387,46 @@ namespace MSNK.Data
                     .OnDelete(DeleteBehavior.Restrict);
             //AKPV end
 
+            //Biz Channel (CIMB EFT)
+            modelBuilder.Entity<AkCimbEFT1>()
+                .HasOne(m => m.AkPembekal)
+                .WithMany(t => t.AkCimbEFT1)
+                .HasForeignKey(m => m.PenerimaId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkCimbEFT1>()
+                .HasOne(m => m.SuPekerja)
+                .WithMany(t => t.AkCimbEFT1)
+                .HasForeignKey(m => m.PenerimaId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkCimbEFT1>()
+                .HasOne(m => m.SuAtlet)
+                .WithMany(t => t.AkCimbEFT1)
+                .HasForeignKey(m => m.PenerimaId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkCimbEFT1>()
+                .HasOne(m => m.SuJurulatih)
+                .WithMany(t => t.AkCimbEFT1)
+                .HasForeignKey(m => m.PenerimaId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkCimbEFT1>()
+                    .HasOne(m => m.AkBank)
+                    .WithMany(t => t.AkCimbEFT1)
+                    .HasForeignKey(m => m.AkBankId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+            modelBuilder.Entity<AkCimbEFT>()
+                    .HasOne(m => m.AkBank)
+                    .WithMany(t => t.AkCimbEFT)
+                    .HasForeignKey(m => m.AkBankId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+            //Biz Channel (CIMB EFT) end
+
             //SPPENDAHULUAN
             modelBuilder.Entity<SpPendahuluanPelbagai>()
                     .HasOne(m => m.SuPekerja!)
@@ -477,7 +522,14 @@ namespace MSNK.Data
             .HasForeignKey(m => m.JBahagianId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
+
+            modelBuilder.Entity<SuProfil1>()
+            .HasOne(m => m.JCaraBayar)
+            .WithMany(t => t.SuProfil1)
+            .HasForeignKey(m => m.JCaraBayarId)
+            .OnDelete(DeleteBehavior.Restrict);
             // SUPROFIL END
+
             //set default value
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan1).HasDefaultValue("");
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan2).HasDefaultValue("");

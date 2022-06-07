@@ -76,8 +76,7 @@ namespace MSNK.Models.Modules
         public JBank JBank { get; set; }
         [DisplayName("Bangsa")]
         public JBangsa JBangsa { get; set; }
-        public ICollection<AkPV> AkPV { get; set; }
-        public ICollection<AkTunaiCV> AkTunaiCV { get; set; }
+        public ICollection<AkCimbEFT1> AkCimbEFT1 { get; set; }
         //relationship end
 
         //soft delete

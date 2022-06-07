@@ -37,6 +37,8 @@ namespace MSNK.Models.Modules
         public AkCarta AkCarta { get; set; }
         public ICollection<AkTerima> AkTerima { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
+        public ICollection<AkCimbEFT> AkCimbEFT { get; set; }
+        public ICollection<AkCimbEFT1> AkCimbEFT1 { get; set; }
 
         //soft delete
         public int FlHapus { get; set; }

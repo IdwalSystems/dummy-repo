@@ -40,6 +40,16 @@ namespace MSNK.Models.Modules
         [DisplayName("Sukan")]
         public int JSukanId { get; set; }
 
+        [DisplayName("Cara Bayaran")]
+        public int? JCaraBayarId { get; set; }
+        public JCaraBayar JCaraBayar { get; set; }
+        [DisplayName("No Cek / EFT / JomPAY")]
+        [MaxLength(10)]
+        public string NoCekEFT { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayName("Tarikh Cek / EFT / JomPAY")]
+        public DateTime? TarCekEFT { get; set; }
+
         //relationship end
 
     }

@@ -90,10 +90,13 @@
                                         <th style="width:10%">Jenis Sukan</th>
                                         <th style="width:5%">No KP</th>
                                         <th style="width:5%">No Akaun</th>
-                                        <th style="width:8%">Amaun RM</th>
-                                        <th style="width:8%">Amaun Sebelum RM</th>
-                                        <th style="width:8%">Tunggakan RM</th>
-                                        <th style="width:8%">Jumlah RM</th>
+                                        <th style="width:4%">Cara Bayaran</th>
+                                        <th style="width:4%">No Cek / EFT</th>
+                                        <th style="width:4%">Tar Cek / EFT</th>
+                                        <th style="width:7%">Amaun RM</th>
+                                        <th style="width:7%">Amaun Sebelum RM</th>
+                                        <th style="width:7%">Tunggakan RM</th>
+                                        <th style="width:7%">Jumlah RM</th>
                                         <th style="width:10%"></th>
                                     </tr>
                                 </thead>
@@ -116,6 +119,23 @@
                                             <td class="text-uppercase">
                                                 @item.SuAtlet.NoAkaunBank
                                             </td>
+                                            <td class="text-uppercase">
+                                                @item.SuAtlet.JCaraBayar.Perihal
+                                            </td>
+                                            <td class=text-uppercase>
+                                                @item.NoCekEFT
+                                            </td>
+                                            @if (!string.IsNullOrEmpty(item.TarCekEFT))
+                                            {
+                                                <td>
+                                                    @item.TarCekEFT.ToString("dd/MM/yyyy")
+                                                </td>
+                                            } else 
+                                            {
+                                                <td>
+
+                                                </td>
+                                            }
                                             <td>
                                                 @Convert.ToDecimal(item.Amaun).ToString("#,##0.00")
                                             </td>
@@ -183,6 +203,31 @@
                             <div class="form-group">
                                 <label class="col-form-label">Nama</label>
                                 <input type="text" class="form-control form-control-sm text-uppercase" id="moNama" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Cara Bayaran</label>
+                                <select class="form-control form-control-sm text-uppercase" id="moCarabayar">
+                                    @foreach (var s in ViewBag.JCarabayar)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">No Cek / EFT</label>
+                                <input type="text" class="form-control form-control-sm text-uppercase" id="moNoCekEFT" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Tar Cek / EFT</label>
+                                <input type="date" class="form-control form-control-sm text-uppercase" id="moTarCekEFT" readonly>
                             </div>
                         </div>
                     </div>

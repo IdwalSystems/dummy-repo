@@ -60,6 +60,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkPV> AkPV { get; set; }
         public ICollection<AkTunaiCV> AkTunaiCV { get; set; }
         public ICollection<AkNotaMinta> AkNotaMinta { get; set; }
+        public ICollection<AkCimbEFT1> AkCimbEFT1 { get; set; }
         //relationship end
 
         //soft delete
