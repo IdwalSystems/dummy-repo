@@ -25,6 +25,17 @@
     {
       "library": "animate.css@4.1.1",
       "destination": "wwwroot/lib/animate.css/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "moment.js@2.29.3",
+      "destination": "wwwroot/lib/moment.js/",
+      "files": [
+        "moment-with-locales.js",
+        "moment-with-locales.min.js",
+        "moment.js",
+        "moment.min.js"
+      ]
     }
   ]
 }

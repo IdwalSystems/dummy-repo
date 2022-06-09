@@ -206,39 +206,36 @@ namespace MSNK.Controllers
                                 Jumlah = item.Amaun
                             });
                     }
+                }
 
-                    if (data2.Count() < data.Count())
+                if (data2.Count() < data.Count())
+                {
+                    // check if have balance of Jurulatih not inserted
+                    foreach (var item1 in data)
                     {
-                        // check if have balance of Jurulatih not inserted
-                        foreach (var item1 in data)
+                        var containsJurulatih = data2.Any(d => d.SuJurulatihId == item1.Id);
+                        // if there is, insert into table
+                        if (containsJurulatih == false)
                         {
-                            var containsJurulatih = data2.Any(d => d.SuJurulatihId == item1.Id);
-                            // if there is, insert into table
-                            if (containsJurulatih == false)
+                            suProfil1Table.Add(
+                            new SuProfil1
                             {
-                                suProfil1Table.Add(
-                                new SuProfil1
-                                {
-                                    SuJurulatih = item1,
-                                    SuJurulatihId = item1.Id,
-                                    JSukan = item1.JSukan,
-                                    JSukanId = item1.JSukanId,
-                                    JCaraBayar = item1.JCaraBayar,
-                                    JCaraBayarId = item1.JCaraBayarId,
-                                    NoCekEFT = "",
-                                    TarCekEFT = null,
-                                    Amaun = 0,
-                                    AmaunSebelum = 0,
-                                    Tunggakan = 0,
-                                    Jumlah = 0
-                                });
-                            }
+                                SuJurulatih = item1,
+                                SuJurulatihId = item1.Id,
+                                JSukan = item1.JSukan,
+                                JSukanId = item1.JSukanId,
+                                JCaraBayar = item1.JCaraBayar,
+                                JCaraBayarId = item1.JCaraBayarId,
+                                NoCekEFT = "",
+                                TarCekEFT = null,
+                                Amaun = 0,
+                                AmaunSebelum = 0,
+                                Tunggakan = 0,
+                                Jumlah = 0
+                            });
                         }
                     }
-                    
-
-                } 
-
+                }
 
             }
             else
@@ -341,32 +338,29 @@ namespace MSNK.Controllers
                                    0,
                                    item.Amaun);
                     }
-
-                    if (data2.Count() < suJurulatih.Count())
+                }
+                if (data2.Count() < suJurulatih.Count())
+                {
+                    // check if have balance of Jurulatih not inserted
+                    foreach (var item1 in suJurulatih)
                     {
-                        // check if have balance of Jurulatih not inserted
-                        foreach (var item1 in suJurulatih)
+                        var containsJurulatih = data2.Any(d => d.SuJurulatihId == item1.Id);
+                        // if there is, insert into table
+                        if (containsJurulatih == false)
                         {
-                            var containsJurulatih = data2.Any(d => d.SuJurulatihId == item1.Id);
-                            // if there is, insert into table
-                            if (containsJurulatih == false)
-                            {
-                                _cart.AddItem1(0,
-                                       item1.Id,
-                                       item1.JSukanId,
-                                       item1.JCaraBayarId,
-                                       "",
-                                       null,
-                                       0,
-                                       0,
-                                       0,
-                                       0);
+                            _cart.AddItem1(0,
+                                   item1.Id,
+                                   item1.JSukanId,
+                                   item1.JCaraBayarId,
+                                   "",
+                                   null,
+                                   0,
+                                   0,
+                                   0,
+                                   0);
 
-                            }
                         }
                     }
-                    
-
                 }
             }
             else
@@ -466,36 +460,34 @@ namespace MSNK.Controllers
                                 Jumlah = item.Amaun
                             });
                         }
-                        if (data2.Count() < data.Count())
+                    }
+                    if (data2.Count() < data.Count())
+                    {
+                        // check if have balance of Jurulatih not inserted
+                        foreach (var item1 in data)
                         {
-                            // check if have balance of Jurulatih not inserted
-                            foreach (var item1 in data)
+                            var containsJurulatih = data2.Any(d => d.SuJurulatihId == item1.Id);
+                            // if there is, insert into table
+                            if (containsJurulatih == false)
                             {
-                                var containsJurulatih = data2.Any(d => d.SuJurulatihId == item1.Id);
-                                // if there is, insert into table
-                                if (containsJurulatih == false)
+                                suProfil1Table.Add(
+                                new SuProfil1
                                 {
-                                    suProfil1Table.Add(
-                                    new SuProfil1
-                                    {
-                                        SuJurulatih = item1,
-                                        SuJurulatihId = item1.Id,
-                                        JSukan = item1.JSukan,
-                                        JSukanId = item1.JSukanId,
-                                        JCaraBayar = item1.JCaraBayar,
-                                        JCaraBayarId = item1.JCaraBayarId,
-                                        NoCekEFT = "",
-                                        TarCekEFT = null,
-                                        Amaun = 0,
-                                        AmaunSebelum = 0,
-                                        Tunggakan = 0,
-                                        Jumlah = 0
-                                    });
-                                }
+                                    SuJurulatih = item1,
+                                    SuJurulatihId = item1.Id,
+                                    JSukan = item1.JSukan,
+                                    JSukanId = item1.JSukanId,
+                                    JCaraBayar = item1.JCaraBayar,
+                                    JCaraBayarId = item1.JCaraBayarId,
+                                    NoCekEFT = "",
+                                    TarCekEFT = null,
+                                    Amaun = 0,
+                                    AmaunSebelum = 0,
+                                    Tunggakan = 0,
+                                    Jumlah = 0
+                                });
                             }
                         }
-                            
-
                     }
                 }
                 else

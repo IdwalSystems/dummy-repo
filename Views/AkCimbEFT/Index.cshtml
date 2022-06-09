@@ -2,124 +2,169 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<partial name="_JSIndex" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.NoPBI)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarJana)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarBayar)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Jumlah)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NamaFail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BilPV)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlKategori)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SuPekerja)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AkBank)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlHapus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarHapus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarMasuk)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserIdKemaskini)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarKemaskini)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NoPBI)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarJana)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarBayar)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Jumlah)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NamaFail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BilPV)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlKategori)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SuPekerja.Emel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AkBank.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlHapus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarHapus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarMasuk)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserIdKemaskini)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarKemaskini)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+@*div Header*@
+<div class="row mb-2">
+    <div class="col-8">
+        <h3 class="text-left">Biz Channel</h3>
+    </div>
+    <div class="col-4 text-right">
+        <a class="text-right btn btn-success text-white" asp-action="Create">Jana Baru</a>
+    </div>
+</div>
+@*div Header end*@
+
+@*div carian*@
+<div class="card mb-2">
+    <div class="card-body pl-3 pb-2 ">
+        <label class="form-control-plaintext" for="searchselect">Carian : </label>
+
+        <div class="form-actions no-color mb-2">
+            <form asp-action="Index" method="get">
+                <div class="form-row">
+                    <div class="col-sm-3 mb-2">
+                        <select class="custom-select form-control-sm"
+                                name="searchColumn"
+                                asp-items="@ViewBag.SearchColumn" id="searchColumn"></select>
+                    </div>
+                    <div class="col-sm-9 mb-2">
+                        <div class="form-row">
+                            <div class="col-10">
+                                <div class="form-row">
+                                    <div class="col-12">
+                                        <input class="form-control form-control-sm" type="text" name="searchString" id="myInput" value="@ViewBag.SearchData1" />
+                                    </div>
+                                    <div class="col-6" id="myInputDate1">
+                                        <input class="form-control form-control-sm mb-2" type="date" name="searchDate1" id="inputTarikh1" value="@ViewBag.SearchData1" />
+                                    </div>
+                                    <div class="col-6" id="myInputDate2">
+                                        <input class="form-control form-control-sm" type="date" name="searchDate2" id="inputTarikh2" value="@ViewBag.SearchData2" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="btn text-info btn-sm" data-toggle="tooltip" data-placement="top" title="Cari"><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@*div carian end*@
+
+@*div table*@
+
+<div class="table-responsive table-sm">
+    <table class="table table-bordered table-hover display compact nowrap" width="100%">
+        <thead>
+            <tr>
+                <th>
+                    Bil
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NoPBI)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TarJana)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TarBayar)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Jumlah)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NamaFail)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BilPV)
+                </th>
+                <th>
+                    Batal
+                </th>
+                <th class="action-button"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+
+                var tabletype = item.FlHapus == 1 ? "table-danger" : null;
+                <tr class="@tabletype">
+                    <td>
+                    </td>
+                    <td class="text-uppercase">
+                        @item.NoPBI
+                    </td>
+                    @if (string.IsNullOrEmpty(item.TarJana.ToString("dd/MM/yyyy")))
+                    {
+                        <td>-</td>
+                    }
+                    else
+                    {
+                        <td width="5%" data-sort='YYYYMMDD'>
+                            @item.TarJana.ToString("dd/MM/yyyy")
+                        </td>
+                    }
+                    @if (string.IsNullOrEmpty(item.TarBayar.ToString("dd/MM/yyyy")))
+                    {
+                        <td>-</td>
+                    }
+                    else
+                    {
+                        <td width="5%" data-sort='YYYYMMDD'>
+                            @item.TarBayar.ToString("dd/MM/yyyy")
+                        </td>
+                    }
+                    
+                    <td class="text-right">
+                        @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
+                    </td>
+                    <td class="text-uppercase">
+                        @item.NamaFail
+                    </td>
+                    <td class="text-uppercase">
+                        @item.BilPV
+                    </td>
+                    <td>
+                        @if (item.FlHapus == 0)
+                        {
+                            <label class="mb-0">TIDAK</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">YA</label>
+                        }
+                    </td>
+                    <td class="action-button">
+                        <div class="btn-group" role="group" aria-label="action">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                            @if (item.FlHapus == 0)
+                            {
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                            }
+                            else
+                            {
+                                if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                                {
+                                    <a asp-action="Rollback" asp-route-id="@item.Id" class="btn text-info btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                        <i class="fas fa-trash-restore"></i>
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@*div table end*@

@@ -21,6 +21,7 @@ namespace MSNK.Models.Modules
         // FlPenerimaEFT = 4 ( jurulatih )
         // FlPenerimaEFT = 5 ( atlet )
         public int Id { get; set; }
+        public int Indek { get; set; }
         public int AkCimbEFTId { get; set; }
         public AkCimbEFT AkCimbEFT { get; set; }
         public int AkPVId { get; set; }

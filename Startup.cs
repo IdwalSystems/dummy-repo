@@ -133,6 +133,11 @@ namespace MSNK
             services.AddTransient<ListViewIRepository<AkNotaMinta1, int>, AkNotaMinta1Repository>();
             services.AddTransient<ListViewIRepository<AkNotaMinta2, int>, AkNotaMinta2Repository>();
 
+            //BIZ CHANNEL
+            services.AddTransient<IRepository<AkCimbEFT, int, string>, AkCimbEFTRepository>();
+            services.AddTransient<ListViewIRepository<AkCimbEFT1, int>, AkCimbEFT1Repository>();
+            //BIZ CHANNEl END
+
             services.AddTransient<IRepository<AbWaran, int, string>, AbWaranRepository>();
             services.AddTransient<ListViewIRepository<AbWaran1, int>, AbWaran1Repository>();
             services.AddTransient<CustomIRepository<string, int>, CustomRepository>();
@@ -151,6 +156,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartWaran.GetCart(ss));
             services.AddScoped(ss => SessionCartAtlet.GetCart(ss));
             services.AddScoped(ss => SessionCartJurulatih.GetCart(ss));
+            services.AddScoped(ss => SessionCartCimbEFT.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -315,13 +321,13 @@ namespace MSNK
                 //Profil Jurulatih End
                 //Menu EFT
                 //Biz Channel
-                options.AddPolicy("BC001", policy => policy.RequireClaim("SU001"));
-                options.AddPolicy("BC001C", policy => policy.RequireClaim("SU001C"));
-                options.AddPolicy("BC001E", policy => policy.RequireClaim("SU001E"));
-                options.AddPolicy("BC001D", policy => policy.RequireClaim("SU001D"));
-                options.AddPolicy("BC001P", policy => policy.RequireClaim("SU001P"));
-                options.AddPolicy("BC001B", policy => policy.RequireClaim("SU001B"));
-                options.AddPolicy("BC001R", policy => policy.RequireClaim("SU001R"));
+                options.AddPolicy("PV002", policy => policy.RequireClaim("PV002"));
+                options.AddPolicy("PV002C", policy => policy.RequireClaim("PV002C"));
+                options.AddPolicy("PV002E", policy => policy.RequireClaim("PV002E"));
+                options.AddPolicy("PV002D", policy => policy.RequireClaim("PV002D"));
+                options.AddPolicy("PV002P", policy => policy.RequireClaim("PV002P"));
+                options.AddPolicy("PV002B", policy => policy.RequireClaim("PV002B"));
+                options.AddPolicy("PV002R", policy => policy.RequireClaim("PV002R"));
                 //Biz Channel End
             });
 

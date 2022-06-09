@@ -2,6 +2,7 @@
 using MSNK.Data;
 using MSNK.Models.Modules.IRepository;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
@@ -58,19 +59,125 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
-        public Task<IEnumerable<AkCimbEFT>> GetAllIncludeDeletedItems()
+        public async Task<IEnumerable<AkCimbEFT>> GetAllIncludeDeletedItems()
         {
-            throw new System.NotImplementedException();
+            return await context.AkCimbEFT
+                .IgnoreQueryFilters()
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkBank)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPV)
+                        .ThenInclude(b => b.SuProfil)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPV)
+                        .ThenInclude(b => b.SpPendahuluanPelbagai)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPembekal)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuPekerja)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuPekerja)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuAtlet)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuAtlet)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuJurulatih)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuJurulatih)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkBank)
+                    .ThenInclude(b => b.JBank)
+                .Include(b => b.SuPekerja)
+                .ToListAsync();
         }
 
-        public Task<AkCimbEFT> GetById(int id)
+        public async Task<AkCimbEFT> GetById(int id)
         {
-            throw new System.NotImplementedException();
+            return await context.AkCimbEFT
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkBank)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPV)
+                        .ThenInclude(b => b.SuProfil)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPV)
+                        .ThenInclude(b => b.SpPendahuluanPelbagai)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPembekal)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuPekerja)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuPekerja)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuAtlet)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuAtlet)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuJurulatih)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuJurulatih)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkBank)
+                    .ThenInclude(b => b.JBank)
+                .Include(b => b.SuPekerja)
+                .Where(b => b.Id == id)
+                .FirstOrDefaultAsync();
         }
 
-        public Task<AkCimbEFT> GetByIdIncludeDeletedItems(int id)
+        public async Task<AkCimbEFT> GetByIdIncludeDeletedItems(int id)
         {
-            throw new System.NotImplementedException();
+            return await context.AkCimbEFT
+                .IgnoreQueryFilters()
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkBank)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPV)
+                        .ThenInclude(b => b.SuProfil)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPV)
+                        .ThenInclude(b => b.SpPendahuluanPelbagai)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPembekal)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuPekerja)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuPekerja)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuAtlet)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuAtlet)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuJurulatih)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuJurulatih)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkBank)
+                    .ThenInclude(b => b.JBank)
+                .Include(b => b.SuPekerja)
+                .Where(b => b.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public Task<AkCimbEFT> GetByString(string id)
@@ -78,19 +185,21 @@ namespace MSNK.Models.Modules.EFRepository
             throw new System.NotImplementedException();
         }
 
-        public Task<AkCimbEFT> Insert(AkCimbEFT entity)
+        public async Task<AkCimbEFT> Insert(AkCimbEFT entity)
         {
-            throw new System.NotImplementedException();
+            await context.AkCimbEFT.AddAsync(entity);
+            return entity;
         }
 
-        public Task Save()
+        public async Task Save()
         {
-            throw new System.NotImplementedException();
+            await context.SaveChangesAsync();
         }
 
-        public Task Update(AkCimbEFT entity)
+        public async Task Update(AkCimbEFT entity)
         {
-            throw new System.NotImplementedException();
+            context.Update(entity);
+            await context.SaveChangesAsync();
         }
     }
 }

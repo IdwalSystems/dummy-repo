@@ -1,0 +1,58 @@
+﻿<script type="text/javascript">
+    // onchange no Rujukan
+    $("body").on('change', "#TarJana", function () {
+        var tarJana = $("#TarJana").val();
+        var noPBI = moment(tarJana).format('YYYYMM');
+        if (tarJana != null || tarJana != undefined) {
+            JsonKod(tarJana, noPBI);
+        }
+
+    });
+
+    function JsonKod(tarJana, noPBI) {
+        $.ajax({
+            type: "POST",
+            //url: "/AkPV/JsonGetKod",
+            url: '@Url.Action("JsonGetKod", "AkCimbEFT")',
+            data: { tarJana: tarJana, noPBI: noPBI },
+            dataType: "json",
+            success: function (msg) {
+                if (msg.record) {
+                    $("#NoPBI").val(msg.record);
+                    $("#NamaFail").val(msg.record + ".txt");
+                }
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    // onchange no Rujukan end
+
+    // jana kelompok
+    function JanaKelompok() {
+        var tarDari = $("#TarDari").val();
+        var tarHingga = $("#TarHingga").val();
+
+        if (tarHingga < tarDari)
+        {
+            $("#TarHingga").val(tarDari);
+        }
+
+        $.ajax({
+            type: "POST",
+            //url: "/AkPV/JsonGetKod",
+            url: '@Url.Action("JsonGetBaucer", "AkCimbEFT")',
+            data: { tarDari: tarDari, tarHingga: tarHingga },
+            dataType: "json",
+            success: function (msg) {
+                if (msg.record) {
+                }
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    // jana kelompok end
+</script>

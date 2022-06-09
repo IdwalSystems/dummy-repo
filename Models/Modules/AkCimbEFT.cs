@@ -9,14 +9,23 @@ namespace MSNK.Models.Modules
 {
     public class AkCimbEFT : AppLogHelper, ISoftDelete
     {
+        // note:
+        // FlKategori = 0 ( Tanpa emel )
+        // FlKategori = 1 ( dengan emel )
+        // ..
         public int Id { get; set; }
+        [DisplayName("No PBI")]
         public string NoPBI { get; set; }
+        [DisplayName("Tarikh Jana")]
         public DateTime TarJana { get; set; }
+        [DisplayName("Tarikh Bayar")]
         public DateTime TarBayar { get; set; }
         [DisplayName("Jumlah RM")]
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal Jumlah { get; set; } 
+        public decimal Jumlah { get; set; }
+        [DisplayName("Nama Fail")]
         public string NamaFail { get; set; }
+        [DisplayName("Bil Baucer")]
         public string BilPV { get; set; }
         public string FlKategori { get; set; }
         public int? SuPekerjaId { get; set; }
@@ -24,6 +33,7 @@ namespace MSNK.Models.Modules
 
         // note:
         // AkBank - Akaun Bank Pembayar
+        [DisplayName("Akaun Bank Pembayar")]
         public int AkBankId { get; set; }
         public AkBank AkBank { get; set; }
 

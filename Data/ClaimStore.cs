@@ -159,13 +159,13 @@ namespace MSNK.Data
             //Profil Jurulatih end
             //Menu EFT
             //Biz Channel
-            new Claim("BC001","SU001 Biz Channel"),
-            new Claim("BC001C","SU001 Biz Channel - Jana (Tambah)"),
-            new Claim("BC001E","SU001 Biz Channel - Ubah Status"),
-            new Claim("BC001D","SU001 Biz Channel - Hapus"),
-            new Claim("BC001P","SU001 Biz Channel - Cetak"),
-            new Claim("BC001B","SU001 Biz Channel - Batal"),
-            new Claim("BC001R","SU001 Biz Channel - Rollback"),
+            new Claim("PV002","PV002 Biz Channel"),
+            new Claim("PV002C","PV002 Biz Channel - Jana (Tambah)"),
+            new Claim("PV002E","PV002 Biz Channel - Ubah Status"),
+            new Claim("PV002D","PV002 Biz Channel - Hapus"),
+            new Claim("PV002P","PV002 Biz Channel - Cetak"),
+            new Claim("PV002B","PV002 Biz Channel - Batal"),
+            new Claim("PV002R","PV002 Biz Channel - Rollback"),
             //Profil Atlet end
 
         };
