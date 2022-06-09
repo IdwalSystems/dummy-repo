@@ -125,10 +125,13 @@
                                 <thead>
                                     <tr>
                                          <th hidden>Jurulatih Id</th>
-                                        <th style="width:30%">Nama</th>
+                                        <th style="width:28%">Nama</th>
                                         <th style="width:10%">Jenis Sukan</th>
                                         <th style="width:5%">No KP</th>
                                         <th style="width:5%">No Akaun</th>
+                                        <th style="width:5%">Cara Bayaran</th>
+                                        <th style="width:5%">No Cek / EFT</th>
+                                        <th style="width:4%">Tar Cek / EFT</th>
                                         <th style="width:8%">Amaun RM</th>
                                         <th style="width:8%">Amaun Sebelum RM</th>
                                         <th style="width:8%">Tunggakan RM</th>
@@ -155,6 +158,23 @@
                                             <td class="text-uppercase">
                                                 @item.SuJurulatih.NoAkaunBank
                                             </td>
+                                            <td class="text-uppercase">
+                                                @item.JCaraBayar.Perihal
+                                            </td>
+                                            <td class=text-uppercase>
+                                                @item.NoCekEFT
+                                            </td>
+                                            @if (!string.IsNullOrEmpty(item.TarCekEFT))
+                                            {
+                                                <td>
+                                                    @item.TarCekEFT.ToString("dd/MM/yyyy")
+                                                </td>
+                                            } else 
+                                            {
+                                                <td>
+
+                                                </td>
+                                            }
                                             <td>
                                                 @Convert.ToDecimal(item.Amaun).ToString("#,##0.00")
                                             </td>
