@@ -24,11 +24,14 @@ namespace MSNK.Models.Modules.Cart.Session
             int Indek,
             int akPVId,
             int flPenerimaEFT,
-            int? penerimaId,
+            int? akPembekalId,
+            int? suPekerjaId,
+            int? suAtletId,
+            int? suJurulatihId,
             decimal amaun,
             string noCek,
             string catatan,
-            int akBankId,
+            int jBankId,
             int? flStatus
             )
         {
@@ -36,11 +39,14 @@ namespace MSNK.Models.Modules.Cart.Session
                     Indek,
                     akPVId,
                     flPenerimaEFT,
-                    penerimaId,
+                    akPembekalId,
+                    suPekerjaId,
+                    suAtletId,
+                    suJurulatihId,
                     amaun,
                     noCek,
                     catatan,
-                    akBankId,
+                    jBankId,
                     flStatus);
 
             Session.SetJson("CartCimbEFT", this);

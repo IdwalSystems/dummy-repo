@@ -24,8 +24,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkCimbEFT
                 .Include(b => b.AkCimbEFT1)
-                    .ThenInclude(b => b.AkBank)
-                        .ThenInclude(b => b.JBank)
+                    .ThenInclude(b => b.JBank)
                 .Include(b => b.AkCimbEFT1)
                     .ThenInclude(b => b.AkPV)
                         .ThenInclude(b => b.SuProfil)
@@ -64,8 +63,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkCimbEFT
                 .IgnoreQueryFilters()
                 .Include(b => b.AkCimbEFT1)
-                    .ThenInclude(b => b.AkBank)
-                        .ThenInclude(b => b.JBank)
+                    .ThenInclude(b => b.JBank)
                 .Include(b => b.AkCimbEFT1)
                     .ThenInclude(b => b.AkPV)
                         .ThenInclude(b => b.SuProfil)
@@ -103,8 +101,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkCimbEFT
                 .Include(b => b.AkCimbEFT1)
-                    .ThenInclude(b => b.AkBank)
-                        .ThenInclude(b => b.JBank)
+                    .ThenInclude(b => b.JBank)
                 .Include(b => b.AkCimbEFT1)
                     .ThenInclude(b => b.AkPV)
                         .ThenInclude(b => b.SuProfil)
@@ -144,8 +141,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.AkCimbEFT
                 .IgnoreQueryFilters()
                 .Include(b => b.AkCimbEFT1)
-                    .ThenInclude(b => b.AkBank)
-                        .ThenInclude(b => b.JBank)
+                    .ThenInclude(b => b.JBank)
                 .Include(b => b.AkCimbEFT1)
                     .ThenInclude(b => b.AkPV)
                         .ThenInclude(b => b.SuProfil)

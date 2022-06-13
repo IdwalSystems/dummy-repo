@@ -88,6 +88,9 @@
                     @Html.DisplayNameFor(model => model.BilPV)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.FlStatus)
+                </th>
+                <th>
                     Batal
                 </th>
                 <th class="action-button"></th>
@@ -133,6 +136,20 @@
                     </td>
                     <td class="text-uppercase">
                         @item.BilPV
+                    </td>
+                    <td>
+                        @if (item.FlStatus == 1)
+                        {
+                            <label class="mb-0">BERJAYA</label>
+                        }
+                        else if (item.FlStatus == 2)
+                        {
+                            <label class="mb-0">GAGAL / BERJAYA</label>
+                        }
+                        else
+                        {
+                            <label class="mb-0">GAGAL</label>
+                        }
                     </td>
                     <td>
                         @if (item.FlHapus == 0)

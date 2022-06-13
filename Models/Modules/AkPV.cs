@@ -24,6 +24,8 @@ namespace MSNK.Models.Modules
         // FlKategoriPenerima = 1 ( pembekal )
         // FlKategoriPenerima = 2 ( pekerja )
         // FlKategoriPenerima = 3 ( pemegang panjar )
+        // FlKategoriPenerima = 4 ( jurulatih )
+        // FlKategoriPenerima = 5 ( atlet )
         // ..
 
         //field
@@ -104,9 +106,14 @@ namespace MSNK.Models.Modules
         [DisplayName("Jenis Kumpulan Wang")]
         public int JKWId { get; set; }
         
+        // kod akaun bank pembayar
         [Required(ErrorMessage = "Kod Bank Diperlukan.")]
         [DisplayName("Kod Bank")]
         public int AkBankId { get; set; }
+
+        // jenis bank penerima
+        [DisplayName("Bank Penerima")]
+        public int? JBankId { get; set; }
         [DisplayName("Kod Pembekal")]
         public int? AkPembekalId { get; set; }
         [DisplayName("Kod Anggota")]
@@ -128,6 +135,7 @@ namespace MSNK.Models.Modules
         public JKW JKW { get; set; }
         
         public AkBank AkBank { get; set; }
+        public JBank JBank { get; set; }
         public AkPembekal AkPembekal { get; set; }
         public SuPekerja SuPekerja { get; set; }
         public JCaraBayar JCaraBayar { get; set; }

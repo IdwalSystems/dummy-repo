@@ -122,7 +122,7 @@
                                                 }
                                             </select>
                                         </td>
-                                        <td style="width:40%"><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" value="0.00"></td>
+                                        <td style="width:40%"><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" placehoder="0.00"></td>
                                         <td>
                                             <select class="form-control form-control-sm text-uppercase" id="txtTK">
                                                 <option value="+" selected>+</option>
@@ -137,7 +137,7 @@
                         <div class="card-footer">
                             <div class="form-group pb-2">
                                 <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
-                                <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly value="0.00" />
+                                <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly placeholder="0.00" />
                                 <span asp-validation-for="Jumlah" class="text-danger"></span>
                             </div>
                         </div>

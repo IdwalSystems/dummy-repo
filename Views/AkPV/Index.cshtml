@@ -188,9 +188,18 @@
                                         {
                                             if (item.Jumlah == item.JumlahInbois && item.FlCetak != 0)
                                             {
-                                                <a asp-action="Posting" asp-route-id="@item.Id" class="btn text-success btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Kemaskini Lejar">
-                                                    <i class="fas fa-file-signature"></i>
-                                                </a>
+                                                @if (item.FlStatusSemak != 0)
+                                                {
+                                                    <button data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
+                                                        <i class="fas fa-file-signature"></i>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button data-toggle="modal" data-target="#modalSemak" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Semak" onclick="ModalClick(this)">
+                                                        <i class="fas fa-file-signature"></i>
+                                                    </button>
+                                                }
                                             }
                                         }
                                         else

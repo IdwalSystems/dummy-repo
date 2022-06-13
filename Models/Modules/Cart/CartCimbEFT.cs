@@ -13,11 +13,14 @@ namespace MSNK.Models.Modules.Cart
             int Indek,
             int akPVId,
             int flPenerimaEFT,
-            int? penerimaId,
+            int? akPembekalId,
+            int? suPekerjaId,
+            int? suAtletId,
+            int? suJurulatihId,
             decimal amaun,
             string noCek,
             string catatan,
-            int akBankId,
+            int jBankId,
             int? flStatus
             )
         {
@@ -27,11 +30,14 @@ namespace MSNK.Models.Modules.Cart
                 Indek = Indek,
                 AkPVId = akPVId,
                 FlPenerimaEFT = flPenerimaEFT,
-                PenerimaId = penerimaId,
+                AkPembekalId = akPembekalId,
+                SuPekerjaId = suPekerjaId,
+                SuJurulatihId = suJurulatihId,
+                SuAtletId = suAtletId,
                 Amaun = amaun,
                 NoCek = noCek,
                 Catatan = catatan,
-                AkBankId = akBankId,
+                JBankId = jBankId,
                 FlStatus = flStatus
             });
         }

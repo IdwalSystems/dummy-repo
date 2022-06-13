@@ -1,0 +1,30 @@
+﻿<script type="text/javascript">
+    //update tbl Baucer
+
+    function Update1(button) {
+        var row = $(button).closest("TR");
+        var akCimbEFTId = $("#Id").val();
+        var indek = $("TD", row).eq(0).html();
+        var status = row.find("td:eq(6) select").val();
+
+        var AkCimbEFT1 = {
+            AkCimbEFTId: akCimbEFTId,
+            Indek: indek,
+            FlStatus: status
+
+        }
+        $.ajax({
+            type: "POST",
+            //url: "/AkPOLaras/SaveCartAkPOLaras2",
+            url: '@Url.Action("SaveCartAkCimbEFT1", "AkCimbEFT")',
+            data: AkCimbEFT1,
+            dataType: "json",
+            success: function (r) {
+                //insert notification here
+                toastr.success("Status Indek" + indek + " berjaya diubah.", "Berjaya");
+                toastr.options.timeOut = 2000; // 2s
+            }
+        });
+    };
+    //update tbl perihal end
+</script>

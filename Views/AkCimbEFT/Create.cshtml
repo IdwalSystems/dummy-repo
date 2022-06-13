@@ -10,10 +10,11 @@
     <div class="col-md-12">
 
         <form asp-action="Create" class="needs-validation">
+            <input asp-for="FlStatus" hidden value="1"/>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="card box-shadow border-success mb-3" id="denganPesananTempatan">
+            <div class="card box-shadow border-success mb-3">
                 <div class="card-header bg-success text-white">
-                    <h5>Invois Pembekal - @ViewData["Title"]</h5>
+                    <h5>Biz Channel - @ViewData["Title"]</h5>
                 </div>
                 <div class="card-body">
                     <div class="form-row">
@@ -25,13 +26,13 @@
                                     </div>
                                     <div class="form-row col-sm ml-2">
                                         <div class="custom-control custom-radio col-md-4 " >
-                                            <input class="custom-control-input " type="radio" id="FlKategori0" asp-for="FlKategori" value="false" checked>
+                                            <input class="custom-control-input " type="radio" id="FlKategori0" asp-for="FlKategori" value="0" checked>
                                             <label class="custom-control-label" for="FlKategori0">
                                                 Tanpa Emel
                                             </label>
                                         </div>
                                         <div class="custom-control custom-radio col-md-4 " >
-                                            <input class="custom-control-input " type="radio" id="FlKategori1" asp-for="FlKategori" value="true">
+                                            <input class="custom-control-input " type="radio" id="FlKategori1" asp-for="FlKategori" value="1">
                                             <label class="custom-control-label" for="FlKategori1">
                                                 Dengan Emel
                                             </label>
@@ -41,7 +42,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-row">
+                   <div class="form-row">
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="NoPBI" class="control-label"></label>
@@ -84,16 +85,16 @@
                         </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row ">
 
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div class="form-group mb-0">
                                 <label class="control-label">Tarikh Baucer</label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-inline">
+                    <div class="form-inline mb-3">
                         <div class="form-group mr-2">
                             <input type="date" name="TarDari" class="form-control form-control-sm" id="TarDari"/>
                         </div>
@@ -114,12 +115,12 @@
                                 <table id="tblBaucer" class="table table-sm" cellpadding="0" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Bil</th>
-                                            <th>No Baucer</th>
-                                            <th width="30%">No KP</th>
-                                            <th width="30%">No Akaun</th>
-                                            <th>Penerima</th>
-                                            <th>Amaun</th>
+                                            <th width="5%">Bil</th>
+                                            <th width="10%">No Baucer</th>
+                                            <th width="10%">No KP</th>
+                                            <th width="10%">No Akaun</th>
+                                            <th width="55%">Penerima</th>
+                                            <th width="10%">Amaun</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -131,10 +132,21 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <div class="form-group">
-                                <label class="control-label">Jumlah Baucer</label>
-                                <input class="form-control form-control-sm" id="jumlahBaucer" name="JumlahBaucer" value="0.00" readonly />
+                            <div class="form-row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Bil Baucer</label>
+                                        <input type="number" class="form-control form-control-sm" id="bilBaucer" asp-for="BilPV" placeholder="0" readonly />
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label class="control-label">Jumlah Baucer RM</label>
+                                        <input class="form-control form-control-sm" id="jumlahBaucer" asp-for="Jumlah" placeholder="0.00" readonly />
+                                    </div>
+                                </div>
                             </div>
+                            
                         </div>
                     </div>
                     @*table baucer end*@

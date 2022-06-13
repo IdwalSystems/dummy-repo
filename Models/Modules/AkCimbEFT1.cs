@@ -27,10 +27,13 @@ namespace MSNK.Models.Modules
         public int AkPVId { get; set; }
         public AkPV AkPV { get; set; }
         public int FlPenerimaEFT { get; set; }
-        public int? PenerimaId { get; set; }
+        public int? AkPembekalId { get; set; }
         public AkPembekal AkPembekal { get; set; }
+        public int? SuPekerjaId { get; set; }
         public SuPekerja SuPekerja { get; set; }
+        public int? SuJurulatihId { get; set; }
         public SuJurulatih SuJurulatih { get; set; }
+        public int? SuAtletId { get; set; }
         public SuAtlet SuAtlet { get; set; }
         [DisplayName("Jumlah RM")]
         [Column(TypeName = "decimal(18, 2)")]
@@ -39,12 +42,13 @@ namespace MSNK.Models.Modules
         public string Catatan { get; set; }
 
         // note:
-        // AkBank - Akaun Bank Penerima
-        public int AkBankId { get; set; }
-        public AkBank AkBank { get; set; }
+        // JBank - Jenis Bank Penerima
+        public int JBankId { get; set; }
+        public JBank JBank { get; set; }
 
         // FlStatus = 0 -> Tolak / Gagal
         // FlStatus = 1 -> Berjaya
+        // FlStatus = null -> KIV
         public int? FlStatus { get; set; }
 
 

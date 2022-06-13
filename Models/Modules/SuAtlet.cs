@@ -42,7 +42,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Berhenti")]
         public DateTime? TarikhBerhenti { get; set; }
         [DisplayName("Nama Bank")]
-        public int? JBankId { get; set; }
+        public int JBankId { get; set; }
         [DisplayName("Agama")]
         public int? JAgamaId { get; set; }
         [DisplayName("Bangsa")]

@@ -28,6 +28,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Bil Baucer")]
         public string BilPV { get; set; }
         public string FlKategori { get; set; }
+        [DisplayName("Penjana")]
         public int? SuPekerjaId { get; set; }
         public SuPekerja SuPekerja { get; set; }
 

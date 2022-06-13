@@ -228,6 +228,9 @@ namespace MSNK.Controllers
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
+            List<JBank> bankList = _context.JBank.OrderBy(b => b.Nama).ToList();
+            ViewBag.JBank = bankList;
+
             List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.Where(x=> x.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
             ViewBag.SpPendahuluanPelbagai = spList;
 
@@ -1387,6 +1390,7 @@ namespace MSNK.Controllers
             int? AkPembekalId,
             int? SuPekerjaId,
             int AkBankId,
+            int? JBankId,
             int JCaraBayarId,
             decimal JumlahInbois,
             int? AkTunaiRuncitId,
@@ -1409,6 +1413,9 @@ namespace MSNK.Controllers
             // FlKategoriPenerima = 1 ( pembekal )
             // FlKategoriPenerima = 2 ( pekerja )
             // FlKategoriPenerima = 3 ( pemegang panjar )
+
+            // FlKategoriPenerima = 4 ( jurulatih )
+            // FlKategoriPenerima = 5 ( atlet )
             // ..
 
 
@@ -1435,6 +1442,7 @@ namespace MSNK.Controllers
 
             var user = await _userManager.GetUserAsync(User);
 
+            
             if (tunaiRuncit != null)
             {
                 akPV.FlKategoriPenerima = 3;
@@ -1468,7 +1476,7 @@ namespace MSNK.Controllers
                 //check if PV dengan tanggungan or tanpa tanggungan end
             }
 
-            if (pekerja != null)
+            if (pekerja != null )
             {
                 akPV.NoKP = pekerja.NoKp;
                 akPV.Nama = pekerja.Nama;
@@ -1482,6 +1490,10 @@ namespace MSNK.Controllers
                 jenis = "CreatePekerja";
             }
 
+            if (FlJenisBaucer == 2)
+            {
+                akPV.FlKategoriPenerima = 2;
+            }
             // get latest no rujukan running number  
             var kw = _context.JKW.FirstOrDefault(x => x.Id == akPV.JKWId);
 
@@ -1520,10 +1532,7 @@ namespace MSNK.Controllers
                         }
                     }
 
-                    if (SuPekerjaId != null)
-                    {
-                        m.SuPekerjaId = SuPekerjaId;
-                    }
+                    m.SuPekerjaId = SuPekerjaId == 0 ? null : SuPekerjaId;
 
                     m.Tahun = akPV.Tahun;
                     m.NoPV = noRujukan;
@@ -1550,6 +1559,7 @@ namespace MSNK.Controllers
                     m.NoRekup = akPV.NoRekup;
                     m.denganTanggungan = akPV.denganTanggungan;
                     m.IsAKB = IsAKB;
+                    m.JBankId = JBankId;
 
                     if (tunaiRuncit != null )
                     {
@@ -1561,6 +1571,15 @@ namespace MSNK.Controllers
                     }
                     if (suProfil != null)
                     {
+                        if (suProfil.FlKategori == 1)
+                        {
+                            m.FlKategoriPenerima = 4;
+                        }
+
+                        if (suProfil.FlKategori == 0)
+                        {
+                            m.FlKategoriPenerima = 5;
+                        }
                         m.SuProfilId = SuProfilId;
                     }
 
@@ -1584,6 +1603,9 @@ namespace MSNK.Controllers
                     // FlKategoriPenerima = 0 ( Am / Lain - lain )
                     // FlKategoriPenerima = 1 ( pembekal )
                     // FlKategoriPenerima = 2 ( pekerja )
+                    // FlKategoriPenerima = 3 ( pemegang panjar )
+                    // FlKategoriPenerima = 4 ( jurulatih )
+                    // FlKategoriPenerima = 5 ( atlet )
                     // ..
 
                     if (IsAKB == true)
@@ -2379,9 +2401,13 @@ namespace MSNK.Controllers
                     break;
                 //pekerja
                 case 2:
-                    data.KodPenerima = akPV.SuPekerja.NoGaji + " - "+ akPV.SuPekerja.NoKp;
-                    namaBankPenerima = akPV.SuPekerja.JBank.Nama;
-                    noAkaunBank = akPV.SuPekerja.NoAkaunBank;
+                    var noGaji = akPV.SuPekerja == null ? "00000" : akPV.SuPekerja.NoGaji;
+                    var noKP = akPV.SuPekerja == null ? "012345678901" : akPV.SuPekerja.NoKp;
+                    var nama = akPV.SuPekerja == null ? "SuperAdmin" : akPV.SuPekerja.Nama;
+                    var noAkaun = akPV.SuPekerja == null ? "019284719285" : akPV.SuPekerja.NoAkaunBank;
+                    data.KodPenerima = noGaji + " - "+ noKP;
+                    namaBankPenerima = nama;
+                    noAkaunBank = noAkaun;
 
                     break;
                 //am
@@ -2541,8 +2567,10 @@ namespace MSNK.Controllers
                             break;
                         //pekerja
                         case 2:
-                            kod = akPV.SuPekerja.NoGaji;
-                            penerima = akPV.SuPekerja.Nama;
+                            var noGaji = akPV.SuPekerja == null ? "00000" : akPV.SuPekerja.NoGaji;
+                            var nama = akPV.SuPekerja == null ? "SuperAdmin" : akPV.SuPekerja.Nama;
+                            kod = noGaji;
+                            penerima = nama;
 
                             break;
                         //panjar

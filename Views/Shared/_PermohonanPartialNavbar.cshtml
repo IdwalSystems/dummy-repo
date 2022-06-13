@@ -9,10 +9,10 @@
 </li>*@
 
 <li class="nav-item">
-    <a class="nav-link collapsed text-truncate" href="#submenuPermohonan" data-toggle="collapse" data-target="#submenuPermohonan"><i class="far fa-file-alt mr-2"></i> Permohonan</a>
+    <a class="nav-link collapsed text-truncate @Html.ActiveClass("SpPendahuluanPelbagai")" href="#submenuPermohonan" data-toggle="collapse" data-target="#submenuPermohonan"><i class="far fa-file-alt mr-2"></i> Permohonan</a>
     <div class="collapse" id="submenuPermohonan" aria-expanded="false">
         <ul class="flex-column pl-2 nav">
-            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-controller="SpPendahuluanPelbagai" asp-action="Index"><span>Pendahuluan Pelbagai</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveClass("SpPendahuluanPelbagai")" asp-controller="SpPendahuluanPelbagai" asp-action="Index"><span>Pendahuluan Pelbagai</span></a></li>
         </ul>
     </div>
 </li>

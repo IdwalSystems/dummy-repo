@@ -10,11 +10,13 @@
 </li>*@
 
 <li class="nav-item">
-    <a class="nav-link collapsed text-truncate" href="#submenuProfil" data-toggle="collapse" data-target="#submenuProfil"><i class="far fa-address-book mr-2"></i> Profil</a>
+    <a class="nav-link collapsed text-truncate
+    @Html.ActiveClass("SuProfilAtlet")
+    @Html.ActiveClass("SuProfilJurulatih")" href="#submenuProfil" data-toggle="collapse" data-target="#submenuProfil"><i class="far fa-address-book mr-2"></i> Profil</a>
     <div class="collapse" id="submenuProfil" aria-expanded="false">
         <ul class="flex-column pl-2 nav">
-            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-controller="SuProfilAtlet" asp-action="Index"><span>Skim Kecemerlangan Atlet</span></a></li>
-            <li class="nav-item"><a class="nav-link py-1 ml-3" asp-controller="SuProfilJurulatih" asp-action="Index"><span>Elaun JSM</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveClass("SuProfilAtlet")" asp-controller="SuProfilAtlet" asp-action="Index"><span>Skim Kecemerlangan Atlet</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveClass("SuProfilJurulatih")" asp-controller="SuProfilJurulatih" asp-action="Index"><span>Elaun JSM</span></a></li>
         </ul>
     </div>
 </li>

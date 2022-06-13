@@ -925,7 +925,7 @@ namespace MSNK.Controllers
                         }
                         //insert applog end
 
-                    await _context.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -939,8 +939,8 @@ namespace MSNK.Controllers
                         }
                     }
                     CartEmpty();
-                TempData[SD.Success] = "Data berjaya diubah..!";
-                return RedirectToAction(nameof(Index));
+                    TempData[SD.Success] = "Data berjaya diubah..!";
+                    return RedirectToAction(nameof(Index));
                 }
             TempData[SD.Warning] = "Data tidak lengkap. Sila cuba sekali lagi";
             PopulateList();

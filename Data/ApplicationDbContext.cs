@@ -369,6 +369,12 @@ namespace MSNK.Data
                     .IsRequired();
 
             modelBuilder.Entity<AkPV>()
+                    .HasOne(m => m.JBank)
+                    .WithMany(t => t.AkPV)
+                    .HasForeignKey(m => m.JBankId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkPV>()
                 .HasOne(m => m.AkTunaiRuncit!)
                 .WithMany(t => t.AkPV)
                 .HasForeignKey(m => m.AkTunaiRuncitId)
@@ -391,31 +397,31 @@ namespace MSNK.Data
             modelBuilder.Entity<AkCimbEFT1>()
                 .HasOne(m => m.AkPembekal)
                 .WithMany(t => t.AkCimbEFT1)
-                .HasForeignKey(m => m.PenerimaId)
+                .HasForeignKey(m => m.AkPembekalId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<AkCimbEFT1>()
                 .HasOne(m => m.SuPekerja)
                 .WithMany(t => t.AkCimbEFT1)
-                .HasForeignKey(m => m.PenerimaId)
+                .HasForeignKey(m => m.SuPekerjaId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<AkCimbEFT1>()
                 .HasOne(m => m.SuAtlet)
                 .WithMany(t => t.AkCimbEFT1)
-                .HasForeignKey(m => m.PenerimaId)
+                .HasForeignKey(m => m.SuAtletId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<AkCimbEFT1>()
                 .HasOne(m => m.SuJurulatih)
                 .WithMany(t => t.AkCimbEFT1)
-                .HasForeignKey(m => m.PenerimaId)
+                .HasForeignKey(m => m.SuJurulatihId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<AkCimbEFT1>()
-                    .HasOne(m => m.AkBank)
+                    .HasOne(m => m.JBank)
                     .WithMany(t => t.AkCimbEFT1)
-                    .HasForeignKey(m => m.AkBankId)
+                    .HasForeignKey(m => m.JBankId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
 

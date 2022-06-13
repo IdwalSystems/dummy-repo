@@ -51,7 +51,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Pencen")]
         public DateTime? TarikhPencen { get; set; }
         [DisplayName("Nama Bank")]
-        public int? JBankId { get; set; }
+        public int JBankId { get; set; }
         [DisplayName("Agama")]
         public int? JAgamaId { get; set; }
         [DisplayName("Bangsa")]

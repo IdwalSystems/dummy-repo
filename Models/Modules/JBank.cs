@@ -19,6 +19,8 @@ namespace MSNK.Models.Modules
         public string KodEFT { get; set; }
         public ICollection<AkBank> AkBank { get; set; }
         public ICollection<AkPembekal> AkPembekal { get; set; }
+        public ICollection<AkCimbEFT1> AkCimbEFT1 { get; set; }
+        public ICollection<AkPV> AkPV { get; set; }
         //field end
 
         //soft delete
