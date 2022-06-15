@@ -17,9 +17,9 @@
     @Html.ActiveClass("AkJurnal")" href="#submenuBaucer" data-toggle="collapse" data-target="#submenuBaucer"><i class="fas fa-money-bill mr-2"></i> Baucer</a>
     <div class="collapse" id="submenuBaucer" aria-expanded="false">
         <ul class="flex-column pl-2 nav">
-            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveClass("AkPV")" asp-controller="AkPV" asp-action="Index"><span>Baucer Pembayaran</span></a></li>
-            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveClass("AkCimbEFT")" asp-controller="AkCimbEFT" asp-action="Index"><span>Biz Channel</span></a></li>
-            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveClass("AkJurnal")" asp-area="" asp-controller="AkJurnal" asp-action="Index"><span>Baucer Jurnal</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkPV")" asp-controller="AkPV" asp-action="Index"><span>Baucer Pembayaran</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkCimbEFT")" asp-controller="AkCimbEFT" asp-action="Index"><span>Biz Channel</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkJurnal")" asp-area="" asp-controller="AkJurnal" asp-action="Index"><span>Baucer Jurnal</span></a></li>
         </ul>
     </div>
 </li>

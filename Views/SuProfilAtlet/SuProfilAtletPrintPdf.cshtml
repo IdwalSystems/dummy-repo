@@ -59,6 +59,7 @@
                 <th>TUNGGAKAN RM</th>
                 <th>AMAUN RM</th>
                 <th>JUMLAH RM</th>
+                <th>CATATAN</th>
             </tr>
         </thead>
 
@@ -68,7 +69,7 @@
             var sum = 0;
             bilSukan++;
 
-            <tr><th colspan="8" class="text-uppercase bg-secondary text-white">@bilSukan) @group.Key</th></tr>
+            <tr><th colspan="9" class="text-uppercase bg-secondary text-white">@bilSukan) @group.Key</th></tr>
             foreach (var item in group)
             {
                 bil++;
@@ -84,6 +85,8 @@
                     <td align="right">@Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")</td>
                     <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
                     <td align="right">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+                    <td class="text-uppercase">@item.Catatan</td>
+
                 </tr>
 
                 sum += item.Amaun;
@@ -105,11 +108,11 @@
                 
             }
              <tr class="font-weight-bold text-uppercase">
-                <td class="text-right bg-light" colspan="7">@group.Key RM</td>
+                <td class="text-right bg-light" colspan="8">@group.Key RM</td>
                 <td class="text-right">@Convert.ToDecimal(sum).ToString("#,##0.00")</td>
             </tr>
             <tr>
-                <td class="text-right border-white" colspan="8">
+                <td class="text-right border-white" colspan="9">
                 </td>
             </tr>
         }
@@ -128,7 +131,7 @@
             </tr>
         }*@
         <tr class="font-weight-bold table-warning">
-            <td class="text-right text-uppercase" colspan="7">Jumlah Keseluruhan RM</td>
+            <td class="text-right text-uppercase" colspan="8">Jumlah Keseluruhan RM</td>
             <td class="text-right">@Convert.ToDecimal(Model.SuProfil.Jumlah).ToString("#,##0.00")</td>
         </tr>
         <tfoot>

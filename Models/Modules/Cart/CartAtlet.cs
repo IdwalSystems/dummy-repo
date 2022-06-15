@@ -21,6 +21,7 @@ namespace MSNK.Models.Modules.Cart
             decimal amaun,
             decimal amaunsebelum,
             decimal tunggakan,
+            string catatan,
             decimal jumlah
             )
         {
@@ -41,6 +42,7 @@ namespace MSNK.Models.Modules.Cart
                     Amaun = amaun,
                     AmaunSebelum = amaunsebelum,
                     Tunggakan = tunggakan,
+                    Catatan = catatan,
                     Jumlah = jumlah
                 });
             }

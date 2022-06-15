@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -88,21 +89,67 @@ namespace MSNK.Controllers
             return View();
         }
 
+        private bool SukanExists(string perihal)
+        {
+            return _context.JSukan.Any(e => e.Perihal == perihal);
+        }
+
         // POST: JSukan/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Perihal,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] JSukan jSukan)
+        public async Task<IActionResult> Create(JSukan jSukan)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(jSukan);
-                await AddLogAsync("Tambah", jSukan.Perihal, jSukan.Perihal, 0, 0); 
-                await _context.SaveChangesAsync();
-                TempData[SD.Success] = "Data berjaya ditambah..!";
-                return RedirectToAction(nameof(Index));
-                
+                var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
+
+                var user = await _userManager.GetUserAsync(User);
+
+                JSukan m = new JSukan();
+                if (SukanExists(jSukan.Perihal) == false)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        //string noRujukan = GetKod(akJurnal.JKWId);
+                        if (jSukan != null)
+                        {
+                            m.Kod = jSukan.Kod;
+                            m.Perihal = jSukan.Perihal?.ToUpper() ?? null;
+                            m.IsElit = jSukan.IsElit;
+                            m.IsPembangunan = jSukan.IsPembangunan;
+                            m.UserId = username;
+                            m.TarMasuk = DateTime.Now;
+
+                            //m.SuTanggungan = _cart.Lines1.ToArray();
+
+                            _context.Add(m);
+
+                            //insert applog
+                            await AddLogAsync("Tambah", m.Kod + " - " + m.Perihal, m.Perihal, 0, 0);
+                            //insert applog end
+
+                            //await AddLogAsync("Tambah", noRujukan, kredit);
+                            await _context.SaveChangesAsync();
+
+                            //CartEmpty();
+                            TempData[SD.Success] = "Maklumat berjaya ditambah.";
+                            return RedirectToAction(nameof(Index));
+                        }
+                        //_context.Add(suJurulatih);
+                        //await _context.SaveChangesAsync();
+                        //return RedirectToAction(nameof(Index));
+
+                    }
+                }
+                else
+                {
+                    TempData[SD.Error] = "Sukan ini telah wujud..!";
+                }
+
+                return View(jSukan);
+
             }
             return View(jSukan);
         }
@@ -128,7 +175,7 @@ namespace MSNK.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Perihal,UserId,TarMasuk,UserIdKemaskini,TarKemaskini")] JSukan jSukan)
+        public async Task<IActionResult> Edit(int id,JSukan jSukan)
         {
             if (id != jSukan.Id)
             {

@@ -70,6 +70,7 @@
                 bil++;
 
                 var tabletype = item.Tunggakan != 0 ? "table-primary" : null;
+                
 
                 <tr class="@tabletype">
                     <td>@bil</td>
@@ -80,7 +81,7 @@
                     <td align="right">@Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")</td>
                     <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
                     <td align="right">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
-                    @if (item.SuJurulatih.TarikhBerhenti != null && !String.IsNullOrEmpty(item.SuJurulatih.TarikhBerhenti))
+                    @if (item.SuJurulatih.TarikhBerhenti != null)
                     {
                         <td class="text-uppercase">@item.SuJurulatih.TarikhAktif.ToString("MMM yyyy") @item.SuJurulatih.TarikhBerhenti.ToString("MMM yyyy") </td>
                     }

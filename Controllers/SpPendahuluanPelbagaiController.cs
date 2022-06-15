@@ -451,6 +451,8 @@ namespace MSNK.Controllers
             //var kw = await _kwRepo.GetById(spPendahuluanPelbagai.JKWId);
             //spPendahuluanPelbagai.JKW = kw;
             int jumlahPeserta = 0;
+            decimal jumlahPerihal = 0;
+
             if (spPendahuluanPelbagai == null)
             {
                 return NotFound();
@@ -461,7 +463,14 @@ namespace MSNK.Controllers
                 jumlahPeserta += item.Jumlah;
             }
 
+            foreach (var item in spPendahuluanPelbagai.SpPendahuluanPelbagai2)
+            {
+                jumlahPerihal += item.Jumlah;
+            }
+
             ViewData["jumlahPeserta"] = jumlahPeserta;
+            ViewData["jumlahPerihal"] = jumlahPerihal;
+
             PopulateList();
             PopulateTable(id);
             return View(spPendahuluanPelbagai);
@@ -507,7 +516,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "SP001C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId, int AkCartaId, int SuPekerjaId)
+        public async Task<IActionResult> Create(SpPendahuluanPelbagai spPendahuluanPelbagai, int JKWId, int SuPekerjaId)
         {
             //var user = "";
             //if (spPendahuluanPelbagai.UserIdKemaskini == "" || spPendahuluanPelbagai.UserIdKemaskini == null)
@@ -525,6 +534,11 @@ namespace MSNK.Controllers
             var sukan = _context.JSukan.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JSukanId);
             var user = await _userManager.GetUserAsync(User);
 
+            if (user.Email == "superadmin@idwal.com.my")
+            {
+                spPendahuluanPelbagai.SuPekerjaId = 1;
+            }
+
             if (ModelState.IsValid)
             {
                 if (spPendahuluanPelbagai != null && JKWId != 0)
@@ -534,10 +548,6 @@ namespace MSNK.Controllers
                     m.JenisPermohonan = spPendahuluanPelbagai.JenisPermohonan;
                     m.NoPermohonan = RunningNumber(spPendahuluanPelbagai);
                     m.Tarikh = spPendahuluanPelbagai.Tarikh;
-                    m.Penyertaan = spPendahuluanPelbagai.Penyertaan;
-                    m.Pertandingan = spPendahuluanPelbagai.Pertandingan;
-                    m.Pengelolaan = spPendahuluanPelbagai.Pengelolaan;
-                    m.ProgramBinaan = spPendahuluanPelbagai.ProgramBinaan;
                     m.JNegeriId = spPendahuluanPelbagai.JNegeriId;
                     m.JSukan = sukan;
                     m.Aktiviti = spPendahuluanPelbagai.Aktiviti?.ToUpper() ?? null;
@@ -545,6 +555,7 @@ namespace MSNK.Controllers
                     m.JTahapAktiviti = tahap;
                     m.AkCartaId = spPendahuluanPelbagai.AkCartaId;
                     m.JumKeseluruhan = spPendahuluanPelbagai.JumKeseluruhan;
+                    m.SuPekerjaId = spPendahuluanPelbagai?.SuPekerjaId;
                     m.FlPosting = 0;
                     //m.TarikhPosting = spPendahuluanPelbagai.TarikhPosting;
                     m.FlHapus = 0;
@@ -571,6 +582,7 @@ namespace MSNK.Controllers
                 }
             }
 
+            CartEmpty();
             PopulateList();
             return View(spPendahuluanPelbagai);
         }
@@ -586,6 +598,7 @@ namespace MSNK.Controllers
 
             var spPendahuluanPelbagai = await _spPendahuluanPelbagaiRepo.GetById((int)id);
             int jumlahPeserta = 0;
+            decimal jumlahPerihal = 0;
 
             if (spPendahuluanPelbagai == null)
             {
@@ -597,7 +610,14 @@ namespace MSNK.Controllers
                 jumlahPeserta += item.Jumlah;
             }
 
+            foreach (var item in spPendahuluanPelbagai.SpPendahuluanPelbagai2)
+            {
+                jumlahPerihal += item.Jumlah;
+            }
+
             ViewData["jumlahPeserta"] = jumlahPeserta;
+            ViewData["jumlahPerihal"] = jumlahPerihal;
+
             CartEmpty();
             PopulateList();
             PopulateTable(id);
@@ -906,7 +926,7 @@ namespace MSNK.Controllers
                                 Tarikh = sp.TarMasuk,
                                 Kod = sp.SuPekerja.NoGaji, // tak pasti tarik dari id pekerja ke?
                                 Penerima = sp.SuPekerja.Nama,
-                                VotId = sp.AkCartaId,
+                                VotId = (int)sp.AkCartaId,
                                 Rujukan = "SP/" + sp.NoPermohonan,
                                 Tanggungan = jumLulus,
                                 JBahagianId = sp.JBahagianId

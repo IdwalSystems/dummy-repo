@@ -13,12 +13,12 @@ namespace MSNK.Models.Modules
     {
         public int Id { get; set; }
         public string NoPermohonan { get; set; }
+
+        // note :
+        // JenisPermohonan = 1 -> Pembangunan Sukan & Atlet
+        // JenisPermohonan = 2 -> Pentadbiran
         [DisplayName("Jenis Permohonan")]
         public int JenisPermohonan { get; set; }
-        public bool Penyertaan { get; set; }
-        public bool Pertandingan { get; set; }
-        public bool Pengelolaan { get; set; }
-        public bool ProgramBinaan { get; set; }
         public string Tarikh { get; set; }
         public string Aktiviti { get; set; }
         public string Tempat { get; set; }
@@ -53,7 +53,7 @@ namespace MSNK.Models.Modules
         public DateTime? TarHapus { get; set; }
 
         //relationship
-        public int AkCartaId { get; set; }
+        public int? AkCartaId { get; set; }
         public AkCarta AkCarta { get; set; }
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }

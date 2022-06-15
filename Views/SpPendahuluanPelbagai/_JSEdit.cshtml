@@ -338,16 +338,17 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var name = $("TD", row).eq(0).html();
-        var amaun = $("TD", row).eq(2).html();
+        var amaun = $("TD", row).eq(7).html();
         var txtJumlahPeserta = $("#txtJumlahPeserta");
+        var JumlahPeserta = $("#jumlahPeserta");
         if (confirm("Hapus Peserta : " + name + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblPeserta")[0];
 
             //Sum value to Total text field
             var sum = 0;
-            sum = parseFloat(txtJumlahPeserta.val()) - parseFloat(amaun);
-            txtJumlahPeserta.val(sum);
+            sum = parseFloat(JumlahPeserta.val()) - parseFloat(amaun);
+            JumlahPeserta.val(sum);
 
             var SpPendahuluanPelbagai1 = {
                 JJantinaId: name,
@@ -376,16 +377,17 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var name = $("TD", row).eq(0).html();
-        var amaun = $("TD", row).eq(8).html();
+        var amaun = $("TD", row).eq(6).html();
         var txtJumlahPerihal = $("#txtJumlahPerihal");
+        var JumlahPerihal = $("#jumlahPerihal");
        if (confirm("Hapus : " + name + " ?")) {
            //Get the reference of the Table.
            var table = $("#tblPerihal")[0];
 
            //Sum value to Total text field
            var sum = 0;
-           sum = parseFloat(txtJumlahPerihal.val() - parseFloat(amaun));
-           txtJumlahPerihal.val(sum);
+           sum = parseFloat(JumlahPerihal.val() - parseFloat(amaun));
+           JumlahPerihal.val(sum);
 
            var SpPendahuluanPelbagai2 = {
                Indek: name,

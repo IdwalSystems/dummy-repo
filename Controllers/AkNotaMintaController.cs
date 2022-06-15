@@ -181,7 +181,8 @@ namespace MSNK.Controllers
                     FlPosting = item.FlPosting,
                     FlStatusSemak = item.FlStatusSemak,
                     FlStatusLulus = item.FlStatusLulus,
-                    JumlahPerihal = jumlahPerihal
+                    JumlahPerihal = jumlahPerihal,
+                    UserId = item.UserId
                 }
                 );
             }
@@ -278,7 +279,7 @@ namespace MSNK.Controllers
                                item.Baris,
                                item.Bil,
                                item.NoStok,
-                               item.Perihal,
+                               item.Perihal?.ToUpper()?? null,
                                item.Kuantiti,
                                item.Unit,
                                item.Harga,
@@ -527,7 +528,7 @@ namespace MSNK.Controllers
                                    akNotaMinta2.Baris,
                                    akNotaMinta2.Bil,
                                    akNotaMinta2.NoStok,
-                                   akNotaMinta2.Perihal,
+                                   akNotaMinta2.Perihal?.ToUpper()?? null,
                                    akNotaMinta2.Kuantiti,
                                    akNotaMinta2.Unit,
                                    akNotaMinta2.Harga,
@@ -660,7 +661,7 @@ namespace MSNK.Controllers
                                    akNotaMinta2.Baris,
                                    akNotaMinta2.Bil,
                                    akNotaMinta2.NoStok,
-                                   akNotaMinta2.Perihal,
+                                   akNotaMinta2.Perihal?.ToUpper()?? null,
                                    akNotaMinta2.Kuantiti,
                                    akNotaMinta2.Unit,
                                    akNotaMinta2.Harga,
@@ -750,7 +751,7 @@ namespace MSNK.Controllers
                     m.JKWId = JKWId;
                     m.JBahagianId = JBahagianId;
                     m.Tahun = akNotaMinta.Tahun;
-                    m.Tajuk = akNotaMinta.Tajuk;
+                    m.Tajuk = akNotaMinta.Tajuk?.ToUpper() ?? null;
                     m.AkPembekalId = akNotaMinta.AkPembekalId;
                     m.NoRujukan = noRujukan;
                     m.Tarikh = akNotaMinta.Tarikh;
@@ -774,7 +775,7 @@ namespace MSNK.Controllers
                     await _context.SaveChangesAsync();
 
                     CartEmpty();
-                    TempData[SD.Success] = "Maklumat berjaya ditambah. No rujukan pendaftaran adalah " + akNotaMinta.NoRujukan;
+                    TempData[SD.Success] = "Maklumat berjaya ditambah. No rujukan pendaftaran adalah " + noRujukan;
                     return RedirectToAction(nameof(Index));
                 }
             }

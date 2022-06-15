@@ -336,6 +336,7 @@ namespace MSNK.Controllers
                                    item.Amaun,
                                    item.Amaun,
                                    0,
+                                   "",
                                    item.Amaun);
                     }
                 }
@@ -357,6 +358,7 @@ namespace MSNK.Controllers
                                    0,
                                    0,
                                    0,
+                                   "",
                                    0);
 
                         }
@@ -376,6 +378,7 @@ namespace MSNK.Controllers
                                    0,
                                    0,
                                    0,
+                                   "",
                                    0);
                 }
             }
@@ -611,6 +614,7 @@ namespace MSNK.Controllers
                         suProfil1.Amaun,
                         suProfil1.AmaunSebelum,
                         suProfil1.Tunggakan,
+                        suProfil1.Catatan?.ToUpper()?? null,
                         suProfil1.Jumlah);
                 }
 
@@ -769,6 +773,7 @@ namespace MSNK.Controllers
                                 item.Amaun,
                                 item.AmaunSebelum,
                                 item.Tunggakan,
+                                item.Catatan?.ToUpper()?? null,
                                 item.Jumlah);
             }
 

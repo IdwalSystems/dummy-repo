@@ -1,5 +1,7 @@
 ﻿<script type="text/javascript">
 
+    // on change Carabayar
+    // on change Carabayar end
     // on change no Rujukan
     $("body").on('change', "#ddlKW , #Tarikh", function () {
         var kodkw = $("#ddlKW").val();
@@ -555,9 +557,17 @@
         if (value.text().indexOf("C -") >= 0 || value.text().indexOf("E -") >= 0 || value.text().indexOf("JP -") >= 0) {
             $("#txtNoCekAtauEFT").prop('disabled', false);
             $("#txtTarCekAtauEFT").prop('disabled', false);
+            $("#ddlJBank").prop('disabled', false);
+            if (value.text().indexOf("E -") >= 0) {
+                $("#ddlJBank").prop('required', true);
+            }
+            else {
+                $("#ddlJBank").prop('required', false);
+            }
         } else {
             $("#txtNoCekAtauEFT").prop('disabled', true);
             $("#txtTarCekAtauEFT").prop('disabled', true);
+            $("#ddlJBank").prop('disabled', true);
         }
     });
     //on change Cara Bayaran end

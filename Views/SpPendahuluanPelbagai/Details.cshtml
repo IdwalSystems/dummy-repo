@@ -1,6 +1,7 @@
 ﻿@model MSNK.Models.Modules.SpPendahuluanPelbagai
 
-@{ ViewData["Title"] = "Papar";
+@{
+    ViewData["Title"] = "Papar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var namaPekerja = "";
@@ -14,6 +15,16 @@
         namaPekerja = Model.SuPekerja.Nama;
     }
 
+    var kodCarta = "";
+    var NamaCarta = "";
+    if (Model.AkCartaId != null)
+    {
+        kodCarta = Model.AkCarta.Kod;
+        NamaCarta = Model.AkCarta.Perihal;
+    }
+    
+
+    
 
 }
 
@@ -35,68 +46,24 @@
                                 <div class="custom-control custom-radio col-md-4 ">
                                     <input class="custom-control-input" asp-for="JenisPermohonan" type="radio" name="jenisPermohonan" id="1" value="1">
                                     <label class="custom-control-label" for="1">
-                                        SUKAN ELITE
+                                        PEMBANGUNAN SUKAN DAN ATLET
                                     </label>
                                 </div>
                                 <div class="custom-control custom-radio col-md-4">
                                     <input class="custom-control-input" asp-for="JenisPermohonan" type="radio" name="jenisPermohonan" id="2" value="2">
                                     <label class="custom-control-label" for="2">
-                                        SUKAN BAKAT DAN PELAPIS
+                                        PENTADBIRAN
                                     </label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label name="Pemohon" class="control-label">Nama Pemohon</label><span class="text-danger control-label"></span>
                                 <input name="Pemohon" class="form-control form-control-sm" readonly value="@namaPekerja" />
                                 <input asp-for="SuPekerjaId" class="form-control form-control-sm" value="@ViewBag.IdPekerja" hidden />
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <div class="card mb-2">
-                                    <div class="form-row">
-                                        <div class="card-body p-1">
-                                            <div class="form-group col-sm">
-                                                <label>Penyertaan</label>
-                                                <div class="custom-control custom-radio">
-                                                    <input type="checkbox" data-val="true" id="Penyertaan" asp-for="Penyertaan" value="true" disabled>
-                                                    <input name="Penyertaan" type="hidden" value="false">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-body p-1">
-                                            <div class="form-group col-sm">
-                                                <label>Pengelolaan</label>
-                                                <div class="custom-control custom-radio">
-                                                    <input type="checkbox" data-val="true" id="Pengelolaan" asp-for="Pengelolaan" value="true" disabled>
-                                                    <input name="Pengelolaan" type="hidden" value="false">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-body p-1">
-                                            <div class="form-group col-sm">
-                                                <label>Pertandingan</label>
-                                                <div class="custom-control custom-radio">
-                                                    <input type="checkbox" data-val="true" id="Pertandingan" asp-for="Pertandingan" value="true" disabled>
-                                                    <input name="Pertandingan" type="hidden" value="false" >
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-body p-1">
-                                            <div class="form-group col-sm">
-                                                <label>Program Binaan</label>
-                                                <div class="custom-control custom-radio">
-                                                    <input type="checkbox" data-val="true" id="ProgramBinaan" asp-for="ProgramBinaan" value="true" disabled>
-                                                    <input name="ProgramBinaan" type="hidden" value="false">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -172,7 +139,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label asp-for="AkCartaId" class="control-label">Kod Objek/Vot</label>
-                                <input class="form-control form-control-sm text-uppercase" value="@Model.AkCarta.Kod - @Model.AkCarta.Perihal " readonly />
+                                <input class="form-control form-control-sm text-uppercase" value="@kodCarta - @NamaCarta " readonly />
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -294,7 +261,7 @@
                         <div class="card-footer">
                             <div class="form-group">
                                 <label class="control-label">Jumlah Perihal (RM)</label>
-                                <input asp-for="JumKeseluruhan" class="form-control form-control-sm" id="jumlahPerihal" readonly />
+                                <input value="@ViewData["jumlahPerihal"]" class="form-control form-control-sm" id="jumlahPerihal" readonly />
                             </div>
                         </div>
                     </div>

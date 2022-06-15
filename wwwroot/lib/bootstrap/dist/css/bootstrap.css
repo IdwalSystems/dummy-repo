@@ -6521,6 +6521,16 @@ button.bg-primary:focus {
   background-color: #6c757d !important;
 }
 
+.bg-pastel-green {
+    background-color: #DBF3D0 !important;
+}
+
+a.bg-pastel-green:hover, a.bg-pastel-green:focus,
+button.bg-pastel-green:hover,
+button.bg-pastel-green:focus {
+    background-color: #DAF7A6 !important;
+}
+
 a.bg-secondary:hover, a.bg-secondary:focus,
 button.bg-secondary:hover,
 button.bg-secondary:focus {

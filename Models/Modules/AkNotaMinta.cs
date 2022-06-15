@@ -23,7 +23,13 @@ namespace MSNK.Models.Modules
         [DisplayName("Jumlah RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
+
         //flag
+        //note :
+        // FlJenis = 0 -> Pesanan Tempatan
+        // FlJenis = 1 -> Inden Kerja
+        [DisplayName("Inden Kerja / Pesanan Tempatan")]
+        public int FlJenis { get; set; }
         [DisplayName("Posting")]
         [DefaultValue("0")]
         public int FlPosting { get; set; }

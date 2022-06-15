@@ -129,12 +129,6 @@
                 <th>
                     Cetak
                 </th>
-                <th>
-                    Lulus
-                </th>
-                <th>
-                    Posting
-                </th>
                 <th></th>
             </tr>
         </thead>
@@ -171,26 +165,6 @@
                         else
                         {
                             <label class="mb-0">SUDAH</label>
-                        }
-                    </td>
-                    <td>
-                        @if (item.FlStatusLulus == 0)
-                        {
-                            <label class="mb-0">BELUM</label>
-                        }
-                        else
-                        {
-                            <label class="mb-0">SUDAH</label>
-                        }
-                    </td>
-                    <td>
-                        @if (item.FlPosting == 0)
-                        {
-                            <label class="mb-0">TIDAK</label>
-                        }
-                        else
-                        {
-                            <label class="mb-0">YA</label>
                         }
                     </td>
                     <td class="action-button">
@@ -351,7 +325,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="col-form-label">Jumlah Lulus RM</label>
-                                <input type="number" class="form-control form-control-sm moLulus" name="jumLulus" placeholder="0.00" step="0.01">
+                                <input type="number" class="form-control form-control-sm moLulus" name="jumLulus" value="0.00" step="0.01">
                             </div>
                         </div>
                     </div>

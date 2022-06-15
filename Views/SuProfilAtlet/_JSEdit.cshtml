@@ -64,6 +64,7 @@
                     $("#moAmaun1").val(r.record.amaun);
                     $("#moAmaunSebelum").val(r.record.amaunSebelum.toFixed(2));
                     $("#moTunggakan").val(r.record.tunggakan.toFixed(2));
+                    $("#moCatatan").val(r.record.catatan);
                     $("#moJumlah1").val(r.record.jumlah);
 
                     //show modal atlet
@@ -84,6 +85,7 @@
         var amaunSebelum = $("#moAmaunSebelum").val();
         var tunggakan = $("#moTunggakan").val();
         var suAtletId = $("#moSuAtletId").val();
+        var catatan = $("#moCatatan").val();
         var jumlah1 = $("#moJumlah1").val();
         var jumlah = $("#jumlahKeseluruhan");
 
@@ -97,6 +99,7 @@
             Amaun: amaun,
             AmaunSebelum: amaunSebelum,
             Tunggakan: tunggakan,
+            Catatan: catatan,
             Jumlah: jumlah1
         }
 
@@ -126,6 +129,7 @@
                                 var item1 = r.record[i];
                                 var noCekEFT = "";
                                 var tarCekEFT = "";
+                                var catatan = "";
                                 if (!(item1.noCekEFT == null ))
                                 {
                                     noCekEFT = item1.noCekEFT; 
@@ -133,6 +137,10 @@
                                 if (!(item1.tarCekEFT == null ))
                                 {
                                     tarCekEFT = item1.tarCekEFT; 
+                                }
+                                if (!(item1.catatan == null ))
+                                {
+                                    catatan = item1.catatan; 
                                 }
                                  var str = "<tr><td id='suAtletId' hidden>" + item1.suAtletId +
                                         "</td><td class='text-uppercase'>" + item1.suAtlet.nama +
@@ -145,6 +153,7 @@
                                         "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                         "</td><td class='text-right'>" + (item1.amaunSebelum).toFixed(2) +
                                         "</td><td class='text-right'>" + (item1.tunggakan).toFixed(2) +
+                                        "</td><td class='text-uppercase'>" + catatan +
                                         "</td><td class='text-right'>" + (item1.jumlah).toFixed(2) +
                                          "</td><td>" +
                                         "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalAtlet' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +

@@ -96,6 +96,7 @@
                                         <th style="width:7%">Amaun RM</th>
                                         <th style="width:7%">Amaun Sebelum RM</th>
                                         <th style="width:7%">Tunggakan RM</th>
+                                        z<th style="width:7%">Catatan</th>
                                         <th style="width:7%">Jumlah RM</th>
                                         <th style="width:10%"></th>
                                     </tr>
@@ -144,6 +145,9 @@
                                             </td>
                                             <td>
                                                 @Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")
+                                            </td>
+                                            <td class=text-uppercase>
+                                                @item.Catatan
                                             </td>
                                             <td>
                                                 @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
@@ -258,6 +262,14 @@
                             <div class="form-group">
                                 <label class="col-form-label">Jumlah RM</label>
                                 <input type="text" class="form-control form-control-sm moJumlah1" id="moJumlah1" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-form-label">Catatan</label>
+                                <textarea class="form-control form-control-sm text-uppercase" id="moCatatan" rows="2"></textarea>
                             </div>
                         </div>
                     </div>

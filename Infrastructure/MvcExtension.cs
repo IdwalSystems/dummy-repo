@@ -18,7 +18,7 @@ namespace MSNK.Infrastructure
                 : "";
         }
 
-        public static string ActiveBorderClass(this IHtmlHelper htmlHelper, string controllers = null, string actions = null, string cssClass = "border rounded")
+        public static string ActiveSideBarClass(this IHtmlHelper htmlHelper, string controllers = null, string actions = null, string cssClass = "bg-pastel-green rounded")
         {
             var currentController = htmlHelper?.ViewContext.RouteData.Values["controller"] as string;
             var currentAction = htmlHelper?.ViewContext.RouteData.Values["action"] as string;

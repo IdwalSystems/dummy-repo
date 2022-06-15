@@ -20,10 +20,10 @@
     @Html.ActiveClass("AkPOLaras")" href="#submenuTanggungan" data-toggle="collapse" data-target="#submenuTanggungan"><i class="far fa-handshake mr-2"></i> Tanggungan</a>
     <div class="collapse" id="submenuTanggungan" aria-expanded="false">
         <ul class="flex-column pl-2 nav">
-            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveClass("AkNotaMinta")" asp-controller="AkNotaMinta" asp-action="Index"><span>Nota Minta</span></a></li>
-            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveClass("AkPO")" asp-area="" asp-controller="AkPO" asp-action="Index"><span>Pesanan Tempatan</span></a></li>
-            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveClass("AkBelian")" asp-area="" asp-controller="AkBelian" asp-action="Index"><span>Inbois Pembekal</span></a></li>
-            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveClass("AkPOLaras")" asp-area="" asp-controller="AkPOLaras" asp-action="Index"><span>Pelarasan Pesanan Tempatan</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkNotaMinta")" asp-controller="AkNotaMinta" asp-action="Index"><span>Nota Minta</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkPO")" asp-area="" asp-controller="AkPO" asp-action="Index"><span>Pesanan Tempatan</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkBelian")" asp-area="" asp-controller="AkBelian" asp-action="Index"><span>Inbois Pembekal</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkPOLaras")" asp-area="" asp-controller="AkPOLaras" asp-action="Index"><span>Pelarasan Pesanan Tempatan</span></a></li>
         </ul>
     </div>
 </li>

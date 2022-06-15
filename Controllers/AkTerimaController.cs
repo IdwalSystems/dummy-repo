@@ -479,7 +479,7 @@ namespace MSNK.Controllers
 
                 _cart.AddItem1(AkTerimaId,
                                result.JumLulus,
-                               result.AkCartaId);
+                               (int)result.AkCartaId);
 
                 return Json(new { result = "OK", record = result });
             }

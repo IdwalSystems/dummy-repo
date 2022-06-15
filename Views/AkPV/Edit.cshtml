@@ -212,7 +212,7 @@
 
 
                     <div class="form-row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label asp-for="JCaraBayarId" class="control-label"></label><span class="text-danger control-label">*</span>
                             <select class="form-control form-control-sm" asp-for="JCaraBayarId" required>
                                 <option value="0" disabled selected>-- Pilih Cara Bayaran --</option>
@@ -223,14 +223,26 @@
                             </select>
                             <span asp-validation-for="JCaraBayarId" class="text-danger"></span>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <label asp-for="JBankId" class="control-label"></label>
+                            <select class="form-control form-control-sm" asp-for="JBankId" id="ddlJBank">
+                                <option value="0" disabled selected>-- Pilih Bank --</option>
+                                @foreach (var s in ViewBag.JBank)
+                                {
+                                    <option value="@s.Id" class="text-uppercase">@s.Kod - @s.Nama</option>
+                                }
+                            </select>
+
+                            <span asp-validation-for="JBankId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="NoCekAtauEFT" class="control-label"></label>
                                 <input asp-for="NoCekAtauEFT" class="form-control form-control-sm form-control-sm" />
                                 <span asp-validation-for="NoCekAtauEFT" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="TarCekAtauEFT" class="control-label"></label>
                                 <input asp-for="TarCekAtauEFT" class="form-control form-control-sm" />
@@ -256,7 +268,7 @@
                             <div class="card mb-2">
                                 <div class="card-body pb-1 pt-1">
                                     <div class="form-group mb-0 mt-1">
-                                        <label class="control-label">Jenis AKB</label>
+                                        <label class="control-label">Jenis ABB</label>
                                     </div>
                                     <div class="form-row col-sm ml-2">
                                         <div class="custom-control custom-radio col-md-6 " >
@@ -390,7 +402,7 @@
                                                 }
                                             </select>
                                         </td>
-                                        <td style="width:50%"><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" placeholder="0.00"></td>
+                                        <td style="width:50%"><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" value="0.00"></td>
                                         <td><button class="btn btn-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
                                     </tr>
                                 </tfoot>
@@ -477,10 +489,10 @@
                                                     </select>
                                                 </td>
                                                 <td><input class="form-control form-control-sm" type="datetime-local" id="txtTarInbois" readonly></td>
-                                                <td><input class="form-control form-control-sm" type="number" id="txtAmaunInbois" step="0.01" placeholder="0.00"></td>
+                                                <td><input class="form-control form-control-sm" type="number" id="txtAmaunInbois" step="0.01" value="0.00"></td>
                                                 <td><input class="form-control form-control-sm" type="text" id="txtNoPO" value="-" readonly></td>
                                                 <td><input class="form-control form-control-sm" type="datetime-local" id="txtTarPO" readonly></td>
-                                                <td><input class="form-control form-control-sm" type="number" id="txtAmaunPO" step="0.01" placeholder="0.00" readonly></td>
+                                                <td><input class="form-control form-control-sm" type="number" id="txtAmaunPO" step="0.01" value="0.00" readonly></td>
                                                 <td><button class="btn btn-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
                                             </tr>
                                         </tfoot>

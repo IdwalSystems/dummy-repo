@@ -1229,7 +1229,7 @@ namespace MSNK.Controllers
                 
                 _cart.AddItem1(AkPVId,
                                result.JumLulus,
-                               result.AkCartaId);
+                               (int)result.AkCartaId);
 
                 return Json(new { result = "OK", record = result });
             }
@@ -2379,6 +2379,7 @@ namespace MSNK.Controllers
             data.AkPV = akPV;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
             data.AkPV2 = akPV.AkPV2;
+            data.IsAKB = akPV.IsAKB;
 
             switch (akPV.FlKategoriPenerima)
             {

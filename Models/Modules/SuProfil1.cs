@@ -23,6 +23,7 @@ namespace MSNK.Models.Modules
         [Column(TypeName = "decimal(18, 2)")]
         [DisplayName("Tunggakan RM")]
         public decimal Tunggakan { get; set; }
+        public string Catatan { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         [DisplayName("Jumlah RM")]
         public decimal Jumlah { get; set; }

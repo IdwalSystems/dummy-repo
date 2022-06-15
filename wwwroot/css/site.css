@@ -144,8 +144,18 @@ body {
     color: #a54ea8;
 }
 
-a.text-purple:hover, a.text-tertiary:focus {
+a.text-purple:hover, a.text-purple:focus {
     color: #7c3480;
+}
+
+.bg-pastel-green {
+    background-color: #DBF3D0 !important;
+}
+
+a.bg-pastel-green:hover, a.bg-pastel-green:focus,
+button.bg-pastel-green:hover,
+button.bg-pastel-green:focus {
+    background-color: #DAF7A6 !important;
 }
 /*AK CODE*/
 

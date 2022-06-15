@@ -135,6 +135,7 @@
                                         <th style="width:8%">Amaun RM</th>
                                         <th style="width:8%">Amaun Sebelum RM</th>
                                         <th style="width:8%">Tunggakan RM</th>
+                                        <th style="width:7%">Catatan</th>
                                         <th style="width:8%">Jumlah RM</th>
                                     </tr>
                                 </thead>
@@ -183,6 +184,9 @@
                                             </td>
                                             <td>
                                                 @Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")
+                                            </td>
+                                            <td class=text-uppercase>
+                                                @item.Catatan
                                             </td>
                                             <td>
                                                 @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")

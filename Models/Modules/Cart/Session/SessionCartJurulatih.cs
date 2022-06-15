@@ -29,6 +29,7 @@ namespace MSNK.Models.Modules.Cart.Session
             decimal amaun,
             decimal amaunsebelum,
             decimal tunggakan,
+            string catatan,
             decimal jumlah
            )
         {
@@ -41,6 +42,7 @@ namespace MSNK.Models.Modules.Cart.Session
             amaun,
             amaunsebelum,
             tunggakan,
+            catatan,
             jumlah
             );
 
