@@ -250,7 +250,7 @@
                         </div>
                         <div class="col-md-3">
                             <label asp-for="JBankId" class="control-label"></label>
-                            <select class="form-control form-control-sm" asp-for="JBankId" id="ddlJBank">
+                            <select class="form-control form-control-sm select2" asp-for="JBankId" id="ddlJBank">
                                 <option value="0" disabled selected>-- Pilih Cara Bayaran --</option>
                                 @foreach (var s in ViewBag.JBank)
                                 {

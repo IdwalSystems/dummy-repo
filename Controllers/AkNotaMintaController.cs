@@ -176,6 +176,7 @@ namespace MSNK.Controllers
                     Jumlah = item.Jumlah,
                     NamaSykt = namaSykt,
                     Alamat1 = alamat1,
+                    Tajuk = item.Tajuk,
                     FlHapus = item.FlHapus,
                     FlCetak = item.FlCetak,
                     FlPosting = item.FlPosting,
