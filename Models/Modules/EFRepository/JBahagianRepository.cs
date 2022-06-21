@@ -25,6 +25,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.JBahagian
                 .Include(x=> x.JKW)
+                .Include(x => x.JPTJ)
                 .ToListAsync();
         }
 
@@ -33,6 +34,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JBahagian
                 .IgnoreQueryFilters()
                 .Include(x => x.JKW)
+                .Include(x => x.JPTJ)
                 .ToListAsync();
         }
 
@@ -40,6 +42,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.JBahagian
                 .Include(x => x.JKW)
+                .Include(x => x.JPTJ)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -48,6 +51,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.JBahagian
                 .IgnoreQueryFilters()
                 .Include(x => x.JKW)
+                .Include(x => x.JPTJ)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 

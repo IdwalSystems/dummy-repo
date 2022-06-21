@@ -48,6 +48,9 @@
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#StatusPO" id="tabPO">Pesanan Tempatan</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#StatusPendahuluanPelbagai" id="tabPendahuluanPelbagai">Pendahuluan Pelbagai</a>
+                </li>
             </ul>
             @*Tab panes*@
             <div class="tab-content">
@@ -67,10 +70,13 @@
                         </div>
                     </div>
                 </div>
-                <div id="menu2" class="container tab-pane fade" hidden>
+                <div id="StatusPendahuluanPelbagai" class="tab-pane fade">
                     <br>
-                    <h3>Menu 2</h3>
-                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            <partial name="_StatusPendahuluanPelbagaiWidget" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

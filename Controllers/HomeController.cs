@@ -66,9 +66,18 @@ namespace MSNK.Controllers
                     .ToListAsync();
                 // Widget Status PO end
 
+                // Widget Status Pendahuluan Pelbagai
+                var spPendahuluanPelbagai = await _context.SpPendahuluanPelbagai
+                    .Include(b => b.SuPekerja)
+                    .Where(b => b.FlPosting == 0)
+                    .OrderByDescending(b => b.Tarikh)
+                    .ToListAsync();
+                // Widget Status Pendahuluan Pelbagai end
+
                 dynamic dyModel = new ExpandoObject();
                 dyModel.AkPO = akPO;
                 dyModel.AkNotaMinta = akNotaMinta;
+                dyModel.SpPendahuluanPelbagai = spPendahuluanPelbagai;
                 return View(dyModel);
             }
             

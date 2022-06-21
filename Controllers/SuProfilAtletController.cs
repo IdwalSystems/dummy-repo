@@ -992,6 +992,7 @@ namespace MSNK.Controllers
             dyModel.SuProfil = obj;
             dyModel.SuProfil1Grouped = obj.SuProfil1.GroupBy(p => p.JSukan.Perihal);
             dyModel.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            dyModel.BulanSingkatan = Tools.BulanSingkatan(obj.Bulan);
             dyModel.Username = user.UserName;
             dyModel.CompanyDetail = company;
 
@@ -1009,7 +1010,7 @@ namespace MSNK.Controllers
             return new ViewAsPdf("SuProfilAtletPrintPdf", dyModel)
             {
                 PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
-                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
                 //CustomSwitches = "--footer-center \"  Tarikh: " +
                 //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
                 //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",

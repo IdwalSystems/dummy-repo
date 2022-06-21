@@ -19,6 +19,7 @@ namespace MSNK.Data
         public DbSet<JCaraBayar> JCaraBayar { get; set; }
         public DbSet<SiModul> SiModul { get; set; }
         public DbSet<JBank> JBank { get; set; }
+        public DbSet<JPTJ> JPTJ { get; set; }
         public DbSet<JNegeri> JNegeri { get; set; }
         public DbSet<AkBank> AkBank { get; set; }
         public DbSet<AkCarta> AkCarta { get; set; }

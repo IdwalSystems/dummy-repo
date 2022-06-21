@@ -116,7 +116,10 @@ namespace MSNK.Controllers
 
             List<JKW> list = _context.JKW.ToList();
 
+            List<JPTJ> ptjlist = _context.JPTJ.ToList();
+
             ViewBag.JKw = list;
+            ViewBag.JPtj = ptjlist;
             return View();
         }
 
@@ -208,8 +211,9 @@ namespace MSNK.Controllers
                 if (ModelState.IsValid)
                 {
                     m.JKWId = JKWId;
+                    m.JPTJId = jBahagian.JPTJId;
                     m.Kod = noRujukan;
-                    m.Perihal = jBahagian.Perihal;
+                    m.Perihal = jBahagian.Perihal?.ToUpper() ?? null;
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
 
@@ -241,8 +245,10 @@ namespace MSNK.Controllers
                 return NotFound();
             }
             List<JKW> list = _context.JKW.ToList();
+            List<JPTJ> ptjList = _context.JPTJ.ToList();
 
-            ViewBag.JKw = list; 
+            ViewBag.JKw = list;
+            ViewBag.JPtj = ptjList;
             return View(jBahagian);
         }
 
@@ -268,12 +274,15 @@ namespace MSNK.Controllers
 
                     // list of input that cannot be change
                     jBahagian.JKWId = jBahagianAsal.JKWId;
+                    jBahagian.JPTJId = jBahagianAsal.JPTJId;
                     jBahagian.Kod = jBahagianAsal.Kod;
                     jBahagian.TarMasuk = jBahagianAsal.TarMasuk;
                     jBahagian.UserId = jBahagianAsal.UserId;
                     var perihalAsal = jBahagianAsal.Perihal;
                     // list of input that cannot be change end
                     _context.Entry(jBahagianAsal).State = EntityState.Detached;
+
+                    jBahagian.Perihal = jBahagian.Perihal?.ToUpper()?? null;
 
                     jBahagian.UserIdKemaskini = user.UserName;
                     jBahagian.TarKemaskini = DateTime.Now;

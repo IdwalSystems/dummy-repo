@@ -25,6 +25,7 @@ namespace MSNK.Models.Administration
         //relationship
         public int? SuPekerjaId { get; set; }
         public SuPekerja SuPekerja { get; set; }
+        public int[] JBahagianList { get; set; }
         
     }
 }

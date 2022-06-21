@@ -39,7 +39,7 @@
 </div>
 <div class="row flexrow mb-3">
     <div class="col-8 text-center text-uppercase">
-        <h4 class="mb-1"><strong>Penyata Pembayaran Elaun Jurulatih Separuh Masa (JSM) Bagi Bulan @Model.SuProfil.Bulan Tahun @Model.SuProfil.Tahun</strong></h4>
+        <h4 class="mb-1"><strong>Penyata Pembayaran Elaun Jurulatih Separuh Masa (JSM) Bagi Bulan @Model.BulanSingkatan Tahun @Model.SuProfil.Tahun</strong></h4>
     </div>
 </div>
 
@@ -53,9 +53,10 @@
                 <th>NO AKAUN BANK</th>
                 <th>BANK</th>
                 <th>TUNGGAKAN RM</th>
+                <th>CATATAN</th>
                 <th>ELAUN RM</th>
                 <th>JUMLAH RM</th>
-                <th>CATATAN</th>
+                <th>TEMPOH TUNGGAKAN</th>
             </tr>
         </thead>
 
@@ -64,7 +65,7 @@
              
             var sum = 0;
 
-            <tr><th colspan="9" class="text-uppercase bg-secondary text-white"> @group.Key</th></tr>
+            <tr><th colspan="10" class="text-uppercase bg-secondary text-white"> @group.Key</th></tr>
             foreach (var item in group)
             {
                 bil++;
@@ -78,9 +79,10 @@
                     <td class="text-uppercase">@item.SuJurulatih.NoKp</td>
                     <td class="text-uppercase">@item.SuJurulatih.NoAkaunBank</td>
                     <td class="text-uppercase">@item.SuJurulatih.JBank.Kod</td>
-                    <td align="right">@Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")</td>
-                    <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
-                    <td align="right">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+                    <td align="right" width="5%">@Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")</td>
+                    <td class="text-uppercase" width="30%">@item.Catatan</td>
+                    <td align="right" width="5%">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                    <td align="right" width="5%" class="table-primary">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
                     @if (item.SuJurulatih.TarikhBerhenti != null)
                     {
                         <td class="text-uppercase">@item.SuJurulatih.TarikhAktif.ToString("MMM yyyy") @item.SuJurulatih.TarikhBerhenti.ToString("MMM yyyy") </td>
@@ -97,7 +99,7 @@
             }
              <tr class="font-weight-bold text-uppercase">
                 <td class="text-right bg-light" colspan="8">@group.Key RM</td>
-                <td class="text-right">@Convert.ToDecimal(sum).ToString("#,##0.00")</td>
+                <td class="text-right table-primary">@Convert.ToDecimal(sum).ToString("#,##0.00")</td>
             </tr>
             <tr>
                 <td class="text-right border-white" colspan="9">
@@ -107,7 +109,7 @@
 
         <tr class="font-weight-bold table-primary">
             <td class="text-right text-uppercase" colspan="8">Jumlah Keseluruhan RM</td>
-            <td class="text-right">@Convert.ToDecimal(Model.SuProfil.Jumlah).ToString("#,##0.00")</td>
+            <td class="text-right table-primary">@Convert.ToDecimal(Model.SuProfil.Jumlah).ToString("#,##0.00")</td>
         </tr>
         <tfoot>
 

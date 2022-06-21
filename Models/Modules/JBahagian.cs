@@ -19,6 +19,9 @@ namespace MSNK.Models.Modules
         [DisplayName("Kumpulan Wang")]
         [Required(ErrorMessage = "Kumpulan Wang Diperlukan")]
         public int JKWId { get; set; }
+        public JPTJ JPTJ { get; set; }
+        [DisplayName("PTJ")]
+        public int? JPTJId { get; set; }
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
 
