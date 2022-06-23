@@ -374,7 +374,7 @@
 
         //Sum value to Total text field
         var sum = 0;
-        sum = parseFloat(txtKadar.val()) * parseFloat(txtBil.val()) * parseFloat(txtBulan.val());
+        sum = parseFloat(txtKadar.val()) * parseFloat(txtBil.val()) * parseFloat(txtBulan.val()) + parseFloat(jumlahPerihal.val());
         jumlahPerihal.val(sum.toFixed(2));
 
         //Get the reference of the Table's TBODY element.
@@ -761,7 +761,7 @@
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
-                                    "</td><td class='text-right'>" + item1.baris +
+                                    "</td><td>" + item1.baris +
                                     "</td><td class='text-uppercase'>" + item1.perihal +
                                     "</td><td class='text-right'>" + (item1.kadar).toFixed(2) +
                                     "</td><td class='text-right'>" + item1.bil +

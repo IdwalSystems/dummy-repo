@@ -87,13 +87,7 @@
                     Jum Kredit RM
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Posting)
-                </th>
-                <th>
                     @Html.DisplayNameFor(model => model.Cetak)
-                </th>
-                <th>
-                    Hapus
                 </th>
                 <th class="action-button" width="5%"></th>
             </tr>
@@ -120,16 +114,6 @@
                         @Convert.ToDecimal(item.JumKredit).ToString("#,##0.00")
                     </td>
                     <td>
-                        @if (item.Posting == 0)
-                        {
-                            <label class="mb-0">BELUM</label>
-                        }
-                        else
-                        {
-                            <label class="mb-0">SUDAH</label>
-                        }
-                    </td>
-                    <td>
                         @if (item.Cetak == 0)
                         {
                             <label class="mb-0">BELUM</label>
@@ -137,16 +121,6 @@
                         else
                         {
                             <label class="mb-0">SUDAH</label>
-                        }
-                    </td>
-                    <td>
-                        @if (item.FlHapus == 0)
-                        {
-                            <label class="mb-0">TIDAK</label>
-                        }
-                        else
-                        {
-                            <label class="mb-0">YA</label>
                         }
                     </td>
                     <td class="action-button">

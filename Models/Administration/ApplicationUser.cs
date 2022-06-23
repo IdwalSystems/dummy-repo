@@ -25,7 +25,10 @@ namespace MSNK.Models.Administration
         //relationship
         public int? SuPekerjaId { get; set; }
         public SuPekerja SuPekerja { get; set; }
-        public int[] JBahagianList { get; set; }
-        
+        [DisplayName("Bahagian")]
+        public string JBahagianList { get; set; }
+        [NotMapped]
+        public List<int> SelectedJBahagianList { get; set; }
+
     }
 }

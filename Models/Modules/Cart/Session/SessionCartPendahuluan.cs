@@ -60,7 +60,7 @@ namespace MSNK.Models.Modules.Cart.Session
         public override void AddItem2(
             int SpPendahuluanPelbagaiId,
             int Indek,
-            int Baris,
+            decimal Baris,
             string Perihal,
             decimal Kadar,
             decimal Bil,

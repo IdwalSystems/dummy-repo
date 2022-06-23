@@ -87,12 +87,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Alamat1)
                 </th>
-                <th>
-                    Posting
-                </th>
-                <th>
-                    Batal
-                </th>
                 <th class="action-button"></th>
             </tr>
         </thead>
@@ -121,26 +115,6 @@
                     </td>
                     <td class="text-uppercase">
                         @item.Alamat1
-                    </td>
-                    <td>
-                        @if (item.FlPosting == 0)
-                        {
-                            <label class="mb-0">BELUM</label>
-                        }
-                        else
-                        {
-                            <label class="mb-0">SUDAH</label>
-                        }
-                    </td>
-                    <td>
-                        @if (item.FlHapus == 0)
-                        {
-                            <label class="mb-0">TIDAK</label>
-                        }
-                        else
-                        {
-                            <label class="mb-0">YA</label>
-                        }
                     </td>
                     <td class="action-button">
                         <div class="btn-group" role="group" aria-label="action">

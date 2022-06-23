@@ -125,6 +125,8 @@ namespace MSNK.Controllers
 
             ViewBag.SuPekerja = await _suPekerjaRepo.GetAll();
 
+            ViewBag.JBahagian = _db.JBahagian.ToList();
+
             return View(registerViewModel);
         }
 
@@ -181,7 +183,17 @@ namespace MSNK.Controllers
                 {
                     model.Nama = pekerja.Nama;
                     model.Password = "Spmb1234#";
-
+                    // select multiple dropdownlist
+                    if (model.SelectedJBahagianList != null)
+                    {
+                        model.JBahagianList = String.Join(",", model.SelectedJBahagianList);
+                    }
+                    else
+                    {
+                        TempData[SD.Error] = "Sila pilih Bahagian bagi pengguna ini.";
+                        return View(model);
+                    }
+                    // select multiple dropdownlist end
                     if (ModelState.IsValid)
                     {
                         var user = new ApplicationUser
@@ -189,7 +201,8 @@ namespace MSNK.Controllers
                             UserName = model.Email,
                             Email = model.Email,
                             Nama = pekerja.Nama,
-                            SuPekerjaId = model.SuPekerjaId
+                            SuPekerjaId = model.SuPekerjaId,
+                            JBahagianList = model.JBahagianList
                         };
                         var result = await _userManager.CreateAsync(user, model.Password);
                         if (result.Succeeded)

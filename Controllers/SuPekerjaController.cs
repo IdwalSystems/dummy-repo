@@ -214,16 +214,16 @@ namespace MSNK.Controllers
                                 if (suPekerja != null)
                                 {
                                     m.NoGaji = GetNoGaji();
-                                    m.Nama = suPekerja.Nama;
+                                    m.Nama = suPekerja.Nama?.ToUpper()?? null;
                                     m.NoKp = suPekerja.NoKp;
-                                    m.Alamat1 = suPekerja.Alamat1;
-                                    m.Alamat2 = suPekerja.Alamat2;
-                                    m.Alamat3 = suPekerja.Alamat3;
+                                    m.Alamat1 = suPekerja.Alamat1?.ToUpper()?? null;
+                                    m.Alamat2 = suPekerja.Alamat2?.ToUpper()?? null;
+                                    m.Alamat3 = suPekerja.Alamat3?.ToUpper()?? null;
                                     m.Poskod = suPekerja.Poskod;
-                                    m.Bandar = suPekerja.Bandar;
+                                    m.Bandar = suPekerja.Bandar?.ToUpper()?? null;
                                     m.JNegeriId = suPekerja.JNegeriId;
                                     m.JBankId = suPekerja.JBankId;
-                                    m.Jawatan = suPekerja.Jawatan;
+                                    m.Jawatan = suPekerja.Jawatan?.ToUpper()?? null;
                                     //m.TelefonRumah = suPekerja.TelefonRumah;
                                     //m.TelefonBimbit = suPekerja.TelefonBimbit;
                                     m.Emel = suPekerja.Emel;
@@ -331,6 +331,15 @@ namespace MSNK.Controllers
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
                     // list of input that cannot be change end
+
+                    // list of input to uppercase
+                    suPekerja.Nama = suPekerja.Nama?.ToUpper()?? null;
+                    suPekerja.Alamat1 = suPekerja.Alamat1?.ToUpper()?? null;
+                    suPekerja.Alamat2 = suPekerja.Alamat2?.ToUpper()?? null;
+                    suPekerja.Alamat3 = suPekerja.Alamat3?.ToUpper()?? null;
+                    suPekerja.Bandar = suPekerja.Bandar?.ToUpper()?? null;
+                    suPekerja.Jawatan = suPekerja.Jawatan?.ToUpper()?? null;
+                    // list of input to uppercase end
 
                     _context.Entry(dataAsal).State = EntityState.Detached;
 

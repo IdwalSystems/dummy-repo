@@ -1801,7 +1801,9 @@ namespace MSNK.Controllers
             data.CompanyDetail = company;
             data.AkTerima = akTerima;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
-            data.username = user.UserName;
+            var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
+
+            data.username = namaUser.Nama;
 
             //update cetak -> 1
             akTerima.FlCetak = 1;

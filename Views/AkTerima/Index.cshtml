@@ -69,8 +69,6 @@
                 <th>No KP</th>
                 <th>Nama</th>
                 <th>Cetak</th>
-                <th>Posting</th>
-                <th>Batal</th>
                 <th width="2%"></th>
             </tr>
         </thead>
@@ -105,26 +103,6 @@
                         else
                         {
                             <label class="mb-0">SUDAH</label>
-                        }
-                    </td>
-                    <td>
-                        @if (item.FlPosting == 0)
-                        {
-                            <label class="mb-0">BELUM</label>
-                        }
-                        else
-                        {
-                            <label class="mb-0">SUDAH</label>
-                        }
-                    </td>
-                    <td>
-                        @if (item.FlHapus == 0)
-                        {
-                            <label class="mb-0">TIDAK</label>
-                        }
-                        else
-                        {
-                            <label class="mb-0">YA</label>
                         }
                     </td>
                     <td class="action-button">

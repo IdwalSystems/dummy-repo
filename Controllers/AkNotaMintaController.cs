@@ -99,11 +99,16 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
+
             var akNotaMinta = await _akNotaMintaRepo.GetAll();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
                 akNotaMinta = await _akNotaMintaRepo.GetAllIncludeDeletedItems();
+            }
+            else
+            {
+                akNotaMinta = akNotaMinta.Where(b => b.UserId == User.Identity.Name).ToList();
             }
 
             //var akNotaMinta = await _context.akNotaMinta.ToListAsync();
@@ -203,10 +208,22 @@ namespace MSNK.Controllers
 
         private void PopulateList()
         {
+            var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.UserName == User.Identity.Name);
+
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
-            List<JBahagian> bahagianList = _context.JBahagian.ToList();
+            string[] arr = user.JBahagianList.Split(',');
+            List<JBahagian> bahagianList = new List<JBahagian>();
+
+            foreach (var item in arr)
+            {
+                var bahagian = _context.JBahagian.FirstOrDefault(x => x.Id == int.Parse(item));
+
+                bahagianList.Add(bahagian);
+
+            }
+
             ViewBag.JBahagian = bahagianList;
 
             List<AkPembekal> akPembekalList = _context.AkPembekal

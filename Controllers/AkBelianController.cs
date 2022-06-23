@@ -332,6 +332,9 @@ namespace MSNK.Controllers
                 };     
             }
 
+            // check if already paid, show list of PVs in AkBelian
+            var akPV2 = _context.AkPV2.Include(b=> b.AkPV).Where(b => b.AkBelianId == id).ToList();
+
             var pembekal = await _akPembekalRepo.GetByIdIncludeDeletedItems(akBelian.AkPembekalId);
 
             if (akBelian == null)
@@ -371,6 +374,15 @@ namespace MSNK.Controllers
             //fill in view model AkPVViewModel from akPV
             akBelianView.AkPembekalId = akBelian.AkPembekalId;
             akBelianView.AkPO = akPO;
+            if (akPV2 != null)
+            {
+                foreach( var i in akPV2)
+                {
+                    akBelianView.JumlahPV += i.Amaun;
+                }
+
+                akBelianView.AkPV2 = akPV2;
+            }
             akBelianView.AkPembekal = pembekal;
             akBelianView.Id = akBelian.Id;
             akBelianView.Tahun = akBelian.Tahun;

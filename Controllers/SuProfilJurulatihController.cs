@@ -119,7 +119,7 @@ namespace MSNK.Controllers
 
             List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
                 .Include(b => b.JParas)
-                .Where(b => b.JParas.Kod == "4")
+                .Where(b => b.JParas.Kod == "4" && b.Perihal.Contains("JSM"))
                 .OrderBy(b => b.Kod)
                 .ToList();
             ViewBag.AkCarta = akCartaList;

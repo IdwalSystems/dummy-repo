@@ -47,14 +47,13 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="NoPermohonan" class="control-label">No Permohonan</label><span class="text-danger control-label">*</span>
-                                <input asp-for="NoPermohonan" class="form-control form-control-sm form-control-sm-custom" required id="txtNoPermohonan" readonly />
+                                <input asp-for="NoPermohonan" class="form-control form-control-sm form-control-sm-custom" required id="txtNoPermohonan" value="@ViewBag.NoPermohonan" readonly />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JKWId" class="control-label">Kumpulan Wang</label>
                                 <select class="form-control form-control-sm" asp-for="JKWId" id="ddlKW">
-                                    <option value="0" hidden>-- Pilih Kumpulan Wang --</option>
                                     @foreach (var s in ViewBag.JKW)
                                     {
                                         <option value="@s.Id">@s.Perihal </option>

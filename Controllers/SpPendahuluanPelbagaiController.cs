@@ -377,11 +377,16 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
+            var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.UserName == User.Identity.Name);
+
             var searchResult = await _spPendahuluanPelbagaiRepo.GetAll();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
                 searchResult = await _spPendahuluanPelbagaiRepo.GetAllIncludeDeletedItems();
+            } else
+            {
+                searchResult = searchResult.Where(b => b.SuPekerjaId == user.SuPekerjaId).ToList();
             }
 
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
@@ -452,6 +457,7 @@ namespace MSNK.Controllers
             //spPendahuluanPelbagai.JKW = kw;
             int jumlahPeserta = 0;
             decimal jumlahPerihal = 0;
+            decimal jumlahAkPV = 0;
 
             if (spPendahuluanPelbagai == null)
             {
@@ -468,8 +474,17 @@ namespace MSNK.Controllers
                 jumlahPerihal += item.Jumlah;
             }
 
+            var akPV = _context.AkPV.Where(b => b.SpPendahuluanPelbagaiId == id).ToList();
+            
+            foreach(var i in akPV)
+            {
+                jumlahAkPV += i.Jumlah;
+            }
+
             ViewData["jumlahPeserta"] = jumlahPeserta;
             ViewData["jumlahPerihal"] = jumlahPerihal;
+            ViewData["jumlahAkPV"] = jumlahAkPV;
+            
 
             PopulateList();
             PopulateTable(id);
@@ -504,7 +519,12 @@ namespace MSNK.Controllers
         // GET: SpPermohonanAktiviti/Create
         public IActionResult Create()
         {
+            SpPendahuluanPelbagai sp = new SpPendahuluanPelbagai();
+            var jkw = _context.JKW.Where(b => b.Kod.Contains("100")).FirstOrDefault();
 
+            sp.JKWId = jkw.Id;
+
+            ViewBag.NoPermohonan = RunningNumber(sp);        
             PopulateList();
             CartEmpty();
             return View();
@@ -1060,6 +1080,8 @@ namespace MSNK.Controllers
         // unposting function end
         private void PopulateList()
         {
+            var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.UserName == User.Identity.Name);
+
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKW = kwList;
 
@@ -1072,13 +1094,22 @@ namespace MSNK.Controllers
             List<JJantina> jantinaList = _context.JJantina.OrderBy(b => b.Id).ToList();
             ViewBag.JJantina = jantinaList;
 
-            List<JTahapAktiviti> tahapAktivitiList = _context.JTahapAktiviti.OrderBy(b => b.Id).ToList();
-            ViewBag.JTahapAktiviti = tahapAktivitiList;
+            ViewBag.JTahapAktiviti = _context.JTahapAktiviti.ToList();
 
-            List<JBahagian> bahagianList = _context.JBahagian.OrderBy(b => b.Id).ToList();
+            string[] arr = user.JBahagianList.Split(',');
+            List<JBahagian> bahagianList = new List<JBahagian>();
+
+            foreach (var item in arr)
+            {
+                var bahagian = _context.JBahagian.FirstOrDefault(x => x.Id == int.Parse(item));
+
+                bahagianList.Add(bahagian);
+
+            }
+
             ViewBag.JBahagian = bahagianList;
 
-            var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.UserName == User.Identity.Name);
+            
 
             if (User.IsInRole("SuperAdmin"))
             {
@@ -1156,7 +1187,7 @@ namespace MSNK.Controllers
                     _cart.AddItem2(spPendahuluanPelbagai2.SpPendahuluanPelbagaiId,
                          spPendahuluanPelbagai2.Indek,
                          spPendahuluanPelbagai2.Baris,
-                         spPendahuluanPelbagai2.Perihal,
+                         spPendahuluanPelbagai2.Perihal?.ToUpper() ?? null,
                          spPendahuluanPelbagai2.Kadar,
                          spPendahuluanPelbagai2.Bil,
                          spPendahuluanPelbagai2.Bulan,
@@ -1301,7 +1332,7 @@ namespace MSNK.Controllers
                     _cart.AddItem2(spPendahuluanPelbagai2.SpPendahuluanPelbagaiId,
                                     spPendahuluanPelbagai2.Indek,
                                     spPendahuluanPelbagai2.Baris,
-                                    spPendahuluanPelbagai2.Perihal,
+                                    spPendahuluanPelbagai2.Perihal?.ToUpper() ?? null,
                                     spPendahuluanPelbagai2.Kadar,
                                     spPendahuluanPelbagai2.Bil,
                                     spPendahuluanPelbagai2.Bulan,

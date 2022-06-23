@@ -37,50 +37,54 @@
             }
         }
     </div>*@
-    <div class="card box-shadow">
-        <div class="card-body">
-            <h5 class="text-purple">Status Terkini</h5>
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#statusNotaMinta" id="tabNM">Nota Minta</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#StatusPO" id="tabPO">Pesanan Tempatan</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#StatusPendahuluanPelbagai" id="tabPendahuluanPelbagai">Pendahuluan Pelbagai</a>
-                </li>
-            </ul>
-            @*Tab panes*@
-            <div class="tab-content">
-                <div id="statusNotaMinta" class="tab-pane active">
-                    <br>
-                    <div class="form-row mb-3">
-                        <div class="col-md-12">
-                            <partial name="_StatusNotaMintaWidget" />
+    @if (!User.IsInRole("User"))
+    {
+        <div class="card box-shadow">
+            <div class="card-body">
+                <h5 class="text-purple">Status Terkini</h5>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#statusNotaMinta" id="tabNM">Nota Minta</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#StatusPO" id="tabPO">Pesanan Tempatan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#StatusPendahuluanPelbagai" id="tabPendahuluanPelbagai">Pendahuluan Pelbagai</a>
+                    </li>
+                </ul>
+                @*Tab panes*@
+                <div class="tab-content">
+                    <div id="statusNotaMinta" class="tab-pane active">
+                        <br>
+                        <div class="form-row mb-3">
+                            <div class="col-md-12">
+                                <partial name="_StatusNotaMintaWidget" />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div id="StatusPO" class="tab-pane fade">
-                    <br>
-                    <div class="form-row mb-3">
-                        <div class="col-md-12">
-                            <partial name="_StatusPOWidget" />
+                    <div id="StatusPO" class="tab-pane fade">
+                        <br>
+                        <div class="form-row mb-3">
+                            <div class="col-md-12">
+                                <partial name="_StatusPOWidget" />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div id="StatusPendahuluanPelbagai" class="tab-pane fade">
-                    <br>
-                    <div class="form-row mb-3">
-                        <div class="col-md-12">
-                            <partial name="_StatusPendahuluanPelbagaiWidget" />
+                    <div id="StatusPendahuluanPelbagai" class="tab-pane fade">
+                        <br>
+                        <div class="form-row mb-3">
+                            <div class="col-md-12">
+                                <partial name="_StatusPendahuluanPelbagaiWidget" />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
+
     
 @*<div class="form-row mb-3">
     <div class="col-md-12">

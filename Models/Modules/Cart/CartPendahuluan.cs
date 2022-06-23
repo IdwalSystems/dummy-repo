@@ -56,7 +56,7 @@ namespace MSNK.Models.Modules.Cart
         public virtual void AddItem2(
             int SpPendahuluanPelbagaiId,
             int Indek,
-            int Baris,
+            decimal Baris,
             string Perihal,
             decimal Kadar,
             decimal Bil,

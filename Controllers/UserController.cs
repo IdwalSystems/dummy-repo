@@ -109,6 +109,21 @@ namespace MSNK.Controllers
                 Value = u.Id
             });
 
+            // get selected multiple dropdown for bahagian
+            ViewBag.JBahagian = _db.JBahagian.ToList();
+
+            string[] arr = objFromDb.JBahagianList.Split(',');
+            List<string> nama = new List<string>();
+
+            foreach (var item in arr)
+            {
+                var bahagian = _db.JBahagian.FirstOrDefault(x => x.Id == int.Parse(item));
+
+                nama.Add(bahagian.Perihal);
+                
+            }
+            ViewBag.SelectedJBahagian = nama;
+            // get selected multiple dropdown for bahagian end
             //List<SelectListItem> listItems = new List<SelectListItem>();
             //listItems.Add(new SelectListItem()
             //{
@@ -133,12 +148,13 @@ namespace MSNK.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ApplicationUser user)
+        public async Task<IActionResult> Edit(ApplicationUser user, string SelectedJBahagianList)
         {
-            if(user.RoleId != null)
+            if (user.RoleId != null)
             {
                 if (ModelState.IsValid)
                 {
+                    
                     var objFromDb = _db.applicationUsers.FirstOrDefault(u => u.Id == user.Id);
                     var roleAsal = "";
                     var roleBaru = "";
@@ -167,7 +183,24 @@ namespace MSNK.Controllers
                         
                         
                     }
+
+                    // select multiple dropdownlist
+                    if (user.SelectedJBahagianList != null)
+                    {
+                        user.JBahagianList = String.Join(",", user.SelectedJBahagianList);
+                    }
+                    else
+                    {
+                        if (objFromDb.JBahagianList != null)
+                        {
+                            user.JBahagianList = objFromDb.JBahagianList;
+                        }
+                    }
+                    // select multiple dropdownlist end
+
                     objFromDb.Nama = user.Nama;
+                    objFromDb.JBahagianList = user.JBahagianList;
+
                     if (roleAsal != roleBaru)
                     {
                         await AddLogAsync("Ubah", roleAsal + " -> " + roleBaru, user.Email, 0, 0);

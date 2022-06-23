@@ -11,7 +11,7 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         public int SpPendahuluanPelbagaiId { get; set; }
         public int Indek { get; set; }
-        public int Baris { get; set; }
+        public decimal Baris { get; set; }
         public string Perihal { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Kadar { get; set; }

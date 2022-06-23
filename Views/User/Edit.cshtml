@@ -23,6 +23,21 @@
                     <option disabled selected>-- Pilih Tahap Pengguna --</option>
                 </select>
             </div>
+            
+
+            <div class="form-group">
+                <label asp-for="JBahagianList"></label>
+                <select asp-for="SelectedJBahagianList" class="form-control form-control-sm select2" multiple="multiple">
+                    @foreach (var s in ViewBag.JBahagian)
+                    {
+                        <option value="@s.Id">@s.Perihal </option>
+                    }
+                </select>
+                @foreach (var s in ViewBag.SelectedJBahagian)
+                {
+                  <span class="badge bg-light text-hov-white">@s</span>  
+                }
+            </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Simpan</button>
                 <a asp-action="Index" class="btn btn-warning" style="width:auto">Batal</a>
