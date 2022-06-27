@@ -3,19 +3,27 @@
 @{ ViewData["Title"] = "Ubah";
     Layout = "~/Views/Shared/_Layout.cshtml"; }
 <partial name="_JSEdit" />
-<div class="row">
-    <div class="col-md-12">
-        <form asp-action="Edit" class="needs-validation">
+
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-primary mb-0">Permohonan Pendahuluan Pelbagai - Ubah</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / <a asp-action="Details" asp-route-id="@Model.Id" class="text-secondary">Papar</a> / Ubah</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+
+                <form asp-action="Edit" class="needs-validation">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="JKWId" id="ddlKW" />
             <input type="hidden" asp-for="JBahagianId" id="ddlBahagian" />
             <input type="hidden" asp-for="SuPekerjaId" />
-            <div class="card box-shadow border-primary mb-3">
-                <div class="card-header bg-primary text-white">
-                    <h5>Permohonan Pendahuluan Pelbagai - @ViewData["Title"]</h5>
-                </div>
-                <div class="card-body">
                     <div class="card mb-3">
                         <div class="card-body">
                             <div class="form-group">
@@ -183,12 +191,12 @@
                                                 <td>@item.BilUru</td>
                                                 <td id="td1Amaun">@item.Jumlah</td>
                                                 <td>
-                                                    <button class="btn btn-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
+                                                    <button class="btn ac-primary btn-sm" type="button" id="btnUpdate1" data-toggle="modal" data-target="#modalObjek" onclick="Update1(this)">
                                                         <i class="fa fa-edit"></i>
                                                     </button>
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-danger btn-sm" type="button" id="btnRemove1" onclick="Remove1(this)">
+                                                    <button class="btn ac-danger btn-sm" type="button" id="btnRemove1" onclick="Remove1(this)">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </td>
@@ -213,7 +221,7 @@
                                             <td><input class="form-control form-control-sm teknikal" type="number" id="txtTeknikal" maxlength="4" value="0"></td>
                                             <td><input class="form-control form-control-sm urusetia" type="number" id="txtUrusetia" maxlength="4" value="0"></td>
                                             <td><input class="form-control form-control-sm" type="number" id="txtJumlahPeserta" maxlength="4" readonly value="0"></td>
-                                            <td><button class="btn btn-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
+                                            <td><button class="btn ac-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -259,12 +267,12 @@
                                                 <td>@item.Bulan</td>
                                                 <td>@item.Jumlah</td>
                                                 <td>
-                                                    <button class="btn btn-primary btn-sm" type="button" id="btnUpdate2" data-toggle="modal" data-target="#modalPerihal" onclick="Update2(this)">
+                                                    <button class="btn ac-primary btn-sm" type="button" id="btnUpdate2" data-toggle="modal" data-target="#modalPerihal" onclick="Update2(this)">
                                                         <i class="fa fa-edit"></i>
                                                     </button>
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-danger btn-sm" type="button" id="btnRemove2" onclick="Remove2(this)">
+                                                    <button class="btn ac-danger btn-sm" type="button" id="btnRemove2" onclick="Remove2(this)">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </td>
@@ -280,7 +288,7 @@
                                             <td><input class="form-control form-control-sm bil" type="text" id="txtBil" placeholder="0"></td>
                                             <td><input class="form-control form-control-sm bulan" type="number" id="txtBulan" maxlength="3" value="0"></td>
                                             <td><input class="form-control form-control-sm" type="number" id="txtJumlahPerihal" maxlength="6" readonly value="0"></td>
-                                            <td><button class="btn btn-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
+                                            <td><button class="btn ac-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -294,17 +302,14 @@
                         </div>
                     </div>
                     @*table Perihal end*@
-                </div>
-            </div>
+
+            <hr />
             <div class="form-group">
-                <input type="submit" value="Simpan" class="btn btn-primary" id="btnSave" />
+                <input type="submit" value="Simpan" id="btnSave" class="btn ac-primary btn-sm" />
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
 <!-- Modal Peserta -->
@@ -314,7 +319,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">Objek</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
                 </button>
             </div>
             <div class="modal-body">
@@ -372,7 +377,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate1()">OK</button>
+                <button type="button" class="btn ac-success btn-sm" data-dismiss="modal" onclick="modalUpdate1()">OK</button>
             </div>
         </div>
     </div>
@@ -386,7 +391,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">Perihal</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
                 </button>
             </div>
             <div class="modal-body">
@@ -441,7 +446,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate2()">OK</button>
+                <button type="button" class="btn ac-success btn-sm" data-dismiss="modal" onclick="modalUpdate2()">OK</button>
             </div>
         </div>
     </div>

@@ -5,91 +5,98 @@
 }
 
 <partial name="_JSIndex" />
-<div class="row mb-2">
-    <div class="col-8">
-        <h3 class="text-left">Profil Kategori</h3>
-    </div>
-    <div class="col-4 text-right">
-        <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
-    </div>
-</div>
 
-<div class="card mb-2">
-    <div class="card-body pl-3 pb-2">
-        <label class="form-control-plaintext" for="columnSearch">Carian : </label>
-        <div class="form-actions no-color mb-2">
-            <div class="form-row">
-                <div class="col-sm-2 mb-2">
-                    <select class="custom-select form-control-sm" id="columnSearch">
-                        <option value="" selected>Semua</option>
-                    </select>
-                </div>
-                <div class="col-sm-8 mb-2">
-                    <input class="form-control form-control-sm" type="text" id="myInput" style="text-transform:uppercase" />
+<div class="card box-shadow">
+    <div class="card card-body border">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase mb-0">Senarai Profil Kategori</h5>
+                <span class="ac-ref">Indeks</span>
+            </div>
+            <div class="col-4 text-right">
+                <a class="text-right btn ac-success" asp-action="Create">Tambah Baru</a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+        <div class="card mb-2">
+            <div class="card-body pl-3 pb-2">
+                <label class="form-control-plaintext" for="columnSearch">Carian : </label>
+                <div class="form-actions no-color mb-2">
+                    <div class="form-row">
+                        <div class="col-sm-2 mb-2">
+                            <select class="custom-select form-control-sm" id="columnSearch">
+                                <option value="" selected>Semua</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-8 mb-2">
+                            <input class="form-control form-control-sm" type="text" id="myInput" style="text-transform:uppercase" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="table-responsive">
-    <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%" id="IndexTable">
-        <thead>
-            <tr>
-                <th width="5%">Bil</th>
-                <th class="perihal">
-                    Perihal
-                </th>
-                <th width="5%">
-                    Kod
-                </th>
-                <th width="10%">
-                    Kadar Geran RM
-                </th>
-                <th width="5%"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                var tabletype = item.FlHapus == 1 ? "table-danger" : null;
-                <tr class="@tabletype text-uppercase">
-                    <td></td>
-                    <td class="text-uppercase">
-                        @item.Perihal
-                    </td>
-                    <td class="text-uppercase">
-                        @item.Kod
-                    </td>
-                    <td class="text-right">
-                        @Convert.ToDecimal(item.KadarGeran).ToString("#,##0.00")
-                    </td>
-                    <td width="5%" class="text-center">
-                        <div class="btn-group" role="group" aria-label="action">
-                            @if (item.FlHapus == 0)
-                            {
-                                <a asp-action="Details" asp-route-id="@item.Id"
-                                   class="btn text-primary btn-sm bg-white" type="button"
-                                   data-toggle="tooltip" data-placement="top"
-                                   title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                                <a asp-action="Delete" asp-route-id="@item.Id"
-                                   class="btn text-danger btn-sm bg-white" type="button"
-                                   data-toggle="tooltip" data-placement="top"
-                                   title="Hapus"><i class="fas fa-trash"></i></a>
-                            }
-                            else
-                            {
-                                if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
-                                {
-                                    <a asp-action="Rollback" asp-route-id="@item.Id" class="btn text-info btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
-                                        <i class="fas fa-trash-restore"></i>
-                                    </a>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%" id="IndexTable">
+                <thead>
+                    <tr>
+                        <th width="5%">Bil</th>
+                        <th class="perihal">
+                            Perihal
+                        </th>
+                        <th width="5%">
+                            Kod
+                        </th>
+                        <th width="10%">
+                            Kadar Geran RM
+                        </th>
+                        <th width="5%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var tabletype = item.FlHapus == 1 ? "table-danger" : null;
+                        <tr class="@tabletype text-uppercase">
+                            <td></td>
+                            <td class="text-uppercase">
+                                @item.Perihal
+                            </td>
+                            <td class="text-uppercase">
+                                @item.Kod
+                            </td>
+                            <td class="text-right">
+                                @Convert.ToDecimal(item.KadarGeran).ToString("#,##0.00")
+                            </td>
+                            <td width="5%" class="text-center action-button">
+                                <div class="btn-group" role="group" aria-label="action">
+                                    @if (item.FlHapus == 0)
+                                    {
+                                        <a asp-action="Details" asp-route-id="@item.Id"
+                                           class="btn text-primary btn-sm bg-white" type="button"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id"
+                                           class="btn text-danger btn-sm bg-white" type="button"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="Hapus"><i class="fas fa-trash"></i></a>
+                                    }
+                                    else
+                                    {
+                                        if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                                        {
+                                            <a asp-action="Rollback" asp-route-id="@item.Id" class="btn text-info btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                                <i class="fas fa-trash-restore"></i>
+                                            </a>
 
-                                }
-                            }
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                                        }
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

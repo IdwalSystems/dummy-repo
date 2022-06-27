@@ -1,12 +1,16 @@
 ﻿@model MSNK.Models.Modules.SiAppInfo
-
-<div class="container">
-    <div class="card">
-        <div class="card-header ">
-            <h6>Info Syarikat</h6>
+<div class="card box-shadow">
+    <div class="card-body border">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase mb-0">Info Syarikat</h5>
+                <span class="ac-ref">Indeks</span>
+            </div>
+    
         </div>
-        <div class="card-body box-shadow">
-            <div class="form-row">
+        <hr class="mt-2"/>
+
+        <div class="form-row">
                 <div class="container text-center mb-4">
                          <img src="~/img/@Model.LogoSyarikat"   
                          class="img-fluid" style="max-width:120px;max-height:120px;"     
@@ -168,14 +172,11 @@
                 </div>
                 
             </div>
- 
-        </div>
-        <div class="card-footer">
+
+            <hr />
             <div class="form-group text-left">
-                <a asp-action="Edit" asp-controller="SiAppInfo" asp-route-id="@Model.Id" class="btn btn-primary" style="width:auto">Ubah</a>
+                <a asp-action="Edit" asp-controller="SiAppInfo" asp-route-id="@Model.Id" class="btn ac-primary btn-sm" style="width:auto">Ubah</a>
             </div>
-        </div>
+
     </div>
-
-
 </div>

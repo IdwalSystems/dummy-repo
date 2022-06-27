@@ -6,21 +6,21 @@
 }
 <partial name="_JSCreate" />
 
-<style>
-    .sorok{
-        display:none;
-    }
-</style>
-
-<div class="row">
-    <div class="col-md-12">
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-success mb-0">Atlet - Tambah</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Tambah</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
         <form asp-action="Create" class="needs-validation">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="card box-shadow border-success mb-3">
-                <div class="card-header bg-success text-white">
-                    <h5>Atlet - @ViewData["Title"]</h5>
-                </div>
-                <div class="card-body">
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label asp-for="KodAtlet" class="control-label"></label>
@@ -45,15 +45,17 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <label asp-for="JSukanId" class="control-label"></label>
-                        <select asp-for="JSukanId" class="form-control form-control-sm select2" required>
-                            <option value="" hidden>-- Pilih Sukan --</option>
-                            @foreach (var s in ViewBag.JSukan)
-                            {
-                                <option value="@s.Id">@s.Perihal </option>
-                            }
-                        </select>
-                        <span asp-validation-for="JSukanId" class="text-danger"></span>
+                        <div class="form-group col-md">
+                            <label asp-for="JSukanId" class="control-label"></label>
+                            <select asp-for="JSukanId" class="form-control form-control-sm select2" required>
+                                <option value="" hidden>-- Pilih Sukan --</option>
+                                @foreach (var s in ViewBag.JSukan)
+                                {
+                                    <option value="@s.Id">@s.Perihal </option>
+                                }
+                            </select>
+                            <span asp-validation-for="JSukanId" class="text-danger"></span>
+                        </div>
                     </div>
                     <div class="form-row ">
                         <div class="form-group col-md">
@@ -173,7 +175,7 @@
                     <br />
 
                     @*table Objek*@
-                    <div class="card box-shadow mb-3 sorok">
+                    <div class="card box-shadow mb-3" hidden>
                         <div class="card-header">
                             <h6>Tanggungan</h6>
                         </div>
@@ -202,17 +204,14 @@
                         </div>
                     </div>
                     @*table Objek end*@
-
-                </div>
-            </div>
+                    
+            <hr />
             <div class="form-group">
-                <input type="submit" value="Simpan" class="btn btn-primary" />
+                <input type="submit" value="Simpan" class="btn ac-primary btn-sm" />
+                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
         </form>
     </div>
-</div>
-<div>
-    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
 @section Scripts {

@@ -4,160 +4,172 @@
     ViewData["Title"] = "Indeks";
 }
 
-<div class="row mb-2">
-    <div class="col-8">
-        <h3 class="text-left">Buku Vot</h3>
-    </div>
-</div>
 <partial name="_JSIndex" />
 
-<div class="card mb-2">
-    <div class="card-body pl-3 pb-2 ">
-        <label class="form-control-plaintext" for="searchselect">Carian : </label>
-        <div class="form-actions no-color mb-2">
-            <form asp-action="Index" method="get" class="needs-validation" novalidate>
-                <div class="form-actions no-color mb-3">
-                    <div class="form-row">
-                        <div class="col-md-2">
-                            <label class="form-control-label">Tahun</label>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="input-group mb-2 input-group-sm ">
-                                <input class="form-control form-control-sm" type="text" name="searchYear" value="@ViewData["searchYear"]" required id="tahun" />
-                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-2">
-                            <div class="input-group mb-2 input-group-sm ">
-                                <label class="form-control-label">Kod Akaun</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase mb-0">Buku Vot</h5>
+                <span class="ac-ref">Indeks</span>
+            </div>
+            <div class="col-4 text-right">
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
 
-                            <div class="input-group mb-2 input-group-sm ">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Dari</span>
+        <div class="card mb-2">
+            <div class="card-body pl-3 pb-2 ">
+                <label class="form-control-plaintext" for="searchselect">Carian : </label>
+                <div class="form-actions no-color mb-2">
+                    <form asp-action="Index" method="get" class="needs-validation" novalidate>
+                        <div class="form-actions no-color mb-3">
+                            <div class="form-row">
+                                <div class="col-md-2">
+                                    <label class="form-control-label">Tahun</label>
                                 </div>
-                                <input class="form-control form-control-sm" type="text" name="searchFrom" value="@ViewData["searchFrom"]" required id="tahun" />
-                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-
-                            <div class="input-group mb-2 input-group-sm ">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Hingga</span>
+                                <div class="col-md-2">
+                                    <div class="input-group mb-2 input-group-sm ">
+                                        <input class="form-control form-control-sm" type="text" name="searchYear" value="@ViewData["searchYear"]" required id="tahun" />
+                                        <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                                    </div>
                                 </div>
-                                <input class="form-control form-control-sm" type="text" name="searchTo" value="@ViewData["searchTo"]" required id="tahun" />
-                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
                             </div>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn text-info btn-sm" data-toggle="tooltip" data-placement="top" title="Cari"><i class="fas fa-search"></i></button>
-                            @*<a asp-action="Index" class="btn btn-warning btn-sm"><i class="fas fa-times"></i></a>*@
-                        </div>
-                    </div>
+                            <div class="form-row">
+                                <div class="col-md-2">
+                                    <div class="input-group mb-2 input-group-sm ">
+                                        <label class="form-control-label">Kod Akaun</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
 
+                                    <div class="input-group mb-2 input-group-sm ">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">Dari</span>
+                                        </div>
+                                        <input class="form-control form-control-sm" type="text" name="searchFrom" value="@ViewData["searchFrom"]" required id="tahun" />
+                                        <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+
+                                    <div class="input-group mb-2 input-group-sm ">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">Hingga</span>
+                                        </div>
+                                        <input class="form-control form-control-sm" type="text" name="searchTo" value="@ViewData["searchTo"]" required id="tahun" />
+                                        <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn text-info btn-sm" data-toggle="tooltip" data-placement="top" title="Cari"><i class="fas fa-search"></i></button>
+                                    @*<a asp-action="Index" class="btn btn-warning btn-sm"><i class="fas fa-times"></i></a>*@
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+        </div>
+
+        <div class="table-responsive table-sm">
+            <table class="table table-bordered table-hover display compact nowrap" width="100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Bil
+                        </th>
+                        <th>
+                            Tahun
+                        </th>
+                        <th>
+                            Kump. Wang
+                        </th>
+                        <th>
+                            Bahagian
+                        </th>
+                        <th>
+                            Kod Akaun
+                        </th>
+                        <th>
+                            Perihal
+                        </th>
+                        <th>
+                            Debit RM
+                        </th>
+                        <th>
+                            Kredit RM
+                        </th>
+                        <th>
+                            Tanggungan RM
+                        </th>
+                        <th>
+                            Liabiliti RM
+                        </th>
+                        <th>
+                            Baki RM
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                @item.Tahun
+                            </td>
+                            <td>
+                                @item.KW
+                            </td>
+                            <td>
+                                @item.Bahagian
+                            </td>
+                            <td>
+                                @item.KodAkaun
+                            </td>
+                            <td class="text-uppercase">
+                                @item.Perihal
+                            </td>
+                            <td>
+                                @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
+                            </td>
+                            <td>
+                                @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
+                            </td>
+                            <td>
+                                @Convert.ToDecimal(item.Tanggungan).ToString("#,##0.00")
+                            </td>
+                            <td>
+                                @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
+                            </td>
+                            <td>
+                                @{
+                                    var baki = item.Kredit - item.Debit - item.Tanggungan - item.Liabiliti;
+                                }
+                                @Convert.ToDecimal(baki).ToString("#,##0.00")
+                            </td>
+                            <td class="action-button">
+                                <a asp-action="Details" 
+                                   asp-route-id="@item.Id" 
+                                   asp-route-tahun="@item.Tahun"
+                                   asp-route-jKWId="@item.JKWId"
+                                   asp-route-jBahagianId="@item.JBahagianId"
+                                   class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
+
 </div>
 
-<div class="table-responsive table-sm">
-    <table class="table table-bordered table-hover display compact nowrap" width="100%">
-        <thead>
-            <tr>
-                <th>
-                    Bil
-                </th>
-                <th>
-                    Tahun
-                </th>
-                <th>
-                    Kump. Wang
-                </th>
-                <th>
-                    Bahagian
-                </th>
-                <th>
-                    Kod Akaun
-                </th>
-                <th>
-                    Perihal
-                </th>
-                <th>
-                    Debit RM
-                </th>
-                <th>
-                    Kredit RM
-                </th>
-                <th>
-                    Tanggungan RM
-                </th>
-                <th>
-                    Liabiliti RM
-                </th>
-                <th>
-                    Baki RM
-                </th>
-                <th>
-
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                    </td>
-                    <td>
-                        @item.Tahun
-                    </td>
-                    <td>
-                        @item.KW
-                    </td>
-                    <td>
-                        @item.Bahagian
-                    </td>
-                    <td>
-                        @item.KodAkaun
-                    </td>
-                    <td class="text-uppercase">
-                        @item.Perihal
-                    </td>
-                    <td>
-                        @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
-                    </td>
-                    <td>
-                        @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
-                    </td>
-                    <td>
-                        @Convert.ToDecimal(item.Tanggungan).ToString("#,##0.00")
-                    </td>
-                    <td>
-                        @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
-                    </td>
-                    <td>
-                        @{
-                            var baki = item.Kredit - item.Debit - item.Tanggungan - item.Liabiliti;
-                        }
-                        @Convert.ToDecimal(baki).ToString("#,##0.00")
-                    </td>
-                    <td class="action-button">
-                        <a asp-action="Details" 
-                           asp-route-id="@item.Id" 
-                           asp-route-tahun="@item.Tahun"
-                           asp-route-jKWId="@item.JKWId"
-                           asp-route-jBahagianId="@item.JBahagianId"
-                           class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
 

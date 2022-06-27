@@ -9,197 +9,203 @@
 
 <partial name="_JSIndex" />
 
-@*div Header*@
-<div class="row mb-2">
-    <div class="col-8">
-        <h3 class="text-left">Nota Minta</h3>
-    </div>
-    <div class="col-4 text-right">
-        <a class="text-right btn btn-success text-white" asp-action="Create">Tambah Baru</a>
-    </div>
-</div>
-@*div Header end*@
+<div class="card box-shadow">
+    <div class="card card-body border">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase mb-0">Senarai Nota Minta</h5>
+                <span class="ac-ref">Indeks</span>
+            </div>
+            <div class="col-4 text-right">
+                <a class="text-right btn ac-success" asp-action="Create">Tambah Baru</a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+        @*div carian*@
+        <div class="card mb-2">
+            <div class="card-body pl-3 pb-2 ">
+                <label class="form-control-plaintext" for="searchselect">Carian : </label>
 
-@*div carian*@
-<div class="card mb-2">
-    <div class="card-body pl-3 pb-2 ">
-        <label class="form-control-plaintext" for="searchselect">Carian : </label>
-
-        <div class="form-actions no-color mb-2">
-            <form asp-action="Index" method="get">
-                <div class="form-row">
-                    <div class="col-sm-3 mb-2">
-                        <select class="custom-select form-control-sm"
-                                name="searchColumn"
-                                asp-items="@ViewBag.SearchColumn" id="searchColumn"></select>
-                    </div>
-                    <div class="col-sm-9 mb-2">
+                <div class="form-actions no-color mb-2">
+                    <form asp-action="Index" method="get">
                         <div class="form-row">
-                            <div class="col-10">
+                            <div class="col-sm-3 mb-2">
+                                <select class="custom-select form-control-sm"
+                                        name="searchColumn"
+                                        asp-items="@ViewBag.SearchColumn" id="searchColumn"></select>
+                            </div>
+                            <div class="col-sm-9 mb-2">
                                 <div class="form-row">
-                                    <div class="col-12">
-                                        <input class="form-control form-control-sm" type="text" name="searchString" id="myInput" value="@ViewBag.SearchData1" />
+                                    <div class="col-10">
+                                        <div class="form-row">
+                                            <div class="col-12">
+                                                <input class="form-control form-control-sm" type="text" name="searchString" id="myInput" value="@ViewBag.SearchData1" />
+                                            </div>
+                                            <div class="col-6" id="myInputDate1">
+                                                <input class="form-control form-control-sm mb-2" type="date" name="searchDate1" id="inputTarikh1" value="@ViewBag.SearchData1" />
+                                            </div>
+                                            <div class="col-6" id="myInputDate2">
+                                                <input class="form-control form-control-sm" type="date" name="searchDate2" id="inputTarikh2" value="@ViewBag.SearchData2" />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-6" id="myInputDate1">
-                                        <input class="form-control form-control-sm mb-2" type="date" name="searchDate1" id="inputTarikh1" value="@ViewBag.SearchData1" />
-                                    </div>
-                                    <div class="col-6" id="myInputDate2">
-                                        <input class="form-control form-control-sm" type="date" name="searchDate2" id="inputTarikh2" value="@ViewBag.SearchData2" />
+                                    <div class="col-2">
+                                        <button type="submit" class="btn text-info btn-sm" data-toggle="tooltip" data-placement="top" title="Cari"><i class="fas fa-search"></i></button>
                                     </div>
                                 </div>
+
                             </div>
-                            <div class="col-2">
-                                <button type="submit" class="btn text-info btn-sm" data-toggle="tooltip" data-placement="top" title="Cari"><i class="fas fa-search"></i></button>
-                            </div>
+
                         </div>
-
-                    </div>
-
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
-@*div carian end*@
+        @*div carian end*@
 
-@*div table*@
+        @*div table*@
 
-<div class="table-responsive table-sm">
-    <table class="table table-bordered table-hover display compact nowrap" width="100%">
-        <thead>
-            <tr>
-                <th>
-                    Bil
-                </th>
-                <th hidden>Id</th>
-                <th width="5%">
-                    No Rujukan
-                </th>
-                <th>
-                    Pemohon
-                </th>
-                <th width="10%">
-                    @Html.DisplayNameFor(model => model.Tarikh)
-                </th>
-                <th width="5%">
-                    @Html.DisplayNameFor(model => model.Jumlah)
-                </th>
-                <th>
-                    Nama / Nama Syarikat
-                </th>
-                <th>
-                    Tajuk
-                </th>
-                <th>
-                    Cetak
-                </th>
-                <th class="action-button"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                var namaUser = _context.applicationUsers.FirstOrDefault(x => x.Email == item.UserId);
-                var pekerja = _context.SuPekerja.FirstOrDefault(x => x.Id == namaUser.SuPekerjaId);
-                var nama = "";
-                if (pekerja == null)
-                {
-                    nama = "SuperAdmin";
-                } else
-                {
-                    nama = pekerja.Nama;
-                }
+        <div class="table-responsive table-sm">
+            <table class="table table-bordered table-hover display compact nowrap" width="100%">
+                <thead>
+                    <tr>
+                        <th>
+                            Bil
+                        </th>
+                        <th hidden>Id</th>
+                        <th width="5%">
+                            No Rujukan
+                        </th>
+                        <th>
+                            Pemohon
+                        </th>
+                        <th width="10%">
+                            @Html.DisplayNameFor(model => model.Tarikh)
+                        </th>
+                        <th width="5%">
+                            @Html.DisplayNameFor(model => model.Jumlah)
+                        </th>
+                        <th>
+                            Nama / Nama Syarikat
+                        </th>
+                        <th>
+                            Tajuk
+                        </th>
+                        <th>
+                            Cetak
+                        </th>
+                        <th class="action-button"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var namaUser = _context.applicationUsers.FirstOrDefault(x => x.Email == item.UserId);
+                        var pekerja = _context.SuPekerja.FirstOrDefault(x => x.Id == namaUser.SuPekerjaId);
+                        var nama = "";
+                        if (pekerja == null)
+                        {
+                            nama = "SuperAdmin";
+                        } else
+                        {
+                            nama = pekerja.Nama;
+                        }
                 
-                var tabletype = item.FlHapus == 1 ? "table-danger" : null;
-                <tr class="@tabletype">
-                    <td>
-                    </td>
-                    <td hidden> @item.Id</td>
-                    <td>
-                        @item.NoRujukan.Substring(3)
-                    </td>
-                    <td class="text-uppercase">
-                        @nama
-                    </td>
-                    <td>
-                        @item.Tarikh.ToString("dd/MM/yyyy")
-                    </td>
-                    <td class="text-right">
-                        @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
-                    </td>
-                    <td class="text-uppercase">
-                        @item.NamaSykt
-                    </td>
-                    <td class="text-uppercase">
-                        @item.Tajuk
-                    </td>
-                    <td>
-                        @if (item.FlCetak == 0)
-                        {
-                            <label class="mb-0">BELUM</label>
-                        }
-                        else
-                        {
-                            <label class="mb-0">SUDAH</label>
-                        }
-                    </td>
-                    <td class="action-button">
-                        <div class="btn-group" role="group" aria-label="action">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                            <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
-                            @if (item.FlHapus == 0)
-                            {
-                                @if (item.FlPosting == 0)
+                        var tabletype = item.FlHapus == 1 ? "table-danger" : null;
+                        <tr class="@tabletype">
+                            <td>
+                            </td>
+                            <td hidden> @item.Id</td>
+                            <td>
+                                @item.NoRujukan.Substring(3)
+                            </td>
+                            <td class="text-uppercase">
+                                @nama
+                            </td>
+                            <td>
+                                @item.Tarikh.ToString("dd/MM/yyyy")
+                            </td>
+                            <td class="text-right">
+                                @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
+                            </td>
+                            <td class="text-uppercase">
+                                @item.NamaSykt
+                            </td>
+                            <td class="text-uppercase">
+                                @item.Tajuk
+                            </td>
+                            <td>
+                                @if (item.FlCetak == 0)
                                 {
-                                    @if (item.Jumlah != 0)
-                                    {
-                                        @if (item.Jumlah == item.JumlahPerihal && item.FlCetak != 0)
-                                        {
-
-                                            @if (item.FlStatusSemak != 0)
-                                            {
-                                                <button data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
-                                                    <i class="fas fa-file-signature"></i>
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                <button data-toggle="modal" data-target="#modalSemak" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Semak" onclick="ModalClick(this)">
-                                                    <i class="fas fa-file-signature"></i>
-                                                </button>
-                                            }
-                                        }
-                                    }
-
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
-
+                                    <label class="mb-0">BELUM</label>
                                 }
                                 else
                                 {
-                                    <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn text-warning btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Batal Lulus">
-                                        <i class="fas fa-file"></i>
-                                    </a>
+                                    <label class="mb-0">SUDAH</label>
                                 }
-                            }
-                            else
-                            {
-                                if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
-                                {
-                                    <a asp-action="Rollback" asp-route-id="@item.Id" class="btn text-info btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
-                                        <i class="fas fa-trash-restore"></i>
-                                    </a>
+                            </td>
+                            <td class="action-button text-center">
+                                <div class="btn-group" role="group" aria-label="action">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                    <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                                    @if (item.FlHapus == 0)
+                                    {
+                                        @if (item.FlPosting == 0)
+                                        {
+                                            @if (item.Jumlah != 0)
+                                            {
+                                                @if (item.Jumlah == item.JumlahPerihal && item.FlCetak != 0)
+                                                {
 
-                                }
-                            }
-                        </div>
+                                                    @if (item.FlStatusSemak != 0)
+                                                    {
+                                                        <button data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
+                                                            <i class="fas fa-file-signature"></i>
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button data-toggle="modal" data-target="#modalSemak" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Semak" onclick="ModalClick(this)">
+                                                            <i class="fas fa-file-signature"></i>
+                                                        </button>
+                                                    }
+                                                }
+                                            }
 
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn text-warning btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Batal Lulus">
+                                                <i class="fas fa-file"></i>
+                                            </a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                                        {
+                                            <a asp-action="Rollback" asp-route-id="@item.Id" class="btn text-info btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                                <i class="fas fa-trash-restore"></i>
+                                            </a>
+
+                                        }
+                                    }
+                                </div>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @*div table end*@
+    </div>
 </div>
-@*div table end*@
+
+
 <!-- Modal Semak -->
 <div class="modal fade bd-example-modal-lg" id="modalSemak" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -207,7 +213,7 @@
             <div class="modal-header" style="color:#a54ea8;">
                 <h5 class="modal-title">Semak Nota Minta</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
                 </button>
             </div>
             <form asp-action="Semak" asp-controller="AkNotaMinta" class="needs-validation">
@@ -251,8 +257,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-success">Semak</button>
+                    <button type="button" class="btn ac-danger btn-sm" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn ac-success btn-sm">Semak</button>
                 </div>
             </form>
         </div>
@@ -266,7 +272,7 @@
             <div class="modal-header" style="color:#a54ea8;">
                 <h5 class="modal-title">Kelulusan Nota Minta</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
                 </button>
             </div>
             <form asp-action="Posting" asp-controller="AkNotaMinta" class="needs-validation">
@@ -310,8 +316,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-success">Lulus</button>
+                    <button type="button" class="btn ac-danger btn-sm" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn ac-success btn-sm">Lulus</button>
                 </div>
             </form>
         </div>

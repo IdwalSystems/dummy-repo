@@ -6,15 +6,23 @@
 }
 
 <partial name="_JSCreate" />
-<div class="row">
-    <div class="col-md-12">
+
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-success mb-0">Waran - Tambah</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Tambah</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+
         <form asp-action="Create" class="needs-validation">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="card box-shadow border-success mb-3">
-                <div class="card-header bg-success text-white">
-                    <h5>Waran - @ViewData["Title"]</h5>
-                </div>
-                <div class="card-body">
                     <div class="card mb-2">
                         <div class="card-body pb-1 pt-1">
                             <div class="form-group mb-0 mt-1">
@@ -129,7 +137,7 @@
                                                 <option value="-">-</option>
                                             </select>
                                         </td>
-                                        <td><button class="btn btn-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
+                                        <td><button class="btn ac-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -145,17 +153,13 @@
                     </div>
                     @*table Objek end*@
 
-                </div>
-            </div>
+            <hr />
             <div class="form-group">
-                <input type="submit" id="btnSave" value="Simpan" class="btn btn-primary" />
+                <input type="submit" value="Simpan" class="btn ac-primary btn-sm" />
+                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
         </form>
     </div>
-
-</div>
-<div>
-    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
 <!-- Modal Objek -->
@@ -165,7 +169,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">Objek</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
                 </button>
             </div>
             <div class="modal-body">
@@ -205,7 +209,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate1()">OK</button>
+                <button type="button" class="btn ac-success btn-sm" data-dismiss="modal" onclick="modalUpdate1()">OK</button>
             </div>
         </div>
     </div>

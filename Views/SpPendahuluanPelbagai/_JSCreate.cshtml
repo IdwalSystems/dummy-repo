@@ -305,12 +305,12 @@
                     //Add Edit Button cell.
                     cell = $(row.insertCell(-1));
 
-                    var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                    var btnUpdate1 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
                     cell.append(btnUpdate1);
 
                     //Add Button cell.
                     cell = $(row.insertCell(-1));
-                    var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                    var btnRemove1 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                     cell.append(btnRemove1);
                     //alert(ddlJantina.val());
                     var SpPendahuluanPelbagai1 = {
@@ -416,12 +416,12 @@
         //Add Edit Button cell.
         cell = $(row.insertCell(-1));
 
-        var btnUpdate2 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
+        var btnUpdate2 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
         cell.append(btnUpdate2);
 
         //Add Button cell.
         cell = $(row.insertCell(-1));
-        var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
+        var btnRemove2 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
         cell.append(btnRemove2);
 
         var SpPendahuluanPelbagai2 = {
@@ -461,14 +461,15 @@
         var name = $("TD", row).eq(0).html();
         var amaun = $("TD", row).eq(7).html();
         var txtJumlahPeserta = $("#txtJumlahPeserta");
+        var JumlahPeserta = $("#jumlahPeserta");
         if (confirm("Hapus Peserta : " + name + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblPeserta")[0];
 
             //Sum value to Total text field
             var sum = 0;
-            sum = parseFloat(txtJumlahPeserta.val()) - parseFloat(amaun);
-            txtJumlahPeserta.val(sum);
+            sum = parseFloat(JumlahPeserta.val()) - parseFloat(amaun);
+            JumlahPeserta.val(sum);
 
             var SpPendahuluanPelbagai1 = {
                 JJantinaId: name,
@@ -486,7 +487,7 @@
                     }
                 });
             }
-            //$("#ddlJantina option[value=" + name + "]").prop('disabled', false);
+            $("#ddlJantina option[value=" + name + "]").prop('disabled', false);
 
         }
     };
@@ -544,9 +545,9 @@
                 "</td><td>" + item.BilUru +
                 "</td><td>" + item.Jumlah +
                 "</td><td>" +
-                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                 "</td><td>" +
-                "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                "<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                 "</td><tr>";
             $("table tbody#tbodyObjek").append(str);
             sum += item.amaun;
@@ -571,9 +572,9 @@
                 "</td><td>" + item.Bulan +
                 "</td><td>" + (item.Jumlah).toFixed(2) +
                 "</td><td>" +
-                "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                 "</td><td>" +
-                "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                "<button class='btn ac-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
                 "</td><tr>";
             $("table tbody#tbodyPerihal").append(str);
             sum += item.amaun;
@@ -665,9 +666,9 @@
                                     "</td><td>" + item1.bilUru +
                                     "</td><td>" + item1.jumlah +
                                     "</td><td>" +
-                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
-                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
                                 $("table tbody#tbodyObjek").append(str);
                                 sum += item1.jumlah;
@@ -768,9 +769,9 @@
                                     "</td><td class='text-right'>" + item1.bulan +
                                     "</td><td class='text-right'>" + (item1.jumlah).toFixed(2) +
                                     "</td><td>" +
-                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalPerihal' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
-                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "<button class='btn ac-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
                                 $("table tbody#tbodyPerihal").append(str);
                                 sum += item1.jumlah;

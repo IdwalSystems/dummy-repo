@@ -74,7 +74,7 @@
                         } else {
                             cell.html("0.00");
                         }
-                        cell.attr("class", "editable-txt text-right");
+                        cell.attr("class", "text-right");
 
                         //Add kredit cell.
                         var cell = $(row.insertCell(-1));
@@ -83,15 +83,15 @@
                         } else {
                             cell.html("0.00");
                         }
-                        cell.attr("class", "editable-txt text-right");
+                        cell.attr("class", "text-right");
 
                         cell = $(row.insertCell(-1));
-                        var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                        var btnUpdate1 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
                         cell.append(btnUpdate1);
 
                         //Add Button cell.
                         cell = $(row.insertCell(-1));
-                        var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                        var btnRemove1 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                         cell.append(btnRemove1);
 
                         var AkJurnal1 = {
@@ -146,12 +146,12 @@
                                                         "<tr id='" + item1.id + "'><td id='akCartaId' hidden>" + item1.akCartaId +
                                                         "</td><td>" + (((item1.indeks.toString()).length < 2) ? ("0" + (item1.indeks).toString()) : item1.indeks) +
                                                         "</td><td>" + item1.akCarta.kod + ' - ' + item1.akCarta.perihal +
-                                                        "</td><td class='editable-txt text-right'>" + (item1.debit).toFixed(2) +
-                                                        "</td><td class='editable-txt text-right'>" + (item1.kredit).toFixed(2) +
+                                                        "</td><td class='text-right'>" + (item1.debit).toFixed(2) +
+                                                        "</td><td class='text-right'>" + (item1.kredit).toFixed(2) +
                                                         "</td><td>" +
-                                                        "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                                        "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                                         "</td><td>" +
-                                                        "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                                        "<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                                         "</td><tr>";
                                                     $("table tbody#tbodyObjek").append(str);
                                                     sumdebit += item1.debit;
@@ -308,12 +308,12 @@
                                         "<tr id='" + item1.id + "'><td id='akCartaId' hidden>" + item1.akCartaId +
                                         "</td><td>" + (((item1.indeks.toString()).length < 2) ? ("0" + (item1.indeks).toString()) : item1.indeks) +
                                         "</td><td>" + item1.akCarta.kod + ' - ' + item1.akCarta.perihal +
-                                        "</td><td class='editable-txt text-right'>" + (item1.debit).toFixed(2) +
-                                        "</td><td class='editable-txt text-right'>" + (item1.kredit).toFixed(2) +
+                                        "</td><td class='text-right'>" + (item1.debit).toFixed(2) +
+                                        "</td><td class='text-right'>" + (item1.kredit).toFixed(2) +
                                         "</td><td>" +
-                                        "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                        "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                         "</td><td>" +
-                                        "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                        "<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                         "</td><tr>";
                                     $("table tbody#tbodyObjek").append(str);
                                     sumdebit += item1.debit;

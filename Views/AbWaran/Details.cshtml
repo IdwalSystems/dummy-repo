@@ -5,17 +5,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
-    <div class="col-md-12">
-        <div class="card box-shadow border-dark md-3">
-            <div class="card-header bg-dark text-white">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5 class="text-left">Waran - @ViewData["Title"]</h5>
-                    </div>
-                </div>
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-dark mb-0">Waran - Papar</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Papar</span>
             </div>
-            <div class="card-body">
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
                 <div class="card mb-2">
                     <div class="card-body pb-1 pt-1">
                         <div class="form-group mb-0 mt-1">
@@ -181,20 +183,17 @@
                     </div>
                 </div>
                 @*table Objek end*@
-            </div>
-
+                
+        <hr />
+        <div class="form-group">
+            @if (Model.FlPosting == 1)
+            {
+            }
+            else
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a>
+            }
+            <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
         </div>
     </div>
-
-</div>
-
-<div>
-    @if (Model.FlPosting == 1)
-    {
-    }
-    else
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
-    }
-    <a asp-action="Index">Kembali ke Indeks</a>
 </div>

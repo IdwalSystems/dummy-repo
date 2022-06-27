@@ -3,175 +3,165 @@
     ViewData["Title"] = "Hapus";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<style>
-    .sorok {
-        display: none;
-    }
-</style>
-<h1>Hapus</h1>
-
-<h3 class="text-danger">Anda pasti?</h3>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="card box-shadow border-danger mb-3">
-            <div class="card-header bg-danger text-white">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5 class="text-left">Daftar Jurulatih - @ViewData["Title"]</h5>
-                    </div>
-                </div>
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-danger mb-0">Jurulatih - Hapus</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Hapus</span>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="form-row mb-2">
-                            <div class="form-group col-md-4">
-                                <label asp-for="NoKp" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.NoKp)" readonly />
-                            </div>
-                            <div class="form-group col-md">
-                                <label asp-for="Nama" class="control-label"></label>
-                                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Nama)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="card mb-2">
-                                <div class="card-header">
-                                    Profil Kategori
-                                </div>
-                                <div class="form-row">               
-                                    <div class="card-body p-1">
-                                        <div class="form-row mb-2 ml-4">
-                                            <div class="col-md-3">
-                                                <label asp-for="IsJSMBakat"></label>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <div class="input-group input-group-sm ">
-                                                    <input type="checkbox" data-val="true" id="IsJSMBakat" asp-for="IsJSMBakat" value="true" class="form-control-sm" disabled>
-                                                    <input asp-for="IsJSMBakat" type="hidden" value="false">
-                                                </div>
-                                            </div>
-                                        </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-4">
+                        <label asp-for="NoKp" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.NoKp)" readonly />
+                    </div>
+                    <div class="form-group col-md">
+                        <label asp-for="Nama" class="control-label"></label>
+                        <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Nama)" readonly />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Profil Kategori</label>
+                    <div class="card mb-2 p-2">
+                        <div class="form-row ml-4 mt-2">    
+                            <div class="col-md-4">
+                                <div class="form-row">
+                                    <div class="col-9">
+                                        <label asp-for="IsJSMBakat"></label>
                                     </div>
-                                    <div class="card-body p-1">
-                                        <div class="form-row mb-2 ml-4">
-                                            <div class="col-md-3">
-                                                <label asp-for="IsJSMPelapis"></label>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <div class="input-group input-group-sm ">
-                                                    <input type="checkbox" data-val="true" id="IsJSMPelapis" asp-for="IsJSMPelapis" value="true" class="form-control-sm" disabled>
-                                                    <input asp-for="IsJSMPelapis" type="hidden" value="false">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    
-                                    </div>
-                                    <div class="card-body p-1">
-                                        <div class="form-row mb-2 ml-4">
-                                            <div class="col-md-3">
-                                                <label asp-for="IsSukma"></label>
-                                            </div>
-                                            <div class="col-md-9">
-                                                <div class="input-group input-group-sm ">
-                                                    <input type="checkbox" data-val="true" id="IsSukma" asp-for="IsSukma" value="true" class="form-control-sm" disabled>
-                                                    <input asp-for="IsSukma" type="hidden" value="false">
-                                                </div>
-                                            </div>
+                                    <div class="col-3">
+                                            <div class="input-group input-group-sm ">
+                                            <input type="checkbox" data-val="true" id="IsJSMBakat" asp-for="IsJSMBakat" value="true" class="form-control-sm" disabled>
+                                            <input asp-for="IsJSMBakat" type="hidden" value="false">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md">
-                                <label asp-for="JSukanId" class="control-label"></label>
-                                <input class="form-control form-control-sm text-uppercase" value="@Model.JSukan.Perihal" readonly />
+                            <div class="col-md-4">
+                                <div class="form-row">
+                                    <div class="col-9">
+                                        <label asp-for="IsJSMPelapis"></label>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group input-group-sm ">
+                                            <input type="checkbox" data-val="true" id="IsJSMPelapis" asp-for="IsJSMPelapis" value="true" class="form-control-sm" disabled> 
+                                            <input asp-for="IsJSMPelapis" type="hidden" value="false">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-row ">
-                            <div class="form-group col-md">
-                                <label asp-for="Alamat1" class="control-label"></label>
-                                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat1)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row ">
-                            <div class="form-group col-md">
-                                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat2)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row ">
-                            <div class="form-group col-md">
-                                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat3)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md ">
-                                <label asp-for="Poskod" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Poskod)" readonly />
-                            </div>
-                            <div class="form-group col-md ">
-                                <label asp-for="Bandar" class="control-label"></label>
-                                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Bandar)" readonly />
-                            </div>
-                            <div class="form-group col-md">
-                                <label asp-for="JNegeri" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JNegeri.Perihal)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row sorok">
-                            <div class="form-group col-md">
-                                <label asp-for="JAgama" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JAgama.Perihal)" readonly />
-                            </div>
-                            <div class="form-group col-md">
-                                <label asp-for="JBangsa" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JBangsa.Perihal)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row sorok">
-                            <div class="form-group col-md">
-                                <label asp-for="Telefon" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Telefon)" readonly />
-                            </div>
-                            <div class="form-group col-md">
-                                <label asp-for="Emel" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Emel)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row sorok">
-                            <div class="form-group col-md">
-                                <label asp-for="TarikhAktif" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhAktif)" readonly />
-                            </div>
-                            <div class="form-group col-md">
-                                <label asp-for="TarikhBerhenti" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhBerhenti)" readonly />
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md sorok">
-                                <label asp-for="JCaraBayar" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JCaraBayar.Perihal)" readonly />
-                            </div>
-                            <div class="form-group col-md">
-                                <label asp-for="NoAkaunBank" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.NoAkaunBank)" readonly />
+                            <div class="col-md-4">
+                                <div class="form-row">
+                                    <div class="col-9">
+                                        <label asp-for="IsSukma"></label>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group input-group-sm ">
+                                            <input type="checkbox" data-val="true" id="IsSukma" asp-for="IsSukma" value="true" class="form-control-sm" disabled>
+                                            <input asp-for="IsSukma" type="hidden" value="false">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <br />
+
+                <div class="form-row">
+                    <div class="form-group col-md">
+                        <label asp-for="JSukanId" class="control-label"></label>
+                        <input class="form-control form-control-sm text-uppercase" value="@Model.JSukan.Perihal" readonly />
+                    </div>
+                </div>
+                <div class="form-row ">
+                    <div class="form-group col-md">
+                        <label asp-for="Alamat1" class="control-label"></label>
+                        <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat1)" readonly />
+                    </div>
+                </div>
+                <div class="form-row ">
+                    <div class="form-group col-md">
+                        <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat2)" readonly />
+                    </div>
+                </div>
+                <div class="form-row ">
+                    <div class="form-group col-md">
+                        <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat3)" readonly />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md ">
+                        <label asp-for="Poskod" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Poskod)" readonly />
+                    </div>
+                    <div class="form-group col-md ">
+                        <label asp-for="Bandar" class="control-label"></label>
+                        <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Bandar)" readonly />
+                    </div>
+                    <div class="form-group col-md">
+                        <label asp-for="JNegeri" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JNegeri.Perihal)" readonly />
+                    </div>
+                </div>
+                <div class="form-row sorok">
+                    <div class="form-group col-md">
+                        <label asp-for="JAgama" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JAgama.Perihal)" readonly />
+                    </div>
+                    <div class="form-group col-md">
+                        <label asp-for="JBangsa" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JBangsa.Perihal)" readonly />
+                    </div>
+                </div>
+                <div class="form-row sorok">
+                    <div class="form-group col-md">
+                        <label asp-for="Telefon" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Telefon)" readonly />
+                    </div>
+                    <div class="form-group col-md">
+                        <label asp-for="Emel" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Emel)" readonly />
+                    </div>
+                </div>
+                <div class="form-row sorok">
+                    <div class="form-group col-md">
+                        <label asp-for="TarikhAktif" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhAktif)" readonly />
+                    </div>
+                    <div class="form-group col-md">
+                        <label asp-for="TarikhBerhenti" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhBerhenti)" readonly />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md sorok">
+                        <label asp-for="JCaraBayar" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.JCaraBayar.Perihal)" readonly />
+                    </div>
+                    <div class="form-group col-md">
+                        <label asp-for="NoAkaunBank" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.NoAkaunBank)" readonly />
+                    </div>
+                </div>
             </div>
         </div>
+        
+        <hr />
+        <div class="form-group">
+             <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <input type="submit" value="Hapus" class="btn ac-danger btn-sm" /> 
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+            </form>
+            
+        </div>
     </div>
-</div>
-<div>
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Hapus" class="btn btn-danger btn-sm" />
-        <a asp-action="Index" class="btn btn-link">Kembali Ke Indeks</a>
-    </form>
 </div>

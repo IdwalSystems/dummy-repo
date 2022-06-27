@@ -112,9 +112,9 @@
             "</td><td>" + data.akCarta.kod + " - " + data.akCarta.perihal +
             "</td><td class='text-right'>" + (data.amaun).toFixed(2) +
             "</td><td>" +
-            "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+            "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
             "</td><td hidden>" +
-            "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)' ><i class='fas fa-trash' ></i></button>" +
+            "<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)' ><i class='fas fa-trash' ></i></button>" +
             "</td><tr>";
         $("table tbody#tbodyObjek").append(str);
         sum += data.amaun;
@@ -324,13 +324,13 @@
                                 //Add Edit Button cell.
                                 cell = $(row.insertCell(-1));
 
-                                var btnUpdate1 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                                var btnUpdate1 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
                                 cell.append(btnUpdate1);
 
                                 //Add Remove Button cell.
                                 cell = $(row.insertCell(-1));
 
-                                var btnRemove1 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                                var btnRemove1 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
                                 cell.append(btnRemove1);
 
                                 $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
@@ -495,9 +495,9 @@
                                     "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
                                     "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" +
-                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
-                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
                                 $("table tbody#tbodyObjek").append(str);
                                 sum += item1.amaun;
@@ -625,12 +625,12 @@
                                 //Add Edit Button cell.
                                 cell = $(row.insertCell(-1));
 
-                                var btnUpdate2 = $("<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
+                                var btnUpdate2 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
                                 cell.append(btnUpdate2);
 
                                 //Add Button cell.
                                 cell = $(row.insertCell(-1));
-                                var btnRemove2 = $("<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
+                                var btnRemove2 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
                                 cell.append(btnRemove2);
 
                                 //Clear the TextBoxes.
@@ -775,9 +775,9 @@
                                     "</td><td>" + tarPO +
                                     "</td><td class='text-right'>" + jumlahPO.toFixed(2) +
                                     "</td><td>" +
-                                    "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalInbois' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalInbois' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +
-                                    "<button class='btn btn-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "<button class='btn ac-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash' ></i></button>" +
                                     "</td><tr>";
                                 $("table tbody#tbodyInbois").append(str);
                                 sum += item1.amaun;

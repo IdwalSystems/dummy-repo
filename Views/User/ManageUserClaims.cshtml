@@ -24,7 +24,7 @@
             "order": [[2, "asc"]],
             "scrollY": "50vh",
             "scrollCollapse": true,
-            "paging": false,
+            //"paging": false,
             dom: 'lrt'
         });
 
@@ -95,61 +95,73 @@
 
 
 </script>
-<div class="row mb-2">
-    <div class="col-8">
-        <h3 class="text-left text-primary">Capaian Pengguna</h3>
+<div >
+    <div class="card box-shadow">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-8">
+                    <h5 class="text-uppercase text-primary mb-0">Maklumat Pengguna - Capaian</h5>
+                    <span class="ac-ref"><a asp-controller="User" asp-action="Index" class="text-secondary">Indeks</a> / Capaian</span>
+                </div>
+                <div class="col-4 text-right">
+                    <a asp-controller="User" asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+                </div>
+    
+            </div>
+            <hr class="mt-2"/>
+            <form method="post">
+                <input asp-for="@Model.UserId" hidden />
+                        <div id="divCheckAll" class="form-check">
+                            <input type="checkbox" name="checkall" id="checkall" onClick="check_uncheck_checkbox(this.checked);" />
+                            <label>Pilih / Batal Semua</label>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%">
+                                <thead>
+                                    <tr class="table-secondary">
+                                        <th>Bil</th>
+                                        <th class="kod">
+                                            Kod
+                                        </th>
+                                        <th class="nama">
+                                            Nama
+                                        </th>
+                                        <th >
+                                            Pilihan
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.Claims.Count; i++)
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <input asp-for="@Model.Claims[i].ClaimType" hidden />
+                                                @Model.Claims[i].ClaimType
+                                            </td>
+                                            <td>
+                                                @Model.Claims[i].ClaimValue
+                                            </td>
+                                            <td class="action-button">
+                                                <input type="checkbox" class="form-check-label" asp-for="@Model.Claims[i].IsSelected" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                     <hr />
+                     <div class="form-group">
+                         <button type="submit" class="btn ac-primary btn-sm">Simpan</button>
+                        <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+                     </div>
+                        
+            </form>
+        </div>
     </div>
 </div>
-<form method="post">
-    <input asp-for="@Model.UserId" hidden />
-    <div class="card">
-        <div class="card-body">
-            <div id="divCheckAll" class="m-2 form-check">
-                <input type="checkbox" name="checkall" id="checkall" onClick="check_uncheck_checkbox(this.checked);" />
-                <label>Pilih / Batal Semua</label>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%">
-                    <thead>
-                        <tr class="table-secondary">
-                            <th>Bil</th>
-                            <th class="kod">
-                                Kod
-                            </th>
-                            <th class="nama">
-                                Nama
-                            </th>
-                            <th>
-                                Pilihan
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.Claims.Count; i++)
-                        {
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <input asp-for="@Model.Claims[i].ClaimType" hidden />
-                                    @Model.Claims[i].ClaimType
-                                </td>
-                                <td>
-                                    @Model.Claims[i].ClaimValue
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="form-check-label" asp-for="@Model.Claims[i].IsSelected" />
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="card-footer">
-            <input type="submit" value="Simpan" class="btn btn-primary" />
-        </div>
-    </div>
-</form>
+
     
     @*<form method="post">
         <input asp-for="@Model.UserId" hidden />

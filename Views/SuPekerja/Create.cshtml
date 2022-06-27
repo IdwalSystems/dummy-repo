@@ -6,21 +6,22 @@
 }
 <partial name="_JSCreate" />
 
-<style>
-    .sorok{
-        display:none;
-    }
-</style>
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-success mb-0">Anggota - Tambah</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Tambah</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
 
-<div class="row">
-    <div class="col-md-12">
         <form asp-action="Create" class="needs-validation">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="card box-shadow border-success mb-3">
-                <div class="card-header bg-success text-white">
-                    <h5>Anggota - @ViewData["Title"]</h5>
-                </div>
-                <div class="card-body">
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label asp-for="NoGaji" class="control-label"></label>
@@ -84,95 +85,8 @@
                             <span asp-validation-for="JNegeriId" class="text-danger"></span>
                         </div>
                     </div>
-                    @*<div class="form-row sorok">
-            <div class="form-group col-md">
-                <label asp-for="JAgamaId" class="control-label"></label>
-                <select asp-for="JAgamaId" class="form-control form-control-sm">
-                    <option value="" hidden>-- Pilih Agama --</option>
-                    @foreach (var s in ViewBag.JAgama)
-                    {
-                        <option value="@s.Id">@s.Perihal </option>
-                    }
-                </select>
-            </div>
-            <div class="form-group col-md">
-                <label asp-for="JBangsaId" class="control-label"></label>
-                <select asp-for="JBangsaId" class="form-control form-control-sm">
-                    <option value="" hidden>-- Pilih Bangsa --</option>
-                    @foreach (var s in ViewBag.JBangsa)
-                    {
-                        <option value="@s.Id">@s.Perihal </option>
-                    }
-                </select>
-            </div>
-            <div class="form-group col-md">
-                <label asp-for="StatusKahwin" class="control-label"></label>
-                <input asp-for="StatusKahwin" class="form-control form-control-sm" />
-                <span asp-validation-for="StatusKahwin" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-row sorok">
-            <div class="form-group col-md">
-                <label asp-for="TelefonRumah" class="control-label"></label>
-                <input asp-for="TelefonRumah" class="form-control form-control-sm" type="tel" />
-                <span asp-validation-for="TelefonRumah" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md">
-                <label asp-for="TelefonBimbit" class="control-label"></label>
-                <input asp-for="TelefonBimbit" class="form-control form-control-sm" type="tel" />
-                <span asp-validation-for="TelefonBimbit" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md">
-                <label asp-for="Emel" class="control-label"></label>
-                <input asp-for="Emel" class="form-control form-control-sm" type="email" />
-                <span asp-validation-for="Emel" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-row sorok">
-            <div class="form-group col-md">
-                <label asp-for="TarikhMasukKerja" class="control-label"></label>
-                <input asp-for="TarikhMasukKerja" class="form-control form-control-sm" type="date" />
-                <span asp-validation-for="TarikhMasukKerja" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md">
-                <label asp-for="TarikhBerhentiKerja" class="control-label"></label>
-                <input asp-for="TarikhBerhentiKerja" class="form-control form-control-sm" type="date" />
-                <span asp-validation-for="TarikhBerhentiKerja" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md">
-                <label asp-for="TarikhPencen" class="control-label"></label>
-                <input asp-for="TarikhPencen" class="form-control form-control-sm" type="date" />
-                <span asp-validation-for="TarikhPencen" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-row sorok">
-            <div class="form-group col-md">
-                <label asp-for="JJawatanPekerjaId" class="control-label"></label>
-                <select asp-for="JJawatanPekerjaId" class="form-control form-control-sm">
-                    <option value="" hidden>-- Pilih Jawatan --</option>
-                    @foreach (var s in ViewBag.JJawatanPekerja)
-                    {
-                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                    }
-                </select>
-            </div>
-        </div>*@
+
                     <div class="form-row">
-                        @*<div class="form-group col-md sorok">
-                <label asp-for="GajiPokok" class="control-label"></label>
-                <input asp-for="GajiPokok" class="form-control form-control-sm" type="number" step="0.01" value="0.00" />
-                <span asp-validation-for="GajiPokok" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md sorok">
-                <label asp-for="JCaraBayarId" class="control-label"></label>
-                <select asp-for="JCaraBayarId" class="form-control form-control-sm">
-                    <option value="" hidden>-- Pilih Cara Bayar --</option>
-                    @foreach (var s in ViewBag.JCaraBayar)
-                    {
-                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                    }
-                </select>
-            </div>*@
                         <div class="form-group col-md-4">
                             <label asp-for="NoAkaunBank" class="control-label"></label>
                             <input asp-for="NoAkaunBank" class="form-control form-control-sm" />
@@ -195,10 +109,8 @@
                             <span asp-validation-for="Emel" class="text-danger"></span>
                         </div>
                     </div>
-                    <br />
-
                     @*table Objek*@
-                    <div class="card box-shadow mb-3 sorok">
+                    <div class="card box-shadow mb-3" hidden>
                         <div class="card-header">
                             <h6>Tanggungan</h6>
                         </div>
@@ -228,16 +140,13 @@
                     </div>
                     @*table Objek end*@
 
-                </div>
-            </div>
+            <hr />
             <div class="form-group">
-                <input type="submit" value="Simpan" class="btn btn-primary" />
+                <input type="submit" value="Simpan" class="btn btn-primary btn-sm" />
+                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
         </form>
     </div>
-</div>
-<div>
-    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
 @section Scripts {

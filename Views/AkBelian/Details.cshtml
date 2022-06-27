@@ -5,332 +5,291 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card box-shadow border-dark mb-3">
-            <div class="card-header bg-dark text-white">
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-dark mb-0">Inbois Pembekal - Papar</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Papar</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+        <div class="form-row">
+            <div class="col-lg-10">
                 <div class="form-row">
-                    <div class="col-md-6">
-                        <h5 class="text-left">Inbois Pembekal - @ViewData["Title"]</h5>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <label class="control-label">Tahun</label>
+                            <input class="form-control form-control-sm" value="@Model.Tahun" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label asp-for="NoInbois" class="control-label"></label>
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.NoInbois.Substring(3)" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label asp-for="Tarikh" class="control-label"></label>
+                            <input class="form-control form-control-sm" value="@Model.Tarikh.ToString("dd/MM/yyyy")" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label asp-for="JKWId" class="control-label"></label>
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label asp-for="JBahagianId" class="control-label"></label>
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="AkPOId" class="control-label"></label>
+                            <input class="form-control form-control-sm" value="@Model.AkPO.NoPO" readonly />
+                        </div>
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="col-md-2">
+                        <label asp-for="AkPembekalId" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Model.AkPembekal.KodSykt" readonly />
+                    </div>
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <label class="control-label">Nama Pembekal</label>
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.NamaSykt" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Alamat</label>
+                    <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat1" readonly />
+                </div>
+                <div class="form-group">
+                    <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat2" readonly />
+                </div>
+                <div class="form-group">
+                    <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat3" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Kod Pemiutang</label>
+                    <input class="form-control form-control-sm text-uppercase" value="@Model.KodObjekAP.Kod - @Model.KodObjekAP.Perihal " readonly />
+                </div>
+                <div class="form-row pb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="TarikhTerima" class="control-label"></label>
+                            <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhTerima)" readonly />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="TarikhKewanganTerima" class="control-label"></label>
+                            <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhKewanganTerima)" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="card mb-2">
+                    <div class="card-body p-1">
+                        <div class="form-group col-sm">
+                            <label asp-for="FlPosting" class="control-label"></label>
+                            <div class="custom-control custom-radio">
+                                <input asp-for="FlPosting" type="radio" id="FlPosting1" name="FlPosting" class="custom-control-input" value="0" checked>
+                                <label class="custom-control-label" for="FlPosting">Belum</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input asp-for="FlPosting" type="radio" id="FlPosting2" name="FlPosting" class="custom-control-input" value="1">
+                                <label class="custom-control-label" for="FlPosting">Sudah</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card mb-2">
+                    <div class="card-body p-1">
+                        <div class="form-group col-sm">
+                            <label class="control-label">Batal</label>
+                            <div class="custom-control custom-radio">
+                                <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus" class="custom-control-input" value="0" checked>
+                                <label class="custom-control-label" for="FlHapus">Tidak</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus" class="custom-control-input" value="1">
+                                <label class="custom-control-label" for="FlHapus">Ya</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*table Objek*@
+        <div class="card box-shadow mb-3">
+            <div class="card-header">
+                <h6>Objek</h6>
             </div>
             <div class="card-body">
-                <div class="form-row">
-                    <div class="col-lg-10">
-                        <div class="form-row">
-                            <div class="col-md-1">
-                                <div class="form-group">
-                                    <label class="control-label">Tahun</label>
-                                    <input class="form-control form-control-sm" value="@Model.Tahun" readonly />
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label asp-for="NoInbois" class="control-label"></label>
-                                    <input class="form-control form-control-sm text-uppercase" value="@Model.NoInbois.Substring(3)" readonly />
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label asp-for="Tarikh" class="control-label"></label>
-                                    <input class="form-control form-control-sm" value="@Model.Tarikh.ToString("dd/MM/yyyy")" readonly />
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label asp-for="JKWId" class="control-label"></label>
-                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label asp-for="JBahagianId" class="control-label"></label>
-                                    <input class="form-control form-control-sm text-uppercase" value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " readonly />
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label asp-for="AkPOId" class="control-label"></label>
-                                    <input class="form-control form-control-sm" value="@Model.AkPO.NoPO" readonly />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-2">
-                                <label asp-for="AkPembekalId" class="control-label"></label>
-                                <input class="form-control form-control-sm" value="@Model.AkPembekal.KodSykt" readonly />
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label class="control-label">Nama Pembekal</label>
-                                    <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.NamaSykt" readonly />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Alamat</label>
-                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat1" readonly />
-                        </div>
-                        <div class="form-group">
-                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat2" readonly />
-                        </div>
-                        <div class="form-group">
-                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPembekal.Alamat3" readonly />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Kod Pemiutang</label>
-                            <input class="form-control form-control-sm text-uppercase" value="@Model.KodObjekAP.Kod - @Model.KodObjekAP.Perihal " readonly />
-                        </div>
-                        <div class="form-row pb-3">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label asp-for="TarikhTerima" class="control-label"></label>
-                                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhTerima)" readonly />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label asp-for="TarikhKewanganTerima" class="control-label"></label>
-                                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.TarikhKewanganTerima)" readonly />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <div class="card mb-2">
-                            <div class="card-body p-1">
-                                <div class="form-group col-sm">
-                                    <label asp-for="FlPosting" class="control-label"></label>
-                                    <div class="custom-control custom-radio">
-                                        <input asp-for="FlPosting" type="radio" id="FlPosting1" name="FlPosting" class="custom-control-input" value="0" checked>
-                                        <label class="custom-control-label" for="FlPosting">Belum</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input asp-for="FlPosting" type="radio" id="FlPosting2" name="FlPosting" class="custom-control-input" value="1">
-                                        <label class="custom-control-label" for="FlPosting">Sudah</label>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="table-responsive">
 
-                        </div>
-                        <div class="card mb-2">
-                            <div class="card-body p-1">
-                                <div class="form-group col-sm">
-                                    <label class="control-label">Batal</label>
-                                    <div class="custom-control custom-radio">
-                                        <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus" class="custom-control-input" value="0" checked>
-                                        <label class="custom-control-label" for="FlHapus">Tidak</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus" class="custom-control-input" value="1">
-                                        <label class="custom-control-label" for="FlHapus">Ya</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @*table Objek*@
-                <div class="card box-shadow mb-3">
-                    <div class="card-header">
-                        <h6>Objek</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
+                    <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th style="width:40%">Kod</th>
+                                <th style="width:50%" class="text-right">Amaun</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyObjek">
+                            @foreach (var item in ViewBag.akBelian1)
+                            {
+                                <tr id="@item.Id">
+                                    <td id="akCartaId" hidden>@item.AkCartaId</td>
+                                    <td class="text-left">@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
+                                    <td class="text-right" id="td1Amaun">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                                </tr>
 
-                            <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th style="width:40%">Kod</th>
-                                        <th style="width:50%" class="text-right">Amaun</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyObjek">
-                                    @foreach (var item in ViewBag.akBelian1)
-                                    {
-                                        <tr id="@item.Id">
-                                            <td id="akCartaId" hidden>@item.AkCartaId</td>
-                                            <td class="text-left">@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                            <td class="text-right" id="td1Amaun">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
-                                        </tr>
+                            }
+                        </tbody>
+                        <tfoot>
 
-                                    }
-                                </tbody>
-                                <tfoot>
-
-                                </tfoot>
-                            </table>
-
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="form-group pb-2">
-                            <label asp-for="Jumlah" class="control-label">Jumlah Objek RM</label>
-                            <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly />
-                        </div>
-                    </div>
+                        </tfoot>
+                    </table>
 
                 </div>
-                @*table Objek end*@
+            </div>
+            <div class="card-footer">
+                <div class="form-group pb-2">
+                    <label asp-for="Jumlah" class="control-label">Jumlah Objek RM</label>
+                    <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly />
+                </div>
+            </div>
 
-                @*table perihal*@
-                <div class="card box-shadow mb-3 mt-2">
-                    <div class="card-header">
-                        <h6>Perihal</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive-md">
-                            <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th class="text-left">Bil</th>
-                                        <th class="text-left">No Stok</th>
-                                        <th class="text-left">Perihal</th>
-                                        <th class="text-right">Kuantiti</th>
-                                        <th class="text-center">Unit</th>
-                                        <th class="text-right">Harga/Unit</th>
-                                        <th class="text-right">Amaun</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyPerihal">
-                                    @foreach (var item in ViewBag.AkBelian2)
-                                    {
-                                        <tr>
-                                            <td class="text-left">@item.Bil</td>
-                                            <td class="text-left">@item.NoStok</td>
-                                            <td class="text-left text-uppercase">@item.Perihal</td>
-                                            <td class="text-right">@item.Kuantiti</td>
-                                            <td class="text-center text-uppercase">@item.Unit</td>
-                                            <td class="text-right">@Convert.ToDecimal(item.Harga).ToString("#,##0.00")</td>
-                                            <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
-                                        </tr>
+        </div>
+        @*table Objek end*@
 
-                                    }
-                                </tbody>
-                                <tfoot>
+        @*table perihal*@
+        <div class="card box-shadow mb-3 mt-2">
+            <div class="card-header">
+                <h6>Perihal</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive-md">
+                    <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Bil</th>
+                                <th class="text-left">No Stok</th>
+                                <th class="text-left">Perihal</th>
+                                <th class="text-right">Kuantiti</th>
+                                <th class="text-center">Unit</th>
+                                <th class="text-right">Harga/Unit</th>
+                                <th class="text-right">Amaun</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyPerihal">
+                            @foreach (var item in ViewBag.AkBelian2)
+                            {
+                                <tr>
+                                    <td class="text-left">@item.Bil</td>
+                                    <td class="text-left">@item.NoStok</td>
+                                    <td class="text-left text-uppercase">@item.Perihal</td>
+                                    <td class="text-right">@item.Kuantiti</td>
+                                    <td class="text-center text-uppercase">@item.Unit</td>
+                                    <td class="text-right">@Convert.ToDecimal(item.Harga).ToString("#,##0.00")</td>
+                                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                                </tr>
 
-                                </tfoot>
-                            </table>
+                            }
+                        </tbody>
+                        <tfoot>
 
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="form-group">
-                            <label class="control-label">Jumlah Perihal RM</label>
-                            <input class="form-control form-control-sm" id="jumlahPerihal" value="@Model.JumlahPerihal" name="JumlahPerihal" readonly />
-                        </div>
-                    </div>
+                        </tfoot>
+                    </table>
 
                 </div>
+            </div>
+            <div class="card-footer">
+                <div class="form-group">
+                    <label class="control-label">Jumlah Perihal RM</label>
+                    <input class="form-control form-control-sm" id="jumlahPerihal" value="@Model.JumlahPerihal" name="JumlahPerihal" readonly />
+                </div>
+            </div>
 
-                @*table perihal end*@
+        </div>
 
-                @*table akPV2*@
-                @if (Model.AkPV2 != null)
-                {
-                <div class="card box-shadow mb-3">
-                    <div class="card-header bg-success text-white">
-                        <h6>Baucer Pembayaran</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
+        @*table perihal end*@
 
-                            <table id="tblAkPV2" class="table table-sm table-borderless" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th style="width:40%">Kod</th>
-                                        <th style="width:50%" class="text-right">Amaun</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyObjek">
-                                    @foreach (var item in Model.AkPV2)
-                                    {
-                                        <tr id="@item.Id">
-                                            <td >@item.AkPV.NoPV</td>
-                                            <td class="text-right" id="td3Amaun">@Convert.ToDecimal(item.AkPV.Jumlah).ToString("#,##0.00")</td>
-                                            <td class="text-center">
-                                                <div class="btn-group" role="group" aria-label="action">
-                                                    <a asp-controller="AkPV" asp-action="Details" asp-route-id="@item.AkPV.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                                                </div>
-                                            </td>
+        @*table akPV2*@
+        @if (Model.AkPV2.Count() != 0)
+        {
+        <div class="card box-shadow mb-3">
+            <div class="card-header bg-success text-white">
+                <h6>Baucer Pembayaran</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+
+                    <table id="tblAkPV2" class="table table-sm table-borderless" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th style="width:40%">Kod</th>
+                                <th style="width:50%" class="text-right">Amaun</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyObjek">
+                            @foreach (var item in Model.AkPV2)
+                            {
+                                <tr id="@item.Id">
+                                    <td >@item.AkPV.NoPV</td>
+                                    <td class="text-right" id="td3Amaun">@Convert.ToDecimal(item.AkPV.Jumlah).ToString("#,##0.00")</td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group" aria-label="action">
+                                            <a asp-controller="AkPV" asp-action="Details" asp-route-id="@item.AkPV.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                        </div>
+                                    </td>
                                             
-                                        </tr>
+                                </tr>
 
-                                    }
-                                </tbody>
-                                <tfoot>
+                            }
+                        </tbody>
+                        <tfoot>
 
-                                </tfoot>
-                            </table>
-
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="form-group pb-2">
-                            <label class="control-label">Jumlah Baucer RM</label>
-                            <input value="@Model.JumlahPV" class="form-control form-control-sm" id="jumlahObjek" readonly />
-                        </div>
-                    </div>
-
-                </div>    
-                }
-                
-                @*table akPV2 end*@
-            </div>
-        </div>
-    </div>
-</div>
-<div>
-    @if (Model.FlHapus == 0)
-    {
-        @if (Model.FlPosting == 1)
-        {
-        }
-        else
-        {
-            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
-
-            @*<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">
-                    Batal
-                </button>*@
-        }
-    }
-
-    <a asp-action="Index">Kembali ke Indeks</a>
-</div>
-
-<!-- Modal Hapus -->
-@*<div class="modal fade" id="modalBatal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-md modal-dialog modal-dialog-centered">
-        <div class="modal-content ">
-            <div class="modal-header bg-warning text-white">
-
-                <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i>  Batal</h5>
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times text-white"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p class="text-center">Anda pasti untuk meneruskan operasi ini?</p>
-                <div class="form-row">
-                    <div class="col-6 mb-2">
-                        <a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-danger btn-block btn-lg ">YA</a>
-                    </div>
-                    <div class="col-6">
-                        <a data-dismiss="modal" aria-label="Close" class=" btn btn-secondary btn-block btn-lg text-white">TIDAK</a>
-                    </div>
-
+                        </tfoot>
+                    </table>
 
                 </div>
             </div>
-            <div class="modal-footer" style="padding:0px;">
-
-
+            <div class="card-footer">
+                <div class="form-group pb-2">
+                    <label class="control-label">Jumlah Baucer RM</label>
+                    <input value="@Model.JumlahPV" class="form-control form-control-sm" id="jumlahObjek" readonly />
+                </div>
             </div>
+
+        </div>    
+        }
+                
+        @*table akPV2 end*@
+        <hr />
+        <div class="form-group">
+            @if (Model.FlPosting == 1)
+            {
+            }
+            else
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a> 
+            }
+            <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
         </div>
     </div>
-</div>*@
-<!-- Modal Hapus End -->
+</div>

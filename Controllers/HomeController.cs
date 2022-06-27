@@ -56,6 +56,23 @@ namespace MSNK.Controllers
                 // filtering day balance
                 var BenchDate = DateTime.Today.AddDays(-5);
                 akPO = akPO.Where(b => b.Tarikh < BenchDate).ToList();
+
+                // badge count
+                int bilMore5Days = 0;
+                int bilLess5Days = 0;
+                foreach (var item in akPO)
+                {
+                    var bakiTarikh = (DateTime.Now - item.Tarikh).Days;
+                    if (bakiTarikh > 14)
+                    {
+                        bilMore5Days++;
+                    }
+                    else
+                    {
+                        bilLess5Days++;
+                    }
+                }
+                // badge count end
                 // Widget Status PO end
 
                 // Widget Status Nota Minta
@@ -64,6 +81,22 @@ namespace MSNK.Controllers
                     .Where(b => b.FlPosting == 0 )
                     .OrderByDescending(b => b.Tarikh)
                     .ToListAsync();
+
+                // badge count
+                int bilKewNM = 0;
+                int bilLulusNM = 0;
+                foreach (var item in akNotaMinta)
+                {
+                    if (item.NoSiri == null)
+                    {
+                        bilKewNM++;
+                    } 
+                    else
+                    {
+                        bilLulusNM++;
+                    }
+                }
+                //badge count end
                 // Widget Status PO end
 
                 // Widget Status Pendahuluan Pelbagai
@@ -72,12 +105,25 @@ namespace MSNK.Controllers
                     .Where(b => b.FlPosting == 0)
                     .OrderByDescending(b => b.Tarikh)
                     .ToListAsync();
+
+                // badge count
+                int bilKewPP = 0;
+                foreach (var item in akNotaMinta)
+                {
+                    bilKewPP++;
+                }
+                //badge count end
                 // Widget Status Pendahuluan Pelbagai end
 
                 dynamic dyModel = new ExpandoObject();
                 dyModel.AkPO = akPO;
+                dyModel.bilMore5Days = bilMore5Days;
+                dyModel.bilLess5Days = bilLess5Days;
                 dyModel.AkNotaMinta = akNotaMinta;
+                dyModel.bilKewNM = bilKewNM;
+                dyModel.bilLulusNM = bilLulusNM;
                 dyModel.SpPendahuluanPelbagai = spPendahuluanPelbagai;
+                dyModel.bilKewPP = bilKewPP;
                 return View(dyModel);
             }
             

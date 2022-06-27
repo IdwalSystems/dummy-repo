@@ -52,10 +52,11 @@
                             "</td><td class='text-right'>" + (item1.tunggakan).toFixed(2) +
                             "</td><td class='text-uppercase'>" + catatan +
                             "</td><td class='text-right'>" + (item1.jumlah).toFixed(2) +
-                            "</td><td>" +
+                            "</td><td class='action-button text-center'>" +
+                            "<div class='btn-group' role='group' aria-label='action'>" +
                             "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalJurulatih' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                             "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
-                            "</td><tr>";
+                            "</div></td><tr>";
                         $("table tbody#tbodyJurulatih").append(str);
                         sum += item1.jumlah;
                     }
@@ -219,10 +220,11 @@
                                         "</td><td class='text-right'>" + (item1.tunggakan).toFixed(2) +
                                         "</td><td class='text-uppercase'>" + catatan +
                                         "</td><td class='text-right'>" + (item1.jumlah).toFixed(2) +
-                                        "</td><td>" +
+                                        "</td><td class='action-button text-center'>" +
+                                        "<div class='btn-group' role='group' aria-label='action'>" +
                                         "<button class='btn btn-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalJurulatih' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
                                         "<button class='btn btn-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
-                                        "</td><tr>";
+                                        "</div></td><tr>";
                                     $("table tbody#tbodyJurulatih").append(str);
                                     sum += item1.jumlah;
                                 }

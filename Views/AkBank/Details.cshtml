@@ -5,49 +5,62 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div>
-    <h4>Akaun Bank - Papar</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Kod)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.Kod)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.NoAkaun)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.NoAkaun)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.JKWId)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.JKW.Kod)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.JBahagianId)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.JBahagian.Kod)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.AkCarta)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.AkCarta.Kod)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.JBank)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.JBank.Nama)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
-    <a asp-action="Index">Kembali Ke Indeks</a>
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-dark mb-0">Akaun Bank - Papar</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Papar</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Kod)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Kod)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.NoAkaun)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.NoAkaun)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.JKWId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.JKW.Kod)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.JBahagianId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.JBahagian.Kod)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.AkCarta)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.AkCarta.Kod)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.JBank)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.JBank.Nama)
+            </dd>
+        </dl>
+        <hr />
+        <div class="form-group">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a> 
+            <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+        </div>
+    </div>
 </div>

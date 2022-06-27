@@ -1,5 +1,166 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+ 
+/*beautify*/
+.ac-ref {
+    font-size: 0.8rem;
+    color: #b1a9a9;
+}
+.ac-bg {
+    background: #f1f1f1 !important;
+}
+
+.ac-primary {
+    background: #1b84e7 !important;
+    color: #fff;
+    transition: 0.3s;
+}
+
+    .ac-primary:hover {
+        background: #125493 !important;
+        color: #fff;
+    }
+
+.ac-tertiary {
+    background: #2cf1c9 !important;
+    color: #fff;
+    transition: 0.3s;
+}
+
+    .ac-tertiary:hover {
+        background: #26d75c !important;
+        color: #fff;
+    }
+
+.ac-secondary {
+    background: #6c757d !important;
+    color: #fff;
+    transition: 0.3s;
+}
+
+    .ac-secondary:hover {
+        background: #b7bec5 !important;
+        color: #fff;
+    }
+
+.ac-light {
+    background: #e4e7e9 !important;
+    transition: 0.3s;
+}
+
+    .ac-light:hover {
+        background: #b7bec5 !important;
+        color: #fff;
+    }
+
+.ac-success {
+    background: #2ec97e !important;
+    color: #fff;
+    transition: 0.3s;
+}
+
+    .ac-success:hover {
+        background: #1e935a !important;
+        color: #fff;
+    }
+
+.ac-danger {
+    background: #f15b69 !important;
+    color: #fff;
+    transition: 0.3s;
+}
+
+    .ac-danger:hover {
+        background: #ad3944 !important;
+        color: #fff;
+    }
+
+.ac-warning {
+    background: #fbde62 !important;
+    transition: 0.3s;
+}
+
+    .ac-warning:hover {
+        background: #b39a31 !important;
+        color: #fff;
+    }
+
+.ac-info {
+    background: #2ab8cf !important;
+    color: #fff;
+    transition: 0.3s;
+}
+
+    .ac-info:hover {
+        background: #1a8293 !important;
+        color: #fff;
+    }
+
+
+.l-bg-danger {
+    background: linear-gradient(170deg, #d3050e 0%, #ffcec0 100%) !important;
+    color: #fff;
+}
+
+.l-bg-primary {
+    background: linear-gradient(170deg, #045DE9 0%, #a2e6f8 100%) !important;
+    color: #fff;
+}
+
+
+
+.l-bg-success {
+    background: linear-gradient(170deg, #429321 0%, #B4EC51 100%) !important;
+    color: #fff;
+}
+
+.l-bg-purple {
+    background: linear-gradient(170deg, #6a1493 0%, #c5aefa 100%) !important;
+    color: #fff;
+}
+.l-bg-super {
+    background-color: #118ab2;
+    background-image: linear-gradient(319deg, #118ab2 0%, #06d6a0 37%, #ffd166 100%);
+    color: #fff;
+}
+
+
+.l-bg-info {
+    background: linear-gradient(170deg, #14a3cd 0%, #B3d6D8 100%) !important;
+    color: #fff;
+}
+
+.l-bg-dark {
+    background: linear-gradient(170deg, #000000 0%, #7F8C8D 100%) !important;
+    color: #fff;
+}
+
+.l-bg-light {
+    background-image: linear-gradient(315deg, #fbfbfb 0%, #fffcff 74%) !important;
+}
+
+.ico-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+  }
+    .ico-card .i {
+        position: relative;
+        right: -20%;
+        top: 60%;
+        font-size: 32rem;
+        line-height: 0;
+        opacity: .1;
+        /*color: rgba(255,255,255,1);*/
+        z-index: 0;
+    }
+/*beautify end*/
 
 /*navbar test*/
 /* width */
@@ -272,6 +433,7 @@ body {
     position: sticky;
     right: 0px;
     background-color: white;
+    border-inline-style: inherit;
 }
 
 .form-group {
@@ -300,6 +462,11 @@ label {
 
 .card-header {
     padding: 0.5rem 0.75rem;
+}
+
+.card-body {
+    background-color: #d5fefd;
+    background-image: linear-gradient(315deg, #fbfbfb 0%, #fffcff 74%);
 }
 
 /*ToTopBtn -----------------------------------------------------------------------*/

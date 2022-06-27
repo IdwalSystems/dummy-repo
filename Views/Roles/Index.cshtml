@@ -1,15 +1,16 @@
 ﻿@model IEnumerable<IdentityRole>
-<br />
-<div class="row mb-2">
-    <div class="col-6">
-        <h4 class="text-primary">Maklumat Tahap Pengguna</h4>
-    </div>
-    @*<div class="col-6 text-right">
-        <a asp-action="Upsert" asp-controller="Roles" class="btn btn-success">Tambah Baru</a>
-    </div>*@
-</div>
-<div class="p-4 border" rounded>
-    @if (Model.Any())
+
+<div class="card box-shadow">
+    <div class="card-body border">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase mb-0">Maklumat Tahap Pengguna</h5>
+                <span class="ac-ref">Indeks</span>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+        @if (Model.Any())
     {
     <div class="table-responsive-md">
         <table class="table table-striped border table-sm">
@@ -45,4 +46,5 @@
 
     </div>
     }
+    </div>
 </div>

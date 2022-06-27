@@ -5,224 +5,227 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
-    <div class="col-md-12">
-        <div class="card box-shadow border-dark md-3">
-            <div class="card-header bg-dark text-white">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5 class="text-left">Elaun JSM - @ViewData["Title"]</h5>
-                    </div>
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-dark mb-0">Elaun JSM - Papar</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Papar</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+
+        <div class="form-row mb-2">
+            <div class="col-md-1">
+                <div class="form-group">
+                    <label asp-for="Tahun" class="control-label"></label>
+                    <input asp-for="Tahun" class="form-control form-control-sm" id="txtTahun" readonly />
+                    <span asp-validation-for="Tahun" class="text-danger"></span>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="form-row mb-2">
-                    <div class="col-md-1">
-                        <div class="form-group">
-                            <label asp-for="Tahun" class="control-label"></label>
-                            <input asp-for="Tahun" class="form-control form-control-sm" id="txtTahun" readonly />
-                            <span asp-validation-for="Tahun" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-1">
-                        <div class="form-group">
-                            <label asp-for="Bulan" class="control-label"></label>
-                            <input value="@Model.Bulan" class="form-control form-control-sm" readonly />
-                            <span asp-validation-for="Bulan" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label class="control-label" asp-for="JKWId"></label>
-                            <input class="form-control form-control-sm" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label class="control-label" asp-for="JBahagianId"></label>
-                            <input class="form-control form-control-sm text-uppercase" value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " readonly />
-                        </div>
-                    </div>
-                    <div class="col-md-1">
-                        <div class="form-group">
-                            <label asp-for="NoRujukan" class="control-label"></label>
-                            <input id="txtNoRujukan" asp-for="NoRujukan" class="form-control form-control-sm" readonly />
-                            <span asp-validation-for="NoRujukan" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label class="control-label" asp-for="AkCartaId"></label>
-                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkCarta.Kod - @Model.AkCarta.Perihal " readonly />
-                        </div>
-                    </div>
-
+            <div class="col-md-1">
+                <div class="form-group">
+                    <label asp-for="Bulan" class="control-label"></label>
+                    <input value="@Model.Bulan" class="form-control form-control-sm" readonly />
+                    <span asp-validation-for="Bulan" class="text-danger"></span>
                 </div>
-                <div class="form-row mb-2">
-                    <div class="col-md-4">
-                        <div class="card mb-2">
-                            <div class="card-body p-1">
-                                <div class="form-group col-sm">
-                                    <label asp-for="FlCetak" class="control-label"></label>
-                                    <div class="custom-control custom-radio">
-                                        <input asp-for="FlCetak" type="radio" id="FlCetak1" name="FlCetak" class="custom-control-input" value="0" checked>
-                                        <label class="custom-control-label" for="FlCetak1">Belum</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input asp-for="FlCetak" type="radio" id="FlCetak2" name="FlCetak" class="custom-control-input" value="1">
-                                        <label class="custom-control-label" for="FlCetak">Sudah</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mb-2">
-                            <div class="card-body p-1">
-                                <div class="form-group col-sm">
-                                    <label asp-for="FlPosting" class="control-label"></label>
-                                    <div class="custom-control custom-radio">
-                                        <input asp-for="FlPosting" type="radio" id="FlPosting1" name="FlPosting" class="custom-control-input" value="0" checked>
-                                        <label class="custom-control-label" for="FlPosting">Belum</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input asp-for="FlPosting" type="radio" id="FlPosting2" name="FlPosting" class="custom-control-input" value="1">
-                                        <label class="custom-control-label" for="FlPosting">Sudah</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mb-2">
-                            <div class="card-body p-1">
-                                <div class="form-group col-sm">
-                                    <label class="control-label">Batal</label>
-                                    <div class="custom-control custom-radio">
-                                        <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus" class="custom-control-input" value="0" checked>
-                                        <label class="custom-control-label" for="FlHapus">Tidak</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus" class="custom-control-input" value="1">
-                                        <label class="custom-control-label" for="FlHapus">Ya</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label" asp-for="JKWId"></label>
+                    <input class="form-control form-control-sm" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
                 </div>
-                
-                @*table Jurulatih*@
-                <div class="card box-shadow mb-3">
-                    <div class="card-header">
-                        <h6>Jurulatih</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-
-                            <table id="tblJurulatih" class="table table-sm" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                         <th hidden>Jurulatih Id</th>
-                                        <th style="width:28%">Nama</th>
-                                        <th style="width:10%">Jenis Sukan</th>
-                                        <th style="width:5%">No KP</th>
-                                        <th style="width:5%">No Akaun</th>
-                                        <th style="width:5%">Cara Bayaran</th>
-                                        <th style="width:5%">No Cek / EFT</th>
-                                        <th style="width:4%">Tar Cek / EFT</th>
-                                        <th style="width:8%">Amaun RM</th>
-                                        <th style="width:8%">Amaun Sebelum RM</th>
-                                        <th style="width:8%">Tunggakan RM</th>
-                                        <th style="width:7%">Catatan</th>
-                                        <th style="width:8%">Jumlah RM</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyJurulatih">
-
-                                    @foreach (var item in ViewBag.suProfil1)
-                                    {
-                                        <tr>
-                                            <td hidden>
-                                                @item.SuJurulatih.Id
-                                            </td>
-                                            <td class="text-uppercase">
-                                                @item.SuJurulatih.Nama
-                                            </td>
-                                            <td class="text-uppercase">
-                                                @item.JSukan.Perihal
-                                            </td>
-                                            <td class="text-uppercase">
-                                                @item.SuJurulatih.NoKp
-                                            </td>
-                                            <td class="text-uppercase">
-                                                @item.SuJurulatih.NoAkaunBank
-                                            </td>
-                                            <td class="text-uppercase">
-                                                @item.JCaraBayar.Perihal
-                                            </td>
-                                            <td class=text-uppercase>
-                                                @item.NoCekEFT
-                                            </td>
-                                            @if (!string.IsNullOrEmpty(item.TarCekEFT))
-                                            {
-                                                <td>
-                                                    @item.TarCekEFT.ToString("dd/MM/yyyy")
-                                                </td>
-                                            } else 
-                                            {
-                                                <td>
-
-                                                </td>
-                                            }
-                                            <td>
-                                                @Convert.ToDecimal(item.Amaun).ToString("#,##0.00")
-                                            </td>
-                                            <td>
-                                                @Convert.ToDecimal(item.AmaunSebelum).ToString("#,##0.00")
-                                            </td>
-                                            <td>
-                                                @Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")
-                                            </td>
-                                            <td class=text-uppercase>
-                                                @item.Catatan
-                                            </td>
-                                            <td>
-                                                @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                                <tfoot>
-
-                                </tfoot>
-                            </table>
-
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="form-group">
-                            <label class="control-label">Jumlah Keseluruhan RM</label>
-                            <input class="form-control form-control-sm" id="jumlahKeseluruhan" value="@Model.Jumlah" readonly />
-                        </div>
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label" asp-for="JBahagianId"></label>
+                    <input class="form-control form-control-sm text-uppercase" value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " readonly />
                 </div>
-                @*table Jurulatih end*@
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <label asp-for="NoRujukan" class="control-label"></label>
+                    <input id="txtNoRujukan" asp-for="NoRujukan" class="form-control form-control-sm" readonly />
+                    <span asp-validation-for="NoRujukan" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label" asp-for="AkCartaId"></label>
+                    <input class="form-control form-control-sm text-uppercase" value="@Model.AkCarta.Kod - @Model.AkCarta.Perihal " readonly />
+                </div>
             </div>
 
         </div>
+        <div class="form-row mb-2">
+            <div class="col-md-4">
+                <div class="card mb-2">
+                    <div class="card-body p-1">
+                        <div class="form-group col-sm">
+                            <label asp-for="FlCetak" class="control-label"></label>
+                            <div class="custom-control custom-radio">
+                                <input asp-for="FlCetak" type="radio" id="FlCetak1" name="FlCetak" class="custom-control-input" value="0" checked>
+                                <label class="custom-control-label" for="FlCetak1">Belum</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input asp-for="FlCetak" type="radio" id="FlCetak2" name="FlCetak" class="custom-control-input" value="1">
+                                <label class="custom-control-label" for="FlCetak">Sudah</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-2">
+                    <div class="card-body p-1">
+                        <div class="form-group col-sm">
+                            <label asp-for="FlPosting" class="control-label"></label>
+                            <div class="custom-control custom-radio">
+                                <input asp-for="FlPosting" type="radio" id="FlPosting1" name="FlPosting" class="custom-control-input" value="0" checked>
+                                <label class="custom-control-label" for="FlPosting">Belum</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input asp-for="FlPosting" type="radio" id="FlPosting2" name="FlPosting" class="custom-control-input" value="1">
+                                <label class="custom-control-label" for="FlPosting">Sudah</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-2">
+                    <div class="card-body p-1">
+                        <div class="form-group col-sm">
+                            <label class="control-label">Batal</label>
+                            <div class="custom-control custom-radio">
+                                <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus" class="custom-control-input" value="0" checked>
+                                <label class="custom-control-label" for="FlHapus">Tidak</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input asp-for="FlHapus" type="radio" id="FlHapus1" name="FlHapus" class="custom-control-input" value="1">
+                                <label class="custom-control-label" for="FlHapus">Ya</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                
+        @*table Jurulatih*@
+        <div class="card box-shadow mb-3">
+            <div class="card-header">
+                <h6>Jurulatih</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+
+                    <table id="tblJurulatih" class="table table-sm" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                    <th hidden>Jurulatih Id</th>
+                                <th style="width:28%">Nama</th>
+                                <th style="width:10%">Jenis Sukan</th>
+                                <th style="width:5%">No KP</th>
+                                <th style="width:5%">No Akaun</th>
+                                <th style="width:5%">Cara Bayaran</th>
+                                <th style="width:5%">No Cek / EFT</th>
+                                <th style="width:4%">Tar Cek / EFT</th>
+                                <th style="width:8%">Amaun RM</th>
+                                <th style="width:8%">Amaun Sebelum RM</th>
+                                <th style="width:8%">Tunggakan RM</th>
+                                <th style="width:7%">Catatan</th>
+                                <th style="width:8%">Jumlah RM</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyJurulatih">
+
+                            @foreach (var item in ViewBag.suProfil1)
+                            {
+                                <tr>
+                                    <td hidden>
+                                        @item.SuJurulatih.Id
+                                    </td>
+                                    <td class="text-uppercase">
+                                        @item.SuJurulatih.Nama
+                                    </td>
+                                    <td class="text-uppercase">
+                                        @item.JSukan.Perihal
+                                    </td>
+                                    <td class="text-uppercase">
+                                        @item.SuJurulatih.NoKp
+                                    </td>
+                                    <td class="text-uppercase">
+                                        @item.SuJurulatih.NoAkaunBank
+                                    </td>
+                                    <td class="text-uppercase">
+                                        @item.JCaraBayar.Perihal
+                                    </td>
+                                    <td class=text-uppercase>
+                                        @item.NoCekEFT
+                                    </td>
+                                    @if (!string.IsNullOrEmpty(item.TarCekEFT))
+                                    {
+                                        <td>
+                                            @item.TarCekEFT.ToString("dd/MM/yyyy")
+                                        </td>
+                                    } else 
+                                    {
+                                        <td>
+
+                                        </td>
+                                    }
+                                    <td>
+                                        @Convert.ToDecimal(item.Amaun).ToString("#,##0.00")
+                                    </td>
+                                    <td>
+                                        @Convert.ToDecimal(item.AmaunSebelum).ToString("#,##0.00")
+                                    </td>
+                                    <td>
+                                        @Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")
+                                    </td>
+                                    <td class=text-uppercase>
+                                        @item.Catatan
+                                    </td>
+                                    <td>
+                                        @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="form-group">
+                    <label class="control-label">Jumlah Keseluruhan RM</label>
+                    <input class="form-control form-control-sm" id="jumlahKeseluruhan" value="@Model.Jumlah" readonly />
+                </div>
+            </div>
+        </div>
+        @*table Jurulatih end*@
+        
+        <hr />
+        <div class="form-group">
+
+            @if (Model.FlPosting == 1)
+            {
+            }
+            else
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a> 
+            }
+            <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+        </div>
+
     </div>
-
 </div>
 
-<div>
-    @if (Model.FlPosting == 1)
-    {
-    }
-    else
-    {
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
-    }
-    <a asp-action="Index">Kembali ke Indeks</a>
-</div>

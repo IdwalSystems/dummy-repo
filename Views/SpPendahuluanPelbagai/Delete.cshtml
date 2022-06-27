@@ -5,19 +5,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Hapus</h1>
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-danger mb-0">Profil Kategori - Hapus</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Hapus</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
 
-<h3 class="text-danger">Anda pasti?</h3>
-
-<div class="row">
-    <div class="col-md-12">
-        <form asp-action="Create" class="needs-validation">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="card box-shadow border-success mb-3">
-                <div class="card-header bg-success text-white">
-                    <h5>Permohonan Pendahuluan Pelbagai - @ViewData["Title"]</h5>
-                </div>
-                <div class="card-body">
                     <div class="card">
                         <div class="card-body">
                             <div class="form-group">
@@ -279,180 +280,22 @@
                         </div>
                     </div>
                     @*table Perihal end*@
-                </div>
-            </div>
-        </form>
-        <form asp-action="Delete">
-            <input type="hidden" asp-for="Id" />
-            <input type="submit" value="Delete" class="btn btn-danger" /> |
-            <a asp-action="Index">Back to List</a>
-        </form>
+                    <hr />
+        <div class="form-group">
+             <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                 @if (Model.FlPosting == 1)
+                {
+                }
+                else
+                {
+                    <input type="submit" value="Hapus" class="btn btn-danger btn-sm" />
+                }
+                
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+            </form>
+            
+        </div>
+
     </div>
 </div>
-
-@*<div>
-    <h4>SpPermohonanAktiviti</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Penyertaan)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Penyertaan)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Pertandingan)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pertandingan)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Pengelolaan)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pengelolaan)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProgramBinaan)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProgramBinaan)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tarikh)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tarikh)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Aktiviti)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Aktiviti)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tempat)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tempat)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JTahapAktivitiId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JTahapAktivitiId)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TarSedia)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TarSedia)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JumKeseluruhan)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JumKeseluruhan)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Penyokong)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Penyokong)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StatusSokong)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StatusSokong)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TarSokong)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TarSokong)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JumSokong)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JumSokong)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Pelulus)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Pelulus)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StatusLulus)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StatusLulus)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TarLulus)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TarLulus)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JumLulus)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JumLulus)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FlPosting)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FlPosting)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FlCetak)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FlCetak)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JNegeri)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JNegeri.Kod)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JSukan)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JSukan.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TarMasuk)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TarMasuk)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserIdKemaskini)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserIdKemaskini)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TarKemaskini)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TarKemaskini)
-        </dd>
-    </dl>
-
-</div>*@

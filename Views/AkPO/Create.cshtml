@@ -4,250 +4,240 @@
     Layout = "~/Views/Shared/_Layout.cshtml"; }
 <partial name="_JSCreate" />
 
-<div class="row">
-    <div class="col-md-12">
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-success mb-0">Pesanan Tempatan - Tambah</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Tambah</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
         <form asp-action="Create">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="card box-shadow border-success mb-3">
-                <div class="card-header bg-success text-white">
-                    <h5>Pesanan Tempatan - @ViewData["Title"]</h5>
+            <div class="form-row">
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <label asp-for="Tahun" class="control-label"></label><span class="text-danger">*</span>
+                        <input asp-for="Tahun" class="form-control form-control-sm" id="txtTahun" value="@DateTime.Now.Year.ToString()" />
+                        <span asp-validation-for="Tahun" class="text-danger"></span>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="JKWId" class="control-label"></label><span class="text-danger">*</span>
+                        <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" id="ddlKW">
+                            @foreach (var s in ViewBag.JKW)
+                            {
+                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger">*</span>
+                        <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" id="ddlBahagian">
+                            @foreach (var s in ViewBag.JBahagian)
+                            {
+                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="Tarikh" class="control-label"></label><span class="text-danger">*</span>
+                        <input asp-for="Tarikh" class="form-control form-control-sm" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="Tarikh" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="NoPO" class="control-label"></label>
+                        <input asp-for="NoPO" class="form-control form-control-sm" value="@ViewBag.NoRujukan" id="txtNoPO" required readonly />
+                        <span asp-validation-for="NoPO" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="AkNotaMintaId" class="control-label"></label>
+                        <select class="form-control form-control-sm select2" asp-for="AkNotaMintaId" id="ddlNotaMinta">
+                            <option value="" hidden>-- Pilih Nota Minta --</option>
+                            @foreach (var s in ViewBag.AkNotaMinta)
+                            {
+                                <option value="@s.Id">@s.NoSiri - @s.NoRujukan </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm form-group">
+                    <div class="form-group">
+                        <label asp-for="AkPembekalId" class="control-label"></label>
+                        <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlPembekal">
+                            <option value="" hidden>-- Pilih Pembekal --</option>
+                            @foreach (var s in ViewBag.AkPembekal)
+                            {
+                                <option value="@s.Id">@s.KodSykt @s.NamaSykt </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Nama Syarikat</label>
+                        <input class="form-control form-control-sm" readonly id="txtNamaSykt" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Alamat</label>
+                        <input class="form-control form-control-sm text-uppercase" id="txtAlamat1" readonly />
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control form-control-sm text-uppercase" id="txtAlamat2" readonly />
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control form-control-sm text-uppercase" id="txtAlamat3" readonly />
+                    </div>
                     <div class="form-row">
-                        <div class="col-md-1">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label asp-for="Tahun" class="control-label"></label><span class="text-danger">*</span>
-                                <input asp-for="Tahun" class="form-control form-control-sm" id="txtTahun" value="@DateTime.Now.Year.ToString()" />
-                                <span asp-validation-for="Tahun" class="text-danger"></span>
+                                <label class="control-label">Nama Bank</label>
+                                <input class="form-control form-control-sm" readonly id="txtJenisBank" />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label asp-for="JKWId" class="control-label"></label><span class="text-danger">*</span>
-                                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" id="ddlKW">
-                                    @foreach (var s in ViewBag.JKW)
-                                    {
-                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                    }
-                                </select>
+                                <label class="control-label">No Akaun Bank</label>
+                                <input class="form-control form-control-sm" readonly id="txtAkaunBank" />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger">*</span>
-                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" id="ddlBahagian">
-                                    @foreach (var s in ViewBag.JBahagian)
-                                    {
-                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                    }
-                                </select>
+                                <label class="control-label">Telefon</label>
+                                <input class="form-control form-control-sm" readonly id="txtTelefon" />
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label asp-for="Tarikh" class="control-label"></label><span class="text-danger">*</span>
-                                <input asp-for="Tarikh" class="form-control form-control-sm" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
-                                <span asp-validation-for="Tarikh" class="text-danger"></span>
+                    </div>
+                    <div class="card mb-2">
+                        <div class="card-body pl-3 pr-3 pt-2">
+
+                            <label class="control-label">Maklumat Tambahan : </label>
+                            <div class="custom-control custom-radio">
+                                <input type="checkbox" data-val="true" id="IsInKewangan" name="IsInKewangan" value="true" checked>
+                                <label class="control-label">PO ini berada di kewangan</label>
+                                <input asp-for="IsInKewangan" hidden value="false">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                    </div>
+
+                    @*table Objek*@
+                    <div class="card box-shadow mb-3 mt-2">
+                        <div class="card-header">
+                            <h6>Objek</h6>
+                        </div>
+                        <div class="card-body">
+                            <table id="tblObjek" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th style="width:70%">Kod</th>
+                                        <th style="width:30%">Amaun RM</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyObjek">
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td id="akCartaId" hidden></td>
+                                        <td style="width:40%">
+                                            <select class="form-control form-control-sm select2" id="txtKodAkaun">
+                                                <option value="" disabled selected>-- Pilih Kod Akaun --</option>
+                                                @foreach (var s in ViewBag.AkCarta)
+                                                {
+                                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td style="width:50%"><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" value="0.00"></td>
+                                        <td><button class="btn ac-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="card-footer">
                             <div class="form-group">
-                                <label asp-for="NoPO" class="control-label"></label>
-                                <input asp-for="NoPO" class="form-control form-control-sm" value="@ViewBag.NoRujukan" id="txtNoPO" required readonly />
-                                <span asp-validation-for="NoPO" class="text-danger"></span>
+                                <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
+                                <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" value="0.00" readonly />
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label asp-for="AkNotaMintaId" class="control-label"></label>
-                                <select class="form-control form-control-sm select2" asp-for="AkNotaMintaId" id="ddlNotaMinta">
-                                    <option value="" hidden>-- Pilih Nota Minta --</option>
-                                    @foreach (var s in ViewBag.AkNotaMinta)
-                                    {
-                                        <option value="@s.Id">@s.NoSiri - @s.NoRujukan </option>
-                                    }
-                                </select>
+                    </div>
+                    @*table Objek end*@
+                    <br />
+                    @*table urusniaga*@
+                    <div class="card box-shadow mb-3 mt-2">
+                        <div class="card-header">
+                            <h6>Perihal</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive-md">
+                                <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Bil</th>
+                                            <th>No Stok</th>
+                                            <th width="30%">Perihal</th>
+                                            <th>Kuantiti</th>
+                                            <th>Unit</th>
+                                            <th>Harga/Unit RM</th>
+                                            <th>Amaun RM</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyPerihal">
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td hidden><input class="form-control form-control-sm" type="text" id="txtIndek" maxlength="3"></td>
+                                            <td hidden><input class="form-control form-control-sm" type="number" id="txtBaris" maxlength="3" value="0"></td>
+                                            <td><input class="form-control form-control-sm" type="number" id="txtBil" maxlength="3" value="0"></td>
+                                            <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtNoStok" maxlength="100" value="-"></td>
+                                            <td><textarea class="form-control form-control-sm text-uppercase" type="text" id="txtPerihal" maxlength="100" value="-" rows="2"></textarea></td>
+                                            <td><input class="form-control form-control-sm kuantiti" type="number" id="txtKuantiti" maxlength="6" value="0"></td>
+                                            <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtUnit" value="-"></td>
+                                            <td><input class="form-control form-control-sm hargaUnit" type="number" id="txtHargaUnit" maxlength="6" value="0.00"></td>
+                                            <td><input class="form-control form-control-sm amaun" type="number" id="txtAmaun" maxlength="6" readonly value="0.00"></td>
+                                            <td><button class="btn ac-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
                             </div>
                         </div>
-
-                        <div class="col-sm form-group">
+                        <div class="card-footer">
                             <div class="form-group">
-                                <label asp-for="AkPembekalId" class="control-label"></label>
-                                <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlPembekal">
-                                    <option value="" hidden>-- Pilih Pembekal --</option>
-                                    @foreach (var s in ViewBag.AkPembekal)
-                                    {
-                                        <option value="@s.Id">@s.KodSykt @s.NamaSykt </option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Nama Syarikat</label>
-                                <input class="form-control form-control-sm" readonly id="txtNamaSykt" />
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Alamat</label>
-                                <input class="form-control form-control-sm text-uppercase" id="txtAlamat1" readonly />
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control form-control-sm text-uppercase" id="txtAlamat2" readonly />
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control form-control-sm text-uppercase" id="txtAlamat3" readonly />
-                            </div>
-                            <div class="form-row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="control-label">Nama Bank</label>
-                                        <input class="form-control form-control-sm" readonly id="txtJenisBank" />
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="control-label">No Akaun Bank</label>
-                                        <input class="form-control form-control-sm" readonly id="txtAkaunBank" />
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label class="control-label">Telefon</label>
-                                        <input class="form-control form-control-sm" readonly id="txtTelefon" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card mb-2">
-                                <div class="card-body pl-3 pr-3 pt-2">
-
-                                    <label class="control-label">Maklumat Tambahan : </label>
-                                    <div class="custom-control custom-radio">
-                                        <input type="checkbox" data-val="true" id="IsInKewangan" name="IsInKewangan" value="true" checked>
-                                        <label class="control-label">PO ini berada di kewangan</label>
-                                        <input asp-for="IsInKewangan" hidden value="false">
-                                    </div>
-                                </div>
-                            </div>
-
-                            @*table Objek*@
-                            <div class="card box-shadow mb-3 mt-2">
-                                <div class="card-header">
-                                    <h6>Objek</h6>
-                                </div>
-                                <div class="card-body">
-                                    <table id="tblObjek" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th style="width:70%">Kod</th>
-                                                <th style="width:30%">Amaun RM</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbodyObjek">
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td id="akCartaId" hidden></td>
-                                                <td style="width:40%">
-                                                    <select class="form-control form-control-sm select2" id="txtKodAkaun">
-                                                        <option value="" disabled selected>-- Pilih Kod Akaun --</option>
-                                                        @foreach (var s in ViewBag.AkCarta)
-                                                        {
-                                                            <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                                        }
-                                                    </select>
-                                                </td>
-                                                <td style="width:50%"><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" value="0.00"></td>
-                                                <td><button class="btn btn-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="form-group">
-                                        <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
-                                        <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" value="0.00" readonly />
-                                    </div>
-                                </div>
-                            </div>
-                            @*table Objek end*@
-                            <br />
-                            @*table urusniaga*@
-                            <div class="card box-shadow mb-3 mt-2">
-                                <div class="card-header">
-                                    <h6>Perihal</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive-md">
-                                        <table id="tblPerihal" class="table table-sm" cellpadding="0" cellspacing="0">
-                                            <thead>
-                                                <tr>
-                                                    <th>Bil</th>
-                                                    <th>No Stok</th>
-                                                    <th width="30%">Perihal</th>
-                                                    <th>Kuantiti</th>
-                                                    <th>Unit</th>
-                                                    <th>Harga/Unit RM</th>
-                                                    <th>Amaun RM</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="tbodyPerihal">
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <td hidden><input class="form-control form-control-sm" type="text" id="txtIndek" maxlength="3"></td>
-                                                    <td hidden><input class="form-control form-control-sm" type="number" id="txtBaris" maxlength="3" value="0"></td>
-                                                    <td><input class="form-control form-control-sm" type="number" id="txtBil" maxlength="3" value="0"></td>
-                                                    <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtNoStok" maxlength="100" value="-"></td>
-                                                    <td><textarea class="form-control form-control-sm text-uppercase" type="text" id="txtPerihal" maxlength="100" value="-" rows="2"></textarea></td>
-                                                    <td><input class="form-control form-control-sm kuantiti" type="number" id="txtKuantiti" maxlength="6" value="0"></td>
-                                                    <td><input class="form-control form-control-sm text-uppercase" type="text" id="txtUnit" value="-"></td>
-                                                    <td><input class="form-control form-control-sm hargaUnit" type="number" id="txtHargaUnit" maxlength="6" value="0.00"></td>
-                                                    <td><input class="form-control form-control-sm amaun" type="number" id="txtAmaun" maxlength="6" readonly value="0.00"></td>
-                                                    <td><button class="btn btn-success btn-sm" type="button" id="btnAdd2"><i class="fas fa-plus"></i></button></td>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-
-                                    </div>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="form-group">
-                                        <label class="control-label">Jumlah Perihal</label>
-                                        <input class="form-control form-control-sm" id="txtJumlahPerihal" value="0.00" readonly />
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            @*table urusniaga end*@
-
-                            @*hidden type input*@
-                            @*<div class="form-group">
-            <label asp-for="FlPosting" class="control-label"></label>
-            <input asp-for="FlPosting" class="form-control form-control-sm" />
-            <span asp-validation-for="FlPosting" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="TarikhPosting" class="control-label"></label>
-            <input asp-for="TarikhPosting" class="form-control form-control-sm" />
-            <span asp-validation-for="TarikhPosting" class="text-danger"></span>
-        </div>
-        <br />*@
-                            <div class="form-group">
-                                <input type="submit" value="Simpan" id="btnSave" class="btn btn-primary" />
+                                <label class="control-label">Jumlah Perihal</label>
+                                <input class="form-control form-control-sm" id="txtJumlahPerihal" value="0.00" readonly />
                             </div>
                         </div>
 
                     </div>
 
+                    @*table urusniaga end*@
+
+                    <hr />
+                    <div class="form-group">
+                        <input type="submit" value="Simpan" id="btnSave" class="btn ac-primary btn-sm" />
+                         <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+                    </div>
                 </div>
+                
+                    
             </div>
         </form>
-
     </div>
-</div>
-<div>
-    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
 <!-- Modal Objek -->
@@ -257,7 +247,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">Objek</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
                 </button>
             </div>
             <div class="modal-body">
@@ -280,7 +270,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate1()">OK</button>
+                <button type="button" class="btn ac-success btn-sm" data-dismiss="modal" onclick="modalUpdate1()">OK</button>
             </div>
         </div>
     </div>
@@ -293,7 +283,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">Perihal</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
                 </button>
             </div>
             <div class="modal-body">
@@ -360,7 +350,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate2()">OK</button>
+                <button type="button" class="btn ac-success btn-sm" data-dismiss="modal" onclick="modalUpdate2()">OK</button>
             </div>
         </div>
     </div>

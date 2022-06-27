@@ -4,16 +4,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <partial name="_JSIndex" />
-<br />
-@*div Header*@
-<div class="row mb-2">
-    <div class="col-8">
-        <h4 class="text-primary">Maklumat Pengguna</h4>
-    </div>
-    <div class="col-4 text-right">
-        <a class="text-right btn btn-success text-white" asp-action="Register">Tambah Baru</a>
-    </div>
-</div>
+
+<div class="card box-shadow">
+    <div class="card-body border">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase mb-0">Maklumat Pengguna</h5>
+                <span class="ac-ref">Indeks</span>
+            </div>
+            <div class="col-4 text-right">
+                <a class="text-right btn ac-success" asp-action="Register">Daftar Baru</a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
 
 <div class="card mb-2">
     <div class="card-body pl-3 pb-2">
@@ -44,11 +48,11 @@
         <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%">
             <thead>
                 <tr class="table-secondary">
-                    <th>Bil</th>
-                    <th class="emel">Emel</th>
-                    <th class="nama">Nama</th>
-                    <th>Tahap Pengguna</th>
-                    <th></th>
+                    <th width="5%">Bil</th>
+                    <th class="emel" width="20%">Emel</th>
+                    <th class="nama" width="50%">Nama</th>
+                    <th width="15%" >Tahap Pengguna</th>
+                    <th width="10%" class="action-button">Tindakan</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,54 +69,40 @@
                         <td>
                             @item.Role
                         </td>
-                        <td>
-                            <div class="text-center">
+                        <td class="action-button">
+                            <div>
                                 @if (item.Role != "SuperAdmin")
                                 {
                                     <form asp-action="Delete" asp-route-userId="@item.Id">
-                                        <a asp-action="Edit" asp-route-userId="@item.Id" class="btn btn-info text-white btn-sm" style="cursor:pointer">
+                                        <a asp-action="Edit" asp-route-userId="@item.Id" class="btn ac-info btn-sm" style="cursor:pointer">
                                             Ubah
                                         </a>
-                                        <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar">Capaian</a>
+                                        <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn ac-primary btn-sm" type="button">Capaian</a>
                                         @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now)
                                         {
                                             // we want to show them the option to lock
-                                            <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-success text-white btn-sm" style="cursor:pointer">
+                                            <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn ac-secondary btn-sm" style="cursor:pointer">
                                                 <span>&nbsp; Lock &nbsp;</span>
                                             </button>
                                         }
                                         else
                                         {
                                             // we want to show them the option to unlock
-                                            <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-warning text-white" style="cursor:pointer">
+                                            <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn ac-warning btn-sm" style="cursor:pointer">
                                                 <span>Unlock</span>
                                             </button>
                                         }
 
-                                        <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger btn-sm">Hapus</button>
+                                        <button type="submit" onclick="return confirm('Anda pasti?')" class="btn ac-danger btn-sm">Hapus</button>
                                     </form>
                                 }
                                 else
                                 {
-                                    <a href="#" class="btn btn-info text-white btn-sm" style="cursor:pointer">
+                                    <a href="#" class="btn ac-info btn-sm" style="cursor:pointer">
                                         Ubah
                                     </a>
-                                    <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn btn-primary btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar">Capaian</a>
-                                    @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now)
-                                    {
-                                        // we want to show them the option to lock
-                                        <a href="#" class="btn btn-success text-white btn-sm" style="cursor:pointer">
-                                            <span>&nbsp; Lock &nbsp;</span>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        // we want to show them the option to unlock
-                                        <a href="#" class="btn btn-warning text-white" style="cursor:pointer">
-                                            <span>Unlock</span>
-                                        </a>
-                                    }
-                                    <a href="#" class="btn btn-danger btn-sm" type="button" onclick="return confirm('Anda pasti?')" data-toggle="tooltip" data-placement="top" title="Hapus">Hapus</a>
+                                    <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn ac-primary btn-sm" type="button" >Capaian</a>
+                                    
                                 }
 
 
@@ -148,4 +138,8 @@
         </table>
     </div>
 }
+
+    </div>
+
+</div>
 

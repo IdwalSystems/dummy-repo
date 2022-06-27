@@ -8,24 +8,22 @@
 }
 
 <div class="container">
-    <form asp-action="PRINT">
-        <div class="card box-shadow border-info mb-3">
-            <div class="card-header bg-info text-white">
-                <h5>@ViewData["Title"]</h5>
+    <div class="card box-shadow">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-8">
+                    <h5 class="text-uppercase text-info mb-0">@ViewData["Title"]</h5>
+                    <span class="ac-ref">Indeks</span>
+                </div>
+                <div class="col-4 text-right">
+                </div>
+    
             </div>
-            
-            <div class="card-body">
+            <hr class="mt-2"/>
+            <form asp-action="PRINT">
                 <div class="card mb-2">
                     <div class="card-body">
                         <div class="form-group col-sm">
-                            @*<div class="custom-control custom-radio">
-
-            <input class="custom-control-input" type="radio" id="LPR0011" name="kodLaporan" value="LPR0011">
-            <label class="custom-control-label" for="LPR0011">
-                Laporan Datfar Resit
-            </label>
-
-        </div>*@
                             <div class="custom-control custom-radio">
 
                                 <input class="custom-control-input" type="radio" name="kodLaporan" id="LPR00102" value="LPR00102" checked>
@@ -87,14 +85,14 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-footer">
+                <hr />
                 <div class="form-group text-right">
-                    <input type="submit" value="Cetak" formtarget="_blank" class="btn btn-primary" />
+                    <input type="submit" value="Cetak" formtarget="_blank" class="btn ac-primary" />
                 </div>
-            </div>
-        </div>
         
-    </form>
+            </form>
+        </div>
+    </div>
+
 
 </div>

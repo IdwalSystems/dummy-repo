@@ -8,92 +8,101 @@
 }
 
 <div class="container">
-    <form asp-action="PRINT">
-        <div class="card box-shadow border-info mb-3">
-            <div class="card-header bg-info text-white">
-                <h5>@ViewData["Title"]</h5>
-            </div>
-            <div class="card-body">
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <div class="form-group col-sm">
-
-                            <div class="custom-control custom-radio">
-
-                                <input class="custom-control-input" type="radio" name="kodLaporan" id="LPN00101" value="LPN00101" checked>
-                                <label class="custom-control-label" for="LPN00101">
-                                    01 - Laporan Daftar Bil Mengikut Bulan &amp; Tahun
-                                </label>
-                            </div>
-                            <div class="custom-control custom-radio" hidden>
-
-                                <input class="custom-control-input" type="radio" name="kodLaporan" id="LPN00102" value="LPV00102">
-                                <label class="custom-control-label" for="LPV00102">
-                                    02 - Laporan Daftar Bil Dengan Nota Minta
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+    <div class="card box-shadow">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-8">
+                    <h5 class="text-uppercase text-info mb-0">@ViewData["Title"]</h5>
+                    <span class="ac-ref">Indeks</span>
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="form-group form-row">
-                            <label asp-for="JKWId" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-5">
-                                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" id="ddlKW">
-                                    @foreach (var s in ViewBag.JKW)
-                                    {
-                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group form-row">
-                            <label asp-for="JBahagianId" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-5">
-                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" id="ddlBahagian">
-                                    @foreach (var s in ViewBag.JBahagian)
-                                    {
-                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group form-row">
-                            <label asp-for="bulanTahun" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-5">
-                                <input type="month" class="form-control form-control-sm" id="tarikhDari" asp-for="bulanTahun" value="@monthYear">
-                            </div>
-                        </div>
-                        <div class="form-group form-row">
-                            <label asp-for="status" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-5">
-                                <select class="form-control form-control-sm input-group-sm" asp-for="status" required>
-                                    <option value="0">SEMUA</option>
-                                    <option value="1">BELUM POSTING</option>
-                                    <option value="2">SUDAH POSTING</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group form-row">
-                            <label asp-for="susunan" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-5">
-                                <select class="form-control form-control-sm input-group-sm" asp-for="susunan" required>
-                                    <option value="0">TARIKH</option>
-                                    <option value="1" selected>NO SIRI</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-4 text-right">
                 </div>
+    
             </div>
-            <div class="card-footer">
-                <div class="form-group text-right">
-                    <input type="submit" value="Cetak" formtarget="_blank" class="btn btn-primary" />
-                </div>
-            </div>
+            <hr class="mt-2"/>
+            <form asp-action="PRINT">
+
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <div class="form-group col-sm">
+
+                                    <div class="custom-control custom-radio">
+
+                                        <input class="custom-control-input" type="radio" name="kodLaporan" id="LPN00101" value="LPN00101" checked>
+                                        <label class="custom-control-label" for="LPN00101">
+                                            01 - Laporan Daftar Bil Mengikut Bulan &amp; Tahun
+                                        </label>
+                                    </div>
+                                    <div class="custom-control custom-radio" hidden>
+
+                                        <input class="custom-control-input" type="radio" name="kodLaporan" id="LPN00102" value="LPV00102">
+                                        <label class="custom-control-label" for="LPV00102">
+                                            02 - Laporan Daftar Bil Dengan Nota Minta
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group form-row">
+                                    <label asp-for="JKWId" class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-5">
+                                        <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" id="ddlKW">
+                                            @foreach (var s in ViewBag.JKW)
+                                            {
+                                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label asp-for="JBahagianId" class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-5">
+                                        <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" id="ddlBahagian">
+                                            @foreach (var s in ViewBag.JBahagian)
+                                            {
+                                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label asp-for="bulanTahun" class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-5">
+                                        <input type="month" class="form-control form-control-sm" id="tarikhDari" asp-for="bulanTahun" value="@monthYear">
+                                    </div>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label asp-for="status" class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-5">
+                                        <select class="form-control form-control-sm input-group-sm" asp-for="status" required>
+                                            <option value="0">SEMUA</option>
+                                            <option value="1">BELUM POSTING</option>
+                                            <option value="2">SUDAH POSTING</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label asp-for="susunan" class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-5">
+                                        <select class="form-control form-control-sm input-group-sm" asp-for="susunan" required>
+                                            <option value="0">TARIKH</option>
+                                            <option value="1" selected>NO SIRI</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+                        <div class="form-group text-right">
+                            <input type="submit" value="Cetak" formtarget="_blank" class="btn ac-primary" />
+                        </div>
+
+            </form>
         </div>
+    </div>
 
-    </form>
 
 </div>

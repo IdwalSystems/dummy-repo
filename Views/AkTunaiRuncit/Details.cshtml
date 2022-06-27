@@ -6,13 +6,20 @@
     decimal baki = 0;
 }
 <partial name="_JSDetails"/>
-<div class="row">
-    <div class="col-md-12">
-        <div class="card box-shadow border-dark mb-3">
-            <div class="card-header bg-dark text-white">
-                <h5>Pemegang Tunai Runcit - @ViewData["Title"]</h5>
+
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-dark mb-0">Pemegang Tunai Runcit - Papar</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Papar</span>
             </div>
-            <div class="card-body">
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
                 <div class="form-row">
                     <div class="col-md-6 pr-md-3">
                         <div class="form-row">
@@ -146,16 +153,11 @@
                         </div>
                     </div>
                 @*table Tunai Pemegang end*@
-
-
-
-            </div>
-
+                
+        <hr />
+        <div class="form-group">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a> 
+            <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
         </div>
     </div>
-
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
-    <a asp-action="Index">Kembali ke Indeks</a>
 </div>

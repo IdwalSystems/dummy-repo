@@ -4,11 +4,19 @@
     ViewData["Title"] = "Tambah";
 }
 
-<h4>Bangsa - Tambah</h4>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-success mb-0">Bangsa - Tambah</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Tambah</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -16,14 +24,12 @@
                 <input asp-for="Perihal" class="form-control form-control-sm text-uppercase" />
                 <span asp-validation-for="Perihal" class="text-danger"></span>
             </div>
+            <hr />
             <div class="form-group">
                 <input type="submit" value="Simpan" class="btn btn-primary btn-sm" />
+                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
         </form>
+
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Kembali ke Indeks</a>
-</div>
-

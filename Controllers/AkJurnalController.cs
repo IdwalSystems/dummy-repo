@@ -487,7 +487,7 @@ namespace MSNK.Controllers
                         //insert applog end
 
                         await _context.SaveChangesAsync();
-                        TempData[SD.Success] = "Maklumat berjaya diubah. No jurnal - " + akJurnal.NoJurnal;
+                        TempData[SD.Success] = "Maklumat berjaya diubah.";
                     }
                     catch (DbUpdateConcurrencyException)
                     {

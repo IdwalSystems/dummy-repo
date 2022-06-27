@@ -5,54 +5,68 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3>Hapus</h3>
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-danger mb-0">Bahagian - Hapus</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Hapus</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+            <p class="text-danger">Anda pasti untuk menghapuskan maklumat berikut?</p>
 
-<h5 class="text-danger">Anda pasti untuk menghapuskan maklumat berikut?</h5>
-<div>
-    <h5>Akaun Bank</h5>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Kod)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.Kod)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.NoAkaun)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.NoAkaun)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.JKWId)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.JKW.Kod)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.JBahagianId)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.JBahagian.Kod)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.AkCarta)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.AkCarta.Kod)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.JBank)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.JBank.Nama)
-        </dd>
-    </dl>
+            <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Kod)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Kod)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.NoAkaun)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.NoAkaun)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.JKWId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.JKW.Kod)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.JBahagianId)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.JBahagian.Kod)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.AkCarta)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.AkCarta.Kod)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.JBank)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.JBank.Nama)
+            </dd>
+        </dl>
 
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Hapus" class="btn btn-danger" /> |
-        <a asp-action="Index">Kembali ke Indeks</a>
-    </form>
+        <hr />
+        <div class="form-group">
+             <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <input type="submit" value="Hapus" class="btn ac-danger btn-sm" /> 
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+            </form>
+            
+        </div>
+    </div>
 </div>

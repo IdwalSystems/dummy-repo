@@ -338,6 +338,7 @@ namespace MSNK.Controllers
             viewModel.NoSiri = akNotaMinta.NoSiri;
             viewModel.NoCAS = akNotaMinta.NoCAS;
             viewModel.TarikhSeksyenKewangan = akNotaMinta.TarikhSeksyenKewangan;
+            viewModel.FlStatusSemak = akNotaMinta.FlStatusSemak;
             viewModel.FlPosting = akNotaMinta.FlPosting;
             viewModel.FlCetak = akNotaMinta.FlCetak;
             viewModel.FlHapus = akNotaMinta.FlHapus;

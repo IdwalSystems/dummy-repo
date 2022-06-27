@@ -6,157 +6,166 @@
 }
 
 <partial name="_JSIndex" />
-<div class="row mb-2">
-    <div class="col-8">
-        <h3 class="text-left text-primary">Transaksi Log Pengguna</h3>
-    </div>
-</div>
-<div class="card mb-2">
-    <div class="card-body pl-3 pb-2 ">
-        <label class="form-control-plaintext" for="searchselect">Carian : </label>
-        <div class="form-actions no-color mb-2">
-            <form asp-action="Index" method="get" class="needs-validation" novalidate>
-                <div class="form-actions no-color mb-3">
-                    <div class="form-row">
-                        <div class="col-md-2">
-                            <label class="form-control-label">Pengguna</label>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="input-group mb-2 input-group-sm ">
-                                <select class="form-control form-control-sm select2" name="searchUsername" asp-items="@ViewBag.username" id="ddlUsername"></select>
-                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                    <div class="col-md-2">
-                        <div class="input-group mb-2 input-group-sm ">
-                            <label class="form-control-label">Modul</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-
-                        <div class="input-group mb-2 input-group-sm ">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">Dari</span>
-                            </div>
-                            <input class="form-control form-control-sm" type="text" name="searchModulFrom" value="@ViewData["ModulFrom"]" id="modul1" />
-                            <label class="invalid-feedback">Sila isi ruangan ini.</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-
-                        <div class="input-group mb-2 input-group-sm ">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">Hingga</span>
-                            </div>
-                            <input class="form-control form-control-sm" type="text" name="searchModulTo" value="@ViewData["ModulTo"]" id="modul2" />
-                            <label class="invalid-feedback">Sila isi ruangan ini.</label>
-                        </div>
-                    </div>
-                        </div>
-                    <div class="form-row">
-                        <div class="col-md-2">
-                            <div class="input-group mb-2 input-group-sm ">
-                                <label class="form-control-label">Tarikh</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-
-                            <div class="input-group mb-2 input-group-sm ">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Dari</span>
-                                </div>
-                                <input class="form-control form-control-sm" type="datetime-local" name="searchDateFrom" value="@ViewData["DateFrom"]" id="tarikh1" />
-                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-
-                            <div class="input-group mb-2 input-group-sm ">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">Hingga</span>
-                                </div>
-                                <input class="form-control form-control-sm" type="datetime-local" name="searchDateTo" value="@ViewData["DateTo"]" id="tarikh2" />
-                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn text-info btn-sm" data-toggle="tooltip" data-placement="top" title="Cari"><i class="fas fa-search"></i></button>
-                            @*<a asp-action="Index" class="btn btn-warning btn-sm"><i class="fas fa-times"></i></a>*@
-                        </div>
-                    </div>
-                </div>
-                    
-            </form>
+<div class="card box-shadow">
+    <div class="card-body border">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase mb-0">Log Transaksi Pengguna</h5>
+                <span class="ac-ref">Indeks</span>
+            </div>
+    
         </div>
+        <hr class="mt-2"/>
+        <div class="card mb-2">
+            <div class="card-body pl-3 pb-2 ">
+                <label class="form-control-plaintext" for="searchselect">Carian : </label>
+                <div class="form-actions no-color mb-2">
+                    <form asp-action="Index" method="get" class="needs-validation" novalidate>
+                        <div class="form-actions no-color mb-3">
+                            <div class="form-row">
+                                <div class="col-md-2">
+                                    <label class="form-control-label">Pengguna</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="input-group mb-2 input-group-sm ">
+                                        <select class="form-control form-control-sm select2" name="searchUsername" asp-items="@ViewBag.username" id="ddlUsername"></select>
+                                        <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                            <div class="col-md-2">
+                                <div class="input-group mb-2 input-group-sm ">
+                                    <label class="form-control-label">Modul</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+
+                                <div class="input-group mb-2 input-group-sm ">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Dari</span>
+                                    </div>
+                                    <input class="form-control form-control-sm" type="text" name="searchModulFrom" value="@ViewData["ModulFrom"]" id="modul1" />
+                                    <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+
+                                <div class="input-group mb-2 input-group-sm ">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Hingga</span>
+                                    </div>
+                                    <input class="form-control form-control-sm" type="text" name="searchModulTo" value="@ViewData["ModulTo"]" id="modul2" />
+                                    <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                                </div>
+                            </div>
+                                </div>
+                            <div class="form-row">
+                                <div class="col-md-2">
+                                    <div class="input-group mb-2 input-group-sm ">
+                                        <label class="form-control-label">Tarikh</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+
+                                    <div class="input-group mb-2 input-group-sm ">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">Dari</span>
+                                        </div>
+                                        <input class="form-control form-control-sm" type="datetime-local" name="searchDateFrom" value="@ViewData["DateFrom"]" id="tarikh1" />
+                                        <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+
+                                    <div class="input-group mb-2 input-group-sm ">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">Hingga</span>
+                                        </div>
+                                        <input class="form-control form-control-sm" type="datetime-local" name="searchDateTo" value="@ViewData["DateTo"]" id="tarikh2" />
+                                        <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn text-info btn-sm" data-toggle="tooltip" data-placement="top" title="Cari"><i class="fas fa-search"></i></button>
+                                    @*<a asp-action="Index" class="btn btn-warning btn-sm"><i class="fas fa-times"></i></a>*@
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive table-sm">
+            <table class="table table-bordered table-hover display compact nowrap" width="100%" id="IndexTable">
+        
+                <thead>
+                    <tr>
+                        <th>Bil</th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.UserId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LgDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LgModule)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LgOperation)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LgNote)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NoRujukan)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Jumlah)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SysCode)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LgDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LgModule)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LgOperation)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LgNote)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NoRujukan)
+                            </td>
+                            <td>
+                                @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SysCode)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </div>
 
-<div class="table-responsive table-sm">
-    <table class="table table-bordered table-hover display compact nowrap" width="100%" id="IndexTable">
-        
-        <thead>
-            <tr>
-                <th>Bil</th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UserId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LgDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LgModule)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LgOperation)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LgNote)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.NoRujukan)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Jumlah)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SysCode)
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td></td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LgDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LgModule)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LgOperation)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LgNote)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NoRujukan)
-                    </td>
-                    <td>
-                        @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SysCode)
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
 

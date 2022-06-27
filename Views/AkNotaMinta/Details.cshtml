@@ -5,13 +5,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card box-shadow border-dark mb-3" id="denganPesananTempatan">
-            <div class="card-header bg-dark text-white">
-                <h5>Nota Minta - @ViewData["Title"]</h5>
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-dark mb-0">Nota Minta - Papar</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Papar</span>
             </div>
-            <div class="card-body">
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
                 <div class="form-row">
                     <div class="col-lg-10">
                         <div class="form-row">
@@ -213,47 +219,39 @@
                     </div>
                 </div>
                 @*table perihal end*@
-            </div>
-        </div>
+                <hr />
+        <div class="form-group">
+            @if (Model.FlHapus == 0)
+            {
+                @if (Model.FlPosting == 1)
+                {
+                }
+                else
+                {
+                    @if (Model.FlStatusSemak == 1)
+                    {
+                        <button class="btn ac-primary btn-sm" data-toggle="modal" data-target="#modalUbah">
+                            Ubah
+                        </button>
+                        <button class="btn ac-secondary btn-sm" data-toggle="modal" data-target="#modalUbah">
+                            Bahagian Kewangan
+                        </button>
+                    }
+                    else
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a>
+                        <a asp-action="EditKewangan" asp-route-id="@Model.Id" class="btn ac-secondary btn-sm">Bahagian Kewangan</a>
+                    }
 
+                }
+            }
+
+            <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+        </div>
     </div>
 </div>
 
-<div>
-    @if (Model.FlHapus == 0)
-    {
-        @if (Model.FlPosting == 1)
-        {
-        }
-        else
-        {
-            @if (Model.FlStatusSemak == 1)
-            {
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalUbah">
-                    Ubah
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#modalUbah">
-                    Bahagian Kewangan
-                </button>
-            }
-            else
-            {
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">Ubah</a>
-                <a asp-action="EditKewangan" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm">Bahagian Kewangan</a>
-            }
 
-            @*<a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-warning btn-sm" onclick="return confirm('Adakah anda ingin teruskan operasi ini?')">Batal</a>*@
-            @*if (ViewData["isLastItem"].ToString() == "N")
-                {
-                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalBatal">
-                        Batal
-                    </button>
-                }*@
-        }
-    }
-
-    <a asp-action="Index">Kembali ke Indeks</a>
-</div>
 
 <!-- Modal Ubah -->
 <div class="modal fade" id="modalUbah" tabindex="-1" role="dialog" aria-hidden="true">

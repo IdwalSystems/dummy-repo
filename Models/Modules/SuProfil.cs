@@ -13,6 +13,7 @@ namespace MSNK.Models.Modules
 
     {
         public int Id { get; set; }
+        [DisplayName("No Rujukan")]
         public string NoRujukan { get; set; }
         public string Bulan { get; set; }
         public string Tahun { get; set; }

@@ -1,5 +1,4 @@
-﻿@model dynamic
-
+﻿
 <script type="text/javascript">
     var columnSearchVar;
     $(document).ready(function () {
@@ -90,7 +89,7 @@
                         @foreach (var item in Model.AkNotaMinta)
                         {
                             var tindakan = "";
-                            var badgeType = "badge-warning";
+                            var badgeType = "ac-warning";
 
                             if(item.NoSiri == null)
                             {
@@ -100,7 +99,7 @@
                             else
                             {
                                 tindakan = "LULUS";
-                                badgeType = "badge-secondary";
+                                badgeType = "ac-success";
                             }
                             <tr class="text-uppercase ">
                                 <td width="5%" data-sort='YYYYMMDD'>

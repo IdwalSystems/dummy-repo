@@ -5,10 +5,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h4>Akaun Bank - Ubah</h4>
-<hr />
-<div class="form-row">
-    <div class="col-md-4">
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-primary mb-0">Akaun Bank - Ubah</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / <a asp-action="Details" asp-route-id="@Model.Id" class="text-secondary">Papar</a> / Ubah</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+
         <form asp-action="Edit">
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -58,15 +68,14 @@
                     }
                 </select>
             </div>
+            <hr />
             <div class="form-group">
-                <input type="submit" value="Simpan" class="btn btn-primary btn-sm" />
+                <input type="submit" value="Simpan" class="btn ac-primary btn-sm" />
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Kembali ke Indeks</a>
 </div>
 
 @section Scripts {
