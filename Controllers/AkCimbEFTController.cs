@@ -340,6 +340,7 @@ namespace MSNK.Controllers
                 List<AkPV> pv = _context.AkPV
                     .Include(b => b.JKW)
                     .Include(b => b.JBahagian)
+                    .Include(b => b.JBank)
                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkCarta)
                     .Include(b => b.SpPendahuluanPelbagai).ThenInclude(b => b.AkCarta)
                     .Include(b => b.SpPendahuluanPelbagai).ThenInclude(b => b.SuPekerja)
@@ -424,7 +425,7 @@ namespace MSNK.Controllers
                             SuAtletId = null,
                             SuJurulatihId = null,
                             NoPV = item.NoPV,
-                            NoKP = item.NoKP,
+                            NoKP = item.NoKP == null ? "" : item.NoKP,
                             NoAkaun = item.NoAkaunBank,
                             Penerima = item.Nama,
                             NoCekAtauEFT = item.NoCekAtauEFT,

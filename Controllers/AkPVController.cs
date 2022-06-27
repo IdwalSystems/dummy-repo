@@ -1772,6 +1772,7 @@ namespace MSNK.Controllers
             akPVView.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
             akPVView.NoRekup = akPV.NoRekup;
             akPVView.IsAKB = akPV.IsAKB;
+            akPVView.JBankId = akPV.JBankId;
 
             switch (akPV.FlKategoriPenerima)
             {
