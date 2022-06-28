@@ -165,6 +165,8 @@ namespace MSNK.Controllers
             List<AkCimbEFT1> akCimbEFT1 = _context.AkCimbEFT1
                 .Include(b => b.JBank)
                 .Include(b => b.AkPV)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkPV)
                         .ThenInclude(b => b.SuProfil)
                 .Include(b => b.AkPV)
                         .ThenInclude(b => b.SpPendahuluanPelbagai)
@@ -360,7 +362,7 @@ namespace MSNK.Controllers
                         .ThenInclude(b => b.AkBelian)
                             .ThenInclude(b => b.AkPO)
                     .Where(b => b.FlPosting == 1 
-                    && b.JCaraBayarId == caraBayar.Id)
+                    && b.JCaraBayarId == caraBayar.Id )
                     .OrderBy(b => b.NoPV)
                     .ToList();
 
@@ -381,7 +383,15 @@ namespace MSNK.Controllers
                 foreach (var item in pv)
                 {
                     //checked if already jana PV in AkCimbEFT1
-                    bool isExistPV = _context.AkCimbEFT1.Where(b => b.AkPVId == item.Id && b.FlStatus != 0).Any();
+                    bool isExistPV = _context.AkCimbEFT1
+                        .Include(b => b.AkCimbEFT)
+                        .Where(b => b.AkPVId == item.Id && b.FlStatus == 1 || b.AkCimbEFT.FlHapus == 1)
+                        .Any();
+
+                     var test = _context.AkCimbEFT1
+                        .Include(b => b.AkCimbEFT)
+                        .Where(b => b.AkPVId == item.Id && b.FlStatus == 1 || b.AkCimbEFT.FlHapus == 1)
+                        .FirstOrDefault();
 
                     if (isExistPV == true)
                     {
@@ -440,7 +450,10 @@ namespace MSNK.Controllers
                 foreach (var item in pv)
                 {
                     //checked if already jana PV in AkCimbEFT1
-                    bool isExistPV = _context.AkCimbEFT1.Where(b => b.AkPVId == item.Id && b.FlStatus != 0).Any();
+                    bool isExistPV = _context.AkCimbEFT1
+                        .Include(b => b.AkCimbEFT)
+                        .Where(b => b.AkPVId == item.Id && b.FlStatus == 1 || b.AkCimbEFT.FlHapus == 1 )
+                        .Any();
 
                     if (isExistPV == true)
                     {
@@ -690,6 +703,18 @@ namespace MSNK.Controllers
                     //insert applog
                     await AddLogAsync("Tambah", m.NoPBI, m.NoPBI, 0, m.Jumlah);
                     //insert applog end
+                    
+                    // update no EFT in akPV
+                    foreach(var item in _cart.Lines1)
+                    {
+                        var akPV = await _akPVRepo.GetById(item.AkPVId);
+
+                        akPV.NoCekAtauEFT = noRujukan;
+                        akPV.TarCekAtauEFT = DateTime.Now;
+
+                        await _akPVRepo.Update(akPV);
+                    }
+                    // update no EFT in AkPV end
 
                     await _context.SaveChangesAsync();
 
@@ -788,7 +813,7 @@ namespace MSNK.Controllers
                     penerima = penerima.PadRight(40).ToUpper();
                     string amaun = i.Amaun.ToString().Replace(".","").PadLeft(11,'0');
                     string refNum = akCimbEFT.NoPBI.PadRight(30);
-                    NoKP = NoKP.PadRight(20);
+                    NoKP = NoKP?.PadRight(20) ?? "".PadRight(20) ;
                     string description = i.Id.ToString().PadRight(20);
 
                     sw.WriteLine(jenisRekod + KodBNM + noAkaun + penerima + amaun + refNum + NoKP + description);
@@ -1055,6 +1080,18 @@ namespace MSNK.Controllers
             //insert applog end
 
             _context.AkCimbEFT.Remove(obj);
+
+            var akCimbEft = await _akCimbEFTRepo.GetById(id);
+
+            foreach (var item in akCimbEft.AkCimbEFT1)
+            {
+                var akCimbEFT1 = await _akCimbEFT1Repo.GetById(item.Id);
+
+                akCimbEFT1.FlStatus = 0;
+
+                await _akCimbEFT1Repo.Update(akCimbEFT1);
+            }
+
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
 

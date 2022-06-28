@@ -41,6 +41,7 @@ namespace MSNK.Models.Modules
         // FlStatus = 0 -> Tolak / Gagal keseluruhan
         // FlStatus = 1 -> Berjaya keseluruhan
         // FlStatus = 2 -> Ada yang ditolak, ada yang berjaya
+        [DisplayName("Status")]
         public int FlStatus { get; set; }
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
