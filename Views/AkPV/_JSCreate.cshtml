@@ -60,6 +60,7 @@
                                 }
 
                                 $("#ddlKW").val(msg?.record?.jkwId).change();
+                                $("#ddlJBank").val(msg?.record?.jBankId).change();
                                 if (msg.record.akTunaiPemegang.length > 0) {
                                     for (var i = 0; i < msg.record.akTunaiPemegang.length; i++) {
                                         var item1 = msg.record.akTunaiPemegang[i];
@@ -72,7 +73,6 @@
                                         $("#txtAlamat1").val(item1.suPekerja.alamat1);
                                         $("#txtAlamat2").val(item1.suPekerja.alamat2);
                                         $("#txtAlamat3").val(item1.suPekerja.alamat3);
-
                                     }
                                 }
 
@@ -271,6 +271,7 @@
                         success: function (r) {
                             var jkw = 0;
                             var jbahagian = 0;
+                            var jbank = 0;
                             if (r.result == "OK") {
                                 var select = new Option("-- Pilih Inbois --", 0, true, true);
                                 $("#txtAkBelian").append(select);
@@ -281,11 +282,13 @@
                                         $("#txtAkBelian").append(option);
                                         jkw = item1.jkwId;
                                         jbahagian = item1.jBahagianId;
+                                        jbank = item1.akPembekal.jBankId;
 
                                     }
                                 }
                                 $("#ddlKW").val(jkw).change();
                                 $("#ddlBahagian").val(jbahagian).change();
+                                $("#ddlJBank").val(jbank).change();
                                 $("#txtAkBelian").val(0).change();
 
                                 //populate related fields
@@ -398,6 +401,7 @@
                         $("#txtNoAkaunBank").val(msg.record.suPekerja.noAkaunBank);
                         $("#txtTelefon").val(msg.record.suPekerja.telefonBimbit);
                         $("#txtEmel").val(msg.record.suPekerja.emel);
+                        $("#ddlJBank").val(msg?.record?.suPekerja?.jBankId).change();
                         // disable fields
                         $("#txtNoKP").prop('readonly', true);
                         $("#Nama").prop('readonly', true);
@@ -631,6 +635,7 @@
                     $("#txtEmel").prop('disabled', true);
                     $("#ddlKodPembekal").prop('disabled', true);
                     $("#ddlKodPembekal").val(0);
+                    $("#ddlJBank").val(msg.record.jBankId).change();
                 },
                 error: function (req, status, error) {
                     alert(error);

@@ -1286,7 +1286,7 @@ namespace MSNK.Controllers
         {
             try
             {
-                var result = await _context.AkBelian.Where(x => x.AkPembekalId == data).ToListAsync();
+                var result = await _context.AkBelian.Include(b=> b.AkPembekal).Where(x => x.AkPembekalId == data).ToListAsync();
 
                 if (result.Count() == 0)
                 {
