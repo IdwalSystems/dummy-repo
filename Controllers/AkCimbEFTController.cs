@@ -15,7 +15,6 @@ using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.ViewModel;
 using Newtonsoft.Json;
-using Syroot.Windows.IO;
 using static MSNK.Infrastructure.Tools;
 
 namespace MSNK.Controllers
@@ -738,6 +737,93 @@ namespace MSNK.Controllers
         //    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
         //}
 
+        [HttpPost]
+        public async Task<JsonResult> JsonJanaTxt(int id)
+        {
+            try
+            {
+                var akCimbEFT = await _akCimbEFTRepo.GetByIdIncludeDeletedItems((int)id);
+
+                List<string> txt = new List<string>();
+                // batch header record
+                var header = "0190210Majlis Sukan Negeri Kedah               "+akCimbEFT.TarBayar.ToString("ddMMyyyy")+"0000000000000000  ";
+                // batch header record end
+                txt.Add(header);
+                // detail record
+                foreach (var i in akCimbEFT.AkCimbEFT1)
+                {
+                    var jenisRekod = "02";
+
+                    if (string.IsNullOrEmpty(i.JBank.KodEFT))
+                    {
+                        var error = "Ralat, Bank " + i.JBank.Nama + " yang tidak mempunyai Kod BNM.";
+                        return Json(new { result = "Error", message = error });
+                    }
+
+                    var KodBNM = i.JBank.KodEFT.ToString().PadRight(7, '0');
+                    var noAkaun = "";
+                    var penerima = "";
+                    var NoKP = "";
+
+                    // FlPenerimaEFT = 0 ( Am / Lain - lain )
+                    // FlPenerimaEFT = 1 ( pembekal )
+                    // FlPenerimaEFT = 2 ( pekerja )
+                    // FlPenerimaEFT = 3 ( pemegang panjar )
+                    // FlPenerimaEFT = 4 ( jurulatih )
+                    // FlPenerimaEFT = 5 ( atlet )
+                    switch (i.FlPenerimaEFT)
+                    {
+                        case 1:
+                            noAkaun = i.AkPV.NoAkaunBank;
+                            penerima = i.AkPV.Nama;
+                            NoKP = "";
+                            break;
+                        case 2:
+                            noAkaun = i.AkPV.NoAkaunBank;
+                            penerima = i.AkPV.Nama;
+                            NoKP = i.AkPV.NoKP;
+                            break;
+                        case 4:
+                            noAkaun = i.SuJurulatih.NoAkaunBank;
+                            penerima = i.SuJurulatih.Nama;
+                            NoKP = i.SuJurulatih.NoKp;
+                            break;
+                        case 5:
+                            noAkaun = i.SuAtlet.NoAkaunBank;
+                            penerima = i.SuAtlet.Nama;
+                            NoKP = i.SuAtlet.NoKp;
+                            break;
+                        default:
+                            noAkaun = i.AkPV.NoAkaunBank;
+                            penerima = i.AkPV.Nama;
+                            NoKP = i.AkPV.NoKP;
+                            break;
+
+                    }
+
+                    noAkaun = noAkaun.PadRight(16);
+                    penerima = penerima.PadRight(40).ToUpper();
+                    string amaun = i.Amaun.ToString().Replace(".", "").PadLeft(11, '0');
+                    string refNum = akCimbEFT.NoPBI.PadRight(30);
+                    NoKP = NoKP?.PadRight(20) ?? "".PadRight(20);
+                    string description = i.Id.ToString().PadRight(20);
+
+                    var nextLine = jenisRekod + KodBNM + noAkaun + penerima + amaun + refNum + NoKP + description;
+
+                    txt.Add(nextLine);
+                    
+                }
+
+                return Json(new { result = "OK", record = txt });
+
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+
         [Authorize(Policy = "PV002C")]
         public async Task<IActionResult> JanaTxt(int? id)
         {
@@ -750,7 +836,7 @@ namespace MSNK.Controllers
 
 
             //File and path you want to create and write to
-            string downloadsPath = Syroot.Windows.IO.KnownFolders.Desktop.Path;
+            string downloadsPath = KnownFolders.GetPath(KnownFolder.Downloads);
             //string downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             //string downloadsPath = "C:\\";
 
