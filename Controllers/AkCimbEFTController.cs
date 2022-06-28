@@ -15,6 +15,7 @@ using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.ViewModel;
 using Newtonsoft.Json;
+using Syroot.Windows.IO;
 using static MSNK.Infrastructure.Tools;
 
 namespace MSNK.Controllers
@@ -730,6 +731,12 @@ namespace MSNK.Controllers
 
             return View(akCimbEFT);
         }
+        //public FileResult Download()
+        //{
+        //    byte[] fileBytes = System.IO.File.ReadAllBytes(@"c:\folder\myfile.ext");
+        //    string fileName = "myfile.ext";
+        //    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        //}
 
         [Authorize(Policy = "PV002C")]
         public async Task<IActionResult> JanaTxt(int? id)
@@ -741,10 +748,10 @@ namespace MSNK.Controllers
 
             var akCimbEFT = await _akCimbEFTRepo.GetByIdIncludeDeletedItems((int)id);
 
-            //File and path you want to create and write to
-            //string downloadsPath = KnownFolders.GetPath(KnownFolder.Downloads);
 
-            string downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            //File and path you want to create and write to
+            string downloadsPath = Syroot.Windows.IO.KnownFolders.Desktop.Path;
+            //string downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             //string downloadsPath = "C:\\";
 
             string txtFile = downloadsPath + "\\" + akCimbEFT.NamaFail;
