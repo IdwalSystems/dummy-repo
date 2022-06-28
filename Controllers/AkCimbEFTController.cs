@@ -742,9 +742,9 @@ namespace MSNK.Controllers
             var akCimbEFT = await _akCimbEFTRepo.GetByIdIncludeDeletedItems((int)id);
 
             //File and path you want to create and write to
-            string downloadsPath = KnownFolders.GetPath(KnownFolder.Downloads);
+            //string downloadsPath = KnownFolders.GetPath(KnownFolder.Downloads);
 
-            downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             //string downloadsPath = "C:\\";
 
             string txtFile = downloadsPath + "\\" + akCimbEFT.NamaFail;
