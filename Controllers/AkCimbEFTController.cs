@@ -744,6 +744,9 @@ namespace MSNK.Controllers
             //File and path you want to create and write to
             string downloadsPath = KnownFolders.GetPath(KnownFolder.Downloads);
 
+            downloadsPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            //string downloadsPath = "C:\\";
+
             string txtFile = downloadsPath + "\\" + akCimbEFT.NamaFail;
 
             if (System.IO.File.Exists(txtFile))
@@ -821,7 +824,7 @@ namespace MSNK.Controllers
                 }
                 // detail record end
             }
-            TempData[SD.Success] = "Maklumat EFT berjaya dijana ke fail TXT. Sila rujuk pada direktori 'Downloads' dengan nama fail " + akCimbEFT.NamaFail;
+            TempData[SD.Success] = "Maklumat EFT berjaya dijana ke fail TXT. Sila rujuk pada direktori 'Desktop' dengan nama fail " + akCimbEFT.NamaFail;
             return RedirectToAction(nameof(Index));
         }
         // GET: AkCimbEFT/Edit/5
