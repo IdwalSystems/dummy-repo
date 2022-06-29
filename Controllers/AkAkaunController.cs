@@ -235,8 +235,10 @@ namespace MSNK.Controllers
             }
 
             var kw = await _context.JKW.FirstOrDefaultAsync(x => x.Kod == searchKW);
+            var carta = await _context.AkCarta.FirstOrDefaultAsync(x => x.Kod == searchCarta);
 
             searchKW = kw.Kod + " - " + kw.Perihal;
+            searchCarta = carta.Kod + " - " + carta.Perihal;
             //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
 
             return new ViewAsPdf("LejarAkaunPrintPDF", akAkaun, 
