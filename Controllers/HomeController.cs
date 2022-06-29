@@ -108,7 +108,7 @@ namespace MSNK.Controllers
 
                 // badge count
                 int bilKewPP = 0;
-                foreach (var item in akNotaMinta)
+                foreach (var item in spPendahuluanPelbagai)
                 {
                     bilKewPP++;
                 }
@@ -152,5 +152,13 @@ namespace MSNK.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [Route("/Home/HandleError/{code:int}")]
+        public IActionResult HandleError(int code)
+        {
+            ViewData["ErrorMessage"] = $"{code}";
+            return View("~/Views/Shared/HandleError.cshtml");
+        }
+
     }
 }

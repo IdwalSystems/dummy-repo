@@ -347,7 +347,11 @@ namespace MSNK
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
         {
+            // debug shown on development
             app.UseDeveloperExceptionPage();
+            // debug shown on development end
+
+            // development shown normally
             //if (env.IsDevelopment())
             //{
             //    app.UseDeveloperExceptionPage();
@@ -358,6 +362,21 @@ namespace MSNK
             //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             //    app.UseHsts();
             //}
+            // end
+
+            app.UseStatusCodePagesWithReExecute("/Home/HandleError/{0}");
+
+            // redirect 404 page not found
+            //app.Use(async (context, next) =>
+            //{
+            //    await next();
+            //    if (context.Response.StatusCode == 404)
+            //    {
+            //        context.Request.Path = "/ErrorPage/Error404";
+            //        await next();
+            //    }
+            //});
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

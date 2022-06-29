@@ -144,15 +144,15 @@
 
                                             @if (item.FlStatusSokong != 0)
                                             {
-                                                <button data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
+                                                <a data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
                                                     <i class="fas fa-file-signature"></i>
-                                                </button>
+                                                </a>
                                             }
                                             else
                                             {
-                                                <button data-toggle="modal" data-target="#modalSokong" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Sokong" onclick="ModalClick(this)">
+                                                <a data-toggle="modal" data-target="#modalSokong" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Sokong" onclick="ModalClick(this)">
                                                     <i class="fas fa-file-signature"></i>
-                                                </button>
+                                                </a>
                                             }
 
                                         }
@@ -192,7 +192,7 @@
 <div class="modal fade bd-example-modal-lg" id="modalSokong" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header" style="color:#a54ea8;">
+            <div class="modal-header text-purple">
                 <h5 class="modal-title">Sokong Permohonan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>

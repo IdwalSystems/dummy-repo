@@ -245,58 +245,60 @@
             </div>
             @*table Perihal end*@
 
-            @*table akPV2*@
-            @if (Model.AkPV.Count != 0)
+            @*table akPV*@
+            @if (Model.AkPV != null)
             {
-            <div class="card box-shadow mb-3">
-                <div class="card-header bg-success text-white">
-                    <h6>Baucer Pembayaran</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
+                @if (Model.AkPV.Count() != 0)
+                {
+                <div class="card box-shadow mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h6>Baucer Pembayaran</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
 
-                        <table id="tblAkPV2" class="table table-sm table-borderless" cellpadding="0" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th style="width:40%">Kod</th>
-                                    <th style="width:50%" class="text-right">Amaun</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyObjek">
-                                @foreach (var item in Model.AkPV)
-                                {
-                                    <tr id="@item.Id">
-                                        <td >@item.NoPV</td>
-                                        <td class="text-right" id="td3Amaun">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
-                                        <td class="text-center">
-                                            <div class="btn-group" role="group" aria-label="action">
-                                                <a asp-controller="AkPV" asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                                            </div>
-                                        </td>
-                                            
+                            <table id="tblAkPV2" class="table table-sm table-borderless" cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th style="width:40%">Kod</th>
+                                        <th style="width:50%" class="text-right">Amaun</th>
+                                        <th></th>
                                     </tr>
+                                </thead>
+                                <tbody id="tbodyObjek">
+                                    @foreach (var item in Model.AkPV)
+                                    {
+                                        <tr id="@item.Id">
+                                            <td >@item.NoPV</td>
+                                            <td class="text-right" id="td3Amaun">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+                                            <td class="text-center">
+                                                <div class="btn-group" role="group" aria-label="action">
+                                                    <a asp-controller="AkPV" asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                                </div>
+                                            </td>
+                                            
+                                        </tr>
 
-                                }
-                            </tbody>
-                            <tfoot>
+                                    }
+                                </tbody>
+                                <tfoot>
 
-                            </tfoot>
-                        </table>
+                                </tfoot>
+                            </table>
 
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                    <div class="form-group pb-2">
-                        <label class="control-label">Jumlah Baucer RM</label>
-                        <input value="@ViewData["jumlahPerihal"]" class="form-control form-control-sm" id="jumlahObjek" readonly />
+                    <div class="card-footer">
+                        <div class="form-group pb-2">
+                            <label class="control-label">Jumlah Baucer RM</label>
+                            <input value="@ViewData["jumlahAkPV"]" class="form-control form-control-sm" id="jumlahObjek" readonly />
+                        </div>
                     </div>
-                </div>
 
-            </div>    
+                </div>    
+                }
             }
-                
-            @*table akPV2 end*@
+            @*table akPV end*@
 
             
         <hr />
