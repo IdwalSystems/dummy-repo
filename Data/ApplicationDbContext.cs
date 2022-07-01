@@ -77,6 +77,11 @@ namespace MSNK.Data
         public DbSet<SiAppInfo> SiAppInfo { get; set; }
         public DbSet<AkCimbEFT> AkCimbEFT { get; set; }
         public DbSet<AkCimbEFT1> AkCimbEFT1 { get; set; }
+        public DbSet<AkPenghutang> AkPenghutang { get; set; }
+        public DbSet<AkInvois> AkInvois { get; set; }
+        public DbSet<AkInvois1> AkInvois1 { get; set; }
+        public DbSet<AkInvois2> AkInvois2 { get; set; }
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -102,6 +107,7 @@ namespace MSNK.Data
             modelBuilder.Entity<JPelulus>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JPenyemak>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JProfilKategori>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkPenghutang>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
 
             //Terimaan
             modelBuilder.Entity<AkTerima>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
@@ -129,9 +135,10 @@ namespace MSNK.Data
             //Profil Atlet & Jurulatih
             modelBuilder.Entity<SuProfil>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Profil Atlet & Jurulatih end
-            //Biz Channel
-            modelBuilder.Entity<AkCimbEFT>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
-            //Biz Channel end
+            //Invois
+            modelBuilder.Entity<AkInvois>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            //Invois end
+
 
             //default bool to true
 
@@ -230,6 +237,12 @@ namespace MSNK.Data
                .WithMany(t => t.AkTerima)
                .HasForeignKey(m => m.SpPendahuluanPelbagaiId)
                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkTerima3>()
+                .HasOne(m => m.AkInvois)
+                .WithMany(t => t.AkTerima3)
+                .HasForeignKey(m => m.AkInvoisId)
+                .OnDelete(DeleteBehavior.ClientNoAction);
             //AkTerima end
             //AkPO
             modelBuilder.Entity<AkPO>()
@@ -325,7 +338,7 @@ namespace MSNK.Data
 
             modelBuilder.Entity<AkBelian>()
                     .HasOne(m => m.KodObjekAP)
-                    .WithMany(t => t.KodObjekAP)
+                    .WithMany(t => t.AkBelian)
                     .HasForeignKey(m => m.KodObjekAPId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
@@ -336,6 +349,36 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.JBahagianId)
                     .OnDelete(DeleteBehavior.Restrict);
             //AkBelian end
+
+            //AkInvois
+            modelBuilder.Entity<AkInvois>()
+                .HasOne(m => m.JKW)
+                .WithMany(t => t.AkInvois)
+                .HasForeignKey(m => m.JKWId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<AkInvois>()
+                .HasOne(m => m.AkPenghutang)
+                .WithMany(t => t.AkInvois)
+                .HasForeignKey(m => m.AkPenghutangId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<AkInvois>()
+                    .HasOne(m => m.KodObjekAP)
+                    .WithMany(t => t.AkInvois)
+                    .HasForeignKey(m => m.KodObjekAPId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+            modelBuilder.Entity<AkInvois>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.AkInvois)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            //AkInvois end
+
             //AkPV
             modelBuilder.Entity<AkPV>()
                 .HasOne(m => m.JKW)

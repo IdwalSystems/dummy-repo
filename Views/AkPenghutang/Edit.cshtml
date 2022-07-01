@@ -1,0 +1,117 @@
+@model MSNK.Models.Modules.AkPenghutang
+
+@{
+    ViewData["Title"] = "Ubah";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-primary mb-0">Penghutang - Ubah</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / <a asp-action="Details" asp-route-id="@Model.Id" class="text-secondary">Papar</a> / Ubah</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+            <form asp-action="Edit">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="KodSykt"  />
+            <div class="form-row">
+                <div class="form-group col-sm-4">
+                    <label asp-for="NoPendaftaran" class="control-label"></label>
+                    <input asp-for="NoPendaftaran" class="form-control form-control-sm" />
+                    <span asp-validation-for="NoPendaftaran" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm">
+                    <label asp-for="NamaSykt" class="control-label"></label>
+                    <input asp-for="NamaSykt" class="form-control form-control-sm text-uppercase" />
+                    <span asp-validation-for="NamaSykt" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Alamat1" class="control-label">Alamat</label>
+                <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" />
+            </div>
+            <div class="form-group">
+                <input asp-for="Alamat2" class="form-control form-control-sm text-uppercase" />
+            </div>
+            <div class="form-group">
+                <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" />
+                <span asp-validation-for="Alamat1" class="text-danger"></span>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-sm">
+                    <label asp-for="Poskod" class="control-label"></label>
+                    <input asp-for="Poskod" class="form-control form-control-sm" />
+                    <span asp-validation-for="Poskod" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm">
+                    <label asp-for="Bandar" class="control-label"></label>
+                    <input asp-for="Bandar" class="form-control form-control-sm text-uppercase" />
+                    <span asp-validation-for="Bandar" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm">
+                    <label asp-for="JNegeriId" class="control-label"></label>
+                    <select class="form-control form-control-sm" asp-for="JNegeriId">
+                        <option value="" hidden>-- Pilih Negeri --</option>
+                        @foreach (var s in ViewBag.JNegeri)
+                        {
+                            <option value="@s.Id">@s.Perihal </option>
+                        }
+                    </select>
+                    <span asp-validation-for="JNegeriId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-sm-4">
+                    <label asp-for="Telefon1" class="control-label"></label>
+                    <input asp-for="Telefon1" class="form-control form-control-sm" />
+                    <span asp-validation-for="Telefon1" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label asp-for="Emel" class="control-label"></label>
+                    <input asp-for="Emel" class="form-control form-control-sm" />
+                    <span asp-validation-for="Emel" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-sm-4">
+                    <label asp-for="AkaunBank" class="control-label"></label>
+                    <input asp-for="AkaunBank" class="form-control form-control-sm" />
+                    <span asp-validation-for="AkaunBank" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label asp-for="JBankId" class="control-label"></label>
+                    <select class="form-control form-control-sm" asp-for="JBankId">
+                        <option value="" hidden>-- Pilih Bank --</option>
+                        @foreach (var s in ViewBag.jbank)
+                        {
+                            <option value="@s.Id">@s.Kod - @s.Nama </option>
+                        }
+                    </select>
+                    <span asp-validation-for="JBankId" class="text-danger"></span>
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Simpan" class="btn ac-primary btn-sm" />
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+            </div>
+        </form>
+    </div>
+
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

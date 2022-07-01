@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,35 +8,35 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
-using MSNK.Models;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
     [Authorize(Roles = "SuperAdmin , Supervisor")]
-    public class AkPembekalController : Controller
+    public class AkPenghutangController : Controller
     {
-        public const string modul = "FL001";
-        public const string namamodul = "Pembekal";
+        public const string modul = "FL005";
+        public const string namamodul = "Penghutang";
 
         private readonly ApplicationDbContext _context;
-        private readonly IRepository<AkPembekal, int, string> _akpembekalRepo;
+        private readonly IRepository<AkPenghutang, int, string> _akpenghutangRepo;
         private readonly IRepository<JBank, int, string> _jbankRepo;
         private readonly IRepository<JNegeri, int, string> _jnegeriRepo;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppLogIRepository<AppLog, int> _appLog;
 
-        public AkPembekalController(
+        public AkPenghutangController(
             ApplicationDbContext context,
-            IRepository<AkPembekal, int, string> AkPembekalRepository,
+            IRepository<AkPenghutang, int, string> AkPenghutangRepository,
             IRepository<JBank, int, string> JBankRepository,
             IRepository<JNegeri, int, string> JNegeriRepository,
             UserManager<IdentityUser> userManager,
-            AppLogIRepository<AppLog, int> appLog)
+            AppLogIRepository<AppLog, int> appLog
+            )
         {
             _context = context;
-            _akpembekalRepo = AkPembekalRepository;
+            _akpenghutangRepo = AkPenghutangRepository;
             _jbankRepo = JBankRepository;
             _jnegeriRepo = JNegeriRepository;
             _userManager = userManager;
@@ -73,15 +73,15 @@ namespace MSNK.Controllers
 
         private string GetKodSykt(string namasykt)
         {
-            var akpembekal = _akpembekalRepo.GetAll()
+            var akPengutang = _akpenghutangRepo.GetAll()
                 .Result
                 .Where(s => s.KodSykt.Contains(namasykt.Substring(0, 1)))
                 .OrderByDescending(s => s.Id).FirstOrDefault();
 
             int intkodsykt = 0;
-            if (akpembekal != null)
+            if (akPengutang != null)
             {
-                if (int.TryParse(akpembekal.KodSykt.Substring(1), out intkodsykt))
+                if (int.TryParse(akPengutang.KodSykt.Substring(1), out intkodsykt))
                 {
                     intkodsykt += 1;
                 }
@@ -117,14 +117,14 @@ namespace MSNK.Controllers
             }
         }
 
-        // GET: AkPembekal
+        // GET: AkPenghutang
         public async Task<IActionResult> Index()
         {
-            var akpembekal = await _akpembekalRepo.GetAllIncludeDeletedItems();
-            return View(akpembekal);
+            var akpenghutang = await _akpenghutangRepo.GetAllIncludeDeletedItems();
+            return View(akpenghutang);
         }
 
-        // GET: AkPembekal/Details/5
+        // GET: AkPenghutang/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -132,37 +132,39 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPembekal = await _akpembekalRepo.GetById((int)id);
-            var bank = await _jbankRepo.GetById(akPembekal.JBankId);
-            akPembekal.JBank = bank;
-            var negeri = await _jnegeriRepo.GetById(akPembekal.JNegeriId);
-            akPembekal.JNegeri = negeri;
+            var akPenghutang = await _akpenghutangRepo.GetById((int)id);
+            var bank = await _jbankRepo.GetById(akPenghutang.JBankId);
+            akPenghutang.JBank = bank;
+            var negeri = await _jnegeriRepo.GetById(akPenghutang.JNegeriId);
+            akPenghutang.JNegeri = negeri;
 
-            if (akPembekal == null)
+            if (akPenghutang == null)
             {
                 return NotFound();
             }
 
-            return View(akPembekal);
+            return View(akPenghutang);
         }
 
-        // GET: AkPembekal/Create
+        // GET: AkPenghutang/Create
         public IActionResult Create()
         {
             PopulateList();
             return View();
         }
 
-        // POST: AkPembekal/Create
+        // POST: AkPenghutang/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkPembekal akPembekal, int jNegeriId, int jBankId)
+        public async Task<IActionResult> Create(AkPenghutang akPenghutang, int jNegeriId, int jBankId)
         {
-            AkPembekal akP = new();
+            AkPenghutang akP = new();
             var user = await _userManager.GetUserAsync(User);
 
             // check kalau ada no Akaun redundant
-            var akPAkaunRedundant = _context.AkPembekal.Where(x => x.AkaunBank == akPembekal.AkaunBank).FirstOrDefault();
+            var akPAkaunRedundant = _context.AkPenghutang.Where(x => x.AkaunBank == akPenghutang.AkaunBank).FirstOrDefault();
 
             if (akPAkaunRedundant != null)
             {
@@ -174,28 +176,28 @@ namespace MSNK.Controllers
             // check end
             if (ModelState.IsValid)
             {
-                if (akPembekal != null)
+                if (akPenghutang != null)
                 {
                     akP.JBankId = jBankId;
                     akP.JNegeriId = jNegeriId;
-                    akP.KodSykt = GetKodSykt(akPembekal.NamaSykt);
-                    akP.NamaSykt = akPembekal.NamaSykt;
-                    akP.NoPendaftaran = akPembekal.NoPendaftaran;
-                    akP.Poskod = akPembekal.Poskod;
-                    akP.Telefon1 = akPembekal.Telefon1;
-                    akP.AkaunBank = akPembekal.AkaunBank;
-                    akP.Alamat1 = akPembekal.Alamat1;
-                    akP.Alamat2 = akPembekal.Alamat2;
-                    akP.Alamat3 = akPembekal.Alamat3;
-                    akP.Bandar = akPembekal.Bandar;
-                    akP.Emel = akPembekal.Emel;
+                    akP.KodSykt = GetKodSykt(akPenghutang.NamaSykt);
+                    akP.NamaSykt = akPenghutang.NamaSykt;
+                    akP.NoPendaftaran = akPenghutang.NoPendaftaran;
+                    akP.Poskod = akPenghutang.Poskod;
+                    akP.Telefon1 = akPenghutang.Telefon1;
+                    akP.AkaunBank = akPenghutang.AkaunBank;
+                    akP.Alamat1 = akPenghutang.Alamat1;
+                    akP.Alamat2 = akPenghutang.Alamat2;
+                    akP.Alamat3 = akPenghutang.Alamat3;
+                    akP.Bandar = akPenghutang.Bandar;
+                    akP.Emel = akPenghutang.Emel;
                     akP.UserId = user.UserName;
-                    await _akpembekalRepo.Insert(akP);
+                    await _akpenghutangRepo.Insert(akP);
                     //insert applog
                     await AddLogAsync("Tambah", akP.KodSykt + " - " + akP.NamaSykt, akP.KodSykt, 0, 0);
                     //insert applog end
-                    await _akpembekalRepo.Save();
-                    TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Pembekal adalah " + akP.KodSykt;
+                    await _akpenghutangRepo.Save();
+                    TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Penghutang adalah " + akP.KodSykt;
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -206,7 +208,7 @@ namespace MSNK.Controllers
             return View(akP);
         }
 
-        // GET: AkPembekal/Edit/5
+        // GET: AkPenghutang/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -216,26 +218,26 @@ namespace MSNK.Controllers
 
             //var akPembekal = await _context.AkPembekal.FindAsync(id);
             PopulateList();
-            var akPembekal = await _akpembekalRepo.GetById((int)id);
-            var bank = await _jbankRepo.GetById(akPembekal.JBankId);
-            akPembekal.JBank = bank;
-            var negeri = await _jnegeriRepo.GetById(akPembekal.JNegeriId);
-            akPembekal.JNegeri = negeri;
-            if (akPembekal == null)
+            var akPenghutang = await _akpenghutangRepo.GetById((int)id);
+            var bank = await _jbankRepo.GetById(akPenghutang.JBankId);
+            akPenghutang.JBank = bank;
+            var negeri = await _jnegeriRepo.GetById(akPenghutang.JNegeriId);
+            akPenghutang.JNegeri = negeri;
+            if (akPenghutang == null)
             {
                 return NotFound();
             }
-            //ViewData["JBankId"] = new SelectList(_context.AkBank, "Id", "Id", akPembekal.JBankId);
-            //ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", akPembekal.JNegeriId);
-            return View(akPembekal);
+            return View(akPenghutang);
         }
 
-        // POST: AkPembekal/Edit/5
+        // POST: AkPenghutang/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkPembekal akPembekal, int jNegeriId, int jBankId)
+        public async Task<IActionResult> Edit(int id, AkPenghutang akPenghutang, int jNegeriId, int jBankId)
         {
-            if (id != akPembekal.Id)
+            if (id != akPenghutang.Id)
             {
                 return NotFound();
             }
@@ -248,40 +250,24 @@ namespace MSNK.Controllers
                 {
                     var user = await _userManager.GetUserAsync(User);
 
-                    AkPembekal dataAsal = await _akpembekalRepo.GetById(id);
-                    akPembekal.KodSykt = dataAsal.KodSykt;
+                    AkPenghutang dataAsal = await _akpenghutangRepo.GetById(id);
+                    akPenghutang.KodSykt = dataAsal.KodSykt;
                     var namaAsal = dataAsal.NamaSykt;
 
                     _context.Entry(dataAsal).State = EntityState.Detached;
 
-                    akPembekal.UserIdKemaskini = user.UserName;
-                    akPembekal.TarKemaskini = DateTime.Now;
-                    //_context.Update(akPembekal);
-                    //await _context.SaveChangesAsync();
+                    akPenghutang.UserIdKemaskini = user.UserName;
+                    akPenghutang.TarKemaskini = DateTime.Now;
 
-                    //akP.JBankId = jBankId;
-                    //akP.JNegeriId = jNegeriId;
-                    //akP.KodSykt = akPembekal.KodSykt;
-                    //akP.NamaSykt = akPembekal.NamaSykt;
-                    //akP.NoPendaftaran = akPembekal.NoPendaftaran;
-                    //akP.Poskod = akPembekal.Poskod;
-                    //akP.Telefon1 = akPembekal.Telefon1;
-                    //akP.AkaunBank = akPembekal.AkaunBank;
-                    //akP.Alamat1 = akPembekal.Alamat1;
-                    //akP.Alamat2 = akPembekal.Alamat2;
-                    //akP.Alamat3 = akPembekal.Alamat3;
-                    //akP.Bandar = akPembekal.Bandar;
-                    //akP.Emel = akPembekal.Emel;
-
-                    await _akpembekalRepo.Update(akPembekal);
+                    await _akpenghutangRepo.Update(akPenghutang);
                     //insert applog
-                    if (namaAsal != akPembekal.NamaSykt)
+                    if (namaAsal != akPenghutang.NamaSykt)
                     {
-                        await AddLogAsync("Ubah", namaAsal + " -> " + akPembekal.NamaSykt, akPembekal.KodSykt, id, 0);
+                        await AddLogAsync("Ubah", namaAsal + " -> " + akPenghutang.NamaSykt, akPenghutang.KodSykt, id, 0);
                     }
                     else
                     {
-                        await AddLogAsync("Ubah", "Ubah Data", akPembekal.KodSykt, id, 0);
+                        await AddLogAsync("Ubah", "Ubah Data", akPenghutang.KodSykt, id, 0);
                     }
                     //insert applog end
                     await _context.SaveChangesAsync();
@@ -289,7 +275,7 @@ namespace MSNK.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AkPembekalExists(akPembekal.Id))
+                    if (!AkPenghutangExists(akPenghutang.Id))
                     {
                         return NotFound();
                     }
@@ -301,12 +287,10 @@ namespace MSNK.Controllers
                 PopulateList();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["JBankId"] = new SelectList(_context.AkBank, "Id", "Id", akPembekal.JBankId);
-            //ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", akPembekal.JNegeriId);
-            return View(akPembekal);
+            return View(akPenghutang);
         }
 
-        // GET: AkPembekal/Delete/5
+        // GET: AkPenghutang/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -314,39 +298,39 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPembekal = await _context.AkPembekal
+            var akPenghutang = await _context.AkPenghutang
                 .Include(a => a.JBank)
                 .Include(a => a.JNegeri)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (akPembekal == null)
+            if (akPenghutang == null)
             {
                 return NotFound();
             }
 
-            return View(akPembekal);
+            return View(akPenghutang);
         }
 
-        // POST: AkPembekal/Delete/5
+        // POST: AkPenghutang/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var akPembekal = await _context.AkPembekal.FindAsync(id);
+            var akPenghutang = await _context.AkPenghutang.FindAsync(id);
             var user = await _userManager.GetUserAsync(User);
-            akPembekal.UserIdKemaskini = user.UserName;
-            akPembekal.TarKemaskini = DateTime.Now;
+            akPenghutang.UserIdKemaskini = user.UserName;
+            akPenghutang.TarKemaskini = DateTime.Now;
 
-            _context.AkPembekal.Remove(akPembekal);
-            await AddLogAsync("Hapus", akPembekal.KodSykt + " - " + akPembekal.NamaSykt, akPembekal.KodSykt, id, 0);
+            _context.AkPenghutang.Remove(akPenghutang);
+            await AddLogAsync("Hapus", akPenghutang.KodSykt + " - " + akPenghutang.NamaSykt, akPenghutang.KodSykt, id, 0);
 
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AkPembekalExists(int id)
+        private bool AkPenghutangExists(int id)
         {
-            return _context.AkPembekal.Any(e => e.Id == id);
+            return _context.AkPenghutang.Any(e => e.Id == id);
         }
 
         protected override void Dispose(bool disposing)
@@ -360,12 +344,12 @@ namespace MSNK.Controllers
 
         public async Task<IActionResult> RollBack(int id)
         {
-            var obj = await _akpembekalRepo.GetByIdIncludeDeletedItems(id);
+            var obj = await _akpenghutangRepo.GetByIdIncludeDeletedItems(id);
 
             // Batal operation
 
             obj.FlHapus = 0;
-            _context.AkPembekal.Update(obj);
+            _context.AkPenghutang.Update(obj);
 
             await AddLogAsync("Rollback", obj.KodSykt + " - " + obj.NamaSykt, obj.KodSykt, id, 0);
             // Batal operation end
@@ -374,5 +358,6 @@ namespace MSNK.Controllers
             TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

@@ -67,7 +67,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkPO1> AkPO1 { get; set; }
         public ICollection<AkPOLaras1> AkPOLaras1 { get; set; }
         public ICollection<AkJurnal1> AkJurnal1 { get; set; }
-        public ICollection<AkBelian> KodObjekAP { get; set; }
+        public ICollection<AkBelian> AkBelian { get; set; }
         public ICollection<AkBelian1> AkBelian1 { get; set; }
         public ICollection<AkPV1> AkPV1 { get; set; }
         public ICollection<AbBukuVot> Vot { get; set; }
@@ -77,6 +77,9 @@ namespace MSNK.Models.Modules
         public ICollection<AkNotaMinta1> AkNotaMinta1 { get; set; }
         public ICollection<AbWaran1> AbWaran1 { get; set; }
         public ICollection<SuProfil> SuProfil { get; set; }
+        public ICollection<AkInvois1> AkInvois1 { get; set; }
+        public ICollection<AkInvois> AkInvois { get; set; }
+
         //relationship end
 
         //soft delete

@@ -1,0 +1,131 @@
+@model IEnumerable<MSNK.Models.Modules.AkInvois>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Tahun)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tarikh)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarikhPosting)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoInbois)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jumlah)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlPosting)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JBahagian)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.JKW)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AkPO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KodObjekAP)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AkPenghutang)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlHapus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarHapus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarMasuk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserIdKemaskini)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TarKemaskini)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tahun)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tarikh)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TarikhPosting)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NoInbois)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Jumlah)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlPosting)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JBahagian.Kod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JKW.Kod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AkPO.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KodObjekAP.DebitKredit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AkPenghutang.AkaunBank)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlHapus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TarHapus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TarMasuk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserIdKemaskini)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TarKemaskini)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

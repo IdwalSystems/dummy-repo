@@ -1,0 +1,23 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $("body").on('change', "#txtboxNamaSykt", function () {
+            var namasykt = $("#txtboxNamaSykt").val();
+            JsonKodSykt(namasykt);
+        });
+
+        function JsonKodSykt(id) {
+            $.ajax({
+                type: "POST",
+                url: "/AkPenghutang/StrCalculate",
+                data: { data: id },
+                dataType: "json",
+                success: function (msg) {
+                    $("#txtboxKodSykt").val(msg.record);
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+    });
+</script>

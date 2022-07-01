@@ -40,5 +40,6 @@ namespace MSNK.Models.Modules
         public ICollection<SpPendahuluanPelbagai> SpPendahuluanPelbagai { get; set; }
         public ICollection<AkBank> AkBank { get; set; }
         public ICollection<SuProfil> SuProfil { get; set; }
+        public ICollection<AkInvois> AkInvois { get; set; }
     }
 }

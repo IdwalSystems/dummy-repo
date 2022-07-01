@@ -16,12 +16,10 @@ namespace MSNK.Models.Modules
         // FlJenisTerima = 1 ( Inbois )
         // FlJenisTerima = 2 ( Gaji )
         // FlJenisTerima = 3 ( Pendahuluan )
-        // FlJenisTerima = 4 ( Panjar )
         // ..
-        // FlKategoriPenerima = 0 ( Am / Lain - lain )
-        // FlKategoriPenerima = 1 ( pembekal )
-        // FlKategoriPenerima = 2 ( pekerja )
-        // FlKategoriPenerima = 3 ( pemegang panjar )
+        // FlKategoriPembayar = 0 ( Am / Lain - lain )
+        // FlKategoriPembayar = 1 ( penghutang )
+        // FlKategoriPembayar = 2 ( pekerja )
         // ..
 
         //field
@@ -104,8 +102,12 @@ namespace MSNK.Models.Modules
         [DisplayName("No Permohonan Aktiviti")]
         public int? SpPendahuluanPelbagaiId { get; set; }
         public SpPendahuluanPelbagai SpPendahuluanPelbagai { get; set; }
+        [DisplayName("Penghutang")]
+        public int? AkPenghutangId { get; set; }
+        public AkPenghutang AkPenghutang { get; set; }
         public ICollection<AkTerima1> AkTerima1 { get; set; }
         public ICollection<AkTerima2> AkTerima2 { get; set; }
+        public ICollection<AkTerima3> AkTerima3 { get; set; }
         //relationship end
 
     }

@@ -1,0 +1,94 @@
+@model MSNK.Models.Modules.AkPenghutang
+
+@{
+    ViewData["Title"] = "Hapus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-danger mb-0">Penghutang - Hapus</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Hapus</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+            <p class="text-danger">Anda pasti untuk menghapuskan maklumat berikut?</p>
+            <div class="form-row">
+                <div class="form-group col-sm-4">
+                    <label asp-for="NoPendaftaran" class="control-label"></label>
+                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.NoPendaftaran)" readonly />
+                </div>
+                <div class="form-group col-sm-8">
+                    <label asp-for="NamaSykt" class="control-label"></label>
+                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.NamaSykt)" readonly />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Alamat1" class="control-label">Alamat</label>
+                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Alamat1)" readonly />
+            </div>
+            <div class="form-group">
+                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Alamat2)" readonly />
+            </div>
+            <div class="form-group">
+                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Alamat3)" readonly />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-sm">
+                    <label asp-for="Poskod" class="control-label"></label>
+                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Poskod)" readonly />
+                </div>
+                <div class="form-group col-sm">
+                    <label asp-for="Bandar" class="control-label"></label>
+                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Bandar)" readonly />
+                </div>
+                <div class="form-group col-sm">
+                    <label asp-for="JNegeri" class="control-label"></label>
+                    <input class="form-control form-control-sm"
+                            value="@Html.DisplayFor(model => model.JNegeri.Perihal)" readonly />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-sm-4">
+                    <label asp-for="Telefon1" class="control-label"></label>
+                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Telefon1)" readonly />
+                </div>
+                <div class="form-group col-sm-4">
+                    <label asp-for="Emel" class="control-label"></label>
+                    <label class="form-control form-control-sm form-control-plaintext">@Html.DisplayFor(model => model.Emel)</label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-sm-4">
+                    <label asp-for="AkaunBank" class="control-label"></label>
+                    <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.AkaunBank)" readonly />
+                </div>
+                <div class="form-group col-sm-4">
+                    <label asp-for="JBank" class="control-label"></label>
+                    <input class="form-control form-control-sm"
+                            value="@Html.DisplayFor(model => model.JBank.Kod) - @Html.DisplayFor(model => model.JBank.Nama)" readonly />
+                </div>
+            </div>
+                
+        <hr />
+        <div class="form-group">
+             <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <input type="submit" value="Hapus" class="btn ac-danger btn-sm" /> 
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+            </form>
+            
+        </div>
+    </div>
+
+</div>
