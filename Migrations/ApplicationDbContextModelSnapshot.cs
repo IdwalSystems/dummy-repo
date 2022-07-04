@@ -695,16 +695,31 @@ namespace MSNK.Migrations
                     b.Property<int>("AkPenghutangId")
                         .HasColumnType("int");
 
+                    b.Property<int>("FlCetak")
+                        .HasColumnType("int");
+
                     b.Property<int>("FlHapus")
                         .HasColumnType("int");
 
                     b.Property<int>("FlPosting")
                         .HasColumnType("int");
 
+                    b.Property<int>("FlStatusLulus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FlStatusSemak")
+                        .HasColumnType("int");
+
                     b.Property<int?>("JBahagianId")
                         .HasColumnType("int");
 
                     b.Property<int>("JKWId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("JPelulusId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("JPenyemakId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Jumlah")
@@ -728,7 +743,13 @@ namespace MSNK.Migrations
                     b.Property<DateTime?>("TarKemaskini")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("TarLulus")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("TarMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TarSemak")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("Tarikh")
@@ -752,6 +773,10 @@ namespace MSNK.Migrations
                     b.HasIndex("JBahagianId");
 
                     b.HasIndex("JKWId");
+
+                    b.HasIndex("JPelulusId");
+
+                    b.HasIndex("JPenyemakId");
 
                     b.HasIndex("KodObjekAPId");
 
@@ -2807,6 +2832,9 @@ namespace MSNK.Migrations
                     b.Property<bool>("IsBelian")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsInvois")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsNotaMinta")
                         .HasColumnType("bit");
 
@@ -2861,6 +2889,9 @@ namespace MSNK.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("IsBelian")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsInvois")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsNotaMinta")
@@ -4340,6 +4371,14 @@ namespace MSNK.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MSNK.Models.Modules.JPelulus", "JPelulus")
+                        .WithMany()
+                        .HasForeignKey("JPelulusId");
+
+                    b.HasOne("MSNK.Models.Modules.JPenyemak", "JPenyemak")
+                        .WithMany()
+                        .HasForeignKey("JPenyemakId");
+
                     b.HasOne("MSNK.Models.Modules.AkCarta", "KodObjekAP")
                         .WithMany("AkInvois")
                         .HasForeignKey("KodObjekAPId")
@@ -4353,6 +4392,10 @@ namespace MSNK.Migrations
                     b.Navigation("JBahagian");
 
                     b.Navigation("JKW");
+
+                    b.Navigation("JPelulus");
+
+                    b.Navigation("JPenyemak");
 
                     b.Navigation("KodObjekAP");
                 });

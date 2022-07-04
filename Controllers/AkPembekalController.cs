@@ -179,20 +179,20 @@ namespace MSNK.Controllers
                     akP.JBankId = jBankId;
                     akP.JNegeriId = jNegeriId;
                     akP.KodSykt = GetKodSykt(akPembekal.NamaSykt);
-                    akP.NamaSykt = akPembekal.NamaSykt;
+                    akP.NamaSykt = akPembekal.NamaSykt?.ToUpper()?? "";
                     akP.NoPendaftaran = akPembekal.NoPendaftaran;
                     akP.Poskod = akPembekal.Poskod;
                     akP.Telefon1 = akPembekal.Telefon1;
                     akP.AkaunBank = akPembekal.AkaunBank;
-                    akP.Alamat1 = akPembekal.Alamat1;
-                    akP.Alamat2 = akPembekal.Alamat2;
-                    akP.Alamat3 = akPembekal.Alamat3;
-                    akP.Bandar = akPembekal.Bandar;
+                    akP.Alamat1 = akPembekal.Alamat1?.ToUpper()?? "";
+                    akP.Alamat2 = akPembekal.Alamat2?.ToUpper()?? "";
+                    akP.Alamat3 = akPembekal.Alamat3?.ToUpper()?? "";
+                    akP.Bandar = akPembekal.Bandar?.ToUpper()?? "";
                     akP.Emel = akPembekal.Emel;
                     akP.UserId = user.UserName;
                     await _akpembekalRepo.Insert(akP);
                     //insert applog
-                    await AddLogAsync("Tambah", akP.KodSykt + " - " + akP.NamaSykt, akP.KodSykt, 0, 0);
+                    await AddLogAsync("Tambah", akP.KodSykt + " - " + akP.NamaSykt?.ToUpper()?? "", akP.KodSykt, 0, 0);
                     //insert applog end
                     await _akpembekalRepo.Save();
                     TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Pembekal adalah " + akP.KodSykt;
@@ -254,8 +254,14 @@ namespace MSNK.Controllers
 
                     _context.Entry(dataAsal).State = EntityState.Detached;
 
+                    akPembekal.NamaSykt = akPembekal.NamaSykt?.ToUpper()?? "";
+                    akPembekal.Alamat1 = akPembekal.Alamat1?.ToUpper()?? "";
+                    akPembekal.Alamat2 = akPembekal.Alamat2?.ToUpper()?? "";
+                    akPembekal.Alamat3 = akPembekal.Alamat3?.ToUpper()?? "";
+                    akPembekal.Bandar = akPembekal.Bandar?.ToUpper()?? "";
                     akPembekal.UserIdKemaskini = user.UserName;
                     akPembekal.TarKemaskini = DateTime.Now;
+                    
                     //_context.Update(akPembekal);
                     //await _context.SaveChangesAsync();
 

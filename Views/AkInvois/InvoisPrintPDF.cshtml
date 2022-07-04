@@ -1,0 +1,193 @@
+﻿@model MSNK.Models.Modules.PrintModel.InvoisPrintModel
+
+@{
+    ViewData["Title"] = "Cetakan Invois Dikeluarkan";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+<style>
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .max-lines {
+        display: block; /* or inline-block */
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 5.8em;
+    }
+</style>
+
+<div class="row flexrow mb-1">
+    <div class="col-2 image-container">
+        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1 , @Model.CompanyDetail.AlamatSyarikat2</p>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat3</p>
+        <p class="mb-0"> Tel: @Model.CompanyDetail.TelSyarikat   Faks: @Model.CompanyDetail.FaksSyarikat</p>
+        <p class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</p>
+    </div>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0"><strong>INVOIS DIKELUARKAN</strong></h6>
+    </div>
+</div>
+<div class="table-responsive-sm">
+    <hr class="bg-dark" />
+</div>
+<div class="row flexrow mb-1 ">
+    <div class="col-10 text-uppercase">
+        <p class="mb-0">Daripada:</p>
+        <p class="mb-0"><strong>PENGARAH MAJLIS SUKAN NEGERI KEDAH</strong></p>
+        <p class="mb-0">@Model.CompanyDetail.AlamatSyarikat1</p>
+        <p class="mb-0">@Model.CompanyDetail.AlamatSyarikat2</p>
+        <p class="mb-0">@Model.CompanyDetail.AlamatSyarikat3</p>
+    </div>
+
+</div>
+
+<br />
+<div class="bg-dark text-white font-weight-bold">
+    <p class="text-center" style="font-size:0.8rem;" colspan="2"><strong>MAKLUMAT INVOIS DIKELUARKAN</strong></p>
+</div>
+
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">Kepada: </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        @*<p class="mb-0"><strong>: @Model.akInvois.Tajuk</strong></p>*@
+    </div>
+</div>
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">Nama Penghutang </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0"><strong>: @Model.akInvois.AkPenghutang.KodSykt - @Model.akInvois.AkPenghutang.NamaSykt</strong></p>
+    </div>
+</div>
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">Alamat Penghutang </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0">: @Model.akInvois.AkPenghutang.Alamat1, @Model.akInvois.AkPenghutang.Alamat2</p>
+        <p class="mb-0 ml-1">  @Model.akInvois.AkPenghutang.Alamat3, @Model.akInvois.AkPenghutang.Poskod, @Model.akInvois.AkPenghutang.Bandar</p>
+        <p class="mb-0 ml-1">  @Model.akInvois.AkPenghutang.JNegeri.Perihal</p>
+    </div>
+
+</div>
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">Tarikh Permohonan </p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0"><strong>: @Model.akInvois.Tarikh.ToString("dd/MM/yyyy")</strong></p>
+    </div>
+</div>
+<div class="row flexrow mb-1 ">
+    <div class="col-2 text-uppercase">
+        <p class="mb-0">No Invois</p>
+    </div>
+    <div class="col-10 text-uppercase">
+        <p class="mb-0"><strong>: @Model.akInvois.NoInbois</strong></p>
+    </div>
+</div>
+
+
+
+<br />
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr style="line-height:0.8rem;">
+                <td class="text-center font-weight-bold" width="5%">BIL  </td>
+                <td class="text-center font-weight-bold" width="55%">BUTIR-BUTIR</td>
+                <td class="text-center font-weight-bold" width="5%">KUANTITI </td>
+                <td class="text-center font-weight-bold" width="7%">HARGA SEUNIT RM</td>
+                <td class="text-center font-weight-bold" width="7%">AMAUN RM</td>
+            </tr>
+            @foreach (var item in Model.akInvois.AkInvois2)
+            {
+                <tr>
+                    <td class="text-left">@item.Bil</td>
+                    <td class="text-left text-uppercase">@item.Perihal</td>
+                    <td class="text-right">@item.Kuantiti</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Harga).ToString("#,##0.00")</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                </tr>
+
+            }
+            <tr class="font-weight-bold">
+                <td class="text-right text-uppercase" colspan="4">Jumlah RM</td>
+                <td class="text-right">@Convert.ToDecimal(Model.JumlahPerihal).ToString("#,##0.00")</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="bg-dark text-white font-weight-bold">
+    <p class="text-center" style="font-size:0.8rem;" colspan="2"><strong>BAHAGIAN KEWANGAN</strong></p>
+</div>
+
+<br />
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr style="line-height:0.8rem;">
+                <td class="text-center font-weight-bold" width="5%">KOD KW</td>
+                <td class="text-center font-weight-bold" width="5%">KOD BAHAGIAN</td>
+                <td class="text-center font-weight-bold" width="7%">KOD OBJEK</td>
+                <td class="text-center font-weight-bold" width="55%">PERIHAL OBJEK</td>
+                <td class="text-center font-weight-bold" width="7%">AMAUN RM</td>
+            </tr>
+            @foreach (var item in Model.akInvois.AkInvois1)
+            {
+                <tr>
+                    <td class="text-center">@Model.akInvois.JKW.Kod</td>
+                    <td class="text-center">@Model.akInvois.JBahagian.Kod</td>
+                    <td class="text-center">@item.AkCarta.Kod</td>
+                    <td class="text-left text-uppercase">@item.AkCarta.Perihal</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr class="font-weight-bold">
+                <td width="33%" height="70px">Disediakan Oleh : </td>
+                <td width="33%" height="70px">Disemak Oleh : </td>
+                <td width="33%" height="70px">Diluluskan Oleh : </td>
+            </tr>
+            <tr>
+                <td><label></label></td>
+                <td><label></label></td>
+                <td class="text-center text-uppercase"><label>PENGARAH</label></td>
+            </tr>
+            <tr>
+                <td class="text-center text-uppercase"><label>MAJLIS SUKAN NEGERI KEDAH</label></td>
+                <td class="text-center text-uppercase"><label>MAJLIS SUKAN NEGERI KEDAH</label></td>
+                <td class="text-center text-uppercase"><label>MAJLIS SUKAN NEGERI KEDAH</label></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

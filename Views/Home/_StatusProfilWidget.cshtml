@@ -1,0 +1,186 @@
+﻿
+<script type="text/javascript">
+    var columnSearchVar;
+    $(document).ready(function () {
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            tableProfil.columns.adjust();
+        });
+
+        var tableProfil = $('.tableProfil').DataTable({
+            "paging": false,
+            rowReorder: false,
+            columnDefs: [
+                { orderable: false, targets: '_all' }
+            ],
+            "scrollY": "40vh",
+            "scrollX": true,
+            "scrollCollapse": true,
+            "paging": false,
+            dom: 'lrtip',
+            "language": {
+                "info": "_TOTAL_ entri yang dipamerkan",
+                "infoEmpty": "Tiada data untuk dipamerkan",
+                "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
+            }
+        });
+
+        tableProfil.columns.adjust();
+
+        $('#columnSearch').change(function () {
+            columnSearchVar = $(this).val();
+            // refresh table
+            tableProfil.destroy();
+
+            tableProfil = $('.tableProfil').DataTable({
+                "paging": false,
+                rowReorder: false,
+                columnDefs: [
+                    { orderable: false, targets: '_all' }
+                ],
+                "scrollY": "40vh",
+                "scrollX": true,
+                "scrollCollapse": true,
+                "paging": false,
+                dom: 'lrtip',
+                "language": {
+                    "info": "_TOTAL_ entri yang dipamerkan",
+                    "infoEmpty": "Tiada data untuk dipamerkan",
+                    "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
+                }
+            });
+
+            // refresh table end
+        });
+
+    });
+</script>
+
+@if (Model.SuProfil.Count > 0)
+{
+    <div class="card box-shadow">
+        <div class="card-header bg-transparent container-fluid">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class=" mb-0 text-info">Status Elaun / Skim</h5>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="card-body">
+            <div class="table-responsive table-sm">
+                <table class="table tableProfil table-bordered table-hover display compact nowrap" width="100%">
+                    <thead>
+                        <tr>
+                            <th width="5%">Tahun</th>
+                            <th width="5%">Bulan</th>
+                            <th width="10%">Bahagian</th>
+                            <th width="10%">No Rujukan</th>
+                            <th width="5%">
+                                Kategori
+                            </th>
+                            <th width="5%">
+                                Tindakan
+                            </th>
+                            <th width="5%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.SuProfil)
+                        {
+                            var tindakan = "KEWANGAN";
+                            var badgeType = "ac-warning";
+
+                            <tr class="text-uppercase ">
+                                <td width="5%">
+                                    @item.Tahun
+                                </td>
+                                <td width="5%">
+                                    @item.Bulan
+                                </td>
+                                <td width="5%">
+                                    @item.JBahagian.Kod - @item.JBahagian.Perihal
+                                </td>
+                                <td>
+                                    @item.NoRujukan
+                                </td>
+                                @if (item.FlKategori == 1){
+                                    <td class="text-uppercase">
+                                        ELAUN JSM
+                                    </td>
+                                } else
+                                {
+                                   <td class="text-uppercase">
+                                        SKIM ATLET
+                                    </td> 
+                                }
+
+                                <td>
+                                    <div class="mt-sm-1 d-block" width="5%">
+                                        <span class="badge @badgeType rounded-pill text-white p-1 px-2">
+                                            @tindakan
+                                        </span>
+                                    </div>
+                                </td>
+                                @if (item.FlKategori == 1){
+                                    <td class="action-button" width="5%">
+                                        <div class="btn-group" role="group" aria-label="action">
+
+                                            <a asp-action="Details" asp-controller="SuProfilJurulatih" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                            <a asp-action="PrintPdf" asp-controller="SuProfilJurulatih" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                                            @if (item.FlPosting == 0)
+                                            {
+                                                @if (item.FlCetak != 0)
+                                                {
+                                                    <a asp-action="Posting" asp-controller="SuProfilJurulatih" asp-route-id="@item.Id" class="btn text-success btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Lulus">
+                                                        <i class="fas fa-file-signature"></i>
+                                                    </a>
+                                                }
+
+                                                <a asp-action="Delete" asp-controller="SuProfilJurulatih" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+
+                                            }
+                                        </div>
+
+                                    </td>
+                                } else
+                                {
+                                   <td class="action-button" width="5%">
+                                        <div class="btn-group" role="group" aria-label="action">
+
+                                            <a asp-action="Details" asp-controller="SuProfilAtlet" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                            <a asp-action="PrintPdf" asp-controller="SuProfilAtlet" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                                            @if (item.FlPosting == 0)
+                                            {
+                                                @if (item.FlCetak != 0)
+                                                {
+                                                    <a asp-action="Posting" asp-controller="SuProfilAtlet" asp-route-id="@item.Id" class="btn text-success btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Lulus">
+                                                        <i class="fas fa-file-signature"></i>
+                                                    </a>
+                                                }
+
+                                                <a asp-action="Delete" asp-controller="SuProfilAtlet" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+
+                                            }
+                                        </div>
+
+                                    </td>
+                                }
+                                
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+}
+else
+{
+
+}
+

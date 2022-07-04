@@ -29,6 +29,7 @@ namespace MSNK.Data
         public DbSet<AkTerima> AkTerima { get; set; }
         public DbSet<AkTerima1> AkTerima1 { get; set; }
         public DbSet<AkTerima2> AkTerima2 { get; set; }
+        public DbSet<AkTerima3> AkTerima3 { get; set; }
         public DbSet<AkPembekal> AkPembekal { get; set; }
         public DbSet<AkPO> AkPO { get; set; }
         public DbSet<AkPO1> AkPO1 { get; set; }

@@ -139,6 +139,12 @@ namespace MSNK
             services.AddTransient<ListViewIRepository<AkCimbEFT1, int>, AkCimbEFT1Repository>();
             //BIZ CHANNEl END
 
+            //INVOIS DIKELUARKAN
+            services.AddTransient<IRepository<AkInvois, int, string>, AkInvoisRepository>();
+            services.AddTransient<ListViewIRepository<AkInvois1, int>, AkInvois1Repository>();
+            services.AddTransient<ListViewIRepository<AkInvois2, int>, AkInvois2Repository>();
+            //INVOIS DIKELUARKAN END
+
             services.AddTransient<IRepository<AbWaran, int, string>, AbWaranRepository>();
             services.AddTransient<ListViewIRepository<AbWaran1, int>, AbWaran1Repository>();
             services.AddTransient<CustomIRepository<string, int>, CustomRepository>();
@@ -158,6 +164,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartAtlet.GetCart(ss));
             services.AddScoped(ss => SessionCartJurulatih.GetCart(ss));
             services.AddScoped(ss => SessionCartCimbEFT.GetCart(ss));
+            services.AddScoped(ss => SessionCartInvois.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -330,6 +337,18 @@ namespace MSNK
                 options.AddPolicy("PV002B", policy => policy.RequireClaim("PV002B"));
                 options.AddPolicy("PV002R", policy => policy.RequireClaim("PV002R"));
                 //Biz Channel End
+                //Menu Invois
+                //Invois Dikeluarkan
+                options.AddPolicy("IN001", policy => policy.RequireClaim("IN001"));
+                options.AddPolicy("IN001C", policy => policy.RequireClaim("IN001C"));
+                options.AddPolicy("IN001E", policy => policy.RequireClaim("IN001E"));
+                options.AddPolicy("IN001D", policy => policy.RequireClaim("IN001D"));
+                options.AddPolicy("IN001P", policy => policy.RequireClaim("IN001P"));
+                options.AddPolicy("IN001B", policy => policy.RequireClaim("IN001B"));
+                options.AddPolicy("IN001R", policy => policy.RequireClaim("IN001R"));
+                options.AddPolicy("IN001T", policy => policy.RequireClaim("IN001T"));
+                options.AddPolicy("IN001UT", policy => policy.RequireClaim("IN001UT"));
+                //Invois Dikeluarkan End
             });
 
             services.AddMvc(f =>

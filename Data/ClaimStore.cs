@@ -167,6 +167,18 @@ namespace MSNK.Data
             new Claim("PV002B","PV002 Biz Channel - Batal"),
             new Claim("PV002R","PV002 Biz Channel - Rollback"),
             //Profil Atlet end
+            //Menu Invois
+            //Invois Dikeluarkan
+            new Claim("IN001","IN001 Invois Dikeluarkan"),
+            new Claim("IN001C","IN001 Invois Dikeluarkan - Tambah"),
+            new Claim("IN001E","IN001 Invois Dikeluarkan - Ubah"),
+            new Claim("IN001D","IN001 Invois Dikeluarkan - Hapus"),
+            new Claim("IN001P","IN001 Invois Dikeluarkan - Cetak"),
+            new Claim("IN001B","IN001 Invois Dikeluarkan - Batal"),
+            new Claim("IN001R","IN001 Invois Dikeluarkan - Rollback"),
+            new Claim("IN001T","IN001 Invois Dikeluarkan - Posting"),
+            new Claim("IN001UT","IN001 Invois Dikeluarkan - UnPosting"),
+            //Profil Atlet end
 
         };
     }

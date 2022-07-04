@@ -115,6 +115,24 @@ namespace MSNK.Controllers
                 //badge count end
                 // Widget Status Pendahuluan Pelbagai end
 
+                // Widget Status Pendahuluan Pelbagai
+                var suProfil = await _context.SuProfil
+                    .Include(b => b.JKW)
+                    .Include(b => b.JBahagian)
+                    .Where(b => b.FlPosting == 0)
+                    .OrderByDescending(b => b.NoRujukan)
+                    .ToListAsync();
+
+                // badge count
+                int bilKewP = 0;
+                foreach (var item in suProfil)
+                {
+                    bilKewP++;
+                }
+                //badge count end
+                // Widget Status Pendahuluan Pelbagai end
+
+
                 dynamic dyModel = new ExpandoObject();
                 dyModel.AkPO = akPO;
                 dyModel.bilMore5Days = bilMore5Days;
@@ -124,6 +142,8 @@ namespace MSNK.Controllers
                 dyModel.bilLulusNM = bilLulusNM;
                 dyModel.SpPendahuluanPelbagai = spPendahuluanPelbagai;
                 dyModel.bilKewPP = bilKewPP;
+                dyModel.SuProfil = suProfil;
+                dyModel.bilKewP = bilKewP;
                 return View(dyModel);
             }
             

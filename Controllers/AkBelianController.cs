@@ -683,9 +683,9 @@ namespace MSNK.Controllers
                                    akBelian2.Baris,
                                    akBelian2.Bil,
                                    akBelian2.NoStok,
-                                   akBelian2.Perihal,
+                                   akBelian2.Perihal?.ToUpper()?? "",
                                    akBelian2.Kuantiti,
-                                   akBelian2.Unit,
+                                   akBelian2.Unit?.ToUpper()?? "",
                                    akBelian2.Harga,
                                    akBelian2.Amaun);
                 }
@@ -1303,6 +1303,7 @@ namespace MSNK.Controllers
             {
                 akBelianView.JumlahPerihal += item.Amaun;
             }
+            akBelianView.AkBelian1 = akBelian.AkBelian1;
             akBelianView.AkBelian2 = akBelian.AkBelian2;
 
             PopulateTable(id);
@@ -1441,9 +1442,9 @@ namespace MSNK.Controllers
                                    akBelian2.Baris,
                                    akBelian2.Bil,
                                    akBelian2.NoStok,
-                                   akBelian2.Perihal,
+                                   akBelian2.Perihal?.ToUpper()?? "",
                                    akBelian2.Kuantiti,
-                                   akBelian2.Unit,
+                                   akBelian2.Unit?.ToUpper()?? "",
                                    akBelian2.Harga,
                                    akBelian2.Amaun);
                 }

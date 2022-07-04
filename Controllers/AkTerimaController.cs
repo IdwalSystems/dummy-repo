@@ -38,6 +38,8 @@ namespace MSNK.Controllers
         private readonly ListViewIRepository<AkTerima2, int> _akTerima2Repo;
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPPRepo;
+        private readonly IRepository<AkPenghutang, int, string> _akPenghutangRepo;
+        private readonly IRepository<AkInvois, int, string> _akInvoisRepo;
         private CartTerima _cart;
 
         public AkTerimaController(
@@ -53,6 +55,8 @@ namespace MSNK.Controllers
             IRepository<AkCarta, int, string> akCartaRepository,
             IRepository<AkAkaun, int, string> akAkaunRepository,
             IRepository<SpPendahuluanPelbagai, int, string> spPPRepo,
+            IRepository<AkPenghutang, int, string> akPenghutangRepo,
+            IRepository<AkInvois, int, string> akInvoisRepo,
             CartTerima cart
             )
         {
@@ -68,6 +72,8 @@ namespace MSNK.Controllers
             _akCartaRepo = akCartaRepository;
             _akAkaunRepo = akAkaunRepository;
             _spPPRepo = spPPRepo;
+            _akPenghutangRepo = akPenghutangRepo;
+            _akInvoisRepo = akInvoisRepo;
             _cart = cart;
         }
 
@@ -241,6 +247,21 @@ namespace MSNK.Controllers
 
             List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.OrderBy(b => b.Kod).ToList();
             ViewBag.JCaraBayar = jCaraBayarList;
+
+            List<AkPenghutang> akPenghutangList = _context.AkPenghutang
+                .Include(b => b.JBank)
+                .OrderBy(b => b.KodSykt).ToList();
+            ViewBag.AkPenghutang = akPenghutangList;
+
+            List<AkInvois> akInvoisList = _context.AkInvois
+                .Where(b => b.FlPosting == 1)
+                .OrderBy(b => b.Tarikh).ToList();
+
+            foreach (var item in akInvoisList)
+            {
+                item.NoInbois = item.NoInbois.Substring(3);
+            }
+            ViewBag.AkInvois = akInvoisList;
 
             //var jenisCek = new Dictionary<string, string>
             //{
@@ -659,6 +680,77 @@ namespace MSNK.Controllers
             }
         }
         // get all item from cart akTerima2 end
+
+        // get an item from cart akTerima3
+        public JsonResult GetAnItemCartAkTerima3(AkTerima3 akTerima3)
+        {
+
+            try
+            {
+                AkTerima3 data = _cart.Lines3.Where(x => x.AkInvoisId == akTerima3.AkInvoisId).FirstOrDefault();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get an item from cart akTerima3 end
+
+        //save cart akTerima3
+        public JsonResult SaveCartAkTerima3(AkTerima3 akTerima3)
+        {
+
+            try
+            {
+
+                var akT3 = _cart.Lines3.Where(x => x.AkInvoisId == akTerima3.AkInvoisId).FirstOrDefault();
+
+                var user = _userManager.GetUserName(User);
+
+                if (akT3 != null)
+                {
+                    _cart.RemoveItem3((int)akTerima3.AkInvoisId);
+
+                    _cart.AddItem3(akTerima3.AkTerimaId,
+                                    akTerima3.AkInvoisId,
+                                    akTerima3.Amaun);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //save cart akTerima3 end
+
+        // get all item from cart akTerima3
+        public JsonResult GetAllItemCartAkTerima3(AkTerima3 akTerima3)
+        {
+
+            try
+            {
+                List<AkTerima3> data = _cart.Lines3.ToList();
+
+                foreach (AkTerima3 item in data)
+                {
+                    var akInvois = _context.AkInvois.Find(item.AkInvoisId);
+
+                    item.AkInvois = akInvois;
+                }
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart akTerima3 end
+
 
         // POST: AkTerima/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -1222,8 +1314,10 @@ namespace MSNK.Controllers
             {
                 ViewBag.akTerima1 = new List<int>();
                 ViewBag.akTerima2 = new List<int>();
+                ViewBag.akTerima3 = new List<int>();
                 _cart.Clear1();
                 _cart.Clear2();
+                _cart.Clear3();
 
                 return Json(new { result = "OK" });
             }
@@ -1312,6 +1406,25 @@ namespace MSNK.Controllers
                 {
 
                     _cart.RemoveItem2(akTerima2.JCaraBayarId);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public JsonResult RemoveAkTerima3(AkTerima3 akTerima3)
+        {
+
+            try
+            {
+                if (akTerima3 != null)
+                {
+
+                    _cart.RemoveItem3((int)akTerima3.AkInvoisId);
                 }
 
                 return Json(new { result = "OK" });
@@ -1828,5 +1941,126 @@ namespace MSNK.Controllers
         }
         // printing resit rasmi end
 
+        // on change kod pembekal controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetPenghutang(int data)
+        {
+            try
+            {
+                var result = await _akPenghutangRepo.GetById(data);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change kod pembekal controller end
+
+        // on change kod pembekal controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetInboisDikeluarkan(int data)
+        {
+            try
+            {
+                var result = await _context.AkInvois.Include(b => b.AkPenghutang).Where(x => x.AkPenghutangId == data).ToListAsync();
+
+                if (result.Count() == 0)
+                {
+                    return Json(new { result = "Error" });
+                }
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change kod pembekal controller end
+
+        // on change inbois controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetAkInvois(int data)
+        {
+            try
+            {
+                _cart.Clear3();
+                var result = await _akInvoisRepo.GetById(data);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+
+        //on change inbois controller end
+
+        // json empty Cart controller
+        [HttpPost]
+        public JsonResult JsonEmptyCart()
+        {
+            try
+            {
+                CartEmpty();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        // json empty cart end
+
+        //function json Create akTerima3
+        public JsonResult GetAkInvois(AkInvois akInvois)
+        {
+            try
+            {
+
+                var result = _context.AkInvois
+                    .Include(b => b.AkInvois1).ThenInclude(b => b.AkCarta)
+                    .Where(b => b.Id == akInvois.Id)
+                    .FirstOrDefault();
+
+                //if (result!= null)
+                //{
+                //    PopulateCartAkPV1(result.Id);
+                //}
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+
+        public JsonResult SaveAkTerima3(AkTerima3 akTerima3)
+        {
+
+            try
+            {
+                if (akTerima3 != null)
+                {
+
+                    // add akTerima3 into cart lines3
+                    _cart.AddItem3(akTerima3.AkTerimaId,
+                                   akTerima3.AkInvoisId,
+                                   akTerima3.Amaun);
+
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
     }
 }

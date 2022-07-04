@@ -44,19 +44,19 @@
     {
     <div class="card box-shadow">
         <div class="card-body">
-            <h5 class="text-purple">Status Terkini</h5>
+            <h5 class="text-purple text-uppercase">Tindakan Kewangan</h5>
             <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#statusNotaMinta" id="tabNM">Nota Minta 
-                        @if(Model.bilKewNM != 0)
-                        {
-                            <span class="badge ac-warning text-white">@Model.bilKewNM</span>  
-                        }
-                        @if(Model.bilLulusNM != 0)
-                        {
-                            <span class="badge ac-success">@Model.bilLulusNM</span>
-                        }
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#statusNotaMinta" id="tabNM">Nota Minta 
+                            @if(Model.bilKewNM != 0)
+                            {
+                                <span class="badge ac-warning text-white">@Model.bilKewNM</span>  
+                            }
+                            @if(Model.bilLulusNM != 0)
+                            {
+                                <span class="badge ac-success">@Model.bilLulusNM</span>
+                            }
                         </a> 
                     </li>
                     <li class="nav-item">
@@ -76,6 +76,14 @@
                             @if(Model.bilKewPP != 0)
                             {
                                 <span class="badge ac-warning text-white">@Model.bilKewPP</span>
+                            }
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#StatusProfilJuruAtlet" id="tabProfilJuruAtlet">Elaun / Skim
+                            @if(Model.bilKewP != 0)
+                            {
+                                <span class="badge ac-warning text-white">@Model.bilKewP</span>
                             }
                         </a>
                     </li>
@@ -103,6 +111,14 @@
                         <div class="form-row mb-3">
                             <div class="col-md-12">
                                 <partial name="_StatusPendahuluanPelbagaiWidget" />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="StatusProfilJuruAtlet" class="tab-pane fade">
+                        <br>
+                        <div class="form-row mb-3">
+                            <div class="col-md-12">
+                                <partial name="_StatusProfilWidget" />
                             </div>
                         </div>
                     </div>

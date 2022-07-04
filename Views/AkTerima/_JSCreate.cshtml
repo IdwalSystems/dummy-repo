@@ -1,4 +1,26 @@
 ﻿<script type="text/javascript">
+    //empty cart
+    function EmptyCart() {
+        $.ajax({
+            type: "POST",
+            //url: "/AkPV/JsonEmptyCart",
+            url: '@Url.Action("JsonEmptyCart", "AkTerima")',
+            dataType: "json",
+            success: function (msg) {
+                $("table tbody#tbodyObjek").empty();
+                $("table tbody#tbodyInbois").empty();
+                $("#jumlahObjek").val("0.00");
+                $("#jumlahInbois").val("0.00");
+                $("#txtKodAkaun option").prop('disabled', false);
+                $("#txtKodAkaun option:selected").prop('disabled', true);
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    };
+    //empty cart end
+
     // onchange no Rujukan
     $("body").on('change', "#ddlKW , #txtTahun", function () {
         var kodkw = $("#ddlKW").val();
@@ -25,6 +47,161 @@
         });
     }
     // onchange no Rujukan end
+
+    // on change kod penghutang
+    $("body").on('change', "#ddlKodPenghutang", function () {
+        var kodPenghutang = $("#ddlKodPenghutang").val();
+        var card = $("#cardInbois");
+        if (kodPenghutang != 0) {
+            card.removeAttr('hidden');
+            $("#txtAkInvois").empty();
+            JsonKodPenghutang(kodPenghutang);
+        } else {
+            //enable field
+            $("#NoKp").prop('disabled', false);
+            $("#Nama").prop('disabled', false);
+            $("#Nama").prop('required', true);
+            $("#Alamat1").prop('disabled', false);
+            $("#Alamat2").prop('disabled', false);
+            $("#Alamat3").prop('disabled', false);
+            $("#Telefon").prop('disabled', false);
+            $("#Emel").prop('disabled', false);
+            $("#Poskod").prop('disabled', false);
+            $("#Bandar").prop('disabled', false);
+
+            //empty field
+            $("#NoKp").val('');
+            $("#Nama").val('');
+            $("#Alamat1").val('');
+            $("#Alamat2").val('');
+            $("#Alamat3").val('');
+            $("#Tel").val('');
+            $("#Emel").val('');
+            $("#Poskod").val('');
+            $("#Bandar").val('');
+
+            $("#btnSave").show();
+            card.prop('hidden', true);
+            EmptyCart();
+        }
+
+    });
+
+    function JsonKodPenghutang(id) {
+        if (id != null) {
+            $.ajax({
+                type: "POST",
+                //url: "/AkPV/JsonGetPembekal",
+                url: '@Url.Action("JsonGetPenghutang", "AkTerima")',
+                data: { data: id },
+                dataType: "json",
+                success: function (msg) {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("JsonGetInboisDikeluarkan", "AkTerima")',
+                        data: { data: id },
+                        datatype: "json",
+                        success: function (r) {
+                            var jkw = 0;
+                            var jbahagian = 0;
+                            var jNegeri = 0;
+                            if (r.result == "OK") {
+                                var select = new Option("-- Pilih Inbois --", 0, true, true);
+                                $("#txtAkInvois").append(select);
+                                if (r.record.length > 0) {
+                                    for (var i = 0; i < r.record.length; i++) {
+                                        var item1 = r.record[i];
+                                        var option = new Option(item1.noInbois.substring(3), item1.id, true, true);
+                                        $("#txtAkInvois").append(option);
+                                        jkw = item1.jkwId;
+                                        jbahagian = item1.jBahagianId;
+                                        jNegeri = item1.akPenghutang.jNegeriId;
+
+                                    }
+                                }
+                                $("#ddlKW").val(jkw).change();
+                                $("#ddlBahagian").val(jbahagian).change();
+                                $("#ddlNegeri").val(jNegeri).change();
+                                $("#txtAkInvois").val(0).change();
+
+                                //populate related fields
+
+                                $("#NoKp").val(msg.record.kodSykt);
+                                $("#Nama").val(msg.record.namaSykt);
+                                $("#Alamat1").val(msg.record.alamat1);
+                                $("#Alamat2").val(msg.record.alamat2);
+                                $("#Alamat3").val(msg.record.alamat3);
+                                $("#Tel").val(msg.record.telefon1);
+                                $("#Emel").val(msg.record.emel);
+                                $("#Poskod").val(msg.record.poskod);
+                                $("#Bandar").val(msg.record.bandar);
+                                // disable fields
+                                $("#NoKp").prop('disabled', true);
+                                $("#Nama").prop('disabled', true);
+                                $("#Alamat1").prop('disabled', true);
+                                $("#Alamat2").prop('disabled', true);
+                                $("#Alamat3").prop('disabled', true);
+                                $("#Tel").prop('disabled', true);
+                                $("#Emel").prop('disabled', true);
+                                $("#Poskod").prop('disabled', true);
+                                $("#Bandar").prop('disabled', true);
+                                $("#ddlKodPekerja").prop('disabled', true);
+                                $("#ddlKodPekerja").val(0);
+                                $("#Nama").prop('required', false);
+
+                            }
+                            else {
+                                $("#ddlKodPenghutang").val(0).change();
+                                toastr.error("Tiada inbois untuk penghutang ini", "Ralat");
+                                toastr.options.timeOut = 5000; // 5s
+                            }
+
+
+                        },
+                        error: function (error) {
+                            alert(error);
+                        }
+                    });
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+    //on change Kod Penghutang end
+
+    // on change no Inbois dikeluarkan
+    $("body").on('change', "#txtAkInvois", function () {
+        var noInbois = $("#txtAkInvois").val();
+
+        if (noInbois != 0) {
+            JsonNoInbois(noInbois);
+        }
+
+    });
+
+    function JsonNoInbois(id) {
+        if (id != null) {
+            $.ajax({
+                type: "POST",
+                //url: "/AkPV/JsonGetAkBelian",
+                url: '@Url.Action("JsonGetAkInvois", "AkTerima")',
+                data: { data: id },
+                dataType: "json",
+                success: function (msg) {
+                    $("#txtTarInbois").val(msg.record.tarikh);
+                    $("#txtAmaunInbois").val(msg.record.jumlah.toFixed(2));
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+
+    }
+
+    //on change no Inbois pembekal end
 
     // onchange no KP
     $("body").on('change', "#NoKp", function () {
@@ -791,6 +968,33 @@
             },
 
         });
+
+        // on change jenis resit
+        $('input[type=radio][name=FlJenisTerima]').on('change', function () {
+            
+            $("#ddlPendahuluanPelbagai").val(0).change();
+            $("#ddlKodPenghutang").val(0).change();
+            $("#txtPerihal").val("");
+            EmptyCart();
+            switch ($(this).val()) {
+                case "0":
+                    $("#divPenghutang").prop('hidden', true);
+                    break;
+                case "1":
+                    $("#divPenghutang").removeAttr('hidden');
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    break;
+                case "4":
+                    break;
+                case "6":
+                    break;
+            }
+        });
+        //on change jenis resit end
+
     });
     //validation form end
 
@@ -811,4 +1015,240 @@
         }
     }
     // check end
+
+    //add tbl Inbois
+    $("body").on("click", "#btnAdd2", function () {
+        //Reference the Name and Country TextBoxes.
+        var ddlAkInvois = $("#txtAkInvois");
+        if (ddlAkInvois.val() != null) {
+            GetInbois(ddlAkInvois.val());
+        }
+
+    });
+
+    function GetInbois(id) {
+        var AkInvois = {
+            Id: id
+        }
+        if (id != "") {
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                //url: "/AkPV/GetAkBelian",
+                url: '@Url.Action("GetAkInvois", "AkTerima")',
+                data: AkInvois,
+                dataType: "json",
+                success: function (r) {
+                    //Reference the TextBoxes.
+                    var ddlAkInvois = $("#txtAkInvois");
+                    var txtTarInbois = $("#txtTarInbois");
+                    var txtAmaunInbois = $("#txtAmaunInbois");
+                    var txtJumlah = $("#jumlahInbois");
+
+                    var AkTerima3 = {
+                        AkInvoisId: ddlAkInvois.val(),
+                        Amaun: txtAmaunInbois.val()
+                    }
+                    var tahun = $("#txtTahun").val();
+                    var jKWId = $("#ddlKW").val();
+                    var jBahagianId = $("#ddlBahagian").val();
+                    var myData = {};
+                    myData.AkTerima3 = AkTerima3;
+                    myData.tahun = tahun;
+                    myData.jKWId = jKWId;
+                    myData.jBahagianId = jBahagianId;
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SaveAkTerima3", "AkTerima")',
+                        data: myData,
+                        dataType: "json",
+                        success: function (b) {
+                            if (b.result == "OK") {
+                                //Sum value to Total text field
+                                var sum = 0;
+                                sum = parseFloat(txtAmaunInbois.val()) + parseFloat(txtJumlah.val());
+                                txtJumlah.val(sum.toFixed(2));
+
+                                //Get the reference of the Table's TBODY element.
+                                var tBody = $("#tblInbois > TBODY")[0];
+                                //Add Row.
+                                var row = tBody.insertRow(-1);
+
+                                //Add AkBelianId cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(r.record.id);
+                                cell.prop("hidden", !this.checked);
+
+                                //Add No inbois cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(r.record.noInbois.substring(3));
+
+                                //Add TarInbois cell.
+                                var cell = $(row.insertCell(-1));
+                                if (txtTarInbois.val() == null || txtTarInbois.val() == '') {
+                                    cell.html('');
+                                } else {
+                                    cell.html(showDate(txtTarInbois.val()));
+                                }
+
+                                //Add amaun inbois cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(parseFloat(txtAmaunInbois.val()).toFixed(2));
+                                cell.addClass('text-right');
+
+                                //Add Edit Button cell.
+                                cell = $(row.insertCell(-1));
+
+                                var btnUpdate2 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate3' onclick='Update3(this)'><i class='fas fa-edit'></i></button>");
+                                cell.append(btnUpdate2);
+
+                                //Add Button cell.
+                                cell = $(row.insertCell(-1));
+                                var btnRemove2 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove3' onclick='Remove3(this)'><i class='fas fa-trash'></i></button>");
+                                cell.append(btnRemove2);
+
+                                //displayObjekList(r.record.akBelian1);
+
+                                $("#txtAkInvois option[value=" + ddlAkInvois.val() + "]").prop('disabled', true);
+
+                                //Clear the TextBoxes.
+                                ddlAkInvois.val("0").trigger('change');
+                                txtTarInbois.val("");
+                                txtAmaunInbois.val("0.00");
+                                checkJumlah();
+
+
+                            }
+                            else {
+                                toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
+                                toastr.options.timeOut = 5000; // 5s
+                            }
+
+                        }
+                    });
+
+                }
+            });
+        }
+
+    }
+    //add tbl Inbois end
+
+    //remove tbl Inbois
+    function Remove3(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var name = $("TD", row).eq(0).html();
+        var amaun = $("TD", row).eq(3).html();
+        var txtJumlah = $("#jumlahInbois");
+
+        if (confirm("Hapus : " + name + " ?")) {
+            //Get the reference of the Table.
+            var table = $("#tblInbois")[0];
+
+            //Sum value to Total text field
+            var sum = 0;
+            sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
+            txtJumlah.val(sum.toFixed(2));
+
+            var AkTerima3 = {
+                AkTerimaId: name
+            }
+            if (name != null) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("RemoveAkTerima3", "AkTerima")',
+                    data: AkTerima3,
+                    dataType: "json",
+                    success: function (r) {
+                        //Delete the Table row using it's Index.
+                        table.deleteRow(row[0].rowIndex);
+                        checkJumlah();
+                    }
+                });
+            }
+            $("#txtAkInvois option[value=" + name + "]").prop('disabled', false);
+        }
+    };
+    //remove tbl Inbois end
+
+    //update tbl Inbois
+    function Update3(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var akInvoisId = $("TD", row).eq(0).html();
+        var AkTerima3 = {
+            AkTerimaId: akTerimaId
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAnItemCartAkTerima3", "AkTerima")',
+            data: AkTerima3,
+            dataType: "json",
+            success: function (r) {
+                //insert data in modal urusniaga
+                $("#moId3").val(r.record.akInvoisId);
+                $("#moAkInvois").val(r.record.akInvoisId);
+                $("#moAmaun3").val(r.record.amaun.toFixed(2));
+
+                //show modal objek
+                $("#modalInbois").modal({ backdrop: 'static', keyboard: false });
+
+            }
+        });
+    };
+
+    function modalUpdate3() {
+        var id = $("#moId3").val();
+        var amaun = $("#moAmaun3").val();
+        var akTerimaId = $("#Id").val();
+        var jumlah = $("#jumlahInbois");
+
+        var AkTerima3 = {
+            AkInvoisId: id,
+            AkTerimaId: akTerimaId,
+            Amaun: amaun
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveCartAkTerima3", "AkTerima3")',
+            data: AkTerima3,
+            dataType: "json",
+            success: function (r) {
+                //insert notification here
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetAllItemCartAkTerima3", "AkTerima")',
+                    dataType: "json",
+                    success: function (r) {
+
+                        //refresh updated table Inbois
+                        $("table tbody#tbodyInbois").empty();
+                        var sum = 0;
+                        if (r.record.length > 0) {
+                            for (var i = 0; i < r.record.length; i++) {
+                                var item1 = r.record[i];
+                                var str = "<tr><td id='akInvoisId' hidden>" + item1.akInvoisId +
+                                    "</td><td>" + item1.akInvois.noInbois.substring(3) +
+                                    "</td><td>" + showDate(item1.akInvois.tarikh) +
+                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                                    "</td><td>" +
+                                    "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate3' data-toggle='modal' data-target='#modalInbois' onclick='Update3(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "</td><td>" +
+                                    "<button class='btn ac-danger btn-sm' type='button' id='btnRemove3' onclick='Remove3(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "</td><tr>";
+                                $("table tbody#tbodyInbois").append(str);
+                                sum += item1.amaun;
+                            }
+                        }
+                        jumlah.val(sum.toFixed(2));
+                        checkJumlah();
+                    }
+                });
+            }
+        });
+    };
+    //update tbl Inbois end
 </script>

@@ -79,5 +79,30 @@ namespace MSNK.Models.Modules.Cart.Session
             Session.Remove("CartTerima");
         }
         //Terima2 End
+
+        //Terima3
+        public override void AddItem3(
+            int akTerimaId,
+            int? akInvoisId,
+            decimal amaun
+           )
+        {
+            base.AddItem3(akTerimaId,
+                          akInvoisId,
+                          amaun);
+
+            Session.SetJson("CartTerima", this);
+        }
+        public override void RemoveItem3(int id)
+        {
+            base.RemoveItem3(id);
+            Session.SetJson("CartTerima", this);
+        }
+        public override void Clear3()
+        {
+            base.Clear3();
+            Session.Remove("CartTerima");
+        }
+        //Terima3 End
     }
 }

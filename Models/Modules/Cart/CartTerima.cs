@@ -81,5 +81,41 @@ namespace MSNK.Models.Modules.Cart
         public virtual void Clear2() => collection2.Clear();
 
         public virtual IEnumerable<AkTerima2> Lines2 => collection2;
+
+        //Terima3
+
+        private List<AkTerima3> collection3 = new List<AkTerima3>();
+
+        public virtual void AddItem3(
+            int akTerimaId,
+            int? akInvoisId,
+            decimal amaun
+            )
+        {
+            AkTerima3 line = collection3
+            .Where(p => p.AkInvoisId == akInvoisId)
+            .FirstOrDefault();
+
+            if (line == null)
+            {
+                collection3.Add(new AkTerima3
+                {
+                    AkTerimaId = akTerimaId,
+                    AkInvoisId = akInvoisId,
+                    Amaun = amaun
+
+                });
+            }
+        }
+
+        public virtual void RemoveItem3(int id) =>
+            collection3.RemoveAll(l => l.AkInvoisId == id);
+
+
+        public virtual void Clear3() => collection3.Clear();
+
+        public virtual IEnumerable<AkTerima3> Lines3 => collection3;
+        // Terima3 End
+
     }
 }

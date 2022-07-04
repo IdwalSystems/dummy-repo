@@ -3,10 +3,6 @@
   "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "font-awesome@5.15.4",
-      "destination": "wwwroot/lib/font-awesome/"
-    },
-    {
       "library": "datatables@1.10.21",
       "destination": "wwwroot/lib/datatables/"
     },
@@ -36,6 +32,11 @@
         "moment.js",
         "moment.min.js"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "font-awesome@6.1.1",
+      "destination": "wwwroot/lib/font-awesome/"
     }
   ]
 }

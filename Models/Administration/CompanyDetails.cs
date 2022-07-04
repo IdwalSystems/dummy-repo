@@ -32,9 +32,9 @@ namespace MSNK.Models.Administration
             NoPendaftaran = "";
             AlamatSyarikat1 = "Kompleks Sukan Muadzam Shah";
             AlamatSyarikat2 = "Lebuhraya Sultan Abdul Halim";
-            AlamatSyarikat3 = "05300 Alor Setar, KEDAH DARUL AMAN";
+            AlamatSyarikat3 = "05400 Alor Setar, KEDAH DARUL AMAN";
             Bandar = "";
-            Poskod = "05300";
+            Poskod = "05400";
             Daerah = "Alor Setar";
             Negeri = "Kedah Darul Aman";
             TelSyarikat = "04-7027441 / 7470 ";

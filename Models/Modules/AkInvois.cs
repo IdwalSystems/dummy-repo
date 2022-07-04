@@ -18,7 +18,6 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Tarikh Diperlukan")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Tarikh { get; set; }
-        public DateTime? TarikhPosting { get; set; }
         [DisplayName("No Rujukan")]
         [Required(ErrorMessage = "No Rujukan Diperlukan")]
         public string NoInbois { get; set; }
@@ -29,11 +28,32 @@ namespace MSNK.Models.Modules
         //field end
 
         //flag
+        //note :
+        // FlJenis = 0 -> Pesanan Tempatan
+        // FlJenis = 1 -> Inden Kerja
         [DisplayName("Posting")]
         [DefaultValue("0")]
         public int FlPosting { get; set; }
-
+        public DateTime? TarikhPosting { get; set; }
+        [DisplayName("Cetak")]
+        [DefaultValue("0")]
+        public int FlCetak { get; set; }
         //flag end
+
+        //untuk kelulusan
+        [DisplayName("Penyemak")]
+        public int? JPenyemakId { get; set; }
+        public JPenyemak JPenyemak { get; set; }
+        [DisplayName("Status Semak")]
+        public int FlStatusSemak { get; set; }
+        public DateTime? TarSemak { get; set; }
+        [DisplayName("Pelulus")]
+        public int? JPelulusId { get; set; }
+        public JPelulus JPelulus { get; set; }
+        [DisplayName("Status Lulus")]
+        public int FlStatusLulus { get; set; }
+        public DateTime? TarLulus { get; set; }
+        //untuk kelulusan end 
 
         //Relationship
         [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
@@ -44,8 +64,8 @@ namespace MSNK.Models.Modules
         public JBahagian JBahagian { get; set; }
         [DisplayName("No Pesanan Tempatan")]
         public int? AkPOId { get; set; }
-        [Required(ErrorMessage = "Kod Penghutang Diperlukan.")]
-        [DisplayName("Kod Penghutang")]
+        [Required(ErrorMessage = "Kod Akaun Penghutang Diperlukan.")]
+        [DisplayName("Kod Akaun Penghutang")]
         public int KodObjekAPId { get; set; }
         [Required(ErrorMessage = "Kod Penghutang Diperlukan.")]
         [DisplayName("Kod Penghutang")]

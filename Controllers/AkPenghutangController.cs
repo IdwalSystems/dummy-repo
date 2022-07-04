@@ -181,20 +181,20 @@ namespace MSNK.Controllers
                     akP.JBankId = jBankId;
                     akP.JNegeriId = jNegeriId;
                     akP.KodSykt = GetKodSykt(akPenghutang.NamaSykt);
-                    akP.NamaSykt = akPenghutang.NamaSykt;
+                    akP.NamaSykt = akPenghutang.NamaSykt?.ToUpper()?? "";
                     akP.NoPendaftaran = akPenghutang.NoPendaftaran;
                     akP.Poskod = akPenghutang.Poskod;
                     akP.Telefon1 = akPenghutang.Telefon1;
                     akP.AkaunBank = akPenghutang.AkaunBank;
-                    akP.Alamat1 = akPenghutang.Alamat1;
-                    akP.Alamat2 = akPenghutang.Alamat2;
-                    akP.Alamat3 = akPenghutang.Alamat3;
-                    akP.Bandar = akPenghutang.Bandar;
+                    akP.Alamat1 = akPenghutang.Alamat1?.ToUpper()?? "";
+                    akP.Alamat2 = akPenghutang.Alamat2?.ToUpper()?? "";
+                    akP.Alamat3 = akPenghutang.Alamat3?.ToUpper()?? "";
+                    akP.Bandar = akPenghutang.Bandar?.ToUpper()?? "";
                     akP.Emel = akPenghutang.Emel;
                     akP.UserId = user.UserName;
                     await _akpenghutangRepo.Insert(akP);
                     //insert applog
-                    await AddLogAsync("Tambah", akP.KodSykt + " - " + akP.NamaSykt, akP.KodSykt, 0, 0);
+                    await AddLogAsync("Tambah", akP.KodSykt + " - " + akP.NamaSykt?.ToUpper()?? "", akP.KodSykt, 0, 0);
                     //insert applog end
                     await _akpenghutangRepo.Save();
                     TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Penghutang adalah " + akP.KodSykt;
@@ -256,6 +256,12 @@ namespace MSNK.Controllers
 
                     _context.Entry(dataAsal).State = EntityState.Detached;
 
+                    akPenghutang.NamaSykt = akPenghutang.NamaSykt?.ToUpper()?? "";
+                    akPenghutang.Alamat1 = akPenghutang.Alamat1?.ToUpper()?? "";
+                    akPenghutang.Alamat2 = akPenghutang.Alamat2?.ToUpper()?? "";
+                    akPenghutang.Alamat3 = akPenghutang.Alamat3?.ToUpper()?? "";
+                    akPenghutang.Bandar = akPenghutang.Bandar?.ToUpper()?? "";
+
                     akPenghutang.UserIdKemaskini = user.UserName;
                     akPenghutang.TarKemaskini = DateTime.Now;
 
@@ -263,7 +269,7 @@ namespace MSNK.Controllers
                     //insert applog
                     if (namaAsal != akPenghutang.NamaSykt)
                     {
-                        await AddLogAsync("Ubah", namaAsal + " -> " + akPenghutang.NamaSykt, akPenghutang.KodSykt, id, 0);
+                        await AddLogAsync("Ubah", namaAsal + " -> " + akPenghutang.NamaSykt?.ToUpper()?? "", akPenghutang.KodSykt, id, 0);
                     }
                     else
                     {
