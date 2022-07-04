@@ -18,9 +18,10 @@
             <h1 class="mb-0 text-primary"><strong>ABB</strong></h1>
         }
         
-        <h6 class="mb-0"><strong>SALINAN AUDIT</strong></h6>
+        <h3 class="mb-0"><strong>SALINAN AUDIT</strong></h3>
     </div>
 </div>
+<br />
 <div class="row flexrow mb-1">
     <div class="col text-center">
         <h5><strong>Tahun Kewangan @Model.AkPV.Tahun</strong></h5>
@@ -39,8 +40,8 @@
             <tr>
                 <td class="text-center text-uppercase">@Model.AkPV.JKW.Kod - @Model.AkPV.JKW.Perihal</td>
                 <td class="text-center text-uppercase">@Model.AkPV.JBahagian.Kod - @Model.AkPV.JBahagian.Perihal</td>
-                <td class="text-center">@Model.AkPV.NoPV.Substring(3)</td>
-                <td class="text-center" width="15%">@Convert.ToDateTime(Model.AkPV.Tarikh).ToString("dd/MM/yyyy")</td>
+                <td class="text-center font-weight-bold">@Model.AkPV.NoPV.Substring(3)</td>
+                <td class="text-center font-weight-bold" width="15%">@Convert.ToDateTime(Model.AkPV.Tarikh).ToString("dd/MM/yyyy")</td>
                 <td class="text-center text-uppercase">@Model.AkPV.JCaraBayar.Perihal</td>
             </tr>
         </tbody>
@@ -54,15 +55,15 @@
         </thead>
         <tbody>
             <tr class="bg-dark text-white font-weight-bold">
-                <td class="text-center" style="font-size:0.8rem;" colspan="2"><strong>BAYARAN KEPADA</strong></td>
+                <td class="text-center" colspan="2"><strong>BAYARAN KEPADA</strong></td>
             </tr>
             <tr>
                 <td class="text-left" width="15%">Nombor ID</td>
-                <td class="text-left">@Model.KodPenerima</td>
+                <td class="text-left ">@Model.KodPenerima</td>
             </tr>
             <tr>
                 <td class="text-left" width="15%" rowspan="4">Penerima Bayaran</td>
-                <td class="text-left">@Model.Penerima</td>
+                <td class="text-left font-weight-bold">@Model.Penerima</td>
             </tr>
             <tr>
                 <td class="text-left">@Model.AkPV.Alamat1</td>
@@ -88,6 +89,7 @@
         </tbody>
     </table>
 </div>
+<br />
 @*invois pembekal*@
 
 <div class="table-responsive-sm mb-0">
@@ -134,9 +136,12 @@
                     <td class="text-right" colspan="2">Jumlah RM</td>
                     <td class="text-right">@Convert.ToDecimal(Model.jumlahPO).ToString("#,##0.00")</td>
                     <td class="text-right" colspan="2">Jumlah RM</td>
-                    <td class="text-right">@Convert.ToDecimal(Model.jumlahInbois).ToString("#,##0.00")</td>
+                    <td class="text-right" style="font-size:1.0rem;">@Convert.ToDecimal(Model.jumlahInbois).ToString("#,##0.00")</td>
                 </tr>
             }
+            <tr class="table-borderless">
+                <td class="text-center text-white" colspan="6">-</td>
+            </tr>
             <tr class="font-weight-bold">
                 <td class="text-center" colspan="6">PERBELANJAAN TELAH DIMASUKKAN KE DALAM PERUNTUKAN-PERUNTUKAN DI BAWAH</td>
             </tr>
@@ -155,11 +160,11 @@
             }
             <tr class="font-weight-bold">
                 <td class="text-right" colspan="5">Jumlah RM</td>
-                <td class="text-right">@Convert.ToDecimal(Model.AkPV.Jumlah).ToString("#,##0.00")</td>
+                <td class="text-right" style="font-size:1.0rem;">@Convert.ToDecimal(Model.AkPV.Jumlah).ToString("#,##0.00")</td>
             </tr>
             <tr class="font-weight-bold">
                 <td class="text-right" style="line-height:1.0rem;">AMAUN DALAM PERKATAAN</td>
-                <td class="text-left" colspan="5" style="line-height:0.8rem;">@Model.JumlahDalamPerkataan</td>
+                <td class="text-left pl-4" colspan="5" style="line-height:0.8rem;">@Model.JumlahDalamPerkataan</td>
             </tr>
         </tbody>
         <tfoot>
@@ -167,6 +172,8 @@
         </tfoot>
     </table>
 </div>
+<br />
+
 <div class="table-responsive-sm">
     <table class="table table-sm topic table-bordered">
         <thead class="table-dark">
@@ -201,6 +208,7 @@
         </tbody>
     </table>
 </div>
+<br />
 
 <div class="table-responsive-sm">
     <table class="table table-sm topic table-bordered">
@@ -211,6 +219,9 @@
             <tr class="bg-dark text-white font-weight-bold">
 
                 <td class="text-center" colspan="3"><h6 class="mb-0"><strong>UNTUK KEGUNAAN BAHAGIAN KEWANGAN</strong></h6></td>
+            </tr>
+            <tr class="table-borderless">
+                <td class="text-center text-white" colspan="3">-</td>
             </tr>
             <tr>
                 <td class="text-center">Disedia </td>
