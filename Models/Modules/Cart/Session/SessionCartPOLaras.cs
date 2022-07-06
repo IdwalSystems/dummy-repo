@@ -51,8 +51,7 @@ namespace MSNK.Models.Modules.Cart.Session
         public override void AddItem2(
             int akPOLarasId,
             int Indek,
-            int Baris,
-            string Bil,
+            decimal Bil,
             string NoStok,
             string Perihal,
             decimal Kuantiti,
@@ -63,7 +62,6 @@ namespace MSNK.Models.Modules.Cart.Session
         {
             base.AddItem2(akPOLarasId,
                     Indek,
-                    Baris,
                     Bil,
                     NoStok,
                     Perihal,

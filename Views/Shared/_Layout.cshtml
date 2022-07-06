@@ -78,7 +78,12 @@
         {
             jawatan = pekerja.Jawatan;
         }
+   
+        var bulan = Tools.BulanSingkatan(DateTime.Now.ToString("MM"));
 
+        var tarikh = DateTime.Now.ToString("dd") + " " + bulan +  " " + DateTime.Now.ToString("yyyy");
+
+        var hari = Tools.Hari(DateTime.Now.ToString("dddd"));
 
     }
     @if (User.IsInRole("Admin"))
@@ -280,7 +285,25 @@
 
         <footer class="border-top footer text-muted">
             <div class="container-fluid">
-                &copy; 2022 - MSNK - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privasi</a>
+                <div class="row">
+                    <div class="col-12">
+                        <p class="float-left">&copy; 2022 - MSNK - @hari, @tarikh <a id="ct6"></a></p>
+                    </div>
+                    <div class="col-lg-4 text-right pr-5">
+                        
+                        
+                    </div>
+    
+                </div>
+                <div class="form-row">
+                    
+                    @*<p class="float-left">&copy; 2022 - MSNK - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privasi</a></p>
+                    <p class="float-right">@hari, @tarikh</p>
+                    <span class="text-right" id="ct6"></span> *@
+                </div>
+                
+                
+                
             </div>
         </footer>
 

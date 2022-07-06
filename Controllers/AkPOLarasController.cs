@@ -227,7 +227,7 @@ namespace MSNK.Controllers
 
             List<AkPOLaras2> akPOLaras2Table = _context.AkPOLaras2
                 .Where(b => b.AkPOLarasId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToList();
             ViewBag.akPOLaras2 = akPOLaras2Table;
         }
@@ -376,7 +376,7 @@ namespace MSNK.Controllers
 
                 List<AkPO2> akPO2Table = await _context.AkPO2
                 .Where(b => b.AkPOId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToListAsync();
 
                 foreach (AkPO2 item in akPO2Table)
@@ -415,7 +415,7 @@ namespace MSNK.Controllers
             List<AkPO2> akPO2Table = _context.AkPO2
                 .AsNoTracking()
                 .Where(b => b.AkPOId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToList();
 
             foreach (AkPO2 item in akPO2Table)
@@ -427,7 +427,6 @@ namespace MSNK.Controllers
 
                 _cart.AddItem2(item.AkPOId,
                                item.Indek,
-                               item.Baris,
                                item.Bil,
                                item.NoStok,
                                item.Perihal,
@@ -567,7 +566,6 @@ namespace MSNK.Controllers
 
                     _cart.AddItem2(akPOLaras2.AkPOLarasId,
                                    akPOLaras2.Indek,
-                                   akPOLaras2.Baris,
                                    akPOLaras2.Bil,
                                    akPOLaras2.NoStok,
                                    akPOLaras2.Perihal,
@@ -709,7 +707,6 @@ namespace MSNK.Controllers
 
                     _cart.AddItem2(akPOLaras2.AkPOLarasId,
                                    akPOLaras2.Indek,
-                                   akPOLaras2.Baris,
                                    akPOLaras2.Bil,
                                    akPOLaras2.NoStok,
                                    akPOLaras2.Perihal,
@@ -735,7 +732,7 @@ namespace MSNK.Controllers
 
             try
             {
-                List<AkPOLaras2> data = _cart.Lines2.OrderBy(b => b.Indek).ToList();
+                List<AkPOLaras2> data = _cart.Lines2.OrderBy(b => b.Bil).ToList();
 
                 return Json(new { result = "OK", record = data });
             }
@@ -803,13 +800,12 @@ namespace MSNK.Controllers
 
             List<AkPOLaras2> akPOLaras2Table = _context.AkPOLaras2
                 .Where(b => b.AkPOLarasId == akPOLaras.Id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToList();
             foreach (AkPOLaras2 item in akPOLaras2Table)
             {
                 _cart.AddItem2(item.AkPOLarasId,
                                item.Indek,
-                               item.Baris,
                                item.Bil,
                                item.NoStok,
                                item.Perihal,

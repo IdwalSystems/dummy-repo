@@ -135,6 +135,10 @@ namespace MSNK.Controllers
                     case 2:
                         akT = akT.Where(x => x.FlPosting == 1).ToList();
                         break;
+                    // batal
+                    case 3:
+                        akT = akT.Where(x => x.FlHapus == 1).ToList();
+                        break;
                     // semua
                     default:
                         break;

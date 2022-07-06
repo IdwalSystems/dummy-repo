@@ -785,7 +785,7 @@ namespace MSNK.Controllers
         {
             try
             {
-                CartEmpty();
+                //CartEmpty();
 
                 var result = _context.AkBelian
                     .Include(b => b.AkPO)

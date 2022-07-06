@@ -47,8 +47,7 @@ namespace MSNK.Models.Modules.Cart
         public virtual void AddItem2(
             int akNotaMintaId,
             int Indek,
-            int Baris,
-            string Bil,
+            decimal Bil,
             string NoStok,
             string Perihal,
             decimal Kuantiti,
@@ -63,7 +62,6 @@ namespace MSNK.Models.Modules.Cart
                 {
                     AkNotaMintaId = akNotaMintaId,
                     Indek = Indek,
-                    Baris = Baris,
                     Bil = Bil,
                     NoStok = NoStok,
                     Perihal = Perihal,

@@ -341,7 +341,7 @@ namespace MSNK.Controllers
 
                 List<AkNotaMinta2> akNotaMinta2Table = await _context.AkNotaMinta2
                 .Where(b => b.AkNotaMintaId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToListAsync();
 
                 foreach (AkNotaMinta2 item in akNotaMinta2Table)
@@ -381,7 +381,7 @@ namespace MSNK.Controllers
             List<AkNotaMinta2> akNotaMinta2Table = _context.AkNotaMinta2
                 .AsNoTracking()
                 .Where(b => b.AkNotaMintaId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToList();
 
             foreach (AkNotaMinta2 item in akNotaMinta2Table)
@@ -390,7 +390,6 @@ namespace MSNK.Controllers
 
                 _cart.AddItem2(item.AkNotaMintaId,
                                item.Indek,
-                               item.Baris,
                                item.Bil,
                                item.NoStok,
                                item.Perihal,
@@ -448,7 +447,7 @@ namespace MSNK.Controllers
             List<AkPO2> akPO2Table = _context.AkPO2
                 //.Include(b => b.AkCarta)
                 .Where(b => b.AkPOId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToList();
             ViewBag.akPO2 = akPO2Table;
         }
@@ -469,13 +468,12 @@ namespace MSNK.Controllers
             List<AkPO2> akPO2Table = _context.AkPO2
                 //.Include(b => b.JPerihal)
                 .Where(b => b.AkPOId == akPO.Id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToList();
             foreach (AkPO2 akPO2 in akPO2Table)
             {
                 _cart.AddItem2(akPO2.AkPOId,
                                akPO2.Indek,
-                               akPO2.Baris,
                                akPO2.Bil,
                                akPO2.NoStok,
                                akPO2.Perihal,
@@ -648,7 +646,6 @@ namespace MSNK.Controllers
 
                     _cart.AddItem2(akPO2.AkPOId,
                                akPO2.Indek,
-                               akPO2.Baris,
                                akPO2.Bil,
                                akPO2.NoStok,
                                akPO2.Perihal,
@@ -673,7 +670,7 @@ namespace MSNK.Controllers
 
             try
             {
-                List<AkPO2> data = _cart.Lines2.OrderBy(b => b.Indek).ToList();
+                List<AkPO2> data = _cart.Lines2.OrderBy(b => b.Bil).ToList();
 
                 return Json(new { result = "OK", record = data });
             }
@@ -1059,7 +1056,6 @@ namespace MSNK.Controllers
 
                     _cart.AddItem2(akPO2.AkPOId,
                          akPO2.Indek,
-                         akPO2.Baris,
                          akPO2.Bil,
                          akPO2.NoStok,
                          akPO2.Perihal,
@@ -1166,7 +1162,6 @@ namespace MSNK.Controllers
                 akT2.Amaun = akPO2.Amaun;
                 akT2.Indek = akPO2.Indek;
                 akT2.Bil = akPO2.Bil;
-                akT2.Baris = akPO2.Baris;
                 akT2.NoStok = akPO2.NoStok;
                 akT2.Perihal = akPO2.Perihal;
                 akT2.Kuantiti = akPO2.Kuantiti;
@@ -1222,7 +1217,6 @@ namespace MSNK.Controllers
                 {
                     _cart.AddItem2(akPO2.AkPOId,
                          akPO2.Indek,
-                         akPO2.Baris,
                          akPO2.Bil,
                          akPO2.NoStok,
                          akPO2.Perihal,

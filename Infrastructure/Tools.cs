@@ -179,5 +179,39 @@ namespace MSNK.Infrastructure
 
             return result;
         }
+
+        public static string Hari(string d)
+        {
+            string result = "";
+
+            switch (d)
+            {
+                case "Monday":
+                    result = "Isnin";
+                    break;
+                case "Tuesday":
+                    result = "Selasa";
+                    break;
+                case "Wednesday":
+                    result = "Rabu";
+                    break;
+                case "Thursday":
+                    result = "Khamis";
+                    break;
+                case "Friday":
+                    result = "Jumaat";
+                    break;
+                case "Saturday":
+                    result = "Sabtu";
+                    break;
+                case "Sunday":
+                    result = "Ahad";
+                    break;
+                default:
+                    break;
+            }
+
+            return result;
+        }
     }
 }

@@ -54,7 +54,6 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task Update(AkNotaMinta2 entity)
         {
             AkNotaMinta2 data = context.AkNotaMinta2.FirstOrDefault(x => x.Id == entity.Id);
-            data.Baris = entity.Baris;
             data.Bil = entity.Bil;
             data.NoStok = entity.NoStok;
             data.Perihal = entity.Perihal;
