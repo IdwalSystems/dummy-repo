@@ -125,7 +125,6 @@
         //Reference the TextBoxes.
         var txtAkPO = $("#Id");
         var txtIndek = id;
-        var txtBaris = $("#txtBaris");
         var txtBil = $("#txtBil");
         var txtNoStok = $("#txtNoStok");
         var txtPerihal = $("#txtPerihal");
@@ -148,11 +147,6 @@
         //Add Indek cell.
         var cell = $(row.insertCell(-1));
         cell.html(txtIndek);
-        cell.prop("hidden", !this.checked);
-
-        //Add Baris cell.
-        var cell = $(row.insertCell(-1));
-        cell.html(txtBaris.val());
         cell.prop("hidden", !this.checked);
 
         //Add Bil cell.
@@ -203,7 +197,6 @@
         var AkPO2 = {
             AkPOId: txtAkPO.val(),
             Indek: id,
-            Baris: txtBaris.val(),
             Bil: txtBil.val(),
             NoStok: txtNoStok.val(),
             Perihal: txtPerihal.val(),
@@ -222,7 +215,6 @@
             success: function (r) {
                 //Clear the TextBoxes.
                 $("#txtIndek").val(bil + 1);
-                txtBaris.val("");
                 txtBil.val("");
                 txtNoStok.val("");
                 txtPerihal.val("");
@@ -444,7 +436,6 @@
                 //insert data in modal perihal
                 $("#moId2").val(r.record.id);
                 $("#moIndek").val(r.record.indek);
-                $("#moBaris").val(r.record.baris);
                 $("#moBil").val(r.record.bil);
                 $("#moNoStok").val(r.record.noStok);
                 $("#moPerihal").val(r.record.perihal);
@@ -462,7 +453,6 @@
     function modalUpdate2() {
         var akPOId = $("#Id").val();
         var indek = $("#moIndek").val();
-        var baris = $("#moBaris").val();
         var bil = $("#moBil").val();
         var noStok = $("#moNoStok").val();
         var perihal = $("#moPerihal").val();
@@ -475,7 +465,6 @@
         var AkPO2 = {
             AkPOId: akPOId,
             Indek: indek,
-            Baris: baris,
             Bil: bil,
             NoStok: noStok,
             Perihal: perihal,
@@ -507,7 +496,6 @@
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
-                                    "</td><td class='text-right' hidden>" + item1.baris +
                                     "</td><td class='text-right'>" + item1.bil +
                                     "</td><td class='text-right'>" + item1.noStok +
                                     "</td><td class='text-right'>" + item1.perihal +

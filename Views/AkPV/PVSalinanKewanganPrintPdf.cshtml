@@ -6,7 +6,7 @@
     </div>
     <div class="col-8 text-uppercase">
         <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
-        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1 , @Model.CompanyDetail.AlamatSyarikat2</p>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1, @Model.CompanyDetail.AlamatSyarikat2</p>
         <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat3</p>
         <p class="mb-0"> Tel: @Model.CompanyDetail.TelSyarikat   Faks: @Model.CompanyDetail.FaksSyarikat</p>
         <p class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</p>
@@ -22,6 +22,7 @@
     </div>
 </div>
 <br />
+
 <div class="row flexrow mb-1">
     <div class="col text-center">
         <h5><strong>Tahun Kewangan @Model.AkPV.Tahun</strong></h5>
@@ -47,6 +48,8 @@
         </tbody>
     </table>
 </div>
+
+<br />
 
 <div class="table-responsive-sm">
     <table class="table table-sm topic table-bordered">
@@ -90,6 +93,7 @@
     </table>
 </div>
 <br />
+
 @*invois pembekal*@
 
 <div class="table-responsive-sm mb-0">
@@ -136,11 +140,12 @@
                     <td class="text-right" colspan="2">Jumlah RM</td>
                     <td class="text-right">@Convert.ToDecimal(Model.jumlahPO).ToString("#,##0.00")</td>
                     <td class="text-right" colspan="2">Jumlah RM</td>
-                    <td class="text-right" style="font-size:1.0rem;">@Convert.ToDecimal(Model.jumlahInbois).ToString("#,##0.00")</td>
+                    <td class="text-right" style="font-size:1.1rem;">@Convert.ToDecimal(Model.jumlahInbois).ToString("#,##0.00")</td>
                 </tr>
             }
             <tr class="table-borderless">
-                <td class="text-center text-white" colspan="6">-</td>
+                <td class="text-white" colspan="6">-</td>
+
             </tr>
             <tr class="font-weight-bold">
                 <td class="text-center" colspan="6">PERBELANJAAN TELAH DIMASUKKAN KE DALAM PERUNTUKAN-PERUNTUKAN DI BAWAH</td>
@@ -155,7 +160,7 @@
                 <tr>
                     <td class="text-center">@item.AkCarta.Kod</td>
                     <td class="text-center" colspan="4">@item.AkCarta.Perihal</td>
-                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                    <td class="text-right" style="font-size:1.1rem;">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
                 </tr>
             }
             <tr class="font-weight-bold">
@@ -221,7 +226,7 @@
                 <td class="text-center" colspan="3"><h6 class="mb-0"><strong>UNTUK KEGUNAAN BAHAGIAN KEWANGAN</strong></h6></td>
             </tr>
             <tr class="table-borderless">
-                <td class="text-center text-white" colspan="3">-</td>
+                <td class="text-white" colspan="3">-</td>
             </tr>
             <tr>
                 <td class="text-center">Disedia </td>

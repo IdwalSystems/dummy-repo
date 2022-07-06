@@ -251,7 +251,7 @@ namespace MSNK.Controllers
 
             List<AkNotaMinta2> akNotaMinta2Table = _context.AkNotaMinta2
                 .Where(b => b.AkNotaMintaId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToList();
             ViewBag.akNotaMinta2 = akNotaMinta2Table;
         }
@@ -288,13 +288,12 @@ namespace MSNK.Controllers
 
             List<AkNotaMinta2> akNotaMinta2Table = _context.AkNotaMinta2
                 .Where(b => b.AkNotaMintaId == akNotaMinta.Id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToList();
             foreach (AkNotaMinta2 item in akNotaMinta2Table)
             {
                 _cart.AddItem2(item.AkNotaMintaId,
                                item.Indek,
-                               item.Baris,
                                item.Bil,
                                item.NoStok,
                                item.Perihal?.ToUpper()?? null,
@@ -349,7 +348,7 @@ namespace MSNK.Controllers
             {
                 viewModel.JumlahPerihal += item.Amaun;
             }
-            viewModel.AkNotaMinta2 = akNotaMinta.AkNotaMinta2;
+            viewModel.AkNotaMinta2 = akNotaMinta.AkNotaMinta2.OrderBy(b => b.Bil).ToList();
 
             if (akNotaMinta == null)
             {
@@ -544,7 +543,6 @@ namespace MSNK.Controllers
 
                     _cart.AddItem2(akNotaMinta2.AkNotaMintaId,
                                    akNotaMinta2.Indek,
-                                   akNotaMinta2.Baris,
                                    akNotaMinta2.Bil,
                                    akNotaMinta2.NoStok,
                                    akNotaMinta2.Perihal?.ToUpper()?? null,
@@ -570,7 +568,7 @@ namespace MSNK.Controllers
 
             try
             {
-                List<AkNotaMinta2> data = _cart.Lines2.OrderBy(b => b.Indek).ToList();
+                List<AkNotaMinta2> data = _cart.Lines2.OrderBy(b => b.Bil).ToList();
 
                 return Json(new { result = "OK", record = data });
             }
@@ -668,7 +666,7 @@ namespace MSNK.Controllers
 
         public async Task<JsonResult> SaveAkNotaMinta2(AkNotaMinta2 akNotaMinta2)
         {
-
+            var akNota = akNotaMinta2;
             try
             {
                 if (akNotaMinta2 != null)
@@ -677,7 +675,6 @@ namespace MSNK.Controllers
 
                     _cart.AddItem2(akNotaMinta2.AkNotaMintaId,
                                    akNotaMinta2.Indek,
-                                   akNotaMinta2.Baris,
                                    akNotaMinta2.Bil,
                                    akNotaMinta2.NoStok,
                                    akNotaMinta2.Perihal?.ToUpper()?? null,
@@ -840,7 +837,7 @@ namespace MSNK.Controllers
             {
                 viewModel.JumlahPerihal += item.Amaun;
             }
-            viewModel.AkNotaMinta2 = akNotaMinta.AkNotaMinta2;
+            viewModel.AkNotaMinta2 = akNotaMinta.AkNotaMinta2.OrderBy(b => b.Bil).ToList();
 
             if (akNotaMinta == null)
             {
@@ -1559,6 +1556,7 @@ namespace MSNK.Controllers
             }
             data.CompanyDetail = company;
             data.AkNotaMinta = akNotaMinta;
+            data.AkNotaMinta.AkNotaMinta2 = akNotaMinta.AkNotaMinta2.OrderBy(b => b.Bil).ToList();
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
             data.username = user.UserName;
 

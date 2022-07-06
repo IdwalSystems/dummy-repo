@@ -254,7 +254,7 @@ namespace MSNK.Controllers
 
             List<AkBelian2> akBelian2Table = _context.AkBelian2
                 .Where(b => b.AkBelianId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToList();
             ViewBag.akBelian2 = akBelian2Table;
         }
@@ -290,13 +290,12 @@ namespace MSNK.Controllers
 
             List<AkBelian2> akBelian2Table = _context.AkBelian2
                 .Where(b => b.AkBelianId == akBelian.Id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToList();
             foreach (AkBelian2 item in akBelian2Table)
             {
                 _cart.AddItem2(item.AkBelianId,
                                item.Indek,
-                               item.Baris,
                                item.Bil,
                                item.NoStok,
                                item.Perihal,
@@ -485,7 +484,7 @@ namespace MSNK.Controllers
 
                 List<AkPO2> akPO2Table = await _context.AkPO2
                 .Where(b => b.AkPOId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToListAsync();
 
                 foreach (AkPO2 item in akPO2Table)
@@ -550,7 +549,7 @@ namespace MSNK.Controllers
             List<AkPO2> akPO2Table = _context.AkPO2
                 .AsNoTracking()
                 .Where(b => b.AkPOId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.Bil)
                 .ToList();
 
             foreach (AkPO2 item in akPO2Table)
@@ -562,7 +561,6 @@ namespace MSNK.Controllers
 
                 _cart.AddItem2(item.AkPOId,
                                item.Indek,
-                               item.Baris,
                                item.Bil,
                                item.NoStok,
                                item.Perihal,
@@ -680,7 +678,6 @@ namespace MSNK.Controllers
 
                     _cart.AddItem2(akBelian2.AkBelianId,
                                    akBelian2.Indek,
-                                   akBelian2.Baris,
                                    akBelian2.Bil,
                                    akBelian2.NoStok,
                                    akBelian2.Perihal?.ToUpper()?? "",
@@ -706,7 +703,7 @@ namespace MSNK.Controllers
 
             try
             {
-                List<AkBelian2> data = _cart.Lines2.OrderBy(b=> b.Indek).ToList();
+                List<AkBelian2> data = _cart.Lines2.OrderBy(b=> b.Bil).ToList();
 
                 return Json(new { result = "OK", record = data });
             }
@@ -1092,7 +1089,6 @@ namespace MSNK.Controllers
                 decimal originalAmount = akB2.Amaun;
                 var user = await _userManager.GetUserAsync(User);
 
-                akB2.Baris = akBelian2.Baris;
                 akB2.Bil = akBelian2.Bil;
                 akB2.NoStok = akBelian2.NoStok;
                 akB2.Perihal = akBelian2.Perihal;
@@ -1439,7 +1435,6 @@ namespace MSNK.Controllers
 
                     _cart.AddItem2(akBelian2.AkBelianId,
                                    akBelian2.Indek,
-                                   akBelian2.Baris,
                                    akBelian2.Bil,
                                    akBelian2.NoStok,
                                    akBelian2.Perihal?.ToUpper()?? "",

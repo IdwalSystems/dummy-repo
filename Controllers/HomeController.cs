@@ -16,6 +16,9 @@ using MSNK.Data;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Models.Modules;
+using MSNK.Models.Modules.ViewModel;
+using static MSNK.Models.Modules.ViewModel.UserClaimsViewModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -179,6 +182,52 @@ namespace MSNK.Controllers
             ViewData["ErrorMessage"] = $"{code}";
             return View("~/Views/Shared/HandleError.cshtml");
         }
+
+        // printing List of Carta
+        [AllowAnonymous]
+        public async Task<IActionResult> PrintPermohonanCapaian()
+        {
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var existingUserClaims = await _userManager.GetClaimsAsync(user);
+
+            var model = new UserClaimsViewModel()
+            {
+                UserId = user.Id
+            };
+
+            foreach (Claim claim in ClaimStore.claimsList)
+            {
+                UserClaim userClaim = new UserClaim
+                {
+                    ClaimType = claim.Type,
+                    ClaimValue = claim.Value
+                };
+                if (existingUserClaims.Any(c => c.Type == claim.Type))
+                {
+                    userClaim.IsSelected = true;
+                }
+                model.Claims.Add(userClaim);
+            }
+            
+            //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
+
+            return new ViewAsPdf("PermohonanCapaianPrintPDF", model)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
+                        " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+        // printing List of Carta end
 
     }
 }

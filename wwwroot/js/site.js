@@ -32,6 +32,35 @@
 //});
 // stop users from entering source code end
 
+function display_ct6() {
+    var x = new Date()
+    var ampm = x.getHours() >= 12 ? ' PM' : ' AM';
+    hours = x.getHours() % 12;
+    hours = hours ? hours : 12;
+    var x1 = x.getMonth() + 1 + "/" + x.getDate() + "/" + x.getFullYear();
+    var minutes = x.getMinutes();
+    var seconds = x.getSeconds();
+
+    if (hours < 10) {
+        hours = '0' + hours;
+    }
+    if (minutes < 10) {
+        minutes = '0' + minutes;
+    }
+
+    if (seconds < 10) {
+        seconds = '0' + seconds;
+    }
+    x1 = hours + ":" + minutes + ":" + seconds + " " + ampm;
+    document.getElementById('ct6').innerHTML = x1;
+    display_c6();
+}
+function display_c6() {
+    var refresh = 1000; // Refresh rate in milli seconds
+    mytime = setTimeout('display_ct6()', refresh)
+}
+display_c6()
+
 var timeInSecondsAfterSessionOut = 600; // change this to change session time out (in seconds).
 var secondTick = 0;
 

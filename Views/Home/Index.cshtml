@@ -2,6 +2,15 @@
 
 @{
     ViewData["Title"] = "Halaman Utama";
+    var user = UserManager.GetUserAsync(User);
+    var namaUser = _context.applicationUsers.FirstOrDefault(x => x.Email == user.Result.Email);
+    var pekerja = _context.SuPekerja.FirstOrDefault(x => x.Id == namaUser.SuPekerjaId);
+    var jawatan = "Super Admin";
+    if (pekerja != null)
+    {
+        jawatan = pekerja.Jawatan;
+    }
+
 }
 
 @*div Header*@
@@ -13,38 +22,87 @@
 </div>
 <hr class="mt-0" />
 @*div Header end*@
-@*<div class="text-center">
-        <h1 class="display-4">Selamat Datang</h1>
-        <p>
-            @ViewBag.json
-        </p>
-        @if (User.Identity.IsAuthenticated)
-        {
 
-            @if (User.IsInRole("Admin"))
-            {
-                <h2>Peranan anda - Admin</h2>
+@*div Header*@
+<div class="row mb-3">
+    <div class="col-lg-8">
+        <h5 class=" mb-0">Selamat Datang, @namaUser.Nama</h5>
+        <p class="text-muted">Berikut merupakan senarai modul bagi memudahkan hari anda. </p>
+    </div>
+    
+</div>
 
-            }
-            else if (User.IsInRole("Supervisor"))
-            {
-                <h2>Peranan anda - Supervisor</h2>
-            }
-            else if (User.IsInRole("User"))
-            {
-                <h2>Peranan anda - User</h2>
-            }
-            else
-            {
-                <h2>Peranan anda - SuperAdmin</h2>
-            }
-        }
-    </div>*@
+@*div Header end*@
+
+
+        <div class="card-group border-0 shadow">
+          <div class="card">
+            <div class="card-body ac-warning">
+              <h5 class="card-title">Transaksi</h5>
+              <p class="card-text">Senarai Nota Minta</p>
+              <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
+                    <a class="btn-block" asp-controller="AkNotaMinta" asp-action="Index">
+                        <i class="fas fa-handshake fa-10x"></i>
+                    </a>
+                </div> 
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body ac-tertiary">
+              <h5 class="card-title">Permohonan</h5>
+              <p class="card-text">Senarai Permohonan Pendahuluan Pelbagai</p>
+              <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
+                    <a class="btn-block" asp-controller="SpPendahuluanPelbagai" asp-action="Index">
+                        <i class="fas fa-file-alt fa-10x"></i>
+                    </a>
+                </div> 
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body ac-warning">
+              <h5 class="card-title">Profil</h5>
+              <p class="card-text">Skim Kecemerlangan Atlet</p>
+                <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
+                    <a class="btn-block" asp-controller="SuProfilAtlet" asp-action="Index">
+                        <i class="fa-solid fa-medal fa-10x"></i>
+                    </a>
+                </div>  
+          </div>
+          </div>
+          <div class="card">
+            <div class="card-body ac-tertiary">
+              <h5 class="card-title">Profil</h5>
+              <p class="card-text">Elaun JSM</p>
+                <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
+                    <a class="btn-block" asp-controller="SuProfilJurulatih" asp-action="Index">
+                        <i class="fa-solid fa-person-running fa-10x"></i>
+                    </a>
+                </div>  
+          </div>
+          </div>
+        </div>
+<br />
+
+@*div Header*@
+<div class="card">
+<div class="card-body ac-info">
+    <h5 class="card-title">Capaian Anda Dinafikan?</h5>
+    <p class="card-text">Sila klik butang ini untuk cetakan borang permohonan capaian</p>
+    <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
+        <a class="btn-block" target="_blank" asp-action="PrintPermohonanCapaian">
+            <i class="fas fa-print fa-10x"></i>
+        </a>
+    </div>  
+</div>
+</div>
+@*div Header end*@
+
+<br />
     @if (!User.IsInRole("User"))
     {
     <div class="card box-shadow">
         <div class="card-body">
-            <h5 class="text-purple text-uppercase">Tindakan Kewangan</h5>
+            <h5 class="text-purple text-uppercase">Makluman Kewangan</h5>
             <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
                     <li class="nav-item">

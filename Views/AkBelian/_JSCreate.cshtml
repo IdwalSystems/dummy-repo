@@ -243,7 +243,6 @@
 
         //Reference the TextBoxes.
         var txtIndek = indek;
-        var txtBaris = $("#txtBaris");
         var txtBil = $("#txtBil");
         var txtNoStok = $("#txtNoStok");
         var txtPerihal = $("#txtPerihal");
@@ -266,11 +265,6 @@
         //Add Indek cell.
         var cell = $(row.insertCell(-1));
         cell.html(txtIndek);
-        cell.prop("hidden", !this.checked);
-
-        //Add Baris cell.
-        var cell = $(row.insertCell(-1));
-        cell.html(txtBaris.val());
         cell.prop("hidden", !this.checked);
 
         //Add Bil cell.
@@ -319,7 +313,6 @@
 
         var AkBelian2 = {
             Indek: indek,
-            Baris: txtBaris.val(),
             Bil: txtBil.val(),
             NoStok: txtNoStok.val(),
             Perihal: txtPerihal.val(),
@@ -337,7 +330,6 @@
             dataType: "json",
             success: function (r) {
                 //Clear the TextBoxes.
-                txtBaris.val("0");
                 txtBil.val("0");
                 txtNoStok.val("-");
                 txtPerihal.val("-");
@@ -526,7 +518,6 @@
             success: function (r) {
                 //insert data in modal perihal
                 $("#moIndek").val(r.record.indek);
-                $("#moBaris").val(r.record.baris);
                 $("#moBil").val(r.record.bil);
                 $("#moNoStok").val(r.record.noStok);
                 $("#moPerihal").val(r.record.perihal);
@@ -544,7 +535,6 @@
     function modalUpdate2() {
 
         var indek = $("#moIndek").val();
-        var baris = $("#moBaris").val();
         var bil = $("#moBil").val();
         var noStok = $("#moNoStok").val();
         var perihal = $("#moPerihal").val();
@@ -556,7 +546,6 @@
 
         var AkBelian2 = {
             Indek: indek,
-            Baris: baris,
             Bil: bil,
             NoStok: noStok,
             Perihal: perihal,
@@ -588,7 +577,6 @@
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
-                                    "</td><td class='text-left' hidden>" + item1.baris +
                                     "</td><td class='text-left'>" + item1.bil +
                                     "</td><td class='text-left'>" + item1.noStok +
                                     "</td><td class='text-left text-uppercase'>" + item1.perihal +

@@ -13,9 +13,8 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         public int AkNotaMintaId { get; set; }
         public int Indek { get; set; }
-        public int Baris { get; set; }
-        [MaxLength(3)]
-        public string Bil { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal Bil { get; set; }
         [MaxLength(20)]
         public string NoStok { get; set; }
         [MaxLength(100)]
