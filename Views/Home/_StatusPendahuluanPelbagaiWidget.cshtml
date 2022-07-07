@@ -74,6 +74,7 @@
                 <table class="table tablePP table-bordered table-hover display compact nowrap" width="100%">
                     <thead>
                         <tr>
+                            <th hidden>Id</th>
                             <th width="5%">Tarikh</th>
                             <th width="10">No Permohonan</th>
                             <th>
@@ -82,10 +83,13 @@
                             <th>
                                 Tajuk
                             </th>
+                            <th>
+                                Jumlah RM
+                            </th>
                             <th width="5%">
                                 Tindakan
                             </th>
-                            <th width="5%"></th>
+                            @*<th width="5%"></th>*@
                         </tr>
                     </thead>
                     <tbody>
@@ -112,6 +116,7 @@
                                 badgeType = "badge-secondary";
                             }*@
                             <tr class="text-uppercase ">
+                                <td hidden>@item.Id</td>
                                 <td width="5%" data-sort='YYYYMMDD'>
                                     @item.TarMasuk.ToString("dd/MM/yyyy")
                                 </td>
@@ -124,6 +129,9 @@
                                 <td class="text-uppercase">
                                     @item.Aktiviti
                                 </td>
+                                <td class="text-right">
+                                    @Convert.ToDecimal(item.JumKeseluruhan).ToString("#,##0.00")
+                                </td>
                                 <td>
                                     <div class="mt-sm-1 d-block" width="5%">
                                         <span class="badge @badgeType rounded-pill text-white p-1 px-2">
@@ -131,25 +139,54 @@
                                         </span>
                                     </div>
                                 </td>
-                                <td class="action-button" width="5%">
-                                    <div class="btn-group" role="group" aria-label="action">
-                                        <a asp-action="Details" asp-controller="SpPendahuluanPelbagai" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                                        <a asp-action="PrintPdf" asp-controller="SpPendahuluanPelbagai" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                                @*<td class="action-button text-center">
+                                <div class="btn-group" role="group" aria-label="action">
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                    <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                                    @if (item.FlHapus == 0)
+                                    {
                                         @if (item.FlPosting == 0)
                                         {
                                             @if (item.FlCetak != 0)
                                             {
-                                                <a asp-action="Posting" asp-controller="SpPendahuluanPelbagai" asp-route-id="@item.Id" class="btn text-success btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Lulus">
-                                                    <i class="fas fa-file-signature"></i>
-                                                </a>
+
+                                                @if (item.FlStatusSokong != 0)
+                                                {
+                                                    <a data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
+                                                        <i class="fas fa-file-signature"></i>
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a data-toggle="modal" data-target="#modalSokong" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Sokong" onclick="ModalClick(this)">
+                                                        <i class="fas fa-file-signature"></i>
+                                                    </a>
+                                                }
+
                                             }
 
-                                            <a asp-action="Delete" asp-controller="SpPendahuluanPelbagai" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
 
                                         }
-                                    </div>
+                                        else
+                                        {
+                                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn text-warning btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Baatal Lulus">
+                                                <i class="fas fa-file"></i>
+                                            </a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                                        {
+                                            <a asp-action="Rollback" asp-route-id="@item.Id" class="btn text-warning btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                                <i class="fas fa-trash-restore"></i>
+                                            </a>
 
-                                </td>
+                                        }
+                                    }
+                                    </div>
+                                </td>*@
                             </tr>
                         }
                     </tbody>
@@ -164,4 +201,3 @@ else
 {
 
 }
-

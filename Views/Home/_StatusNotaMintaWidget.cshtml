@@ -54,6 +54,21 @@
         });
 
     });
+
+    //modal click
+    function ModalClick(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var id = $("TD", row).eq(0).html();
+        var noRujukan = $("TD", row).eq(2).html();
+        var jumlah = $("TD", row).eq(4).html();
+        //var jumSokong = Number(jumKeseluruhan.replace(/[^0-9.-]+/g, ""));
+        //alert(noPermohonan);
+        $(".moId").val(id);
+        $(".moNoRujukan").val(noRujukan.trim());
+        $(".moJumlah").val(jumlah.trim());
+    };
+
 </script>
 
 @if (Model.AkNotaMinta.Count > 0)
@@ -74,11 +89,13 @@
                 <table class="table tableNM table-bordered table-hover display compact nowrap" width="100%">
                     <thead>
                         <tr>
+                            <th hidden>Id</th>
                             <th width="5%">Tarikh</th>
                             <th>No Rujukan</th>
                             <th>
                                 Pembekal
                             </th>
+                            <th width="5%">Jumlah RM</th>
                             <th width="5%">
                                 Tindakan
                             </th>
@@ -94,14 +111,14 @@
                             if(item.NoSiri == null)
                             {
                                 tindakan = "KEWANGAN";
-
                             }
                             else
                             {
-                                tindakan = "LULUS";
+                                tindakan = "SEMAK / LULUS";
                                 badgeType = "ac-success";
                             }
                             <tr class="text-uppercase ">
+                                <td hidden>@item.Id</td>
                                 <td width="5%" data-sort='YYYYMMDD'>
                                     @item.Tarikh.ToString("dd/MM/yyyy")
                                 </td>
@@ -110,6 +127,9 @@
                                 </td>
                                 <td class="text-uppercase">
                                     @item.AkPembekal.KodSykt - @item.AkPembekal.NamaSykt
+                                </td>
+                                <td class="text-right">
+                                    @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
                                 </td>
                                 <td>
                                     <div class="mt-sm-1 d-block" width="5%">
@@ -198,7 +218,7 @@ else
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="modal-body">
 
-                    <input hidden name="id" class="moId" />
+                    <input name="id" class="moId" />
                     <div class="form-row">
                         <div class="col-md-6">
                             <div class="form-group">

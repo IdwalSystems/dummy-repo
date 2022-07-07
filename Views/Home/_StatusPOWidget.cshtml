@@ -134,6 +134,7 @@
             <table class="table tablePO table-bordered table-hover display compact nowrap" width="100%">
                 <thead >
                     <tr>
+                        <th hidden>Id</th>
                         <th width="5%">Tarikh</th>
                         <th width="10%">No PO</th>
                         <th width="65%">
@@ -158,6 +159,7 @@
                         var badgeType = bakiTarikh > 14 ? "bg-danger" : "bg-warning";
                         var statusPo = bakiTarikh > 14 ? "Tamat Tempoh" : "Lebih 5 hari";
                         <tr class="@tabletype text-uppercase ">
+                            <td hidden>@item.Id</td>
                             <td width="5%" data-sort='YYYYMMDD'>
                                 @item.Tarikh.ToString("dd/MM/yyyy")
                             </td>

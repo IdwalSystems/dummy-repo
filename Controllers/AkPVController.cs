@@ -809,7 +809,6 @@ namespace MSNK.Controllers
             {
                 return Json(new { result = "Error", message = ex.Message });
             }
-
         }
 
         //private void PopulateCartAkPV1(int id)
