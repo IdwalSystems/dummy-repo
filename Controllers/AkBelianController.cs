@@ -499,6 +499,8 @@ namespace MSNK.Controllers
                     result.AkPO2.Add(item);
                 }
 
+                result.AkPO2 = result.AkPO2.OrderBy(b => b.Bil).ToList();
+
                 return Json(new { result = "OK", record = result });
             }
             catch (Exception ex)

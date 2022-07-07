@@ -325,6 +325,8 @@ namespace MSNK.Controllers
                     result.AkNotaMinta2.Add(item);
                 }
 
+                result.AkNotaMinta2 = result.AkNotaMinta2.OrderBy(b => b.Bil).ToList();
+
                 return Json(new { result = "OK", record = result });
             }
             catch (Exception ex)
