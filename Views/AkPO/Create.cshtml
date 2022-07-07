@@ -56,14 +56,14 @@
                         <span asp-validation-for="Tarikh" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="form-group">
                         <label asp-for="NoPO" class="control-label"></label>
                         <input asp-for="NoPO" class="form-control form-control-sm" value="@ViewBag.NoRujukan" id="txtNoPO" required readonly />
                         <span asp-validation-for="NoPO" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="form-group">
                         <label asp-for="AkNotaMintaId" class="control-label"></label>
                         <select class="form-control form-control-sm select2" asp-for="AkNotaMintaId" id="ddlNotaMinta">
@@ -73,6 +73,14 @@
                                 <option value="@s.Id">@s.NoSiri - @s.NoRujukan </option>
                             }
                         </select>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label asp-for="TarikhBekalan" class="control-label"></label><span class="text-danger">*</span>
+                        <input asp-for="TarikhBekalan" class="form-control form-control-sm" type="date" value="@DateTime.Now.AddDays(14).ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="TarikhBekalan" class="text-danger"></span>
                     </div>
                 </div>
 

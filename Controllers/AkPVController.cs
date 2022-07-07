@@ -45,6 +45,8 @@ namespace MSNK.Controllers
         private readonly CustomIRepository<string, int> _customRepo;
         private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPPRepo;
         private readonly IRepository<SuProfil, int, string> _suProfilRepo;
+        private readonly IRepository<JPenyemak, int, string> _penyemakRepo;
+        private readonly IRepository<JPelulus, int, string> _pelulusRepo;
         private CartPV _cart;
 
         public AkPVController(
@@ -67,6 +69,8 @@ namespace MSNK.Controllers
             CustomIRepository<string, int> customRepo,
             IRepository<SpPendahuluanPelbagai, int, string> spPPRepo,
             IRepository<SuProfil, int, string> suProfilRepo,
+            IRepository<JPenyemak, int, string> penyemakRepo,
+            IRepository<JPelulus, int, string> pelulusRepo,
             CartPV cart
             )
         {
@@ -89,6 +93,8 @@ namespace MSNK.Controllers
             _customRepo = customRepo;
             _spPPRepo = spPPRepo;
             _suProfilRepo = suProfilRepo;
+            _penyemakRepo = penyemakRepo;
+            _pelulusRepo = pelulusRepo;
             _cart = cart;
         }
         private async Task AddLogAsync(
@@ -2350,13 +2356,21 @@ namespace MSNK.Controllers
         }
 
         [Authorize(Policy = "PV001P")]
-        public async Task<IActionResult> PrintPdf(int id)
+        public async Task<IActionResult> PrintPdf(int id, int penyemakId, int pelulusId)
         {
             AkPV akPV = await _akPVRepo.GetByIdIncludeDeletedItems(id);
 
             PVPrintModel data = new PVPrintModel();
             var user = await _userManager.GetUserAsync(User);
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
+            var pekerja = _context.SuPekerja.FirstOrDefault(x => x.Id == namaUser.SuPekerjaId);
+            var jawatan = "Super Admin";
+            if (pekerja != null)
+            {
+                jawatan = pekerja.Jawatan;
+            }
+            var penyemak = await _penyemakRepo.GetById(penyemakId);
+            var pelulus = await _pelulusRepo.GetById(pelulusId);
 
             string jumlahDalamPerkataan;
 
@@ -2377,6 +2391,8 @@ namespace MSNK.Controllers
 
             CompanyDetails company = new CompanyDetails();
             data.Username = namaUser.Nama;
+            data.Penyemak = penyemak;
+            data.Pelulus = pelulus;
             data.AkPV = akPV;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
             data.AkPV2 = akPV.AkPV2;
@@ -3033,52 +3049,6 @@ namespace MSNK.Controllers
         }
         // unposting function end
 
-        //// POST: AkPV/Cancel/5
-        //[Authorize(Policy = "PV001B")]
-        //public async Task<IActionResult> Cancel(int id)
-        //{
-        //    var akPV = await _context.AkPV.FindAsync(id);
-        //    // check if already posting redirect back
-        //    if (akPV.FlPosting == 1)
-        //    {
-        //        TempData[SD.Error] = "Akses tidak dibenarkan..!";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    // check if this data is the last one (for preventing batal purpose)
-        //    var lastItem = _context.AkPV.OrderByDescending(x => x.Id).FirstOrDefault();
-
-        //    if (lastItem.Id == akPV.Id)
-        //    {
-        //        TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    // check end
-        //    // Batal operation
-
-        //    akPV.FlHapus = 1;
-        //    _context.AkPV.Update(akPV);
-
-        //    // Batal operation end
-
-        //    //insert applog
-        //    var user = await _userManager.GetUserAsync(User);
-
-        //    AppLog appLog = new AppLog();
-
-        //    appLog.UserId = user.UserName;
-        //    appLog.LgModule = modul + "B";
-        //    appLog.LgOperation = "Batal";
-        //    appLog.LgNote = modul + " Baucer Pembayaran - Batal";
-        //    appLog.NoRujukan = akPV.NoPV;
-        //    appLog.Jumlah = akPV.Jumlah;
-
-        //    await _appLog.Insert(appLog);
-        //    //insert applog end
-
-        //    await _context.SaveChangesAsync();
-        //    TempData[SD.Success] = "Data berjaya dibatalkan..!";
-        //    return RedirectToAction(nameof(Index));
-        //}
         // POST: AkPV/Cancel/5
         [Authorize(Policy = "PV001R")]
         public async Task<IActionResult> RollBack(int id)

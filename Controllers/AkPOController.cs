@@ -221,17 +221,6 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
             }
 
-            var lastItem = akPO.OrderByDescending(x => x.Id).FirstOrDefault();
-
-            if (lastItem != null)
-            {
-                ViewData["lastItem"] = lastItem.NoPO;
-            }
-            else
-            {
-                ViewData["lastItem"] = "NaN";
-            }
-
             return View(akPO);
         }
 
@@ -246,19 +235,6 @@ namespace MSNK.Controllers
             var akPO = await _akPORepo.GetByIdIncludeDeletedItems((int)id);
             var kw = await _kwRepo.GetById(akPO.JKWId);
             akPO.JKW = kw;
-
-            // check if this data is the last one (for preventing batal purpose)
-            var lastItem = _context.AkPO.OrderByDescending(x => x.Id).FirstOrDefault();
-
-            if (lastItem.Id == akPO.Id)
-            {
-                ViewData["isLastItem"] = "Y";
-            }
-            else
-            {
-                ViewData["isLastItem"] = "N";
-            }
-            // check end
 
             if (akPO == null)
             {
@@ -1745,6 +1721,13 @@ namespace MSNK.Controllers
             }
 
             var user = await _userManager.GetUserAsync(User);
+            var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
+            var pekerja = _context.SuPekerja.FirstOrDefault(x => x.Id == namaUser.SuPekerjaId);
+            var jawatan = "Super Admin";
+            if (pekerja != null)
+            {
+                jawatan = pekerja.Jawatan;
+            }
 
             POPrintModel data = new POPrintModel();
 
@@ -1753,7 +1736,8 @@ namespace MSNK.Controllers
             data.AkPO = akPO;
             //data.AkPO.JNegeri = negeri;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
-            data.Username = user.UserName;
+            data.Username = namaUser.Nama;
+            data.Jawatan = jawatan;
 
             //update cetak -> 1
             akPO.FlCetak = 1;

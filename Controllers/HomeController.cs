@@ -135,6 +135,15 @@ namespace MSNK.Controllers
                 //badge count end
                 // Widget Status Pendahuluan Pelbagai end
 
+                List<JPenyemak> penyemak = _context.JPenyemak
+                .Include(x => x.SuPekerja)
+                .Where(x => x.IsNotaMinta == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+                ViewBag.JPenyemakNM = penyemak;
+
+                List<JPelulus> pelulus = _context.JPelulus
+                    .Include(x => x.SuPekerja)
+                    .Where(x => x.IsNotaMinta == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+                ViewBag.JPelulusNM = pelulus;
 
                 dynamic dyModel = new ExpandoObject();
                 dyModel.AkPO = akPO;

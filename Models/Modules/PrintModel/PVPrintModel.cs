@@ -21,5 +21,7 @@ namespace MSNK.Models.Modules.PrintModel
         public AkPV AkPV { get; set; }
         public new ICollection<AkPV2> AkPV2 { get; set; }
         public CompanyDetails CompanyDetail { get; set; }
+        public JPenyemak Penyemak { get; set; }
+        public JPelulus Pelulus { get; set; }
     }
 }

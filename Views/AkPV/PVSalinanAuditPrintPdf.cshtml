@@ -42,7 +42,7 @@
             <tr>
                 <td class="text-center text-uppercase">@Model.AkPV.JKW.Kod - @Model.AkPV.JKW.Perihal</td>
                 <td class="text-center text-uppercase">@Model.AkPV.JBahagian.Kod - @Model.AkPV.JBahagian.Perihal</td>
-                <td class="text-center font-weight-bold">@Model.AkPV.NoPV.Substring(3)</td>
+                <td class="text-center font-weight-bold" style="font-size:1.2rem;">@Model.AkPV.NoPV.Substring(3)</td>
                 <td class="text-center font-weight-bold" width="15%">@Convert.ToDateTime(Model.AkPV.Tarikh).ToString("dd/MM/yyyy")</td>
                 <td class="text-center text-uppercase">@Model.AkPV.JCaraBayar.Perihal</td>
             </tr>
@@ -241,6 +241,12 @@
                 <td class="text-center" height="50px"></td>
                 <td class="text-center" height="50px"></td>
                 <td class="text-center" height="50px"></td>
+
+            </tr>
+            <tr>
+                <td class="text-center">@Model.Username</td>
+                <td class="text-center">@Model.Penyemak.SuPekerja.Nama</td>
+                <td class="text-center">@Model.Pelulus.SuPekerja.Nama</td>
 
             </tr>
             <tr>

@@ -407,17 +407,17 @@ namespace MSNK.Controllers
 
         private bool ICAtletExists(string kod)
         {
-            return _context.SuAtlet.Any(e => e.NoKp == kod);
+            return _context.SuAtlet.Any(e => e.NoKp == kod && e.FlHapus == 0);
         }
 
         private bool AkaunAtletExists(string kod)
         {
-            return _context.SuAtlet.Any(e => e.NoAkaunBank == kod);
+            return _context.SuAtlet.Any(e => e.NoAkaunBank == kod && e.FlHapus == 0);
         }
 
         private bool EmelAtletExists(string kod)
         {
-            return _context.SuAtlet.Any(e => e.Emel == kod);
+            return _context.SuAtlet.Any(e => e.Emel == kod && e.FlHapus == 0);
         }
 
     }

@@ -54,7 +54,7 @@ namespace MSNK.Controllers
             _akPembekalRepo = akPembekal;
             _kwRepo = kwRepo;
             _abBukuVotRepo = abBukuVotRepository;
-            _akCartaRepo = akCartaRepository; 
+            _akCartaRepo = akCartaRepository;
             _cart = cart;
         }
 
@@ -1519,7 +1519,7 @@ namespace MSNK.Controllers
 
         // printing Nota Minta
         [Authorize(Policy = "NM001P")]
-        public async Task<IActionResult> PrintPdf(int id)
+        public async Task<IActionResult> PrintPdf(int id, int penyemakId, int pelulusId)
         {
             AkNotaMinta akNotaMinta = await _akNotaMintaRepo.GetByIdIncludeDeletedItems(id);
 
@@ -1535,6 +1535,7 @@ namespace MSNK.Controllers
             }
 
             var user = await _userManager.GetUserAsync(User);
+            var namaUser = _context.applicationUsers.FirstOrDefault(x => x.Email == user.Email);
 
             NotaMintaPrintModel data = new NotaMintaPrintModel();
 
@@ -1558,7 +1559,7 @@ namespace MSNK.Controllers
             data.AkNotaMinta = akNotaMinta;
             data.AkNotaMinta.AkNotaMinta2 = akNotaMinta.AkNotaMinta2.OrderBy(b => b.Bil).ToList();
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
-            data.username = user.UserName;
+            data.username = namaUser.Nama;
 
             //update cetak -> 1
             akNotaMinta.FlCetak = 1;

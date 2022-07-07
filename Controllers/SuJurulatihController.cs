@@ -391,17 +391,17 @@ namespace MSNK.Controllers
 
         private bool ICJurulatihExists(string kod)
         {
-            return _context.SuJurulatih.Any(e => e.NoKp == kod);
+            return _context.SuJurulatih.Any(e => e.NoKp == kod && e.FlHapus == 0);
         }
 
         private bool AkaunJurulatihExists(string kod)
         {
-            return _context.SuJurulatih.Any(e => e.NoAkaunBank == kod);
+            return _context.SuJurulatih.Any(e => e.NoAkaunBank == kod && e.FlHapus == 0);
         }
 
         private bool EmelJurulatihExists(string kod)
         {
-            return _context.SuJurulatih.Any(e => e.Emel == kod);
+            return _context.SuJurulatih.Any(e => e.Emel == kod && e.FlHapus == 0);
         }
 
     }

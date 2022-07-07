@@ -27,6 +27,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.SpPendahuluanPelbagai
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.JTahapAktiviti)
                 .Include(b => b.JSukan)
                 .Include(b => b.AkCarta)
@@ -42,6 +43,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.SpPendahuluanPelbagai
                 .IgnoreQueryFilters()
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.JTahapAktiviti)
                 .Include(b => b.JSukan)
                 .Include(b => b.AkCarta)
@@ -57,6 +59,7 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.SpPendahuluanPelbagai
                 .Where(d => d.Id == id)
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.JTahapAktiviti)
                 .Include(b => b.JSukan)
                 .Include(b => b.AkCarta)
@@ -75,6 +78,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .IgnoreQueryFilters()
                 .Where(d => d.Id == id)
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.JTahapAktiviti)
                 .Include(b => b.JSukan)
                 .Include(b => b.AkCarta)

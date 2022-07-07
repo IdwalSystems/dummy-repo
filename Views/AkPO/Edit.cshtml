@@ -65,14 +65,14 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="form-group">
                         <label asp-for="NoPO" class="control-label"></label>
                         <input asp-for="NoPO" class="form-control form-control-sm text-uppercase" readonly />
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="form-group">
                         <label asp-for="AkNotaMintaId" class="control-label"></label>
                         @if (Model.AkNotaMintaId == null)
@@ -84,6 +84,12 @@
                             <input value="@Model.AkNotaMinta.Tarikh - @Model.AkNotaMinta.NoRujukan" class="form-control form-control-sm text-uppercase" readonly />
                         }
 
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label asp-for="TarikhBekalan" class="control-label"></label>
+                        <input asp-for="TarikhBekalan" class="form-control form-control-sm text-uppercase" type="date" />
                     </div>
                 </div>
             </div>

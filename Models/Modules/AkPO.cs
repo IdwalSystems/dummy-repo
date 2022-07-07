@@ -18,6 +18,8 @@ namespace MSNK.Models.Modules
         public string NoPO { get; set; }
         [DisplayName("Tarikh")]
         public DateTime Tarikh { get; set; }
+        [DisplayName("Tarikh Dibekalkan")]
+        public DateTime? TarikhBekalan { get; set; }
         [DisplayName("Tarikh Posting")]
         public DateTime? TarikhPosting { get; set; }
         [DisplayName("Jumlah RM")]

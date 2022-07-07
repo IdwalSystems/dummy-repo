@@ -9,7 +9,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-8">
-                <h5 class="text-uppercase text-dark mb-0">Akaun Bank - Papar</h5>
+                <h5 class="text-uppercase text-dark mb-0">Pesanan Tempatan - Papar</h5>
                 <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Papar</span>
             </div>
             <div class="col-4 text-right">
@@ -47,13 +47,13 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <label class="control-label">No PO</label>
                                     <input class="form-control form-control-sm" value="@Model.NoPO" readonly />
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <label asp-for="AkNotaMintaId" class="control-label"></label>
                                     <select class="form-control form-control-sm select2" asp-for="AkNotaMintaId" id="ddlNotaMinta" disabled>
@@ -63,6 +63,12 @@
                                             <option value="@s.Id">@s.NoSiri - @s.NoRujukan </option>
                                         }
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label asp-for="TarikhBekalan" class="control-label"></label>
+                                    <input asp-for="TarikhBekalan" class="form-control form-control-sm text-uppercase" type="date" readonly />
                                 </div>
                             </div>
 
