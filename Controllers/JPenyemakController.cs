@@ -134,6 +134,7 @@ namespace MSNK.Controllers
                     m.IsPendahuluan = jPenyemak.IsPendahuluan;
                     m.IsPO = jPenyemak.IsPO;
                     m.IsPV = jPenyemak.IsPV;
+                    m.IsInvois = jPenyemak.IsInvois;
                     m.TarMasuk = DateTime.Now;
                     m.UserId = user.UserName;
 

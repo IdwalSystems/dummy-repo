@@ -58,4 +58,18 @@
             }
         });
     });
+
+    //modal click
+    function ModalClick(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var id = $("TD", row).eq(1).html();
+        var noRujukan = $("TD", row).eq(2).html();
+        var jumlah = $("TD", row).eq(4).html();
+        //var jumSokong = Number(jumKeseluruhan.replace(/[^0-9.-]+/g, ""));
+        //alert(noPermohonan);
+        $(".moId").val(id);
+        $(".moNoRujukan").val(noRujukan.trim());
+        $(".moJumlah").val(jumlah.trim());
+    };
 </script>
