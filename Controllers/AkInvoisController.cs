@@ -189,6 +189,7 @@ namespace MSNK.Controllers
                     Alamat1 = alamat1,
                     FlHapus = item.FlHapus,
                     FlPosting = item.FlPosting,
+                    FlCetak = item.FlCetak,
                     JumlahPerihal = jumlahPerihal
                 }
                 );

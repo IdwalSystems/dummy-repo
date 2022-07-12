@@ -846,7 +846,7 @@ namespace MSNK.Controllers
                 {
 
                     // check if Inbois has PO or not
-                    var po = _context.AkBelian.Include(x => x.AkBelian1).Where(b => b.Id == akPV2.AkBelianId).FirstOrDefault();
+                    var po = _context.AkBelian.Include(x => x.AkBelian1).ThenInclude(x=> x.AkCarta).Where(b => b.Id == akPV2.AkBelianId).FirstOrDefault();
 
                     if (po.AkPOId != null)
                     {
@@ -885,36 +885,28 @@ namespace MSNK.Controllers
                                    akPV2.Amaun,
                                    akPV2.HavePO);
 
-                    ////get akBelian1
-                    //List<AkBelian1> akBelian1Table = _context.AkBelian1
-                    //.Include(b => b.AkCarta)
-                    //.Where(b => b.AkBelianId == akPV2.AkBelianId)
-                    //.OrderBy(b => b.Id)
-                    //.ToList();
+                    // get kod akaun from akBelian1
+                    foreach (var item in po.AkBelian1)
+                    {
+                        var akBelian1 = _cart.Lines1.Where(b => b.AkCartaId == item.AkCartaId).FirstOrDefault();
 
-                    ////initialize list of AkPV1
-                    //List<AkPV1> akPV1Table = new List<AkPV1>();
+                        var amount = item.Amaun;
+                        if (akBelian1 != null)
+                        {
+                            amount += akBelian1.Amaun;
 
-                    ////populate data from AkBelian1 into AkPV1
-                    //foreach (AkBelian1 item in akBelian1Table)
-                    //{
-                    //    akPV1Table.Add(
-                    //        new AkPV1
-                    //        {
-                    //            AkCartaId = item.AkCartaId,
-                    //            Amaun = item.Amaun
-                    //        });
-                    //}
+                            _cart.RemoveItem1(akBelian1.Id);
 
-                    ////populate cart AkPV1
-                    //foreach (AkPV1 akPV1 in akPV1Table)
-                    //{
-                    //    _cart.AddItem1(akPV1.AkPVId,
-                    //                   akPV1.Amaun,
-                    //                   akPV1.AkCartaId);
-                    //}
+                        }
 
-                    //ViewBag.akPV1 = akPV1Table;
+                        _cart.AddItem1(akPV2.AkPVId,
+                                        amount,
+                                        item.AkCartaId);
+                    }
+                    // add to cart
+                    // -- check if akCartaId already exist or not in _cart
+                    // -- if exist, add the amount
+                    // -- if not, add new kod akaun
                 }
 
                 return Json(new { result = "OK" });

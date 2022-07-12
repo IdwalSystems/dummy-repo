@@ -8,7 +8,7 @@
         function JsonKodSykt(id) {
             $.ajax({
                 type: "POST",
-                url: "/AkPenghutang/StrCalculate",
+                url: '@Url.Action("StrCalculate", "AkPenghutang")',
                 data: { data: id },
                 dataType: "json",
                 success: function (msg) {
