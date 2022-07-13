@@ -2016,7 +2016,7 @@ namespace MSNK.Controllers
         {
             try
             {
-                _cart.Clear3();
+                //_cart.Clear3();
                 var result = await _akInvoisRepo.GetById(data);
 
                 return Json(new { result = "OK", record = result });
