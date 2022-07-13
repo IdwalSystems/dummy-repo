@@ -42,7 +42,7 @@
     </div>
 
     <div class="col-2 text-right">
-        <h6 class="mb-0"><strong>NOTA MINTA</strong></h6>
+        <h3 class="mb-0"><strong>NOTA MINTA</strong></h3>
     </div>
 </div>
 <div class="table-responsive-sm">
@@ -121,17 +121,31 @@
                 <td class="text-center font-weight-bold" width="7%">HARGA SEUNIT RM</td>
                 <td class="text-center font-weight-bold" width="7%">AMAUN RM</td>
             </tr>
-            @foreach (var item in Model.AkNotaMinta.AkNotaMinta2)
+            @if (Model.AkNotaMinta.AkNotaMinta2.Count() >= 10)
             {
                 <tr>
-                    <td class="text-left">@item.Bil</td>
-                    <td class="text-left text-uppercase">@item.Perihal</td>
-                    <td class="text-right">@item.Kuantiti</td>
-                    <td class="text-right">@Convert.ToDecimal(item.Harga).ToString("#,##0.00")</td>
-                    <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                    <td class="text-left">1</td>
+                    <td class="text-left text-uppercase font-weight-bold">Perihal adalah seperti lampiran berikut:</td>
+                    <td class="text-right">-</td>
+                    <td class="text-right">-</td>
+                    <td class="text-right">-</td>
                 </tr>
-
             }
+            else
+            {
+               @foreach (var item in Model.AkNotaMinta.AkNotaMinta2)
+                {
+                    <tr>
+                        <td class="text-left">@item.Bil</td>
+                        <td class="text-left text-uppercase">@item.Perihal</td>
+                        <td class="text-right">@item.Kuantiti</td>
+                        <td class="text-right">@Convert.ToDecimal(item.Harga).ToString("#,##0.00")</td>
+                        <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                    </tr>
+
+                } 
+            }
+            
             <tr class="font-weight-bold">
                 <td class="text-right text-uppercase" colspan="4">Jumlah RM</td>
                 <td class="text-right">@Convert.ToDecimal(Model.JumlahPerihal).ToString("#,##0.00")</td>
@@ -214,3 +228,41 @@
         </tbody>
     </table>
 </div>
+
+@if (Model.AkNotaMinta.AkNotaMinta2.Count() >= 10)
+{
+    <div class="table-responsive-sm mb-0">
+        <table class="table table-bordered table-sm topic">
+            <thead class="text-center">
+                <tr>
+                    <th colspan="5">LAMPIRAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="line-height:0.8rem;">
+                    <td class="text-center font-weight-bold" width="5%">BIL  </td>
+                    <td class="text-center font-weight-bold" width="55%">BUTIR-BUTIR</td>
+                    <td class="text-center font-weight-bold" width="5%">KUANTITI </td>
+                    <td class="text-center font-weight-bold" width="7%">HARGA SEUNIT RM</td>
+                    <td class="text-center font-weight-bold" width="7%">AMAUN RM</td>
+                </tr>
+
+                @foreach (var item in Model.AkNotaMinta.AkNotaMinta2)
+                {
+                    <tr>
+                        <td class="text-left">@item.Bil</td>
+                        <td class="text-left text-uppercase">@item.Perihal</td>
+                        <td class="text-right">@item.Kuantiti</td>
+                        <td class="text-right">@Convert.ToDecimal(item.Harga).ToString("#,##0.00")</td>
+                        <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                    </tr>
+
+                } 
+                <tr class="font-weight-bold">
+                    <td class="text-right text-uppercase" colspan="4">Jumlah RM</td>
+                    <td class="text-right">@Convert.ToDecimal(Model.JumlahPerihal).ToString("#,##0.00")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}

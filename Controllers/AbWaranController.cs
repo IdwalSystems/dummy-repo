@@ -480,20 +480,24 @@ namespace MSNK.Controllers
             var user = await _userManager.GetUserAsync(User);
 
             // check if Tahun, FlJenisWaran ,JBahagianId, JKWId already exist or not 
-            var w = await _context.AbWaran.Where(x => x.Tahun == abWaran.Tahun
-                                                && x.FlJenisWaran == FlJenisWaran 
-                                                && x.JKWId == JKWId 
-                                                && x.JBahagianId == JBahagianId)
-                    .FirstOrDefaultAsync();
-
-            if (w != null)
+            if (FlJenisWaran == 0)
             {
-                TempData[SD.Error] = "Data bagi Tahun, Jenis Waran, Kump. Wang dan Bahagian telah wujud.";
-                PopulateList();
-                CartEmpty();
+                var w = await _context.AbWaran.Where(x => x.Tahun == abWaran.Tahun
+                                                                && x.FlJenisWaran == FlJenisWaran
+                                                                && x.JKWId == JKWId
+                                                                && x.JBahagianId == JBahagianId)
+                                    .FirstOrDefaultAsync();
 
-                return View(abWaran);
+                if (w != null)
+                {
+                    TempData[SD.Error] = "Data bagi Tahun, Jenis Waran, Kump. Wang dan Bahagian telah wujud.";
+                    PopulateList();
+                    CartEmpty();
+
+                    return View(abWaran);
+                }
             }
+            
             // check end
 
             if (ModelState.IsValid)

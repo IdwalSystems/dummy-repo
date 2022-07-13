@@ -76,7 +76,7 @@ namespace MSNK.Controllers
             var akpembekal = _akpembekalRepo.GetAll()
                 .Result
                 .Where(s => s.KodSykt.Contains(namasykt.Substring(0, 1)))
-                .OrderByDescending(s => s.Id).FirstOrDefault();
+                .OrderByDescending(s => s.KodSykt).FirstOrDefault();
 
             int intkodsykt = 0;
             if (akpembekal != null)

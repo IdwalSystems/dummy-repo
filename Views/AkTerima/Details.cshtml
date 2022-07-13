@@ -340,6 +340,46 @@
 
         @switch (Model.FlJenisTerima)
         {
+            case 1:
+                @*table Objek*@
+                <div class="card box-shadow mb-3">
+                    <div class="card-header">
+                        <h6>Invois Dikeluarkan</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+
+                            <table id="tblInvois" class="table table-sm" cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th style="width:40%">No Invois</th>
+                                        <th style="width:10%">Tarikh</th>
+                                        <th style="width:50%" class="text-right">Amaun RM</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyObjek">
+                                    @foreach (var item in ViewBag.akTerima3)
+                                    {
+                                        <tr id="@item.Id">
+                                            <td id="akInvoisId" hidden>@item.AkInvoisId</td>
+                                            <td>@item.AkInvois.NoInbois</td>
+                                            <td>@item.AkInvois.Tarikh.ToString("dd/MM/yyyy")</td>
+                                            <td class="text-right" id="td3Amaun">@item.Amaun</td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                                <tfoot>
+
+                                </tfoot>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+                @*table Objek end*@
+                break;
             case 3:
                 @*pendahuluan pelbagai*@
                 <div class="card box-shadow mb-3" id="cardPendahuluanPelbagai">

@@ -184,19 +184,34 @@
                 <td class="text-center">HARGA/UNIT</td>
                 <td class="text-center">AMAUN</td>
             </tr>
-            @foreach (var item in Model.AkPO.AkPO2)
+            @if (Model.AkPO.AkPO2.Count >= 7)
             {
-
                 <tr>
-                    <td>@item.Bil</td>
-                    <td>@item.NoStok</td>
-                    <td class="text-uppercase">@item.Perihal</td>
-                    <td align="right">@item.Kuantiti</td>
-                    <td align="center" class="text-uppercase">@item.Unit</td>
-                    <td align="right">@item.Harga</td>
-                    <td align="right">@item.Amaun</td>
+                    <td>1</td>
+                    <td>-</td>
+                    <td class="text-uppercase font-weight-bold">Perihal adalah seperti lampiran berikut:</td>
+                    <td align="right">-</td>
+                    <td align="center" class="text-uppercase">-</td>
+                    <td align="right">-</td>
+                    <td align="right">-</td>
                 </tr>
+            }
+            else
+            {
+               @foreach (var item in Model.AkPO.AkPO2)
+                {
 
+                    <tr>
+                        <td>@item.Bil</td>
+                        <td>@item.NoStok</td>
+                        <td class="text-uppercase">@item.Perihal</td>
+                        <td align="right">@item.Kuantiti</td>
+                        <td align="center" class="text-uppercase">@item.Unit</td>
+                        <td align="right">@item.Harga</td>
+                        <td align="right">@item.Amaun</td>
+                    </tr>
+
+                } 
             }
             <tr class="font-weight-bold">
                 <td class="text-right" colspan="6">Jumlah RM</td>
@@ -284,3 +299,50 @@
         </tbody>
     </table>
 </div>
+
+@if (Model.AkPO.AkPO2.Count >= 7)
+{
+   <p class="breakhere"></p>
+
+    <div class="table-responsive-sm mb-0">
+        <table class="table table-bordered table-sm topic">
+            <thead class="text-center">
+                <tr>
+                    <th colspan="7">LAMPIRAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">BIL</td>
+                    <td class="text-center">NO STOK</td>
+                    <td class="text-center">PERIHAL</td>
+                    <td class="text-center">KUANTITI</td>
+                    <td class="text-center">UNIT</td>
+                    <td class="text-center">HARGA/UNIT</td>
+                    <td class="text-center">AMAUN</td>
+                </tr>
+                @foreach (var item in Model.AkPO.AkPO2)
+                {
+
+                    <tr>
+                        <td>@item.Bil</td>
+                        <td>@item.NoStok</td>
+                        <td class="text-uppercase">@item.Perihal</td>
+                        <td align="right">@item.Kuantiti</td>
+                        <td align="center" class="text-uppercase">@item.Unit</td>
+                        <td align="right">@item.Harga</td>
+                        <td align="right">@item.Amaun</td>
+                    </tr>
+
+                } 
+                <tr class="font-weight-bold">
+                    <td class="text-right" colspan="6">Jumlah RM</td>
+                    <td class="text-right">@Convert.ToDecimal(Model.AkPO.Jumlah).ToString("#,##0.00")</td>
+                </tr>
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+        </table>
+    </div> 
+}

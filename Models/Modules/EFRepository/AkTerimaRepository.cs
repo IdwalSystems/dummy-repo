@@ -31,7 +31,11 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkBank)
                 .Include(b => b.JNegeri)
                 .Include(b => b.AkTerima1)
+                    .ThenInclude(b => b.AkCarta)
                 .Include(b => b.AkTerima2)
+                    .ThenInclude( b => b.JCaraBayar)
+                .Include(b => b.AkTerima3)
+                    .ThenInclude(b => b.AkInvois)
                 .ToListAsync();
         }
 
@@ -45,7 +49,11 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkBank)
                 .Include(b => b.JNegeri)
                 .Include(b => b.AkTerima1)
+                    .ThenInclude(b => b.AkCarta)
                 .Include(b => b.AkTerima2)
+                    .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkTerima3)
+                    .ThenInclude(b => b.AkInvois)
                 .ToListAsync();
         }
 
@@ -57,8 +65,12 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.SpPendahuluanPelbagai)
                 .Include(b => b.AkBank)
                 .Include(b => b.JNegeri)
-                .Include(b => b.AkTerima1).ThenInclude(b=> b.AkCarta)
-                .Include(b => b.AkTerima2).ThenInclude(b=> b.JCaraBayar)
+                .Include(b => b.AkTerima1)
+                    .ThenInclude(b => b.AkCarta)
+                .Include(b => b.AkTerima2)
+                    .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkTerima3)
+                    .ThenInclude(b => b.AkInvois)
                 .Where(b=> b.Id == id)
                 .FirstOrDefaultAsync();
         }
@@ -72,8 +84,12 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.SpPendahuluanPelbagai)
                 .Include(b => b.AkBank)
                 .Include(b => b.JNegeri)
-                .Include(b => b.AkTerima1).ThenInclude(b => b.AkCarta)
-                .Include(b => b.AkTerima2).ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkTerima1)
+                    .ThenInclude(b => b.AkCarta)
+                .Include(b => b.AkTerima2)
+                    .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkTerima3)
+                    .ThenInclude(b => b.AkInvois)
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
         }

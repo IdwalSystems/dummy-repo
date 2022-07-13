@@ -58,16 +58,16 @@
             JsonKodPenghutang(kodPenghutang);
         } else {
             //enable field
-            $("#NoKp").prop('disabled', false);
-            $("#Nama").prop('disabled', false);
+            $("#NoKp").prop('readonly', false);
+            $("#Nama").prop('readonly', false);
             $("#Nama").prop('required', true);
-            $("#Alamat1").prop('disabled', false);
-            $("#Alamat2").prop('disabled', false);
-            $("#Alamat3").prop('disabled', false);
-            $("#Telefon").prop('disabled', false);
-            $("#Emel").prop('disabled', false);
-            $("#Poskod").prop('disabled', false);
-            $("#Bandar").prop('disabled', false);
+            $("#Alamat1").prop('readonly', false);
+            $("#Alamat2").prop('readonly', false);
+            $("#Alamat3").prop('readonly', false);
+            $("#Telefon").prop('readonly', false);
+            $("#Emel").prop('readonly', false);
+            $("#Poskod").prop('readonly', false);
+            $("#Bandar").prop('readonly', false);
 
             //empty field
             $("#NoKp").val('');
@@ -136,16 +136,16 @@
                                 $("#Poskod").val(msg.record.poskod);
                                 $("#Bandar").val(msg.record.bandar);
                                 // disable fields
-                                $("#NoKp").prop('disabled', true);
-                                $("#Nama").prop('disabled', true);
-                                $("#Alamat1").prop('disabled', true);
-                                $("#Alamat2").prop('disabled', true);
-                                $("#Alamat3").prop('disabled', true);
-                                $("#Tel").prop('disabled', true);
-                                $("#Emel").prop('disabled', true);
-                                $("#Poskod").prop('disabled', true);
-                                $("#Bandar").prop('disabled', true);
-                                $("#ddlKodPekerja").prop('disabled', true);
+                                $("#NoKp").prop('readonly', true);
+                                $("#Nama").prop('readonly', true);
+                                $("#Alamat1").prop('readonly', true);
+                                $("#Alamat2").prop('readonly', true);
+                                $("#Alamat3").prop('readonly', true);
+                                $("#Tel").prop('readonly', true);
+                                $("#Emel").prop('readonly', true);
+                                $("#Poskod").prop('readonly', true);
+                                $("#Bandar").prop('readonly', true);
+                                $("#ddlKodPekerja").prop('readonly', true);
                                 $("#ddlKodPekerja").val(0);
                                 $("#Nama").prop('required', false);
 
@@ -1017,7 +1017,7 @@
     // check end
 
     //add tbl Inbois
-    $("body").on("click", "#btnAdd2", function () {
+    $("body").on("click", "#btnAdd3", function () {
         //Reference the Name and Country TextBoxes.
         var ddlAkInvois = $("#txtAkInvois");
         if (ddlAkInvois.val() != null) {

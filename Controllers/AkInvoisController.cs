@@ -190,6 +190,8 @@ namespace MSNK.Controllers
                     FlHapus = item.FlHapus,
                     FlPosting = item.FlPosting,
                     FlCetak = item.FlCetak,
+                    FlStatusSemak = item.FlStatusSemak,
+                    FlStatusLulus = item.FlStatusLulus,
                     JumlahPerihal = jumlahPerihal
                 }
                 );
@@ -1050,6 +1052,69 @@ namespace MSNK.Controllers
             }
         }
         // function  json Create end
+
+        // Semak function
+        [HttpPost, ActionName("Semak")]
+        [Authorize(Policy = "IN001T")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Semak(int? id, int penyemakId, DateTime? tarikhSemak)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+
+                if (tarikhSemak == null)
+                {
+                    TempData[SD.Error] = "Tarikh Semak diperlukan.";
+                    return RedirectToAction(nameof(Index));
+
+                }
+
+                var user = await _userManager.GetUserAsync(User);
+                //var user = UserManager.GetUserAsync(User);
+                var namaUser = _context.
+                    applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.Email == user.UserName);
+                //var pelulus = await _context.JPelulus.Include(x => x.SuPekerja).Where(x => x.IsPendahuluan == true).FirstOrDefaultAsync();
+                //var sokong = Convert.ToDecimal(jumSokong);
+
+                AkInvois sp = await _akInvoisRepo.GetById((int)id);
+
+                //check for print
+                if (sp.FlCetak == 0)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal disemak. Sila cetak data dahulu sebelum menjalani operasi ini.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //check for print end
+
+                //semak operation start here
+                //update semak status
+                sp.FlStatusSemak = 1;
+                sp.TarSemak = tarikhSemak;
+
+                sp.JPenyemakId = penyemakId;
+
+
+                await _akInvoisRepo.Update(sp);
+
+                //insert applog
+                await AddLogAsync("Posting", "Semak Data", sp.NoInbois, (int)id, sp.Jumlah);
+
+                //insert applog end
+
+                await _context.SaveChangesAsync();
+
+                TempData[SD.Success] = "Data berjaya disemak.";
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+        // Semak function end
 
         // posting function
         [Authorize(Policy = "IN001T")]

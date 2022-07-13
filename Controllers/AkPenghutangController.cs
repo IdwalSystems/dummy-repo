@@ -76,7 +76,7 @@ namespace MSNK.Controllers
             var akPengutang = _akpenghutangRepo.GetAll()
                 .Result
                 .Where(s => s.KodSykt.Contains(namasykt.Substring(0, 1)))
-                .OrderByDescending(s => s.Id).FirstOrDefault();
+                .OrderByDescending(s => s.KodSykt).FirstOrDefault();
 
             int intkodsykt = 0;
             if (akPengutang != null)

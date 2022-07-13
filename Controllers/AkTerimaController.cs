@@ -290,6 +290,13 @@ namespace MSNK.Controllers
                 .OrderBy(b => b.Id)
                 .ToList();
             ViewBag.akTerima2 = akTerima2Table;
+
+            List<AkTerima3> akTerima3Table = _context.AkTerima3
+                .Include(b => b.AkInvois)
+                .Where(b => b.AkTerimaId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+            ViewBag.akTerima3 = akTerima3Table;
         }
         private void PopulateCart()
         {
@@ -787,6 +794,12 @@ namespace MSNK.Controllers
             var spPendahuluan = _context.SpPendahuluanPelbagai.Find(SpPendahuluanPelbagaiId);
 
             var jenis = "CreateAm";
+
+            if (FlJenisTerima == 1)
+            {
+                akTerima.FlKategoriPembayar = 1;
+            }
+
             if (spPendahuluan != null)
             {
                 var pekerja = _context.SuPekerja.Find(spPendahuluan.SuPekerjaId);
@@ -860,6 +873,8 @@ namespace MSNK.Controllers
                     m.Sebab = akTerima.Sebab;
 
                     m.FlKategoriPembayar = akTerima.FlKategoriPembayar;
+                    m.AkPenghutangId = akTerima.AkPenghutangId;
+
                     m.FlJenisTerima = akTerima.FlJenisTerima;
                     if (spPendahuluan != null)
                     {
@@ -872,6 +887,7 @@ namespace MSNK.Controllers
 
                     m.AkTerima1 = _cart.Lines1.ToArray();
                     m.AkTerima2 = _cart.Lines2.ToArray();
+                    m.AkTerima3 = _cart.Lines3.ToArray();
 
                     await _akTerimaRepo.Insert(m);
 
@@ -1061,6 +1077,9 @@ namespace MSNK.Controllers
                         // list of input that cannot be change
                         akTerima.Tahun = dataAsal.Tahun;
                         akTerima.JKWId = dataAsal.JKWId;
+                        akTerima.FlJenisTerima = dataAsal.FlJenisTerima;
+                        akTerima.FlKategoriPembayar = dataAsal.FlKategoriPembayar;
+                        akTerima.AkPenghutangId = dataAsal.AkPenghutangId;
                         //akTerima.JBahagianId = dataAsal.JBahagianId;
                         akTerima.NoRujukan = dataAsal.NoRujukan;
                         akTerima.Nama = dataAsal.Nama;
@@ -1086,11 +1105,22 @@ namespace MSNK.Controllers
                                 _context.Remove(model);
                             }
                         }
+
+                        foreach (AkTerima3 item in dataAsal.AkTerima3)
+                        {
+                            var model = _context.AkTerima3.FirstOrDefault(b => b.Id == item.Id);
+                            if (model != null)
+                            {
+                                _context.Remove(model);
+                            }
+                        }
+
                         decimal jumlahAsal = dataAsal.Jumlah;
                         _context.Entry(dataAsal).State = EntityState.Detached;
 
                         akTerima.AkTerima1 = _cart.Lines1.ToList();
                         akTerima.AkTerima2 = _cart.Lines2.ToList();
+                        akTerima.AkTerima3 = _cart.Lines3.ToList();
 
                         akTerima.UserIdKemaskini = user.UserName;
                         akTerima.TarKemaskini = DateTime.Now;

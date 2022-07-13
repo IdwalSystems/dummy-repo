@@ -388,15 +388,16 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var name = $("TD", row).eq(0).html();
-        var amaun = $("TD", row).eq(8).html();
-        var txtJumlah = $("#jumlahPerihal");
+        var amaun = $("TD", row).eq(7).html();
+        var txtJumlah = $("#txtJumlahPerihal");
+        var JumlahPerihal = $("#jumlahPerihal");
         if (confirm("Hapus : " + name + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblPerihal")[0];
 
             var sum = 0;
-            sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
-            txtJumlah.val(sum.toFixed(2));
+            sum = parseFloat(JumlahPerihal.val()) - parseFloat(amaun);
+            JumlahPerihal.val(sum.toFixed(2));
 
             var AkBelian2 = {
                 Indek: name,

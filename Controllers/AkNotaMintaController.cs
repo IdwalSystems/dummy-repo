@@ -1576,9 +1576,8 @@ namespace MSNK.Controllers
             {
                 PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
-                //CustomSwitches = "--footer-center \"  Tarikh: " +
-                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
-                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
+                        " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
         }
