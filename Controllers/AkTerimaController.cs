@@ -873,8 +873,12 @@ namespace MSNK.Controllers
                     m.Sebab = akTerima.Sebab;
 
                     m.FlKategoriPembayar = akTerima.FlKategoriPembayar;
-                    m.AkPenghutangId = akTerima.AkPenghutangId;
-
+                    
+                    if (akTerima.FlKategoriPembayar == 1)
+                    {
+                        m.AkPenghutangId = akTerima.AkPenghutangId;
+                    }
+                    
                     m.FlJenisTerima = akTerima.FlJenisTerima;
                     if (spPendahuluan != null)
                     {
