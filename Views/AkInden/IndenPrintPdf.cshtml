@@ -1,0 +1,41 @@
+﻿@model MSNK.Models.Modules.PrintModel.IndenPrintModel
+
+@{
+    ViewData["Title"] = "Cetakan Inden Kerja";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+<style>
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    .date-span {
+       position: absolute;
+       bottom:0;
+       left:0;
+       display: inline-block;
+    }
+
+    .relative {
+        position:relative;
+        
+    }
+</style>
+<partial name="IndenSalinanPembekalPrintPdf" />
+<P CLASS="breakhere">
+<partial name="IndenAsalPrintPdf" />

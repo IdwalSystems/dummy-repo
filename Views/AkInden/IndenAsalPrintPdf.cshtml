@@ -1,0 +1,341 @@
+﻿
+<div class="row flexrow mb-1 ml-1">
+    <div class="col-2 image-container">
+        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1 , @Model.CompanyDetail.AlamatSyarikat2</p>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat3</p>
+        <p class="mb-0"> Tel: @Model.CompanyDetail.TelSyarikat   Faks: @Model.CompanyDetail.FaksSyarikat</p>
+        <p class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</p>
+    </div>
+
+    <div class="col-2 text-right">
+        <h5 class="mb-0 text-gray"><strong>ASAL</strong></h5>
+        <h3 class="mb-0"><strong>INDEN KERJA</strong></h3>
+    </div>
+</div>
+<br />
+<div class="row flexrow mb-1">
+    <div class="col-8 text-center text-uppercase">
+        <h5 class="mb-1"><strong>Tahun Kewangan @Model.AkInden.Tahun</strong></h5>
+    </div>
+</div>
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">No Inden Kerja</td>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">Tarikh</td>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">Kumpulan Wang </td>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">Bahagian </td>
+            </tr>
+            <tr>
+                <td class="text-center">@Model.AkInden.NoInden</td>
+                <td class="text-center" width="15%">@Convert.ToDateTime(Model.AkInden.Tarikh).ToString("dd/MM/yyyy")</td>
+                <td class="text-center text-uppercase">@Model.AkInden.JKW.Kod - @Model.AkInden.JKW.Perihal</td>
+                <td class="text-center text-uppercase">@Model.AkInden.JBahagian.Kod - @Model.AkInden.JBahagian.Perihal</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr>
+                <td class="text-left text-uppercase font-weight-bold" width="15%">Disediakan oleh:</td>
+                <td class="text-uppercase">@Model.Username</td>
+            </tr>
+            <tr>
+                <td class="text-left text-uppercase font-weight-bold" width="15%">Jawatan</td>
+                <td class="text-uppercase" >@Model.Jawatan</td>
+           </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <thead class="table-dark">
+
+        </thead>
+        <tbody>
+            <tr class="bg-dark text-white font-weight-bold">
+                <td class="text-center" colspan="4"><strong>MAKLUMAT PEMBEKAL</strong></td>
+            </tr>
+            <tr>
+                <td class="text-left" width="15%">KOD SYARIKAT</td>
+                <td class="text-left" width="35%">@Model.AkInden.AkPembekal.KodSykt</td>
+                <td class="text-left" width="15%">Nama Bank</td>
+                <td class="text-left" width="35%">@Model.AkInden.AkPembekal.JBank.Nama</td>
+            </tr>
+            <tr>
+                <td class="text-left" width="15%" rowspan="4">PEMBEKAL</td>
+                <td class="text-left" width="35%">@Model.AkInden.AkPembekal.NamaSykt</td>
+                <td class="text-left" width="15%">No Akaun Bank</td>
+                <td class="text-left" width="35%">@Model.AkInden.AkPembekal.AkaunBank</td>
+            </tr>
+            <tr>
+                <td class="text-left" colspan="3">@Model.AkInden.AkPembekal.Alamat1</td>
+            </tr>
+            <tr>
+                <td class="text-left" colspan="3">@Model.AkInden.AkPembekal.Alamat2</td>
+            </tr>
+            <tr>
+                <td class="text-left" colspan="3">@Model.AkInden.AkPembekal.Alamat3</td>
+            </tr>
+            <tr class="font-weight-bold">
+                <td class="text-left" colspan="4"><strong>SILA BEKALKAN BARANG / LAKSANAKAN KERJA TERSEBUT PADA ATAU SEBELUM : @Model.AkInden.TarikhBekalan?.ToString("dd/MM/yyyy")</strong></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <thead class="text-center">
+            <tr class="bg-dark text-white font-weight-bold">
+
+                <td class="text-center" colspan="3"><h6 class="mb-0"><strong>BAHAGIAN KEWANGAN</strong></h6></td>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <thead class="text-center">
+            <tr>
+                <th>KOD</th>
+                <th>OBJEK</th>
+                <th>AMAUN</th>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model.AkInden.AkInden1)
+        {
+            
+            <tr>
+                <td>@item.AkCarta.Kod</td>
+                <td>@item.AkCarta.Perihal</td>
+                <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+            </tr>
+        }
+        <tr class="font-weight-bold">
+            <td class="text-right" colspan="2">Jumlah RM</td>
+            <td class="text-right">@Convert.ToDecimal(Model.AkInden.Jumlah).ToString("#,##0.00")</td>
+        </tr>
+        <tfoot>
+        </tfoot>
+    </table>
+</div>    
+
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <thead class="table-dark">
+
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center" width="15%" rowspan="3">Disemak </td>
+                <td class="relative text-right" width="25%" rowspan="3" ><span class="date-span" hidden> Tarikh: </span></td>
+                <td width="10%">Nama: </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td width="10%">Jawatan: </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td width="10%">Tarikh: </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <thead class="text-center">
+            <tr class="bg-dark text-white font-weight-bold">
+
+                <td class="text-center" colspan="7"><h6 class="mb-0"><strong>PERHATIAN PEMBEKAL</strong></h6></td>
+            </tr>
+            <tr>
+                <th colspan="7">PERIHAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center">BIL</td>
+                <td class="text-center">NO STOK</td>
+                <td class="text-center">PERIHAL</td>
+                <td class="text-center">KUANTITI</td>
+                <td class="text-center">UNIT</td>
+                <td class="text-center">HARGA/UNIT</td>
+                <td class="text-center">AMAUN</td>
+            </tr>
+            @if (Model.AkInden.AkInden2.Count >= 7)
+            {
+                <tr>
+                    <td>1</td>
+                    <td>-</td>
+                    <td class="text-uppercase font-weight-bold">Perihal adalah seperti lampiran berikut:</td>
+                    <td align="right">-</td>
+                    <td align="center" class="text-uppercase">-</td>
+                    <td align="right">-</td>
+                    <td align="right">-</td>
+                </tr>
+            }
+            else
+            {
+               @foreach (var item in Model.AkInden.AkInden2)
+                {
+
+                    <tr>
+                        <td>@item.Bil</td>
+                        <td>@item.NoStok</td>
+                        <td class="text-uppercase">@item.Perihal</td>
+                        <td align="right">@item.Kuantiti</td>
+                        <td align="center" class="text-uppercase">@item.Unit</td>
+                        <td align="right">@item.Harga</td>
+                        <td align="right">@item.Amaun</td>
+                    </tr>
+
+                } 
+            }
+            <tr class="font-weight-bold">
+                <td class="text-right" colspan="6">Jumlah RM</td>
+                <td class="text-right">@Convert.ToDecimal(Model.AkInden.Jumlah).ToString("#,##0.00")</td>
+            </tr>
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr>
+                <td class="text-right" style="line-height:1.0rem;">AMAUN DALAM PERKATAAN</td>
+                <td class="text-left" style="line-height:0.8rem;">@Model.JumlahDalamPerkataan</td>
+            </tr>
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+</div>
+
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <thead class="table-dark">
+
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center" width="15%" rowspan="3">Diperakui </td>
+                <td class="relative text-right" width="25%" rowspan="3" ><span class="date-span" hidden> Tarikh: </span></td>
+                <td width="10%">Nama: </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td width="10%">Jawatan: </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td width="10%">Tarikh: </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <thead class="table-dark">
+
+        </thead>
+        <tbody>
+            <tr class="bg-dark text-white font-weight-bold">
+
+                <td class="text-center" colspan="4"><h6 class="mb-0"><strong>PERHATIAN PENGARAH</strong></h6></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <thead class="table-dark">
+
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center" width="15%" rowspan="3">Diluluskan </td>
+                <td class="relative text-right" width="25%" rowspan="3" ><span class="date-span" hidden> Tarikh: </span></td>
+                <td width="10%">Nama: </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td width="10%">Jawatan: </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td width="10%">Tarikh: </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@if (Model.AkInden.AkInden2.Count >= 7)
+{
+   <p class="breakhere"></p>
+
+    <div class="table-responsive-sm mb-0">
+        <table class="table table-bordered table-sm topic">
+            <thead class="text-center">
+                <tr>
+                    <th colspan="7">LAMPIRAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">BIL</td>
+                    <td class="text-center">NO STOK</td>
+                    <td class="text-center">PERIHAL</td>
+                    <td class="text-center">KUANTITI</td>
+                    <td class="text-center">UNIT</td>
+                    <td class="text-center">HARGA/UNIT</td>
+                    <td class="text-center">AMAUN</td>
+                </tr>
+                @foreach (var item in Model.AkInden.AkInden2)
+                {
+
+                    <tr>
+                        <td>@item.Bil</td>
+                        <td>@item.NoStok</td>
+                        <td class="text-uppercase">@item.Perihal</td>
+                        <td align="right">@item.Kuantiti</td>
+                        <td align="center" class="text-uppercase">@item.Unit</td>
+                        <td align="right">@item.Harga</td>
+                        <td align="right">@item.Amaun</td>
+                    </tr>
+
+                } 
+                <tr class="font-weight-bold">
+                    <td class="text-right" colspan="6">Jumlah RM</td>
+                    <td class="text-right">@Convert.ToDecimal(Model.AkInden.Jumlah).ToString("#,##0.00")</td>
+                </tr>
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+        </table>
+    </div> 
+}

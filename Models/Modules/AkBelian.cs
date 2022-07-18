@@ -45,9 +45,17 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
-        [DisplayName("Dengan Pesanan Tempatan/Tanpa Pesanan Tempatan")]
+        // if have akPOId or akIndenId, Dengan Tanggungan
+        // else Tanpa Tanggungan
+        [DisplayName("Dengan Tanggungan/Tanpa Tanggungan")]
         [DefaultValue("1")]
-        public string FlPO { get; set; }
+        public string FlTanggungan { get; set; }
+        // note :
+        // FlJenisTanggungan = 0 : Tanpa Tanggungan
+        // FlJenisTanggungan = 1 : PO
+        // FlJenisTanggungan = 2 : Inden Kerja
+        [DisplayName("Inden Kerja / Pesanan Tempatan")]
+        public int FlJenisTanggungan { get; set; }
         //flag end
 
         //Relationship
@@ -59,6 +67,8 @@ namespace MSNK.Models.Modules
         public JBahagian JBahagian { get; set; }
         [DisplayName("No Pesanan Tempatan")]
         public int? AkPOId { get; set; }
+        [DisplayName("No Inden")]
+        public int? AkIndenId { get; set; }
         [Required(ErrorMessage = "Kod Pemiutang Diperlukan.")]
         [DisplayName("Kod Pemiutang")]
         public int KodObjekAPId { get; set; }
@@ -67,6 +77,7 @@ namespace MSNK.Models.Modules
         public int AkPembekalId { get; set; }
         public JKW JKW { get; set; }
         public AkPO AkPO { get; set; }
+        public AkInden AkInden { get; set; }
         public AkCarta KodObjekAP { get; set; }
         public AkPembekal AkPembekal { get; set; }
         public ICollection<AkBelian1> AkBelian1 { get; set; }

@@ -32,6 +32,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkJurnal> AkJurnal { get; set; }
         public ICollection<AkNotaMinta> AkNotaMinta { get; set; }
         public ICollection<AkPO> AkPO { get; set; }
+        public ICollection<AkInden> AkInden { get; set; }
         public ICollection<AkPOLaras> AkPOLaras { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
         public ICollection<AkTerima> AkTerima { get; set; }

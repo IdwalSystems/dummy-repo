@@ -31,7 +31,18 @@ namespace MSNK.Data
             new Claim("TG001T","TG001 Pesanan Tempatan - Posting"),
             new Claim("TG001UT","TG001 Pesanan Tempatan - UnPosting"),
             //Pesanan Tempatan end
-            //Pelarasan Tanggungan
+            //Inden
+            new Claim("TG003","TG003 Inden Kerja"),
+            new Claim("TG003C","TG003 Inden Kerja - Tambah"),
+            new Claim("TG003E","TG003 Inden Kerja - Ubah"),
+            new Claim("TG003D","TG003 Inden Kerja - Hapus"),
+            new Claim("TG003P","TG003 Inden Kerja - Cetak"),
+            new Claim("TG003B","TG003 Inden Kerja - Batal"),
+            new Claim("TG003R","TG003 Inden Kerja - Rollback"),
+            new Claim("TG003T","TG003 Inden Kerja - Posting"),
+            new Claim("TG003UT","TG003 Inden Kerja - UnPosting"),
+            //Inden end
+            //Pelarasan PO
             new Claim("PT001","PT001 Pelarasan Tanggungan"),
             new Claim("PT001C","PT001 Pelarasan Tanggungan - Tambah"),
             new Claim("PT001E","PT001 Pelarasan Tanggungan - Ubah"),
@@ -41,7 +52,7 @@ namespace MSNK.Data
             new Claim("PT001R","PT001 Pelarasan Tanggungan - Rollback"),
             new Claim("PT001T","PT001 Pelarasan Tanggungan - Posting"),
             new Claim("PT001UT","PT001 Pelarasan Tanggungan - UnPosting"),
-            //Pelarasan Tanggungan end
+            //Pelarasan PO end
             //Invois Pembekal
             new Claim("TG002","TG002 Invois Pembekal"),
             new Claim("TG002C","TG002 Invois Pembekal - Tambah"),

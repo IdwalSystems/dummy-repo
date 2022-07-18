@@ -34,6 +34,9 @@ namespace MSNK.Data
         public DbSet<AkPO> AkPO { get; set; }
         public DbSet<AkPO1> AkPO1 { get; set; }
         public DbSet<AkPO2> AkPO2 { get; set; }
+        public DbSet<AkInden> AkInden { get; set; }
+        public DbSet<AkInden1> AkInden1 { get; set; }
+        public DbSet<AkInden2> AkInden2 { get; set; }
         public DbSet<AkPOLaras> AkPOLaras { get; set; }
         public DbSet<AkPOLaras1> AkPOLaras1 { get; set; }
         public DbSet<AkPOLaras2> AkPOLaras2 { get; set; }
@@ -121,6 +124,7 @@ namespace MSNK.Data
             //Tanggungan
             modelBuilder.Entity<AkNotaMinta>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkPO>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkInden>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkPOLaras>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkBelian>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Tanggungan End
@@ -272,7 +276,34 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.JBahagianId)
                     .OnDelete(DeleteBehavior.Restrict);
             //AkPO end
-            //AkPO
+            //AkInden
+            modelBuilder.Entity<AkInden>()
+                    .HasOne(m => m.AkPembekal)
+                    .WithMany(t => t.AkInden)
+                    .HasForeignKey(m => m.AkPembekalId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+            modelBuilder.Entity<AkInden>()
+                    .HasOne(m => m.JKW)
+                    .WithMany(t => t.AkInden)
+                    .HasForeignKey(m => m.JKWId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+            modelBuilder.Entity<AkInden>()
+                .HasOne(m => m.AkNotaMinta)
+                .WithMany(t => t.AkInden)
+                .HasForeignKey(m => m.AkNotaMintaId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkInden>()
+                    .HasOne(m => m.JBahagian)
+                    .WithMany(t => t.AkInden)
+                    .HasForeignKey(m => m.JBahagianId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            //AkInden end
+            //AkPOLaras
             modelBuilder.Entity<AkPOLaras>()
                     .HasOne(m => m.AkPO)
                     .WithMany(t => t.AkPOLaras)
@@ -286,7 +317,7 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.JKWId)
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
-            //AkPO end
+            //AkPOLaras end
             //AkNotaMinta
             modelBuilder.Entity<AkNotaMinta>()
                     .HasOne(m => m.AkPembekal)

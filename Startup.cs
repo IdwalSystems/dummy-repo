@@ -84,6 +84,9 @@ namespace MSNK
             services.AddTransient<IRepository<AkPO, int, string>, AkPORepository>();
             services.AddTransient<ListViewIRepository<AkPO1, int>, AkPO1Repository>();
             services.AddTransient<ListViewIRepository<AkPO2, int>, AkPO2Repository>();
+            services.AddTransient<IRepository<AkInden, int, string>, AkIndenRepository>();
+            services.AddTransient<ListViewIRepository<AkInden1, int>, AkInden1Repository>();
+            services.AddTransient<ListViewIRepository<AkInden2, int>, AkInden2Repository>();
             services.AddTransient<IRepository<AkPOLaras, int, string>, AkPOLarasRepository>();
             services.AddTransient<ListViewIRepository<AkPOLaras1, int>, AkPOLaras1Repository>();
             services.AddTransient<ListViewIRepository<AkPOLaras2, int>, AkPOLaras2Repository>();
@@ -152,6 +155,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPendahuluan.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
+            services.AddScoped(ss => SessionCartInden.GetCart(ss));
             services.AddScoped(ss => SessionCartPOLaras.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
             services.AddScoped(ss => SessionCartBelian.GetCart(ss));
@@ -199,7 +203,18 @@ namespace MSNK
                 options.AddPolicy("TG001T", policy => policy.RequireClaim("TG001T"));
                 options.AddPolicy("TG001UT", policy => policy.RequireClaim("TG001UT"));
                 //Pesanan Tempatan End
-                //Pelarasan Tanggungan
+                //Inden
+                options.AddPolicy("TG003", policy => policy.RequireClaim("TG003"));
+                options.AddPolicy("TG003C", policy => policy.RequireClaim("TG003C"));
+                options.AddPolicy("TG003E", policy => policy.RequireClaim("TG003E"));
+                options.AddPolicy("TG003D", policy => policy.RequireClaim("TG003D"));
+                options.AddPolicy("TG003P", policy => policy.RequireClaim("TG003P"));
+                options.AddPolicy("TG003B", policy => policy.RequireClaim("TG003B"));
+                options.AddPolicy("TG003R", policy => policy.RequireClaim("TG003R"));
+                options.AddPolicy("TG003T", policy => policy.RequireClaim("TG003T"));
+                options.AddPolicy("TG003UT", policy => policy.RequireClaim("TG003UT"));
+                //Inden End
+                //Pelarasan PO
                 options.AddPolicy("PT001", policy => policy.RequireClaim("PT001"));
                 options.AddPolicy("PT001C", policy => policy.RequireClaim("PT001C"));
                 options.AddPolicy("PT001E", policy => policy.RequireClaim("PT001E"));
@@ -209,7 +224,7 @@ namespace MSNK
                 options.AddPolicy("PT001R", policy => policy.RequireClaim("PT001R"));
                 options.AddPolicy("PT001T", policy => policy.RequireClaim("PT001T"));
                 options.AddPolicy("PT001UT", policy => policy.RequireClaim("PT001UT"));
-                //Pesanan Tempatan End
+                //Pesanan PO End
                 //Invois Pembekal
                 options.AddPolicy("TG002", policy => policy.RequireClaim("TG002"));
                 options.AddPolicy("TG002C", policy => policy.RequireClaim("TG002C"));

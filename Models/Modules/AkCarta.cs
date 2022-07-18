@@ -79,6 +79,7 @@ namespace MSNK.Models.Modules
         public ICollection<SuProfil> SuProfil { get; set; }
         public ICollection<AkInvois1> AkInvois1 { get; set; }
         public ICollection<AkInvois> AkInvois { get; set; }
+        public ICollection<AkInden> AkInden { get; set; }
 
         //relationship end
 

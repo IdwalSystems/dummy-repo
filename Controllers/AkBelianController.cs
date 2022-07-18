@@ -29,6 +29,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkPembekal, int, string> _akPembekalRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;
         private readonly IRepository<AkPO, int, string> _akPORepo;
+        private readonly IRepository<AkInden, int, string> _akIndenRepo;
         private readonly ListViewIRepository<AkBelian1, int> _akBelian1Repo;
         private readonly ListViewIRepository<AkBelian2, int> _akBelian2Repo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
@@ -45,6 +46,7 @@ namespace MSNK.Controllers
             IRepository<AkPembekal, int, string> akPembekal,
             IRepository<JKW, int, string> kwRepo,
             IRepository<AkPO, int, string> akPORepo,
+            IRepository<AkInden, int, string> akIndenRepo,
             ListViewIRepository<AkBelian1, int> akBelian1Repository,
             ListViewIRepository<AkBelian2, int> akBelian2Repository,
             IRepository<AkCarta, int, string> akCartaRepository,
@@ -61,6 +63,7 @@ namespace MSNK.Controllers
             _akPembekalRepo = akPembekal;
             _kwRepo = kwRepo;
             _akPORepo = akPORepo;
+            _akIndenRepo = akIndenRepo;
             _akBelian1Repo = akBelian1Repository;
             _akBelian2Repo = akBelian2Repository;
             _akCartaRepo = akCartaRepository;
@@ -221,6 +224,15 @@ namespace MSNK.Controllers
                 .Where(b => b.FlPosting == 1)
                 .OrderBy(b => b.Tarikh).ToList();
             ViewBag.AkPO = akPOList;
+
+            List<AkInden> akIndenList = _context.AkInden
+                .Include(b => b.AkPembekal).ThenInclude(b => b.JBank)
+                .Include(b => b.JKW)
+                .Include(b => b.AkInden1).ThenInclude(b => b.AkCarta)
+                .Include(b => b.AkInden2)
+                .Where(b => b.FlPosting == 1)
+                .OrderBy(b => b.Tarikh).ToList();
+            ViewBag.AkInden = akIndenList;
 
             List<AkPembekal> akPembekalList = _context.AkPembekal
                 .Include(b => b.JBank)
@@ -576,6 +588,98 @@ namespace MSNK.Controllers
         }
         //on change no PO controller end
 
+        // on change no Inden controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetNoInden(int id)
+        {
+            try
+            {
+                CartEmpty();
+                PopulateCartFromAkInden(id);
+                var result = await _akIndenRepo.GetById(id);
+          
+                List<AkInden1> akInden1Table = await _context.AkInden1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkIndenId == id)
+                .OrderBy(b => b.Id)
+                .ToListAsync();
+
+                foreach (AkInden1 item in akInden1Table)
+                {
+                    if (item.Amaun != 0)
+                    {
+                        result.AkInden1.Add(item);
+                    }
+                }
+
+                List<AkInden2> akInden2Table = await _context.AkInden2
+                .Where(b => b.AkIndenId == id)
+                .OrderBy(b => b.Bil)
+                .ToListAsync();
+
+                foreach (AkInden2 item in akInden2Table)
+                {
+                    result.AkInden2.Add(item);
+                }
+
+                result.AkInden2 = result.AkInden2.OrderBy(b => b.Bil).ToList();
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+
+        private void PopulateCartFromAkInden(int id)
+        {
+            var user = _userManager.GetUserName(User);
+
+            List<AkInden1> akInden1Table = _context.AkInden1
+                .Include(b => b.AkCarta)
+                .Where(b => b.AkIndenId == id)
+                .OrderBy(b => b.Id)
+                .ToList();
+
+            foreach (AkInden1 item in akInden1Table)
+            {
+
+                item.AkIndenId = 0;
+
+                if (item.Amaun != 0)
+                {
+                    _cart.AddItem1(item.AkIndenId,
+                                   item.Amaun,
+                                   item.AkCartaId);
+                }
+            }
+
+            List<AkInden2> akInden2Table = _context.AkInden2
+                .AsNoTracking()
+                .Where(b => b.AkIndenId == id)
+                .OrderBy(b => b.Bil)
+                .ToList();
+
+            foreach (AkInden2 item in akInden2Table)
+            {
+                item.AkIndenId = 0;
+
+                _cart.AddItem2(item.AkIndenId,
+                               item.Indek,
+                               item.Bil,
+                               item.NoStok,
+                               item.Perihal,
+                               item.Kuantiti,
+                               item.Unit,
+                               item.Harga,
+                               item.Amaun);
+            }
+
+
+        }
+        //on change no PO controller end
+
         // get an item from cart akBelian1
         public JsonResult GetAnItemCartAkBelian1(AkBelian1 akBelian1)
         {
@@ -722,7 +826,7 @@ namespace MSNK.Controllers
         [HttpPost]
         [Authorize(Policy = "TG002C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkPembekalId, int KodObjekAPId, string NamaPembekal, decimal JumlahPerihal, int JBahagianId)
+        public async Task<IActionResult> Create(AkBelian akBelian, int JKWId, int AkPOId, int AkIndenId, int AkPembekalId, int KodObjekAPId, string NamaPembekal, decimal JumlahPerihal, int JBahagianId)
         {
             AkBelian m = new AkBelian();
             var user = await _userManager.GetUserAsync(User);
@@ -740,6 +844,7 @@ namespace MSNK.Controllers
             var noRujukan = "IN/"+ pembekal.KodSykt.ToUpper() + "/" + akBelian.NoInbois.ToUpper();
 
             var akPo = await _akPORepo.GetById(AkPOId);
+            var akInden = await _akIndenRepo.GetById(AkIndenId);
             // checking for existing no rujukan
             var countNoRujukan = _context.AkBelian.Where(x => x.NoInbois == noRujukan && x.AkPembekalId == AkPembekalId).Count();
 
@@ -774,17 +879,38 @@ namespace MSNK.Controllers
                     m.TarikhKewanganTerima = akBelian.TarikhKewanganTerima;
                     m.Jumlah = akBelian.Jumlah;
                     m.FlPosting = 0;
-                    if (akPo != null)
-                    {
-                        m.FlPO = "1";
-                        m.AkPOId = AkPOId;
-                        m.AkPembekalId = akPo.AkPembekalId;
+                    m.FlJenisTanggungan = akBelian.FlJenisTanggungan;
+
+                    switch (akBelian.FlJenisTanggungan) {
+                        //PO (ada tanggungan)
+                        case 1:
+                            m.FlTanggungan = "1";
+                            m.AkPOId = AkPOId;
+                            m.AkPembekalId = akPo.AkPembekalId;
+                            break;
+                        //Inden (ada tanggungan)
+                        case 2:
+                            m.FlTanggungan = "1";
+                            m.AkIndenId = AkIndenId;
+                            m.AkPembekalId = akInden.AkPembekalId;
+                            break;
+                        // tanpa tanggungan
+                        default:
+                            m.FlTanggungan = "0";
+                            m.AkPembekalId = AkPembekalId;
+                            break;
                     }
-                    else
-                    {
-                        m.FlPO = "0";
-                        m.AkPembekalId = AkPembekalId;
-                    }
+                    //if (akPo != null)
+                    //{
+                    //    m.FlTanggungan = "1";
+                    //    m.AkPOId = AkPOId;
+                    //    m.AkPembekalId = akPo.AkPembekalId;
+                    //}
+                    //else
+                    //{
+                    //    m.FlTanggungan = "0";
+                    //    m.AkPembekalId = AkPembekalId;
+                    //}
 
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
@@ -1159,9 +1285,17 @@ namespace MSNK.Controllers
                         akBelian.JKWId = akBelianAsal.JKWId;
                         akBelian.JBahagianId = akBelianAsal.JBahagianId;
                         akBelian.NoInbois = akBelianAsal.NoInbois;
+                        akBelian.FlJenisTanggungan = akBelianAsal.FlJenisTanggungan;
+                        akBelian.FlTanggungan = akBelianAsal.FlTanggungan;
+
                         if (akBelianAsal.AkPOId != null)
                         {
                             akBelian.AkPOId = akBelianAsal.AkPOId;
+                            akBelian.AkPembekalId = akBelianAsal.AkPembekalId;
+                        }
+                        if (akBelianAsal.AkIndenId != null)
+                        {
+                            akBelian.AkIndenId = akBelianAsal.AkIndenId;
                             akBelian.AkPembekalId = akBelianAsal.AkPembekalId;
                         }
                         akBelian.TarMasuk = akBelianAsal.TarMasuk;
@@ -1697,46 +1831,23 @@ namespace MSNK.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-        // unposting function end
-        // POST: AkPV/Cancel/5
-        //[Authorize(Policy = "TG002B")]
-        //public async Task<IActionResult> Cancel(int id)
-        //{
-        //    var akBelian = await _context.AkBelian.FindAsync(id);
-        //    // check if already posting redirect back
-        //    if (akBelian.FlPosting == 1)
-        //    {
-        //        TempData[SD.Error] = "Akses tidak dibenarkan..!";
-        //        return RedirectToAction(nameof(Index));
-        //    }
 
-        //    // Batal operation
+        // json empty Cart controller
+        [HttpPost]
+        public JsonResult JsonEmptyCart()
+        {
+            try
+            {
+                CartEmpty();
 
-        //    akBelian.FlHapus = 1;
-        //    akBelian.TarHapus = DateTime.Now;
-        //    _context.AkBelian.Update(akBelian);
-
-        //    // Batal operation end
-
-        //    //insert applog
-        //    var user = await _userManager.GetUserAsync(User);
-
-        //    AppLog appLog = new AppLog();
-
-        //    appLog.UserId = user.UserName;
-        //    appLog.LgModule = modul + "B";
-        //    appLog.LgOperation = "Batal";
-        //    appLog.LgNote = modul + " Inbois Pembekal - Batal";
-        //    appLog.NoRujukan = akBelian.NoInbois;
-        //    appLog.Jumlah = akBelian.Jumlah;
-
-        //    await _appLog.Insert(appLog);
-        //    //insert applog end
-
-        //    await _context.SaveChangesAsync();
-        //    TempData[SD.Success] = "Data berjaya dibatalkan..!";
-        //    return RedirectToAction(nameof(Index));
-        //}
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        // json empty cart end
 
         // POST: AkPV/Cancel/5
         [Authorize(Policy = "TG002R")]

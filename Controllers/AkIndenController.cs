@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,29 +9,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
 using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
 using Rotativa.AspNetCore;
-using MSNK.Infrastructure;
 
 namespace MSNK.Controllers
 {
     [Authorize(Roles = "SuperAdmin , Supervisor, User")]
-    public class AkPOController : Controller
+    public class AkIndenController : Controller
     {
-        public const string modul = "TG001";
-        public const string namamodul = "Pesanan Tempatan";
+        public const string modul = "TG003";
+        public const string namamodul = "Inden Kerja";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IRepository<AkPO, int, string> _akPORepo;
+        private readonly IRepository<AkInden, int, string> _akIndenRepo;
         private readonly IRepository<AkNotaMinta, int, string> _akNotaMintaRepo;
-        private readonly ListViewIRepository<AkPO1, int> _akPO1Repo;
-        private readonly ListViewIRepository<AkPO2, int> _akPO2Repo;
+        private readonly ListViewIRepository<AkInden1, int> _akInden1Repo;
+        private readonly ListViewIRepository<AkInden2, int> _akInden2Repo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<AkPembekal, int, string> _akpembekalRepo;
         private readonly IRepository<AkBank, int, string> _akBankRepo;
@@ -42,15 +41,15 @@ namespace MSNK.Controllers
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly CustomIRepository<string, int> _customRepo;
-        private CartPO _cart;
+        private CartInden _cart;
 
-        public AkPOController(ApplicationDbContext context,
+        public AkIndenController(ApplicationDbContext context,
             AppLogIRepository<AppLog, int> appLog,
             UserManager<IdentityUser> userManager,
-            IRepository<AkPO, int, string> akPORepository,
+            IRepository<AkInden, int, string> akIndenRepository,
             IRepository<AkNotaMinta, int, string> akNotaMintaRepository,
-            ListViewIRepository<AkPO1, int> akPO1Repository,
-            ListViewIRepository<AkPO2, int> akPO2Repository,
+            ListViewIRepository<AkInden1, int> akInden1Repository,
+            ListViewIRepository<AkInden2, int> akInden2Repository,
             IRepository<AkCarta, int, string> akCartaRepository,
             IRepository<AkPembekal, int, string> akPembekalRepository,
             IRepository<AkBank, int, string> akBankRepository,
@@ -60,16 +59,16 @@ namespace MSNK.Controllers
             IRepository<AkAkaun, int, string> akAkaunRepository,
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
             CustomIRepository<string, int> customRepo,
-            CartPO cart
+            CartInden cart
             )
         {
             _context = context;
             _appLog = appLog;
             _userManager = userManager;
-            _akPORepo = akPORepository;
+            _akIndenRepo = akIndenRepository;
             _akNotaMintaRepo = akNotaMintaRepository;
-            _akPO1Repo = akPO1Repository;
-            _akPO2Repo = akPO2Repository;
+            _akInden1Repo = akInden1Repository;
+            _akInden2Repo = akInden2Repository;
             _akCartaRepo = akCartaRepository;
             _kwRepo = kwRepository;
             _negeriRepo = negeriRepository;
@@ -81,6 +80,7 @@ namespace MSNK.Controllers
             _customRepo = customRepo;
             _cart = cart;
         }
+
         private async Task AddLogAsync(
             string operasi,
             string nota,
@@ -100,8 +100,39 @@ namespace MSNK.Controllers
             await _appLog.Insert(appLog, modul, operasi);
         }
 
+        [HttpPost]
+        public JsonResult GetMaklumat(AkPembekal akPembekal)
+        {
+            try
+            {
+                var result = _context.AkPembekal.Where(b => b.Id == akPembekal.Id).Include(x => x.JBank).FirstOrDefault();
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+
+        public JsonResult GetCarta(AkCarta akCarta)
+        {
+            try
+            {
+                var result = _context.AkCarta.Where(b => b.Id == akCarta.Id).FirstOrDefault();
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
+
         //Function Running Number
-        private string RunningNumber(AkPO data)
+        private string RunningNumber(AkInden data)
         {
             var kw = _context.JKW.FirstOrDefault(x => x.Id == data.JKWId);
 
@@ -112,10 +143,10 @@ namespace MSNK.Controllers
             int x = 1;
             string noRujukan = prefix + "000000";
 
-            var LatestNoRujukan = _context.AkPO
+            var LatestNoRujukan = _context.AkInden
                 .IgnoreQueryFilters()
-                .Where(x => x.NoPO.Substring(0, 9) == prefix)
-                .Max(x => x.NoPO);
+                .Where(x => x.NoInden.Substring(0, 9) == prefix)
+                .Max(x => x.NoInden);
             if (LatestNoRujukan == null)
             {
                 noRujukan = string.Format("{0:" + prefix + "000000}", x);
@@ -128,8 +159,9 @@ namespace MSNK.Controllers
             }
             return noRujukan;
         }
+
         [HttpPost]
-        public JsonResult JsonGetKod(AkPO data)
+        public JsonResult JsonGetKod(AkInden data)
         {
             try
             {
@@ -150,8 +182,8 @@ namespace MSNK.Controllers
             }
         }
 
-        // GET: AkPO
-        [Authorize(Policy = "TG001")]
+        // GET: AkInden
+        [Authorize(Policy = "TG003")]
         public async Task<IActionResult> Index(
             string searchString,
             string searchDate1,
@@ -160,7 +192,7 @@ namespace MSNK.Controllers
         {
             List<SelectListItem> columnList = new();
             columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
-            columnList.Add(new SelectListItem() { Text = "No PO", Value = "NoRujukan" });
+            columnList.Add(new SelectListItem() { Text = "No Inden", Value = "NoRujukan" });
             columnList.Add(new SelectListItem() { Text = "Nama", Value = "Nama" });
 
             if (!String.IsNullOrEmpty(searchColumn))
@@ -172,11 +204,11 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akPO = await _akPORepo.GetAll();
+            var akInden = await _akIndenRepo.GetAll();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
-                akPO = await _akPORepo.GetAllIncludeDeletedItems();
+                akInden = await _akIndenRepo.GetAllIncludeDeletedItems();
             }
 
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
@@ -186,11 +218,11 @@ namespace MSNK.Controllers
                 {
                     if (searchColumn == "NoRujukan")
                     {
-                        akPO = akPO.Where(s => s.NoPO.ToUpper().Contains(searchString.ToUpper())).ToList();
+                        akInden = akInden.Where(s => s.NoInden.ToUpper().Contains(searchString.ToUpper())).ToList();
                     }
                     else if (searchColumn == "Pembekal")
                     {
-                        akPO = akPO.Where(s => s.AkPembekal.NamaSykt.ToUpper().Contains(searchString.ToUpper())).ToList();
+                        akInden = akInden.Where(s => s.AkPembekal.NamaSykt.ToUpper().Contains(searchString.ToUpper())).ToList();
                     }
 
                     ViewBag.SearchData1 = searchString;
@@ -206,7 +238,7 @@ namespace MSNK.Controllers
                     {
                         DateTime date1 = DateTime.Parse(searchDate1);
                         DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                        akPO = akPO.Where(x => x.Tarikh >= date1
+                        akInden = akInden.Where(x => x.Tarikh >= date1
                             && x.Tarikh <= date2).ToList();
                     }
                     ViewBag.SearchData1 = searchDate1;
@@ -221,10 +253,10 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
             }
 
-            return View(akPO);
+            return View(akInden);
         }
 
-        // GET: AkPO/Details/5
+        // GET: AkInden/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -232,69 +264,20 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPO = await _akPORepo.GetByIdIncludeDeletedItems((int)id);
-            var kw = await _kwRepo.GetById(akPO.JKWId);
-            akPO.JKW = kw;
+            var akInden = await _akIndenRepo.GetByIdIncludeDeletedItems((int)id);
+            var kw = await _kwRepo.GetById(akInden.JKWId);
+            akInden.JKW = kw;
 
-            if (akPO == null)
+            if (akInden == null)
             {
                 return NotFound();
             }
             PopulateList();
             PopulateTable(id);
-            return View(akPO);
-        }
-        // GET: AkPO/Delete/5
-        [Authorize(Policy = "TG001D")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var akPO = await _akPORepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akPO.JKWId);
-            akPO.JKW = kw;
-            if (akPO == null)
-            {
-                return NotFound();
-            }
-            PopulateList();
-            PopulateTable(id);
-            return View(akPO);
+            return View(akInden);
         }
 
-        // POST: AkPO/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Authorize(Policy = "TG001D")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var akPO = await _context.AkPO.FindAsync(id);
-            var user = await _userManager.GetUserAsync(User);
-            akPO.UserIdKemaskini = user.UserName;
-            akPO.TarKemaskini = DateTime.Now;
-            // check if already posting redirect back
-            if (akPO.FlPosting == 1)
-            {
-                TempData[SD.Error] = "Akses tidak dibenarkan..!";
-                return RedirectToAction(nameof(Index));
-            }
-            akPO.FlCetak = 0;
-            _context.AkPO.Update(akPO);
-
-            _context.AkPO.Remove(akPO);
-
-            //insert applog
-            await AddLogAsync("Hapus", akPO.NoPO, akPO.NoPO, id, akPO.Jumlah);
-            //insert applog end
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        // on change no PO controller
+        // on change no Inden controller
         [HttpPost]
         public async Task<JsonResult> JsonGetNoNotaMinta(int id)
         {
@@ -379,7 +362,7 @@ namespace MSNK.Controllers
 
 
         }
-        //on change no PO controller end
+        //on change no Inden controller end
 
         private void PopulateList()
         {
@@ -400,7 +383,7 @@ namespace MSNK.Controllers
 
             List<AkNotaMinta> akNotaMintaList = _context.AkNotaMinta
                 .Where(x => x.FlPosting == 1 &&
-                x.FlJenis == 0)
+                x.FlJenis == 1)
                 .ToList();
             ViewBag.AkNotaMinta = akNotaMintaList;
 
@@ -418,55 +401,55 @@ namespace MSNK.Controllers
         private void PopulateTable(int? id)
         {
 
-            List<AkPO1> akPO1Table = _context.AkPO1
+            List<AkInden1> akInden1Table = _context.AkInden1
                 .Include(b => b.AkCarta)
-                .Where(b => b.AkPOId == id)
+                .Where(b => b.AkIndenId == id)
                 .OrderBy(b => b.Id)
                 .ToList();
-            ViewBag.akPO1 = akPO1Table;
+            ViewBag.akInden1 = akInden1Table;
 
-            List<AkPO2> akPO2Table = _context.AkPO2
+            List<AkInden2> akInden2Table = _context.AkInden2
                 //.Include(b => b.AkCarta)
-                .Where(b => b.AkPOId == id)
+                .Where(b => b.AkIndenId == id)
                 .OrderBy(b => b.Bil)
                 .ToList();
-            ViewBag.akPO2 = akPO2Table;
+            ViewBag.akInden2 = akInden2Table;
         }
-        private void PopulateCart(AkPO akPO)
+
+        private void PopulateCart(AkInden akInden)
         {
-            List<AkPO1> akPO1Table = _context.AkPO1
+            List<AkInden1> akInden1Table = _context.AkInden1
                 .Include(b => b.AkCarta)
-                .Where(b => b.AkPOId == akPO.Id)
+                .Where(b => b.AkIndenId == akInden.Id)
                 .OrderBy(b => b.Id)
                 .ToList();
-            foreach (AkPO1 akPO1 in akPO1Table)
+            foreach (AkInden1 akInden1 in akInden1Table)
             {
-                _cart.AddItem1(akPO1.AkPOId,
-                                akPO1.AkCartaId,
-                                akPO1.Amaun);
+                _cart.AddItem1(akInden1.AkIndenId,
+                                akInden1.AkCartaId,
+                                akInden1.Amaun);
             }
 
-            List<AkPO2> akPO2Table = _context.AkPO2
+            List<AkInden2> akInden2Table = _context.AkInden2
                 //.Include(b => b.JPerihal)
-                .Where(b => b.AkPOId == akPO.Id)
+                .Where(b => b.AkIndenId == akInden.Id)
                 .OrderBy(b => b.Bil)
                 .ToList();
-            foreach (AkPO2 akPO2 in akPO2Table)
+            foreach (AkInden2 akInden2 in akInden2Table)
             {
-                _cart.AddItem2(akPO2.AkPOId,
-                               akPO2.Indek,
-                               akPO2.Bil,
-                               akPO2.NoStok,
-                               akPO2.Perihal,
-                               akPO2.Kuantiti,
-                               akPO2.Unit,
-                               akPO2.Harga,
-                               akPO2.Amaun);
+                _cart.AddItem2(akInden2.AkIndenId,
+                               akInden2.Indek,
+                               akInden2.Bil,
+                               akInden2.NoStok,
+                               akInden2.Perihal,
+                               akInden2.Kuantiti,
+                               akInden2.Unit,
+                               akInden2.Harga,
+                               akInden2.Amaun);
             }
         }
-
-        // GET: AkPO/Createt
-        [Authorize(Policy = "TG001C")]
+        // GET: AkInden/Create
+        [Authorize(Policy = "TG003C")]
         public IActionResult Create()
         {
             var kwId = 1;
@@ -480,10 +463,10 @@ namespace MSNK.Controllers
             int x = 1;
             string noRujukan = prefix + "000000";
 
-            var LatestNoRujukan = _context.AkPO
+            var LatestNoRujukan = _context.AkInden
                 .IgnoreQueryFilters()
-                .Where(x => x.NoPO.Substring(0, 9) == prefix)
-                .Max(x => x.NoPO);
+                .Where(x => x.NoInden.Substring(0, 9) == prefix)
+                .Max(x => x.NoInden);
             if (LatestNoRujukan == null)
             {
                 noRujukan = string.Format("{0:" + prefix + "000000}", x);
@@ -502,12 +485,12 @@ namespace MSNK.Controllers
             return View();
         }
 
-        public JsonResult GetAnItemCartAkPO1(AkPO1 akPO1)
+        public JsonResult GetAnItemCartAkInden1(AkInden1 akInden1)
         {
 
             try
             {
-                AkPO1 data = _cart.Lines1.Where(x => x.AkCartaId == akPO1.AkCartaId).FirstOrDefault();
+                AkInden1 data = _cart.Lines1.Where(x => x.AkCartaId == akInden1.AkCartaId).FirstOrDefault();
 
                 return Json(new { result = "OK", record = data });
             }
@@ -516,11 +499,10 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get an item from cart akPO1 end
 
-        //save cart akPO1
-        public async Task<JsonResult> SaveCartAkPO1(
-            AkPO1 akPO1,
+        //save cart akInden1
+        public async Task<JsonResult> SaveCartAkInden1(
+            AkInden1 akInden1,
             string tahun,
             int jKWId,
             int jBahagianId)
@@ -529,20 +511,20 @@ namespace MSNK.Controllers
             try
             {
 
-                var akP1 = _cart.Lines1.Where(x => x.AkCartaId == akPO1.AkCartaId).FirstOrDefault();
+                var akI1 = _cart.Lines1.Where(x => x.AkCartaId == akInden1.AkCartaId).FirstOrDefault();
 
-                if (akP1 != null)
+                if (akI1 != null)
                 {
                     // check for baki peruntukan
                     bool IsExistAbBukuVot = await _context.AbBukuVot
-                            .Where(x => x.Tahun == tahun && x.VotId == akP1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                            .Where(x => x.Tahun == tahun && x.VotId == akI1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
                             .AnyAsync();
 
                     if (IsExistAbBukuVot == true)
                     {
-                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akP1.AkCartaId, jKWId, jBahagianId);
+                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akI1.AkCartaId, jKWId, jBahagianId);
 
-                        if (sum < akPO1.Amaun)
+                        if (sum < akInden1.Amaun)
                         {
                             return Json(new { result = "ERROR" });
                         }
@@ -553,11 +535,11 @@ namespace MSNK.Controllers
                     }
                     // check for baki peruntukan end
 
-                    _cart.RemoveItem1(akPO1.AkCartaId);
+                    _cart.RemoveItem1(akInden1.AkCartaId);
 
-                    _cart.AddItem1(akPO1.AkPOId,
-                                    akPO1.AkCartaId,
-                                    akPO1.Amaun);
+                    _cart.AddItem1(akInden1.AkIndenId,
+                                    akInden1.AkCartaId,
+                                    akInden1.Amaun);
                 }
 
                 return Json(new { result = "OK" });
@@ -567,17 +549,17 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        //save cart akPO1 end
+        //save cart akInden1 end
 
-        // get all item from cart akPO1
-        public JsonResult GetAllItemCartAkPO1(AkPO1 akPO1)
+        // get all item from cart akInden1
+        public JsonResult GetAllItemCartAkInden1(AkInden1 akInden1)
         {
 
             try
             {
-                List<AkPO1> data = _cart.Lines1.ToList();
+                List<AkInden1> data = _cart.Lines1.ToList();
 
-                foreach (AkPO1 item in data)
+                foreach (AkInden1 item in data)
                 {
                     var akCarta = _context.AkCarta.Find(item.AkCartaId);
 
@@ -591,15 +573,15 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get all item from cart akPO1 end
+        // get all item from cart akInden1 end
 
-        // get an item from cart akPO2
-        public JsonResult GetAnItemCartAkPO2(AkPO2 akPO2)
+        // get an item from cart akInden2
+        public JsonResult GetAnItemCartAkInden2(AkInden2 akInden2)
         {
 
             try
             {
-                AkPO2 data = _cart.Lines2.Where(x => x.Indek == akPO2.Indek).FirstOrDefault();
+                AkInden2 data = _cart.Lines2.Where(x => x.Indek == akInden2.Indek).FirstOrDefault();
 
                 return Json(new { result = "OK", record = data });
             }
@@ -608,32 +590,32 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get an item from cart akPO2 end
+        // get an item from cart akInden2 end
 
-        //save cart akPO2
-        public JsonResult SaveCartAkPO2(AkPO2 akPO2)
+        //save cart akInden2
+        public JsonResult SaveCartAkInden2(AkInden2 akInden2)
         {
 
             try
             {
 
-                var akT2 = _cart.Lines2.Where(x => x.Indek == akPO2.Indek).FirstOrDefault();
+                var akI2 = _cart.Lines2.Where(x => x.Indek == akInden2.Indek).FirstOrDefault();
 
                 var user = _userManager.GetUserName(User);
 
-                if (akT2 != null)
+                if (akI2 != null)
                 {
-                    _cart.RemoveItem2(akPO2.Indek);
+                    _cart.RemoveItem2(akInden2.Indek);
 
-                    _cart.AddItem2(akPO2.AkPOId,
-                               akPO2.Indek,
-                               akPO2.Bil,
-                               akPO2.NoStok,
-                               akPO2.Perihal,
-                               akPO2.Kuantiti,
-                               akPO2.Unit,
-                               akPO2.Harga,
-                               akPO2.Amaun);
+                    _cart.AddItem2(akInden2.AkIndenId,
+                               akInden2.Indek,
+                               akInden2.Bil,
+                               akInden2.NoStok,
+                               akInden2.Perihal,
+                               akInden2.Kuantiti,
+                               akInden2.Unit,
+                               akInden2.Harga,
+                               akInden2.Amaun);
                 }
 
                 return Json(new { result = "OK" });
@@ -645,13 +627,13 @@ namespace MSNK.Controllers
         }
         //save cart akPO2 end
 
-        // get all item from cart akPO2
-        public JsonResult GetAllItemCartAkPO2()
+        // get all item from cart akInden2
+        public JsonResult GetAllItemCartAkInden2()
         {
 
             try
             {
-                List<AkPO2> data = _cart.Lines2.OrderBy(b => b.Bil).ToList();
+                List<AkInden2> data = _cart.Lines2.OrderBy(b => b.Bil).ToList();
 
                 return Json(new { result = "OK", record = data });
             }
@@ -660,53 +642,53 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        // get all item from cart akPO2 end
+        // get all item from cart akInden2 end
 
-        // POST: AkPO/Create
+        // POST: AkInden/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Policy = "TG001C")]
+        [Authorize(Policy = "TG003C")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkPO akPO, int JKWId, int? AkNotaMintaId, int JBahagianId, bool IsInKewangan)
+        public async Task<IActionResult> Create(AkInden akInden, int JKWId, int? AkNotaMintaId, int JBahagianId, bool IsInKewangan)
         {
-
-            AkPO m = new AkPO();
+            AkInden m = new AkInden();
             var user = await _userManager.GetUserAsync(User);
-            var pembekal = _context.AkPembekal.FirstOrDefault(x => x.Id == akPO.AkPembekalId);
+            var pembekal = _context.AkPembekal.FirstOrDefault(x => x.Id == akInden.AkPembekalId);
 
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
 
             // get latest no rujukan running number  
-            var noRujukan = RunningNumber(akPO);
+            var noRujukan = RunningNumber(akInden);
             // get latest no rujukan running number end
+
 
             if (ModelState.IsValid)
             {
-                if (akPO != null && JKWId != 0 && JBahagianId != 0)
+                if (akInden != null && JKWId != 0 && JBahagianId != 0)
                 {
 
                     m.JKWId = JKWId;
                     m.JBahagianId = JBahagianId;
-                    m.NoPO = noRujukan;
-                    m.Tarikh = akPO.Tarikh;
+                    m.NoInden = noRujukan;
+                    m.Tarikh = akInden.Tarikh;
                     m.AkNotaMintaId = AkNotaMintaId;
-                    m.TarikhPosting = akPO.TarikhPosting;
+                    m.TarikhPosting = akInden.TarikhPosting;
                     m.AkPembekal = pembekal;
-                    m.Jumlah = akPO.Jumlah;
+                    m.Jumlah = akInden.Jumlah;
                     m.FlPosting = 0;
                     m.FlHapus = 0;
                     m.FlCetak = 0;
                     m.IsInKewangan = IsInKewangan;
-                    m.Tahun = akPO.Tahun;
+                    m.Tahun = akInden.Tahun;
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
 
-                    m.AkPO1 = _cart.Lines1.ToArray();
-                    m.AkPO2 = _cart.Lines2.ToArray();
+                    m.AkInden1 = _cart.Lines1.ToArray();
+                    m.AkInden2 = _cart.Lines2.ToArray();
 
                     // check for baki peruntukan
-                    foreach (AkPO1 item in m.AkPO1)
+                    foreach (AkInden1 item in m.AkInden1)
                     {
                         bool IsExistAbBukuVot = await _context.AbBukuVot
                             .Where(x => x.Tahun == m.Tahun && x.VotId == item.AkCartaId && x.JKWId == m.JKWId && x.JBahagianId == m.JBahagianId)
@@ -724,7 +706,7 @@ namespace MSNK.Controllers
                                 PopulateList();
                                 CartEmpty();
 
-                                return View(akPO);
+                                return View(akInden);
                             }
                         }
                         else
@@ -733,15 +715,15 @@ namespace MSNK.Controllers
                             PopulateList();
                             CartEmpty();
 
-                            return View(akPO);
+                            return View(akInden);
                         }
                     }
                     // check for baki peruntukan end
 
-                    await _akPORepo.Insert(m);
+                    await _akIndenRepo.Insert(m);
 
                     //insert applog
-                    await AddLogAsync("Tambah", m.NoPO, m.NoPO, 0, m.Jumlah);
+                    await AddLogAsync("Tambah", m.NoInden, m.NoInden, 0, m.Jumlah);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -751,13 +733,12 @@ namespace MSNK.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-
             PopulateList();
-            return View(akPO);
+            return View(akInden);
         }
 
-        // GET: AkPO/Edit/5
-        [Authorize(Policy = "TG001E")]
+        // GET: AkInden/Edit/5
+        [Authorize(Policy = "TG003E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -765,12 +746,12 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akPO = await _akPORepo.GetById((int)id);
-            var kw = await _kwRepo.GetById(akPO.JKWId);
-            akPO.JKW = kw;
+            var akInden = await _akIndenRepo.GetById((int)id);
+            var kw = await _kwRepo.GetById(akInden.JKWId);
+            akInden.JKW = kw;
 
             // check if already posting redirect back
-            if (akPO.FlPosting == 1)
+            if (akInden.FlPosting == 1)
             {
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
                 return RedirectToAction(nameof(Index));
@@ -779,11 +760,11 @@ namespace MSNK.Controllers
             CartEmpty();
             PopulateList();
             PopulateTable(id);
-            PopulateCart(akPO);
-            return View(akPO);
+            PopulateCart(akInden);
+            return View(akInden);
         }
 
-        // get latest Index number in AkPO2
+        // get latest Index number in AkInden2
         public JsonResult GetLatestIndexNumberPerihal()
         {
 
@@ -799,51 +780,51 @@ namespace MSNK.Controllers
             }
         }
 
-        // POST: AkPO/Edit/5
+        // POST: AkInden/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Policy = "TG001E")]
+        [Authorize(Policy = "TG003E")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AkPO akPO, int JKWId, int JNegeriId, int AkBankId, decimal JumlahPerihal, int? AkNotaMintaId, int JBahagianId)
+        public async Task<IActionResult> Edit(int id, AkInden akInden, int JKWId, int JNegeriId, int AkBankId, decimal JumlahPerihal, int? AkNotaMintaId, int JBahagianId)
         {
-            if (id != akPO.Id)
+            if (id != akInden.Id)
             {
                 return NotFound();
             }
 
-            if (akPO.Jumlah == JumlahPerihal)
+            if (akInden.Jumlah == JumlahPerihal)
             {
                 if (ModelState.IsValid)
                 {
                     try
                     {
                         var user = await _userManager.GetUserAsync(User);
-                        AkPO dataAsal = await _akPORepo.GetById(id);
+                        AkInden dataAsal = await _akIndenRepo.GetById(id);
 
                         // list of input that cannot be change
-                        akPO.Tahun = dataAsal.Tahun;
-                        akPO.JKWId = dataAsal.JKWId;
-                        akPO.JBahagianId = dataAsal.JBahagianId;
-                        akPO.AkNotaMintaId = dataAsal.AkNotaMintaId;
-                        akPO.NoPO = dataAsal.NoPO;
-                        akPO.TarMasuk = dataAsal.TarMasuk;
-                        akPO.UserId = dataAsal.UserId;
-                        akPO.FlCetak = 0;
+                        akInden.Tahun = dataAsal.Tahun;
+                        akInden.JKWId = dataAsal.JKWId;
+                        akInden.JBahagianId = dataAsal.JBahagianId;
+                        akInden.AkNotaMintaId = dataAsal.AkNotaMintaId;
+                        akInden.NoInden = dataAsal.NoInden;
+                        akInden.TarMasuk = dataAsal.TarMasuk;
+                        akInden.UserId = dataAsal.UserId;
+                        akInden.FlCetak = 0;
                         // list of input that cannot be change end
 
-                        foreach (AkPO1 item in dataAsal.AkPO1)
+                        foreach (AkInden1 item in dataAsal.AkInden1)
                         {
-                            var model = _context.AkPO1.FirstOrDefault(b => b.Id == item.Id);
+                            var model = _context.AkInden1.FirstOrDefault(b => b.Id == item.Id);
                             if (model != null)
                             {
                                 _context.Remove(model);
                             }
                         }
 
-                        foreach (AkPO2 item in dataAsal.AkPO2)
+                        foreach (AkInden2 item in dataAsal.AkInden2)
                         {
-                            var model = _context.AkPO2.FirstOrDefault(b => b.Id == item.Id);
+                            var model = _context.AkInden2.FirstOrDefault(b => b.Id == item.Id);
                             if (model != null)
                             {
                                 _context.Remove(model);
@@ -852,23 +833,23 @@ namespace MSNK.Controllers
                         decimal jumlahAsal = dataAsal.Jumlah;
                         _context.Entry(dataAsal).State = EntityState.Detached;
 
-                        
-                        akPO.AkPO1 = _cart.Lines1.ToList();
-                        akPO.AkPO2 = _cart.Lines2.ToList();
+
+                        akInden.AkInden1 = _cart.Lines1.ToList();
+                        akInden.AkInden2 = _cart.Lines2.ToList();
 
                         // check for baki peruntukan
-                        foreach (AkPO1 item in _cart.Lines1)
+                        foreach (AkInden1 item in _cart.Lines1)
                         {
 
                             bool IsExistAbBukuVot = await _context.AbBukuVot
-                                .Where(x => x.Tahun == akPO.Tahun && x.VotId == item.AkCartaId && x.JKWId == akPO.JKWId && x.JBahagianId == akPO.JBahagianId)
+                                .Where(x => x.Tahun == akInden.Tahun && x.VotId == item.AkCartaId && x.JKWId == akInden.JKWId && x.JBahagianId == akInden.JBahagianId)
                                 .AnyAsync();
 
                             var carta = _context.AkCarta.Find(item.AkCartaId);
 
                             if (IsExistAbBukuVot == true)
                             {
-                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akPO.Tahun, item.AkCartaId, akPO.JKWId, akPO.JBahagianId);
+                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akInden.Tahun, item.AkCartaId, akInden.JKWId, akInden.JBahagianId);
 
                                 if (sum < item.Amaun)
                                 {
@@ -876,7 +857,7 @@ namespace MSNK.Controllers
                                     PopulateList();
                                     PopulateTable(id);
 
-                                    return View(akPO);
+                                    return View(akInden);
                                 }
                             }
                             else
@@ -885,27 +866,27 @@ namespace MSNK.Controllers
                                 PopulateList();
                                 PopulateTable(id);
 
-                                return View(akPO);
+                                return View(akInden);
                             }
                         }
                         // check for baki peruntukan end
 
-                        akPO.UserIdKemaskini = user.UserName;
-                        akPO.TarKemaskini = DateTime.Now;
-                        akPO.FlCetak = 0;
+                        akInden.UserIdKemaskini = user.UserName;
+                        akInden.TarKemaskini = DateTime.Now;
+                        akInden.FlCetak = 0;
 
-                        _context.Update(akPO);
+                        _context.Update(akInden);
 
                         //insert applog
-                        if (jumlahAsal != akPO.Jumlah)
+                        if (jumlahAsal != akInden.Jumlah)
                         {
-                            await AddLogAsync("Ubah","RM" +  Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" + 
-                                Convert.ToDecimal(akPO.Jumlah).ToString("#,##0.00"), akPO.NoPO, id, akPO.Jumlah);
+                            await AddLogAsync("Ubah", "RM" +  Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" +
+                                Convert.ToDecimal(akInden.Jumlah).ToString("#,##0.00"), akInden.NoInden, id, akInden.Jumlah);
 
                         }
                         else
                         {
-                            await AddLogAsync("Ubah", "Ubah Data", akPO.NoPO, id, akPO.Jumlah);
+                            await AddLogAsync("Ubah", "Ubah Data", akInden.NoInden, id, akInden.Jumlah);
                         }
                         //insert applog end
 
@@ -913,7 +894,7 @@ namespace MSNK.Controllers
                     }
                     catch (DbUpdateConcurrencyException)
                     {
-                        if (!AkPOExists(akPO.Id))
+                        if (!AkIndenExists(akInden.Id))
                         {
                             return NotFound();
                         }
@@ -924,7 +905,7 @@ namespace MSNK.Controllers
                     }
                     CartEmpty();
                     // checking for jumlah objek & jumlah perihal
-                    if (akPO.Jumlah != JumlahPerihal)
+                    if (akInden.Jumlah != JumlahPerihal)
                     {
                         TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Perihal";
                     }
@@ -936,40 +917,74 @@ namespace MSNK.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-
             TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Perihal";
             PopulateList();
             PopulateTable(id);
             //PopulateCart();
-            return View(akPO);
+            return View(akInden);
         }
 
-        private bool AkPOExists(int id)
+        // GET: AkInden/Delete/5
+        [Authorize(Policy = "TG003D")]
+        public async Task<IActionResult> Delete(int? id)
         {
-            return _context.AkPO.Any(e => e.Id == id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var akInden = await _akIndenRepo.GetById((int)id);
+            var kw = await _kwRepo.GetById(akInden.JKWId);
+            akInden.JKW = kw;
+            if (akInden == null)
+            {
+                return NotFound();
+            }
+            PopulateList();
+            PopulateTable(id);
+            return View(akInden);
         }
 
-        public JsonResult GetCarta(AkCarta akCarta)
+        // POST: AkInden/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "TG003D")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
+            var akInden = await _context.AkInden.FindAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            akInden.UserIdKemaskini = user.UserName;
+            akInden.TarKemaskini = DateTime.Now;
+            // check if already posting redirect back
+            if (akInden.FlPosting == 1)
             {
-                var result = _context.AkCarta.Where(b => b.Id == akCarta.Id).FirstOrDefault();
-
-                return Json(new { result = "OK", record = result });
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
-            {
-                return Json(new { result = "Error", message = ex.Message });
-            }
+            akInden.FlCetak = 0;
+            _context.AkInden.Update(akInden);
 
+            _context.AkInden.Remove(akInden);
+
+            //insert applog
+            await AddLogAsync("Hapus", akInden.NoInden, akInden.NoInden, id, akInden.Jumlah);
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool AkIndenExists(int id)
+        {
+            return _context.AkInden.Any(e => e.Id == id);
         }
 
         public JsonResult CartEmpty()
         {
             try
             {
-                ViewBag.akPO1 = new List<int>();
-                ViewBag.akPO2 = new List<int>();
+                ViewBag.akInden1 = new List<int>();
+                ViewBag.akInden2 = new List<int>();
                 _cart.Clear1();
                 _cart.Clear2();
 
@@ -981,8 +996,8 @@ namespace MSNK.Controllers
             }
         }
 
-        public async Task<JsonResult> SaveAkPO1(
-            AkPO1 akPO1,
+        public async Task<JsonResult> SaveAkInden1(
+            AkInden1 akInden1,
             string tahun,
             int jKWId,
             int jBahagianId)
@@ -990,18 +1005,18 @@ namespace MSNK.Controllers
 
             try
             {
-                if (akPO1 != null)
+                if (akInden1 != null)
                 {
                     // check for baki peruntukan
                     bool IsExistAbBukuVot = await _context.AbBukuVot
-                            .Where(x => x.Tahun == tahun && x.VotId == akPO1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                            .Where(x => x.Tahun == tahun && x.VotId == akInden1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
                             .AnyAsync();
 
                     if (IsExistAbBukuVot == true)
                     {
-                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akPO1.AkCartaId, jKWId, jBahagianId);
+                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akInden1.AkCartaId, jKWId, jBahagianId);
 
-                        if (sum < akPO1.Amaun)
+                        if (sum < akInden1.Amaun)
                         {
                             return Json(new { result = "ERROR" });
                         }
@@ -1012,9 +1027,9 @@ namespace MSNK.Controllers
                     }
                     // check for baki peruntukan end
 
-                    _cart.AddItem1(akPO1.AkPOId,
-                                   akPO1.AkCartaId,
-                                   akPO1.Amaun);
+                    _cart.AddItem1(akInden1.AkIndenId,
+                                   akInden1.AkCartaId,
+                                   akInden1.Amaun);
 
                 }
 
@@ -1026,24 +1041,24 @@ namespace MSNK.Controllers
             }
         }
 
-        public async Task<JsonResult> SaveAkPO2(AkPO2 akPO2)
+        public async Task<JsonResult> SaveAkInden2(AkInden2 akInden2)
         {
 
             try
             {
-                if (akPO2 != null)
+                if (akInden2 != null)
                 {
                     var user = await _userManager.GetUserAsync(User);
 
-                    _cart.AddItem2(akPO2.AkPOId,
-                         akPO2.Indek,
-                         akPO2.Bil,
-                         akPO2.NoStok,
-                         akPO2.Perihal,
-                         akPO2.Kuantiti,
-                         akPO2.Unit,
-                         akPO2.Harga,
-                         akPO2.Amaun);
+                    _cart.AddItem2(akInden2.AkIndenId,
+                         akInden2.Indek,
+                         akInden2.Bil,
+                         akInden2.NoStok,
+                         akInden2.Perihal,
+                         akInden2.Kuantiti,
+                         akInden2.Unit,
+                         akInden2.Harga,
+                         akInden2.Amaun);
                 }
 
                 return Json(new { result = "OK" });
@@ -1054,15 +1069,15 @@ namespace MSNK.Controllers
             }
         }
 
-        public JsonResult RemoveAkPO1(AkPO1 akPO1)
+        public JsonResult RemoveAkInden1(AkInden1 akInden1)
         {
 
             try
             {
-                if (akPO1 != null)
+                if (akInden1 != null)
                 {
 
-                    _cart.RemoveItem1(akPO1.AkCartaId);
+                    _cart.RemoveItem1(akInden1.AkCartaId);
                 }
 
                 return Json(new { result = "OK" });
@@ -1073,15 +1088,15 @@ namespace MSNK.Controllers
             }
         }
 
-        public JsonResult RemoveAkPO2(AkPO2 akPO2)
+        public JsonResult RemoveAkInden2(AkInden2 akInden2)
         {
 
             try
             {
-                if (akPO2 != null)
+                if (akInden2 != null)
                 {
 
-                    _cart.RemoveItem2(akPO2.Indek);
+                    _cart.RemoveItem2(akInden2.Indek);
                 }
 
                 return Json(new { result = "OK" });
@@ -1090,301 +1105,10 @@ namespace MSNK.Controllers
             {
                 return Json(new { result = "ERROR", message = ex.Message });
             }
-        }
-
-        public async Task<JsonResult> SaveUpdateAkPO1(AkPO1 akPO1)
-        {
-
-            try
-            {
-
-                _cart.Clear1();
-
-                AkPO1 akT1 = await _akPO1Repo.GetById(akPO1.Id);
-
-                decimal originalAmount = akT1.Amaun;
-                var user = await _userManager.GetUserAsync(User);
-
-                akT1.Amaun = akPO1.Amaun;
-                _context.AkPO1.Update(akT1);
-
-                // update total akPO with date updated and userUpdated
-                var akPO = await _akPORepo.GetById(akPO1.AkPOId);
-                decimal total = 0;
-
-                total = akPO.Jumlah - originalAmount + akT1.Amaun;
-                akPO.Jumlah = total;
-                akPO.UserIdKemaskini = user.UserName;
-                akPO.TarKemaskini = DateTime.Now;
-                await _akPORepo.Update(akPO);
-                // update total akPO with date updated and userUpdated end
-
-                await _context.SaveChangesAsync();
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> SaveUpdateAkPO2(AkPO2 akPO2)
-        {
-
-            try
-            {
-                _cart.Clear2();
-
-                AkPO2 akT2 = await _akPO2Repo.GetById(akPO2.Id);
-                var user = await _userManager.GetUserAsync(User);
-                decimal originalAmount = akT2.Amaun;
-
-                akT2.Amaun = akPO2.Amaun;
-                akT2.Indek = akPO2.Indek;
-                akT2.Bil = akPO2.Bil;
-                akT2.NoStok = akPO2.NoStok;
-                akT2.Perihal = akPO2.Perihal;
-                akT2.Kuantiti = akPO2.Kuantiti;
-                akT2.Unit = akPO2.Unit;
-                akT2.Harga = akPO2.Harga;
-                akT2.Amaun = akPO2.Amaun;
-
-                _context.AkPO2.Update(akT2);
-
-                await _context.SaveChangesAsync();
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> GetCart1(AkPO1 akPO1)
-        {
-            try
-            {
-                AkPO data = await _context.AkPO.Include(x => x.AkPO1).ThenInclude(x => x.AkCarta).FirstOrDefaultAsync(x => x.Id == akPO1.AkPOId);
-
-                List<AkPO1> akT1 = data.AkPO1.ToList();
-
-                foreach (AkPO1 item in akT1)
-                {
-
-                    _cart.AddItem1(item.AkPOId,
-                                item.AkCartaId,
-                                item.Amaun);
-
-                }
-
-                return Json(new { result = "OK", data = data });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-        public async Task<JsonResult> GetCart2(AkPO2 akPO2)
-        {
-            try
-            {
-                AkPO data = await _context.AkPO.Include(x => x.AkPO2).ThenInclude(x => x.Perihal).FirstOrDefaultAsync(x => x.Id == akPO2.AkPOId);
-
-                List<AkPO2> akT2 = data.AkPO2.ToList();
-
-                foreach (AkPO2 item in akT2)
-                {
-                    _cart.AddItem2(akPO2.AkPOId,
-                         akPO2.Indek,
-                         akPO2.Bil,
-                         akPO2.NoStok,
-                         akPO2.Perihal,
-                         akPO2.Kuantiti,
-                         akPO2.Unit,
-                         akPO2.Harga,
-                         akPO2.Amaun);
-                }
-
-                return Json(new { result = "OK", data = data });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> UpdateAkPO1(AkPO1 akPO1)
-        {
-
-            try
-            {
-                AkPO1 data = await _akPO1Repo.GetBy2Id(akPO1.AkPOId, akPO1.AkCartaId);
-
-                return Json(new { result = "OK", record = data });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> UpdateAkPO2(AkPO2 akPO2)
-        {
-
-            try
-            {
-                AkPO2 data = await _akPO2Repo.GetBy2Id(akPO2.AkPOId, akPO2.Indek);
-
-                return Json(new { result = "OK", record = data });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> InsertUpdateAkPO1(AkPO1 akPO1)
-        {
-
-            try
-            {
-                if (akPO1 != null || akPO1.Amaun != 0)
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akPO1.AkCartaId);
-                    akPO1.AkCarta = akCarta;
-
-                    await _akPO1Repo.Insert(akPO1);
-
-                    decimal total = 0;
-
-                    AkPO akPO = await _akPORepo.GetById(akPO1.AkPOId);
-
-                    total = akPO.Jumlah + akPO1.Amaun;
-
-                    akPO.Jumlah = total;
-                    akPO.UserIdKemaskini = user.UserName;
-
-                    await _akPORepo.Update(akPO);
-                    await _context.SaveChangesAsync();
-
-                    _cart.AddItem1(akPO1.AkPOId,
-                                   akPO1.AkCartaId,
-                                   akPO1.Amaun);
-
-
-                }
-
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> InsertUpdateAkPO2(AkPO2 akPO2)
-        {
-
-            try
-            {
-                if (akPO2 != null || akPO2.Amaun != 0)
-                {
-                 
-                    var user = await _userManager.GetUserAsync(User);
-
-                    await _akPO2Repo.Insert(akPO2);
-
-                    await _context.SaveChangesAsync();
-                }
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-        public async Task<JsonResult> RemoveUpdateAkPO1(AkPO1 akPO1)
-        {
-
-            try
-            {
-                if (akPO1 != null)
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    var akT1 = await _context.AkPO1.FirstOrDefaultAsync(x => x.AkCartaId == akPO1.AkCartaId && x.AkPOId == akPO1.AkPOId);
-                    _context.AkPO1.Remove(akT1);
-
-                    decimal total = 0;
-
-                    AkPO akPO = await _akPORepo.GetById(akPO1.AkPOId);
-
-                    total = akPO.Jumlah - akT1.Amaun;
-
-                    akPO.Jumlah = total;
-                    akPO.UserIdKemaskini = user.UserName;
-                    akPO.TarKemaskini = DateTime.Now;
-                    await _akPORepo.Update(akPO);
-
-                    await _context.SaveChangesAsync();
-
-                    _cart.RemoveItem1(akPO1.AkCartaId);
-
-                }
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> RemoveUpdateAkPO2(AkPO2 akPO2)
-        {
-
-            try
-            {
-                if (akPO2 != null)
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    var akP2 = await _context.AkPO2.FirstOrDefaultAsync(x => x.Indek == akPO2.Indek && x.AkPOId == akPO2.AkPOId);
-                    _context.AkPO2.Remove(akP2);
-
-                    await _context.SaveChangesAsync();
-
-                }
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        [HttpPost]
-        public JsonResult GetMaklumat(AkPembekal akPembekal)
-        {
-            try
-            {
-                var result = _context.AkPembekal.Where(b => b.Id == akPembekal.Id).Include(x => x.JBank).FirstOrDefault();
-
-                return Json(new { result = "OK", record = result });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "Error", message = ex.Message });
-            }
-
         }
 
         // posting function
-        [Authorize(Policy = "TG001T")]
+        [Authorize(Policy = "TG003T")]
         public async Task<IActionResult> Posting(int? id)
         {
             if (id == null)
@@ -1395,10 +1119,10 @@ namespace MSNK.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
 
-                AkPO akPO = await _akPORepo.GetById((int)id);
+                AkInden akInden = await _akIndenRepo.GetById((int)id);
 
                 //check for print
-                if (akPO.FlCetak == 0)
+                if (akInden.FlCetak == 0)
                 {
                     //duplicate id error
                     TempData[SD.Error] = "Data gagal diluluskan. Sila cetak data dahulu sebelum menjalani operasi ini.";
@@ -1406,18 +1130,18 @@ namespace MSNK.Controllers
                 }
                 //check for print end
 
-                List<AkPO1> akPO1 = akPO.AkPO1.ToList();
+                List<AkInden1> akInden1 = akInden.AkInden1.ToList();
 
                 // check for baki peruntukan
-                foreach (AkPO1 item in akPO1)
+                foreach (AkInden1 item in akInden1)
                 {
                     bool IsExistAbBukuVot = await _context.AbBukuVot
-                            .Where(x => x.Tahun == akPO.Tahun && x.VotId == item.AkCartaId && x.JKWId == akPO.JKWId && x.JBahagianId == akPO.JBahagianId)
+                            .Where(x => x.Tahun == akInden.Tahun && x.VotId == item.AkCartaId && x.JKWId == akInden.JKWId && x.JBahagianId == akInden.JBahagianId)
                             .AnyAsync();
 
                     if (IsExistAbBukuVot == true)
                     {
-                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akPO.Tahun, item.AkCartaId, akPO.JKWId, akPO.JBahagianId);
+                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akInden.Tahun, item.AkCartaId, akInden.JKWId, akInden.JBahagianId);
 
                         if (sum < item.Amaun)
                         {
@@ -1433,7 +1157,7 @@ namespace MSNK.Controllers
                 }
                 // check for baki peruntukan end
 
-                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("PO/" + akPO.NoPO)).FirstOrDefaultAsync();
+                var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("IK/" + akInden.NoInden)).FirstOrDefaultAsync();
                 if (abBukuVot != null)
                 {
 
@@ -1445,50 +1169,50 @@ namespace MSNK.Controllers
                 {
                     //posting operation start here
 
-                    foreach (AkPO1 item in akPO1)
+                    foreach (AkInden1 item in akInden1)
                     {
                         //insert into AbBukuVot
                         AbBukuVot abBukuVotPosting = new AbBukuVot()
                         {
-                            Tahun = akPO.Tahun,
-                            JKWId = akPO.JKWId,
-                            JBahagianId = akPO.JBahagianId,
-                            Tarikh = akPO.Tarikh,
-                            Kod = akPO.AkPembekal.KodSykt,
-                            Penerima = akPO.AkPembekal.NamaSykt,
+                            Tahun = akInden.Tahun,
+                            JKWId = akInden.JKWId,
+                            JBahagianId = akInden.JBahagianId,
+                            Tarikh = akInden.Tarikh,
+                            Kod = akInden.AkPembekal.KodSykt,
+                            Penerima = akInden.AkPembekal.NamaSykt,
                             VotId = item.AkCartaId,
-                            Rujukan = "PO/"+akPO.NoPO,
+                            Rujukan = "IK/"+akInden.NoInden,
                             Tanggungan = item.Amaun
                         };
 
                         await _abBukuVotRepo.Insert(abBukuVotPosting);
                         // insert into AbBukuVot end
- 
+
                     }
 
                     //update AkNotaMinta
-                    if(akPO.AkNotaMintaId != null)
+                    if (akInden.AkNotaMintaId != null)
                     {
-                        var noPO = "PO/" + akPO.NoPO;
-                        var tarikhPO = DateTime.Now;
+                        var noInden = "IK/" + akInden.NoInden;
+                        var tarikhInden = DateTime.Now;
 
-                        AkNotaMinta akNM = await _akNotaMintaRepo.GetById((int)akPO.AkNotaMintaId);
+                        AkNotaMinta akNM = await _akNotaMintaRepo.GetById((int)akInden.AkNotaMintaId);
 
-                        akNM.NoCAS = noPO;
-                        akNM.TarikhSeksyenKewangan = tarikhPO;
+                        akNM.NoCAS = noInden;
+                        akNM.TarikhSeksyenKewangan = tarikhInden;
 
                         await _akNotaMintaRepo.Update(akNM);
                     }
-                    
+
                     //update AkNotaMinta end
 
                     //update posting status in akPO
-                    akPO.FlPosting = 1;
-                    akPO.TarikhPosting = DateTime.Now;
-                    await _akPORepo.Update(akPO);
+                    akInden.FlPosting = 1;
+                    akInden.TarikhPosting = DateTime.Now;
+                    await _akIndenRepo.Update(akInden);
 
                     //insert applog
-                    await AddLogAsync("Posting", "Posting Data", akPO.NoPO, (int)id, akPO.Jumlah);
+                    await AddLogAsync("Posting", "Posting Data", akInden.NoInden, (int)id, akInden.Jumlah);
 
                     //insert applog end
 
@@ -1507,7 +1231,7 @@ namespace MSNK.Controllers
         // posting function end
 
         // unposting function
-        [Authorize(Policy = "TG001UT")]
+        [Authorize(Policy = "TG003UT")]
         public async Task<IActionResult> UnPosting(int? id)
         {
             if (id == null)
@@ -1516,13 +1240,13 @@ namespace MSNK.Controllers
             }
             else
             {
-                AkPO akPO = await _context.AkPO
+                AkInden akInden = await _context.AkInden
                     .Include(x => x.AkPembekal)
-                    .Include(x => x.AkPO1).ThenInclude(x => x.AkCarta)
-                    .Include(x => x.AkPO2)
+                    .Include(x => x.AkInden1).ThenInclude(x => x.AkCarta)
+                    .Include(x => x.AkInden2)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("PO/" + akPO.NoPO)).ToList();
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("IK/" + akInden.NoInden)).ToList();
                 if (abBukuVot == null)
                 {
 
@@ -1533,88 +1257,57 @@ namespace MSNK.Controllers
                 else
                 {
                     // check if already linked with AkBelian
-                    AkBelian Belian = _context.AkBelian.Where(x => x.AkPOId == id).FirstOrDefault();
+                    AkBelian Belian = _context.AkBelian.Where(x => x.AkIndenId == id).FirstOrDefault();
 
                     if (Belian != null)
                     {
-                        //var akBelian = (from tblBelian in _context.AkBelian.ToList()
-                        //                join tblPO in _context.AkPO.ToList()
-                        //                on tblBelian.AkPOId equals tblPO.Id into tblBelianTblPO
-                        //                from tblBelian_tblPO in tblBelianTblPO.DefaultIfEmpty().Where(x => x.FlHapus != 1)
-                        //                select new
-                        //                {
-                        //                    Id = tblBelian.Id,
-                        //                    AkBelianId = tblBelian_tblPO.Id,
-                        //                    AkPOId = tblBelian.AkPOId,
-                        //                    NoInbois = tblBelian.NoInbois
-
-                        //                }).Where(x => x.AkBelianId == id).FirstOrDefault();
-
-                        //if (akBelian != null)
-                        //{
-                            //linkage id error
-                            TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoInbois.ToUpper() + ". Batal kelulusan tidak dibenarkan";
+                        
+                        //linkage id error
+                        TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoInbois.ToUpper() + ". Batal kelulusan tidak dibenarkan";
                         //}
                     }
                     else
                     {
-                        // check if already linked with AkPOLaras
-                        AkPOLaras akPOLaras = _context.AkPOLaras.Where(x => x.AkPOId == id).FirstOrDefault();
 
-                        if (akPOLaras != null)
+                        //unposting operation start here
+                        //delete data from akAkaun
+                        foreach (AbBukuVot item in abBukuVot)
                         {
-                            //linkage id error
-                            TempData[SD.Error] = "Data terkait pada No Pelarasan Tanggungan " + akPOLaras.NoRujukan.ToUpper() + ". Batal kelulusan tidak dibenarkan";
+                            await _abBukuVotRepo.Delete(item.Id);
                         }
-                        else
+
+                        //update posting status in akPO
+
+                        //update AkNotaMinta
+
+                        if (akInden.AkNotaMintaId != null)
                         {
-                            //unposting operation start here
-                            //delete data from akAkaun
-                            foreach (AbBukuVot item in abBukuVot)
-                            {
-                                await _abBukuVotRepo.Delete(item.Id);
-                            }
+                            AkNotaMinta akNM = await _akNotaMintaRepo.GetById((int)akInden.AkNotaMintaId);
 
-                            //delete data from abBukuVot
-                            //foreach (AbBukuVot item in abBukuVot)
-                            //{
-                            //    await _abBukuVotRepo.Delete(item.Id);
-                            //}
-                            //delete data from abBukuVot
+                            akNM.NoCAS = "";
+                            akNM.TarikhSeksyenKewangan = null;
 
-                            //update posting status in akPO
-
-                            //update AkNotaMinta
-
-                            if (akPO.AkNotaMintaId != null)
-                            {
-                                AkNotaMinta akNM = await _akNotaMintaRepo.GetById((int)akPO.AkNotaMintaId);
-
-                                akNM.NoCAS = "";
-                                akNM.TarikhSeksyenKewangan = null;
-
-                                await _akNotaMintaRepo.Update(akNM);
-                            }
-
-                            //update AkNotaMinta end
-
-                            akPO.FlPosting = 0;
-                            akPO.TarikhPosting = null;
-                            await _akPORepo.Update(akPO);
-
-                            //insert applog
-                            await AddLogAsync("UnPosting", "UnPosting Data", akPO.NoPO, (int)id, akPO.Jumlah);
-
-                            //insert applog end
-
-                            await _context.SaveChangesAsync();
-
-                            TempData[SD.Success] = "Data berjaya batal kelulusan.";
-                            //unposting operation end
+                            await _akNotaMintaRepo.Update(akNM);
                         }
+
+                        //update AkNotaMinta end
+
+                        akInden.FlPosting = 0;
+                        akInden.TarikhPosting = null;
+                        await _akIndenRepo.Update(akInden);
+
+                        //insert applog
+                        await AddLogAsync("UnPosting", "UnPosting Data", akInden.NoInden, (int)id, akInden.Jumlah);
+
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
+
+                        TempData[SD.Success] = "Data berjaya batal kelulusan.";
+                        //unposting operation end
                     }
 
-                    
+
 
                 }
 
@@ -1623,55 +1316,12 @@ namespace MSNK.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-        // unposting function end
-        //// POST: AkPO/Cancel/5
-        //[Authorize(Policy = "TG001B")]
-        //public async Task<IActionResult> Cancel(int id)
-        //{
-        //    var akPO = await _context.AkPO.FindAsync(id);
-        //    // check if already posting redirect back
-        //    if (akPO.FlPosting == 1)
-        //    {
-        //        TempData[SD.Error] = "Akses tidak dibenarkan..!";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    // check if this data is the last one (for preventing batal purpose)
-        //    var lastItem = _context.AkPO.OrderByDescending(x => x.Id).FirstOrDefault();
 
-        //    if (lastItem.Id == akPO.Id)
-        //    {
-        //        TempData[SD.Warning] = "Anda disarankan untuk hapus data ini. Operasi batal tidak dibenarkan..!";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    // check end
-        //    akPO.FlHapus = 1;
-
-        //    _context.AkPO.Update(akPO);
-
-        //    //insert applog
-        //    var user = await _userManager.GetUserAsync(User);
-
-        //    AppLog appLog = new AppLog();
-
-        //    appLog.UserId = user.UserName;
-        //    appLog.LgModule = modul + "B";
-        //    appLog.LgOperation = "Batal";
-        //    appLog.LgNote = modul + " Pesanan Tempatan - Batal";
-        //    appLog.NoRujukan = akPO.NoPO;
-        //    appLog.Jumlah = akPO.Jumlah;
-
-        //    await _appLog.Insert(appLog);
-        //    //insert applog end
-
-        //    await _context.SaveChangesAsync();
-        //    TempData[SD.Success] = "Data berjaya dibatalkan..!";
-        //    return RedirectToAction(nameof(Index));
-        //}
         // POST: AkPV/Cancel/5
-        [Authorize(Policy = "TG001R")]
+        [Authorize(Policy = "TG003R")]
         public async Task<IActionResult> RollBack(int id)
         {
-            var obj = await _akPORepo.GetByIdIncludeDeletedItems(id);
+            var obj = await _akIndenRepo.GetByIdIncludeDeletedItems(id);
             // check if already posting redirect back
             if (obj.FlPosting == 1)
             {
@@ -1690,17 +1340,17 @@ namespace MSNK.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-            
+
             // Batal operation
 
             obj.FlHapus = 0;
             obj.FlCetak = 0;
-            _context.AkPO.Update(obj);
+            _context.AkInden.Update(obj);
 
             // Batal operation end
 
             //insert applog
-            await AddLogAsync("Rollback", "Rollback Data", obj.NoPO, (int)id, obj.Jumlah);
+            await AddLogAsync("Rollback", "Rollback Data", obj.NoInden, (int)id, obj.Jumlah);
 
             //insert applog end
 
@@ -1708,21 +1358,21 @@ namespace MSNK.Controllers
             TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
         }
-        // printing pesanan tempatan by akPO.Id
-        [Authorize(Policy = "TG001P")]
+        // printing resit rasmi by akPO.Id
+        [Authorize(Policy = "TG003P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
-            AkPO akPO = await _akPORepo.GetByIdIncludeDeletedItems(id);
+            AkInden akInden = await _akIndenRepo.GetByIdIncludeDeletedItems(id);
 
             string jumlahDalamPerkataan;
 
-            if (akPO.Jumlah < 0)
+            if (akInden.Jumlah < 0)
             {
-                jumlahDalamPerkataan = ("Kurangan Ringgit Malaysia " + Tools.JumlahDalamPerkataan(0 - akPO.Jumlah)).ToUpper();
+                jumlahDalamPerkataan = ("Kurangan Ringgit Malaysia " + Tools.JumlahDalamPerkataan(0 - akInden.Jumlah)).ToUpper();
             }
             else
             {
-                jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPO.Jumlah)).ToUpper();
+                jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akInden.Jumlah)).ToUpper();
             }
 
             var user = await _userManager.GetUserAsync(User);
@@ -1734,28 +1384,28 @@ namespace MSNK.Controllers
                 jawatan = pekerja.Jawatan;
             }
 
-            POPrintModel data = new POPrintModel();
+            IndenPrintModel data = new IndenPrintModel();
 
             CompanyDetails company = new CompanyDetails();
             data.CompanyDetail = company;
-            data.AkPO = akPO;
+            data.AkInden = akInden;
             //data.AkPO.JNegeri = negeri;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
             data.Username = namaUser.Nama;
             data.Jawatan = jawatan;
 
             //update cetak -> 1
-            akPO.FlCetak = 1;
-            await _akPORepo.Update(akPO);
+            akInden.FlCetak = 1;
+            await _akIndenRepo.Update(akInden);
 
             //insert applog
-            await AddLogAsync("Cetak", "Cetak Data", akPO.NoPO, id, akPO.Jumlah);
+            await AddLogAsync("Cetak", "Cetak Data", akInden.NoInden, id, akInden.Jumlah);
 
             //insert applog end
 
             await _context.SaveChangesAsync();
 
-            return new ViewAsPdf("POPrintPdf", data)
+            return new ViewAsPdf("IndenPrintPdf", data)
             {
                 PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
@@ -1765,7 +1415,6 @@ namespace MSNK.Controllers
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
         }
-        // printing pesanan tempatan end
-
+        // printing inden kerja end
     }
 }

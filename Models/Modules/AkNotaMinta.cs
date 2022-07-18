@@ -81,6 +81,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkNotaMinta1> AkNotaMinta1 { get; set; }
         public ICollection<AkNotaMinta2> AkNotaMinta2 { get; set; }
         public ICollection<AkPO> AkPO { get; set; }
+        public ICollection<AkInden> AkInden { get; set; }
 
     }
 }

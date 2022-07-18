@@ -341,6 +341,7 @@ namespace MSNK.Controllers
             viewModel.FlPosting = akNotaMinta.FlPosting;
             viewModel.FlCetak = akNotaMinta.FlCetak;
             viewModel.FlHapus = akNotaMinta.FlHapus;
+            viewModel.FlJenis = akNotaMinta.FlJenis;
 
             viewModel.Jumlah = akNotaMinta.Jumlah;
             viewModel.AkNotaMinta1 = akNotaMinta.AkNotaMinta1;
@@ -764,6 +765,7 @@ namespace MSNK.Controllers
             {
                 if (akNotaMinta != null && JKWId != 0 && AkPembekalId != 0 && JBahagianId != 0)
                 {
+                    m.FlJenis = akNotaMinta.FlJenis;
                     m.JKWId = JKWId;
                     m.JBahagianId = JBahagianId;
                     m.Tahun = akNotaMinta.Tahun;
@@ -887,7 +889,8 @@ namespace MSNK.Controllers
 
                         AkNotaMinta dataAsal = await _akNotaMintaRepo.GetById(id);
 
-                        // list of input that cannot be change
+                    // list of input that cannot be change
+                    akNotaMinta.FlJenis = dataAsal.FlJenis;
                         akNotaMinta.Tahun = dataAsal.Tahun;
                         akNotaMinta.JKWId = dataAsal.JKWId;
                         akNotaMinta.JBahagianId = dataAsal.JBahagianId;
@@ -1100,6 +1103,7 @@ namespace MSNK.Controllers
                     // get latest no rujukan running number end
 
                     // list of input that cannot be change
+                    akNotaMinta.FlJenis = dataAsal.FlJenis;
                     akNotaMinta.Tahun = dataAsal.Tahun;
                     akNotaMinta.JKWId = dataAsal.JKWId;
                     akNotaMinta.JBahagianId = dataAsal.JBahagianId;
@@ -1198,6 +1202,7 @@ namespace MSNK.Controllers
             viewModel.FlPosting = akNotaMinta.FlPosting;
             viewModel.FlCetak = akNotaMinta.FlCetak;
             viewModel.FlHapus = akNotaMinta.FlHapus;
+            viewModel.FlJenis = akNotaMinta.FlJenis;
 
             viewModel.Jumlah = akNotaMinta.Jumlah;
             viewModel.AkNotaMinta1 = akNotaMinta.AkNotaMinta1;
@@ -1418,7 +1423,7 @@ namespace MSNK.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    TempData[SD.Success] = "Data berjaya batal kelulusan dari Pesanan Tempatan.";
+                    TempData[SD.Success] = "Data berjaya batal kelulusan dari Pesanan Tempatan / Inden Kerja.";
                     //unposting operation end
                 }
 

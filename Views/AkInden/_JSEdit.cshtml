@@ -1,64 +1,12 @@
 ﻿<script type="text/javascript">
 
-    // onchange no Rujukan
-    $("body").on('change', "#ddlKW , #txtTahun", function () {
-        var kodkw = $("#ddlKW").val();
-        var year = $("#txtTahun").val();
-        if (kodkw != 0) {
-            JsonKod(kodkw, year);
-        }
-
-    });
-
-    function JsonKod(id, year) {
-        $.ajax({
-            type: "POST",
-            //url: "/AkPV/JsonGetKod",
-            url: '@Url.Action("JsonGetKod", "AkNotaMinta")',
-            data: { data: id, year: year },
-            dataType: "json",
-            success: function (msg) {
-                $("#txtNoRujukan").val(msg.record);
-            },
-            error: function (req, status, error) {
-                alert(error);
-            }
-        });
-    }
-    // onchange no Rujukan end
-
-    // onchange kod pembekal
-    $("body").on('change', "#ddlKodPembekal", function () {
-        var kodPembekal = $("#ddlKodPembekal").val();
-        JsonKodPembekal(kodPembekal);
-    });
-
-    function JsonKodPembekal(id) {
-        if (id != null) {
-            $.ajax({
-                type: "POST",
-                //url: "/AkBelian/JsonGetPembekal",
-                url: '@Url.Action("JsonGetPembekal", "AkNotaMinta")',
-                data: { data: id },
-                dataType: "json",
-                success: function (msg) {
-                    $("#txtNamaPembekal").val(msg.record.namaSykt);
-                },
-                error: function (req, status, error) {
-                    alert(error);
-                }
-            });
-        }
-    }
-    //onchange Kod Pembekal end
+    var bil = 1;
 
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
         var txtKodAkaun = $("#txtKodAkaun");
-        if (txtKodAkaun.val() != null) {
-            GetCarta(txtKodAkaun.val());
-        }
+        GetCarta(txtKodAkaun.val());
     });
 
     function GetCarta(id) {
@@ -69,71 +17,91 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                //url: "/AkBelian/GetCarta",
-                url: '@Url.Action("GetCarta", "AkNotaMinta")',
+                url: '@Url.Action("GetCarta", "AkInden")',
                 data: Objek,
                 dataType: "json",
                 success: function (r) {
                     //Reference the TextBoxes.
+                    var txtAkInden = $("#Id");
                     var txtKodAkaun = $("#txtKodAkaun");
                     var txtAmaunObjek = $("#txtAmaunObjek");
                     var txtJumlah = $("#jumlahObjek");
 
-                    //Sum value to Total text field
-                    var sum = 0;
-                    sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
-                    txtJumlah.val(sum.toFixed(2));
-
-                    //Get the reference of the Table's TBODY element.
-                    var tBody = $("#tblObjek > TBODY")[0];
-                    //Add Row.
-                    var row = tBody.insertRow(-1);
-
-                    //Add akCartaId cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
-
-                    //Add kod cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.kod + ' - ' + r.record.perihal);
-
-                    //Add amaun cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(parseFloat(txtAmaunObjek.val()).toFixed(2));
-                    cell.addClass('text-right');
-
-                    //Add Edit Button cell.
-                    cell = $(row.insertCell(-1));
-
-                    var btnUpdate1 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
-                    cell.append(btnUpdate1);
-
-                    //Add Button cell.
-                    cell = $(row.insertCell(-1));
-                    var btnRemove1 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
-                    cell.append(btnRemove1);
-
-                    var AkNotaMinta1 = {
+                    var AkInden1 = {
+                        AkIndenId: txtAkInden.val(),
                         AkCartaId: txtKodAkaun.val(),
                         Amaun: txtAmaunObjek.val()
                     }
 
+                    var tahun = $("#txtTahun").val();
+                    var jKWId = $("#ddlKW").val();
+                    var jBahagianId = $("#ddlBahagian").val();
+                    var myData = {};
+                    myData.AkInden1 = AkInden1;
+                    myData.tahun = tahun;
+                    myData.jKWId = jKWId;
+                    myData.jBahagianId = jBahagianId;
+
                     $.ajax({
                         type: "POST",
-                        //url: "/AkBelian/SaveAkBelian1",
-                        url: '@Url.Action("SaveAkNotaMinta1", "AkNotaMinta")',
-                        data: AkNotaMinta1,
+                        url: '@Url.Action("SaveAkInden1", "AkInden")',
+                        data: myData,
                         dataType: "json",
-                        success: function (r) {
-                            //Clear the TextBoxes.
-                            txtKodAkaun.val("").trigger('change');
-                            txtAmaunObjek.val("0.00");
-                            checkJumlah();
+                        success: function (b) {
+                            if (b.result == "OK") {
+                                //Sum value to Total text field
+                                var sum = 0;
+                                sum = parseFloat(txtAmaunObjek.val()) + parseFloat(txtJumlah.val());
+                                txtJumlah.val(sum.toFixed(2));
+
+                                //Get the reference of the Table's TBODY element.
+                                var tBody = $("#tblObjek > TBODY")[0];
+                                //Add Row.
+                                var row = tBody.insertRow(-1);
+
+                                //Add akCartaId cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(r.record.id);
+                                cell.prop("hidden", !this.checked);
+
+                                //Add kod cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(r.record.kod + ' - ' + r.record.perihal);
+
+                                //Add amaun cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(parseFloat(txtAmaunObjek.val()).toFixed(2));
+                                cell.attr("id", "td1Amaun_" + r.record.Id);
+                                cell.addClass('text-right');
+
+                                //Add Edit Button cell.
+                                cell = $(row.insertCell(-1));
+
+                                var btnUpdate1 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' onclick='Update1(this)'><i class='fas fa-edit'></i></button>");
+                                cell.append(btnUpdate1);
+
+                                //Add Remove Button cell.
+                                cell = $(row.insertCell(-1));
+
+                                var btnRemove1 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash'></i></button>");
+                                cell.append(btnRemove1);
+
+                                $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
+
+                                //Clear the TextBoxes.
+                                txtKodAkaun.val("").trigger('change');
+                                txtAmaunObjek.val("");
+                                checkJumlah();
+                                
+                            } else {
+                                toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
+                                toastr.options.timeOut = 2000; // 2s
+                            }
+
                         }
                     });
 
-                    $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
+
 
                 }
             });
@@ -143,20 +111,18 @@
     //add tbl objek end
 
     //add tbl Perihal
-    var bil = $('#tblPerihal tr').length;
-    if (bil == 0) {
-        bil = 1;
-    }
     $("body").on("click", "#btnAdd2", function () {
         //Reference the Name and Country TextBoxes.
-        GetIndek(bil);
+        var txtIndek = bil;
+        GetIndek(txtIndek);
     });
 
-    function GetIndek(indek) {
-            //Send the JSON array to Controller using AJAX.
+    function GetIndek(id) {
+        //Send the JSON array to Controller using AJAX.
 
         //Reference the TextBoxes.
-        var txtIndek = indek;
+        var txtAkInden = $("#Id");
+        var txtIndek = id;
         var txtBil = $("#txtBil");
         var txtNoStok = $("#txtNoStok");
         var txtPerihal = $("#txtPerihal");
@@ -197,7 +163,8 @@
 
         //Add Kuantiti cell.
         var cell = $(row.insertCell(-1));
-        cell.html(txtKuantiti.val());
+        cell.html(parseFloat(txtKuantiti.val()).toFixed(2));
+        cell.addClass('text-right');
 
         //Add Unit cell.
         var cell = $(row.insertCell(-1));
@@ -225,8 +192,9 @@
         var btnRemove2 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
         cell.append(btnRemove2);
 
-        var AkNotaMinta2 = {
-            Indek: indek,
+        var AkInden2 = {
+            AkIndenId: txtAkInden.val(),
+            Indek: id,
             Bil: txtBil.val(),
             NoStok: txtNoStok.val(),
             Perihal: txtPerihal.val(),
@@ -238,20 +206,23 @@
 
         $.ajax({
             type: "POST",
-            //url: "/AkBelian/SaveAkBelian2",
-            url: '@Url.Action("SaveAkNotaMinta2", "AkNotaMinta")',
-            data: AkNotaMinta2,
+            url: '@Url.Action("SaveAkInden2", "AkInden")',
+            data: AkInden2,
             dataType: "json",
             success: function (r) {
                 //Clear the TextBoxes.
-                txtBil.val(0);
-                txtNoStok.val("-");
-                txtPerihal.val("-");
-                txtKuantiti.val("0");
-                txtUnit.val("-");
-                txtHargaUnit.val("0.00");
-                txtAmaun.val("0.00");
+                $("#txtIndek").val(bil + 1);
+                txtBil.val("");
+                txtNoStok.val("");
+                txtPerihal.val("");
+                txtKuantiti.val("");
+                txtUnit.val("");
+                txtHargaUnit.val("");
+                txtAmaun.val("");
                 bil++;
+                if ($("#jumlahObjek").val() != 0.00) {
+                    checkJumlah();
+                }
             }
         });
     }
@@ -261,10 +232,11 @@
     function Remove1(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var name = $("TD", row).eq(0).html();
+        var akIndenId = $('#Id').val();
+        var akCartaId = $("TD", row).eq(0).html();
         var amaun = $("TD", row).eq(2).html();
         var txtJumlah = $("#jumlahObjek");
-        if (confirm("Hapus kod Akaun : " + name + " ?")) {
+        if (confirm("Hapus kod Akaun : " + akCartaId + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblObjek")[0];
 
@@ -273,15 +245,15 @@
             sum = parseFloat(txtJumlah.val()) - parseFloat(amaun);
             txtJumlah.val(sum.toFixed(2));
 
-            var AkNotaMinta1 = {
-                AkCartaId: name,
+            var AkInden1 = {
+                AkIndenId: akIndenId,
+                AkCartaId: akCartaId
             }
-            if (name != null) {
+            if (akCartaId != null) {
                 $.ajax({
                     type: "POST",
-                    //url: "/AkBelian/RemoveAkBelian1",
-                    url: '@Url.Action("RemoveAkNotaMinta1", "AkNotaMinta")',
-                    data: AkNotaMinta1,
+                    url: '@Url.Action("RemoveAkInden1", "AkInden")',
+                    data: AkInden1,
                     dataType: "json",
                     success: function (r) {
                         //Delete the Table row using it's Index.
@@ -290,7 +262,7 @@
                     }
                 });
             }
-            $("#txtKodAkaun option[value=" + name + "]").prop('disabled', false);
+            $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', false);
 
         }
     };
@@ -300,31 +272,34 @@
     function Remove2(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var name = $("TD", row).eq(0).html();
+        var akIndenId = $("#Id").val();
+        var indek = $("TD", row).eq(0).html();
         var amaun = $("TD", row).eq(7).html();
         var txtJumlah = $("#txtJumlahPerihal");
         var JumlahPerihal = $("#jumlahPerihal");
-        if (confirm("Hapus : " + name + " ?")) {
+        if (confirm("Hapus : " + indek + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblPerihal")[0];
 
+            //Sum value to Total text field
             var sum = 0;
             sum = parseFloat(JumlahPerihal.val()) - parseFloat(amaun);
-            JumlahPerihal.val(sum);
+            JumlahPerihal.val(sum.toFixed(2));
 
-            var AkNotaMinta2 = {
-                Indek: name,
+            var AkInden2 = {
+                AkIndenId: akIndenId,
+                Indek: indek
             }
             if (name != null) {
                 $.ajax({
                     type: "POST",
-                    //url: "/AkBelian/RemoveAkBelian2",
-                    url: '@Url.Action("RemoveAkNotaMinta2", "AkNotaMinta")',
-                    data: AkNotaMinta2,
+                    url: '@Url.Action("RemoveAkInden2", "AkInden")',
+                    data: AkInden2,
                     dataType: "json",
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
+                        checkJumlah();
                     }
                 });
             }
@@ -332,57 +307,71 @@
     };
     //remove tbl perihal end
 
-
     //update tbl objek
     function Update1(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
+        var akIndenId = $('#Id').val();
         var akCartaId = $("TD", row).eq(0).html();
 
-        var AkNotaMinta1 = {
+        var AkInden1 = {
+            AkIndenId: akIndenId,
             AkCartaId: akCartaId
         }
-        $.ajax({
-            type: "POST",
-            //url: "/AkBelian/GetAnItemCartAkBelian1",
-            url: '@Url.Action("GetAnItemCartAkNotaMinta1", "AkNotaMinta")',
-            data: AkNotaMinta1,
-            dataType: "json",
-            success: function (r) {
-                //insert data in modal objek
-                $("#moId1").val(r.record.id);
-                $("#moKodAkaun").val(r.record.akCartaId);
-                $("#moAmaun1").val(r.record.amaun.toFixed(2));
 
-                //show modal objek
-                $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
+        if (akCartaId != null) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetAnItemCartAkInden1", "AkInden")',
+                data: AkInden1,
+                dataType: "json",
+                success: function (r) {
+                    //insert data in modal objek
+                    $("#moId1").val(r.record.id);
+                    $("#moKodAkaun").val(r.record.akCartaId);
+                    $("#moAmaun1").val(r.record.amaun.toFixed(2));
 
-            }
-        });
+                    //show modal objek
+                    $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
+
+                }
+            });
+        }
     };
 
     function modalUpdate1() {
         var amaun = $("#moAmaun1").val();
+        var akIndenId = $("#Id").val();
         var akCartaId = $("#moKodAkaun").val();
         var jumlah = $("#jumlahObjek");
 
-        var AkNotaMinta1 = {
-            akCartaId: akCartaId,
+        var AkInden1 = {
+            AkIndenId: akIndenId,
+            AkCartaId: akCartaId,
             Amaun: amaun
         }
+
+        var tahun = $("#txtTahun").val();
+        var jKWId = $("#ddlKW").val();
+        var jBahagianId = $("#ddlBahagian").val();
+        var myData = {};
+        myData.AkInden1 = AkInden1;
+        myData.tahun = tahun;
+        myData.jKWId = jKWId;
+        myData.jBahagianId = jBahagianId;
+
         $.ajax({
             type: "POST",
-            //url: "/AkBelian/SaveCartAkBelian1",
-            url: '@Url.Action("SaveCartAkNotaMinta1", "AkNotaMinta")',
-            data: AkNotaMinta1,
+            url: '@Url.Action("SaveCartAkInden1", "AkInden")',
+            data: myData,
             dataType: "json",
-            success: function (r) {
+            success: function (b) {
                 //insert notification here
 
-                $.ajax({
+                if (b.result == "OK") {
+                    $.ajax({
                     type: "POST",
-                    //url: "/AkBelian/GetAllItemCartAkBelian1",
-                    url: '@Url.Action("GetAllItemCartAkNotaMinta1", "AkNotaMinta")',
+                    url: '@Url.Action("GetAllItemCartAkInden1", "AkInden")',
                     dataType: "json",
                     success: function (r) {
 
@@ -409,6 +398,11 @@
                         checkJumlah();
                     }
                 });
+                } else {
+                    toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
+                    toastr.options.timeOut = 2000; // 2s
+                }
+
             }
         });
     };
@@ -418,19 +412,21 @@
     function Update2(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
-        var indek = $("TD", row).eq(0).html();
+        var akIndenId = $('#Id').val();
+        var IndekId = $("TD", row).eq(0).html();
 
-        var AkNotaMinta2 = {
-            Indek: indek
+        var AkInden2 = {
+            AkIndenId: akIndenId,
+            Indek: IndekId
         }
         $.ajax({
             type: "POST",
-            //url: "/AkBelian/GetAnItemCartAkBelian2",
-            url: '@Url.Action("GetAnItemCartAkNotaMinta2", "AkNotaMinta")',
-            data: AkNotaMinta2,
+            url: '@Url.Action("GetAnItemCartAkInden2", "AkInden")',
+            data: AkInden2,
             dataType: "json",
             success: function (r) {
                 //insert data in modal perihal
+                $("#moId2").val(r.record.id);
                 $("#moIndek").val(r.record.indek);
                 $("#moBil").val(r.record.bil);
                 $("#moNoStok").val(r.record.noStok);
@@ -447,7 +443,7 @@
     };
 
     function modalUpdate2() {
-
+        var akIndenId = $("#Id").val();
         var indek = $("#moIndek").val();
         var bil = $("#moBil").val();
         var noStok = $("#moNoStok").val();
@@ -458,7 +454,8 @@
         var amaun = $("#moAmaun2").val();
         var jumlah = $("#jumlahPerihal");
 
-        var AkNotaMinta2 = {
+        var AkInden2 = {
+            AkIndenId: akIndenId,
             Indek: indek,
             Bil: bil,
             NoStok: noStok,
@@ -470,32 +467,30 @@
         }
         $.ajax({
             type: "POST",
-            //url: "/AkBelian/SaveCartAkBelian2",
-            url: '@Url.Action("SaveCartAkNotaMinta2", "AkNotaMinta")',
-            data: AkNotaMinta2,
+            url: '@Url.Action("SaveCartAkInden2", "AkInden")',
+            data: AkInden2,
             dataType: "json",
             success: function (r) {
                 //insert notification here
 
                 $.ajax({
                     type: "POST",
-                    //url: "/AkBelian/GetAllItemCartAkBelian2",
-                    url: '@Url.Action("GetAllItemCartAkNotaMinta2", "AkNotaMinta")',
+                    url:'@Url.Action("GetAllItemCartAkInden2", "AkInden")',
                     dataType: "json",
                     success: function (r) {
 
-                        //refresh updated table perihal
+                        //refresh updated table urusniaga
                         $("table tbody#tbodyPerihal").empty();
                         var sum = 0;
                         if (r.record.length > 0) {
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='txtIndek' hidden>" + item1.indek +
-                                    "</td><td class='text-left'>" + item1.bil +
-                                    "</td><td class='text-left'>" + item1.noStok +
-                                    "</td><td class='text-left'>" + item1.perihal +
-                                    "</td><td class='text-right'>" + item1.kuantiti.toFixed(2) +
-                                    "</td><td class='text-center'>" + item1.unit +
+                                    "</td><td class='text-right'>" + item1.bil +
+                                    "</td><td class='text-right'>" + item1.noStok +
+                                    "</td><td class='text-right'>" + item1.perihal +
+                                    "</td><td class='text-right'>" + (item1.kuantiti).toFixed(2) +
+                                    "</td><td class='text-uppercase'>" + item1.unit +
                                     "</td><td class='text-right'>" + (item1.harga).toFixed(2) +
                                     "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" +
@@ -508,6 +503,7 @@
                             }
                         }
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }
@@ -515,7 +511,28 @@
     };
     //update tbl perihal end
 
-    // on change harga/unit and kuantiti
+    // onchange kod pembekal
+    $("body").on('change', "#ddlKodPembekal", function () {
+        var kodPembekal = $("#ddlKodPembekal").val();
+        JsonKodPembekal(kodPembekal);
+    });
+    function JsonKodPembekal(id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("JsonGetPembekal", "AkInden")',
+            data: { data: id },
+            dataType: "json",
+            success: function (msg) {
+                $("#txtNamaPembekal").val(msg.record.namaSykt);
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    //on change Kod Pembekal end
+
+    // onchange harga/unit and kuantiti
     $("body").on('change', ".hargaUnit, .kuantiti", function () {
         //main body
         var amount = $("#txtHargaUnit").val();
@@ -559,6 +576,34 @@
     })();
 
     $(document).ready(function () {
+        // find latest number in perihal
+        $.ajax({
+            type: "POST",
+            //url: "/AkPO/GetAnItemCartAkPO2",
+            url: '@Url.Action("GetLatestIndexNumberPerihal", "AkInden")',
+            dataType: "json",
+            success: function (r) {
+                //insert data in modal perihal
+                bil = r.record + 1;
+            }
+        });
+        // find latest number in perihal end
+        //bil = $('#tblPerihal tr').length - 1;
+
+        // disable each kod akaun that has been picked
+        $('#tbodyObjek tr').each(function () {
+            var akCartaId = $(this).find("#akCartaId").html();
+            $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', true);
+        });
+
+        // get total amaun perihal for each row in tbl perihal
+        var sum = 0;
+        $('#tbodyPerihal tr').each(function () {
+            var amaun = $(this).find(".amaunPerihal").html();
+            sum += parseFloat(amaun);
+        });
+        $('#jumlahPerihal').val(sum.toFixed(2));
+
         $.validator.setDefaults({
             errorElement: "span",
             errorClass: "help-block",

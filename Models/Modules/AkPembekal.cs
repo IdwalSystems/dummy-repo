@@ -56,6 +56,7 @@ namespace MSNK.Models.Modules
         [Display(Name = "Bank")]
         public JBank JBank { get; set; }
         public ICollection<AkPO> AkPO { get; set; }
+        public ICollection<AkInden> AkInden { get; set; }
         public ICollection<AkBelian> AkBelian { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
         public ICollection<AkTunaiCV> AkTunaiCV { get; set; }
