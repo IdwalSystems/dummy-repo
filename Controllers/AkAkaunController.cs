@@ -17,6 +17,9 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin , Supervisor")]
     public class AkAkaunController : Controller
     {
+        public const string modul = "AK002";
+        public const string namamodul = "Lejar Am";
+
         private readonly ApplicationDbContext _context;
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;

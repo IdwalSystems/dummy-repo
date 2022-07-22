@@ -25,9 +25,7 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin,Supervisor,User")]
     public class SpPendahuluanPelbagaiController : Controller
 
-
     {
-
         public const string modul = "SP001";
         public const string namamodul = "Pendahuluan Pelbagai";
 

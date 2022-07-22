@@ -1,0 +1,62 @@
+@model IEnumerable<MSNK.Models.Modules.SiModul>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="card box-shadow">
+    <div class="card-body border">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase mb-0">Maklumat Modul</h5>
+                <span class="ac-ref">Indeks</span>
+            </div>
+    
+        </div>
+        <hr class="mt-2"/>
+        @if (Model.Any())
+    {
+    <div class="table-responsive-md">
+        <table class="table table-striped border table-sm">
+            <tr class="table-secondary">
+                <th width="10%">Id</th>
+                <th width="70%">Perihal</th>
+                <th width="10%">Model</th>
+                <th width="10%">Model asal</th>
+                @*<th></th>*@
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.FuncId
+                    </td>
+                    <td>
+                        @item.FuncName
+                    </td>
+                    <td>
+                        @item.Model
+                    </td>
+                    <td>
+                        @item.FuncIdOld
+                    </td>
+                    @*<td>
+                        <div class="text-center">
+                            <form asp-action="Delete" asp-route-id="@item.Id">
+                                <a asp-action="Upsert" asp-route-id="@item.Id" class="btn btn-info text-white btn-sm" style="cursor:pointer">
+                                    Ubah
+                                </a>
+
+                                <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger btn-sm">Hapus</button>
+                            </form>
+                        </div>
+
+                    </td>*@
+                </tr>
+            }
+        </table>
+
+    </div>
+    }
+    </div>
+</div>

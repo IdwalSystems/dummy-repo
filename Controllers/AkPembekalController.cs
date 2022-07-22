@@ -17,7 +17,7 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin , Supervisor")]
     public class AkPembekalController : Controller
     {
-        public const string modul = "FL001";
+        public const string modul = "DF002";
         public const string namamodul = "Pembekal";
 
         private readonly ApplicationDbContext _context;
@@ -118,6 +118,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPembekal
+        [Authorize(Policy = "DF002")]
         public async Task<IActionResult> Index()
         {
             var akpembekal = await _akpembekalRepo.GetAllIncludeDeletedItems();
@@ -146,6 +147,7 @@ namespace MSNK.Controllers
             return View(akPembekal);
         }
 
+        [Authorize(Policy = "DF002C")]
         // GET: AkPembekal/Create
         public IActionResult Create()
         {
@@ -153,6 +155,7 @@ namespace MSNK.Controllers
             return View();
         }
 
+        [Authorize(Policy = "DF002C")]
         // POST: AkPembekal/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -206,6 +209,7 @@ namespace MSNK.Controllers
             return View(akP);
         }
 
+        [Authorize(Policy = "DF002E")]
         // GET: AkPembekal/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -230,6 +234,7 @@ namespace MSNK.Controllers
             return View(akPembekal);
         }
 
+        [Authorize(Policy = "DF002E")]
         // POST: AkPembekal/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -312,6 +317,7 @@ namespace MSNK.Controllers
             return View(akPembekal);
         }
 
+        [Authorize(Policy = "DF002D")]
         // GET: AkPembekal/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -332,6 +338,7 @@ namespace MSNK.Controllers
             return View(akPembekal);
         }
 
+        [Authorize(Policy = "DF002D")]
         // POST: AkPembekal/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -364,6 +371,7 @@ namespace MSNK.Controllers
             base.Dispose(disposing);
         }
 
+        [Authorize(Policy = "DF002R")]
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _akpembekalRepo.GetByIdIncludeDeletedItems(id);

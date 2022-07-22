@@ -35,6 +35,15 @@ namespace MSNK.Controllers
         {
             var appLog = new List<AppLog>();
 
+            if (!String.IsNullOrEmpty(searchUsername) ||
+                !String.IsNullOrEmpty(searchModulFrom) ||
+                !String.IsNullOrEmpty(searchModulTo) ||
+                !String.IsNullOrEmpty(searchDateFrom) ||
+                !String.IsNullOrEmpty(searchDateTo))
+            {
+                appLog = _context.AppLog.ToList();
+            }
+
             //function search userList
             var userList = await _context.applicationUsers.Include(x=> x.SuPekerja).ToListAsync();
 
@@ -48,7 +57,7 @@ namespace MSNK.Controllers
             if (!String.IsNullOrEmpty(searchUsername))
             {
                 ViewBag.username = new SelectList(userSelect, "Value", "Text", searchUsername);
-                appLog = _context.AppLog.Where(x => x.UserId == searchUsername).ToList();
+                appLog = appLog.Where(x => x.UserId == searchUsername).ToList();
             }
             else
             {
@@ -84,7 +93,7 @@ namespace MSNK.Controllers
                 ViewData["ModulTo"] = searchModulTo;
             }
             // function search modul range end
-            return View(appLog);
+            return View(appLog.OrderBy(b => b.LgDate).ThenBy(b => b.LgModule).ToList());
         }
    
     }

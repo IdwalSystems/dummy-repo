@@ -23,7 +23,7 @@ namespace MSNK.Controllers
     public class AkTunaiCVController : Controller
     {
 
-        public const string modul = "TR002";
+        public const string modul = "TR001";
         public const string namamodul = "Tunai Keluar";
 
         private readonly ApplicationDbContext _context;
@@ -88,7 +88,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiCV
-        [Authorize(Policy = "TR002")]
+        [Authorize(Policy = "TR001")]
         public async Task<IActionResult> Index(
             string searchString,
             string searchDate1,
@@ -681,7 +681,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiCV/Edit/5
-        [Authorize(Policy = "TR002E")]
+        [Authorize(Policy = "TR001E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -725,7 +725,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Policy = "TR002E")]
+        [Authorize(Policy = "TR001E")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,AkTunaiCV akTunaiCV, int AkTunaiRuncitId, int? AkPembekalId, int? SuPekerjaId)
         {
@@ -835,7 +835,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiCV/Delete/5
-        [Authorize(Policy = "TR002D")]
+        [Authorize(Policy = "TR001D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -857,7 +857,7 @@ namespace MSNK.Controllers
 
         // POST: AkTunaiCV/Delete/5
         [HttpPost, ActionName("Delete")]
-        [Authorize(Policy = "TR002D")]
+        [Authorize(Policy = "TR001D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -882,7 +882,7 @@ namespace MSNK.Controllers
         }
 
         // posting function
-        [Authorize(Policy = "TR002T")]
+        [Authorize(Policy = "TR001T")]
         public async Task<IActionResult> Posting(int? id)
         {
             if (id == null)
@@ -987,7 +987,7 @@ namespace MSNK.Controllers
         // posting function end
 
         // unposting function
-        [Authorize(Policy = "TR002UT")]
+        [Authorize(Policy = "TR001UT")]
         public async Task<IActionResult> UnPosting(int? id)
         {
             if (id == null)
@@ -1040,7 +1040,7 @@ namespace MSNK.Controllers
         // unposting function end
 
         // printing pelarasan PO 
-        [Authorize(Policy = "TR002P")]
+        [Authorize(Policy = "TR001P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
             AkTunaiCV obj = await _akTunaiCVRepo.GetByIdIncludeDeletedItems(id);
@@ -1089,7 +1089,7 @@ namespace MSNK.Controllers
         }
 
         // POST: AkPV/Cancel/5
-        [Authorize(Policy = "TR002R")]
+        [Authorize(Policy = "TR001R")]
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _akTunaiCVRepo.GetByIdIncludeDeletedItems(id);
@@ -1119,7 +1119,7 @@ namespace MSNK.Controllers
         // printing pelarasan PO end
 
         //// POST: AkTunaiCV/Cancel/5
-        //[Authorize(Policy = "TR002B")]
+        //[Authorize(Policy = "TR001B")]
         //public async Task<IActionResult> Cancel(int id)
         //{
         //    var akTunaiCV = await _context.AkTunaiCV.FindAsync(id);

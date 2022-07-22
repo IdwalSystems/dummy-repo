@@ -29,6 +29,18 @@
         page-break-after: always
     }
 
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+
     
 </style>
 
@@ -43,23 +55,23 @@
     </div>
 </div>
 
-<div class="table-responsive-sm mb-0">
-    <table class="table table-bordered table-sm topic">
-        <thead class="text-center">
-            <tr class="table-primary">
-                <th>BIL</th>
-                <th>NAMA</th>
-                <th>NO KP</th>
-                <th>NO AKAUN BANK</th>
-                <th>BANK</th>
-                <th>TUNGGAKAN RM</th>
-                <th>CATATAN</th>
-                <th>ELAUN RM</th>
-                <th>JUMLAH RM</th>
-                <th>TEMPOH KONTRAK</th>
-            </tr>
-        </thead>
+<table class="table table-bordered table-sm topic">
+    <thead class="text-center">
+        <tr class="table-primary">
+            <th>BIL</th>
+            <th>NAMA</th>
+            <th>NO KP</th>
+            <th>NO AKAUN BANK</th>
+            <th>BANK</th>
+            <th>TUNGGAKAN RM</th>
+            <th>CATATAN</th>
+            <th>ELAUN RM</th>
+            <th>JUMLAH RM</th>
+            <th>TEMPOH KONTRAK</th>
+        </tr>
+    </thead>
 
+    <tbody>
         @foreach (var group in Model.SuProfil1Grouped)
         {
              
@@ -97,7 +109,7 @@
                 sum += item.Amaun;
                 
             }
-             <tr class="font-weight-bold text-uppercase">
+                <tr class="font-weight-bold text-uppercase">
                 <td class="text-right bg-light" colspan="8">@group.Key RM</td>
                 <td class="text-right table-primary">@Convert.ToDecimal(sum).ToString("#,##0.00")</td>
             </tr>
@@ -111,11 +123,9 @@
             <td class="text-right text-uppercase" colspan="8">Jumlah Keseluruhan RM</td>
             <td class="text-right table-primary">@Convert.ToDecimal(Model.SuProfil.Jumlah).ToString("#,##0.00")</td>
         </tr>
-        <tfoot>
+    </tbody>
 
-        </tfoot>
-    </table>
-</div>
+</table>
 
 <div class="table-responsive-sm">
     <table class="table table-sm topic table-bordered">

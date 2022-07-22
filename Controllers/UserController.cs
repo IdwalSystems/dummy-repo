@@ -56,6 +56,7 @@ namespace MSNK.Controllers
 
         public IActionResult Index()
         {
+            
             var userList = _db.applicationUsers.ToList();
             var userRole = _db.UserRoles.ToList();
             var roles = _db.Roles.ToList();

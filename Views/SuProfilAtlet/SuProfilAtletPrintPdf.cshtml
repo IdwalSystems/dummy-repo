@@ -13,7 +13,7 @@
     var bil = 0;
 
 }
-<style>
+<style >
 
     .topic tr {
         line-height: 0.5rem;
@@ -29,10 +29,29 @@
         font-weight: normal
     }
 
+    .max-lines {
+        display: block; /* or inline-block */
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 5.8em;
+    }
+
     .breakhere {
         page-break-after: always
     }
 
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
     
 </style>
 
@@ -47,98 +66,79 @@
     </div>
 </div>
 
-<div class="table-responsive-sm mb-0">
-    <table class="table table-bordered table-sm topic">
-        <thead class="text-center">
-            <tr class="table-warning">
-                <th>BIL</th>
-                <th>NAMA</th>
-                <th>NO KP</th>
-                <th>NO AKAUN BANK</th>
-                <th>BANK</th>
-                <th>TUNGGAKAN RM</th>
-                <th>CATATAN</th>
-                <th>AMAUN RM</th>
-                <th>JUMLAH RM</th>
+  
+<table class="table table-bordered table-sm topic">
+    <thead class="text-center">
+        <tr class="table-warning">
+            <th>BIL</th>
+            <th>NAMA</th>
+            <th>NO KP</th>
+            <th>NO AKAUN BANK</th>
+            <th>BANK</th>
+            <th>TUNGGAKAN RM</th>
+            <th>CATATAN</th>
+            <th>AMAUN RM</th>
+            <th>JUMLAH RM</th>
                 
-            </tr>
-        </thead>
-
-        @foreach (var group in Model.SuProfil1Grouped)
-        {
+        </tr>
+    </thead>
+    <tbody >
+    @foreach (var group in Model.SuProfil1Grouped)
+    {
              
-            var sum = 0;
-            bilSukan++;
-
-            <tr><th colspan="9" class="text-uppercase bg-secondary text-white">@bilSukan) @group.Key</th></tr>
-            foreach (var item in group)
-            {
-                bil++;
-
-                <tr>
-                    <td>@bil</td>
-                    <td class="text-uppercase">@item.SuAtlet.Nama</td>
-                    <td class="text-uppercase">@item.SuAtlet.NoKp</td>
-                    <td class="text-uppercase">@item.SuAtlet.NoAkaunBank</td>
-                    <td class="text-uppercase">@item.SuAtlet.JBank.Kod</td>
-                    <td align="right" width="5%">@Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")</td>
-                    <td class="text-uppercase">@item.Catatan</td>
-                    <td align="right" width="5%">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
-                    <td align="right" width="5%" class="table-primary">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
-                    
-
-                </tr>
-
-                sum += item.Amaun;
-
-                //count for 100, 300, 500
-                if (item.Amaun == 100)
-                {
-                    jum100++;
-                } else if (item.Amaun == 300)
-                {
-                    jum300++;
-                } else if (item.Amaun == 500)
-                {
-                    jum500++;
-                } else
-                {
-                }
-                //count end
-                
-            }
-             <tr class="font-weight-bold text-uppercase">
-                <td class="text-right bg-light" colspan="8">@group.Key RM</td>
-                <td class="text-right table-primary">@Convert.ToDecimal(sum).ToString("#,##0.00")</td>
-            </tr>
-            <tr>
-                <td class="text-right border-white" colspan="9">
-                </td>
-            </tr>
-        }
-
-       @* @foreach (var item in Model.SuProfil.SuProfil1)
+        var sum = 0;
+        bilSukan++;
+            
+        <tr ><td colspan="9" class="text-uppercase bg-secondary text-white">@bilSukan) @group.Key</td></tr>
+        foreach (var item in group)
         {
-
-            <tr>
+            bil++;
+            <tr >
+                <td>@bil</td>
                 <td class="text-uppercase">@item.SuAtlet.Nama</td>
                 <td class="text-uppercase">@item.SuAtlet.NoKp</td>
                 <td class="text-uppercase">@item.SuAtlet.NoAkaunBank</td>
                 <td class="text-uppercase">@item.SuAtlet.JBank.Kod</td>
-                <td align="right">@Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")</td>
-                <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
-                <td align="right">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+                <td align="right" width="5%">@Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")</td>
+                <td class="text-uppercase">@item.Catatan</td>
+                <td align="right" width="5%">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                <td align="right" width="5%" class="table-primary">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+                    
+
             </tr>
-        }*@
+            sum += item.Amaun;
+
+            //count for 100, 300, 500
+            if (item.Amaun == 100)
+            {
+                jum100++;
+            } else if (item.Amaun == 300)
+            {
+                jum300++;
+            } else if (item.Amaun == 500)
+            {
+                jum500++;
+            } else
+            {
+            }
+            //count end
+                
+        }
+            <tr class="font-weight-bold text-uppercase" >
+            <td class="text-right bg-light" colspan="8">@group.Key RM</td>
+            <td class="text-right table-primary">@Convert.ToDecimal(sum).ToString("#,##0.00")</td>
+        </tr>
+        <tr>
+            <td class="text-right border-white" colspan="9">
+            </td>
+        </tr>
+    }
         <tr class="font-weight-bold table-warning">
             <td class="text-right text-uppercase" colspan="8">Jumlah Keseluruhan RM</td>
             <td class="text-right table-primary">@Convert.ToDecimal(Model.SuProfil.Jumlah).ToString("#,##0.00")</td>
         </tr>
-        <tfoot>
-
-        </tfoot>
-    </table>
-</div>
+    </tbody>
+</table>
 
 <div class="row flexrow mb-1">
     <div class="col-8 text-center text-uppercase">

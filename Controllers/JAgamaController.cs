@@ -17,7 +17,7 @@ namespace MSNK.Controllers
     public class JAgamaController : Controller
     {
         public const string modul = "JD001";
-        public const string namamodul = "Agama";
+        public const string namamodul = "Jadual Agama";
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;

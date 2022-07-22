@@ -18,8 +18,8 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin,Supervisor,User")]
     public class SuAtletController : Controller
     {
-        public const string modul = "FL003";
-        public const string namamodul = "Atlet";
+        public const string modul = "DF005";
+        public const string namamodul = "Daftar Atlet";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -138,6 +138,7 @@ namespace MSNK.Controllers
         }
         //Function Cart Empty end
 
+        [Authorize(Policy = "DF005")]
         // GET: SuAtlet
         public async Task<IActionResult> Index()
         {
@@ -169,6 +170,7 @@ namespace MSNK.Controllers
             return View(suAtlet);
         }
 
+        [Authorize(Policy = "DF004C")]
         // GET: SuAtlet/Create
         public IActionResult Create()
         {
@@ -178,6 +180,7 @@ namespace MSNK.Controllers
             return View();
         }
 
+        [Authorize(Policy = "DF004C")]
         // POST: SuAtlet/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -264,6 +267,7 @@ namespace MSNK.Controllers
             return View(suAtlet);
         }
 
+        [Authorize(Policy = "DF004E")]
         // GET: SuAtlet/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -285,6 +289,7 @@ namespace MSNK.Controllers
             return View(suAtlet);
         }
 
+        [Authorize(Policy = "DF004E")]
         // POST: SuAtlet/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -309,6 +314,7 @@ namespace MSNK.Controllers
                     suAtlet.UserId = dataAsal.UserId;
                     suAtlet.NoKp = dataAsal.NoKp;
                     suAtlet.KodAtlet = dataAsal.KodAtlet;
+                    suAtlet.FlStatus = dataAsal.FlStatus;
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
                     // list of input that cannot be change end
@@ -353,6 +359,7 @@ namespace MSNK.Controllers
             return View(suAtlet);
         }
 
+        [Authorize(Policy = "DF004D")]
         // GET: SuAtlet/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -371,6 +378,7 @@ namespace MSNK.Controllers
             return View(suAtlet);
         }
 
+        [Authorize(Policy = "DF004D")]
         // POST: SuAtlet/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -390,6 +398,7 @@ namespace MSNK.Controllers
             return _context.SuAtlet.Any(e => e.Id == id);
         }
 
+        [Authorize(Policy = "DF004R")]
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _suAtletRepo.GetByIdIncludeDeletedItems(id);
@@ -399,6 +408,8 @@ namespace MSNK.Controllers
             _context.SuAtlet.Update(obj);
 
             // Batal operation end
+
+            await AddLogAsync("Hapus", obj.NoKp + " - " + obj.NoAkaunBank, obj.KodAtlet, id, 0);
 
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dikembalikan..!";

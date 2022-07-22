@@ -89,26 +89,26 @@ namespace MSNK.Data
             //Baucer Jurnal end
             //Menu Tunai Runcit
             //Pemegang Tunai Runcit
-            new Claim("TR001","TR001 Pemegang Tunai Runcit"),
-            new Claim("TR001C","TR001 Pemegang Tunai Runcit - Tambah"),
-            new Claim("TR001E","TR001 Pemegang Tunai Runcit - Ubah"),
-            new Claim("TR001D","TR001 Pemegang Tunai Runcit - Hapus"),
-            new Claim("TR001P","TR001 Pemegang Tunai Runcit - Cetak"),
-            new Claim("TR001R","TR001 Pemegang Tunai Runcit - Rollback"),
+            new Claim("DF004","DF004 P. Tunai Runcit"),
+            new Claim("DF004C","DF004 P. Tunai Runcit - Tambah"),
+            new Claim("DF004E","DF004 P. Tunai Runcit - Ubah"),
+            new Claim("DF004D","DF004 P. Tunai Runcit - Hapus"),
+            new Claim("DF004P","DF004 P. Tunai Runcit - Cetak"),
+            new Claim("DF004R","DF004 P. Tunai Runcit - Rollback"),
             //new Claim("TR001B","TR001 Pemegang Tunai Runcit - Batal"),
-            new Claim("TR001T","TR001 Pemegang Tunai Runcit - Rekup"),
+            new Claim("DF004T","DF004 P. Tunai Runcit - Rekup"),
             //new Claim("TR001UT","TR001 Pemegang Tunai Runcit - UnPosting"),
             //Pemegang Tunai Runcit end
             //Tunai Keluar
-            new Claim("TR002","TR002 Tunai Keluar"),
-            new Claim("TR002C","TR002 Tunai Keluar - Tambah"),
-            new Claim("TR002E","TR002 Tunai Keluar - Ubah"),
-            new Claim("TR002D","TR002 Tunai Keluar - Hapus"),
-            new Claim("TR002P","TR002 Tunai Keluar - Cetak"),
-            new Claim("TR002B","TR002 Tunai Keluar - Batal"),
-            new Claim("TR002R","TR002 Tunai Keluar - Rollback"),
-            new Claim("TR002T","TR002 Tunai Keluar - Posting"),
-            new Claim("TR002UT","TR002 Tunai Keluar - UnPosting"),
+            new Claim("TR001","TR001 Tunai Keluar"),
+            new Claim("TR001C","TR001 Tunai Keluar - Tambah"),
+            new Claim("TR001E","TR001 Tunai Keluar - Ubah"),
+            new Claim("TR001D","TR001 Tunai Keluar - Hapus"),
+            new Claim("TR001P","TR001 Tunai Keluar - Cetak"),
+            new Claim("TR001B","TR001 Tunai Keluar - Batal"),
+            new Claim("TR001R","TR001 Tunai Keluar - Rollback"),
+            new Claim("TR001T","TR001 Tunai Keluar - Posting"),
+            new Claim("TR001UT","TR001 Tunai Keluar - UnPosting"),
             //Tunai Keluar end
             //Nota Minta
             new Claim("NM001","NM001 Nota Minta"),
@@ -189,7 +189,56 @@ namespace MSNK.Data
             new Claim("IN001R","IN001 Invois Dikeluarkan - Rollback"),
             new Claim("IN001T","IN001 Invois Dikeluarkan - Posting"),
             new Claim("IN001UT","IN001 Invois Dikeluarkan - UnPosting"),
-            //Profil Atlet end
+            //Invois Dikeluarkan end
+            //Menu Daftar
+            // Anggota
+            new Claim("DF001","DA001 Daftar Anggota"),
+            new Claim("DF001C","DA001 Daftar Anggota - Tambah"),
+            new Claim("DF001E","DA001 Daftar Anggota - Ubah"),
+            new Claim("DF001D","DA001 Daftar Anggota - Hapus"),
+            new Claim("DF001B","DA001 Daftar Anggota - Batal"),
+            new Claim("DF001R","DA001 Daftar Anggota - Rollback"),
+            // Anggota End
+            // Pembekal
+            new Claim("DF002","DA002 Daftar Pembekal"),
+            new Claim("DF002C","DA002 Daftar Pembekal - Tambah"),
+            new Claim("DF002E","DA002 Daftar Pembekal - Ubah"),
+            new Claim("DF002D","DA002 Daftar Pembekal - Hapus"),
+            new Claim("DF002B","DA002 Daftar Pembekal - Batal"),
+            new Claim("DF002R","DA002 Daftar Pembekal - Rollback"),
+            // Pembekal End
+            // Penghutang
+            new Claim("DF003","DA003 Daftar Penghutang"),
+            new Claim("DF003C","DA003 Daftar Penghutang - Tambah"),
+            new Claim("DF003E","DA003 Daftar Penghutang - Ubah"),
+            new Claim("DF003D","DA003 Daftar Penghutang - Hapus"),
+            new Claim("DF003B","DA003 Daftar Penghutang - Batal"),
+            new Claim("DF003R","DA003 Daftar Penghutang - Rollback"),
+            // Penghutang End
+            // P. Tunai Runcit
+            new Claim("DF004","DA004 Daftar P. Tunai Runcit"),
+            new Claim("DF004C","DA004 Daftar P. Tunai Runcit - Tambah"),
+            new Claim("DF004E","DA004 Daftar P. Tunai Runcit - Ubah"),
+            new Claim("DF004D","DA004 Daftar P. Tunai Runcit - Hapus"),
+            new Claim("DF004B","DA004 Daftar P. Tunai Runcit - Batal"),
+            new Claim("DF004R","DA004 Daftar P. Tunai Runcit - Rollback"),
+            // P. Tunai Runcit End
+            // Atlet
+            new Claim("DF005","DA005 Daftar Atlet"),
+            new Claim("DF005C","DA005 Daftar Atlet - Tambah"),
+            new Claim("DF005E","DA005 Daftar Atlet - Ubah"),
+            new Claim("DF005D","DA005 Daftar Atlet - Hapus"),
+            new Claim("DF005B","DA005 Daftar Atlet - Batal"),
+            new Claim("DF005R","DA005 Daftar Atlet - Rollback"),
+            // Atlet End
+            // Jurulatih
+            new Claim("DF006","DA006 Daftar Jurulatih"),
+            new Claim("DF006C","DA006 Daftar Jurulatih - Tambah"),
+            new Claim("DF006E","DA006 Daftar Jurulatih - Ubah"),
+            new Claim("DF006D","DA006 Daftar Jurulatih - Hapus"),
+            new Claim("DF006B","DA006 Daftar Jurulatih - Batal"),
+            new Claim("DF006R","DA006 Daftar Jurulatih - Rollback"),
+            // Jurulatih End
 
         };
     }

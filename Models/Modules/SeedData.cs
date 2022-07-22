@@ -71,20 +71,20 @@ namespace MSNK.Models.Modules
             }
 
             //// Look for any movies.
-            //if (context.JKW.Any())
-            //{
-            //    //return;   // DB has been seeded
-            //}
-            //else
-            //{
-            //    context.JKW.AddRange(
-            //        new JKW
-            //        {
-            //            Kod = "100",
-            //            Perihal = "MAJLIS SUKAN NEGERI KEDAH"
-            //        }
-            //    );
-            //}
+            if (context.JKW.Any())
+            {
+                //return;   // DB has been seeded
+            }
+            else
+            {
+                context.JKW.AddRange(
+                    new JKW
+                    {
+                        Kod = "100",
+                        Perihal = "MAJLIS SUKAN NEGERI KEDAH"
+                    }
+                );
+            }
 
             //if (context.JCaraBayar.Any())
             //{
@@ -136,245 +136,278 @@ namespace MSNK.Models.Modules
                     );
             }
 
-            //if (context.SiModul.Any())
-            //{
-            //    //return;
-            //}
-            //else
-            //{
-            //    context.SiModul.AddRange(
-            //        new SiModul
-            //        {
-            //            FuncId = "SY001",
-            //            FuncName = "SY001 Pengurusan Pengguna"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "SY001A",
-            //            FuncName = "SY001 Pengurusan Pengguna – Capaian"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "SY001C",
-            //            FuncName = "SY001 Pengurusan Pengguna - Tambah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "SY001D",
-            //            FuncName = "SY001 Pengurusan Pengguna - Hapus"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "SY001E",
-            //            FuncName = "SY001 Pengurusan Pengguna - Ubah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "SY001R",
-            //            FuncName = "SY001 Pengurusan Pengguna - Reset Katalauan"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PR001",
-            //            FuncName = "PR001 Penerimaan"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PR001C",
-            //            FuncName = "PR001 Penerimaan - Tambah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PR001D",
-            //            FuncName = "PR001 Penerimaan - Hapus"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PR001E",
-            //            FuncName = "PR001 Penerimaan - Ubah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PR001P",
-            //            FuncName = "PR001 Penerimaan - Cetak"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PR001T",
-            //            FuncName = "PR001 Penerimaan - Posting"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PR001UT",
-            //            FuncName = "PR001 Penerimaan – UnPosting"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PR001B",
-            //            FuncName = "PR001 Penerimaan – Batal"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "JU001",
-            //            FuncName = "JU001 Jurnal"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "JU001C",
-            //            FuncName = "JU001 Jurnal - Tambah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "JU001D",
-            //            FuncName = "JU001 Jurnal - Hapus"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "JU001E",
-            //            FuncName = "JU001 Jurnal - Ubah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "JU001P",
-            //            FuncName = "JU001 Jurnal - Cetak"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "JU001T",
-            //            FuncName = "JU001 Jurnal - Posting"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "JU001UT",
-            //            FuncName = "JU001 Jurnal – UnPosting"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "JU001B",
-            //            FuncName = "JU001 Jurnal – Batal"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG001",
-            //            FuncName = "TG001 Pesanan Tempatan"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG001C",
-            //            FuncName = "TG001 Pesanan Tempatan - Tambah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG001D",
-            //            FuncName = "TG001 Pesanan Tempatan - Hapus"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG001E",
-            //            FuncName = "TG001 Pesanan Tempatan - Ubah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG001P",
-            //            FuncName = "TG001 Pesanan Tempatan - Cetak"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG001T",
-            //            FuncName = "TG001 Pesanan Tempatan - Posting"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG001UT",
-            //            FuncName = "TG001 Pesanan Tempatan – UnPosting"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG001B",
-            //            FuncName = "TG001 Pesanan Tempatan – Batal"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG002",
-            //            FuncName = "TG002 Invois Pembekal"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG002C",
-            //            FuncName = "TG002 Invois Pembekal - Tambah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG002D",
-            //            FuncName = "TG002 Invois Pembekal - Hapus"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG002E",
-            //            FuncName = "TG002 Invois Pembekal - Ubah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG002P",
-            //            FuncName = "TG002 Invois Pembekal - Cetak"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG002T",
-            //            FuncName = "TG002 Invois Pembekal - Posting"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG002UT",
-            //            FuncName = "TG002 Invois Pembekal – UnPosting"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG002B",
-            //            FuncName = "TG002 Invois Pembekal – Batal"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PV001",
-            //            FuncName = "PV001 Baucer Pembayaran"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PV001C",
-            //            FuncName = "PV001 Baucer Pembayaran - Tambah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PV001D",
-            //            FuncName = "PV001 Baucer Pembayaran - Hapus"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PV001E",
-            //            FuncName = "PV001 Baucer Pembayaran - Ubah"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PV001P",
-            //            FuncName = "PV001 Baucer Pembayaran - Cetak"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PV001T",
-            //            FuncName = "PV001 Baucer Pembayaran - Posting"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "PV001UT",
-            //            FuncName = "PV001 Baucer Pembayaran – UnPosting"
-            //        },
-            //        new SiModul
-            //        {
-            //            FuncId = "TG002B",
-            //            FuncName = "TG002 Baucer Pembayaran – Batal"
-            //        }
-            //    );
-            //}
+            if (context.SiModul.Any())
+            {
+                //return;
+            }
+            else
+            {
+                context.SiModul.AddRange(
+                    new SiModul
+                    {
+                        FuncId = "SY001",
+                        FuncName = "Maklumat Pengguna",
+                        Model = "User"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "SY002",
+                        FuncName = "Maklumat Tahap Pengguna",
+                        Model = "Roles"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "SY003",
+                        FuncName = "Log Transaksi Pengguna",
+                        Model = "AppLog"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "SY004",
+                        FuncName = "Info Syarikat",
+                        Model = "SiAppInfo"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD006",
+                        FuncName = "Jadual Kumpulan Wang",
+                        Model = "JKW"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD002",
+                        FuncName = "Jadual Bahagian",
+                        Model = "JBahagian"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD009",
+                        FuncName = "Jadual Akaun Bank",
+                        Model = "AkBank"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD004",
+                        FuncName = "Jadual Bank",
+                        Model = "JBank"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD005",
+                        FuncName = "Jadual Cara Bayar",
+                        Model = "JCaraBayar"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD001",
+                        FuncName = "Jadual Agama",
+                        Model = "JAgama"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD003",
+                        FuncName = "Jadual Bangsa",
+                        Model = "JBangsa"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD008",
+                        FuncName = "Jadual Sukan",
+                        Model = "JSukan"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD013",
+                        FuncName = "Jadual Tahap Aktiviti",
+                        Model = "JTahapAktiviti"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD007",
+                        FuncName = "Jadual Negeri",
+                        Model = "JNegeri"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD011",
+                        FuncName = "Jadual Penyemak",
+                        Model = "JPenyemak"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD010",
+                        FuncName = "Jadual Pelulus",
+                         Model = "JPelulus"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JD012",
+                        FuncName = "Jadual Profil Kategori",
+                        Model = "JProfilKategori"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "DF001",
+                        FuncName = "Daftar Anggota",
+                        Model = "SuPekerja"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "DF002",
+                        FuncName = "Daftar Pembekal",
+                        Model = "AkPembekal"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "DF003",
+                        FuncName = "Daftar Penghutang",
+                        Model = "AkPenghutang"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "DF004",
+                        FuncName = "Daftar P. Tunai Runcit",
+                        Model = "AkTunaiRuncit",
+                        FuncIdOld = "TR001"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "DF005",
+                        FuncName = "Daftar Atlet",
+                        Model = "SuAtlet"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "DF006",
+                        FuncName = "Daftar Jurulatih",
+                        Model = "SuJurulatih"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "BJ001",
+                        FuncName = "Belanjawan Waran",
+                        Model = "AbWaran"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "AK001",
+                        FuncName = "Carta Akaun",
+                        Model = "AkCarta"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "AK002",
+                        FuncName = "Lejar Am",
+                        Model = "AkAkaun"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "AK003",
+                        FuncName = "Buku Vot",
+                        Model = "AbBukuVot"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "SU001",
+                        FuncName = "Profil Atlet",
+                        Model = "SuProfil"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "SU002",
+                        FuncName = "Profil Jurulatih",
+                        Model ="SuProfil"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "SP001",
+                        FuncName = "Pendahuluan Pelbagai",
+                        Model = "SpPendahuluanPelbagai"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "IN001",
+                        FuncName = "Invois Dikeluarkan",
+                        Model = "AkInvois"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "PR001",
+                        FuncName = "Penerimaan",
+                        Model = "AkTerima"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "NM001",
+                        FuncName = "Nota Minta",
+                        Model = "AkNotaMinta"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG001",
+                        FuncName = "Pesanan Tempatan",
+                        Model = "AkPO"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG003",
+                        FuncName = "Inden Kerja",
+                        Model = "AkInden"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "PT001",
+                        FuncName = "Pelarasan Pesanan Tempatan",
+                        Model = "AkPOLaras"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TG002",
+                        FuncName = "Invois Pembekal",
+                        Model = "AkBelian"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "PV001",
+                        FuncName = "Baucer Pembayaran",
+                        Model = "AkPV"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "PV002",
+                        FuncName = "Biz Channel",
+                        Model = "AkCimbEFT"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "JU001",
+                        FuncName = "Baucer Jurnal",
+                        Model = "AkJurnal"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "TR001",
+                        FuncName = "Tunai Keluar",
+                        Model = "AkTunaiCV",
+                        FuncIdOld = "TR002"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "LPN001",
+                        FuncName = "Laporan Daftar Bil / Nota Minta"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "LPV001",
+                        FuncName = "Laporan Daftar Baucer"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "LPR001",
+                        FuncName = "Laporan Daftar Resit"
+                    }
+                );
+            }
 
             if (context.JJantina.Any())
             {

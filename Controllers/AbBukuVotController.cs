@@ -18,6 +18,9 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin , Supervisor")]
     public class AbBukuVotController : Controller
     {
+        public const string modul = "AK003";
+        public const string namamodul = "Buku Vot";
+
         private readonly ApplicationDbContext _context;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly UserManager<IdentityUser> _userManager;
@@ -70,7 +73,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                carianDari = searchFrom;
+                carianDari = searchFrom.ToUpper();
             }
 
             if (string.IsNullOrEmpty(searchTo))
@@ -79,7 +82,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                carianHingga = searchTo;
+                carianHingga = searchTo.ToUpper();
             }
 
             ViewData["searchFrom"] = carianDari;
@@ -122,7 +125,7 @@ namespace MSNK.Controllers
                 Tanggungan = l.Sum(c => c.Tanggungan),
                 Liabiliti = l.Sum(c => c.Liabiliti),
                 Baki = l.Sum(c => c.Baki)
-            }).ToList();
+            }).OrderBy(b => b.KodAkaun).ToList();
 
             //filter range search
             CarianJulat carian = new CarianJulat();

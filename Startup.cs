@@ -260,27 +260,16 @@ namespace MSNK
                 options.AddPolicy("JU001UT", policy => policy.RequireClaim("JU001UT"));
                 //Baucer Jurnal End
                 //Menu Tunai Runcit
-                //Pemegang Tunai Runcit
+                //Tunai Keluar
                 options.AddPolicy("TR001", policy => policy.RequireClaim("TR001"));
                 options.AddPolicy("TR001C", policy => policy.RequireClaim("TR001C"));
                 options.AddPolicy("TR001E", policy => policy.RequireClaim("TR001E"));
                 options.AddPolicy("TR001D", policy => policy.RequireClaim("TR001D"));
                 options.AddPolicy("TR001P", policy => policy.RequireClaim("TR001P"));
+                options.AddPolicy("TR001B", policy => policy.RequireClaim("TR001B"));
                 options.AddPolicy("TR001R", policy => policy.RequireClaim("TR001R"));
-                //options.AddPolicy("TR001B", policy => policy.RequireClaim("TR001B"));
                 options.AddPolicy("TR001T", policy => policy.RequireClaim("TR001T"));
-                //options.AddPolicy("TR001UT", policy => policy.RequireClaim("TR001UT"));
-                //Pemegang Tunai Runcit End
-                //Tunai Keluar
-                options.AddPolicy("TR002", policy => policy.RequireClaim("TR002"));
-                options.AddPolicy("TR002C", policy => policy.RequireClaim("TR002C"));
-                options.AddPolicy("TR002E", policy => policy.RequireClaim("TR002E"));
-                options.AddPolicy("TR002D", policy => policy.RequireClaim("TR002D"));
-                options.AddPolicy("TR002P", policy => policy.RequireClaim("TR002P"));
-                options.AddPolicy("TR002B", policy => policy.RequireClaim("TR002B"));
-                options.AddPolicy("TR002R", policy => policy.RequireClaim("TR002R"));
-                options.AddPolicy("TR002T", policy => policy.RequireClaim("TR002T"));
-                options.AddPolicy("TR002UT", policy => policy.RequireClaim("TR002UT"));
+                options.AddPolicy("TR001UT", policy => policy.RequireClaim("TR001UT"));
                 //Tunai Keluar End
                 //Menu Nota Minta
                 //Nota Minta
@@ -364,6 +353,56 @@ namespace MSNK
                 options.AddPolicy("IN001T", policy => policy.RequireClaim("IN001T"));
                 options.AddPolicy("IN001UT", policy => policy.RequireClaim("IN001UT"));
                 //Invois Dikeluarkan End
+                //Menu Daftar
+                //Anggota
+                options.AddPolicy("DF001", policy => policy.RequireClaim("DF001"));
+                options.AddPolicy("DF001C", policy => policy.RequireClaim("DF001C"));
+                options.AddPolicy("DF001E", policy => policy.RequireClaim("DF001E"));
+                options.AddPolicy("DF001D", policy => policy.RequireClaim("DF001D"));
+                options.AddPolicy("DF001B", policy => policy.RequireClaim("DF001B"));
+                options.AddPolicy("DF001R", policy => policy.RequireClaim("DF001R"));
+                //Anggota End
+                //Pembekal
+                options.AddPolicy("DF002", policy => policy.RequireClaim("DF002"));
+                options.AddPolicy("DF002C", policy => policy.RequireClaim("DF002C"));
+                options.AddPolicy("DF002E", policy => policy.RequireClaim("DF002E"));
+                options.AddPolicy("DF002D", policy => policy.RequireClaim("DF002D"));
+                options.AddPolicy("DF002B", policy => policy.RequireClaim("DF002B"));
+                options.AddPolicy("DF002R", policy => policy.RequireClaim("DF002R"));
+                //Pembekal End
+                //Penghutang
+                options.AddPolicy("DF003", policy => policy.RequireClaim("DF003"));
+                options.AddPolicy("DF003C", policy => policy.RequireClaim("DF003C"));
+                options.AddPolicy("DF003E", policy => policy.RequireClaim("DF003E"));
+                options.AddPolicy("DF003D", policy => policy.RequireClaim("DF003D"));
+                options.AddPolicy("DF003B", policy => policy.RequireClaim("DF003B"));
+                options.AddPolicy("DF003R", policy => policy.RequireClaim("DF003R"));
+                //Penghutang End
+                //P. Tunai Runcit
+                options.AddPolicy("DF004", policy => policy.RequireClaim("DF004"));
+                options.AddPolicy("DF004C", policy => policy.RequireClaim("DF004C"));
+                options.AddPolicy("DF004E", policy => policy.RequireClaim("DF004E"));
+                options.AddPolicy("DF004D", policy => policy.RequireClaim("DF004D"));
+                options.AddPolicy("DF004P", policy => policy.RequireClaim("DF004P"));
+                options.AddPolicy("DF004R", policy => policy.RequireClaim("DF004R"));
+                options.AddPolicy("DF004T", policy => policy.RequireClaim("DF004T"));
+                //P. Tunai Runcit End
+                //Atlet
+                options.AddPolicy("DF005", policy => policy.RequireClaim("DF005"));
+                options.AddPolicy("DF005C", policy => policy.RequireClaim("DF005C"));
+                options.AddPolicy("DF005E", policy => policy.RequireClaim("DF005E"));
+                options.AddPolicy("DF005D", policy => policy.RequireClaim("DF005D"));
+                options.AddPolicy("DF005B", policy => policy.RequireClaim("DF005B"));
+                options.AddPolicy("DF005R", policy => policy.RequireClaim("DF005R"));
+                //Atlet End
+                //Jurulatih
+                options.AddPolicy("DF006", policy => policy.RequireClaim("DF006"));
+                options.AddPolicy("DF006C", policy => policy.RequireClaim("DF006C"));
+                options.AddPolicy("DF006E", policy => policy.RequireClaim("DF006E"));
+                options.AddPolicy("DF006D", policy => policy.RequireClaim("DF006D"));
+                options.AddPolicy("DF006B", policy => policy.RequireClaim("DF006B"));
+                options.AddPolicy("DF006R", policy => policy.RequireClaim("DF006R"));
+                //Jurulatih End
             });
 
             services.AddMvc(f =>

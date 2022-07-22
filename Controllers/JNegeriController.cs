@@ -17,7 +17,7 @@ namespace MSNK.Controllers
     public class JNegeriController : Controller
     {
         public const string modul = "JD007";
-        public const string namamodul = "Negeri";
+        public const string namamodul = "Jadual Negeri";
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;

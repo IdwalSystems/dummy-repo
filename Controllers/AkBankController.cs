@@ -18,7 +18,7 @@ namespace MSNK.Controllers
     public class AkBankController : Controller
     {
         public const string modul = "JD009";
-        public const string namamodul = "Akaun Bank";
+        public const string namamodul = "Jadual Akaun Bank";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;

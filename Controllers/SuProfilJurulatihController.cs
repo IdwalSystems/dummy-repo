@@ -82,10 +82,10 @@ namespace MSNK.Controllers
         {
             List<SuProfil1> table1 = _context.SuProfil1
                 .Include(b => b.JSukan)
-                .Include(b => b.SuJurulatih)
+                .Include(b => b.SuAtlet).ThenInclude(b => b.JBank)
                 .Include(b => b.JCaraBayar)
                 .Where(b => b.SuProfilId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.JSukan.Perihal).ThenBy(b => b.SuAtlet.Nama)
                 .ToList();
             ViewBag.suProfil1 = table1;
         }
@@ -650,7 +650,7 @@ namespace MSNK.Controllers
                     item.JCaraBayar = jCaraBayar;
                 }
 
-                data = data.OrderBy(x => x.JSukanId)
+                data = data.OrderBy(x => x.JSukan.Perihal)
                     .ThenBy(x => x.SuJurulatih.Nama).ToList();
 
                 return Json(new { result = "OK", record = data });

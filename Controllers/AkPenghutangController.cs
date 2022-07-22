@@ -16,7 +16,7 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin , Supervisor")]
     public class AkPenghutangController : Controller
     {
-        public const string modul = "FL005";
+        public const string modul = "DF003";
         public const string namamodul = "Penghutang";
 
         private readonly ApplicationDbContext _context;
@@ -117,6 +117,7 @@ namespace MSNK.Controllers
             }
         }
 
+        [Authorize(Policy = "DF003")]
         // GET: AkPenghutang
         public async Task<IActionResult> Index()
         {
@@ -146,6 +147,7 @@ namespace MSNK.Controllers
             return View(akPenghutang);
         }
 
+        [Authorize(Policy = "DF003C")]
         // GET: AkPenghutang/Create
         public IActionResult Create()
         {
@@ -153,6 +155,7 @@ namespace MSNK.Controllers
             return View();
         }
 
+        [Authorize(Policy = "DF003C")]
         // POST: AkPenghutang/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -208,6 +211,7 @@ namespace MSNK.Controllers
             return View(akP);
         }
 
+        [Authorize(Policy = "DF003E")]
         // GET: AkPenghutang/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -230,6 +234,7 @@ namespace MSNK.Controllers
             return View(akPenghutang);
         }
 
+        [Authorize(Policy = "DF003E")]
         // POST: AkPenghutang/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -296,6 +301,7 @@ namespace MSNK.Controllers
             return View(akPenghutang);
         }
 
+        [Authorize(Policy = "DF003D")]
         // GET: AkPenghutang/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -316,6 +322,7 @@ namespace MSNK.Controllers
             return View(akPenghutang);
         }
 
+        [Authorize(Policy = "DF003D")]
         // POST: AkPenghutang/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -348,6 +355,7 @@ namespace MSNK.Controllers
             base.Dispose(disposing);
         }
 
+        [Authorize(Policy = "DF003R")]
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _akpenghutangRepo.GetByIdIncludeDeletedItems(id);

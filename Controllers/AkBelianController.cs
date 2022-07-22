@@ -20,7 +20,7 @@ namespace MSNK.Controllers
     {
 
         public const string modul = "TG002";
-        public const string namamodul = "Inbois Pembekal";
+        public const string namamodul = "Invois Pembekal";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -102,7 +102,7 @@ namespace MSNK.Controllers
         {
             List<SelectListItem> columnList = new();
             columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
-            columnList.Add(new SelectListItem() { Text = "No Inbois", Value = "NoRujukan" });
+            columnList.Add(new SelectListItem() { Text = "No Invois", Value = "NoRujukan" });
             columnList.Add(new SelectListItem() { Text = "Nama", Value = "Nama" });
 
             if (!String.IsNullOrEmpty(searchColumn))

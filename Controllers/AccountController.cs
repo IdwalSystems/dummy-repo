@@ -24,7 +24,7 @@ namespace MSNK.Controllers
     public class AccountController : Controller
     {
         public const string modul = "SY001";
-        public const string namamodul = "Sistem Pengguna";
+        public const string namamodul = "Maklumat Pengguna";
 
         private readonly ApplicationDbContext _db;
         private readonly IConfiguration _configuration;

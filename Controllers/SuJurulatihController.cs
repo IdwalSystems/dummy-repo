@@ -18,8 +18,8 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin,Supervisor,User")]
     public class SuJurulatihController : Controller
     {
-        public const string modul = "FL004";
-        public const string namamodul = "Jurulatih";
+        public const string modul = "DF006";
+        public const string namamodul = "Daftar Jurulatih";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -119,6 +119,7 @@ namespace MSNK.Controllers
             return no.ToString("D5");
         }
 
+        [Authorize(Policy = "DF006")]
         // GET: SuJurulatih
         public async Task<IActionResult> Index()
         {
@@ -150,6 +151,7 @@ namespace MSNK.Controllers
             return View(suJurulatih);
         }
 
+        [Authorize(Policy = "DF006C")]
         // GET: SuJurulatih/Create
         public IActionResult Create()
         {
@@ -159,6 +161,7 @@ namespace MSNK.Controllers
             return View();
         }
 
+        [Authorize(Policy = "DF006C")]
         // POST: SuJurulatih/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -248,6 +251,7 @@ namespace MSNK.Controllers
             return View(suJurulatih);
         }
 
+        [Authorize(Policy = "DF006E")]
         // GET: SuJurulatih/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -269,6 +273,7 @@ namespace MSNK.Controllers
             return View(suJurulatih);
         }
 
+        [Authorize(Policy = "DF006E")]
         // POST: SuJurulatih/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -293,6 +298,7 @@ namespace MSNK.Controllers
                     suJurulatih.UserId = dataAsal.UserId;
                     suJurulatih.NoKp = dataAsal.NoKp;
                     suJurulatih.KodJurulatih = dataAsal.KodJurulatih;
+                    suJurulatih.FlStatus = dataAsal.FlStatus;
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
                     // list of input that cannot be change end
@@ -337,6 +343,7 @@ namespace MSNK.Controllers
             return View(suJurulatih);
         }
 
+        [Authorize(Policy = "DF006D")]
         // GET: SuJurulatih/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -355,6 +362,7 @@ namespace MSNK.Controllers
             return View(suJurulatih);
         }
 
+        [Authorize(Policy = "DF006D")]
         // POST: SuJurulatih/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -374,6 +382,7 @@ namespace MSNK.Controllers
             return _context.SuJurulatih.Any(e => e.Id == id);
         }
 
+        [Authorize(Policy = "DF006R")]
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _suJurulatihRepo.GetByIdIncludeDeletedItems(id);
@@ -383,6 +392,8 @@ namespace MSNK.Controllers
             _context.SuJurulatih.Update(obj);
 
             // Batal operation end
+
+            await AddLogAsync("Hapus", obj.NoKp + " - " + obj.NoAkaunBank, obj.KodJurulatih, id, 0);
 
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dikembalikan..!";

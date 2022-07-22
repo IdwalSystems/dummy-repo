@@ -22,7 +22,7 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin,Supervisor,User")]
     public class AkInvoisController : Controller
     {
-        public const string modul = "IN002";
+        public const string modul = "IN001";
         public const string namamodul = "Inbois Dikeluarkan";
 
         private readonly ApplicationDbContext _context;

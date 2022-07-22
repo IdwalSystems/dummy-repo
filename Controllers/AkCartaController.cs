@@ -22,7 +22,7 @@ namespace MSNK.Controllers
     public class AkCartaController : Controller
     {
         public const string modul = "AK001";
-        public const string namamodul = "AK001";
+        public const string namamodul = "Carta Akaun";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;

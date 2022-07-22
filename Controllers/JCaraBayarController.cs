@@ -17,7 +17,7 @@ namespace MSNK.Controllers
     public class JCaraBayarController : Controller
     {
         public const string modul = "JD005";
-        public const string namamodul = "Carabayar";
+        public const string namamodul = "Jadual Cara Bayar";
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;

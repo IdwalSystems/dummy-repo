@@ -21,8 +21,8 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin , Supervisor, User")]
     public class AkTunaiRuncitController : Controller
     {
-        public const string modul = "TR001";
-        public const string namamodul = "Pemegang Tunai Runcit";
+        public const string modul = "DF004";
+        public const string namamodul = "Daftar P. Tunai Runcit";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -74,7 +74,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiRuncit
-        [Authorize(Policy = "TR001")]
+        [Authorize(Policy = "DF004")]
         public async Task<IActionResult> Index()
         {
             var akTunaiRuncit = await _akTunaiRuncitRepo.GetAll();
@@ -202,7 +202,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiRuncit/Create
-        [Authorize(Policy = "PR001C")]
+        [Authorize(Policy = "DF004C")]
         public IActionResult Create()
         {
             // get latest no rujukan running number  
@@ -400,6 +400,7 @@ namespace MSNK.Controllers
             }
         }
 
+        [Authorize(Policy = "DF004C")]
         // POST: AkTunaiRuncit/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -467,7 +468,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiRuncit/Edit/5
-        [Authorize(Policy = "TR001E")]
+        [Authorize(Policy = "DF004E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -510,7 +511,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Policy = "TR001E")]
+        [Authorize(Policy = "DF004E")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AkTunaiRuncit akTunaiRuncit, int JKWId, int AkCartaId, decimal Baki, DateTime? TarikhBaki)
         {
@@ -582,7 +583,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkTunaiRuncit/Delete/5
-        [Authorize(Policy ="TR001D")]
+        [Authorize(Policy ="DF004D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -605,7 +606,7 @@ namespace MSNK.Controllers
 
         // POST: AkTunaiRuncit/Delete/5
         [HttpPost, ActionName("Delete")]
-        [Authorize(Policy = "TR001D")]
+        [Authorize(Policy = "DF004D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -648,7 +649,7 @@ namespace MSNK.Controllers
         }
 
         // POST: AkPV/Cancel/5
-        [Authorize(Policy = "TR001R")]
+        [Authorize(Policy = "DF004R")]
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _akTunaiRuncitRepo.GetByIdIncludeDeletedItems(id);
@@ -677,7 +678,7 @@ namespace MSNK.Controllers
         }
 
         // rekup function
-        [Authorize(Policy = "TR001T")]
+        [Authorize(Policy = "DF001T")]
         public async Task<IActionResult> Rekup(int? id, string tarikhDari, string tarikhHingga)
         {
             if (id == null)
@@ -791,7 +792,7 @@ namespace MSNK.Controllers
         // rekup function end
 
         // printing Rekupan Tunai Runcit
-        [Authorize(Policy = "TR001P")]
+        [Authorize(Policy = "DF001P")]
         public async Task<IActionResult> PrintPdf(int id, string kodKaunter, string rekup)
         {
             if (rekup == null)

@@ -16,7 +16,7 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin,Supervisor")]
     public class JTahapAktivitiController : Controller
     {
-        public const string modul = "JD009";
+        public const string modul = "JD013";
         public const string namamodul = "Jadual Tahap Aktiviti";
 
         private readonly ApplicationDbContext _context;

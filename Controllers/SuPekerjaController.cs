@@ -18,8 +18,8 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin,Supervisor")]
     public class SuPekerjaController : Controller
     {
-        public const string modul = "FL002";
-        public const string namamodul = "Anggota";
+        public const string modul = "DF001";
+        public const string namamodul = "Daftar Anggota";
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -150,6 +150,7 @@ namespace MSNK.Controllers
             }
         }
 
+        [Authorize(Policy = "DF001")]
         // GET: SuPekerja
         public async Task<IActionResult> Index()
         {
@@ -181,6 +182,7 @@ namespace MSNK.Controllers
             return View(suPekerja);
         }
 
+        [Authorize(Policy = "DF001C")]
         // GET: SuPekerja/Create
         public IActionResult Create()
         {
@@ -190,6 +192,7 @@ namespace MSNK.Controllers
             return View();
         }
 
+        [Authorize(Policy = "DF001C")]
         // POST: SuPekerja/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -283,6 +286,7 @@ namespace MSNK.Controllers
             return View(suPekerja);
         }
 
+        [Authorize(Policy = "DF001E")]
         // GET: SuPekerja/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -304,6 +308,7 @@ namespace MSNK.Controllers
             return View(suPekerja);
         }
 
+        [Authorize(Policy = "DF001E")]
         // POST: SuPekerja/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -381,6 +386,7 @@ namespace MSNK.Controllers
             return View(suPekerja);
         }
 
+        [Authorize(Policy = "DF001D")]
         // GET: SuPekerja/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -399,6 +405,7 @@ namespace MSNK.Controllers
             return View(suPekerja);
         }
 
+        [Authorize(Policy = "DF001D")]
         // POST: SuPekerja/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -580,6 +587,7 @@ namespace MSNK.Controllers
             }
         }
 
+        [Authorize(Policy = "DF001R")]
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _suPekerjaRepo.GetByIdIncludeDeletedItems(id);

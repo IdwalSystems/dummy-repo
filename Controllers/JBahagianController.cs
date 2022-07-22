@@ -18,7 +18,7 @@ namespace MSNK.Controllers
     public class JBahagianController : Controller
     {
         public const string modul = "JD002";
-        public const string namamodul = "Bahagian";
+        public const string namamodul = "Jadual Bahagian";
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;

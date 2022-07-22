@@ -82,10 +82,10 @@ namespace MSNK.Controllers
         {
             List<SuProfil1> table1 = _context.SuProfil1
                 .Include(b => b.JSukan)
-                .Include(b => b.SuAtlet)
+                .Include(b => b.SuAtlet).ThenInclude(b => b.JBank)
                 .Include(b => b.JCaraBayar)
                 .Where(b => b.SuProfilId == id)
-                .OrderBy(b => b.Id)
+                .OrderBy(b => b.JSukan.Perihal).ThenBy(b => b.SuAtlet.Nama)
                 .ToList();
             ViewBag.suProfil1 = table1;
         }
@@ -104,6 +104,11 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
+
+            suProfil.SuProfil1 = suProfil.SuProfil1
+                .OrderBy(b => b.JSukan.Perihal)
+                .ThenBy(b => b.SuAtlet.Nama)
+                .ToList();
 
             PopulateTableDetails(id);
             return View(suProfil);
@@ -654,7 +659,7 @@ namespace MSNK.Controllers
                     item.JCaraBayar = jCaraBayar;
                 }
 
-                data = data.OrderBy(x => x.JSukanId)
+                data = data.OrderBy(x => x.JSukan.Perihal)
                     .ThenBy(x => x.SuAtlet.Nama).ToList();
 
                 return Json(new { result = "OK", record = data });
@@ -751,6 +756,12 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
+
+            suProfil.SuProfil1 = suProfil.SuProfil1
+                .OrderBy(b => b.JSukan.Perihal)
+                .ThenBy(b => b.SuAtlet.Nama)
+                .ToList();
+
             CartEmpty();
             PopulateList();
             PopulateTableDetails(id);
@@ -967,6 +978,11 @@ namespace MSNK.Controllers
         {
             SuProfil obj = await _suProfilRepo.GetByIdIncludeDeletedItems(id);
 
+            obj.SuProfil1 = obj.SuProfil1
+                .OrderBy(b => b.JSukan.Perihal)
+                .ThenBy(b => b.SuAtlet.Nama)
+                .ToList();
+
             string jumlahDalamPerkataan;
 
             if (obj.Jumlah < 0)
@@ -1009,7 +1025,7 @@ namespace MSNK.Controllers
 
             return new ViewAsPdf("SuProfilAtletPrintPdf", dyModel)
             {
-                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageMargins = { Left = 15, Bottom = 16, Right = 15, Top = 15 },
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
                 //CustomSwitches = "--footer-center \"  Tarikh: " +
                 //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
