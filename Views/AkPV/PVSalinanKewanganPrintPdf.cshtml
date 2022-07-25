@@ -142,11 +142,12 @@
                     <td class="text-right" colspan="2">Jumlah RM</td>
                     <td class="text-right" style="font-size:1.1rem;">@Convert.ToDecimal(Model.jumlahInbois).ToString("#,##0.00")</td>
                 </tr>
-            }
-            <tr class="table-borderless">
-                <td class="text-white" colspan="6">-</td>
+                <tr class="table-borderless">
+                    <td class="text-white" colspan="6">-</td>
 
-            </tr>
+                </tr>
+            }
+            
             <tr class="font-weight-bold">
                 <td class="text-center" colspan="6">PERBELANJAAN TELAH DIMASUKKAN KE DALAM PERUNTUKAN-PERUNTUKAN DI BAWAH</td>
             </tr>
@@ -240,15 +241,15 @@
 
             </tr>
             <tr>
-                <td class="text-center">@Model.Username</td>
+                <td class="text-center text-uppercase">@Model.Username</td>
                 <td class="text-center">@Model.Penyemak.SuPekerja.Nama</td>
                 <td class="text-center">@Model.Pelulus?.SuPekerja?.Nama</td>
 
             </tr>
             <tr>
-                <td class="text-center">Pembantu Tadbir (Kewangan)</td>
-                <td class="text-center">Akauntan</td>
-                <td class="text-center">Pengarah</td>
+                <td class="text-center text-uppercase">Pembantu Tadbir (Kewangan)</td>
+                <td class="text-center">@Model.Penyemak?.SuPekerja?.Jawatan</td>
+                <td class="text-center">@Model.Pelulus?.SuPekerja?.Jawatan</td>
 
             </tr>
             <tr>

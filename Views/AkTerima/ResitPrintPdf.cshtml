@@ -27,6 +27,10 @@
         max-height: 5.8em;
     }
 
+    hr.cut-line {
+      border-top: 2px dashed;
+    }
+
 </style>
 @*Asal*@
 <div class="row flexrow mb-1 ml-1">
@@ -149,7 +153,9 @@
 
 <p class="mb-0 text-right">@Model.username : @DateTime.Now</p>
 @*Asal End*@
-<hr />
+<hr class="cut-line mb-0"  />
+<p class="mb-4 text-center">Sila potong di sini</p>
+
 @*Salinan*@
 <div class="row flexrow mb-1 ml-1">
     <div class="col-2 image-container">
