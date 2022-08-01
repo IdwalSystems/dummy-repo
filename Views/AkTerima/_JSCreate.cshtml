@@ -203,7 +203,7 @@
 
     //on change no Inbois pembekal end
 
-    // onchange no KP
+    // on change no KP
     $("body").on('change', "#NoKp", function () {
         var noKP = $("#NoKp").val();
         if (noKP != null) {
@@ -240,14 +240,14 @@
             }
         });
     }
-    // onchange no KP end
+    // on change no KP end
 
-    // onchange CaraBayar
+    // on change CaraBayar
     $("body").on('change', "#ddlCaraBayar", function () {
         var caraBayar = $("#ddlCaraBayar").val();
         $("#txtAmaunUrusniaga").val("0.00");
         $("#txtNoCek").val("-");
-        $("#txtJenisCek").val("");
+        $("#txtJenisCek").val(0).change();
         $("#txtKodBankCek").val("-");
         $("#txtTempatCek").val("-");
         $("#txtNoSlip").val("-");
@@ -286,7 +286,7 @@
             });
         }
     }
-    // onchange CaraBayar end
+    // on change CaraBayar end
 
     // on change no permohonan
     $("body").on('change', "#ddlPendahuluanPelbagai", function () {
@@ -513,6 +513,7 @@
                 data: JCaraBayar,
                 dataType: "json",
                 success: function (r) {
+
                     //Reference the TextBoxes.
                     var ddlCaraBayar = $("#ddlCaraBayar");
                     var txtAmaunUrusniaga = $("#txtAmaunUrusniaga");
@@ -525,73 +526,8 @@
 
                     var txtJumlah = $("#jumlahUrusniaga");
 
-                    //Sum value to Total text field
-                    var sum = 0;
-                    sum = parseFloat(txtAmaunUrusniaga.val()) + parseFloat(txtJumlah.val());
-                    txtJumlah.val(sum.toFixed(2));
-
-                    //Get the reference of the Table's TBODY element.
-                    var tBody = $("#tblUrusniaga > TBODY")[0];
-                    //Add Row.
-                    var row = tBody.insertRow(-1);
-
-                    //Add caraBayarId cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
-
-                    //Add caraBayar cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.perihal);
-
-                    //Add Amaun cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(parseFloat(txtAmaunUrusniaga.val()).toFixed(2));
-
-                    //Add NoCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtNoCek.val());
-
-                    //Add JenisCek cell.
-                    var cell = $(row.insertCell(-1));
-                    if ($("#txtJenisCek").val() == null) {
-                        cell.html("");
-                    } else {
-                        cell.html($("#txtJenisCek option:selected").text().toUpperCase());
-                    }
-
-
-                    //Add KodBankCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtKodBankCek.val());
-
-                    //Add TempatCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtTempatCek.val());
-
-                    //Add NoSlip cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtNoSlip.val());
-
-                    //Add TarSlip cell.
-                    var cell = $(row.insertCell(-1));
-                    if (txtTarSlip.val() == null || txtTarSlip.val() == '') {
-                        cell.html('');
-                    } else {
-
-                        cell.html(showDate(txtTarSlip.val()));
-                    }
-
-                    //Add Edit Button cell.
-                    cell = $(row.insertCell(-1));
-
-                    var btnUpdate2 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
-                    cell.append(btnUpdate2);
-
-                    //Add Button cell.
-                    cell = $(row.insertCell(-1));
-                    var btnRemove2 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
-                    cell.append(btnRemove2);
+                    var id = ddlCaraBayar.val();
+                    var perihal = r.record.perihal;
 
                     var AkTerima2 = {
                         JCaraBayarId: ddlCaraBayar.val(),
@@ -610,20 +546,99 @@
                         data: AkTerima2,
                         dataType: "json",
                         success: function (r) {
-                            //Clear the TextBoxes.
-                            ddlCaraBayar.val("").trigger('change');
-                            txtAmaunUrusniaga.val("0.00");
-                            txtNoCek.val("-");
-                            txtJenisCek.val("");
-                            txtKodBankCek.val("-");
-                            txtTempatCek.val("-");
-                            txtNoSlip.val("-");
-                            txtTarSlip.val("");
-                            checkJumlah();
+                            if (r.result == "OK") {
+                                
+                                //Sum value to Total text field
+                                var sum = 0;
+                                sum = parseFloat(txtAmaunUrusniaga.val()) + parseFloat(txtJumlah.val());
+                                txtJumlah.val(sum.toFixed(2));
+
+                                //Get the reference of the Table's TBODY element.
+                                var tBody = $("#tblUrusniaga > TBODY")[0];
+                                //Add Row.
+                                var row = tBody.insertRow(-1);
+
+                                //Add caraBayarId cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(ddlCaraBayar.val());
+                                cell.prop("hidden", !this.checked);
+
+                                //Add caraBayar cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(perihal);
+
+                                //Add Amaun cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(parseFloat(txtAmaunUrusniaga.val()).toFixed(2));
+
+                                //Add NoCek cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(txtNoCek.val());
+
+                                //Add JenisCek cell.
+                                var cell = $(row.insertCell(-1));
+                                if ($("#txtJenisCek").val() == null) {
+                                    cell.html("");
+                                } else {
+                                    cell.html($("#txtJenisCek option:selected").text().toUpperCase());
+                                }
+
+                                //Add KodBankCek cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(txtKodBankCek.val());
+
+                                //Add TempatCek cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(txtTempatCek.val());
+
+                                //Add NoSlip cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(txtNoSlip.val());
+
+                                //Add TarSlip cell.
+                                var cell = $(row.insertCell(-1));
+                                if (txtTarSlip.val() == null || txtTarSlip.val() == '') {
+                                    cell.html('');
+                                } else {
+
+                                    cell.html(showDate(txtTarSlip.val()));
+                                }
+
+                                //Add Edit Button cell.
+                                cell = $(row.insertCell(-1));
+
+                                var btnUpdate2 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
+                                cell.append(btnUpdate2);
+
+                                //Add Button cell.
+                                cell = $(row.insertCell(-1));
+                                var btnRemove2 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
+                                cell.append(btnRemove2);
+
+                                //Clear the TextBoxes.
+                                ddlCaraBayar.val("").trigger('change');
+                                txtAmaunUrusniaga.val("0.00");
+                                txtNoCek.val("-");
+                                txtJenisCek.val("");
+                                txtKodBankCek.val("-");
+                                txtTempatCek.val("-");
+                                txtNoSlip.val("-");
+                                txtTarSlip.val("");
+                                checkJumlah();
+
+                                if (r.isCek === "false"){
+                                    $("#ddlCaraBayar option[value=" + id + "]").prop('disabled', true);
+                                }
+
+                            }
+                            else if (r.result == "ERRORCEK") {
+                                toastr.error(r.message, "Ralat");
+                                toastr.options.timeOut = 5000; // 5s
+                            }
+                            
                         }
                     });
-                    $("#ddlCaraBayar option[value=" + ddlCaraBayar.val() + "]").prop('disabled', true);
-
+                    
                 }
             });
         }
@@ -636,9 +651,10 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var name = $("TD", row).eq(0).html();
+        var namaAkaun = $("TD", row).eq(1).html();
         var amaun = $("TD", row).eq(2).html();
         var txtJumlah = $("#jumlahObjek");
-        if (confirm("Hapus kod Akaun : " + name + " ?")) {
+        if (confirm("Hapus kod Akaun : " + namaAkaun + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblObjek")[0];
 
@@ -675,10 +691,11 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var name = $("TD", row).eq(0).html();
+        var carabayar = $("TD", row).eq(1).html();
         var amaun = $("TD", row).eq(2).html();
         var txtJumlah = $("#jumlahUrusniaga");
 
-        if (confirm("Hapus : " + name + " ?")) {
+        if (confirm("Hapus : " + carabayar + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblUrusniaga")[0];
 
@@ -893,15 +910,33 @@
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
                                 var tarSlip = "";
+                                var jenisCek = "";
                                 if (item1.tarSlip == null) {
                                 } else {
                                     tarSlip = showDate(item1.tarSlip);
+                                }
+                                if (item1.jenisCek == null) {
+                                } else {
+                                    switch (item1.jenisCek) {
+                                        case 1:
+                                            jenisCek = "Cek Cawangan Ini";
+                                            break;
+                                        case 2:
+                                            jenisCek = "Cek Tempatan";
+                                            break;
+                                        case 3:
+                                            jenisCek = "Cek Luar";
+                                            break;
+                                        case 4:
+                                            jenisCek = "Cek Antarabangsa";
+                                            break;
+                                    }
                                 }
                                 var str = "<tr><td id='jCaraBayarId' hidden>" + item1.jCaraBayarId +
                                     "</td><td class='text-uppercase'>" + item1.jCaraBayar.perihal +
                                     "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" + item1.noCek +
-                                    "</td><td class='text-uppercase'>" + item1.jenisCek +
+                                    "</td><td class='text-uppercase'>" + jenisCek +
                                     "</td><td class='text-uppercase'>" + item1.kodBankCek +
                                     "</td><td class='text-uppercase'>" + item1.tempatCek +
                                     "</td><td>" + item1.noSlip +

@@ -501,7 +501,8 @@ body {
     padding: 0.1rem 0.5rem;
     height: calc(1.4em + 0.5rem + 2px);
     font-size: .8rem;
-    border-radius: 0.3rem;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+    /*background: aliceblue;*/
 }
 
 label {
@@ -583,6 +584,7 @@ label {
 }
 
 .dropdown-menu {
+    position: relative;
     margin: 0 0.5rem;
     animation: fadeInUp; /* referring directly to the animation's @keyframe declaration */
     animation-duration: 0.5s; /* don't forget to set a duration! */

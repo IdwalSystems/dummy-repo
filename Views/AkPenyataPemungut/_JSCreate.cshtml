@@ -1,0 +1,106 @@
+﻿<script type="text/javascript">
+    // on change cara bayar
+    $("body").on('change', "#ddlCaraBayar", function () {
+        var caraBayarId = $("#ddlCaraBayar").val();
+        var div = $("#divJenisCek");
+        $('input[type="radio"]').prop('checked', false);
+        $.ajax({
+            type: "POST",
+            //url: "/AkPV/JsonGetKod",
+            url: '@Url.Action("JsonGetCaraBayar", "AkPenyataPemungut")',
+            data: { id: caraBayarId },
+            dataType: "json",
+            success: function (msg) {
+                if (msg.result == "CEK") {
+                    div.removeAttr('hidden');
+                }
+                else {
+                    div.prop('hidden', true);
+                }
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+
+    });
+    // on change cara bayar end
+    // onchange no Rujukan
+    $("body").on('change', "#Tahun", function () {
+        var tahun = $("#Tahun").val();
+        if (tahun != null || tahun != undefined) {
+            JsonKod(tahun);
+        }
+
+    });
+
+    function JsonKod(tahun) {
+        $.ajax({
+            type: "POST",
+            //url: "/AkPV/JsonGetKod",
+            url: '@Url.Action("JsonGetKod", "AkPenyataPemungut")',
+            data: { tahun: tahun },
+            dataType: "json",
+            success: function (msg) {
+                if (msg.record) {
+                    $("#NoDokumen").val(msg.record);
+                }
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    // onchange no Rujukan end
+
+    // jana kelompok
+    function JanaKelompok() {
+        var tarDari = $("#TarDari").val();
+        var tarHingga = $("#TarHingga").val();
+        var caraBayarId = $("#ddlCaraBayar").val();
+        var jenisCek = $('input[name="FlJenisCek"]:checked').val();
+        
+
+        var jumlah = $("#jumlahTerima");
+        var bilTerima = $("#bilTerima");
+
+        if (tarHingga < tarDari)
+        {
+            $("#TarHingga").val(tarDari);
+        }
+
+        $.ajax({
+            type: "POST",
+            //url: "/AkPV/JsonGetKod",
+            url: '@Url.Action("JsonGetTerima", "AkPenyataPemungut")',
+            data: { tarDari: tarDari, tarHingga: tarHingga, JCaraBayarId: caraBayarId, JenisCek: jenisCek },
+            dataType: "json",
+            success: function (msg) {
+                //refresh updated table Baucer\
+                $("table tbody#tbodyTerima").empty();
+                var sum = 0;
+                var bil = 0;
+                if (msg.table.length > 0) {
+                    for (var i = 0; i < msg.table.length; i++) {
+                        var item1 = msg.table[i];
+                        var str = "<tr><td id='Indek' hidden>" + item1.indek +
+                            "</td><td class='text-uppercase'>" + item1.indek +
+                            "</td><td class='text-uppercase'>" + item1.noResit +
+                            "</td><td class='text-uppercase'>" + moment(item1.tarikh).format('DD/MM/YYYY') +
+                            "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                            "</td><tr>";
+                        $("table tbody#tbodyTerima").append(str);
+                        sum += item1.amaun;
+                        bil++;
+                    }
+                }
+                jumlah.val(sum.toFixed(2));
+                bilTerima.val(bil);
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    // jana kelompok end
+</script>

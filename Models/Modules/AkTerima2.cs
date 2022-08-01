@@ -8,9 +8,17 @@ namespace MSNK.Models.Modules
 {
     public class AkTerima2
     {
+        // note:
+        // FlJenis = 0 || null ( Lain - lain )
+        // FlJenis = 1 ( Cek Cawangan Ini )
+        // FlJenis = 2 ( Cek Tempatan )
+        // FlJenis = 3 ( Cek Luar )
+        // FlJenis = 4 ( Cek Antarabangsa )
+        // ..
         //field
         public int Id { get; set; }
         public int AkTerimaId { get; set; }
+        public AkTerima AkTerima { get; set; }
         [DisplayName("Cara Bayar")]
         public int JCaraBayarId { get; set; }
         [DisplayName("Amaun RM")]
@@ -18,8 +26,7 @@ namespace MSNK.Models.Modules
         public decimal Amaun { get; set; }
         [MaxLength(10)]
         public string NoCek { get; set; } 
-        [MaxLength(1)]
-        public string JenisCek { get; set; } 
+        public int JenisCek { get; set; } 
         [MaxLength(4)]
         public string KodBankCek { get; set; } 
         [MaxLength(100)]
@@ -28,11 +35,13 @@ namespace MSNK.Models.Modules
         public string NoSlip { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? TarSlip { get; set; }
+        public int? AkPenyataPemungutId { get; set; }
         //field end
         
 
         //Relationship
         public JCaraBayar JCaraBayar { get; set; }
+        public ICollection<AkPenyataPemungut2> AkPenyataPemungut2 { get; set; }
         //relationship end
 
 

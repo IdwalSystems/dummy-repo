@@ -48,9 +48,10 @@ namespace MSNK.Models.Modules.Cart
             int akTerimaId,
             int jCaraBayarId,
             decimal amaun, string noCek,
-            string jenisCek, string kodBankCek,
+            int jenisCek, string kodBankCek,
             string tempatCek, string noSlip,
-            DateTime? tarSlip
+            DateTime? tarSlip,
+            int? AkPenyataPemungutId
             )
         {
             AkTerima2 line = collection2
@@ -69,7 +70,8 @@ namespace MSNK.Models.Modules.Cart
                     KodBankCek = kodBankCek,
                     TempatCek = tempatCek,
                     NoSlip = noSlip,
-                    TarSlip = tarSlip
+                    TarSlip = tarSlip,
+                    AkPenyataPemungutId = AkPenyataPemungutId
                 });
             }
         }

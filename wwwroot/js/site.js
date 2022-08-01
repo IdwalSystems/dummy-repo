@@ -55,6 +55,7 @@ function display_ct6() {
     document.getElementById('ct6').innerHTML = x1;
     display_c6();
 }
+
 function display_c6() {
     var refresh = 1000; // Refresh rate in milli seconds
     mytime = setTimeout('display_ct6()', refresh)
@@ -71,7 +72,7 @@ function ResetThisSession() {
 function StartThisSessionTimer() {
     secondTick++;
     var timeLeft = ((timeInSecondsAfterSessionOut - secondTick) / 60).toFixed(0); // in minutes
-    timeLeft = timeInSecondsAfterSessionOut - secondTick; // override, we have 30 secs only 
+    timeLeft = timeInSecondsAfterSessionOut - secondTick; // override, we have 30 secs only
 
     $("#spanTimeLeft").html(timeLeft);
 
@@ -90,6 +91,11 @@ function StartThisSessionTimer() {
     tick = setTimeout("StartThisSessionTimer()", 1000);
 }
 
+function display_timer() {
+
+    document.getElementById('timer').innerHTML = timeInSecondsAfterSessionOut;
+    StartThisSessionTimer();
+}
 /*StartThisSessionTimer();*/
 
 function showDate(d) {
@@ -105,6 +111,19 @@ $(document).ready(function () {
     $(".select2").select2({
         theme: "bootstrap"
     });  
+
+    $("#datepicker").datepicker({
+        changeMonth: true,
+        changeYear: true,
+    })
+        .hide()
+        .click(function () {
+            $(this).hide();
+        });
+
+    $("#datepickerImage").click(function () {
+        $("#datepicker").show();
+    });
 
 });
 

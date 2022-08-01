@@ -19,7 +19,7 @@
         <hr class="mt-2"/>
 
                 <form asp-action="Edit" class="needs-validation">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="JKWId" id="ddlKW" />
             <input type="hidden" asp-for="JBahagianId" id="ddlBahagian" />
@@ -153,7 +153,8 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JumKeseluruhan" class="control-label">Jumlah</label><span class="text-danger control-label">*</span>
-                                <input asp-for="JumKeseluruhan" class="form-control form-control-sm form-control-sm-custom" type="number" value="@Model.JumKeseluruhan" required id="txtJumlahKeseluruhan" /><span class="text-danger control-label" id="spanJumKeseluruhan"></span>
+                                <input asp-for="JumKeseluruhan" class="form-control form-control-sm form-control-sm-custom" type="number" value="@Model.JumKeseluruhan" id="txtJumlahKeseluruhan" step="0.01"/>
+                                <span class="text-danger control-label" asp-validation-for="JumKeseluruhan"></span>
                             </div>
                         </div>
                     </div>

@@ -107,20 +107,15 @@
     }
     <!-- horizontal navbar -->
     <div>
-        <nav class="navbar navbar-expand-lg navbar-toggleable-lg @navtype box-shadow">
+        <nav class="navbar navbar-expand-lg @navtype box-shadow">
             <div class="container-fluid">
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">
                     <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" style="width: 40px; height: 40px; align-content: center; height: 100%;" class="border border-light rounded-circle" />
                 </a>
                 <h5 class="@texttype mb-0">MSNK</h5>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
-                    <div class="col-6 navbar-nav">
-                    </div>
-                    <div class="col-6 navbar-nav ms-auto float-right">
+
+                <div class=" d-inline">
+                    <div class="col-12 navbar-nav float-right">
                         <partial name="_LoginPartialNavbar" />
                     </div>
                 </div>
@@ -272,7 +267,17 @@
         <!-- Toggle button -->
 
         <div class="container-fluid">
-            <button id="sidebarCollapse" type="button" class="btn ac-tertiary shadow-sm mb-3 sticky-top"><i class="fa fa-bars"></i> Menu Utama</button>
+            <div class="d-inline">
+                <button id="sidebarCollapse" type="button" class="btn ac-tertiary shadow-sm mb-3 sticky-top">
+                    <i class="fa fa-bars pr-2"></i> Menu Utama</button>
+            </div>
+            <div class="d-inline pl-2">
+                <button type="button" class="btn ac-light shadow-sm mb-3 sticky-top">
+                    <i class="fa fa-calendar pr-2"></i> 
+                    @hari, @tarikh <span id="ct6"></span></button>
+            </div>
+            <a id="timer"></a>
+            
 
             <main role="main" class="pb-3">
                 <partial name="_Notifications" />
@@ -287,7 +292,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <p class="float-left">&copy; 2022 - MSNK - @hari, @tarikh <a id="ct6"></a></p>
+                        <p class="float-left">&copy; 2022 - MSNK</p>
                     </div>
                     <div class="col-lg-4 text-right pr-5">
                         

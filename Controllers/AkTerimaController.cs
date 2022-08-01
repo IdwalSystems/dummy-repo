@@ -352,7 +352,8 @@ namespace MSNK.Controllers
                                akTerima2.KodBankCek,
                                akTerima2.TempatCek,
                                akTerima2.NoSlip,
-                               akTerima2.TarSlip);
+                               akTerima2.TarSlip,
+                               akTerima2.AkPenyataPemungutId);
             }
 
             ViewBag.akTerima2 = akTerima2Table;
@@ -629,7 +630,8 @@ namespace MSNK.Controllers
                                    akTerima2.KodBankCek,
                                    akTerima2.TempatCek,
                                    akTerima2.NoSlip,
-                                   akTerima2.TarSlip);
+                                   akTerima2.TarSlip, 
+                                   akTerima2.AkPenyataPemungutId);
                 }
 
                 return Json(new { result = "OK" });
@@ -654,29 +656,7 @@ namespace MSNK.Controllers
                     var jCaraBayar = _context.JCaraBayar.Find(item.JCaraBayarId);
 
                     item.JCaraBayar = jCaraBayar;
-                    if (item.JenisCek == null)
-                    {
-                        item.JenisCek = "";
-                    }
-                    else
-                    {
-                        switch (item.JenisCek)
-                        {
-                            case "1":
-                                item.JenisCek = "Cek Cawangan Ini";
-                                break;
-                            case "2":
-                                item.JenisCek = "Cek Tempatan";
-                                break;
-                            case "3":
-                                item.JenisCek = "Cek Luar";
-                                break;
-                            case "4":
-                                item.JenisCek = "Cek Antarabangsa";
-                                break;
-
-                        }
-                    }
+                    
                 }
 
                 return Json(new { result = "OK", record = data });
@@ -1388,8 +1368,22 @@ namespace MSNK.Controllers
 
             try
             {
+                bool isCek = false;
+
                 if (akTerima2 != null)
                 {
+                    var caraBayar = _context.JCaraBayar.FirstOrDefault(b => b.Id == akTerima2.JCaraBayarId);
+
+                    isCek = caraBayar.Perihal.Contains("CEK");
+
+                    if (isCek == true)
+                    {
+                        if (akTerima2.JenisCek == 0)
+                        {
+                            return Json(new { result = "ERRORCEK", message = "Sila pilih jenis cek." });
+                        }
+
+                    }
                     var user = await _userManager.GetUserAsync(User);
 
 
@@ -1401,10 +1395,11 @@ namespace MSNK.Controllers
                                    akTerima2.KodBankCek,
                                    akTerima2.TempatCek,
                                    akTerima2.NoSlip,
-                                   akTerima2.TarSlip);
+                                   akTerima2.TarSlip,
+                                   null);
                 }
 
-                return Json(new { result = "OK" });
+                return Json(new { result = "OK", isCek = isCek });
             }
             catch (Exception ex)
             {
@@ -1753,7 +1748,8 @@ namespace MSNK.Controllers
                                    item.KodBankCek,
                                    item.TempatCek,
                                    item.NoSlip,
-                                   item.TarSlip);
+                                   item.TarSlip,
+                                   item.AkPenyataPemungutId);
                 }
 
                 return Json(new { result = "OK", data = data });

@@ -83,6 +83,7 @@ namespace MSNK.Models.Modules
         public ICollection<JPenyemak> JPenyemak { get; set; }
         public ICollection<AkCimbEFT> AkCimbEFT { get; set; }
         public ICollection<AkCimbEFT1> AkCimbEFT1 { get; set; }
+        public ICollection<AkPenyataPemungut> AkPenyataPemungut { get; set; }
         //relationship end
 
         //soft delete

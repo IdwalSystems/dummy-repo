@@ -338,6 +338,12 @@ namespace MSNK.Models.Modules
                     },
                     new SiModul
                     {
+                        FuncId = "PR002",
+                        FuncName = "Penyata Pemungut",
+                        Model = "AkPenyataPemungut"
+                    },
+                    new SiModul
+                    {
                         FuncId = "NM001",
                         FuncName = "Nota Minta",
                         Model = "AkNotaMinta"

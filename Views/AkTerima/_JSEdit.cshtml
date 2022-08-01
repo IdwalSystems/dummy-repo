@@ -9,12 +9,12 @@
     //    return (day < 10 ? '0' + day : day) + "/" + (month < 10 ? '0' + month : month) + "/" + year;
     //}
 
-    // onchange CaraBayar
+    // on change CaraBayar
     $("body").on('change', "#ddlCaraBayar", function () {
         var caraBayar = $("#ddlCaraBayar").val();
         $("#txtAmaunUrusniaga").val("0.00");
         $("#txtNoCek").val("-");
-        $("#txtJenisCek").val("");
+        $("#txtJenisCek").val(0).change();
         $("#txtKodBankCek").val("-");
         $("#txtTempatCek").val("-");
         $("#txtNoSlip").val("-");
@@ -31,7 +31,7 @@
                 data: { data: id },
                 dataType: "json",
                 success: function (msg) {
-                    if (msg.record.perihal.trim() == "CEK") {
+                    if (msg.record.kod == "C") {
                         // enable fields
                         $("#txtJenisCek").prop('disabled', false);
                         $("#txtKodBankCek").prop('disabled', false);
@@ -53,7 +53,7 @@
             });
         }
     }
-    // onchange CaraBayar end
+    // on change CaraBayar end
 
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
@@ -185,73 +185,8 @@
                     var txtTarSlip = $("#txtTarSlip");
                     var txtJumlah = $("#jumlahUrusniaga");
 
-                    //Sum value to Total text field
-                    var sum = 0;
-                    sum = parseFloat(amaun.val()) + parseFloat(txtJumlah.val());
-                    txtJumlah.val(sum.toFixed(2));
-                    //Get the reference of the Table's TBODY element.
-                    var tBody = $("#tblUrusniaga > TBODY")[0];
-                    //Add Row.
-                    var row = tBody.insertRow(-1);
-
-                    //Add caraBayarId cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.id);
-                    cell.prop("hidden", !this.checked);
-
-                    //Add caraBayar cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(r.record.perihal);
-
-                    //Add Amaun cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(parseFloat(amaun.val()).toFixed(2));
-                    cell.addClass("text-right");
-
-                    //Add NoCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtNoCek.val());
-
-                    //Add JenisCek cell.
-                    var cell = $(row.insertCell(-1));
-                    if ($("#txtJenisCek").val() == null) {
-                        cell.html("");
-                    } else {
-                        cell.html($("#txtJenisCek option:selected").text());
-                    }
-
-                    //Add KodBankCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtKodBankCek.val());
-
-                    //Add TempatCek cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtTempatCek.val());
-
-                    //Add NoSlip cell.
-                    var cell = $(row.insertCell(-1));
-                    cell.html(txtNoSlip.val());
-
-                    //Add TarSlip cell.
-                    var cell = $(row.insertCell(-1));
-                    if (txtTarSlip.val() == null || txtTarSlip.val() == '') {
-                        cell.html('');
-                    } else {
-
-                        cell.html(showDate(txtTarSlip.val()));
-                    }
-
-                    //Add Edit Button cell.
-                    cell = $(row.insertCell(-1));
-
-                    var btnUpdate2 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
-                    cell.append(btnUpdate2);
-
-                    //Add Remove Button cell.
-                    cell = $(row.insertCell(-1));
-
-                    var btnRemove2 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
-                    cell.append(btnRemove2);
+                    var id = ddlCaraBayar.val();
+                    var perihal = r.record.perihal;
 
                     var AkTerima2 = {
                         AkTerimaId: txtAkTerima.val(),
@@ -271,19 +206,97 @@
                         data: AkTerima2,
                         dataType: "json",
                         success: function (r) {
-                            //Clear the TextBoxes.
-                            ddlCaraBayar.val("").trigger('change');
-                            amaun.val("0.00");
-                            txtNoCek.val("");
-                            txtJenisCek.val("");
-                            txtKodBankCek.val("");
-                            txtTempatCek.val("");
-                            txtNoSlip.val("");
-                            txtTarSlip.val("");
-                            checkJumlah();
+                            if (r.result == "OK") {
+                                //Sum value to Total text field
+                                var sum = 0;
+                                sum = parseFloat(amaun.val()) + parseFloat(txtJumlah.val());
+                                txtJumlah.val(sum.toFixed(2));
+                                //Get the reference of the Table's TBODY element.
+                                var tBody = $("#tblUrusniaga > TBODY")[0];
+                                //Add Row.
+                                var row = tBody.insertRow(-1);
+
+                                //Add caraBayarId cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(ddlCaraBayar.val());
+                                cell.prop("hidden", !this.checked);
+
+                                //Add caraBayar cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(perihal);
+
+                                //Add Amaun cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(parseFloat(amaun.val()).toFixed(2));
+                                cell.addClass("text-right");
+
+                                //Add NoCek cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(txtNoCek.val());
+
+                                //Add JenisCek cell.
+                                var cell = $(row.insertCell(-1));
+                                if ($("#txtJenisCek").val() == null) {
+                                    cell.html("");
+                                } else {
+                                    cell.html($("#txtJenisCek option:selected").text());
+                                }
+
+                                //Add KodBankCek cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(txtKodBankCek.val());
+
+                                //Add TempatCek cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(txtTempatCek.val());
+
+                                //Add NoSlip cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(txtNoSlip.val());
+
+                                //Add TarSlip cell.
+                                var cell = $(row.insertCell(-1));
+                                if (txtTarSlip.val() == null || txtTarSlip.val() == '') {
+                                    cell.html('');
+                                } else {
+
+                                    cell.html(showDate(txtTarSlip.val()));
+                                }
+
+                                //Add Edit Button cell.
+                                cell = $(row.insertCell(-1));
+
+                                var btnUpdate2 = $("<button class='btn ac-primary btn-sm' type='button' id='btnUpdate2' onclick='Update2(this)'><i class='fas fa-edit'></i></button>");
+                                cell.append(btnUpdate2);
+
+                                //Add Remove Button cell.
+                                cell = $(row.insertCell(-1));
+
+                                var btnRemove2 = $("<button class='btn ac-danger btn-sm' type='button' id='btnRemove2' onclick='Remove2(this)'><i class='fas fa-trash'></i></button>");
+                                cell.append(btnRemove2);
+
+                                //Clear the TextBoxes.
+                                ddlCaraBayar.val("").trigger('change');
+                                amaun.val("0.00");
+                                txtNoCek.val("");
+                                txtJenisCek.val("");
+                                txtKodBankCek.val("");
+                                txtTempatCek.val("");
+                                txtNoSlip.val("");
+                                txtTarSlip.val("");
+                                checkJumlah();
+
+                                if (r.isCek === "false"){
+                                    $("#ddlCaraBayar option[value=" + id + "]").prop('disabled', true);
+                                }
+                            }
+                            else if (r.result == "ERRORCEK") {
+                                toastr.error(r.message, "Ralat");
+                                toastr.options.timeOut = 5000; // 5s
+                            }
                         }
                     });
-                    $("#ddlCaraBayar option[value=" + ddlCaraBayar.val() + "]").prop('disabled', true);
+                    
                 }
             });
         }
@@ -336,11 +349,11 @@
         var row = $(button).closest("TR");
         var akTerimaId = $('#Id').val();
         var name = $("TD", row).eq(0).html();
+        var carabayar = $("TD", row).eq(1).html();
         var amaun = $("TD", row).eq(2).html();
         var txtJumlah = $("#jumlahUrusniaga");
-        alert(amaun);
 
-        if (confirm("Hapus : " + name + " ?")) {
+        if (confirm("Hapus : " + carabayar + " ?")) {
             //Get the reference of the Table.
             var table = $("#tblUrusniaga")[0];
 
@@ -561,15 +574,33 @@
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
                                 var tarSlip = "";
+                                var jenisCek = "";
                                 if (item1.tarSlip == null) {
                                 } else {
                                     tarSlip = showDate(item1.tarSlip);
+                                }
+                                if (item1.jenisCek == null) {
+                                } else {
+                                    switch (item1.jenisCek) {
+                                        case 1:
+                                            jenisCek = "Cek Cawangan Ini";
+                                            break;
+                                        case 2:
+                                            jenisCek = "Cek Tempatan";
+                                            break;
+                                        case 3:
+                                            jenisCek = "Cek Luar";
+                                            break;
+                                        case 4:
+                                            jenisCek = "Cek Antarabangsa";
+                                            break;
+                                    }
                                 }
                                 var str = "<tr><td id='jCaraBayarId' hidden>" + item1.jCaraBayarId +
                                     "</td><td class='text-uppercase'>" + item1.jCaraBayar.perihal +
                                     "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" + item1.noCek +
-                                    "</td><td class='text-uppercase'>" + item1.jenisCek +
+                                    "</td><td class='text-uppercase'>" + jenisCek +
                                     "</td><td class='text-uppercase'>" + item1.kodBankCek +
                                     "</td><td class='text-uppercase'>" + item1.tempatCek +
                                     "</td><td>" + item1.noSlip +

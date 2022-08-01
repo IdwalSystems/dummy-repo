@@ -53,17 +53,6 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task Update(AkCimbEFT1 entity)
         {
             AkCimbEFT1 data = context.AkCimbEFT1.FirstOrDefault(x => x.Id == entity.Id);
-            //data.AkPVId = entity.AkPVId;
-            //data.FlPenerimaEFT = entity.FlPenerimaEFT;
-            //data.AkPembekalId = entity.AkPembekalId;
-            //data.SuPekerjaId = entity.SuPekerjaId;
-            //data.SuAtletId = entity.SuAtletId;
-            //data.SuJurulatihId = entity.SuJurulatihId;
-            //data.Amaun = entity.Amaun;
-            //data.NoCek = entity.NoCek;
-            //data.Catatan = entity.NoCek;
-            //data.JBankId = entity.JBankId;
-            //data.FlStatus = entity.FlStatus;
             await context.SaveChangesAsync();
         }
     }

@@ -85,7 +85,10 @@ namespace MSNK.Data
         public DbSet<AkInvois> AkInvois { get; set; }
         public DbSet<AkInvois1> AkInvois1 { get; set; }
         public DbSet<AkInvois2> AkInvois2 { get; set; }
-       
+        public DbSet<AkPenyataPemungut> AkPenyataPemungut { get; set; }
+        public DbSet<AkPenyataPemungut1> AkPenyataPemungut1 { get; set; }
+        public DbSet<AkPenyataPemungut2> AkPenyataPemungut2 { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -115,6 +118,7 @@ namespace MSNK.Data
 
             //Terimaan
             modelBuilder.Entity<AkTerima>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkPenyataPemungut>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             // Terimaan End
 
             //Baucer
@@ -508,6 +512,28 @@ namespace MSNK.Data
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
             //Biz Channel (CIMB EFT) end
+
+            //Penyata Pemungut
+
+            modelBuilder.Entity<AkPenyataPemungut>()
+                .HasOne(m => m.SuPekerja)
+                .WithMany(t => t.AkPenyataPemungut)
+                .HasForeignKey(m => m.SuPekerjaId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkPenyataPemungut>()
+                    .HasOne(m => m.AkBank)
+                    .WithMany(t => t.AkPenyataPemungut)
+                    .HasForeignKey(m => m.AkBankId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+            modelBuilder.Entity<AkPenyataPemungut>()
+                .HasOne(m => m.JCaraBayar)
+                .WithMany(t => t.AkPenyataPemungut)
+                .HasForeignKey(m => m.JCaraBayarId)
+                .OnDelete(DeleteBehavior.NoAction);
+            //Penyata Pemungut end
 
             //SPPENDAHULUAN
             modelBuilder.Entity<SpPendahuluanPelbagai>()

@@ -19,6 +19,15 @@ namespace MSNK.Data
             new Claim("PR001T","PR001 Penerimaan - Posting"),
             new Claim("PR001UT","PR001 Penerimaan - UnPosting"),
             //Resit Rasmi end
+            //Penyata Pemungut
+            new Claim("PR002","PR002 Penyata Pemungut"),
+            new Claim("PR002C","PR002 Penyata Pemungut - Tambah"),
+            new Claim("PR002E","PR002 Penyata Pemungut - Ubah"),
+            new Claim("PR002D","PR002 Penyata Pemungut - Hapus"),
+            new Claim("PR002P","PR002 Penyata Pemungut - Cetak"),
+            new Claim("PR002B","PR002 Penyata Pemungut - Batal"),
+            new Claim("PR002R","PR002 Penyata Pemungut - Rollback"),
+            //Penyata Pemungut end
             //Menu Tanggungan
             //Pesanan Tempatan
             new Claim("TG001","TG001 Pesanan Tempatan"),

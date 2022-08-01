@@ -51,9 +51,10 @@ namespace MSNK.Models.Modules.Cart.Session
             int akTerimaId,
             int jCaraBayarId,
             decimal amaun, string noCek,
-            string jenisCek, string kodBankCek,
+            int jenisCek, string kodBankCek,
             string tempatCek, string noSlip,
-            DateTime? tarSlip
+            DateTime? tarSlip,
+            int? AkPenyataPemungutId
             )
         {
             base.AddItem2(akTerimaId,
@@ -64,7 +65,8 @@ namespace MSNK.Models.Modules.Cart.Session
                           kodBankCek,
                           tempatCek,
                           noSlip,
-                          tarSlip);
+                          tarSlip,
+                          AkPenyataPemungutId);
 
             Session.SetJson("CartTerima", this);
         }

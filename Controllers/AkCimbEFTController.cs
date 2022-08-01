@@ -87,7 +87,7 @@ namespace MSNK.Controllers
             List<SelectListItem> columnList = new();
             columnList.Add(new SelectListItem() { Text = "Tar Jana", Value = "TarJana" });
             columnList.Add(new SelectListItem() { Text = "No PBI", Value = "NoPBI" });
-            columnList.Add(new SelectListItem() { Text = "Nama Fail", Value = "Nama" });
+            columnList.Add(new SelectListItem() { Text = "Penjana", Value = "Nama" });
 
             var akCimbEFT = await _akCimbEFTRepo.GetAll();
 
@@ -385,13 +385,8 @@ namespace MSNK.Controllers
                     //checked if already jana PV in AkCimbEFT1
                     bool isExistPV = _context.AkCimbEFT1
                         .Include(b => b.AkCimbEFT)
-                        .Where(b => b.AkPVId == item.Id && b.FlStatus == 1 || b.AkCimbEFT.FlHapus == 1)
+                        .Where(b => b.AkPVId == item.Id && b.FlStatus == 1 && b.AkCimbEFT.FlHapus == 0)
                         .Any();
-
-                     var test = _context.AkCimbEFT1
-                        .Include(b => b.AkCimbEFT)
-                        .Where(b => b.AkPVId == item.Id && b.FlStatus == 1 || b.AkCimbEFT.FlHapus == 1)
-                        .FirstOrDefault();
 
                     if (isExistPV == true)
                     {
@@ -452,7 +447,7 @@ namespace MSNK.Controllers
                     //checked if already jana PV in AkCimbEFT1
                     bool isExistPV = _context.AkCimbEFT1
                         .Include(b => b.AkCimbEFT)
-                        .Where(b => b.AkPVId == item.Id && b.FlStatus == 1 || b.AkCimbEFT.FlHapus == 1 )
+                        .Where(b => b.AkPVId == item.Id && b.FlStatus == 1 && b.AkCimbEFT.FlHapus == 0 )
                         .Any();
 
                     if (isExistPV == true)
@@ -526,7 +521,7 @@ namespace MSNK.Controllers
             foreach(var item in pv)
             {
                 //checked if already jana PV in AkCimbEFT1
-                bool isExistPV = _context.AkCimbEFT1.Where(b => b.AkPVId == item.Id && b.FlStatus != 0).Any();
+                bool isExistPV = _context.AkCimbEFT1.Where(b => b.AkPVId == item.Id && b.FlStatus != 0 && b.AkCimbEFT.FlHapus == 0).Any();
 
                 if (isExistPV == true)
                 {
@@ -673,7 +668,7 @@ namespace MSNK.Controllers
             }
 
             // get latest no rujukan running number  
-            var noRujukan = GetNoRujukan(DateTime.Now, DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("MM"));
+            var noRujukan = GetNoRujukan(akCimbEFT.TarJana, akCimbEFT.TarJana.ToString("yyyy"), akCimbEFT.TarJana.ToString("MM"));
             // get latest no rujukan running number end
 
             if (ModelState.IsValid)
@@ -683,7 +678,6 @@ namespace MSNK.Controllers
 
                     m.NoPBI = noRujukan;
                     m.TarJana = akCimbEFT.TarJana;
-                    m.TarJana = DateTime.Now;
                     m.TarBayar = DateTime.Now;
                     m.Jumlah = akCimbEFT.Jumlah;
                     m.NamaFail = akCimbEFT.NamaFail;
@@ -1027,7 +1021,7 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        //save cart akNotaMinta2 end
+        //save cart akCimbEFT1 end
 
         // POST: AkCimbEFT/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -1195,7 +1189,7 @@ namespace MSNK.Controllers
         }
 
         // POST: AkPV/Cancel/5
-        [Authorize(Policy = "PR001R")]
+        [Authorize(Policy = "PV002R")]
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _akCimbEFTRepo.GetByIdIncludeDeletedItems(id);

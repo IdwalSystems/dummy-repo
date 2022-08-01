@@ -150,6 +150,13 @@ namespace MSNK
 
             services.AddTransient<IRepository<AbWaran, int, string>, AbWaranRepository>();
             services.AddTransient<ListViewIRepository<AbWaran1, int>, AbWaran1Repository>();
+
+            //PENYATA PEMUNGUT
+            services.AddTransient<IRepository<AkPenyataPemungut, int, string>, AkPenyataPemungutRepository>();
+            services.AddTransient<ListViewIRepository<AkPenyataPemungut1, int>, AkPenyataPemungut1Repository>();
+            services.AddTransient<ListViewIRepository<AkPenyataPemungut2, int>, AkPenyataPemungut2Repository>();
+            //PENYATA PEMUNGUT END
+
             services.AddTransient<CustomIRepository<string, int>, CustomRepository>();
 
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
@@ -169,6 +176,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartJurulatih.GetCart(ss));
             services.AddScoped(ss => SessionCartCimbEFT.GetCart(ss));
             services.AddScoped(ss => SessionCartInvois.GetCart(ss));
+            services.AddScoped(ss => SessionCartPenyataPemungut.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -191,6 +199,17 @@ namespace MSNK
                 options.AddPolicy("PR001T", policy => policy.RequireClaim("PR001T"));
                 options.AddPolicy("PR001UT", policy => policy.RequireClaim("PR001UT"));
                 //Resit Rasmi end
+                //Penyata Pemungut
+                options.AddPolicy("PR002", policy => policy.RequireClaim("PR002"));
+                options.AddPolicy("PR002C", policy => policy.RequireClaim("PR002C"));
+                options.AddPolicy("PR002E", policy => policy.RequireClaim("PR002E"));
+                options.AddPolicy("PR002D", policy => policy.RequireClaim("PR002D"));
+                options.AddPolicy("PR002P", policy => policy.RequireClaim("PR002P"));
+                options.AddPolicy("PR002B", policy => policy.RequireClaim("PR002B"));
+                options.AddPolicy("PR002R", policy => policy.RequireClaim("PR002R"));
+                options.AddPolicy("PR002T", policy => policy.RequireClaim("PR002T"));
+                options.AddPolicy("PR002UT", policy => policy.RequireClaim("PR002UT"));
+                //Penyata Pemungut end
                 //Menu Tanggungan
                 //Pesanan Tempatan
                 options.AddPolicy("TG001", policy => policy.RequireClaim("TG001"));
