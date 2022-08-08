@@ -19,6 +19,7 @@ using MSNK.Models.Modules;
 using MSNK.Models.Modules.ViewModel;
 using static MSNK.Models.Modules.ViewModel.UserClaimsViewModel;
 using Rotativa.AspNetCore;
+using MSNK.Infrastructure;
 
 namespace MSNK.Controllers
 {
@@ -33,13 +34,15 @@ namespace MSNK.Controllers
             ApplicationDbContext context,
             ILogger<HomeController> logger,  
             UserManager<IdentityUser> userManager,
-            IRepository<AkPO, int, string> poRepo)
+            IRepository<AkPO, int, string> poRepo,
+            UserService userService)
         {
             _context = context;
             _logger = logger;
             _userManager = userManager;
             _poRepo = poRepo;
         }
+
 
         public async Task<IActionResult> Index()
         {

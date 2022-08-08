@@ -30,12 +30,15 @@
                             </div>
                             <div class="form-group">
                                 <label asp-for="RoleId">Tahap Pengguna</label>
-                                <select asp-for="RoleId" asp-items="@Model.RoleList" class="form-control form-control-sm">
-                                    <option disabled selected>-- Pilih Tahap Pengguna --</option>
+                                <select asp-for="SelectedRoleList" asp-items="@Model.RoleList" class="form-control form-control-sm select2" multiple="multiple">
+                                    @*<option disabled selected>-- Pilih Tahap Pengguna --</option>*@
                                 </select>
+                                @foreach (var s in ViewBag.SelectedRole)
+                                {
+                                  <span class="badge ac-light">@s</span>  
+                                }
                             </div>
             
-
                             <div class="form-group">
                                 <label asp-for="JBahagianList"></label>
                                 <select asp-for="SelectedJBahagianList" class="form-control form-control-sm select2" multiple="multiple">

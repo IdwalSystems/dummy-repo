@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MSNK.Data;
+using MSNK.Infrastructure;
 using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
@@ -25,15 +26,18 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _db;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppLogIRepository<AppLog, int> _appLog;
+        private UserService _userServices;
 
         public UserController(
             ApplicationDbContext db, 
             UserManager<IdentityUser> userManager,
-            AppLogIRepository<AppLog,int> appLog)
+            AppLogIRepository<AppLog,int> appLog,
+            UserService userService)
         {
             _db = db;
             _userManager = userManager;
             _appLog = appLog;
+            _userServices = userService;
         }
         private async Task AddLogAsync(
             string operasi,
@@ -60,24 +64,23 @@ namespace MSNK.Controllers
             var userList = _db.applicationUsers.ToList();
             var userRole = _db.UserRoles.ToList();
             var roles = _db.Roles.ToList();
-            foreach(var user in userList)
+            foreach (var user in userList)
             {
-                var role = userRole.FirstOrDefault(u => u.UserId == user.Id);
-                if (role == null)
+                List<string> namaRole = new List<string>();
+                var userRoles = userRole.Where(u => u.UserId == user.Id).ToList();
+                if (userRoles == null)
                 {
-                    user.Role = "None";
+                    namaRole.Add("None");
                 }
                 else
                 {
-                    if(user.Role == "SuperAdmin")
+                    foreach(var item in userRoles)
                     {
-                        continue;
-                    }
-                    else
-                    {
-                        user.Role = roles.FirstOrDefault(u => u.Id == role.RoleId).Name;
+                        var RoleName = _db.Roles.FirstOrDefault(b => b.Id == item.RoleId).Name;
+                        namaRole.Add(RoleName);
                     }
                 }
+                user.UserRoles = namaRole;
             }
             //hide superadmin
                 //userList = userList.Where(x => x.Role != "SuperAdmin").ToList();
@@ -99,11 +102,21 @@ namespace MSNK.Controllers
             }
             var userRole = _db.UserRoles.ToList();
             var roles = _db.Roles.ToList();
-            var role = userRole.FirstOrDefault(u => u.UserId == userId);
+            var role = userRole.Where(u => u.UserId == userId).ToList();
+            List<string> namaRole = new List<string>();
+
             if (role != null)
             {
-                objFromDb.RoleId = roles.FirstOrDefault(u => u.Id == role.RoleId).Id;
+                objFromDb.SelectedRoleList = role;
+                foreach (var item in role)
+                {
+                    var RoleName = _db.Roles.FirstOrDefault(b => b.Id == item.RoleId).Name;
+                    namaRole.Add(RoleName);
+                }
             }
+
+            ViewBag.SelectedRole = namaRole;
+
             objFromDb.RoleList = _db.Roles.Where(x => x.Name != "SuperAdmin").Select(u => new SelectListItem
             {
                 Text = u.Name,
@@ -149,42 +162,70 @@ namespace MSNK.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ApplicationUser user, string SelectedJBahagianList)
+        public async Task<IActionResult> Edit(ApplicationUser user, string SelectedJBahagianList, List<string> SelectedRoleList)
         {
-            if (user.RoleId != null)
+            if (SelectedRoleList != null)
             {
                 if (ModelState.IsValid)
                 {
+
+                    foreach(var item in SelectedRoleList)
+                    {
+                        var role = new IdentityUserRole<string>
+                        {
+                            RoleId = item
+                        };
+
+                        user.SelectedRoleList.Add(role);
+                    }
                     
                     var objFromDb = _db.applicationUsers.FirstOrDefault(u => u.Id == user.Id);
-                    var roleAsal = "";
-                    var roleBaru = "";
+                    List<string> roleAsal = new List<string>() ;
+                    List<string> roleBaru = new List<string>();
+
                     if (objFromDb == null)
                     {
                         return NotFound();
                     }
-                    var userRole = _db.UserRoles.FirstOrDefault(u => u.UserId == objFromDb.Id);
 
-                    if (userRole != null)
+
+                    if (user.SelectedRoleList != null)
                     {
-                        var previousRoleName = _db.Roles.Where(u => u.Id == userRole.RoleId).Select(e => e.Name).FirstOrDefault();
-                        var newRoleName = _db.Roles.Where(u => u.Id == user.RoleId).Select(e => e.Name).FirstOrDefault();
-                        roleAsal = previousRoleName;
-                        roleBaru = newRoleName;
-                        //removing old role
-                        await _userManager.RemoveFromRoleAsync(objFromDb, previousRoleName);
+                        var userRoles = _db.UserRoles.Where(u => u.UserId == objFromDb.Id).ToList();
 
-                        //add new role
-                        await _userManager.AddToRoleAsync(objFromDb, _db.Roles.FirstOrDefault(u => u.Id == user.RoleId).Name);
-                    }
-                    else
-                    {
-                        //add new role
-                        await _userManager.AddToRoleAsync(objFromDb, user.RoleId);
-                        
-                        
-                    }
+                        if (userRoles != null)
+                        {
+                            //removing old roles
+                            foreach (var item in userRoles)
+                            {
+                                var previousRoleName = _db.Roles.Where(u => u.Id == item.RoleId).Select(e => e.Name).FirstOrDefault();
+                                roleAsal.Add(previousRoleName);
+                                //removing old role
+                                await _userManager.RemoveFromRoleAsync(objFromDb, previousRoleName);
+                            }
 
+                            //add new roles
+                            foreach (var item in SelectedRoleList)
+                            {
+                                var newRoleName = _db.Roles.Where(u => u.Id == item).Select(e => e.Name).FirstOrDefault();
+                                roleBaru.Add(newRoleName);
+                                //add new role
+                                await _userManager.AddToRoleAsync(objFromDb, newRoleName);
+                            }
+
+                        }
+                        else
+                        {
+                            //add new roles
+                            foreach (var item in SelectedRoleList)
+                            {
+                                var newRoleName = _db.Roles.Where(u => u.Id == item).Select(e => e.Name).FirstOrDefault();
+                                //add new role
+                                await _userManager.AddToRoleAsync(objFromDb, newRoleName);
+                            }
+                        }
+                    }
+                    
                     // select multiple dropdownlist
                     if (user.SelectedJBahagianList != null)
                     {
@@ -204,7 +245,7 @@ namespace MSNK.Controllers
 
                     if (roleAsal != roleBaru)
                     {
-                        await AddLogAsync("Ubah", roleAsal + " -> " + roleBaru, user.Email, 0, 0);
+                        await AddLogAsync("Ubah", String.Join(",", roleAsal) + " -> " + String.Join(",", roleBaru), user.Email, 0, 0);
 
                     }
                     _db.SaveChanges();
@@ -343,6 +384,13 @@ namespace MSNK.Controllers
             _db.SaveChanges();
             TempData[SD.Success] = "Capaian berjaya diubah.";
             return RedirectToAction(nameof(Index));
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> ImpersonateUser(string userId)
+        {
+            await _userServices.Impersonate(userId);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

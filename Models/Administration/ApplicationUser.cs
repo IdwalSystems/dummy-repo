@@ -20,6 +20,10 @@ namespace MSNK.Models.Administration
         [NotMapped]
         public string Role { get; set; }
         [NotMapped]
+        public List<string> UserRoles { get; set; }
+        [NotMapped]
+        public List<IdentityUserRole<string>> SelectedRoleList { get; set; }
+        [NotMapped]
         public IEnumerable<SelectListItem> RoleList { get; set; }
 
         //relationship

@@ -67,13 +67,20 @@
                             @item.Nama
                         </td>
                         <td>
-                            @item.Role
+                            @String.Join(',',item.UserRoles)
                         </td>
                         <td class="action-button">
                             <div>
-                                @if (item.Role != "SuperAdmin")
+                                
+                                @if (!String.Join(',',item.UserRoles).Contains("SuperAdmin"))
                                 {
                                     <form asp-action="Delete" asp-route-userId="@item.Id">
+                                        @if (User.IsInRole("SuperAdmin"))
+                                        {
+                                            <a asp-action="ImpersonateUser" asp-route-userId="@item.Id" class="btn ac-dark btn-sm" style="cursor:pointer">
+                                                <i class="fa fa-user-secret"></i>
+                                            </a>
+                                        }
                                         <a asp-action="Edit" asp-route-userId="@item.Id" class="btn ac-info btn-sm" style="cursor:pointer">
                                             Ubah
                                         </a>
@@ -98,6 +105,7 @@
                                 }
                                 else
                                 {
+                                     
                                     <a href="#" class="btn ac-info btn-sm" style="cursor:pointer">
                                         Ubah
                                     </a>

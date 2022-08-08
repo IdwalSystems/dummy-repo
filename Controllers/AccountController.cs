@@ -295,6 +295,8 @@ namespace MSNK.Controllers
 
                 if (result.Succeeded)
                 {
+                    var user = _db.applicationUsers.FirstOrDefault(b => b.UserName == model.Emel);
+                    var roles = _db.UserRoles.FirstOrDefault(b => b.RoleId == "1f24d001-e893-491e-bbc1-974d2ee2e0f1");
                     return LocalRedirect(returnurl);
                 }
                 if (result.IsLockedOut) 
