@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,6 +42,9 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Nombor Akaun Bank Diperlukan."), MaxLength(20)]
         [Display(Name = "No Akaun Bank")]
         public string AkaunBank { get; set; }
+        [Display(Name = "Baki Awal RM")]
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal BakiAwal { get; set; }
         //field end
         
 

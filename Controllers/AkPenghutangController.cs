@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
@@ -126,7 +128,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPenghutang/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, DateTime? lastDate)
         {
             if (id == null)
             {
@@ -143,8 +145,123 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
+            // create table sublejar pembekal
+            List<SublejarPembekalViewModel> vmodel = new List<SublejarPembekalViewModel>();
 
-            return View(akPenghutang);
+            // get baki awal
+            var tahun = DateTime.Now.Year;
+            var firstDate = Convert.ToDateTime("01/01/" + tahun);
+            if (lastDate == null)
+            {
+                lastDate = DateTime.Now;
+            }
+            // get all akBelian and AkPV order by tarikh where posting = 1 where tarikh less than 01/01/[this-year]
+            List<AkInvois> bakiAwalInvoisList = _context.AkInvois.Where(b => b.AkPenghutangId == akPenghutang.Id
+                && b.FlPosting == 1
+                && b.Tarikh < firstDate.AddHours(23.99)).ToList();
+
+            decimal bakiAwal = 0;
+            decimal bayaranAwal = 0;
+            decimal hutangAwal = 0;
+
+            bakiAwal = bakiAwal + akPenghutang.BakiAwal;
+            if (akPenghutang.BakiAwal < 0)
+            {
+                hutangAwal = hutangAwal - akPenghutang.BakiAwal;
+            }
+            else
+            {
+                bayaranAwal = bayaranAwal + akPenghutang.BakiAwal;
+            }
+
+            foreach (var item in bakiAwalInvoisList)
+            {
+                hutangAwal = hutangAwal + item.Jumlah;
+                bakiAwal = bakiAwal - item.Jumlah;
+            }
+
+            List<AkTerima> bakiAwalTerimaList = _context.AkTerima.Where(b => b.AkPenghutangId == (int)id
+                && b.FlPosting == 1
+                && b.Tarikh < firstDate.AddHours(23.99)).ToList();
+
+            foreach (var item in bakiAwalTerimaList)
+            {
+                bayaranAwal = bayaranAwal + item.Jumlah;
+                bakiAwal = bakiAwal + item.Jumlah;
+            }
+
+            // insert into viewmodel first row
+            vmodel.Add(new SublejarPembekalViewModel
+            {
+                Tarikh = firstDate,
+                Rujukan = "BAKI AWAL",
+                Bayaran = bayaranAwal,
+                Hutang = hutangAwal,
+                Baki = bakiAwal
+            });
+
+            // get all akBelian and AkPV order by tarikh where posting = 1
+            List<AkInvois> InvoisList = _context.AkInvois.Where(b => b.AkPenghutangId == akPenghutang.Id
+                && b.FlPosting == 1
+                && b.Tarikh >= firstDate
+                && b.Tarikh <= lastDate).ToList();
+
+            foreach (var item in InvoisList)
+            {
+                vmodel.Add(new SublejarPembekalViewModel
+                {
+                    Tarikh = (DateTime)item.Tarikh,
+                    Rujukan = item.NoInbois,
+                    Bayaran = 0,
+                    Hutang = item.Jumlah
+                });
+            }
+
+            // get all akBelian and AkPV order by tarikh where posting = 1
+            List<AkTerima> TerimaList = _context.AkTerima.Where(b => b.AkPenghutangId == akPenghutang.Id
+                && b.FlPosting == 1
+                && b.Tarikh >= firstDate
+                && b.Tarikh <= lastDate).ToList();
+
+            foreach (var item in TerimaList)
+            {
+                vmodel.Add(new SublejarPembekalViewModel
+                {
+                    Tarikh = item.Tarikh,
+                    Rujukan = item.NoRujukan,
+                    Bayaran = item.Jumlah,
+                    Hutang = 0
+                });
+            }
+
+            vmodel = vmodel.OrderBy(b => b.Tarikh).ToList();
+
+            // insert into viewmodel with balance for each transaction
+            var bil = 0;
+
+            foreach (var i in vmodel)
+            {
+                bil++;
+                i.Id = bil;
+
+                if (i.Rujukan == "BAKI AWAL")
+                {
+                    continue;
+                }
+
+                hutangAwal = hutangAwal + i.Hutang;
+                bayaranAwal = bayaranAwal + i.Bayaran;
+                bakiAwal = bakiAwal + i.Bayaran - i.Hutang;
+                i.Baki = bakiAwal;
+            }
+
+            dynamic dyModel = new ExpandoObject();
+            dyModel.AkPenghutang = akPenghutang;
+            dyModel.Sublejar = vmodel;
+            dyModel.JumBayaran = bayaranAwal;
+            dyModel.JumHutang = hutangAwal;
+
+            return View(dyModel);
         }
 
         [Authorize(Policy = "DF003C")]
@@ -194,6 +311,7 @@ namespace MSNK.Controllers
                     akP.Alamat3 = akPenghutang.Alamat3?.ToUpper()?? "";
                     akP.Bandar = akPenghutang.Bandar?.ToUpper()?? "";
                     akP.Emel = akPenghutang.Emel;
+                    akP.BakiAwal = akPenghutang.BakiAwal;
                     akP.UserId = user.UserName;
                     await _akpenghutangRepo.Insert(akP);
                     //insert applog

@@ -32,6 +32,7 @@
     <script src="~/lib/toastr.js/toastr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.js" integrity="sha512-B+gr+zLWg81qxVwvtYwKrmjvQtZKD/GGFF7jD80OfzbqFw+NsbS5faEqpCO7Q7oRw1bYi0+WLJf54j8Vm7NADw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     @*<script>
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip()
@@ -107,12 +108,12 @@
     }
     <!-- horizontal navbar -->
     <div>
-        <nav class="navbar navbar-expand-lg @navtype box-shadow">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm box-shadow">
             <div class="container-fluid">
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">
                     <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" style="width: 40px; height: 40px; align-content: center; height: 100%;" class="border border-light rounded-circle" />
                 </a>
-                <h5 class="@texttype mb-0">MSNK</h5>
+                <h5 class=" mb-0">MSNK</h5>
 
                 <div class=" d-inline">
                     <div class="col-12 navbar-nav float-right">

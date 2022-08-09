@@ -237,8 +237,25 @@ namespace MSNK.Controllers
             List<JBank> bankList = _context.JBank.OrderBy(b => b.Nama).ToList();
             ViewBag.JBank = bankList;
 
-            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.Where(x=> x.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
-            ViewBag.SpPendahuluanPelbagai = spList;
+            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.Where(x => x.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
+
+            List<SpPendahuluanPelbagai> spListUpdated = new List<SpPendahuluanPelbagai>();
+
+            foreach (var item in spList)
+            {
+                var ExistAkPVWithSp = _context.AkPV.Any(b => b.SpPendahuluanPelbagaiId == item.Id);
+
+                if (ExistAkPVWithSp == true)
+                {
+                    continue;
+                }
+                else
+                {
+                    spListUpdated.Add(item);
+                }
+            }
+            
+            ViewBag.SpPendahuluanPelbagai = spListUpdated;
 
             List<SuProfil> suProfilList = _context.SuProfil.Where(x => x.FlPosting == 1).OrderBy(b => b.NoRujukan).ToList();
             ViewBag.SuProfil = suProfilList;
@@ -256,11 +273,23 @@ namespace MSNK.Controllers
                 .Where(b => b.FlPosting == 1)
                 .OrderBy(b => b.Tarikh).ToList();
 
+            List<AkBelian> akBelianListUpdated = new List<AkBelian>();
+
             foreach (var item in akBelianList)
             {
-                item.NoInbois = item.NoInbois.Substring(9);
+                var TotalAkPV = _context.AkPV2.Where(b => b.AkBelianId == item.Id).Sum(b => b.Amaun).CompareTo(item.Jumlah);
+                if (TotalAkPV == 0 || TotalAkPV > 0)
+                {
+                    continue;
+                }
+                else
+                {
+                    item.NoInbois = item.NoInbois.Substring(9);
+                    akBelianListUpdated.Add(item);
+                }
+                
             }
-            ViewBag.AkBelian = akBelianList;
+            ViewBag.AkBelian = akBelianListUpdated;
 
             List<AkPembekal> akPembekalList = _context.AkPembekal
                 .Include(b => b.JBank)

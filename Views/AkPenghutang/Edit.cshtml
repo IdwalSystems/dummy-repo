@@ -102,6 +102,11 @@
                     </select>
                     <span asp-validation-for="JBankId" class="text-danger"></span>
                 </div>
+                <div class="form-group col-sm-4">
+                    <label asp-for="BakiAwal" class="control-label"></label> <span class="text-info">(sehingga tarikh 31/12/2021)</span>
+                    <input asp-for="BakiAwal" value="@Model.BakiAwal" type="number" class="form-control form-control-sm" step="0.01" />
+                    <span asp-validation-for="BakiAwal" class="text-danger"></span>
+                </div>
             </div>
             <hr />
             <div class="form-group">

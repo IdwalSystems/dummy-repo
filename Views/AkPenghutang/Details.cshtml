@@ -1,4 +1,4 @@
-@model MSNK.Models.Modules.AkPenghutang
+@model dynamic
 
 @{
     ViewData["Title"] = "Papar";
@@ -15,79 +15,104 @@
             <div class="col-4 text-right">
                 <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
             </div>
-    
+
         </div>
-        <hr class="mt-2"/>
+        <hr class="mt-2" />
+        <ul class="nav nav-tabs">
+            <li class="nav-item active"><a class="nav-link active" data-toggle="tab" href="#main">Maklumat</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#sublejar">Sublejar</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="main" class="tab-pane active">
+                <div class="form-row mb-3">
+                    <div class="col-md-12">
+                        <div class="form-row">
+                            <div class="form-group col-sm-2">
+                                <label class="control-label">Kod</label>
+                                <input class="form-control form-control-sm" value=" @Model.AkPenghutang.KodSykt" readonly />
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label class="control-label">No Pendaftaran</label>
+                                <input class="form-control form-control-sm" value="@Model.AkPenghutang.NoPendaftaran" readonly />
+                            </div>
+                            <div class="form-group col-sm-8">
+                                <label class="control-label">Nama Syarikat</label>
+                                <input class="form-control form-control-sm text-uppercase" value="@Model.AkPenghutang.NamaSykt" readonly />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Alamat</label>
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPenghutang.Alamat1" readonly />
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPenghutang.Alamat2" readonly />
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkPenghutang.Alamat3" readonly />
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-sm">
+                                <label class="control-label">Poskod</label>
+                                <input class="form-control form-control-sm" value="@Model.AkPenghutang.Poskod" readonly />
+                            </div>
+                            <div class="form-group col-sm">
+                                <label class="control-label">Bandar</label>
+                                <input class="form-control form-control-sm text-uppercase" value="@Model.AkPenghutang.Bandar" readonly />
+                            </div>
+                            <div class="form-group col-sm">
+                                <label class="control-label">Negeri</label>
+                                <input class="form-control form-control-sm"
+                                       value="@Model.AkPenghutang.JNegeri.Perihal" readonly />
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-sm-4">
+                                <label class="control-label">Telefon</label>
+                                <input class="form-control form-control-sm" value="@Model.AkPenghutang.Telefon1" readonly />
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label class="control-label">Emel</label>
+                                <label class="form-control form-control-sm form-control-plaintext">@Model.AkPenghutang.Emel</label>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-sm-4">
+                                <label class="control-label">Akaun Bank</label>
+                                <input class="form-control form-control-sm" value="@Model.AkPenghutang.AkaunBank" readonly />
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label class="control-label">Bank</label>
+                                <input class="form-control form-control-sm"
+                                       value="@Model.AkPenghutang.JBank.Kod - @Model.AkPenghutang.JBank.Nama" readonly />
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label class="control-label">Baki Awal RM</label> <span class="text-info">(sehingga tarikh 31/12/2021)</span>
+                                <input value="@Model.AkPenghutang.BakiAwal" class="form-control form-control-sm" readonly />
+                            </div>
+                        </div>
+
+                        <hr />
+                        <div class="form-group">
+                            <a asp-action="Edit" asp-route-id="@Model.AkPenghutang.Id" class="btn ac-primary btn-sm">Ubah</a>
+                            <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="sublejar" class="tab-pane fade">
+                <div class="form-row mb-3">
+                    <div class="col-md-12">
+                        <partial name="_SublejarPenghutangTab" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
         
-        <div class="form-row">
-            <div class="form-group col-sm-2">
-                <label asp-for="NoPendaftaran" class="control-label"></label>
-                <input class="form-control form-control-sm" value=" @Model.KodSykt" readonly />
-            </div>
-            <div class="form-group col-sm-2">
-                <label asp-for="NoPendaftaran" class="control-label"></label>
-                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.NoPendaftaran)" readonly />
-            </div>
-            <div class="form-group col-sm-8">
-                <label asp-for="NamaSykt" class="control-label"></label>
-                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.NamaSykt)" readonly />
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Alamat1" class="control-label">Alamat</label>
-            <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat1)" readonly />
-        </div>
-        <div class="form-group">
-            <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat2)" readonly />
-        </div>
-        <div class="form-group">
-            <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Alamat3)" readonly />
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-sm">
-                <label asp-for="Poskod" class="control-label"></label>
-                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Poskod)" readonly />
-            </div>
-            <div class="form-group col-sm">
-                <label asp-for="Bandar" class="control-label"></label>
-                <input class="form-control form-control-sm text-uppercase" value="@Html.DisplayFor(model => model.Bandar)" readonly />
-            </div>
-            <div class="form-group col-sm">
-                <label asp-for="JNegeri" class="control-label"></label>
-                <input class="form-control form-control-sm"
-                        value="@Html.DisplayFor(model => model.JNegeri.Perihal)" readonly />
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-sm-4">
-                <label asp-for="Telefon1" class="control-label"></label>
-                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.Telefon1)" readonly />
-            </div>
-            <div class="form-group col-sm-4">
-                <label asp-for="Emel" class="control-label"></label>
-                <label class="form-control form-control-sm form-control-plaintext">@Html.DisplayFor(model => model.Emel)</label>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-sm-4">
-                <label asp-for="AkaunBank" class="control-label"></label>
-                <input class="form-control form-control-sm" value="@Html.DisplayFor(model => model.AkaunBank)" readonly />
-            </div>
-            <div class="form-group col-sm-4">
-                <label asp-for="JBank" class="control-label"></label>
-                <input class="form-control form-control-sm"
-                        value="@Html.DisplayFor(model => model.JBank.Kod) - @Html.DisplayFor(model => model.JBank.Nama)" readonly />
-            </div>
-        </div>
-        
-        <hr />
-        <div class="form-group">
-            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a> 
-            <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
-        </div>
     </div>
 </div>

@@ -3,25 +3,65 @@
     var namaUser = _context.applicationUsers.FirstOrDefault(x => x.Email == user.Result.Email);
 
 }
-<ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
-    {
-    <li class="nav-item dropdown">
-        <a class="nav-link" href="#"  aria-haspopup="true" aria-expanded="false">Selamat Datang, @namaUser.Nama  <i class="fas fa-angle-down"></i> </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" asp-area="" asp-controller="Profile" asp-action="ChangePassword">Tukar Kata Laluan</a>
-            <form id="logOutForm" method="post" class="form-inline" asp-controller="Account" asp-action="LogOff">
-                <button type="submit" class="btn dropdown-item">Log Keluar</button>
-            </form>
-        </div>
-    </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
-        </li>
-    }
+
+<div class="nav-item dropdown">
+    <button class="btn btn-block"><i class="fa fa-user-cog"></i></button>
+    <div class=" dropdown-content">
+        <button class="btn dropdown-item" asp-area="" asp-controller="Profile" asp-action="ChangePassword">Tukar Kata Laluan</button>
+        <form id="logOutForm" method="post" class="form-inline" asp-controller="Account" asp-action="LogOff">
+            <button type="submit" class="btn dropdown-item">Log Keluar</button>
+        </form>
+    </div>
+    
+</div>
+            
+
+@*<div class="dropdown">
+    <span><i class="fa fa-user"></i></span>
+    <div class="dropdown-content">
+        <ul class="navbar-nav">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" aria-expanded="false"><i class="fas fa-angle-down"></i> </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" asp-area="" asp-controller="Profile" asp-action="ChangePassword">Tukar Kata Laluan</a>
+                        <form id="logOutForm" method="post" class="form-inline" asp-controller="Account" asp-action="LogOff">
+                            <button type="submit" class="btn dropdown-item">Log Keluar</button>
+                        </form>
+                    </div>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                </li>
+            }
 
 
-</ul>
+        </ul>
+    </div>
+</div>*@
+    @*<ul class="navbar-nav">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="#" aria-haspopup="true" aria-expanded="false"><i class="fas fa-angle-down"></i> </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" asp-area="" asp-controller="Profile" asp-action="ChangePassword">Tukar Kata Laluan</a>
+                    <form id="logOutForm" method="post" class="form-inline" asp-controller="Account" asp-action="LogOff">
+                        <button type="submit" class="btn dropdown-item">Log Keluar</button>
+                    </form>
+                </div>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+            </li>
+        }
+
+
+    </ul>*@
