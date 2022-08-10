@@ -2444,7 +2444,7 @@ namespace MSNK.Controllers
                     var nama = akPV.SuPekerja == null ? "SuperAdmin" : akPV.SuPekerja.Nama;
                     var noAkaun = akPV.SuPekerja == null ? "019284719285" : akPV.SuPekerja.NoAkaunBank;
                     data.KodPenerima = noGaji + " - "+ noKP;
-                    namaBankPenerima = nama;
+                    namaBankPenerima = akPV.SuPekerja == null ? "Testing Bank" : akPV.SuPekerja.JBank.Nama; ;
                     noAkaunBank = noAkaun;
 
                     break;

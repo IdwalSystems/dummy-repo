@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,17 @@ namespace MSNK.Models.Modules.EFRepository
 
         public readonly ApplicationDbContext context;
         public CustomRepository(ApplicationDbContext context) => this.context = context;
+
+        public async Task<List<AbWaran>> GetAbWaranBasedOnYear(string tahun, int jKWId, int jBahagianId, DateTime tarHingga)
+        {
+            var sql = await context.AbWaran.Where(
+                b => b.Tahun == tahun
+                && b.JKWId == jKWId
+                && b.JBahagianId == jBahagianId
+                && b.Tarikh <= tarHingga).ToListAsync();
+
+            return sql;
+        }
 
         public async Task<decimal> GetBalanceFromAbBukuVot(string tahun, int? akCartaId, int jKWId, int? jBahagianId)
         {
@@ -80,5 +92,6 @@ namespace MSNK.Models.Modules.EFRepository
 
             return baki;
         }
+
     }
 }
