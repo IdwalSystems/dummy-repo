@@ -62,7 +62,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId )
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -72,6 +73,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = pekerjaId;
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -201,6 +203,7 @@ namespace MSNK.Controllers
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
 
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             SuPekerja m = new SuPekerja();
             if (ICPekerjaExists(suPekerja.NoKp) == false)
@@ -242,13 +245,14 @@ namespace MSNK.Controllers
                                     m.NoAkaunBank = suPekerja.NoAkaunBank;
                                     m.UserId = username;
                                     m.TarMasuk = DateTime.Now;
+                                    m.SuPekerjaMasukId = pekerjaId;
 
                                     m.SuTanggungan = _cart.Lines1.ToArray();
 
                                     await _suPekerjaRepo.Insert(m);
 
                                     //insert applog
-                                    await AddLogAsync("Tambah", m.NoGaji + " - " + suPekerja.NoKp,m.NoGaji,0, 0);
+                                    await AddLogAsync("Tambah", m.NoGaji + " - " + suPekerja.NoKp,m.NoGaji,0, 0, pekerjaId);
                                     //insert applog end
 
                                     //await AddLogAsync("Tambah", noRujukan, kredit);
@@ -324,6 +328,7 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
                     SuPekerja dataAsal = await _suPekerjaRepo.GetById(id);
 
@@ -335,6 +340,7 @@ namespace MSNK.Controllers
                     suPekerja.NoGaji = dataAsal.NoGaji;
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
+                    suPekerja.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
                     // list of input that cannot be change end
 
                     // list of input to uppercase
@@ -350,6 +356,7 @@ namespace MSNK.Controllers
 
                     suPekerja.UserIdKemaskini = user.UserName;
                     suPekerja.TarKemaskini = DateTime.Now;
+                    suPekerja.SuPekerjaKemaskiniId = pekerjaId;
 
                     _context.Update(suPekerja);
 
@@ -357,11 +364,11 @@ namespace MSNK.Controllers
                     if (namaAsal != suPekerja.Nama || noAkaunAsal != suPekerja.NoAkaunBank)
                     {
                         await AddLogAsync("Ubah", namaAsal + " -> " + suPekerja.Nama
-                            + ", " + noAkaunAsal + " -> " + suPekerja.NoAkaunBank,suPekerja.NoGaji,id, 0);
+                            + ", " + noAkaunAsal + " -> " + suPekerja.NoAkaunBank,suPekerja.NoGaji,id, 0, pekerjaId);
                     }
                     else
                     {
-                        await AddLogAsync("Ubah", "Ubah Data", suPekerja.NoGaji,id, 0);
+                        await AddLogAsync("Ubah", "Ubah Data", suPekerja.NoGaji,id, 0, pekerjaId);
                     }
                     //insert applog end
 
@@ -411,9 +418,17 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             var suPekerja = await _context.SuPekerja.FindAsync(id);
+
+            suPekerja.UserIdKemaskini = user.UserName;
+            suPekerja.TarKemaskini = DateTime.Now;
+            suPekerja.SuPekerjaKemaskiniId = pekerjaId;
+
             _context.SuPekerja.Remove(suPekerja);
-            await AddLogAsync("Hapus", suPekerja.NoKp + " - " + suPekerja.NoAkaunBank, suPekerja.NoGaji,id, 0);
+            await AddLogAsync("Hapus", suPekerja.NoKp + " - " + suPekerja.NoAkaunBank, suPekerja.NoGaji,id, 0, pekerjaId);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
@@ -578,6 +593,7 @@ namespace MSNK.Controllers
 
                     await _suPekerjaRepo.Update(suPekerja);
                     await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
                 return Json(new { result = "OK" });
             }
@@ -591,12 +607,20 @@ namespace MSNK.Controllers
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _suPekerjaRepo.GetByIdIncludeDeletedItems(id);
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             // Batal operation
 
             obj.FlHapus = 0;
+            obj.UserIdKemaskini = user.UserName;
+            obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
+
             _context.SuPekerja.Update(obj);
 
             // Batal operation end
+            await AddLogAsync("Rollback", obj.NoKp + " - " + obj.NoAkaunBank, obj.NoGaji, id, 0, pekerjaId);
 
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dikembalikan..!";

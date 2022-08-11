@@ -64,7 +64,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -74,6 +75,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = pekerjaId;
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -189,6 +191,7 @@ namespace MSNK.Controllers
             var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
 
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             SuAtlet m = new SuAtlet();
             if (ICAtletExists(suAtlet.NoKp) == false)
@@ -224,13 +227,14 @@ namespace MSNK.Controllers
                             m.NoAkaunBank = suAtlet.NoAkaunBank;
                             m.UserId = username;
                             m.TarMasuk = DateTime.Now;
+                            m.SuPekerjaMasukId = pekerjaId;
 
                             //m.SuTanggungan = _cart.Lines1.ToArray();
 
                             await _suAtletRepo.Insert(m);
 
                             //insert applog
-                            await AddLogAsync("Tambah", m.KodAtlet + " - " + suAtlet.NoKp, m.KodAtlet, 0, 0);
+                            await AddLogAsync("Tambah", m.KodAtlet + " - " + suAtlet.NoKp, m.KodAtlet, 0, 0, pekerjaId);
                             //insert applog end
 
                             //await AddLogAsync("Tambah", noRujukan, kredit);
@@ -305,6 +309,7 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
                     SuAtlet dataAsal = await _suAtletRepo.GetById(id);
 
@@ -317,12 +322,14 @@ namespace MSNK.Controllers
                     suAtlet.FlStatus = dataAsal.FlStatus;
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
+                    suAtlet.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
                     // list of input that cannot be change end
 
                     _context.Entry(dataAsal).State = EntityState.Detached;
 
                     suAtlet.UserIdKemaskini = user.UserName;
                     suAtlet.TarKemaskini = DateTime.Now;
+                    suAtlet.SuPekerjaKemaskiniId = pekerjaId;
 
                     _context.Update(suAtlet);
 
@@ -330,11 +337,11 @@ namespace MSNK.Controllers
                     if (namaAsal != suAtlet.Nama || noAkaunAsal != suAtlet.NoAkaunBank)
                     {
                         await AddLogAsync("Ubah", namaAsal + " -> " + suAtlet.Nama
-                            + ", " + noAkaunAsal + " -> " + suAtlet.NoAkaunBank, suAtlet.KodAtlet, id, 0);
+                            + ", " + noAkaunAsal + " -> " + suAtlet.NoAkaunBank, suAtlet.KodAtlet, id, 0, pekerjaId);
                     }
                     else
                     {
-                        await AddLogAsync("Ubah", "Ubah Data", suAtlet.KodAtlet, id, 0);
+                        await AddLogAsync("Ubah", "Ubah Data", suAtlet.KodAtlet, id, 0, pekerjaId);
                     }
                     //insert applog end
 
@@ -384,9 +391,16 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             var suAtlet = await _context.SuAtlet.FindAsync(id);
+            suAtlet.UserIdKemaskini = user.UserName;
+            suAtlet.TarKemaskini = DateTime.Now;
+            suAtlet.SuPekerjaKemaskiniId = pekerjaId;
+
             _context.SuAtlet.Remove(suAtlet);
-            await AddLogAsync("Hapus", suAtlet.NoKp + " - " + suAtlet.NoAkaunBank, suAtlet.KodAtlet, id, 0);
+            await AddLogAsync("Hapus", suAtlet.NoKp + " - " + suAtlet.NoAkaunBank, suAtlet.KodAtlet, id, 0, pekerjaId);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
@@ -401,15 +415,22 @@ namespace MSNK.Controllers
         [Authorize(Policy = "DF004R")]
         public async Task<IActionResult> RollBack(int id)
         {
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             var obj = await _suAtletRepo.GetByIdIncludeDeletedItems(id);
             // Batal operation
+
+            obj.UserIdKemaskini = user.UserName;
+            obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
 
             obj.FlHapus = 0;
             _context.SuAtlet.Update(obj);
 
             // Batal operation end
 
-            await AddLogAsync("Hapus", obj.NoKp + " - " + obj.NoAkaunBank, obj.KodAtlet, id, 0);
+            await AddLogAsync("Hapus", obj.NoKp + " - " + obj.NoAkaunBank, obj.KodAtlet, id, 0, pekerjaId);
 
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dikembalikan..!";

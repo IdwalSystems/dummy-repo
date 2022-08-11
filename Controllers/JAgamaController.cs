@@ -36,7 +36,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -95,8 +96,15 @@ namespace MSNK.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+                jAgama.UserId = user.UserName;
+                jAgama.TarMasuk = DateTime.Now;
+                jAgama.SuPekerjaMasukId = pekerjaId;
+
                 _context.Add(jAgama);
-                await AddLogAsync("Tambah", jAgama.Perihal,"",0, 0);
+                await AddLogAsync("Tambah", jAgama.Perihal,"",0, 0, pekerjaId);
                 await _context.SaveChangesAsync();
                 TempData[SD.Success] = "Data berjaya ditambah..!";
                 return RedirectToAction(nameof(Index));
@@ -136,16 +144,26 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
                     var objAsal = await _context.JAgama.FirstOrDefaultAsync(x=> x.Id == jAgama.Id);
                     var perihalAsal = objAsal.Perihal;
+                    jAgama.UserId = objAsal.UserId;
+                    jAgama.TarMasuk = objAsal.TarMasuk;
+                    jAgama.SuPekerjaMasukId = objAsal.SuPekerjaMasukId;
 
                     _context.Entry(objAsal).State = EntityState.Detached;
+
+                    jAgama.UserIdKemaskini = user.UserName;
+                    jAgama.TarKemaskini = DateTime.Now;
+                    jAgama.SuPekerjaKemaskiniId = pekerjaId;
 
                     _context.Update(jAgama);
 
                     if (perihalAsal != jAgama.Perihal)
                     {
-                        await AddLogAsync("Ubah", perihalAsal + " -> " + jAgama.Perihal,jAgama.Id.ToString(),id, 0);
+                        await AddLogAsync("Ubah", perihalAsal + " -> " + jAgama.Perihal,jAgama.Id.ToString(),id, 0, pekerjaId);
                     }
 
                     await _context.SaveChangesAsync();
@@ -193,11 +211,13 @@ namespace MSNK.Controllers
             var jAgama = await _context.JAgama.FindAsync(id);
 
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
             jAgama.UserIdKemaskini = user.UserName;
             jAgama.TarKemaskini = DateTime.Now;
+            jAgama.SuPekerjaKemaskiniId = pekerjaId;
 
             _context.JAgama.Remove(jAgama);
-            await AddLogAsync("Hapus", jAgama.Perihal, jAgama.Id.ToString(),id, 0);
+            await AddLogAsync("Hapus", jAgama.Perihal, jAgama.Id.ToString(),id, 0, pekerjaId);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
@@ -207,14 +227,21 @@ namespace MSNK.Controllers
         {
             var obj = await _context.JAgama.IgnoreQueryFilters()
                 .FirstOrDefaultAsync(x=> x.Id == id);
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             // Batal operation
 
             obj.FlHapus = 0;
+            obj.UserIdKemaskini = user.UserName;
+            obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
+
             _context.JAgama.Update(obj);
 
             //await AddLogAsync("Rollback", obj.Perihal, 0);
             // Batal operation end
+            await AddLogAsync("Rollback", obj.Perihal, obj.Id.ToString(), id, 0, pekerjaId);
 
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dikembalikan..!";

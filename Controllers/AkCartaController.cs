@@ -52,7 +52,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -62,6 +63,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota ;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = pekerjaId;
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -115,6 +117,9 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkCarta akCarta, int JKWId, int JJenisId, int JParasId, bool IsBajet)
         {
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             string paras = _context.JParas.FirstOrDefault(q => q.Id == JParasId).Kod;
             int kodman = Convert.ToInt32(akCarta.Kod.Substring(1, 1));
             int kodsen = Convert.ToInt32(akCarta.Kod.Substring(2, 1));
@@ -202,10 +207,13 @@ namespace MSNK.Controllers
                         akC.Catatan1 = akCarta.Catatan1?.ToUpper() ?? null;
                         akC.Catatan2 = akCarta.Catatan2;
                         akC.IsBajet = akCarta.IsBajet;
+                        akC.UserId = user.UserName;
+                        akC.TarMasuk = DateTime.Now;
+                        akC.SuPekerjaMasukId = pekerjaId;
                         try {
                             await _akCartaRepo.Insert(akC);
                             //insert applog
-                            await AddLogAsync("Tambah", akC.Kod, akC.Kod, 0, akC.Baki);
+                            await AddLogAsync("Tambah", akC.Kod, akC.Kod, 0, akC.Baki, pekerjaId);
                             //insert applog end
                             await _akCartaRepo.Save();
                         }
@@ -266,6 +274,9 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
+
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             string paras = _context.JParas.FirstOrDefault(q => q.Id == JParasId).Kod;
             int kodman = Convert.ToInt32(akCarta.Kod.Substring(1, 1));
@@ -360,9 +371,9 @@ namespace MSNK.Controllers
                         carta.Catatan1 = akCarta.Catatan1;
                         carta.Catatan2 = akCarta.Catatan2;
                         carta.IsBajet = akCarta.IsBajet;
-                        var user = await _userManager.GetUserAsync(User);
                         carta.UserIdKemaskini = user.UserName;
                         carta.TarKemaskini = DateTime.Now;
+                        carta.SuPekerjaKemaskiniId = pekerjaId;
 
                         try
                         {
@@ -397,7 +408,7 @@ namespace MSNK.Controllers
                             }
                         }
                         //insert applog
-                        await AddLogAsync("Ubah", carta.Kod, carta.Kod, id, carta.Baki);
+                        await AddLogAsync("Ubah", carta.Kod, carta.Kod, id, carta.Baki, pekerjaId);
                         //insert applog end
 
                         await _context.SaveChangesAsync();
@@ -462,8 +473,11 @@ namespace MSNK.Controllers
             string kodCarta = akCarta.Kod;
 
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             akCarta.UserIdKemaskini = user.UserName;
             akCarta.TarKemaskini = DateTime.Now;
+            akCarta.SuPekerjaKemaskiniId = pekerjaId;
 
             if (
                 akCarta.AkAkaun1.Count > 0||
@@ -493,7 +507,7 @@ namespace MSNK.Controllers
                 {
                     _context.AkCarta.Remove(akCarta);
                     //insert applog
-                    await AddLogAsync("Hapus", akCarta.Kod + " Paras 1", akCarta.Kod, 0, akCarta.Baki);
+                    await AddLogAsync("Hapus", akCarta.Kod + " Paras 1", akCarta.Kod, 0, akCarta.Baki, pekerjaId);
                     //insert applog end
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
@@ -520,7 +534,7 @@ namespace MSNK.Controllers
                 {
                     _context.AkCarta.Remove(akCarta);
                     //insert applog
-                    await AddLogAsync("Hapus", akCarta.Kod + " Paras 2", akCarta.Kod, 0, akCarta.Baki);
+                    await AddLogAsync("Hapus", akCarta.Kod + " Paras 2", akCarta.Kod, 0, akCarta.Baki, pekerjaId);
                     //insert applog end
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
@@ -547,7 +561,7 @@ namespace MSNK.Controllers
                 {
                     _context.AkCarta.Remove(akCarta);
                     //insert applog
-                    await AddLogAsync("Hapus", akCarta.Kod + " Paras 3", akCarta.Kod, 0, akCarta.Baki);
+                    await AddLogAsync("Hapus", akCarta.Kod + " Paras 3", akCarta.Kod, 0, akCarta.Baki, pekerjaId);
                     //insert applog end
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";
@@ -565,7 +579,7 @@ namespace MSNK.Controllers
             {
                 _context.AkCarta.Remove(akCarta);
                 //insert applog
-                await AddLogAsync("Hapus", akCarta.Kod + " Paras 4", akCarta.Kod, 0, akCarta.Baki);
+                await AddLogAsync("Hapus", akCarta.Kod + " Paras 4", akCarta.Kod, 0, akCarta.Baki, pekerjaId);
                 //insert applog end
                 await _context.SaveChangesAsync();
                 TempData[SD.Success] = kodCarta + " - " + akCarta.Perihal + " berjaya dipadam.";

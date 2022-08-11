@@ -47,7 +47,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? suPekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -57,6 +58,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = suPekerjaId;
 
             await _appLog.Insert(appLog,modul,operasi);
         }
@@ -124,6 +126,7 @@ namespace MSNK.Controllers
         {
             AkBank akB = new AkBank();
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             if (ModelState.IsValid)
             {
@@ -137,11 +140,12 @@ namespace MSNK.Controllers
                     akB.NoAkaun = akBank.NoAkaun;
                     akB.UserId = user.UserName;
                     akB.TarMasuk = DateTime.Now;
+                    akB.SuPekerjaMasukId = pekerjaId;
 
                     await _akBankRepo.Insert(akB);
 
                     //insert applog
-                    await AddLogAsync("Tambah",akB.Kod + " - " + akB.NoAkaun, akB.Kod, 0, 0);
+                    await AddLogAsync("Tambah",akB.Kod + " - " + akB.NoAkaun, akB.Kod, 0, 0, pekerjaId);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -194,6 +198,7 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
                     var objAsal = await _context.AkBank.FirstOrDefaultAsync(x => x.Id == akBank.Id);
 
@@ -203,16 +208,20 @@ namespace MSNK.Controllers
                     akBank.JKWId = objAsal.JKWId;
                     akBank.JBahagianId = objAsal.JBahagianId;
                     akBank.AkCartaId = objAsal.AkCartaId;
+                    akBank.UserId = objAsal.UserId;
+                    akBank.TarMasuk = objAsal.TarMasuk;
+                    akBank.SuPekerjaMasukId = objAsal.SuPekerjaMasukId;
 
                     _context.Entry(objAsal).State = EntityState.Detached;
 
                     akBank.UserIdKemaskini = user.UserName;
                     akBank.TarKemaskini = DateTime.Now;
+                    akBank.SuPekerjaKemaskiniId = pekerjaId;
 
                     _context.Update(akBank);
                     //insert applog
                     await AddLogAsync("Ubah",kodAsal + " -> " + akBank.Kod + ", "
-                        + noAkaunAsal + " -> " + akBank.NoAkaun + ", ", akBank.Kod, id, 0);
+                        + noAkaunAsal + " -> " + akBank.NoAkaun + ", ", akBank.Kod, id, 0, pekerjaId);
 
                     //insert applog end
 
@@ -263,12 +272,15 @@ namespace MSNK.Controllers
             var akBank = await _context.AkBank.FindAsync(id);
 
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+            
             akBank.UserIdKemaskini = user.UserName;
             akBank.TarKemaskini = DateTime.Now;
+            akBank.SuPekerjaKemaskiniId = pekerjaId;
 
             await _akBankRepo.Delete(id);
             //insert applog
-            await AddLogAsync("Hapus",akBank.Kod + " - " + akBank.NoAkaun, akBank.Kod, id, 0);
+            await AddLogAsync("Hapus",akBank.Kod + " - " + akBank.NoAkaun, akBank.Kod, id, 0, pekerjaId);
 
             //insert applog end
 

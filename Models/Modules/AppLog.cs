@@ -32,6 +32,7 @@ namespace MSNK.Models.Modules
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
         public string SysCode { get; set; }
+        public int? SuPekerjaId { get; set; }
         
     }
 }

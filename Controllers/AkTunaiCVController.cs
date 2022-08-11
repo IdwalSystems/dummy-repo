@@ -73,7 +73,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -83,6 +84,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = pekerjaId;
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -554,6 +556,8 @@ namespace MSNK.Controllers
             AkTunaiCV m = new AkTunaiCV();
             var pembekal = _context.AkPembekal.Find(AkPembekalId);
             var pekerja = _context.SuPekerja.Find(SuPekerjaId);
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             //check if user fil in both pekerja and pembekal
             if (pembekal != null && pekerja != null)
@@ -564,8 +568,6 @@ namespace MSNK.Controllers
                 PopulateList();
                 return View(akTunaiCV);
             }
-
-            var user = await _userManager.GetUserAsync(User);
 
             if(pembekal != null)
             {
@@ -659,13 +661,14 @@ namespace MSNK.Controllers
 
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
+                    m.SuPekerjaMasukId = pekerjaId;
 
                     m.AkTunaiCV1 = _cart.Lines1.ToArray();
 
                     await _akTunaiCVRepo.Insert(m);
 
                     //insert applog
-                    await AddLogAsync("Tambah", m.NoCV + " - " + m.Penerima, m.NoCV, 0, m.Jumlah);
+                    await AddLogAsync("Tambah", m.NoCV + " - " + m.Penerima, m.NoCV, 0, m.Jumlah, pekerjaId);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -739,6 +742,7 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
                     var dataAsal = await _akTunaiCVRepo.GetById(id);
                     var jumlah = dataAsal.Jumlah;
 
@@ -774,6 +778,7 @@ namespace MSNK.Controllers
                     akTunaiCV.Tarikh = dataAsal.Tarikh;
                     akTunaiCV.TarMasuk = dataAsal.TarMasuk;
                     akTunaiCV.UserId = dataAsal.UserId;
+                    akTunaiCV.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
                     akTunaiCV.FlCetak = 0;
                     // list of input that cannot be change end
 
@@ -792,6 +797,7 @@ namespace MSNK.Controllers
 
                     akTunaiCV.UserIdKemaskini = user.UserName;
                     akTunaiCV.TarKemaskini = DateTime.Now;
+                    akTunaiCV.SuPekerjaKemaskiniId = pekerjaId;
                     if (akTunaiCV.Catatan == null)
                     {
                         akTunaiCV.Catatan = "";
@@ -803,12 +809,12 @@ namespace MSNK.Controllers
                     if (jumlahAsal != akTunaiCV.Jumlah)
                     {
                         await AddLogAsync("Ubah","RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" + 
-                            Convert.ToDecimal(akTunaiCV.Jumlah).ToString("#,##0.00"), akTunaiCV.NoCV, id, akTunaiCV.Jumlah);
+                            Convert.ToDecimal(akTunaiCV.Jumlah).ToString("#,##0.00"), akTunaiCV.NoCV, id, akTunaiCV.Jumlah, pekerjaId);
 
                     }
                     else
                     {
-                        await AddLogAsync("Ubah", "Ubah Data", akTunaiCV.NoCV, id, akTunaiCV.Jumlah);
+                        await AddLogAsync("Ubah", "Ubah Data", akTunaiCV.NoCV, id, akTunaiCV.Jumlah, pekerjaId);
                     }
                     //insert applog end
 
@@ -863,13 +869,15 @@ namespace MSNK.Controllers
         {
             var akTunaiCV = await _context.AkTunaiCV.FindAsync(id);
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
             akTunaiCV.UserIdKemaskini = user.UserName;
             akTunaiCV.TarKemaskini = DateTime.Now;
+            akTunaiCV.SuPekerjaKemaskiniId = pekerjaId;
 
             _context.AkTunaiCV.Remove(akTunaiCV);
 
             //insert applog
-            await AddLogAsync("Hapus", "Hapus Data", akTunaiCV.NoCV, id, akTunaiCV.Jumlah);
+            await AddLogAsync("Hapus", "Hapus Data", akTunaiCV.NoCV, id, akTunaiCV.Jumlah, pekerjaId);
             //insert applog end
 
             await _context.SaveChangesAsync();
@@ -892,6 +900,7 @@ namespace MSNK.Controllers
             else
             {
                 var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
                 AkTunaiCV akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
 
@@ -969,7 +978,7 @@ namespace MSNK.Controllers
                     await _akTunaiCVRepo.Update(akTunaiCV);
 
                     //insert applog
-                    await AddLogAsync("Posting", "Posting Data", akTunaiCV.NoCV,(int) id, akTunaiCV.Jumlah);
+                    await AddLogAsync("Posting", "Posting Data", akTunaiCV.NoCV,(int) id, akTunaiCV.Jumlah, pekerjaId);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -996,6 +1005,9 @@ namespace MSNK.Controllers
             }
             else
             {
+                var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
                 AkTunaiCV akTunaiCV = await _akTunaiCVRepo.GetById((int)id);
 
                 List<AkTunaiLejar> akTunaiLejar = _context.AkTunaiLejar.Where(x => x.NoRujukan == akTunaiCV.NoCV).ToList();
@@ -1022,7 +1034,7 @@ namespace MSNK.Controllers
                     await _akTunaiCVRepo.Update(akTunaiCV);
 
                     //insert applog
-                    await AddLogAsync("UnPosting", "UnPosting Data", akTunaiCV.NoCV,(int) id, akTunaiCV.Jumlah);
+                    await AddLogAsync("UnPosting", "UnPosting Data", akTunaiCV.NoCV,(int) id, akTunaiCV.Jumlah, pekerjaId);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1057,6 +1069,7 @@ namespace MSNK.Controllers
             }
 
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             TunaiCVPrintModel data = new TunaiCVPrintModel();
 
@@ -1071,7 +1084,7 @@ namespace MSNK.Controllers
             await _akTunaiCVRepo.Update(obj);
 
             //insert applog
-            await AddLogAsync("Cetak", "Cetak Data", obj.NoCV, id, obj.Jumlah);
+            await AddLogAsync("Cetak", "Cetak Data", obj.NoCV, id, obj.Jumlah, pekerjaId);
 
             //insert applog end
 
@@ -1092,6 +1105,9 @@ namespace MSNK.Controllers
         [Authorize(Policy = "TR001R")]
         public async Task<IActionResult> RollBack(int id)
         {
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             var obj = await _akTunaiCVRepo.GetByIdIncludeDeletedItems(id);
             // check if already posting redirect back
             if (obj.FlPosting == 1)
@@ -1104,12 +1120,16 @@ namespace MSNK.Controllers
 
             obj.FlHapus = 0;
             obj.FlCetak = 0;
+            obj.UserIdKemaskini = user.UserName;
+            obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
+
             _context.AkTunaiCV.Update(obj);
 
             // rollback operation end
 
             //insert applog
-            await AddLogAsync("Posting", "Posting Data", obj.NoCV, id, obj.Jumlah);
+            await AddLogAsync("Posting", "Posting Data", obj.NoCV, id, obj.Jumlah, pekerjaId);
             //insert applog end
 
             await _context.SaveChangesAsync();

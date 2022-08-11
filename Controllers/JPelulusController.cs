@@ -40,7 +40,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -50,6 +51,8 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = pekerjaId;
+
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -106,6 +109,7 @@ namespace MSNK.Controllers
         {
             JPelulus m = new JPelulus();
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
             var pekerja = await _context.SuPekerja.FirstOrDefaultAsync(x => x.Id == SuPekerjaId);
 
             if (IsSuPekerjaExists(SuPekerjaId) == true)
@@ -136,11 +140,11 @@ namespace MSNK.Controllers
                     m.IsInvois = jPelulus.IsInvois;
                     m.TarMasuk = DateTime.Now;
                     m.UserId = user.UserName;
-
+                    m.SuPekerjaMasukId = pekerjaId;
                     await _pelulusRepo.Insert(m);
 
                     //insert applog
-                    await AddLogAsync("Tambah", pekerja.NoGaji + " - " + pekerja.NoKp, pekerja.NoGaji, 0, 0);
+                    await AddLogAsync("Tambah", pekerja.NoGaji + " - " + pekerja.NoKp, pekerja.NoGaji, 0, 0, pekerjaId);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -196,7 +200,11 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
                     var objAsal = await _context.JPelulus.Include(x=> x.SuPekerja).FirstOrDefaultAsync(x => x.Id == id);
+                    jPelulus.UserId = objAsal.UserId;
+                    jPelulus.TarMasuk = objAsal.TarMasuk;
+                    jPelulus.SuPekerjaMasukId = objAsal.SuPekerjaMasukId;
 
                     jPelulus.SuPekerjaId = objAsal.SuPekerjaId;
 
@@ -206,11 +214,12 @@ namespace MSNK.Controllers
 
                     jPelulus.UserIdKemaskini = user.UserName;
                     jPelulus.TarKemaskini = DateTime.Now;
+                    jPelulus.SuPekerjaKemaskiniId = pekerjaId;
 
                     _context.Update(jPelulus);
                     //insert applog
 
-                        await AddLogAsync("Ubah", objPekerja.NoGaji + " - " + objPekerja.NoKp, objPekerja.NoGaji, id, 0);
+                        await AddLogAsync("Ubah", objPekerja.NoGaji + " - " + objPekerja.NoKp, objPekerja.NoGaji, id, 0, pekerjaId);
 
                     //insert applog end
 
@@ -259,12 +268,14 @@ namespace MSNK.Controllers
             var obj = await _pelulusRepo.GetById(id);
 
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
             obj.UserIdKemaskini = user.UserName;
             obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
 
             await _pelulusRepo.Delete(id);
             //insert applog
-            await AddLogAsync("Hapus", obj.SuPekerja.NoGaji + " - " + obj.SuPekerja.NoKp, obj.SuPekerja.NoGaji, id, 0);
+            await AddLogAsync("Hapus", obj.SuPekerja.NoGaji + " - " + obj.SuPekerja.NoKp, obj.SuPekerja.NoGaji, id, 0, pekerjaId);
 
             //insert applog end
 

@@ -50,7 +50,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -60,6 +61,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = pekerjaId;
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -681,6 +683,8 @@ namespace MSNK.Controllers
         {
             SuProfil m = new SuProfil();
             var IsExistNoRujukan = _context.SuProfil.Where(x => x.NoRujukan == suProfil.NoRujukan).FirstOrDefault();
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             // get latest no rujukan running number 
             var year = DateTime.Now.Year.ToString();
@@ -702,9 +706,6 @@ namespace MSNK.Controllers
             }
             // check end
 
-            var user = await _userManager.GetUserAsync(User);
-
-
             if (ModelState.IsValid)
             {
                 if (suProfil != null && JKWId != 0 && JBahagianId != 0 && AkCartaId != 0)
@@ -719,13 +720,14 @@ namespace MSNK.Controllers
                     m.Jumlah = suProfil.Jumlah;
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
+                    m.SuPekerjaMasukId = pekerjaId;
 
                     m.SuProfil1 = _cart.Lines1.ToArray();
 
                     await _suProfilRepo.Insert(m);
 
                     //insert applog
-                    await AddLogAsync("Tambah", m.NoRujukan, m.NoRujukan, 0, suProfil.Jumlah);
+                    await AddLogAsync("Tambah", m.NoRujukan, m.NoRujukan, 0, suProfil.Jumlah, pekerjaId);
                     //insert applog end
                     await _suProfilRepo.Save();
                     TempData[SD.Success] = "Maklumat berjaya ditambah. No Rujukan adalah " + m.NoRujukan;
@@ -813,6 +815,7 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
                     SuProfil dataAsal = await _suProfilRepo.GetById(id);
 
@@ -826,6 +829,7 @@ namespace MSNK.Controllers
                     //suProfil.JBahagianId = dataAsal.JBahagianId;
                     suProfil.TarMasuk = dataAsal.TarMasuk;
                     suProfil.UserId = dataAsal.UserId;
+                    suProfil.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
                     suProfil.FlCetak = 0;
                     // list of input that cannot be change end
 
@@ -844,18 +848,19 @@ namespace MSNK.Controllers
 
                     suProfil.UserIdKemaskini = user.UserName;
                     suProfil.TarKemaskini = DateTime.Now;
+                    suProfil.SuPekerjaKemaskiniId = pekerjaId;
 
                     _context.Update(suProfil);
                     // insert applog
                     if (jumlahAsal != suProfil.Jumlah)
                     {
                         await AddLogAsync("Ubah", "RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" +
-                            Convert.ToDecimal(suProfil.Jumlah).ToString("#,##0.00"), suProfil.NoRujukan, id, suProfil.Jumlah);
+                            Convert.ToDecimal(suProfil.Jumlah).ToString("#,##0.00"), suProfil.NoRujukan, id, suProfil.Jumlah, pekerjaId);
 
                     }
                     else
                     {
-                        await AddLogAsync("Ubah", "Ubah Data", suProfil.NoRujukan, id, suProfil.Jumlah);
+                        await AddLogAsync("Ubah", "Ubah Data", suProfil.NoRujukan, id, suProfil.Jumlah, pekerjaId);
                     }
                     //insert applog end
 
@@ -911,9 +916,11 @@ namespace MSNK.Controllers
             var obj = await _context.SuProfil.FindAsync(id);
 
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             obj.UserIdKemaskini = user.UserName;
             obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
             // check if already posting redirect back
             if (obj.FlPosting == 1)
             {
@@ -924,7 +931,7 @@ namespace MSNK.Controllers
             _context.SuProfil.Update(obj);
 
             //insert applog
-            await AddLogAsync("Hapus", obj.NoRujukan, obj.NoRujukan, id, obj.Jumlah);
+            await AddLogAsync("Hapus", obj.NoRujukan, obj.NoRujukan, id, obj.Jumlah, pekerjaId);
             //insert applog end
 
             _context.SuProfil.Remove(obj);
@@ -939,6 +946,9 @@ namespace MSNK.Controllers
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _suProfilRepo.GetByIdIncludeDeletedItems(id);
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             // check if already posting redirect back
             if (obj.FlPosting == 1)
             {
@@ -958,12 +968,16 @@ namespace MSNK.Controllers
 
             obj.FlHapus = 0;
             obj.FlCetak = 0;
+            obj.UserIdKemaskini = user.UserName;
+            obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
+
             _context.SuProfil.Update(obj);
 
             // Batal operation end
 
             //insert applog
-            await AddLogAsync("Rollback", "Rollback Data", obj.NoRujukan, (int)id, obj.Jumlah);
+            await AddLogAsync("Rollback", "Rollback Data", obj.NoRujukan, (int)id, obj.Jumlah, pekerjaId);
 
             //insert applog end
 
@@ -977,6 +991,8 @@ namespace MSNK.Controllers
         public async Task<IActionResult> PrintPdf(int id)
         {
             SuProfil obj = await _suProfilRepo.GetByIdIncludeDeletedItems(id);
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             obj.SuProfil1 = obj.SuProfil1
                 .OrderBy(b => b.JSukan.Perihal)
@@ -993,8 +1009,6 @@ namespace MSNK.Controllers
             {
                 jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(obj.Jumlah)).ToUpper();
             }
-
-            var user = await _userManager.GetUserAsync(User);
 
             SuProfilAtletPrintModel data = new SuProfilAtletPrintModel();
 
@@ -1017,7 +1031,7 @@ namespace MSNK.Controllers
             await _suProfilRepo.Update(obj);
 
             //insert applog
-            await AddLogAsync("Cetak", "Cetak Data", obj.NoRujukan, id, obj.Jumlah);
+            await AddLogAsync("Cetak", "Cetak Data", obj.NoRujukan, id, obj.Jumlah, pekerjaId);
 
             //insert applog end
 
@@ -1046,6 +1060,7 @@ namespace MSNK.Controllers
             else
             {
                 var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
                 SuProfil obj = await _suProfilRepo.GetById((int)id);
 
@@ -1076,10 +1091,11 @@ namespace MSNK.Controllers
                 //update posting status in akPO
                 obj.FlPosting = 1;
                 obj.TarikhPosting = DateTime.Now;
+
                 await _suProfilRepo.Update(obj);
 
                 //insert applog
-                await AddLogAsync("Posting", "Posting Data", obj.NoRujukan, (int)id, obj.Jumlah);
+                await AddLogAsync("Posting", "Posting Data", obj.NoRujukan, (int)id, obj.Jumlah, pekerjaId);
 
                 //insert applog end
 
@@ -1103,6 +1119,9 @@ namespace MSNK.Controllers
             }
             else
             {
+                var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
                 SuProfil obj = await _suProfilRepo.GetById((int)id);
 
                 //check
@@ -1126,10 +1145,11 @@ namespace MSNK.Controllers
                 //update posting status in akPOLaras
                 obj.FlPosting = 0;
                 obj.TarikhPosting = null;
+
                 await _suProfilRepo.Update(obj);
 
                 //insert applog
-                await AddLogAsync("UnPosting", "UnPosting Data", obj.NoRujukan, (int)id, obj.Jumlah);
+                await AddLogAsync("UnPosting", "UnPosting Data", obj.NoRujukan, (int)id, obj.Jumlah, pekerjaId);
 
                 //insert applog end
 

@@ -50,7 +50,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -60,6 +61,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = pekerjaId;
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -281,6 +283,7 @@ namespace MSNK.Controllers
         {
             AkPembekal akP = new();
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             // check kalau ada no Akaun redundant
             var akPAkaunRedundant = _context.AkPembekal.Where(x => x.AkaunBank == akPembekal.AkaunBank).FirstOrDefault();
@@ -312,9 +315,12 @@ namespace MSNK.Controllers
                     akP.Emel = akPembekal.Emel;
                     akP.BakiAwal = akPembekal.BakiAwal;
                     akP.UserId = user.UserName;
+                    akP.TarMasuk = DateTime.Now;
+                    akP.SuPekerjaMasukId = pekerjaId;
+
                     await _akpembekalRepo.Insert(akP);
                     //insert applog
-                    await AddLogAsync("Tambah", akP.KodSykt + " - " + akP.NamaSykt?.ToUpper()?? "", akP.KodSykt, 0, 0);
+                    await AddLogAsync("Tambah", akP.KodSykt + " - " + akP.NamaSykt?.ToUpper()?? "", akP.KodSykt, 0, 0, pekerjaId);
                     //insert applog end
                     await _akpembekalRepo.Save();
                     TempData[SD.Success] = "Maklumat berjaya ditambah. Kod Pembekal adalah " + akP.KodSykt;
@@ -371,10 +377,14 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
                     AkPembekal dataAsal = await _akpembekalRepo.GetById(id);
                     akPembekal.KodSykt = dataAsal.KodSykt;
                     var namaAsal = dataAsal.NamaSykt;
+                    akPembekal.UserId = dataAsal.UserId;
+                    akPembekal.TarMasuk = dataAsal.TarMasuk;
+                    akPembekal.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
 
                     _context.Entry(dataAsal).State = EntityState.Detached;
 
@@ -385,6 +395,7 @@ namespace MSNK.Controllers
                     akPembekal.Bandar = akPembekal.Bandar?.ToUpper()?? "";
                     akPembekal.UserIdKemaskini = user.UserName;
                     akPembekal.TarKemaskini = DateTime.Now;
+                    akPembekal.SuPekerjaKemaskiniId = pekerjaId;
                     
                     //_context.Update(akPembekal);
                     //await _context.SaveChangesAsync();
@@ -407,11 +418,11 @@ namespace MSNK.Controllers
                     //insert applog
                     if (namaAsal != akPembekal.NamaSykt)
                     {
-                        await AddLogAsync("Ubah", namaAsal + " -> " + akPembekal.NamaSykt, akPembekal.KodSykt, id, 0);
+                        await AddLogAsync("Ubah", namaAsal + " -> " + akPembekal.NamaSykt, akPembekal.KodSykt, id, 0, pekerjaId);
                     }
                     else
                     {
-                        await AddLogAsync("Ubah", "Ubah Data", akPembekal.KodSykt, id, 0);
+                        await AddLogAsync("Ubah", "Ubah Data", akPembekal.KodSykt, id, 0, pekerjaId);
                     }
                     //insert applog end
                     await _context.SaveChangesAsync();
@@ -465,11 +476,13 @@ namespace MSNK.Controllers
         {
             var akPembekal = await _context.AkPembekal.FindAsync(id);
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
             akPembekal.UserIdKemaskini = user.UserName;
             akPembekal.TarKemaskini = DateTime.Now;
+            akPembekal.SuPekerjaKemaskiniId = pekerjaId;
 
             _context.AkPembekal.Remove(akPembekal);
-            await AddLogAsync("Hapus", akPembekal.KodSykt + " - " + akPembekal.NamaSykt, akPembekal.KodSykt, id, 0);
+            await AddLogAsync("Hapus", akPembekal.KodSykt + " - " + akPembekal.NamaSykt, akPembekal.KodSykt, id, 0, pekerjaId);
 
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
@@ -494,13 +507,19 @@ namespace MSNK.Controllers
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _akpembekalRepo.GetByIdIncludeDeletedItems(id);
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             // Batal operation
 
             obj.FlHapus = 0;
+            obj.UserIdKemaskini = user.UserName;
+            obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
+
             _context.AkPembekal.Update(obj);
 
-            await AddLogAsync("Rollback", obj.KodSykt + " - " + obj.NamaSykt, obj.KodSykt, id, 0);
+            await AddLogAsync("Rollback", obj.KodSykt + " - " + obj.NamaSykt, obj.KodSykt, id, 0, pekerjaId);
             // Batal operation end
 
             await _context.SaveChangesAsync();

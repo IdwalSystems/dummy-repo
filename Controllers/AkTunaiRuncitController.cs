@@ -59,7 +59,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -69,6 +70,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = pekerjaId;
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -411,6 +413,7 @@ namespace MSNK.Controllers
         {
             AkTunaiRuncit m = new AkTunaiRuncit();
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             // get latest no rujukan running number  
             var kw = _context.JKW.FirstOrDefault(x => x.Id == JKWId);
@@ -447,13 +450,14 @@ namespace MSNK.Controllers
                     m.Catatan = akTunaiRuncit.Catatan;
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
+                    m.SuPekerjaMasukId = pekerjaId;
 
                     m.AkTunaiPemegang = _cart.Lines1.ToArray();
 
                     await _akTunaiRuncitRepo.Insert(m);
 
                     //insert applog
-                    await AddLogAsync("Tambah", m.KaunterPanjar, m.KaunterPanjar, 0,0);
+                    await AddLogAsync("Tambah", m.KaunterPanjar, m.KaunterPanjar, 0,0, pekerjaId);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -525,6 +529,7 @@ namespace MSNK.Controllers
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
                     AkTunaiRuncit akTunaiRuncitAsal = await _akTunaiRuncitRepo.GetById(id);
 
                     // list of input that cannot be change
@@ -550,11 +555,12 @@ namespace MSNK.Controllers
 
                     akTunaiRuncit.UserIdKemaskini = user.UserName;
                     akTunaiRuncit.TarKemaskini = DateTime.Now;
+                    akTunaiRuncit.SuPekerjaKemaskiniId = pekerjaId;
 
                     _context.Update(akTunaiRuncit);
 
                     //insert applog
-                    await AddLogAsync("Ubah", "Ubah Data", akTunaiRuncit.KaunterPanjar, id, 0);
+                    await AddLogAsync("Ubah", "Ubah Data", akTunaiRuncit.KaunterPanjar, id, 0, pekerjaId);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -610,6 +616,9 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             var akTunaiRuncit = await _context.AkTunaiRuncit.FindAsync(id);
 
             // check if already made a transaction in tunaiCV
@@ -632,14 +641,14 @@ namespace MSNK.Controllers
             }
             // check end
 
-            var user = await _userManager.GetUserAsync(User);
             akTunaiRuncit.UserIdKemaskini = user.UserName;
             akTunaiRuncit.TarKemaskini = DateTime.Now;
+            akTunaiRuncit.SuPekerjaKemaskiniId = pekerjaId;
 
             _context.AkTunaiRuncit.Remove(akTunaiRuncit);
 
             //insert applog
-            await AddLogAsync("Hapus", "Hapus Data", akTunaiRuncit.KaunterPanjar, id, 0);
+            await AddLogAsync("Hapus", "Hapus Data", akTunaiRuncit.KaunterPanjar, id, 0, pekerjaId);
             //insert applog end
 
 
@@ -652,6 +661,9 @@ namespace MSNK.Controllers
         [Authorize(Policy = "DF004R")]
         public async Task<IActionResult> RollBack(int id)
         {
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             var obj = await _akTunaiRuncitRepo.GetByIdIncludeDeletedItems(id);
             // check if already posting redirect back
             if (obj.FlPosting == 1)
@@ -664,12 +676,16 @@ namespace MSNK.Controllers
 
             obj.FlHapus = 0;
             obj.FlCetak = 0;
+            obj.UserIdKemaskini = user.UserName;
+            obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
+
             _context.AkTunaiRuncit.Update(obj);
 
             // rollback operation end
 
             //insert applog
-            await AddLogAsync("Posting", "Posting Data", obj.KaunterPanjar, id, 0);
+            await AddLogAsync("Posting", "Posting Data", obj.KaunterPanjar, id, 0, pekerjaId);
             //insert applog end
 
             await _context.SaveChangesAsync();
@@ -688,6 +704,7 @@ namespace MSNK.Controllers
             else
             {
                 var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
                 var akTunaiRuncit = await _akTunaiRuncitRepo.GetById((int) id);
                 DateTime date1 = DateTime.Parse(tarikhDari);
                 DateTime date2 = DateTime.Parse(tarikhHingga).AddHours(23.99);
@@ -771,10 +788,13 @@ namespace MSNK.Controllers
 
                     //update posting status in akTunaiCV
                     akTunaiRuncit.UserIdKemaskini = user.UserName;
+                    akTunaiRuncit.TarKemaskini = DateTime.Now;
+                    akTunaiRuncit.SuPekerjaKemaskiniId = pekerjaId;
+
                     await _akTunaiRuncitRepo.Update(akTunaiRuncit);
 
                     //insert applog
-                    await AddLogAsync("Rekup", "Rekup Data", akTunaiRuncit.KaunterPanjar + " - No Rekup : " + noRekup, (int)id, jumlahRekupan);
+                    await AddLogAsync("Rekup", "Rekup Data", akTunaiRuncit.KaunterPanjar + " - No Rekup : " + noRekup, (int)id, jumlahRekupan, pekerjaId);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -805,6 +825,8 @@ namespace MSNK.Controllers
                 var userManager = _userManager.GetUserAsync(User);
 
                 var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.Email == userManager.Result.Email);
+
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
                 var rekupanList = (from tblTunaiLejar in _context.AkTunaiLejar
                                        .Include(x => x.AkTunaiRuncit)
@@ -872,7 +894,7 @@ namespace MSNK.Controllers
                                        "https"));
 
                 //insert applog
-                await AddLogAsync("Cetak", "Cetak Rekupan", "Kod Kaunter Panjar : " + kodKaunter + ", No Rekup : " + rekup, id, 0);
+                await AddLogAsync("Cetak", "Cetak Rekupan", "Kod Kaunter Panjar : " + kodKaunter + ", No Rekup : " + rekup, id, 0, pekerjaId);
 
                 //insert applog end
                 await _context.SaveChangesAsync();

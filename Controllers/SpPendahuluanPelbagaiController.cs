@@ -94,7 +94,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -104,6 +105,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = pekerjaId;
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -551,6 +553,7 @@ namespace MSNK.Controllers
             var tahap = _context.JTahapAktiviti.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JTahapAktivitiId);
             var sukan = _context.JSukan.FirstOrDefault(x => x.Id == spPendahuluanPelbagai.JSukanId);
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             if (user.Email == "superadmin@idwal.com.my")
             {
@@ -582,6 +585,7 @@ namespace MSNK.Controllers
                     m.TarMasuk = DateTime.Now;
                     m.JBahagian = bahagian;
                     m.UserId = user.UserName;
+                    m.SuPekerjaMasukId = pekerjaId;
 
                     m.SpPendahuluanPelbagai1 = _cart.Lines1.ToArray();
                     m.SpPendahuluanPelbagai2 = _cart.Lines2.ToArray();
@@ -589,7 +593,7 @@ namespace MSNK.Controllers
                     await _spPendahuluanPelbagaiRepo.Insert(m);
 
                     //insert applog
-                    await AddLogAsync("Tambah", m.NoPermohonan, m.NoPermohonan, 0, m.JumKeseluruhan);
+                    await AddLogAsync("Tambah", m.NoPermohonan, m.NoPermohonan, 0, m.JumKeseluruhan, pekerjaId);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -663,6 +667,7 @@ namespace MSNK.Controllers
                     try
                     {
                         var user = await _userManager.GetUserAsync(User);
+                        int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
                         SpPendahuluanPelbagai spPendahuluanPelbagaiAsal = await _spPendahuluanPelbagaiRepo.GetById(id);
                         // list of input that cannot be change
                         //spPendahuluanPelbagai.Tahun = spPendahuluanPelbagaiAsal.Tahun;
@@ -671,6 +676,7 @@ namespace MSNK.Controllers
                         //spPendahuluanPelbagai.Nama = spPendahuluanPelbagaiAsal.Nama;
                         spPendahuluanPelbagai.TarMasuk = spPendahuluanPelbagaiAsal.TarMasuk;
                         spPendahuluanPelbagai.UserId = spPendahuluanPelbagaiAsal.UserId;
+                        spPendahuluanPelbagai.SuPekerjaMasukId = spPendahuluanPelbagaiAsal.SuPekerjaMasukId;
                         spPendahuluanPelbagai.FlCetak = 0;
                         // list of input that cannot be change end
 
@@ -718,6 +724,7 @@ namespace MSNK.Controllers
 
                         spPendahuluanPelbagai.UserIdKemaskini = user.UserName;
                         spPendahuluanPelbagai.TarKemaskini = DateTime.Now;
+                        spPendahuluanPelbagai.SuPekerjaKemaskiniId = pekerjaId;
 
                         _context.Update(spPendahuluanPelbagai);
 
@@ -740,11 +747,11 @@ namespace MSNK.Controllers
 
                         if (logSeluruh != "" || logSokong != "" || logLulus != "")
                         {
-                            await AddLogAsync("Ubah", "Ubah Data : " + logSeluruh + ", " + logSokong + ", " + logLulus, spPendahuluanPelbagai.NoPermohonan, id, spPendahuluanPelbagai.JumKeseluruhan);
+                            await AddLogAsync("Ubah", "Ubah Data : " + logSeluruh + ", " + logSokong + ", " + logLulus, spPendahuluanPelbagai.NoPermohonan, id, spPendahuluanPelbagai.JumKeseluruhan, pekerjaId);
                         }
                         else
                         {
-                            await AddLogAsync("Ubah", "Ubah Data", spPendahuluanPelbagai.NoPermohonan, id, spPendahuluanPelbagai.JumKeseluruhan);
+                            await AddLogAsync("Ubah", "Ubah Data", spPendahuluanPelbagai.NoPermohonan, id, spPendahuluanPelbagai.JumKeseluruhan, pekerjaId);
                         }
                         //insert applog end
                         //AK CODE END
@@ -834,6 +841,7 @@ namespace MSNK.Controllers
             else
             {
                 var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
                 //var user = UserManager.GetUserAsync(User);
                 var namaUser = _context.
                     applicationUsers.Include(x=> x.SuPekerja).FirstOrDefault(x => x.Email == user.UserName);
@@ -867,7 +875,7 @@ namespace MSNK.Controllers
                         await _spPendahuluanPelbagaiRepo.Update(sp);
 
                         //insert applog
-                        await AddLogAsync("Posting", "Sokong Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
+                        await AddLogAsync("Posting", "Sokong Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan, pekerjaId);
 
                         //insert applog end
 
@@ -895,7 +903,7 @@ namespace MSNK.Controllers
 
         // posting function
         [HttpPost, ActionName("Posting")]
-        [Authorize(Policy = "PV001T")]
+        [Authorize(Policy = "SP001T")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Posting(int? id, decimal jumSokong, decimal jumLulus, int pelulusId, DateTime tarikhLulus)
         {
@@ -905,11 +913,13 @@ namespace MSNK.Controllers
             }
             else
             {
+
                 if(jumLulus != 0)
                 {
                     if(jumLulus <= jumSokong)
                     {
                         var user = await _userManager.GetUserAsync(User);
+                        int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
                         var pelulus = await _context.JPelulus.Include(x => x.SuPekerja).Where(x => x.IsPendahuluan == true).FirstOrDefaultAsync();
 
                         SpPendahuluanPelbagai sp = await _spPendahuluanPelbagaiRepo.GetById((int)id);
@@ -962,15 +972,10 @@ namespace MSNK.Controllers
                             sp.TarLulus = tarikhLulus;
                             sp.JPelulusId = pelulusId;
 
-                            // AK CODE 31/03/2022
-                            sp.UserIdKemaskini = user.UserName;
-                            sp.TarKemaskini = DateTime.Now;
-                            // AK CODE END 31/03/2022
-
                             await _spPendahuluanPelbagaiRepo.Update(sp);
 
                             //insert applog
-                            await AddLogAsync("Posting", "Posting Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan);
+                            await AddLogAsync("Posting", "Posting Data", sp.NoPermohonan, (int)id, sp.JumKeseluruhan, pekerjaId);
 
                             //insert applog end
 
@@ -1009,6 +1014,9 @@ namespace MSNK.Controllers
             }
             else
             {
+                var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
                 SpPendahuluanPelbagai obj = await _spPendahuluanPelbagaiRepo.GetById((int)id);
 
                 var akPV = await _context.AkPV.Where(x => x.SpPendahuluanPelbagaiId == id).FirstOrDefaultAsync();
@@ -1059,7 +1067,7 @@ namespace MSNK.Controllers
                     await _spPendahuluanPelbagaiRepo.Update(obj);
 
                     //insert applog
-                    await AddLogAsync("UnPosting", "UnPosting Data", obj.NoPermohonan, (int)id, obj.JumKeseluruhan);
+                    await AddLogAsync("UnPosting", "UnPosting Data", obj.NoPermohonan, (int)id, obj.JumKeseluruhan, pekerjaId);
 
                     //insert applog end
 
@@ -1389,6 +1397,9 @@ namespace MSNK.Controllers
         [Authorize(Policy = "SP001R")]
         public async Task<IActionResult> RollBack(int id)
         {
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             var obj = await _spPendahuluanPelbagaiRepo.GetByIdIncludeDeletedItems(id);
             // check if already posting redirect back
             if (obj.FlPosting == 1)
@@ -1411,12 +1422,16 @@ namespace MSNK.Controllers
             obj.JumLulus = 0;
             obj.FlStatusLulus = 0;
 
+            obj.UserIdKemaskini = user.UserName;
+            obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
+
             _context.SpPendahuluanPelbagai.Update(obj);
 
             // rollback operation end
 
             //insert applog
-            await AddLogAsync("Rollback", "Rollback Data", obj.NoPermohonan, id, obj.JumKeseluruhan);
+            await AddLogAsync("Rollback", "Rollback Data", obj.NoPermohonan, id, obj.JumKeseluruhan, pekerjaId);
             //insert applog end
 
             await _context.SaveChangesAsync();
@@ -1432,6 +1447,7 @@ namespace MSNK.Controllers
             var jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(sp.JumKeseluruhan)).ToUpper();
 
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             PendahuluanPelbagaiPrintModel data = new PendahuluanPelbagaiPrintModel();
 
@@ -1467,7 +1483,7 @@ namespace MSNK.Controllers
             await _spPendahuluanPelbagaiRepo.Update(sp);
 
             //insert applog
-            await AddLogAsync("Cetak", "Cetak Data", sp.NoPermohonan, id, sp.JumKeseluruhan);
+            await AddLogAsync("Cetak", "Cetak Data", sp.NoPermohonan, id, sp.JumKeseluruhan, pekerjaId);
             //insert applog end
 
             await _context.SaveChangesAsync();

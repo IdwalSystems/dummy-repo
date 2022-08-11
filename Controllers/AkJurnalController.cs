@@ -72,7 +72,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -82,6 +83,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = pekerjaId;
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -313,6 +315,7 @@ namespace MSNK.Controllers
         {
             AkJurnal m = new AkJurnal();
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             if (AkTunaiRuncitId != 0 )
             {
@@ -352,10 +355,11 @@ namespace MSNK.Controllers
                         m.AkJurnal1 = _cart.Lines1.OrderBy(x=>x.Indeks).ToList();
                         m.UserId = user.UserName;
                         m.TarMasuk = DateTime.Now;
+                        m.SuPekerjaMasukId = pekerjaId;
 
                         await _akJurnalRepo.Insert(m);
                         //insert applog
-                        await AddLogAsync("Tambah", noRujukan, noRujukan, 0, kredit);
+                        await AddLogAsync("Tambah", noRujukan, noRujukan, 0, kredit, pekerjaId);
                         //insert applog end
                         await _context.SaveChangesAsync();
 
@@ -432,6 +436,8 @@ namespace MSNK.Controllers
                     try
                     {
                         var user = await _userManager.GetUserAsync(User);
+                        int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
                         AkJurnal akJurnalAsal = await _akJurnalRepo.GetById(id);
 
                         akJurnalAsal.AkJurnal1 = _akJurnal1Repo.GetAll(id).Result.ToList();
@@ -453,8 +459,7 @@ namespace MSNK.Controllers
                         akJurnal.AkJurnal1 = _cart.Lines1.OrderBy(q => q.Indeks).ToList();
                         akJurnal.UserId = akJurnalAsal.UserId;
                         akJurnal.TarMasuk = akJurnalAsal.TarMasuk;
-                        akJurnal.UserIdKemaskini = user.UserName;
-                        akJurnal.TarKemaskini = DateTime.Now;
+                        akJurnal.SuPekerjaMasukId = akJurnalAsal.SuPekerjaMasukId;  
                         akJurnal.Cetak = 0;
                         
                         if (AkTunaiRuncitId != 0)
@@ -463,7 +468,11 @@ namespace MSNK.Controllers
                             akJurnal.FlKategoriPenerima = 3;
                             akJurnal.AkTunaiRuncitId = AkTunaiRuncitId;
                         }
-                        
+
+                        akJurnal.UserIdKemaskini = user.UserName;
+                        akJurnal.TarKemaskini = DateTime.Now;
+                        akJurnal.SuPekerjaKemaskiniId = pekerjaId;
+
                         _context.Update(akJurnal);
                         //insert applog
                         if (kreditAsal != akJurnal.JumKredit)
@@ -478,11 +487,11 @@ namespace MSNK.Controllers
 
                         if (logKredit != "" || logDebit != "")
                         {
-                            await AddLogAsync("Ubah", "Ubah Data : " + logKredit + "," +logDebit, akJurnal.NoJurnal, id, akJurnal.JumKredit);
+                            await AddLogAsync("Ubah", "Ubah Data : " + logKredit + "," +logDebit, akJurnal.NoJurnal, id, akJurnal.JumKredit, pekerjaId);
                         }
                         else
                         {
-                            await AddLogAsync("Ubah", "Ubah Data", akJurnal.NoJurnal, id, akJurnal.JumKredit);
+                            await AddLogAsync("Ubah", "Ubah Data", akJurnal.NoJurnal, id, akJurnal.JumKredit, pekerjaId);
                         }
                         //insert applog end
 
@@ -538,8 +547,11 @@ namespace MSNK.Controllers
         {
             var akJurnal = await _context.AkJurnal.FindAsync(id);
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             akJurnal.UserIdKemaskini = user.UserName;
             akJurnal.TarKemaskini = DateTime.Now;
+            akJurnal.SuPekerjaKemaskiniId = pekerjaId;
 
             if (akJurnal.Posting == 1)
             {
@@ -550,7 +562,7 @@ namespace MSNK.Controllers
             akJurnal.Cetak = 0;
             _context.AkJurnal.Update(akJurnal);
             _context.AkJurnal.Remove(akJurnal);
-            await AddLogAsync("Hapus", "Hapus Data", akJurnal.NoJurnal, id, akJurnal.JumKredit);
+            await AddLogAsync("Hapus", "Hapus Data", akJurnal.NoJurnal, id, akJurnal.JumKredit, pekerjaId);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
@@ -851,6 +863,9 @@ namespace MSNK.Controllers
             }
             else
             {
+                var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
                 AkJurnal akJurnal = await _context.AkJurnal.Include(x => x.AkJurnal1).FirstOrDefaultAsync(x => x.Id == id);
 
                 if (akJurnal.Cetak == 0)
@@ -1001,7 +1016,7 @@ namespace MSNK.Controllers
                     akJurnal.TarikhPosting = DateTime.Now;
                     await _akJurnalRepo.Update(akJurnal);
                     //insert applog
-                    await AddLogAsync("Posting", "Posting Data", akJurnal.NoJurnal, (int)id, akJurnal.JumKredit);
+                    await AddLogAsync("Posting", "Posting Data", akJurnal.NoJurnal, (int)id, akJurnal.JumKredit, pekerjaId);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1019,6 +1034,9 @@ namespace MSNK.Controllers
             }
             else
             {
+                var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
                 AkJurnal akJurnal = await _context.AkJurnal
                     .Include(x => x.AkJurnal1)
                     .FirstOrDefaultAsync(x => x.Id == id);
@@ -1091,7 +1109,7 @@ namespace MSNK.Controllers
                     await _akJurnalRepo.Update(akJurnal);
 
                     //insert applog
-                    await AddLogAsync("UnPosting", "Batal Posting Data", akJurnal.NoJurnal, (int)id, akJurnal.JumKredit);
+                    await AddLogAsync("UnPosting", "Batal Posting Data", akJurnal.NoJurnal, (int)id, akJurnal.JumKredit, pekerjaId);
                     //insert applog end
                     await _context.SaveChangesAsync();
 
@@ -1104,6 +1122,9 @@ namespace MSNK.Controllers
 
         public async Task<IActionResult> PrintPdf(int id)
         {
+            var userId = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == userId.Id).FirstOrDefault().SuPekerjaId;
+
             AkJurnal akJurnal = await _akJurnalRepo.GetByIdIncludeDeletedItems(id);
 
             JurnalPrintModel data = new JurnalPrintModel();
@@ -1116,7 +1137,7 @@ namespace MSNK.Controllers
             {
                 user = akJurnal.UserIdKemaskini;
             }
-
+            
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email.ToUpper() == user.ToUpper());
             var jumDebitPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akJurnal.JumDebit)).ToUpper();
             var jumKreditPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akJurnal.JumKredit)).ToUpper();
@@ -1132,7 +1153,7 @@ namespace MSNK.Controllers
             akJurnal.Cetak = 1;
             await _akJurnalRepo.Update(akJurnal);
             //insert applog
-            await AddLogAsync("Cetak", "Cetak Data", akJurnal.NoJurnal,id, akJurnal.JumKredit);
+            await AddLogAsync("Cetak", "Cetak Data", akJurnal.NoJurnal,id, akJurnal.JumKredit, pekerjaId);
             //insert applog end
             await _context.SaveChangesAsync();
 
@@ -1151,6 +1172,9 @@ namespace MSNK.Controllers
         [Authorize(Policy = "JU001R")]
         public async Task<IActionResult> RollBack(int id)
         {
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             var obj = await _akJurnalRepo.GetByIdIncludeDeletedItems(id);
 
             // check if already posting redirect back
@@ -1164,12 +1188,15 @@ namespace MSNK.Controllers
 
             obj.FlHapus = 0;
             obj.Cetak = 0;
+            obj.UserIdKemaskini = user.UserName;
+            obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
             _context.AkJurnal.Update(obj);
 
             // Batal operation end
 
             //insert applog
-            await AddLogAsync("Rollback", "Rolback Data", obj.NoJurnal, (int)id, obj.JumKredit);
+            await AddLogAsync("Rollback", "Rolback Data", obj.NoJurnal, (int)id, obj.JumKredit, pekerjaId);
             //insert applog end
 
             await _context.SaveChangesAsync();

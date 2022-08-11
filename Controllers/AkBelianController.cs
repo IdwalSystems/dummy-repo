@@ -78,7 +78,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? suPekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -88,6 +89,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = suPekerjaId;
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -830,6 +832,7 @@ namespace MSNK.Controllers
         {
             AkBelian m = new AkBelian();
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             var pembekal = await _akPembekalRepo.GetById(AkPembekalId);
             if (pembekal == null)
@@ -914,6 +917,7 @@ namespace MSNK.Controllers
 
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
+                    m.SuPekerjaMasukId = pekerjaId;
 
                     m.AkBelian1 = _cart.Lines1.ToArray();
                     m.AkBelian2 = _cart.Lines2.ToArray();
@@ -921,7 +925,7 @@ namespace MSNK.Controllers
                     await _akBelianRepo.Insert(m);
 
                     //insert applog
-                    await AddLogAsync("Tambah", m.NoInbois, m.NoInbois, 0, m.Jumlah);
+                    await AddLogAsync("Tambah", m.NoInbois, m.NoInbois, 0, m.Jumlah, pekerjaId);
                     //insert applog end
 
                     await _context.SaveChangesAsync();
@@ -1277,6 +1281,7 @@ namespace MSNK.Controllers
                     try
                     {
                         var user = await _userManager.GetUserAsync(User);
+                        int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
                         AkBelian akBelianAsal = await _akBelianRepo.GetById(id);
 
@@ -1300,6 +1305,7 @@ namespace MSNK.Controllers
                         }
                         akBelian.TarMasuk = akBelianAsal.TarMasuk;
                         akBelian.UserId = akBelianAsal.UserId;
+                        akBelian.SuPekerjaMasukId = akBelianAsal.SuPekerjaMasukId;
                         akBelian.KodObjekAPId = akBelianAsal.KodObjekAPId;
                         decimal jumlahAsal = akBelianAsal.Jumlah;
                         // list of input that cannot be change end
@@ -1328,6 +1334,7 @@ namespace MSNK.Controllers
 
                         akBelian.UserIdKemaskini = user.UserName;
                         akBelian.TarKemaskini = DateTime.Now;
+                        akBelian.SuPekerjaKemaskiniId = pekerjaId;
 
                         _context.Update(akBelian);
 
@@ -1335,12 +1342,12 @@ namespace MSNK.Controllers
                         if(jumlahAsal != akBelian.Jumlah)
                         {
                             await AddLogAsync("Ubah","RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" +
-                                Convert.ToDecimal(akBelian.Jumlah).ToString("#,##0.00"), akBelian.NoInbois, id, akBelian.Jumlah);
+                                Convert.ToDecimal(akBelian.Jumlah).ToString("#,##0.00"), akBelian.NoInbois, id, akBelian.Jumlah, pekerjaId);
 
                         }
                         else
                         {
-                            await AddLogAsync("Ubah", "Ubah Data", akBelian.NoInbois, id, akBelian.Jumlah);
+                            await AddLogAsync("Ubah", "Ubah Data", akBelian.NoInbois, id, akBelian.Jumlah, pekerjaId);
                         }
 
                         //insert applog end
@@ -1480,12 +1487,15 @@ namespace MSNK.Controllers
             }
 
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             akBelian.UserIdKemaskini = user.UserName;
             akBelian.TarKemaskini = DateTime.Now;
+            akBelian.SuPekerjaKemaskiniId = pekerjaId;
 
             _context.AkBelian.Remove(akBelian);
             //insert applog
-            await AddLogAsync("Hapus", "Hapus Data", akBelian.NoInbois, id, akBelian.Jumlah);
+            await AddLogAsync("Hapus", "Hapus Data", akBelian.NoInbois, id, akBelian.Jumlah, pekerjaId);
             //insert applog end
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
@@ -1618,6 +1628,9 @@ namespace MSNK.Controllers
             }
             else
             {
+                var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
                 AkBelian akBelian = await _akBelianRepo.GetById((int)id);
 
                 List<AkBelian1> akB1 = akBelian.AkBelian1.ToList();
@@ -1722,7 +1735,7 @@ namespace MSNK.Controllers
                         await _akBelianRepo.Update(akBelian);
 
                         //insert applog
-                        await AddLogAsync("Posting", "Posting Data", akBelian.NoInbois, (int)id, akBelian.Jumlah);
+                        await AddLogAsync("Posting", "Posting Data", akBelian.NoInbois, (int)id, akBelian.Jumlah,pekerjaId);
 
                         //insert applog end
 
@@ -1757,6 +1770,9 @@ namespace MSNK.Controllers
             }
             else
             {
+                var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
                 AkBelian akBelian = await _akBelianRepo.GetById((int) id);
 
                 List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akBelian.NoInbois).ToList();
@@ -1813,7 +1829,7 @@ namespace MSNK.Controllers
                         await _akBelianRepo.Update(akBelian);
 
                         //insert applog
-                        await AddLogAsync("UnPosting", "Batal Posting Data", akBelian.NoInbois, (int)id, akBelian.Jumlah);
+                        await AddLogAsync("UnPosting", "Batal Posting Data", akBelian.NoInbois, (int)id, akBelian.Jumlah, pekerjaId);
 
                         //insert applog end
 
@@ -1854,6 +1870,9 @@ namespace MSNK.Controllers
         public async Task<IActionResult> RollBack(int id)
         {
             var obj = await _akBelianRepo.GetByIdIncludeDeletedItems(id);
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             // check if already posting redirect back
             if (obj.FlPosting == 1)
             {
@@ -1866,12 +1885,15 @@ namespace MSNK.Controllers
                 // Batal operation
 
                 obj.FlHapus = 0;
+                obj.UserIdKemaskini = user.UserName;
+                obj.TarKemaskini = DateTime.Now;
+                obj.SuPekerjaKemaskiniId = pekerjaId;
                 _context.AkBelian.Update(obj);
 
                 // Batal operation end
 
                 //insert applog
-                await AddLogAsync("Rollback", "Rollback Data", obj.NoInbois, id, obj.Jumlah);
+                await AddLogAsync("Rollback", "Rollback Data", obj.NoInbois, id, obj.Jumlah, pekerjaId);
                 //insert applog end
 
                 await _context.SaveChangesAsync();

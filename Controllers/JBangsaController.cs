@@ -36,7 +36,8 @@ namespace MSNK.Controllers
             string nota,
             string rujukan,
             int idRujukan,
-            decimal jumlah)
+            decimal jumlah,
+            int? pekerjaId)
         {
             var user = await _userManager.GetUserAsync(User);
             AppLog appLog = new AppLog();
@@ -46,6 +47,7 @@ namespace MSNK.Controllers
             appLog.NoRujukan = rujukan;
             appLog.LgNote = namamodul + " - " + nota;
             appLog.Jumlah = jumlah;
+            appLog.SuPekerjaId = pekerjaId;
 
             await _appLog.Insert(appLog, modul, operasi);
         }
@@ -95,8 +97,15 @@ namespace MSNK.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+                jBangsa.UserId = user.UserName;
+                jBangsa.TarMasuk = DateTime.Now;
+                jBangsa.SuPekerjaMasukId = pekerjaId;
+
                 _context.Add(jBangsa);
-                await AddLogAsync("Tambah", jBangsa.Perihal, jBangsa.Perihal, 0, 0);
+                await AddLogAsync("Tambah", jBangsa.Perihal, jBangsa.Perihal, 0, 0, pekerjaId);
                 await _context.SaveChangesAsync();
                 TempData[SD.Success] = "Data berjaya ditambah..!";
                 return RedirectToAction(nameof(Index));
@@ -136,16 +145,24 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
                     var objAsal = await _context.JBangsa.FirstOrDefaultAsync(x => x.Id == jBangsa.Id);
                     var perihalAsal = objAsal.Perihal;
+                    jBangsa.UserId = objAsal.UserId;
+                    jBangsa.TarMasuk = objAsal.TarMasuk;
 
                     _context.Entry(objAsal).State = EntityState.Detached;
 
+                    jBangsa.UserIdKemaskini = user.UserName;
+                    jBangsa.TarKemaskini = DateTime.Now;
+                    jBangsa.SuPekerjaKemaskiniId = pekerjaId;
                     _context.Update(jBangsa);
 
                     if (perihalAsal != jBangsa.Perihal)
                     {
-                        await AddLogAsync("Ubah", perihalAsal + " -> " + jBangsa.Perihal,jBangsa.Perihal,id, 0);
+                        await AddLogAsync("Ubah", perihalAsal + " -> " + jBangsa.Perihal,jBangsa.Perihal,id, 0, pekerjaId);
                     }
                     await _context.SaveChangesAsync();
                     TempData[SD.Success] = "Data berjaya diubah..!";
@@ -191,11 +208,13 @@ namespace MSNK.Controllers
         {
             var jBangsa = await _context.JBangsa.FindAsync(id);
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
             jBangsa.UserIdKemaskini = user.UserName;
             jBangsa.TarKemaskini = DateTime.Now;
+            jBangsa.SuPekerjaKemaskiniId = pekerjaId;
 
             _context.JBangsa.Remove(jBangsa);
-            await AddLogAsync("Hapus", jBangsa.Perihal,jBangsa.Perihal,id, 0);
+            await AddLogAsync("Hapus", jBangsa.Perihal,jBangsa.Perihal,id, 0, pekerjaId);
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
             return RedirectToAction(nameof(Index));
@@ -205,13 +224,18 @@ namespace MSNK.Controllers
         {
             var obj = await _context.JBangsa.IgnoreQueryFilters()
                 .FirstOrDefaultAsync(x => x.Id == id);
-
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+            obj.UserIdKemaskini = user.UserName;
+            obj.TarKemaskini = DateTime.Now;
+            obj.SuPekerjaKemaskiniId = pekerjaId;
             // Batal operation
 
             obj.FlHapus = 0;
             _context.JBangsa.Update(obj);
 
             // Batal operation end
+            await AddLogAsync("RollBack", obj.Perihal, obj.Perihal, id, 0, pekerjaId);
 
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dikembalikan..!";
