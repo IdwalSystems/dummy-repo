@@ -1,14 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MSNK.Models.Modules.FormModel;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSNK.Models.Modules.ViewModel
 {
     public class AbBelanjawanSemasaViewModel
     {
+        public int Id { get; set; }
+        [Display(Name = "Kumpulan Wang")]
+        public int JKWId { get; set; }
+        [Display(Name = "Bahagian")]
+        public int JBahagianId { get; set; }
+        [Required(ErrorMessage = "Tahun Diperlukan")]
+        public string Tahun { get; set; }
+        [Required(ErrorMessage = "Tarikh Diperlukan")]
+        [Display(Name = "Tarikh Hingga")]
+        public DateTime TarHingga { get; set; }
         public string Objek { get; set; }
         public string Perihalan { get; set; }
         [Display(Name = "Paras")]
-        public int JParasId { get; set; }
+        public string Paras { get; set; }
         [Display(Name = "Asal RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Asal { get; set; }

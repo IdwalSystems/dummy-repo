@@ -1,5 +1,213 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.AbBelanjawanSemasaViewModel>
+
 @{
+    ViewData["Title"] = "Belanjawan Semasa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string Year = DateTime.Now.ToString("yyyy");
+    string dateNow = DateTime.Now.ToString("yyyy-MM-dd");
+    int bil = 0;
 }
+<partial name="_JSIndex" />
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-info mb-0">@ViewData["Title"]</h5>
+                <span class="ac-ref">Indeks</span>
+            </div>
+            <div class="col-4 text-right">
+            </div>
+
+        </div>
+        <hr class="mt-2" />
+        <form asp-action="Index" method="post">
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group form-row">
+                        <label class="col-sm-2 col-form-label">Kumpulan Wang</label>
+                        <div class="col-sm-5">
+                            <select class="form-control form-control-sm text-uppercase" name="JKWId" id="ddlKW" value="@ViewBag.JKWId">
+                                @foreach (var s in ViewBag.JKW)
+                                {
+                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-row">
+                        <label class="col-sm-2 col-form-label">Bahagian</label>
+                        <div class="col-sm-5">
+                            <select class="form-control form-control-sm text-uppercase" name="JBahagianId" id="ddlBahagian" value="@ViewBag.JBahagianId">
+                                @foreach (var s in ViewBag.JBahagian)
+                                {
+                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-row">
+                        <label class="col-sm-2 col-form-label">Tahun</label>
+                        <div class="col-sm-5">
+                            <input class="form-control form-control-sm" id="tarikhDari" name="Tahun" value="@ViewData["Tahun"]" required>
+                        </div>
+                    </div>
+                    <div class="form-group form-row">
+                        <label class="col-sm-2 col-form-label">Tarikh Hingga</label>
+                        <div class="col-sm-5">
+                            <input name="TarHingga" class="form-control form-control-sm" type="date" value="@ViewData["TarHingga"]" required />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <hr />
+            <div class="form-group text-right">
+                <button data-toggle="modal" data-target="#modalCetak" class="btn ac-success" type="button" data-placement="top" title="Lulus" >
+                    Cetak
+                </button>
+                <input type="submit" value="Papar" class="btn ac-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>
+@if (Model != null)
+{
+    @if (Model.Count() > 0)
+    {
+        <div class="card box-shadow">
+            <div class="card-body">
+                <div class="table-responsive table-sm">
+                    <table class="table tableSub table-bordered table-hover display compact nowrap" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Bil</th>
+                                <th width="5%">Objek</th>
+                                <th width="30%">Perihalan</th>
+                                <th width="5%">Asal RM</th>
+                                <th width="5%">Tambah RM</th>
+                                <th width="5%">Pindah RM</th>
+                                <th width="5%">Jumlah RM</th>
+                                <th width="5%">Telah Guna RM</th>
+                                <th width="5%">Baki RM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                bil++;
+                                <tr class="text-uppercase ">
+                                    <td>@bil</td>
+                                    <td>
+                                        @item.Objek
+                                    </td>
+                                    <td>
+                                        @item.Perihalan
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.Asal).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.Tambah).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.Pindah).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.TelahGuna).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.Baki).ToString("#,##0.00")
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                        @*<tfoot>
+                                <tr class="text-uppercase font-weight-bold">
+                                    <td colspan="2" class="text-right">JUMLAH RM</td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(Model.JumBayaran).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(Model.JumHutang).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(Model.JumBayaran - Model.JumHutang).ToString("#,##0.00")
+                                    </td>
+
+                                </tr>
+                            </tfoot>*@
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    }
+}
+
+<!-- Modal Cetak -->
+<div class="modal fade bd-example-modal-lg" id="modalCetak" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-success">
+                <h5 class="modal-title">Cetak Belanjawan Semasa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
+                </button>
+            </div>
+            <form asp-action="PrintPDF" class="needs-validation">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="modal-body">
+
+                    <div class="form-group form-row">
+                        <label class="col-sm-2 col-form-label">Kumpulan Wang</label>
+                        <div class="col-sm-10">
+                            <select class="form-control form-control-sm text-uppercase" name="JKWId" id="ddlKW" value="@ViewBag.JKWId">
+                                @foreach (var s in ViewBag.JKW)
+                                {
+                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-row">
+                        <label class="col-sm-2 col-form-label">Bahagian</label>
+                        <div class="col-sm-10">
+                            <select class="form-control form-control-sm text-uppercase" name="JBahagianId" id="ddlBahagian" value="@ViewBag.JBahagianId">
+                                @foreach (var s in ViewBag.JBahagian)
+                                {
+                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-row">
+                        <label class="col-sm-2 col-form-label">Tahun</label>
+                        <div class="col-sm-10">
+                            <input class="form-control form-control-sm" id="tarikhDari" name="Tahun" value="@ViewData["Tahun"]" required>
+                        </div>
+                    </div>
+                    <div class="form-group form-row">
+                        <label class="col-sm-2 col-form-label">Tarikh Hingga</label>
+                        <div class="col-sm-10">
+                            <input name="TarHingga" class="form-control form-control-sm" type="date" value="@ViewData["TarHingga"]" required />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn ac-danger btn-sm" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn ac-success btn-sm" formtarget="_blank">Cetak</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Cetak End -->

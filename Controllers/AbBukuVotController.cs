@@ -49,7 +49,7 @@ namespace MSNK.Controllers
             string searchTo
             )
         {
-
+           
             var user = await _userManager.GetUserAsync(User);
 
             var tahun = "";

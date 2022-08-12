@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MSNK.Models.Modules.ViewModel
+namespace MSNK.Models.Modules.FormModel
 {
-    public class ReportParamViewModel
+    public class ReportFormModel
     {
         // tajuk laporan
         public string kodLaporan { get; set; }

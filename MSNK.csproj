@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\Modules\FormModel\**" />
-    <Content Remove="Models\Modules\FormModel\**" />
-    <EmbeddedResource Remove="Models\Modules\FormModel\**" />
-    <None Remove="Models\Modules\FormModel\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Migrations\20211221024836_AddInitialTables.cs" />
     <Compile Remove="Migrations\20211221024836_AddInitialTables.Designer.cs" />
     <Compile Remove="Migrations\20220104014329_AddInitialTables.cs" />

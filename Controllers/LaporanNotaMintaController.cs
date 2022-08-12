@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Administration;
 using MSNK.Models.Modules;
+using MSNK.Models.Modules.FormModel;
 using MSNK.Models.Modules.PrintModel.Reporting;
-using MSNK.Models.Modules.ViewModel;
 using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
@@ -51,7 +51,7 @@ namespace MSNK.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Print( string kodLaporan, ReportParamViewModel param)
+        public async Task<IActionResult> Print( string kodLaporan, ReportFormModel param)
         {
             var pdfName = param.kodLaporan;
             var tajuk = "";

@@ -159,6 +159,7 @@ namespace MSNK
             //PENYATA PEMUNGUT END
 
             services.AddTransient<CustomIRepository<string, int>, CustomRepository>();
+            services.AddTransient<BelanjawanSemasaIRepository<string, int>, BelanjawanSemasaRepository>();
 
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPendahuluan.GetCart(ss));
