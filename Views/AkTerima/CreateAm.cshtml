@@ -62,7 +62,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label asp-for="Tarikh" class="control-label"></label><span class="text-danger control-label">*</span>
-                        <input asp-for="Tarikh" type="date" class="form-control form-control-sm" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                        <input asp-for="Tarikh" class="form-control form-control-sm" value="@DateTime.Now.ToString("s")" required />
                         <span asp-validation-for="Tarikh" class="text-danger"></span>
                     </div>
                 </div>

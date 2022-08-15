@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.ViewModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -130,7 +132,10 @@ namespace MSNK.Controllers
         }
 
         // GET: AkPenghutang/Details/5
-        public async Task<IActionResult> Details(int? id, DateTime? lastDate)
+        public async Task<IActionResult> Details(int? id, 
+            DateTime? lastDate,
+            DateTime searchFrom,
+            DateTime searchTo)
         {
             if (id == null)
             {
@@ -155,8 +160,23 @@ namespace MSNK.Controllers
             var firstDate = Convert.ToDateTime("01/01/" + tahun);
             if (lastDate == null)
             {
-                lastDate = DateTime.Now;
+                lastDate = DateTime.Now.AddHours(23.99);
             }
+
+            if (searchFrom.ToString("dd/MM/yyyy") != "01/01/0001")
+            {
+                firstDate = searchFrom;
+            }
+
+            if (searchTo.ToString("dd/MM/yyyy") != "01/01/0001")
+            {
+                lastDate = searchTo.AddHours(23.99);
+            }
+
+            ViewData["searchFrom"] = firstDate.ToString("yyyy-MM-dd");
+            ViewData["searchTo"] = lastDate?.ToString("yyyy-MM-dd");
+            ViewData["PenghutangId"] = id;
+
             // get all akBelian and AkPV order by tarikh where posting = 1 where tarikh less than 01/01/[this-year]
             List<AkInvois> bakiAwalInvoisList = _context.AkInvois.Where(b => b.AkPenghutangId == akPenghutang.Id
                 && b.FlPosting == 1
@@ -265,6 +285,166 @@ namespace MSNK.Controllers
 
             return View(dyModel);
         }
+
+        // printing sublejar Penghutang
+        public async Task<IActionResult> PrintSublejarPenghutangPdf(
+            int? id,
+            DateTime? lastDate,
+            DateTime searchFrom,
+            DateTime searchTo)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var akPenghutang = await _akpenghutangRepo.GetById((int)id);
+
+            if (akPenghutang == null)
+            {
+                return NotFound();
+            }
+
+            // get baki awal
+            var tahun = DateTime.Now.Year;
+
+            var firstDate = Convert.ToDateTime("01/01/" + tahun);
+            if (lastDate == null)
+            {
+                lastDate = DateTime.Now.AddHours(23.99);
+            }
+
+            if (searchFrom.ToString("dd/MM/yyyy") != "01/01/0001")
+            {
+                firstDate = searchFrom;
+            }
+
+            if (searchTo.ToString("dd/MM/yyyy") != "01/01/0001")
+            {
+                lastDate = searchTo.AddHours(23.99);
+            }
+
+            ViewData["searchFrom"] = firstDate.ToString("yyyy-MM-dd");
+            ViewData["searchTo"] = lastDate?.ToString("yyyy-MM-dd");
+
+            // create table sublejar pembekal
+            List<SublejarPembekalViewModel> vmodel = new List<SublejarPembekalViewModel>();
+
+            // get all akBelian and AkPV order by tarikh where posting = 1 where tarikh less than 01/01/[this-year]
+            List<AkInvois> bakiAwalInvoisList = _context.AkInvois.Where(b => b.AkPenghutangId == akPenghutang.Id
+                && b.FlPosting == 1
+                && b.Tarikh < firstDate.AddHours(23.99)).ToList();
+
+            decimal bakiAwal = 0;
+            decimal bayaranAwal = 0;
+            decimal hutangAwal = 0;
+
+            bakiAwal = bakiAwal + akPenghutang.BakiAwal;
+            if (akPenghutang.BakiAwal < 0)
+            {
+                hutangAwal = hutangAwal - akPenghutang.BakiAwal;
+            }
+            else
+            {
+                bayaranAwal = bayaranAwal + akPenghutang.BakiAwal;
+            }
+
+            foreach (var item in bakiAwalInvoisList)
+            {
+                hutangAwal = hutangAwal + item.Jumlah;
+                bakiAwal = bakiAwal - item.Jumlah;
+            }
+
+            List<AkTerima> bakiAwalTerimaList = _context.AkTerima.Where(b => b.AkPenghutangId == (int)id
+                && b.FlPosting == 1
+                && b.Tarikh < firstDate.AddHours(23.99)).ToList();
+
+            foreach (var item in bakiAwalTerimaList)
+            {
+                bayaranAwal = bayaranAwal + item.Jumlah;
+                bakiAwal = bakiAwal + item.Jumlah;
+            }
+
+            // insert into viewmodel first row
+            vmodel.Add(new SublejarPembekalViewModel
+            {
+                Tarikh = firstDate,
+                Rujukan = "BAKI AWAL",
+                Bayaran = bayaranAwal,
+                Hutang = hutangAwal,
+                Baki = bakiAwal
+            });
+
+            // get all akBelian and AkPV order by tarikh where posting = 1
+            List<AkInvois> InvoisList = _context.AkInvois.Where(b => b.AkPenghutangId == akPenghutang.Id
+                && b.FlPosting == 1
+                && b.Tarikh >= firstDate
+                && b.Tarikh <= lastDate).ToList();
+
+            foreach (var item in InvoisList)
+            {
+                vmodel.Add(new SublejarPembekalViewModel
+                {
+                    Tarikh = (DateTime)item.Tarikh,
+                    Rujukan = item.NoInbois,
+                    Bayaran = 0,
+                    Hutang = item.Jumlah
+                });
+            }
+
+            // get all akBelian and AkPV order by tarikh where posting = 1
+            List<AkTerima> TerimaList = _context.AkTerima.Where(b => b.AkPenghutangId == akPenghutang.Id
+                && b.FlPosting == 1
+                && b.Tarikh >= firstDate
+                && b.Tarikh <= lastDate).ToList();
+
+            foreach (var item in TerimaList)
+            {
+                vmodel.Add(new SublejarPembekalViewModel
+                {
+                    Tarikh = item.Tarikh,
+                    Rujukan = item.NoRujukan,
+                    Bayaran = item.Jumlah,
+                    Hutang = 0
+                });
+            }
+
+            vmodel = vmodel.OrderBy(b => b.Tarikh).ToList();
+
+            // insert into viewmodel with balance for each transaction
+            var bil = 0;
+
+            foreach (var i in vmodel)
+            {
+                bil++;
+                i.Id = bil;
+
+                if (i.Rujukan == "BAKI AWAL")
+                {
+                    continue;
+                }
+
+                hutangAwal = hutangAwal + i.Hutang;
+                bayaranAwal = bayaranAwal + i.Bayaran;
+                bakiAwal = bakiAwal + i.Bayaran - i.Hutang;
+                i.Baki = bakiAwal;
+            }
+
+            var penghutang = akPenghutang.KodSykt + " - " + akPenghutang.NamaSykt;
+
+            return new ViewAsPdf("SublejarPenghutangPrintPDF", vmodel.OrderBy(b => b.Tarikh).ToList(),
+                new ViewDataDictionary(ViewData) {
+                    {"Penghutang", penghutang },
+                    {"TarDari", firstDate.ToString("dd/MM/yyyy") },
+                    {"TarHingga", lastDate?.ToString("dd/MM/yyyy") } })
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
+                        " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+        // printing sublejar Penghutang end
 
         [Authorize(Policy = "DF003C")]
         // GET: AkPenghutang/Create

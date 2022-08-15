@@ -62,6 +62,7 @@
         <p class="mb-0"> @company.AlamatSyarikat3</p>
         <p class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</p>
     </div>
+
 </div>
 
 <br />
@@ -70,7 +71,7 @@
         <tr class="bg-dark text-white">
             <th colspan="11" class="text-center bg-dark text-white">
                 <strong>
-                    SUBLEJAR PEMBEKAL @ViewData["Pembekal"]
+                    SUBLEJAR PENGHUTANG @ViewData["Penghutang"]
                     <br />
                     DARI TARIKH : @ViewData["TarDari"] SEHINGGA @ViewData["TarHingga"]
                 </strong>

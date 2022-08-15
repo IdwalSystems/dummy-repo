@@ -289,7 +289,6 @@ namespace MSNK.Controllers
         }
 
         // printing sublejar Pembekal
-        [AllowAnonymous]
         public async Task<IActionResult> PrintSublejarPembekalPdf(
             int? id,
             DateTime? lastDate,
