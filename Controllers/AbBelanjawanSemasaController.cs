@@ -12,6 +12,8 @@ using System.Linq;
 using System.Dynamic;
 using MSNK.Models.Modules.FormModel;
 using Rotativa.AspNetCore;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.EntityFrameworkCore;
 
 namespace MSNK.Controllers
 {
@@ -396,7 +398,19 @@ namespace MSNK.Controllers
 
             vm = vm.OrderBy(b => b.Objek).ToList();
 
-            return new ViewAsPdf("BelanjawanSemasaPrintPDF", vm)
+            var kw = await _context.JKW.FirstOrDefaultAsync(x => x.Id == JKWId);
+            var bahagian = await _context.JBahagian.FirstOrDefaultAsync(x => x.Id == JBahagianId);
+
+            var KW = kw.Kod + " - " + kw.Perihal;
+            var Bahagian = bahagian.Kod + " - " + bahagian.Perihal;
+            var lastDate = tarHingga.ToString("dd/MM/yyyy"); 
+
+            return new ViewAsPdf("BelanjawanSemasaPrintPDF", vm,
+                new ViewDataDictionary(ViewData) {
+                    { "KW", KW },
+                    { "Bahagian", Bahagian },
+                    { "TarHingga", lastDate }
+                })
             {
                 PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,

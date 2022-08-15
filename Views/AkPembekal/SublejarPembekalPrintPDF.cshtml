@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.AbBelanjawanSemasaViewModel>
+﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.SublejarPembekalViewModel>
 
 @{
     ViewData["Title"] = "Cetakan Belanjawan Semasa";
@@ -8,13 +8,8 @@
 
     var bil = 0;
 
-    decimal JumAsal = 0;
-    decimal JumTambah = 0;
-    decimal JumPindah = 0;
-    decimal JumJumlah = 0;
-    decimal JumBelanja = 0;
-    decimal JumTBS = 0;
-    decimal JumTelahGuna = 0;
+    decimal JumBayaran = 0;
+    decimal JumHutang = 0;
     decimal JumBaki = 0;
 
 }
@@ -86,22 +81,19 @@
         <tr class="bg-dark text-white">
             <th colspan="11" class="text-center bg-dark text-white">
                 <strong>
-                    LAPORAN BELANJAWAN SEMASA BAGI BAHAGIAN : @ViewData["Bahagian"] KW : @ViewData["KW"]
+                    SUBLEJAR PEMBEKAL @ViewData["Pembekal"]
                     <br />
-                    SEHINGGA TARIKH : @ViewData["TarHingga"]
+                    DARI TARIKH : @ViewData["TarDari"] SEHINGGA @ViewData["TarHingga"]
                 </strong>
             </th>
         </tr>
         <tr style="line-height:0.8rem;" class="bg-secondary text-white">
 
             <th width="2%">Bil</th>
-            <th width="5%">Objek</th>
-            <th width="30%">Perihalan</th>
-            <th width="5%">Asal RM</th>
-            <th width="5%">Tambah RM</th>
-            <th width="5%">Pindah RM</th>
-            <th width="5%">Jumlah RM</th>
-            <th width="5%">Telah Guna RM</th>
+            <th width="5%">Tarikh</th>
+            <th width="30%">Rujukan</th>
+            <th width="5%">Bayaran RM</th>
+            <th width="5%">Hutang RM</th>
             <th width="5%">Baki RM</th>
         </tr>
     </thead>
@@ -109,38 +101,25 @@
         @foreach (var item in Model)
         {
             var tabletype = "";
-            JumAsal = JumAsal + item.Asal;
-            JumTambah = JumTambah + item.Tambah;
-            JumPindah = JumPindah + item.Pindah;
-            JumJumlah = JumJumlah + item.Jumlah;
-            JumBelanja = JumBelanja + item.Belanja;
-            JumTBS = JumTBS + item.TBS;
-            JumTelahGuna = JumTelahGuna + item.TelahGuna;
-            JumBaki = JumBaki + item.Baki;
 
             bil++;
+            JumBayaran = JumBayaran + item.Bayaran;
+            JumHutang = JumHutang + item.Hutang;
+            JumBaki = JumBaki + item.Bayaran - item.Hutang;
+
             <tr class="@tabletype" style="line-height:0.8rem; page-break-before:avoid;">
                 <td>@bil</td>
                 <td>
-                    @item.Objek
+                    @item.Tarikh.ToString("dd/MM/yyyy")
                 </td>
                 <td>
-                    @item.Perihalan
+                    @item.Rujukan
                 </td>
                 <td class="text-right">
-                    @Convert.ToDecimal(item.Asal).ToString("#,##0.00")
+                    @Convert.ToDecimal(item.Bayaran).ToString("#,##0.00")
                 </td>
                 <td class="text-right">
-                    @Convert.ToDecimal(item.Tambah).ToString("#,##0.00")
-                </td>
-                <td class="text-right">
-                    @Convert.ToDecimal(item.Pindah).ToString("#,##0.00")
-                </td>
-                <td class="text-right">
-                    @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
-                </td>
-                <td class="text-right">
-                    @Convert.ToDecimal(item.TelahGuna).ToString("#,##0.00")
+                    @Convert.ToDecimal(item.Hutang).ToString("#,##0.00")
                 </td>
                 <td class="text-right">
                     @Convert.ToDecimal(item.Baki).ToString("#,##0.00")
@@ -148,21 +127,12 @@
             </tr>
         }
         <tr class="table-warning">
-            <td colspan="3" class="font-weight-bold text-uppercase">Jumlah RM</td>
+            <td colspan="3" class="font-weight-bold text-uppercase text-right">Jumlah RM</td>
             <td class="font-weight-bold text-right">
-                @Convert.ToDecimal(JumAsal).ToString("#,##0.00")
+                @Convert.ToDecimal(JumBayaran).ToString("#,##0.00")
             </td>
             <td class="font-weight-bold text-right">
-                @Convert.ToDecimal(JumTambah).ToString("#,##0.00")
-            </td>
-            <td class="font-weight-bold text-right">
-                @Convert.ToDecimal(JumPindah).ToString("#,##0.00")
-            </td>
-            <td class="font-weight-bold text-right">
-                @Convert.ToDecimal(JumJumlah).ToString("#,##0.00")
-            </td>
-            <td class="font-weight-bold text-right">
-                @Convert.ToDecimal(JumTelahGuna).ToString("#,##0.00")
+                @Convert.ToDecimal(JumHutang).ToString("#,##0.00")
             </td>
             <td class="font-weight-bold text-right">
                 @Convert.ToDecimal(JumBaki).ToString("#,##0.00")

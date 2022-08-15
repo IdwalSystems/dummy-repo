@@ -36,7 +36,8 @@ namespace MSNK.Models.Modules.EFRepository
                 b => b.Tahun == tahun
                 && b.JKWId == jKWId
                 && b.JBahagianId == jBahagianId
-                && b.Tarikh <= tarHingga).OrderBy(b => b.Tarikh)
+                && b.Tarikh <= tarHingga
+                && b.FlPosting == 1).OrderBy(b => b.Tarikh)
                 .ToListAsync();
 
             return sql;
@@ -107,7 +108,8 @@ namespace MSNK.Models.Modules.EFRepository
                 b => b.Tahun == tahun
                 && b.JKWId == jKWId
                 && b.JBahagianId == jBahagianId
-                && b.Tarikh <= tarHingga).OrderBy(b => b.Tarikh)
+                && b.Tarikh <= tarHingga
+                && b.FlPosting == 1).OrderBy(b => b.Tarikh)
                 .ToListAsync();
 
             return sql;
@@ -123,7 +125,8 @@ namespace MSNK.Models.Modules.EFRepository
                 b => b.Tahun == tahun
                 && b.JKWId == jKWId
                 && b.JBahagianId == jBahagianId
-                && b.Tarikh <= tarHingga).OrderBy(b => b.Tarikh)
+                && b.Tarikh <= tarHingga
+                && b.FlPosting == 1).OrderBy(b => b.Tarikh)
                 .ToListAsync();
 
             return sql;
@@ -140,7 +143,8 @@ namespace MSNK.Models.Modules.EFRepository
                 b => b.Tahun == tahun
                 && b.JKWId == jKWId
                 && b.JBahagianId == jBahagianId
-                && b.Tarikh <= tarHingga).OrderBy(b => b.Tarikh)
+                && b.Tarikh <= tarHingga
+                && b.FlPosting == 1).OrderBy(b => b.Tarikh)
                 .ToListAsync();
 
             return sql;
@@ -184,7 +188,8 @@ namespace MSNK.Models.Modules.EFRepository
                 b => b.Tahun == tahun
                 && b.JKWId == jKWId
                 && b.JBahagianId == jBahagianId
-                && b.Tarikh <= tarHingga).OrderBy(b => b.Tarikh)
+                && b.Tarikh <= tarHingga
+                && b.FlPosting == 1).OrderBy(b => b.Tarikh)
                 .ToListAsync();
 
             return sql;
@@ -233,7 +238,8 @@ namespace MSNK.Models.Modules.EFRepository
                 b => b.Tahun == tahun
                 && b.AkTunaiRuncit.JKWId == jKWId
                 && b.AkTunaiRuncit.JBahagianId == jBahagianId
-                && b.Tarikh <= tarHingga).OrderBy(b => b.Tarikh)
+                && b.Tarikh <= tarHingga
+                && b.FlPosting == 1).OrderBy(b => b.Tarikh)
                 .ToListAsync();
 
             return sql;
@@ -252,7 +258,8 @@ namespace MSNK.Models.Modules.EFRepository
                 b => b.Tahun == tahun
                 && b.JKWId == jKWId
                 && b.JBahagianId == jBahagianId
-                && b.Tarikh <= tarHingga).OrderBy(b => b.Tarikh)
+                && b.Tarikh <= tarHingga
+                && b.FlPosting == 1).OrderBy(b => b.Tarikh)
                 .ToListAsync();
 
             return sql;
@@ -296,7 +303,8 @@ namespace MSNK.Models.Modules.EFRepository
                 b => b.Tarikh.Year.ToString() == tahun
                 && b.JKWId == jKWId
                 && b.JBahagianId == jBahagianId
-                && b.Tarikh <= tarHingga).OrderBy(b => b.Tarikh)
+                && b.Tarikh <= tarHingga
+                && b.Posting == 1).OrderBy(b => b.Tarikh)
                 .ToListAsync();
 
             return sql;

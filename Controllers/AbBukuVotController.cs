@@ -330,6 +330,6 @@ namespace MSNK.Controllers
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
         }
-        // printing List of Carta end
+        // printing List of Buku Vot end
     }
 }

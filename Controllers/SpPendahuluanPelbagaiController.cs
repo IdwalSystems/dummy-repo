@@ -485,8 +485,7 @@ namespace MSNK.Controllers
             ViewData["jumlahPerihal"] = jumlahPerihal;
             ViewData["jumlahAkPV"] = jumlahAkPV;
             
-
-            PopulateList();
+            PopulateList(spPendahuluanPelbagai.SuPekerjaId);
             PopulateTable(id);
             return View(spPendahuluanPelbagai);
         }
@@ -525,7 +524,7 @@ namespace MSNK.Controllers
             sp.JKWId = jkw.Id;
 
             ViewBag.NoPermohonan = RunningNumber(sp);        
-            PopulateList();
+            PopulateList(sp.SuPekerjaId);
             CartEmpty();
             return View();
         }
@@ -605,7 +604,7 @@ namespace MSNK.Controllers
             }
 
             CartEmpty();
-            PopulateList();
+            PopulateList(spPendahuluanPelbagai.SuPekerjaId);
             return View(spPendahuluanPelbagai);
         }
 
@@ -641,7 +640,7 @@ namespace MSNK.Controllers
             ViewData["jumlahPerihal"] = jumlahPerihal;
 
             CartEmpty();
-            PopulateList();
+            PopulateList(spPendahuluanPelbagai.SuPekerjaId);
             PopulateTable(id);
             PopulateCartFromDb(spPendahuluanPelbagai);
             return View(spPendahuluanPelbagai);
@@ -785,7 +784,7 @@ namespace MSNK.Controllers
             }
 
             TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Urusniaga";
-            PopulateList();
+            PopulateList(spPendahuluanPelbagai.SuPekerjaId);
             PopulateTable(id);
             //PopulateCart();
             return View(spPendahuluanPelbagai);
@@ -811,7 +810,7 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
-            PopulateList();
+            PopulateList(spPendahuluanPelbagai.SuPekerjaId);
             PopulateTable(id);
             return View(spPendahuluanPelbagai);
         }
@@ -1084,7 +1083,7 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
-        private void PopulateList()
+        private void PopulateList(int? pekerjaId)
         {
             var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.UserName == User.Identity.Name);
 
@@ -1115,7 +1114,22 @@ namespace MSNK.Controllers
 
             ViewBag.JBahagian = bahagianList;
 
-            
+            string[] arr2 = _context.applicationUsers.Include(x => x.SuPekerja)
+                .Where(b => b.SuPekerjaId == pekerjaId).FirstOrDefault().JBahagianList.Split(',');
+
+            List<JBahagian> bahagianUbahList = new List<JBahagian>();
+
+            foreach (var item in arr2)
+            {
+                var bahagian = _context.JBahagian.FirstOrDefault(x => x.Id == int.Parse(item));
+
+                bahagianUbahList.Add(bahagian);
+
+            }
+
+            ViewBag.JBahagianUbah = bahagianUbahList;
+
+            var pekerja = _context.SuPekerja.FirstOrDefault(b => b.Id == pekerjaId);
 
             if (User.IsInRole("SuperAdmin"))
             {
@@ -1123,8 +1137,8 @@ namespace MSNK.Controllers
             }
             else
             {
-                ViewBag.IdPekerja = user.SuPekerjaId;
-                ViewBag.NamaPekerja = user.SuPekerja.Nama;
+                ViewBag.IdPekerja = pekerjaId;
+                ViewBag.NamaPekerja = pekerja.Nama;
             }
 
             List<AkCarta> akCartaList = _context.AkCarta

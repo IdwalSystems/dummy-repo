@@ -22,7 +22,6 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="JKWId" id="ddlKW" />
-            <input type="hidden" asp-for="JBahagianId" id="ddlBahagian" />
             <input type="hidden" asp-for="SuPekerjaId" />
                     <div class="card mb-3">
                         <div class="card-body">
@@ -70,7 +69,13 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label asp-for="JBahagianId" class="control-label">Bahagian</label>
-                                <input value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " class="form-control form-control-sm form-control-sm text-uppercase" required id="ddlBahagian" readonly />
+                                <select class="form-control form-control-sm" asp-for="JBahagianId" id="ddlBahagian">
+                                    <option value="0" hidden>-- Pilih Bahagian --</option>
+                                    @foreach (var s in ViewBag.JBahagianUbah)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
                             </div>
                         </div>
 
