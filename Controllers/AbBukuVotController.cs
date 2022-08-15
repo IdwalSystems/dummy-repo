@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.ViewModel;
 using MSNK.Models.Operations;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -152,8 +154,8 @@ namespace MSNK.Controllers
                 string tahun,
                 int jKWId,
                 int jBahagianId,
-                string searchFrom,
-                string searchTo
+                DateTime searchFrom,
+                DateTime searchTo
                 )
         {
             if (id == null)
@@ -168,7 +170,11 @@ namespace MSNK.Controllers
                 .Where(x => x.Tahun == tahun && x.VotId == id && x.JBahagianId == jBahagianId && x.JKWId == jKWId)
                 .FirstOrDefaultAsync();
 
+            ViewData["VotId"] = id;
             ViewData["tahun"] = tahun;
+            ViewData["jKWId"] = jKWId;
+            ViewData["jBahagianId"] = jBahagianId;
+
             ViewData["Vot"] = abBukuVot.JKW.Kod + " / " + abBukuVot.JBahagian.Kod + " / " + abBukuVot.Vot.Kod + " - " + abBukuVot.Vot.Perihal;
 
             var sql = _context.AbBukuVot
@@ -186,23 +192,78 @@ namespace MSNK.Controllers
             var carianDari = "";
             var carianHingga = "";
 
-            if (string.IsNullOrEmpty(searchFrom))
+            carianDari = searchFrom.ToString("dd/MM/yyyy");
+            carianHingga = searchTo.ToString("dd/MM/yyyy");
+
+            ViewData["searchFrom"] = searchFrom.ToString("yyyy-MM-dd");
+            ViewData["searchTo"] = searchTo.ToString("yyyy-MM-dd");
+
+            //filter range search
+            CarianJulat carian = new CarianJulat();
+
+            carian.year = tahun;
+            carian.keyword1 = carianDari;
+            carian.keyword2 = carianHingga;
+
+            if (carian.keyword1 != "" && carian.keyword2 != "")
             {
-                carianDari = "";
+                DateTime date1 = DateTime.Parse(carian.keyword1);
+                DateTime date2 = DateTime.Parse(carian.keyword2).AddHours(23.99);
+
+                sql = sql.Where(x => x.Tarikh >= date1
+                        && x.Tarikh <= date2).ToList();
             }
-            else
+            //filter range search end
+
+            return View(sql.OrderBy(b => b.Tarikh));
+        }
+
+        // printing List of Carta
+        [AllowAnonymous]
+        public async Task<IActionResult> PrintBukuVotDetailsPdf(
+            int? id,
+            string tahun,
+            int jKWId,
+            int jBahagianId,
+            DateTime searchFrom,
+            DateTime searchTo)
+        {
+            if (id == null)
             {
-                carianDari = searchFrom;
+                return NotFound();
             }
 
-            if (string.IsNullOrEmpty(searchTo))
+            var abBukuVot = await _context.AbBukuVot
+                .Include(x => x.Vot)
+                .Include(x => x.JKW)
+                .Include(x => x.JBahagian)
+                .Where(x => x.Tahun == tahun && x.VotId == id && x.JBahagianId == jBahagianId && x.JKWId == jKWId)
+                .FirstOrDefaultAsync();
+
+            ViewData["VotId"] = id;
+            ViewData["tahun"] = tahun;
+            ViewData["jKWId"] = jKWId;
+            ViewData["jBahagianId"] = jBahagianId;
+
+            ViewData["Vot"] = abBukuVot.JKW.Kod + " / " + abBukuVot.JBahagian.Kod + " / " + abBukuVot.Vot.Kod + " - " + abBukuVot.Vot.Perihal;
+
+            var sql = _context.AbBukuVot
+                .Include(x => x.Vot).Include(x => x.JKW)
+                .Include(x => x.Vot).Include(x => x.JBahagian)
+                .Where(x => x.Tahun == tahun && x.VotId == id && x.JBahagianId == jBahagianId && x.JKWId == jKWId)
+                .OrderBy(x => x.Tarikh)
+                .ToList();
+
+            if (sql == null)
             {
-                carianHingga = "";
+                return NotFound();
             }
-            else
-            {
-                carianHingga = searchTo;
-            }
+
+            var carianDari = "";
+            var carianHingga = "";
+
+            carianDari = searchFrom.ToString("dd/MM/yyyy");
+            carianHingga = searchTo.ToString("dd/MM/yyyy");
 
             ViewData["searchFrom"] = carianDari;
             ViewData["searchTo"] = carianHingga;
@@ -222,9 +283,53 @@ namespace MSNK.Controllers
                 sql = sql.Where(x => x.Tarikh >= date1
                         && x.Tarikh <= date2).ToList();
             }
-            //filter range search end
 
-            return View(sql);
+            List<AbBukuVotDetailViewModel> list = new List<AbBukuVotDetailViewModel>();
+
+            int bil = 0;
+            foreach (var item in sql)
+            {
+
+                bil++;
+
+                list.Add(new AbBukuVotDetailViewModel
+                {
+                    Id = bil,
+                    Tarikh = item.Tarikh,
+                    Kod = item.Kod,
+                    Nama = item.Penerima,
+                    NoRujukan = item.Rujukan,
+                    Debit = item.Debit,
+                    Kredit = item.Kredit,
+                    Tanggungan = item.Tanggungan,
+                    Liabiliti = item.Liabiliti,
+                    Baki = item.Baki
+                });
+            }
+            //filter range search end
+            var kw = await _context.JKW.FirstOrDefaultAsync(x => x.Id == jKWId);
+            var bahagian = await _context.JBahagian.FirstOrDefaultAsync(x => x.Id == jBahagianId);
+            var carta = await _context.AkCarta.FirstOrDefaultAsync(x => x.Id == id);
+
+            var KW = kw.Kod + " - " + kw.Perihal;
+            var Bahagian = bahagian.Kod + " - " + bahagian.Perihal;
+            var Carta = carta.Kod + " - " + carta.Perihal;
+
+            return new ViewAsPdf("BukuVotDetailsPrintPDF", list.OrderBy(b => b.Tarikh).ToList(),
+                new ViewDataDictionary(ViewData) { 
+                    {"KW", KW },
+                    {"Bahagian", Bahagian },
+                    {"Carta", Carta },
+                    {"tarDari", carianDari },
+                    {"tarHingga", carianHingga } })
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
+                        " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
         }
+        // printing List of Carta end
     }
 }

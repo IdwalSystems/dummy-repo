@@ -1,0 +1,162 @@
+﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.AbBukuVotDetailViewModel>
+
+@{
+    ViewData["Title"] = "Cetakan Butiran Buku Vot";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+
+    CompanyDetails company = new CompanyDetails();
+    decimal baki = 0;
+}
+<style>
+
+    .image-container {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+
+    .topic tr {
+        line-height: 1rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .max-lines {
+        display: block; /* or inline-block */
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 5.8em;
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+
+<div class="row flexrow mb-1 text-center">
+    <div class="col-12 text-uppercase">
+        <img class="image-container mb-2" src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
+        <h3 class="mb-1"><strong>@company.NamaSyarikat</strong></h3>
+        <h4 class="mb-0"> @company.AlamatSyarikat1 , @company.AlamatSyarikat2</h4>
+        <h4 class="mb-0"> @company.AlamatSyarikat3</h4>
+        <h4 class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</h4>
+    </div>
+
+</div>
+
+<br />
+<table class="table table-bordered table-sm topic">
+    <thead>
+        <tr class="bg-dark text-white">
+            <th colspan="11" class="text-center bg-dark text-white">
+                <strong>
+                    SENARAI BUTIRAN BUKU VOT @ViewData["Carta"] BAGI BAHAGIAN : @ViewData["Bahagian"] KW : @ViewData["KW"]
+                    <br />
+                    DARI TARIKH : @ViewData["tarDari"] -> @ViewData["TarHingga"]
+                </strong>
+            </th>
+        </tr>
+        <tr style="line-height:0.8rem;" class="bg-secondary text-white">
+
+            <th width="2%">
+                BIL
+            </th>
+            <th width="5%">
+                TARIKH
+            </th>
+            <th width="5%">
+                KOD
+            </th>
+            <th>
+                NAMA
+            </th>
+            <th width="15%">
+                NO RUJUKAN
+            </th>
+            <th width="10%">
+                DEBIT RM
+            </th>
+            <th width="10%">
+                KREDIT RM
+            </th>
+            <th width="10%">
+                TANGGUNG RM
+            </th>
+            <th width="10%">
+                LIABILITI RM
+            </th>
+            <th width="10%">
+                BAKI RM
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            
+            <tr>
+                <td class="bil">
+                    @item.Id
+                </td>
+                <td>
+                    @item.Tarikh.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @item.Kod
+                </td>
+                <td>
+                    @item.Nama
+                </td>
+                <td>
+                    @item.NoRujukan
+                </td>
+                <td class="debit text-right">
+                    @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
+                </td>
+                <td class="kredit text-right">
+                    @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
+                </td>
+                <td class="kredit text-right">
+                    @Convert.ToDecimal(item.Tanggungan).ToString("#,##0.00")
+                </td>
+                <td class="kredit text-right">
+                    @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
+                </td>
+                <td class="total text-right">
+                    @{
+                        baki += item.Kredit - item.Debit - item.Tanggungan - item.Liabiliti;
+                    }
+                    @Convert.ToDecimal(baki).ToString("#,##0.00")
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+    </tfoot>
+</table>
