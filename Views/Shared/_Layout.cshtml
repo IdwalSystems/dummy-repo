@@ -6,13 +6,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MSNK</title>
-    <link href="~/css/site.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/site.min.css" />
     <link rel="stylesheet" href="~/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
     <link href="~/lib/datatables/css/dataTables.bootstrap4.css" rel="stylesheet" />
-    <link href="~/lib/select2/css/select2.css" rel="stylesheet" />
+    <link href="~/lib/select2/css/select2.min.css" rel="stylesheet" />
     <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
     <link href="~/lib/select2-bootstrap-theme/select2-bootstrap.css" rel="stylesheet" />
 
@@ -28,9 +27,9 @@
     <script src="~/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     <script src="~/lib/datatables/js/jquery.dataTables.js"></script>
     <script src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
-    <script src="~/lib/select2/js/select2.js"></script>
+    <script src="~/lib/select2/js/select2.min.js"></script>
     <script src="~/lib/toastr.js/toastr.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.js" integrity="sha512-B+gr+zLWg81qxVwvtYwKrmjvQtZKD/GGFF7jD80OfzbqFw+NsbS5faEqpCO7Q7oRw1bYi0+WLJf54j8Vm7NADw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     @*<script>
@@ -111,7 +110,7 @@
         <nav class="navbar navbar-expand-lg navbar-toggleable-sm box-shadow">
             <div class="container-fluid">
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">
-                    <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" style="width: 40px; height: 40px; align-content: center; height: 100%;" class="border border-light rounded-circle" />
+                    <img src="~/img/MainLogo_Syarikat.webp" alt="Logo syarikat" style="width: 40px; height: 40px; align-content: center; height: 100%;" class="border border-light rounded-circle" />
                 </a>
                 <h5 class=" mb-0">MSNK</h5>
 
@@ -130,7 +129,7 @@
         <div class="py-4 px-3 @navtype card-header">
             <div class="media d-flex align-items-center">
 
-                <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" width="65" class="mr-3 rounded-circle img-thumbnail shadow-sm">
+                <img src="~/img/MainLogo_Syarikat.webp" alt="Logo syarikat" width="65" class="mr-3 rounded-circle img-thumbnail shadow-sm">
                 <div class="media-body">
                     <h5 class="m-0 @texttype">@namaUser.Nama</h5>
                     <p class="font-weight-light @texttype mb-0">@jawatan</p>

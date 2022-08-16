@@ -276,6 +276,13 @@ namespace MSNK.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Log_In()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnurl=null)

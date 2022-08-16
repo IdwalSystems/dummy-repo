@@ -22,9 +22,10 @@ namespace MSNK.Models.Administration
         public string FaksSyarikat { get; set; }
         public string EmelSyarikat { get; set; }
         public DateTime TarMula { get; set; }
-        public string LogoSyarikat { get; set; }
+        public string CompanyLogoWeb { get; set; }
+        public string CompanyLogoPrintPDF { get; set; }
 
-        
+
         public CompanyDetails()
         {
             KodSistem = "SPMB";
@@ -40,7 +41,8 @@ namespace MSNK.Models.Administration
             TelSyarikat = "04-7027441 / 7470 ";
             FaksSyarikat = "04-7027442";
             EmelSyarikat = "msnk@kedah.gov.my";
-            LogoSyarikat = "MainLogo_Syarikat.png";
+            CompanyLogoWeb = "MainLogo_Syarikat.webp";
+            CompanyLogoPrintPDF = "MainLogo_Syarikat.png";
 
         }
     }

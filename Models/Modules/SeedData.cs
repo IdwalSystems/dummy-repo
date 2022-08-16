@@ -64,7 +64,7 @@ namespace MSNK.Models.Modules
                         FaksSyarikat = company.FaksSyarikat,
                         EmelSyarikat = company.EmelSyarikat,
                         TarMula = DateTime.Today,
-                        LogoSyarikat = company.LogoSyarikat
+                        LogoSyarikat = company.CompanyLogoPrintPDF
 
             }
                 );

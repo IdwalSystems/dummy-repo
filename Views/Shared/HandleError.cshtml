@@ -1,14 +1,22 @@
-﻿
-<div class="jumbotron-fluid">
-    <div class="col-12 text-center">
-        <h1 class="text-danger">
-        @ViewData["ErrorMessage"] 
-        </h1>
-        <p>
-            Ralat berlaku. Sila kembali ke Halaman Utama.
-        </p>
-        <a asp-controller="Home" asp-action="Index" class="btn ac-primary">Kembali Ke Halaman Utama</a>
+﻿@{
+    ViewData["Title"] = ViewData["ErrorMessage"];
+
+}
+
+<div class="container">
+    <div class="card jumbotron center ac-light" style="">
+        <h1 class="text-danger ">@ViewData["ErrorMessage"] </h1>
+        <h5 class="mb-3">Ralat berlaku. Sila kembali ke Halaman Utama.</h5>
+        <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
+            <a class="btn-block " asp-controller="Home" asp-action="Index">
+                <i class="fas fa-ban fa-10x" style="font-size:60vh;"></i>
+            </a>
+        </div>
+        
+        <a class="btn ac-info" asp-controller="Home" asp-action="Index">
+            Kembali Ke Halaman Utama
+        </a>
     </div>
-    
 </div>
+
 

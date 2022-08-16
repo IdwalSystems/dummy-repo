@@ -125,7 +125,7 @@ namespace MSNK.Controllers
             if (model.Gambar != null)
             {
                 string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "img");
-                uniqueFileName = "MainLogo_Syarikat.png";
+                uniqueFileName = "MainLogo_Syarikat.webp";
                 //uniqueFileName = model.Gambar.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))

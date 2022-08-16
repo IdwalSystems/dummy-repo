@@ -1,3 +1,7 @@
 ﻿@{
+    CompanyDetails company = new CompanyDetails();
+
     Layout = "_Layout";
+    ViewData["CompanyLogoPrintPDF"] = company.CompanyLogoPrintPDF;
+    ViewData["CompanyLogoWeb"] = company.CompanyLogoWeb;
 }
