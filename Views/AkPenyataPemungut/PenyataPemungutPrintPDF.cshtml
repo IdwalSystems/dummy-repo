@@ -1,0 +1,229 @@
+﻿@model MSNK.Models.Modules.PrintModel.PenyataPemungutPrintModel
+
+@{
+    ViewData["Title"] = "Cetakan Penyata Pemungut";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+<style>
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+</style>
+<div class="row flexrow mb-1 ml-1">
+    <div class="col-2 image-container">
+        <img src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat1 , @Model.CompanyDetail.AlamatSyarikat2</p>
+        <p class="mb-0"> @Model.CompanyDetail.AlamatSyarikat3</p>
+        <p class="mb-0"> Tel: @Model.CompanyDetail.TelSyarikat   Faks: @Model.CompanyDetail.FaksSyarikat</p>
+        <p class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</p>
+    </div>
+
+    <div class="col-2 text-right">
+        <h3 class="mb-0"><strong>PENYATA PEMUNGUT</strong></h3>
+        @*<h6 class="mb-0">NO PO:</h6>
+            <h6 class="mb-0 ">@Model.AkPO.NoPO</h6>
+            <h6 class="mb-0">TARIKH PESANAN TEMPATAN: @Html.DisplayFor(x => x.AkPO.Tarikh, "{0:dd/MM/yyyy}")</h6>*@
+    </div>
+</div>
+<br />
+<div class="row flexrow mb-1">
+    <div class="col-8 text-center text-uppercase">
+        <h5 class="mb-1"><strong>Tahun Kewangan @Model.AkPenyataPemungut.Tahun</strong></h5>
+    </div>
+</div>
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">No Dokumen</td>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">Tarikh</td>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">No Akaun </td>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">Bank </td>
+                <td class="text-center text-uppercase font-weight-bold" width="15%">Jenis Bayaran </td>
+            </tr>
+            <tr>
+                <td class="text-center">@Model.AkPenyataPemungut.NoDokumen</td>
+                <td class="text-center" width="15%">@Convert.ToDateTime(Model.AkPenyataPemungut.Tarikh).ToString("dd/MM/yyyy")</td>
+                <td class="text-center text-uppercase">@Model.AkPenyataPemungut.AkBank.NoAkaun</td>
+                <td class="text-center text-uppercase">@Model.AkPenyataPemungut.AkBank.JBank.Kod - @Model.AkPenyataPemungut.AkBank.JBank.Nama</td>
+                <td class="text-center text-uppercase">@Model.AkPenyataPemungut.JCaraBayar.Kod - @Model.AkPenyataPemungut.JCaraBayar.Perihal</td>
+            </tr>
+            @if (Model.AkPenyataPemungut.FlJenisCek != 0)
+            {
+                <tr>
+                    <td class="text-center text-uppercase font-weight-bold">Jenis cek</td>
+                    @switch (Model.AkPenyataPemungut.FlJenisCek)
+                    {
+                        case 1:
+                            <td colspan="4" class="text-uppercase">
+                                Cek Cawangan Ini
+                            </td>
+                            break;
+                        case 2:
+                            <td colspan="4" class="text-uppercase">
+                                Cek Tempatan
+                            </td>
+                            break;
+                        case 3:
+                            <td colspan="4" class="text-uppercase">
+                                Cek Luar
+                            </td>
+                            break;
+                        case 4:
+                            <td colspan="4" class=" text-uppercase">
+                                Cek Antarabangsa
+                            </td>
+                            break;
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <thead class="text-center">
+            <tr>
+                <th colspan="5" class="ac-light text-uppercase">Pungutan Dimasukira ke dalam akaun-akaun di bawah</th>
+            </tr>
+            <tr>
+                <th width="2%" class="text-center">KW</th>
+                <th width="5%" class="text-center">Bahagian</th>
+                <th width="5%" class="text-center">KOD</th>
+                <th>OBJEK</th>
+                <th width="5%">AMAUN</th>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model.AkPenyataPemungut.AkPenyataPemungut1)
+        {
+
+            <tr>
+                <td>@item.JBahagian.JKW.Kod</td>
+                <td>@item.JBahagian.Kod</td>
+                <td>@item.AkCarta.Kod</td>
+                <td>@item.AkCarta.Perihal</td>
+                <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+            </tr>
+        }
+        
+        <tfoot class="table-warning">
+            <tr class="font-weight-bold">
+                <td class="text-right" colspan="4">Jumlah RM</td>
+                <td class="text-right">@Convert.ToDecimal(Model.AkPenyataPemungut.Jumlah).ToString("#,##0.00")</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+@if (Model.AkPenyataPemungut.FlJenisCek != 0)
+{
+    <div class="table-responsive-sm mb-0">
+        <table class="table table-bordered table-sm topic">
+            <thead class="text-center">
+                <tr>
+                    <th colspan="4" class="ac-primary text-uppercase">Senarai cek yang terlibat</th>
+                </tr>
+                <tr>
+                    <th width="5%" class="text-center">Tarikh</th>
+                    <th class="text-center">No Resit</th>
+                    <th width="10%" class="text-center">No Cek</th>
+                    <th width="5%">AMAUN</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model.AkPenyataPemungut.AkPenyataPemungut2)
+            {
+
+                <tr>
+                    <td>@item.AkTerima2.AkTerima.Tarikh.ToString("dd/MM/yyyy")</td>
+                    <td>@item.AkTerima2.AkTerima.NoRujukan</td>
+                    <td>@item.AkTerima2.NoCek</td>
+                    <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                </tr>
+            }
+            
+            <tfoot class="table-warning">
+                <tr class="font-weight-bold">
+                    <td class="text-right" colspan="3">Jumlah RM</td>
+                    <td class="text-right">@Convert.ToDecimal(Model.AkPenyataPemungut.Jumlah).ToString("#,##0.00")</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <tbody>
+            <tr>
+                <td class="text-right font-weight-bold" style="line-height:1.0rem;">AMAUN DALAM PERKATAAN</td>
+                <td class="text-left" style="line-height:0.8rem;">@Model.JumlahDalamPerkataan</td>
+            </tr>
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+</div>
+
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <thead class="table-dark">
+
+        </thead>
+        <tbody>
+            <tr class="bg-dark text-white font-weight-bold">
+
+                <td class="text-center" colspan="3"><h6 class="mb-0"><strong>UNTUK KEGUNAAN BAHAGIAN KEWANGAN</strong></h6></td>
+            </tr>
+            <tr>
+                <td class="text-center" width="33%">Disedia </td>
+                <td class="text-center" width="33%">Disemak </td>
+                <td class="text-center" width="33%">Diluluskan </td>
+            </tr>
+            <tr>
+                <td class="text-center" height="50px"></td>
+                <td class="text-center" height="50px"></td>
+                <td class="text-center" height="50px"></td>
+
+            </tr>
+            <tr>
+                <td class="text-left">Nama:</td>
+                <td class="text-left">Nama:</td>
+                <td class="text-left">Nama:</td>
+
+            </tr>
+            <tr>
+                <td class="text-left">Jawatan:</td>
+                <td class="text-left">Jawatan:</td>
+                <td class="text-left">Jawatan:</td>
+
+            </tr>
+            <tr>
+                <td class="text-left">Tarikh: @DateTime.Now</td>
+                <td class="text-left">Tarikh:</td>
+                <td class="text-left">Tarikh:</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

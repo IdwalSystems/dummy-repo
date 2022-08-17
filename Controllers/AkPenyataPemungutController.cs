@@ -8,10 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
+using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
 using MSNK.Models.Modules.ViewModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -340,6 +344,10 @@ namespace MSNK.Controllers
                     foreach (var item2 in item.AkTerima2)
                     {
                         //checked if already jana Terima in AkPenyataPemungut1
+                        var ExistTerima = _context.AkPenyataPemungut2
+                            .Include(b => b.AkPenyataPemungut)
+                            .Where(b => b.AkTerima2Id == item2.Id && b.AkPenyataPemungut.FlHapus == 0)
+                            .FirstOrDefault();
                         bool isExistTerima = _context.AkPenyataPemungut2
                             .Include(b => b.AkPenyataPemungut)
                             .Where(b => b.AkTerima2Id == item2.Id && b.AkPenyataPemungut.FlHapus == 0)
@@ -485,23 +493,27 @@ namespace MSNK.Controllers
         {
             string prefix = "";
             int x = 1;
-            string noRujukan = prefix + "000000";
+            string noRujukan = prefix + "000001";
 
-            var LatestNoRujukan = _context.AkPenyataPemungut
-                       .IgnoreQueryFilters()
-                       .Where(x => x.Tahun ==  year)
-                       .Max(x => x.NoDokumen);
+            var akPungut = _context.AkPenyataPemungut
+                       .Where(x => x.Tahun ==  year).OrderBy(x => x.NoDokumen).ToList();
+            
+            if (akPungut != null)
+            {
+                foreach (var item in akPungut)
+                {
+                    if(item.NoDokumen == noRujukan)
+                    {
+                        x = int.Parse(item.NoDokumen.Substring(1));
+                        x++;
+                        noRujukan = string.Format("{0:" + prefix + "000000}", x);
+                        continue;
+                    }
+                    break;
+                }
+                
+            }
 
-            if (LatestNoRujukan == null)
-            {
-                noRujukan = string.Format("{0:" + prefix + "000000}", x);
-            }
-            else
-            {
-                x = int.Parse(LatestNoRujukan.Substring(1));
-                x++;
-                noRujukan = string.Format("{0:" + prefix + "000000}", x);
-            }
             return noRujukan;
         }
 
@@ -799,6 +811,13 @@ namespace MSNK.Controllers
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
+            bool isExistNoDokumen = _context.AkPenyataPemungut.Any(b => b.NoDokumen == obj.NoDokumen && b.Tahun == obj.Tahun);
+
+            if (isExistNoDokumen == true)
+            {
+                TempData[SD.Warning] = "No Dokumen pada tahun berikut telah wujud. Operasi rollback tidak dibenarkan";
+                return RedirectToAction(nameof(Index));
+            }
             // Rollback operation
 
             obj.FlHapus = 0;
@@ -818,6 +837,55 @@ namespace MSNK.Controllers
             TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
         }
+
+        // printing Penyata Pemungut 
+        [Authorize(Policy = "PT001P")]
+        public async Task<IActionResult> PrintPdf(int id)
+        {
+            AkPenyataPemungut akPungut = await _akPungutRepo.GetByIdIncludeDeletedItems(id);
+
+            string jumlahDalamPerkataan;
+
+            if (akPungut.Jumlah < 0)
+            {
+                jumlahDalamPerkataan = ("Kurangan Ringgit Malaysia " + Tools.JumlahDalamPerkataan(0 - akPungut.Jumlah)).ToUpper();
+            }
+            else
+            {
+                jumlahDalamPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akPungut.Jumlah)).ToUpper();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+            PenyataPemungutPrintModel data = new PenyataPemungutPrintModel();
+
+            CompanyDetails company = new CompanyDetails();
+            data.CompanyDetail = company;
+            data.AkPenyataPemungut = akPungut;
+            data.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            data.Username = user.UserName;
+
+            //update cetak -> 1
+
+            //insert applog
+            await AddLogAsync("Cetak", "Cetak Data", akPungut.NoDokumen, id, akPungut.Jumlah, pekerjaId);
+
+            //insert applog end
+
+            await _context.SaveChangesAsync();
+
+            return new ViewAsPdf("PenyataPemungutPrintPdf", data)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                //CustomSwitches = "--footer-center \"  Tarikh: " +
+                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+        // printing Penyata Pemungut end
 
         private bool AkPenyataPemungutExists(int id)
         {
