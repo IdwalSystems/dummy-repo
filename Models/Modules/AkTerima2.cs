@@ -36,8 +36,10 @@ namespace MSNK.Models.Modules
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? TarSlip { get; set; }
         public int? AkPenyataPemungutId { get; set; }
+        public int? AkPadananPenyataId { get; set; }
+        public AkPadananPenyata AkPadananPenyata { get; set; }
         //field end
-        
+
 
         //Relationship
         public JCaraBayar JCaraBayar { get; set; }

@@ -329,6 +329,10 @@ namespace MSNK
                 options.AddPolicy("BJ001T", policy => policy.RequireClaim("BJ001T"));
                 options.AddPolicy("BJ001UT", policy => policy.RequireClaim("BJ001UT"));
                 //Waran End
+                //Belanjawan Semasa
+                options.AddPolicy("BJ002", policy => policy.RequireClaim("BJ002"));
+                options.AddPolicy("BJ002P", policy => policy.RequireClaim("BJ002P"));
+                //Belanjawan Semasa End
                 //Menu Profil
                 //Profil Atlet
                 options.AddPolicy("SU001", policy => policy.RequireClaim("SU001"));
@@ -424,6 +428,18 @@ namespace MSNK
                 options.AddPolicy("DF006B", policy => policy.RequireClaim("DF006B"));
                 options.AddPolicy("DF006R", policy => policy.RequireClaim("DF006R"));
                 //Jurulatih End
+                //Laporan
+                options.AddPolicy("DF006", policy => policy.RequireClaim("LP001"));
+                //Laporan End
+                //Menu Penyesuaian Bank
+                //Penyesuaian Bank
+                options.AddPolicy("PB001", policy => policy.RequireClaim("PB001"));
+                options.AddPolicy("PB001C", policy => policy.RequireClaim("PB001C"));
+                options.AddPolicy("PB001E", policy => policy.RequireClaim("PB001E"));
+                options.AddPolicy("PB001D", policy => policy.RequireClaim("PB001D"));
+                options.AddPolicy("PB001P", policy => policy.RequireClaim("PB001P"));
+                options.AddPolicy("PB001R", policy => policy.RequireClaim("PB001R"));
+                //Penyesuaian Bank end
             });
 
             services.AddMvc(f =>

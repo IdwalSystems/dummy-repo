@@ -154,8 +154,8 @@ namespace MSNK.Controllers
                 string tahun,
                 int jKWId,
                 int jBahagianId,
-                DateTime searchFrom,
-                DateTime searchTo
+                string searchFrom,
+                string searchTo
                 )
         {
             if (id == null)
@@ -192,11 +192,11 @@ namespace MSNK.Controllers
             var carianDari = "";
             var carianHingga = "";
 
-            carianDari = searchFrom.ToString("dd/MM/yyyy");
-            carianHingga = searchTo.ToString("dd/MM/yyyy");
+            carianDari = searchFrom;
+            carianHingga = searchTo;
 
-            ViewData["searchFrom"] = searchFrom.ToString("yyyy-MM-dd");
-            ViewData["searchTo"] = searchTo.ToString("yyyy-MM-dd");
+            ViewData["searchFrom"] = searchFrom;
+            ViewData["searchTo"] = searchTo;
 
             //filter range search
             CarianJulat carian = new CarianJulat();
@@ -225,8 +225,8 @@ namespace MSNK.Controllers
             string tahun,
             int jKWId,
             int jBahagianId,
-            DateTime searchFrom,
-            DateTime searchTo)
+            string searchFrom,
+            string searchTo)
         {
             if (id == null)
             {
@@ -262,8 +262,8 @@ namespace MSNK.Controllers
             var carianDari = "";
             var carianHingga = "";
 
-            carianDari = searchFrom.ToString("dd/MM/yyyy");
-            carianHingga = searchTo.ToString("dd/MM/yyyy");
+            carianDari = searchFrom;
+            carianHingga = searchTo;
 
             ViewData["searchFrom"] = carianDari;
             ViewData["searchTo"] = carianHingga;

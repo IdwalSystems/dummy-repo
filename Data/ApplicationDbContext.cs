@@ -88,6 +88,9 @@ namespace MSNK.Data
         public DbSet<AkPenyataPemungut> AkPenyataPemungut { get; set; }
         public DbSet<AkPenyataPemungut1> AkPenyataPemungut1 { get; set; }
         public DbSet<AkPenyataPemungut2> AkPenyataPemungut2 { get; set; }
+        public DbSet<AkBankRecon> AkBankRecon { get; set; }
+        public DbSet<AkBankReconPenyataBank> AkBankReconPenyataBank { get; set; }
+        public DbSet<AkPadananPenyata> AkPadananPenyata { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -147,7 +150,9 @@ namespace MSNK.Data
             //Invois
             modelBuilder.Entity<AkInvois>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Invois end
-
+            //BankRecon
+            modelBuilder.Entity<AkBankRecon>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            //BankRecon end
 
             //default bool to true
 

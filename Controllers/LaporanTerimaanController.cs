@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "LP001")]
     public class LaporanTerimaanController : Controller
     {
         public const string modul = "LPR001";

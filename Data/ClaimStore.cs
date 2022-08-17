@@ -154,6 +154,10 @@ namespace MSNK.Data
             new Claim("BJ001T","BJ001 Waran - Posting"),
             new Claim("BJ001UT","BJ001 Waran - UnPosting"),
             //Waran end
+            //Belanjawan Semasa
+            new Claim("BJ002","BJ002 Belanjawan Semasa"),
+            new Claim("BJ002P","BJ002 Belanjawan Semasa - Cetak"),
+            //Waran end
             //Menu Profil
             //Profil Atlet
             new Claim("SU001","SU001 Profil Atlet"),
@@ -248,6 +252,18 @@ namespace MSNK.Data
             new Claim("DF006B","DF006 Daftar Jurulatih - Batal"),
             new Claim("DF006R","DF006 Daftar Jurulatih - Rollback"),
             // Jurulatih End
+            // Laporan - Laporan
+            new Claim("LP001","LP001 Laporan - laporan Daftar"),
+            // Laporan - Laporan End
+            //Menu Penyesuaian Bank
+            //Penyesuaian Bank
+            new Claim("PB001","PB001 Penyesuaian Bank"),
+            new Claim("PB001C","PB001 Penyesuaian Bank - Tambah"),
+            new Claim("PB001E","PB001 Penyesuaian Bank - Ubah"),
+            new Claim("PB001D","PB001 Penyesuaian Bank - Hapus"),
+            new Claim("PB001P","PB001 Penyesuaian Bank - Cetak"),
+            new Claim("PB001R","PB001 Penyesuaian Bank - Rollback"),
+            //Penyesuaian Bank end
 
         };
     }

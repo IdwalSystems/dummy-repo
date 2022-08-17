@@ -145,6 +145,8 @@ namespace MSNK.Models.Modules
         public ICollection<AkPV1> AkPV1 { get; set; }
         public ICollection<AkPV2> AkPV2 { get; set; }
         public ICollection<AkCimbEFT1> AkCimbEFT1 { get; set; }
+        public int? AkPadananPenyataId { get; set; }
+        public AkPadananPenyata AkPadananPenyata { get; set; }
         //relationship end
 
     }

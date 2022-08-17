@@ -17,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MSNK.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "BJ002")]
     public class AbBelanjawanSemasaController : Controller
     {
         public const string modul = "BJ002";
