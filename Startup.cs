@@ -178,7 +178,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartJurulatih.GetCart(ss));
             services.AddScoped(ss => SessionCartCimbEFT.GetCart(ss));
             services.AddScoped(ss => SessionCartInvois.GetCart(ss));
-            services.AddScoped(ss => SessionCartPenyataPemungut.GetCart(ss));
+            //services.AddScoped(ss => SessionCartPenyataPemungut.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -453,13 +453,20 @@ namespace MSNK
                 });
             });
 
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<UnhandledExceptionFilterAttribute>();
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
         {
             // debug shown on development
-            app.UseDeveloperExceptionPage();
+            //app.UseDeveloperExceptionPage();
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
             // debug shown on development end
 
             // development shown normally
@@ -474,16 +481,15 @@ namespace MSNK
             //    app.UseHsts();
             //}
             // end
-
             app.UseStatusCodePagesWithReExecute("/Home/HandleError/{0}");
 
             // redirect 404 page not found
             //app.Use(async (context, next) =>
             //{
             //    await next();
-            //    if (context.Response.StatusCode == 404)
+            //    if (context.Response.StatusCode == 400)
             //    {
-            //        context.Request.Path = "/ErrorPage/Error404";
+            //        context.Request.Path = "/Home/GlobalError";
             //        await next();
             //    }
             //});

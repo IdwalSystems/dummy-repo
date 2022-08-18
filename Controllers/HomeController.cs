@@ -29,6 +29,7 @@ namespace MSNK.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkPO, int, string> _poRepo;
+        private readonly UserService _userService;
 
         public HomeController(
             ApplicationDbContext context,
@@ -41,6 +42,7 @@ namespace MSNK.Controllers
             _logger = logger;
             _userManager = userManager;
             _poRepo = poRepo;
+            _userService = userService;
         }
 
 
@@ -53,6 +55,15 @@ namespace MSNK.Controllers
             }
             else
             {
+                if(!User.IsInRole("SuperAdmin"))
+                {
+                    bool IsUnderMaintainance = _userService.IsUnderMaintainance();
+                    if (IsUnderMaintainance == true)
+                    {
+                        return View("UnderMaintainance");
+                    }
+                }
+                
                 // Widget Status PO
                 var akPO = await _context.AkPO
                     .Include(b => b.AkPembekal)
@@ -184,6 +195,12 @@ namespace MSNK.Controllers
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult GlobalError()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }

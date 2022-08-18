@@ -33,6 +33,7 @@ namespace MSNK.Models.Modules
         public DateTime TarMula { get; set; }
         [DisplayName("Logo")]
         public string LogoSyarikat { get; set; }
+        public int FlMaintainance { get; set; }
 
     }
 }

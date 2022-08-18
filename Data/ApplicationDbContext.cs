@@ -13,6 +13,7 @@ namespace MSNK.Data
         }
 
         public DbSet<ApplicationUser> applicationUsers { get; set; }
+        public DbSet<ExceptionLogger> ExceptionLogger { get; set; }
 
         //module
         public DbSet<JKW> JKW { get; set; }

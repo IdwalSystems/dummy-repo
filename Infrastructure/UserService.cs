@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Owin;
+using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Administration;
+using MSNK.Models.Modules;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,6 +33,27 @@ namespace MSNK.Infrastructure
 
             ApplicationUser user = (ApplicationUser)await _userManager.FindByIdAsync(userId);
             await _signInManager.SignInAsync(user, false);
+        }
+
+        public bool IsUnderMaintainance()
+        {
+            SiAppInfo appInfo = _db.SiAppInfo.FirstOrDefault();
+
+            if(appInfo != null)
+            {
+                if(appInfo.FlMaintainance == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
