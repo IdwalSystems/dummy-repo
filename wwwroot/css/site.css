@@ -13,6 +13,22 @@ for details on configuring this project to bundle and minify static web assets. 
     .gradient-form {
         height: 100vh !important;
     }
+
+    .show-mobile {
+        display: none;
+    }
+
+}
+
+@media (max-width: 767px) {
+    .hidden-mobile {
+        display: none;
+    }
+
+    .show-mobile {
+        display:inherit;
+        transition:ease-in;
+    }
 }
 
 @media (min-width: 769px) {

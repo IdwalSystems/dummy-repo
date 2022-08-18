@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using MSNK.Data;
 using MSNK.Models.Administration;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
@@ -28,13 +29,13 @@ namespace MSNK.Infrastructure
             _userManager = userManager;
         }
 
-        public override async void OnException(ExceptionContext context)
+        public override void OnException(ExceptionContext context)
         {
             ExceptionLogger logger = new ExceptionLogger();
 
             logger.LogTime = DateTime.Now;
             logger.UserName = context.HttpContext.User.Identity.Name;
-            logger.TraceIdentifier = context.HttpContext.TraceIdentifier;
+            logger.TraceIdentifier = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier;
             logger.ControllerName = context.ActionDescriptor.DisplayName;
             logger.ExceptionMessage = context.Exception.Message;
             logger.ExceptionStackTrace = context.Exception.StackTrace;
@@ -42,8 +43,8 @@ namespace MSNK.Infrastructure
             logger.Source = context.Exception.Source;
             logger.UrlRequest = context.HttpContext.Request.Path.ToString();
 
-            await _db.AddAsync(logger);
-            await _db.SaveChangesAsync();
+            _db.Add(logger);
+            _db.SaveChanges();
 
         }
     }
