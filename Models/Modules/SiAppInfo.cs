@@ -31,8 +31,10 @@ namespace MSNK.Models.Modules
         public string EmelSyarikat { get; set; }
         [DisplayName("Tarikh Mula")]
         public DateTime TarMula { get; set; }
-        [DisplayName("Logo")]
-        public string LogoSyarikat { get; set; }
+        [DisplayName("Logo Web")]
+        public string CompanyLogoWeb { get; set; }
+        [DisplayName("Logo laporan")]
+        public string CompanyLogoPrintPDF { get; set; }
         public int FlMaintainance { get; set; }
 
     }

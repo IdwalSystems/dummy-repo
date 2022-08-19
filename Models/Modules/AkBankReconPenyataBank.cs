@@ -7,6 +7,7 @@ namespace MSNK.Models.Modules
     public class AkBankReconPenyataBank
     {
         public int Id { get; set; }
+        public int Indek { get; set; }
         public int AkBankReconId { get; set; }
         public AkBankRecon AkBankRecon { get; set; }
         public string NoAkaunBank { get; set; }

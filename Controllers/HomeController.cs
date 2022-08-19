@@ -20,6 +20,10 @@ using MSNK.Models.Modules.ViewModel;
 using static MSNK.Models.Modules.ViewModel.UserClaimsViewModel;
 using Rotativa.AspNetCore;
 using MSNK.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace MSNK.Controllers
 {
@@ -196,6 +200,37 @@ namespace MSNK.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            // get details of exception features
+            // errormessage, Username, StackTrace etc.
+            var contextException = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            // get details of request feature
+            // path, url requested etc.
+            var contextRequest = HttpContext.Features.Get<IHttpRequestFeature>();
+
+            ExceptionLogger logger = new ExceptionLogger();
+
+            var traceId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+
+            var IsExistLogger = _context.ExceptionLogger.FirstOrDefault(b => b.TraceIdentifier == traceId);
+            
+            // error handler logs for View
+            if(IsExistLogger == null)
+            {
+                logger.LogTime = DateTime.Now;
+                logger.UserName = HttpContext.User.Identity.Name;
+                logger.TraceIdentifier = traceId;
+                logger.ControllerName = ControllerContext.ActionDescriptor.DisplayName;
+                logger.ExceptionMessage = contextException.Error.Message;
+                logger.ExceptionStackTrace = contextException.Error.StackTrace;
+                logger.ExceptionType = contextException.Error.GetType().FullName;
+                logger.Source = contextException.Error.Source;
+                logger.UrlRequest = contextRequest.RawTarget;
+
+                _context.Add(logger);
+                _context.SaveChanges();
+            }
+
+
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 

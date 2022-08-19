@@ -40,6 +40,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkTerima, int, string> _akTerimaRepo;
         private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPPRepo;
         private readonly CustomIRepository<string, int> _customRepo;
+        private readonly UserService _userService;
         private CartWaran _cart;
 
         public AbWaranController(
@@ -57,6 +58,7 @@ namespace MSNK.Controllers
             IRepository<AkTerima, int, string> akTerimaRepo,
             IRepository<SpPendahuluanPelbagai, int, string> spPPRepo,
             CustomIRepository<string, int> customrepo,
+            UserService userService,
             CartWaran cart)
         {
             _context = context;
@@ -73,6 +75,7 @@ namespace MSNK.Controllers
             _akTerimaRepo = akTerimaRepo;
             _spPPRepo = spPPRepo;
             _customRepo = customrepo;
+            _userService = userService;
             _cart = cart;
         }
 
@@ -1143,8 +1146,7 @@ namespace MSNK.Controllers
 
             WaranPrintModel data = new WaranPrintModel();
 
-            CompanyDetails company = new CompanyDetails();
-            data.CompanyDetail = company;
+            data.CompanyDetail = await _userService.GetCompanyDetails();
             data.AbWaran = obj;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
             data.Username = user.UserName;

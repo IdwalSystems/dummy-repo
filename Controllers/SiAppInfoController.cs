@@ -67,7 +67,7 @@ namespace MSNK.Controllers
             model.FaksSyarikat = obj.FaksSyarikat;
             model.EmelSyarikat = obj.EmelSyarikat;
             model.TarMula = obj.TarMula;
-            model.GambarSediaAda = obj.LogoSyarikat;
+            model.GambarSediaAda = obj.CompanyLogoWeb;
 
             return View(model);
         }
@@ -108,7 +108,7 @@ namespace MSNK.Controllers
                         System.IO.File.Delete(filePath);
                     }
 
-                    obj.LogoSyarikat = ProcessUploadedFile(model);
+                    obj.CompanyLogoWeb = ProcessUploadedFile(model);
                 }
 
                 _db.Update(obj);

@@ -1,105 +1,70 @@
 @model MSNK.Models.Modules.AkBankRecon
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Tambah";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-success mb-0">Penyesuaian Bank - Tambah</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Tambah</span>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
+            </div>
 
-<h1>Create</h1>
+        </div>
+        <hr class="mt-2" />
+        <form asp-action="Create" class="needs-validation">
+            <div asp-validation-summary="All" class="text-danger"></div>
 
-<h4>AkBankRecon</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Tahun" class="control-label"></label>
-                <input asp-for="Tahun" class="form-control" />
-                <span asp-validation-for="Tahun" class="text-danger"></span>
+            <div class="form-row">
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <label asp-for="Tahun" class="control-label"></label>
+                        <input type="text" asp-for="Tahun" class="form-control form-control-sm" id="txtTahun" value="@DateTime.Now.Year.ToString()" required />
+                        <input type="text" class="form-control" name="datepicker" id="datepicker" />
+                        <span asp-validation-for="Tahun" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <label asp-for="Bulan" class="control-label"></label>
+                        <input asp-for="Bulan" class="form-control form-control-sm" id="txtBulan" value="@DateTime.Now.ToString("MM")" required />
+                        <span asp-validation-for="Bulan" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label asp-for="AkBankId" class="control-label"></label><span class="text-danger control-label">*</span>
+                        <select class="form-control form-control-sm" asp-for="AkBankId" required>
+                            @foreach (var s in ViewBag.AkBank)
+                            {
+                                <option value="@s.Id">@s.NoAkaun - @s.JBank.Nama </option>
+                            }
+                        </select>
+                        <span asp-validation-for="AkBankId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="BakiPenyata" class="control-label"></label><span class="text-danger control-label">*</span>
+                        <input asp-for="BakiPenyata" class="form-control form-control-sm form-control-sm-custom" type="number" value="0.00" id="txtBakiPenyata" />
+                    </div>
+                </div>
             </div>
+
+            <hr />
             <div class="form-group">
-                <label asp-for="Bulan" class="control-label"></label>
-                <input asp-for="Bulan" class="form-control" />
-                <span asp-validation-for="Bulan" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BakiPenyata" class="control-label"></label>
-                <input asp-for="BakiPenyata" class="form-control" />
-                <span asp-validation-for="BakiPenyata" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AkBankId" class="control-label"></label>
-                <select asp-for="AkBankId" class ="form-control" asp-items="ViewBag.AkBankId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="FlMuatNaik" class="control-label"></label>
-                <input asp-for="FlMuatNaik" class="form-control" />
-                <span asp-validation-for="FlMuatNaik" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TarMuatNaik" class="control-label"></label>
-                <input asp-for="TarMuatNaik" class="form-control" />
-                <span asp-validation-for="TarMuatNaik" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsKunci" /> @Html.DisplayNameFor(model => model.IsKunci)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="TarKunci" class="control-label"></label>
-                <input asp-for="TarKunci" class="form-control" />
-                <span asp-validation-for="TarKunci" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FlHapus" class="control-label"></label>
-                <input asp-for="FlHapus" class="form-control" />
-                <span asp-validation-for="FlHapus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TarHapus" class="control-label"></label>
-                <input asp-for="TarHapus" class="form-control" />
-                <span asp-validation-for="TarHapus" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SuPekerjaMasukId" class="control-label"></label>
-                <input asp-for="SuPekerjaMasukId" class="form-control" />
-                <span asp-validation-for="SuPekerjaMasukId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TarMasuk" class="control-label"></label>
-                <input asp-for="TarMasuk" class="form-control" />
-                <span asp-validation-for="TarMasuk" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SuPekerjaKemaskiniId" class="control-label"></label>
-                <input asp-for="SuPekerjaKemaskiniId" class="form-control" />
-                <span asp-validation-for="SuPekerjaKemaskiniId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserIdKemaskini" class="control-label"></label>
-                <input asp-for="UserIdKemaskini" class="form-control" />
-                <span asp-validation-for="UserIdKemaskini" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TarKemaskini" class="control-label"></label>
-                <input asp-for="TarKemaskini" class="form-control" />
-                <span asp-validation-for="TarKemaskini" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Simpan" class="btn ac-primary btn-sm" />
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

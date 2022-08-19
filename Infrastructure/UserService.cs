@@ -28,6 +28,34 @@ namespace MSNK.Infrastructure
             _signInManager = signInManager;
         }
 
+        public async Task<CompanyDetails> GetCompanyDetails()
+        {
+            CompanyDetails company = new CompanyDetails();
+
+            SiAppInfo appInfo = await _db.SiAppInfo.FirstOrDefaultAsync();
+
+            if(appInfo != null)
+            {
+
+                company.KodSistem = appInfo.KodSistem;
+                company.NamaSyarikat = appInfo.NamaSyarikat;
+                company.NoPendaftaran = appInfo.NoPendaftaran;
+                company.AlamatSyarikat1 = appInfo.AlamatSyarikat1;
+                company.AlamatSyarikat2 = appInfo.AlamatSyarikat2;
+                company.AlamatSyarikat3 = appInfo.AlamatSyarikat3;
+                company.Bandar = appInfo.Bandar;
+                company.Poskod = appInfo.Poskod;
+                company.Daerah = appInfo.Daerah;
+                company.Negeri = appInfo.Negeri;
+                company.TelSyarikat = appInfo.TelSyarikat;
+                company.FaksSyarikat = appInfo.FaksSyarikat;
+                company.EmelSyarikat = appInfo.EmelSyarikat;
+                company.CompanyLogoWeb = "MainLogo_Syarikat.webp";
+                company.CompanyLogoPrintPDF = "MainLogo_Syarikat.png";
+            };
+
+            return company; 
+        }
         public async Task Impersonate(string userId)
         {
 

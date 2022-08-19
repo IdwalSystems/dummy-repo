@@ -137,7 +137,7 @@ $(document).ready(function () {
 
     $("#datepicker").datepicker({
         changeMonth: true,
-        changeYear: true,
+        changeYear: false,
     })
         .hide()
         .click(function () {

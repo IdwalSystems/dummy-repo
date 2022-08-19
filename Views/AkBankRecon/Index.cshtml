@@ -1,125 +1,150 @@
 @model IEnumerable<MSNK.Models.Modules.AkBankRecon>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Penyata Penyesuaian Bank";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string Year = DateTime.Now.ToString("yyyy");
+    string dateNow = DateTime.Now.ToString("yyyy-MM-dd");
+    int bil = 0;
 }
 
-<h1>Index</h1>
+<partial name="_JSIndex" />
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-info mb-0">@ViewData["Title"]</h5>
+                <span class="ac-ref">Indeks</span>
+            </div>
+            <div class="col-4 text-right">
+                <a class="text-right btn ac-success" asp-action="Create">Tambah Baru</a>
+            </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Tahun)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bulan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BakiPenyata)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AkBank)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlMuatNaik)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarMuatNaik)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsKunci)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarKunci)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FlHapus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarHapus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SuPekerjaMasukId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarMasuk)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SuPekerjaKemaskiniId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserIdKemaskini)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TarKemaskini)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tahun)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bulan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BakiPenyata)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AkBank.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlMuatNaik)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarMuatNaik)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsKunci)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarKunci)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FlHapus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarHapus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SuPekerjaMasukId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarMasuk)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SuPekerjaKemaskiniId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserIdKemaskini)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TarKemaskini)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+        </div>
+        <hr class="mt-2" />
+        <form asp-action="Index" method="post">
+
+            <div class="card">
+                <div class="card-body" >
+                    <div class="form-group form-row">
+                        <label class="col-sm-2 col-form-label">Bank</label>
+                        <div class="col-sm-5">
+                            <select class="form-control form-control-sm text-uppercase" name="AkBankId" id="ddlAkBank" value="@ViewBag.AkBankId">
+                                @foreach (var s in ViewBag.AkBank)
+                                {
+                                    <option value="@s.Id">@s.NoAkaun - @s.JBank.Nama </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-row " >
+                        <label class="col-sm-2 col-form-label">Tahun</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control form-control-sm" id="tahun" name="Tahun" value="@ViewData["Tahun"]">
+                        </div>
+                    </div>
+                    <div class="form-group form-row">
+                        <label class="col-sm-2 col-form-label">Bulan</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control form-control-sm" id="bulan" name="Bulan" value="@ViewData["Bulan"]">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <hr />
+            <div class="form-group text-right">
+                <input type="submit" value="Papar" class="btn ac-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>
+@if (Model != null)
+{
+    @if (Model.Count() > 0)
+    {
+        <div class="card box-shadow">
+            <div class="card-body">
+                <div class="table-responsive table-sm">
+                    <table class="table tableSub table-bordered table-hover display compact nowrap" width="100%">
+                        <thead>
+                            <tr>
+                                <th width="2%">Bil</th>
+                                <th width="5%">Tahun</th>
+                                <th width="5%">Bulan</th>
+                                <th width="5%">No Akaun</th>
+                                <th width="5%">Bank</th>
+                                <th width="30%">Nama Bank</th>
+                                <th width="10%">Baki Penyata RM</th>
+                                <th width="5%">Tarikh Kunci</th>
+                                <th width="5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                bil++;
+                                <tr class="text-uppercase ">
+                                    <td>@bil</td>
+                                    <td>
+                                        @item.Tahun
+                                    </td>
+                                    <td>
+                                        @item.Bulan
+                                    </td>
+                                    <td>
+                                        @item.AkBank.NoAkaun
+                                    </td>
+                                    <td>
+                                        @item.AkBank.JBank.Kod
+                                    </td>
+                                    <td>
+                                        @item.AkBank.JBank.Nama
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.BakiPenyata).ToString("#,##0.00")
+                                    </td>
+                                    <td>
+                                        @item.TarKunci?.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td width="5%" class="action-button text-center">
+                                        <div class="btn-group" role="group" aria-label="action">
+                                            <a asp-action="Details" asp-route-id="@item.Id"
+                                               class="btn text-primary btn-sm bg-white" type="button"
+                                               data-toggle="tooltip" data-placement="top"
+                                               title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                            @if (item.FlHapus == 0)
+                                            {
+
+                                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                                   class="btn text-danger btn-sm bg-white" type="button"
+                                                   data-toggle="tooltip" data-placement="top"
+                                                   title="Hapus"><i class="fas fa-trash"></i></a>
+                                            }
+                                            else
+                                            {
+                                                if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                                                {
+                                                    <a asp-action="Rollback" asp-route-id="@item.Id" class="btn text-info btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                                        <i class="fas fa-trash-restore"></i>
+                                                    </a>
+
+                                                }
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    }
 }
-    </tbody>
-</table>

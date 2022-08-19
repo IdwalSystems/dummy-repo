@@ -72,7 +72,6 @@ namespace MSNK
                 opt.SlidingExpiration = true;
             });
 
-
             services.AddTransient<IRepository<AkBank, int, string>, AkBankRepository>();
             services.AddTransient<IRepository<JKW, int, string>, JKWRepository>();
             services.AddTransient<IRepository<JBank, int, string>, JBankRepository>();
@@ -161,6 +160,10 @@ namespace MSNK
             services.AddTransient<CustomIRepository<string, int>, CustomRepository>();
             services.AddTransient<BelanjawanSemasaIRepository<string, int>, BelanjawanSemasaRepository>();
 
+            // BANK RECON
+            services.AddTransient<IRepository<AkBankRecon, int, string>, AkBankReconRepository>();
+            services.AddTransient<ListViewIRepository<AkBankReconPenyataBank, int>, AkBankReconPenyataBankRepository>();
+            // BANK RECON END
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPendahuluan.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
@@ -178,7 +181,8 @@ namespace MSNK
             services.AddScoped(ss => SessionCartJurulatih.GetCart(ss));
             services.AddScoped(ss => SessionCartCimbEFT.GetCart(ss));
             services.AddScoped(ss => SessionCartInvois.GetCart(ss));
-            //services.AddScoped(ss => SessionCartPenyataPemungut.GetCart(ss));
+            services.AddScoped(ss => SessionCartPenyataPemungut.GetCart(ss));
+            services.AddScoped(ss => SessionCartBankRecon.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -429,7 +433,7 @@ namespace MSNK
                 options.AddPolicy("DF006R", policy => policy.RequireClaim("DF006R"));
                 //Jurulatih End
                 //Laporan
-                options.AddPolicy("DF006", policy => policy.RequireClaim("LP001"));
+                options.AddPolicy("LP001", policy => policy.RequireClaim("LP001"));
                 //Laporan End
                 //Menu Penyesuaian Bank
                 //Penyesuaian Bank
