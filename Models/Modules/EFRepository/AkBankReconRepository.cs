@@ -26,6 +26,8 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<AkBankRecon>> GetAll()
         {
             return await context.AkBankRecon
+                .Include(b => b.AkBank)
+                    .ThenInclude(b => b.JBank)
                 .Include(b => b.AkBankReconPenyataBank)
                     .ThenInclude(b => b.AkPadananPenyata)
                         .ThenInclude(b => b.AkPV)
@@ -43,6 +45,8 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkBankRecon
                 .IgnoreQueryFilters()
+                .Include(b => b.AkBank)
+                    .ThenInclude(b => b.JBank)
                 .Include(b => b.AkBankReconPenyataBank)
                     .ThenInclude(b => b.AkPadananPenyata)
                         .ThenInclude(b => b.AkPV)
@@ -57,6 +61,8 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkBankRecon
                 .IgnoreQueryFilters()
+                .Include(b => b.AkBank)
+                    .ThenInclude(b => b.JBank)
                 .Include(b => b.AkBankReconPenyataBank)
                     .ThenInclude(b => b.AkPadananPenyata)
                         .ThenInclude(b => b.AkPV)
@@ -71,6 +77,8 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkBankRecon
                 .IgnoreQueryFilters()
+                .Include(b => b.AkBank)
+                    .ThenInclude(b => b.JBank)
                 .Include(b => b.AkBankReconPenyataBank)
                     .ThenInclude(b => b.AkPadananPenyata)
                         .ThenInclude(b => b.AkPV)

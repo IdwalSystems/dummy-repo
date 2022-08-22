@@ -25,7 +25,6 @@
                     <div class="form-group">
                         <label asp-for="Tahun" class="control-label"></label>
                         <input type="text" asp-for="Tahun" class="form-control form-control-sm" id="txtTahun" value="@DateTime.Now.Year.ToString()" required />
-                        <input type="text" class="form-control" name="datepicker" id="datepicker" />
                         <span asp-validation-for="Tahun" class="text-danger"></span>
                     </div>
                 </div>

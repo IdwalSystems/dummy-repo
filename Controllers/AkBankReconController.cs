@@ -133,9 +133,8 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akBankRecon = await _context.AkBankRecon
-                .Include(a => a.AkBank)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akBankRecon = await _akReconRepo.GetByIdIncludeDeletedItems((int)id);
+
             if (akBankRecon == null)
             {
                 return NotFound();
@@ -223,12 +222,13 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akBankRecon = await _context.AkBankRecon.FindAsync(id);
+            var akBankRecon = await _akReconRepo.GetByIdIncludeDeletedItems((int)id);
             if (akBankRecon == null)
             {
                 return NotFound();
             }
-            ViewData["AkBankId"] = new SelectList(_context.AkBank, "Id", "Id", akBankRecon.AkBankId);
+
+            PopulateList();
             return View(akBankRecon);
         }
 
