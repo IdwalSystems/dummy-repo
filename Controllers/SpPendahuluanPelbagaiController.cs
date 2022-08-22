@@ -516,9 +516,23 @@ namespace MSNK.Controllers
         //}
 
         // GET: SpPermohonanAktiviti/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            
             SpPendahuluanPelbagai sp = new SpPendahuluanPelbagai();
+
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+            if (pekerjaId == null)
+            {
+                sp.SuPekerjaId = 1;
+            }
+            else
+            {
+                sp.SuPekerjaId = pekerjaId;
+            }
+
             var jkw = _context.JKW.Where(b => b.Kod.Contains("100")).FirstOrDefault();
 
             sp.JKWId = jkw.Id;
