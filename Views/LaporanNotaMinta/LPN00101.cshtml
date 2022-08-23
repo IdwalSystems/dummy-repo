@@ -129,7 +129,16 @@
             {
                 @foreach (var itemPO in item.AkPO)
                 {
-                    <td class="text-center" style="border-bottom:none;">@itemPO.NoPO</td>
+                    if (itemPO.FlHapus == 0)
+                    {
+                        <td class="text-center" style="border-bottom:none;">@itemPO.NoPO</td>
+
+                    }
+                    else
+                    {
+                        <td class="text-center" style="border-bottom:none;">-</td>
+
+                    }
 
                     if (itemPO.AkBelian.Count > 0)
                     {
@@ -139,16 +148,29 @@
                             {
                                 foreach (var itemPV2 in itemBelian.AkPV2)
                                 {
+
                                     var tarikhPostingPV = Convert.ToDateTime(itemPV2.AkPV.TarikhPosting).ToString("dd/MM/yyyy");
                                     tarikhPostingPV = (tarikhPostingPV != "01/01/0001") ? tarikhPostingPV : "-";
                                     var tarikhCek = Convert.ToDateTime(itemPV2.AkPV.TarCekAtauEFT).ToString("dd/MM/yyyy");
                                     tarikhCek = (tarikhCek != "01/01/0001") ? tarikhCek : "-";
 
-                                    <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(itemPV2.AkPV.Tarikh).ToString("dd/MM/yyyy")</td>
-                                    <td class="text-center" style="border-bottom:none;">@itemPV2.AkPV.NoPV</td>
-                                    <td class="text-center" style="border-bottom:none;">@tarikhPostingPV</td>
-                                    <td class="text-center" style="border-bottom:none;">@tarikhCek</td>
-                                    <td class="text-center" style="border-bottom:none;">@itemPV2.AkPV.JCaraBayar.Perihal</td>
+                                    if (itemPV2.AkPV.FlHapus == 0)
+                                    {
+                                        <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(itemPV2.AkPV.Tarikh).ToString("dd/MM/yyyy")</td>
+                                        <td class="text-center" style="border-bottom:none;">@itemPV2.AkPV.NoPV</td>
+                                        <td class="text-center" style="border-bottom:none;">@tarikhPostingPV</td>
+                                        <td class="text-center" style="border-bottom:none;">@tarikhCek</td>
+                                        <td class="text-center" style="border-bottom:none;">@itemPV2.AkPV.JCaraBayar.Perihal</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center" style="border-bottom:none;">-</td>
+                                        <td class="text-center" style="border-bottom:none;">-</td>
+                                        <td class="text-center" style="border-bottom:none;">-</td>
+                                        <td class="text-center" style="border-bottom:none;">-</td>
+                                        <td class="text-center" style="border-bottom:none;">-</td>
+                                    }
+
                                 }
                             }
                         }

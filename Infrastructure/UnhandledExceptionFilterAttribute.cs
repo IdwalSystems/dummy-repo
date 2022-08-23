@@ -33,18 +33,18 @@ namespace MSNK.Infrastructure
         {
             ExceptionLogger logger = new ExceptionLogger();
 
-            logger.LogTime = DateTime.Now;
-            logger.UserName = context.HttpContext.User.Identity.Name;
-            logger.TraceIdentifier = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier;
-            logger.ControllerName = context.ActionDescriptor.DisplayName;
-            logger.ExceptionMessage = context.Exception.Message;
-            logger.ExceptionStackTrace = context.Exception.StackTrace;
-            logger.ExceptionType = context.Exception.GetType().FullName;
-            logger.Source = context.Exception.Source;
-            logger.UrlRequest = context.HttpContext.Request.Path.ToString();
+            //logger.LogTime = DateTime.Now;
+            //logger.UserName = context.HttpContext.User.Identity.Name;
+            //logger.TraceIdentifier = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier;
+            //logger.ControllerName = context.ActionDescriptor.DisplayName;
+            //logger.ExceptionMessage = context.Exception.Message;
+            //logger.ExceptionStackTrace = context.Exception.StackTrace;
+            //logger.ExceptionType = context.Exception.GetType().FullName;
+            //logger.Source = context.Exception.Source;
+            //logger.UrlRequest = context.HttpContext.Request.Path.ToString();
 
-            _db.Add(logger);
-            _db.SaveChanges();
+            //_db.Add(logger);
+            //_db.SaveChanges();
 
         }
     }

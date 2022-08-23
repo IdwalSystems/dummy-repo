@@ -469,8 +469,9 @@ namespace MSNK
         {
             // debug shown on development
             //app.UseDeveloperExceptionPage();
-            app.UseExceptionHandler("/Home/Error");
-            app.UseHsts();
+            //app.UseExceptionHandler("/Home/Error");
+            //app.UseHsts();
+            app.UseDeveloperExceptionPage();
             // debug shown on development end
 
             // development shown normally

@@ -91,6 +91,7 @@ namespace MSNK.Controllers
             columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
             columnList.Add(new SelectListItem() { Text = "No Nota Minta", Value = "NoRujukan" });
             columnList.Add(new SelectListItem() { Text = "Nama", Value = "Nama" });
+            columnList.Add(new SelectListItem() { Text = "No Siri", Value = "NoSiri" });
 
             if (!String.IsNullOrEmpty(searchColumn))
             {
@@ -127,6 +128,18 @@ namespace MSNK.Controllers
                     else if (searchColumn == "Nama")
                     {
                         akNotaMinta = akNotaMinta.Where(s => s.AkPembekal.NamaSykt.ToUpper().Contains(searchString.ToUpper())).ToList();
+                    }
+                    else if (searchColumn == "NoSiri")
+                    {
+                        foreach (var i in akNotaMinta)
+                        {
+                            if (string.IsNullOrEmpty(i.NoSiri))
+                            {
+                                i.NoSiri = "";
+                            }
+                        }
+
+                        akNotaMinta = akNotaMinta.Where(s => s.NoSiri.Contains(searchString.ToUpper())).ToList();
                     }
 
 
@@ -179,6 +192,7 @@ namespace MSNK.Controllers
                     Id = item.Id,
                     Tahun = item.Tahun,
                     NoRujukan = item.NoRujukan,
+                    NoSiri = item.NoSiri,
                     Tarikh = item.Tarikh,
                     Jumlah = item.Jumlah,
                     NamaSykt = namaSykt,

@@ -266,7 +266,7 @@ namespace MSNK.Controllers
                 UserId = user.Id
             };
 
-            foreach (Claim claim in ClaimStore.claimsList)
+            foreach (Claim claim in ClaimStore.claimsList.OrderBy(b => b.Type))
             {
                 UserClaim userClaim = new UserClaim
                 {
@@ -278,8 +278,9 @@ namespace MSNK.Controllers
                     userClaim.IsSelected = true;
                 }
                 model.Claims.Add(userClaim);
+
             }
-            
+
             //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
 
             return new ViewAsPdf("PermohonanCapaianPrintPDF", model)
