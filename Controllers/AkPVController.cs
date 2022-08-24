@@ -1310,10 +1310,14 @@ namespace MSNK.Controllers
 
         // on change kod pembekal controller
         [HttpPost]
-        public async Task<JsonResult> JsonGetInboisPembekal(int data)
+        public async Task<JsonResult> JsonGetInboisPembekal(int data, int jenisBaucer)
         {
             try
             {
+                if (jenisBaucer == 0)
+                {
+                    return Json(new { result = "OK" });
+                }
                 var result = await _context.AkBelian.Include(b=> b.AkPembekal).Where(x => x.AkPembekalId == data).ToListAsync();
 
                 if (result.Count() == 0)
@@ -1478,32 +1482,35 @@ namespace MSNK.Controllers
                 jenis = "CreatePanjar";
             }
 
-            if (pembekal != null)
+            if (FlJenisBaucer == 1)
             {
-                akPV.Nama = pembekal.NamaSykt;
-                akPV.Alamat1 = pembekal.Alamat1;
-                akPV.Alamat2 = pembekal.Alamat2;
-                akPV.Alamat3 = pembekal.Alamat3;
-                akPV.Telefon = pembekal.Telefon1;
-                akPV.Emel = pembekal.Emel;
-                akPV.NoAkaunBank = pembekal.AkaunBank;
-                akPV.FlJenisBaucer = 1;
-                akPV.FlKategoriPenerima = 1;
-                jenis = "CreateAm";
-
-                //check if PV dengan tanggungan or tanpa tanggungan
-                List<AkPV2> akPV2CartList = _cart.Lines2.ToList();
-
-                foreach (AkPV2 item in akPV2CartList)
+                if (pembekal != null)
                 {
-                    if (item.HavePO == true)
-                    {
-                        akPV.denganTanggungan = true;
-                    }
-                }
-                //check if PV dengan tanggungan or tanpa tanggungan end
-            }
+                    akPV.Nama = pembekal.NamaSykt;
+                    akPV.Alamat1 = pembekal.Alamat1;
+                    akPV.Alamat2 = pembekal.Alamat2;
+                    akPV.Alamat3 = pembekal.Alamat3;
+                    akPV.Telefon = pembekal.Telefon1;
+                    akPV.Emel = pembekal.Emel;
+                    akPV.NoAkaunBank = pembekal.AkaunBank;
+                    akPV.FlJenisBaucer = 1;
+                    akPV.FlKategoriPenerima = 1;
+                    jenis = "CreateAm";
 
+                    //check if PV dengan tanggungan or tanpa tanggungan
+                    List<AkPV2> akPV2CartList = _cart.Lines2.ToList();
+
+                    foreach (AkPV2 item in akPV2CartList)
+                    {
+                        if (item.HavePO == true)
+                        {
+                            akPV.denganTanggungan = true;
+                        }
+                    }
+                    //check if PV dengan tanggungan or tanpa tanggungan end
+                }
+            }
+            
             if (pekerja != null )
             {
                 akPV.NoKP = pekerja.NoKp;
@@ -1521,6 +1528,13 @@ namespace MSNK.Controllers
             if (FlJenisBaucer == 2)
             {
                 akPV.FlKategoriPenerima = 2;
+                jenis = "CreatePekerja";
+            }
+
+            if (FlJenisBaucer == 0 && pembekal != null)
+            {
+                akPV.FlKategoriPenerima = 1;
+                jenis = "CreateAm";
             }
             // get latest no rujukan running number  
             var kw = _context.JKW.FirstOrDefault(x => x.Id == akPV.JKWId);
@@ -1542,26 +1556,31 @@ namespace MSNK.Controllers
                     m.JBahagianId = JBahagianId;
 
                     
-                    if (AkPembekalId != null)
+                    if (FlJenisBaucer == 1)
                     {
-                        if (FlJenisBaucer == 1 && AkPembekalId != 0)
+                        if (AkPembekalId != null)
                         {
-                            m.AkPembekalId = AkPembekalId;
-
-                            // checking for jumlah objek & jumlah perihal
-                            if (akPV.Jumlah != JumlahInbois)
+                            if (AkPembekalId != 0)
                             {
-                                TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Inbois";
-                                //PopulateCart();
-                                CartEmpty();
-                                PopulateList();
-                                return View(jenis, akPV);
+                                m.AkPembekalId = AkPembekalId;
+
+                                // checking for jumlah objek & jumlah perihal
+                                if (akPV.Jumlah != JumlahInbois)
+                                {
+                                    TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Inbois";
+                                    //PopulateCart();
+                                    CartEmpty();
+                                    PopulateList();
+                                    return View(jenis, akPV);
+                                }
                             }
                         }
                     }
+                    
 
                     m.SuPekerjaId = SuPekerjaId == 0 ? null : SuPekerjaId;
 
+                    m.AkPembekalId = AkPembekalId == 0 ? null : AkPembekalId;
                     m.Tahun = akPV.Tahun;
                     m.NoPV = noRujukan;
                     m.Tarikh = akPV.Tarikh;
@@ -2390,6 +2409,8 @@ namespace MSNK.Controllers
 
             PVPrintModel data = new PVPrintModel();
             var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
             var pekerja = _context.SuPekerja.FirstOrDefault(x => x.Id == namaUser.SuPekerjaId);
             var jawatan = "Super Admin";
@@ -2460,6 +2481,7 @@ namespace MSNK.Controllers
                 default:
                     data.KodPenerima = akPV.NoKP;
                     noAkaunBank = akPV.NoAkaunBank;
+                    namaBankPenerima = akPV.JBank.Nama;
                     break;
             }
 
@@ -2480,6 +2502,12 @@ namespace MSNK.Controllers
             //update cetak -> 1
             akPV.FlCetak = 1;
             await _akPVRepo.Update(akPV);
+
+            //insert applog
+            await AddLogAsync("Cetak", "Cetak Data", akPV.NoPV, id, akPV.Jumlah, pekerjaId);
+
+            //insert applog end
+
             await _context.SaveChangesAsync();
 
             return new ViewAsPdf("PVPrintPdf", data)
@@ -2723,10 +2751,20 @@ namespace MSNK.Controllers
 
                         }
 
-                        if (AppInfo == null)
-                        {
                             //insert into AbBukuVot
                             AbBukuVot abBukuVot = new AbBukuVot();
+
+                            decimal liabiliti = 0;
+                            
+                            if (akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == 1)
+                            {
+                                liabiliti = 0;
+                            } 
+                            else
+                            {
+                                liabiliti = 0 - item.Amaun;
+                            }
+
                             if (akPV.FlKategoriPenerima == 1)
                             {
                                 //dengan tanggungan
@@ -2741,7 +2779,7 @@ namespace MSNK.Controllers
                                     VotId = item.AkCartaId,
                                     Rujukan = akPV.NoPV,
                                     Debit = item.Amaun,
-                                    Liabiliti = 0 - item.Amaun
+                                    Liabiliti = liabiliti
 
                                 };
 
@@ -2929,7 +2967,6 @@ namespace MSNK.Controllers
 
 
                             // insert into AbBukuVot end
-                        }
 
                         //insert into akAkaun
                         AkAkaun akAKodBank = new AkAkaun()

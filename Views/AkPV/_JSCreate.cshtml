@@ -219,22 +219,55 @@
     // on change kod pembekal
     $("body").on('change', "#ddlKodPembekal", function () {
         var kodPembekal = $("#ddlKodPembekal").val();
+        var jenisBaucer = $("input[name='FlJenisBaucer']:checked").val();
         var card = $("#cardInbois");
-        if (kodPembekal != 0) {
-            card.removeAttr('hidden');
-            $("#txtAkBelian").empty();
-            JsonKodPembekal(kodPembekal);
+        if (jenisBaucer != 0) {
+            if (kodPembekal != 0) {
+                card.removeAttr('hidden');
+                $("#txtAkBelian").empty();
+                JsonKodPembekal(kodPembekal, jenisBaucer);
+            } else {
+                //enable field
+                $("#txtNoKP").prop('readonly', false);
+                $("#Nama").prop('readonly', false);
+                $("#Nama").prop('required', true);
+                $("#txtAlamat1").prop('readonly', false);
+                $("#txtAlamat2").prop('readonly', false);
+                $("#txtAlamat3").prop('readonly', false);
+                $("#txtNoAkaunBank").prop('readonly', false);
+                $("#txtTelefon").prop('readonly', false);
+                $("#txtEmel").prop('readonly', false);
+                $("#ddlKodPekerja").prop('disabled', false);
+
+                //empty field
+                $("#txtNoKP").val('');
+                $("#Nama").val('');
+                $("#txtAlamat1").val('');
+                $("#txtAlamat2").val('');
+                $("#txtAlamat3").val('');
+                $("#txtNoAkaunBank").val('');
+                $("#txtTelefon").val('');
+                $("#txtEmel").val('');
+
+                $("#btnSave").show();
+                card.prop('hidden', true);
+                EmptyCart();
+            }
+            
         } else {
+            if (kodPembekal != 0) {
+                JsonKodPembekal(kodPembekal, jenisBaucer);
+            }
             //enable field
-            $("#txtNoKP").prop('disabled', false);
-            $("#Nama").prop('disabled', false);
+            $("#txtNoKP").prop('readonly', false);
+            $("#Nama").prop('readonly', false);
             $("#Nama").prop('required', true);
-            $("#txtAlamat1").prop('disabled', false);
-            $("#txtAlamat2").prop('disabled', false);
-            $("#txtAlamat3").prop('disabled', false);
-            $("#txtNoAkaunBank").prop('disabled', false);
-            $("#txtTelefon").prop('disabled', false);
-            $("#txtEmel").prop('disabled', false);
+            $("#txtAlamat1").prop('readonly', false);
+            $("#txtAlamat2").prop('readonly', false);
+            $("#txtAlamat3").prop('readonly', false);
+            $("#txtNoAkaunBank").prop('readonly', false);
+            $("#txtTelefon").prop('readonly', false);
+            $("#txtEmel").prop('readonly', false);
             $("#ddlKodPekerja").prop('disabled', false);
 
             //empty field
@@ -251,48 +284,51 @@
             card.prop('hidden', true);
             EmptyCart();
         }
+        
 
     });
 
-    function JsonKodPembekal(id) {
+    function JsonKodPembekal(id, jenisBaucer) {
         if (id != null) {
             $.ajax({
                 type: "POST",
                 //url: "/AkPV/JsonGetPembekal",
                 url: '@Url.Action("JsonGetPembekal", "AkPV")',
-                data: { data: id },
+                data: { data: id},
                 dataType: "json",
                 success: function (msg) {
                     $.ajax({
                         type: "POST",
                         url: '@Url.Action("JsonGetInboisPembekal", "AkPV")',
-                        data: { data: id },
+                        data: { data: id, jenisBaucer: jenisBaucer },
                         datatype: "json",
                         success: function (r) {
                             var jkw = 0;
                             var jbahagian = 0;
                             var jbank = 0;
                             if (r.result == "OK") {
-                                var select = new Option("-- Pilih Inbois --", 0, true, true);
-                                $("#txtAkBelian").append(select);
-                                if (r.record.length > 0) {
-                                    for (var i = 0; i < r.record.length; i++) {
-                                        var item1 = r.record[i];
-                                        var option = new Option(item1.noInbois.substring(9), item1.id, true, true);
-                                        $("#txtAkBelian").append(option);
-                                        jkw = item1.jkwId;
-                                        jbahagian = item1.jBahagianId;
-                                        jbank = item1.akPembekal.jBankId;
+                                if (jenisBaucer != 0) {
+                                    var select = new Option("-- Pilih Inbois --", 0, true, true);
+                                    $("#txtAkBelian").append(select);
+                                    if (r.record.length > 0) {
+                                        for (var i = 0; i < r.record.length; i++) {
+                                            var item1 = r.record[i];
+                                            var option = new Option(item1.noInbois.substring(9), item1.id, true, true);
+                                            $("#txtAkBelian").append(option);
+                                            jkw = item1.jkwId;
+                                            jbahagian = item1.jBahagianId;
+                                            jbank = item1.akPembekal.jBankId;
 
+                                        }
                                     }
+                                    $("#ddlKW").val(jkw).change();
+                                    $("#ddlBahagian").val(jbahagian).change();
+                                    $("#ddlJBank").val(jbank).change();
+                                    $("#txtAkBelian").val(0).change();
+
                                 }
-                                $("#ddlKW").val(jkw).change();
-                                $("#ddlBahagian").val(jbahagian).change();
-                                $("#ddlJBank").val(jbank).change();
-                                $("#txtAkBelian").val(0).change();
-
                                 //populate related fields
-
+                                $("#ddlJBank").val(msg.record.jBankId).change();
                                 $("#Nama").val(msg.record.namaSykt);
                                 $("#txtAlamat1").val(msg.record.alamat1);
                                 $("#txtAlamat2").val(msg.record.alamat2);
@@ -301,18 +337,17 @@
                                 $("#txtTelefon").val(msg.record.telefon1);
                                 $("#txtEmel").val(msg.record.emel);
                                 // disable fields
-                                $("#txtNoKP").prop('disabled', true);
-                                $("#Nama").prop('disabled', true);
-                                $("#txtAlamat1").prop('disabled', true);
-                                $("#txtAlamat2").prop('disabled', true);
-                                $("#txtAlamat3").prop('disabled', true);
-                                $("#txtNoAkaunBank").prop('disabled', true);
-                                $("#txtTelefon").prop('disabled', true);
-                                $("#txtEmel").prop('disabled', true);
-                                $("#ddlKodPekerja").prop('disabled', true);
+                                $("#txtNoKP").prop('readonly', true);
+                                $("#Nama").prop('readonly', true);
+                                $("#txtAlamat1").prop('readonly', true);
+                                $("#txtAlamat2").prop('readonly', true);
+                                $("#txtAlamat3").prop('readonly', true);
+                                $("#txtNoAkaunBank").prop('readonly', true);
+                                $("#txtTelefon").prop('readonly', true);
+                                $("#txtEmel").prop('readonly', true);
+                                $("#ddlKodPekerja").prop('readonly', true);
                                 $("#ddlKodPekerja").val(0);
                                 $("#Nama").prop('required', false);
-
                             }
                             else {
                                 $("#ddlKodPembekal").val(0).change();
@@ -582,14 +617,14 @@
             $("#Nama").prop('required', false);
         } else {
             //enable field
-            $("#txtNoKP").prop('disabled', false);
-            $("#Nama").prop('disabled', false);
-            $("#txtAlamat1").prop('disabled', false);
-            $("#txtAlamat2").prop('disabled', false);
-            $("#txtAlamat3").prop('disabled', false);
-            $("#txtNoAkaunBank").prop('disabled', false);
-            $("#txtTelefon").prop('disabled', false);
-            $("#txtEmel").prop('disabled', false);
+            $("#txtNoKP").prop('readonly', false);
+            $("#Nama").prop('readonly', false);
+            $("#txtAlamat1").prop('readonly', false);
+            $("#txtAlamat2").prop('readonly', false);
+            $("#txtAlamat3").prop('readonly', false);
+            $("#txtNoAkaunBank").prop('readonly', false);
+            $("#txtTelefon").prop('readonly', false);
+            $("#txtEmel").prop('readonly', false);
             $("#ddlKodPembekal").prop('disabled', false);
 
             //empty field
@@ -625,14 +660,14 @@
                     $("#txtTelefon").val(msg.record.telefonBimbit);
                     $("#txtEmel").val(msg.record.emel);
                     // disable fields
-                    $("#txtNoKP").prop('disabled', true);
-                    $("#Nama").prop('disabled', true);
-                    $("#txtAlamat1").prop('disabled', true);
-                    $("#txtAlamat2").prop('disabled', true);
-                    $("#txtAlamat3").prop('disabled', true);
-                    $("#txtNoAkaunBank").prop('disabled', true);
-                    $("#txtTelefon").prop('disabled', true);
-                    $("#txtEmel").prop('disabled', true);
+                    $("#txtNoKP").prop('readonly', true);
+                    $("#Nama").prop('readonly', true);
+                    $("#txtAlamat1").prop('readonly', true);
+                    $("#txtAlamat2").prop('readonly', true);
+                    $("#txtAlamat3").prop('readonly', true);
+                    $("#txtNoAkaunBank").prop('readonly', true);
+                    $("#txtTelefon").prop('readonly', true);
+                    $("#txtEmel").prop('readonly', true);
                     $("#ddlKodPembekal").prop('disabled', true);
                     $("#ddlKodPembekal").val(0);
                     $("#ddlJBank").val(msg.record.jBankId).change();
@@ -743,7 +778,7 @@
             EmptyCart();
             switch ($(this).val()) {
                 case "0":
-                    $("#divPembekal").prop('hidden', true);
+                    $("#divPembekal").removeAttr('hidden');
                     $("#cardSuProfil").prop('hidden', true);
                     break;
                 case "1":
@@ -897,9 +932,12 @@
                                 txtKodAkaun.val("").trigger('change');
                                 txtAmaunObjek.val("0.00");
 
-                                if ($('#ddlKodPembekal').val() != 0) {
-                                    checkJumlah();
+                                if ($('input[type="radio"][name="FlJenisBaucer"]:checked').val() != 0) {
+                                    if ($('#ddlKodPembekal').val() != 0) {
+                                        checkJumlah();
+                                    }
                                 }
+                                
                             }
                             else {
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");

@@ -468,10 +468,10 @@ namespace MSNK
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
         {
             // debug shown on development
-            //app.UseDeveloperExceptionPage();
-            //app.UseExceptionHandler("/Home/Error");
-            //app.UseHsts();
             app.UseDeveloperExceptionPage();
+            app.UseExceptionHandler("/Home/Error");
+            //app.UseHsts();
+            //app.UseDeveloperExceptionPage();
             // debug shown on development end
 
             // development shown normally
