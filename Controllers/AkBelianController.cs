@@ -527,6 +527,11 @@ namespace MSNK.Controllers
         {
             var user = _userManager.GetUserName(User);
 
+
+            decimal Amaun = 0;
+            decimal Kuantiti = 0;
+            decimal Harga = 0;
+
             AkPOLaras akPOLaras = _context.AkPOLaras
                     .Include(x => x.AkPOLaras1)
                     .Where(x => x.AkPOId == id && x.FlPosting == 1).FirstOrDefault();
@@ -571,19 +576,22 @@ namespace MSNK.Controllers
             foreach (AkPO2 item in akPO2Table)
             {
                 item.AkPOId = 0;
-                item.Amaun = 0;
-                item.Kuantiti = 0;
-                item.Harga = 0;
+                if (akPOLaras == null)
+                {
+                    Amaun = item.Amaun;
+                    Kuantiti = item.Kuantiti;
+                    Harga = item.Harga;
+                }
 
                 _cart.AddItem2(item.AkPOId,
                                item.Indek,
                                item.Bil,
                                item.NoStok,
                                item.Perihal,
-                               item.Kuantiti,
+                               Kuantiti,
                                item.Unit,
-                               item.Harga,
-                               item.Amaun);
+                               Harga,
+                               Amaun);
             }
 
             

@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<IdentityRole>
 
+@{
+    ViewData["Title"] = "Tahap Pengguna";
+}
+
 <div class="card box-shadow">
     <div class="card-body border">
         <div class="row">
@@ -7,44 +11,44 @@
                 <h5 class="text-uppercase mb-0">Maklumat Tahap Pengguna</h5>
                 <span class="ac-ref">Indeks</span>
             </div>
-    
+
         </div>
-        <hr class="mt-2"/>
+        <hr class="mt-2" />
         @if (Model.Any())
-    {
-    <div class="table-responsive-md">
-        <table class="table table-striped border table-sm">
-            <tr class="table-secondary">
-                <th width="30%">Id</th>
-                <th>Tahap Pengguna</th>
-                @*<th></th>*@
-            </tr>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @item.Id
-                    </td>
-                    <td>
-                        @item.Name
-                    </td>
-                    @*<td>
-                        <div class="text-center">
-                            <form asp-action="Delete" asp-route-id="@item.Id">
-                                <a asp-action="Upsert" asp-route-id="@item.Id" class="btn btn-info text-white btn-sm" style="cursor:pointer">
-                                    Ubah
-                                </a>
+        {
+            <div class="table-responsive-md">
+                <table class="table table-striped border table-sm">
+                    <tr class="table-secondary">
+                        <th width="30%">Id</th>
+                        <th>Tahap Pengguna</th>
+                        @*<th></th>*@
+                    </tr>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.Id
+                            </td>
+                            <td>
+                                @item.Name
+                            </td>
+                            @*<td>
+                                    <div class="text-center">
+                                        <form asp-action="Delete" asp-route-id="@item.Id">
+                                            <a asp-action="Upsert" asp-route-id="@item.Id" class="btn btn-info text-white btn-sm" style="cursor:pointer">
+                                                Ubah
+                                            </a>
 
-                                <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger btn-sm">Hapus</button>
-                            </form>
-                        </div>
+                                            <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+                                    </div>
 
-                    </td>*@
-                </tr>
-            }
-        </table>
+                                </td>*@
+                        </tr>
+                    }
+                </table>
 
-    </div>
-    }
+            </div>
+        }
     </div>
 </div>

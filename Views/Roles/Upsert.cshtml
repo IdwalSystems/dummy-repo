@@ -1,13 +1,15 @@
 ﻿@model IdentityRole
-@{ 
+@{
+
     var title = "Tambah Tahap Pengguna";
+    ViewData["Title"] = title;
 }
 
 <form method="post">
-    @if(Model!=null && !String.IsNullOrEmpty(Model.Id))
+    @if (Model!=null && !String.IsNullOrEmpty(Model.Id))
     {
         title = "Ubah Tahap Pengguna";
-        <input  asp-for="@Model.Id" hidden/>
+        <input asp-for="@Model.Id" hidden />
     }
     <div class="border p-3 bg-white">
         <div class="form-group row">

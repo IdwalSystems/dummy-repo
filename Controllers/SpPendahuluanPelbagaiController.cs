@@ -618,6 +618,7 @@ namespace MSNK.Controllers
             }
 
             CartEmpty();
+            ViewBag.NoPermohonan = RunningNumber(spPendahuluanPelbagai);
             PopulateList(spPendahuluanPelbagai.SuPekerjaId);
             return View(spPendahuluanPelbagai);
         }
@@ -1147,6 +1148,7 @@ namespace MSNK.Controllers
 
             if (User.IsInRole("SuperAdmin"))
             {
+                ViewBag.IdPekerja = 1;
                 ViewBag.NamaPekerja = "SuperAdmin";
             }
             else

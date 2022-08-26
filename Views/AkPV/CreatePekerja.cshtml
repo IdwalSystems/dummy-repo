@@ -1,7 +1,7 @@
 ﻿@model MSNK.Models.Modules.AkPV
 
 @{
-    ViewData["Title"] = "Tambah";
+    ViewData["Title"] = "PV - Tambah Pekerja";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -257,13 +257,13 @@
                 <div class="col-md-3">
                     <label asp-for="JBankId" class="control-label"></label>
                     <select class="form-control form-control-sm select2" asp-for="JBankId" id="ddlJBank">
-                        <option value="0" disabled selected>-- Pilih Cara Bayaran --</option>
-                        @foreach (var s in ViewBag.JBank)
+                        <option value="0" selected>-- Pilih Bank --</option>
+                        @foreach (var s in ViewBag.JBankId)
                         {
                             <option value="@s.Id" class="text-uppercase">@s.Kod - @s.Nama</option>
                         }
                     </select>
-                    <span asp-validation-for="JCaraBayarId" class="text-danger"></span>
+                    <span asp-validation-for="JBankId" class="text-danger"></span>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">

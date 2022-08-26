@@ -1,6 +1,6 @@
 ﻿@model MSNK.Models.Modules.SpPendahuluanPelbagai
 
-@{ ViewData["Title"] = "Tambah";
+@{ ViewData["Title"] = "Pend. Pelbagai - Tambah";
     Layout = "~/Views/Shared/_Layout.cshtml"; }
 <partial name="_JSCreate" />
 
@@ -18,7 +18,7 @@
         </div>
         <hr class="mt-2"/>
         <form asp-action="Create" class="needs-validation">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div> 
+            <div asp-validation-summary="All" class="text-danger"></div> 
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="form-group">
@@ -55,7 +55,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label asp-for="NoPermohonan" class="control-label">No Permohonan</label><span class="text-danger control-label">*</span>
-                        <input asp-for="NoPermohonan" class="form-control form-control-sm form-control-sm-custom" required id="txtNoPermohonan" value="@ViewBag.NoPermohonan" readonly />
+                        <input asp-for="NoPermohonan" class="form-control form-control-sm form-control-sm-custom" id="txtNoPermohonan" value="@ViewBag.NoPermohonan" readonly />
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -129,7 +129,7 @@
             </div>
                 <div class="form-group">
                     <label asp-for="Aktiviti" class="control-label">Aktiviti/Kejohanan</label><span class="text-danger control-label">*</span>
-                    <textarea asp-for="Aktiviti" class="form-control form-control-sm text-uppercase" cols="2" required >
+                    <textarea asp-for="Aktiviti" class="form-control form-control-sm text-uppercase" cols="2" >
                     </textarea>
                     <span asp-validation-for="Aktiviti" class="text-danger"></span>
                 </div>
@@ -138,13 +138,14 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label asp-for="Tarikh" class="control-label">Tarikh Aktiviti</label><span class="text-danger control-label">*</span>
-                            <input asp-for="Tarikh" class="form-control form-control-sm" required />
+                            <input asp-for="Tarikh" class="form-control form-control-sm" />
+                            <span asp-validation-for="Tarikh" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label asp-for="Tempat" class="control-label">Tempat</label><span class="text-danger control-label">*</span>
-                            <input asp-for="Tempat" class="form-control form-control-sm text-uppercase" required />
+                            <input asp-for="Tempat" class="form-control form-control-sm text-uppercase" />
                             <span asp-validation-for="Tempat" class="text-danger"></span>
                         </div>
                     </div>

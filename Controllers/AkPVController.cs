@@ -1499,12 +1499,14 @@ namespace MSNK.Controllers
 
                     //check if PV dengan tanggungan or tanpa tanggungan
                     List<AkPV2> akPV2CartList = _cart.Lines2.ToList();
-
+                    
                     foreach (AkPV2 item in akPV2CartList)
                     {
-                        if (item.HavePO == true)
+                        AkBelian akBelian = _context.AkBelian.FirstOrDefault(b => b.Id == item.AkBelianId);
+
+                        if (akBelian.FlTanggungan == "1")
                         {
-                            akPV.denganTanggungan = true;
+                            item.HavePO = true;
                         }
                     }
                     //check if PV dengan tanggungan or tanpa tanggungan end
@@ -1513,14 +1515,7 @@ namespace MSNK.Controllers
             
             if (pekerja != null )
             {
-                akPV.NoKP = pekerja.NoKp;
-                akPV.Nama = pekerja.Nama;
-                akPV.Alamat1 = pekerja.Alamat1;
-                akPV.Alamat2 = pekerja.Alamat2;
-                akPV.Alamat3 = pekerja.Alamat3;
-                akPV.Telefon = pekerja.TelefonBimbit;
-                akPV.Emel = pekerja.Emel;
-                akPV.NoAkaunBank = pekerja.NoAkaunBank;
+
                 akPV.FlKategoriPenerima = 2;
                 jenis = "CreatePekerja";
             }
@@ -1564,6 +1559,13 @@ namespace MSNK.Controllers
                             {
                                 m.AkPembekalId = AkPembekalId;
 
+                                foreach (var i in _cart.Lines2.ToList())
+                                {
+                                    if (i.HavePO == true)
+                                    {
+                                        akPV.denganTanggungan = true;
+                                    }
+                                }
                                 // checking for jumlah objek & jumlah perihal
                                 if (akPV.Jumlah != JumlahInbois)
                                 {
@@ -2967,33 +2969,71 @@ namespace MSNK.Controllers
 
 
                             // insert into AbBukuVot end
-
-                        //insert into akAkaun
-                        AkAkaun akAKodBank = new AkAkaun()
+                        
+                        if (akPV.denganTanggungan == true)
                         {
-                            NoRujukan = akPV.NoPV,
-                            JKWId = akPV.JKWId,
-                            JBahagianId = akPV.JBahagianId,
-                            AkCartaId1 = akPV.AkBank.AkCartaId,
-                            AkCartaId2 = item.AkCartaId,
-                            Tarikh = akPV.Tarikh,
-                            Kredit = item.Amaun
-                        };
+                            foreach (var i in akPV.AkPV2)
+                            {
+                                //insert into akAkaun dengan tanggungan
+                                AkAkaun akAKodBank = new AkAkaun()
+                                {
+                                    NoRujukan = akPV.NoPV,
+                                    JKWId = akPV.JKWId,
+                                    JBahagianId = akPV.JBahagianId,
+                                    AkCartaId1 = akPV.AkBank.AkCartaId,
+                                    AkCartaId2 = i.AkBelian.KodObjekAPId,
+                                    Tarikh = akPV.Tarikh,
+                                    Kredit = item.Amaun
+                                };
 
-                        await _akAkaunRepo.Insert(akAKodBank);
+                                await _akAkaunRepo.Insert(akAKodBank);
 
-                        AkAkaun akAObjek = new AkAkaun()
+                                AkAkaun akAObjek = new AkAkaun()
+                                {
+                                    NoRujukan = akPV.NoPV,
+                                    JKWId = akPV.JKWId,
+                                    JBahagianId = akPV.JBahagianId,
+                                    AkCartaId1 = i.AkBelian.KodObjekAPId,
+                                    AkCartaId2 = akPV.AkBank.AkCartaId,
+                                    Tarikh = akPV.Tarikh,
+                                    Debit = item.Amaun
+                                };
+
+                                await _akAkaunRepo.Insert(akAObjek);
+                                
+                            }
+                            
+                        }
+                        else
                         {
-                            NoRujukan = akPV.NoPV,
-                            JKWId = akPV.JKWId,
-                            JBahagianId = akPV.JBahagianId,
-                            AkCartaId1 = item.AkCartaId,
-                            AkCartaId2 = akPV.AkBank.AkCartaId,
-                            Tarikh = akPV.Tarikh,
-                            Debit = item.Amaun
-                        };
+                            //insert into akAkaun
+                            AkAkaun akAKodBank = new AkAkaun()
+                            {
+                                NoRujukan = akPV.NoPV,
+                                JKWId = akPV.JKWId,
+                                JBahagianId = akPV.JBahagianId,
+                                AkCartaId1 = akPV.AkBank.AkCartaId,
+                                AkCartaId2 = item.AkCartaId,
+                                Tarikh = akPV.Tarikh,
+                                Kredit = item.Amaun
+                            };
 
-                        await _akAkaunRepo.Insert(akAObjek);
+                            await _akAkaunRepo.Insert(akAKodBank);
+
+                            AkAkaun akAObjek = new AkAkaun()
+                            {
+                                NoRujukan = akPV.NoPV,
+                                JKWId = akPV.JKWId,
+                                JBahagianId = akPV.JBahagianId,
+                                AkCartaId1 = item.AkCartaId,
+                                AkCartaId2 = akPV.AkBank.AkCartaId,
+                                Tarikh = akPV.Tarikh,
+                                Debit = item.Amaun
+                            };
+
+                            await _akAkaunRepo.Insert(akAObjek);
+                        }
+                        
  
                     }
 

@@ -253,7 +253,7 @@
                 card.prop('hidden', true);
                 EmptyCart();
             }
-            
+
         } else {
             if (kodPembekal != 0) {
                 JsonKodPembekal(kodPembekal, jenisBaucer);
@@ -284,7 +284,7 @@
             card.prop('hidden', true);
             EmptyCart();
         }
-        
+
 
     });
 
@@ -438,14 +438,14 @@
                         $("#txtEmel").val(msg.record.suPekerja.emel);
                         $("#ddlJBank").val(msg?.record?.suPekerja?.jBankId).change();
                         // disable fields
-                        $("#txtNoKP").prop('readonly', true);
-                        $("#Nama").prop('readonly', true);
-                        $("#txtAlamat1").prop('readonly', true);
-                        $("#txtAlamat2").prop('readonly', true);
-                        $("#txtAlamat3").prop('readonly', true);
-                        $("#txtNoAkaunBank").prop('readonly', true);
-                        $("#txtTelefon").prop('readonly', true);
-                        $("#txtEmel").prop('readonly', true);
+                        //$("#txtNoKP").prop('readonly', true);
+                        //$("#Nama").prop('readonly', true);
+                        //$("#txtAlamat1").prop('readonly', true);
+                        //$("#txtAlamat2").prop('readonly', true);
+                        //$("#txtAlamat3").prop('readonly', true);
+                        //$("#txtNoAkaunBank").prop('readonly', true);
+                        //$("#txtTelefon").prop('readonly', true);
+                        //$("#txtEmel").prop('readonly', true);
                         //$("#ddlKodPekerja").prop('disabled', true);
                         $("#Nama").prop('required', false);
 
@@ -528,7 +528,7 @@
                         $("#txtTahun").val(msg.record.tarMasuk.substring(0,4));
                         $("#ddlKW").val(msg.record.jkwId).change();
                         $("#ddlBahagian").val(msg.record.jBahagianId).change();
-                        
+
                         //enable field
                         $("#txtNoKP").prop('readonly', false);
                         $("#Nama").prop('readonly', false);
@@ -656,18 +656,18 @@
                     $("#txtAlamat1").val(msg.record.alamat1);
                     $("#txtAlamat2").val(msg.record.alamat2);
                     $("#txtAlamat3").val(msg.record.alamat3);
-                    $("#txtNoAkaunBank").val(msg.record.noAkaunBank);
+               $("#txtNoAkaunBank").val(msg.record.noAkaunBank);
                     $("#txtTelefon").val(msg.record.telefonBimbit);
                     $("#txtEmel").val(msg.record.emel);
                     // disable fields
-                    $("#txtNoKP").prop('readonly', true);
-                    $("#Nama").prop('readonly', true);
-                    $("#txtAlamat1").prop('readonly', true);
-                    $("#txtAlamat2").prop('readonly', true);
-                    $("#txtAlamat3").prop('readonly', true);
-                    $("#txtNoAkaunBank").prop('readonly', true);
-                    $("#txtTelefon").prop('readonly', true);
-                    $("#txtEmel").prop('readonly', true);
+                    //$("#txtNoKP").prop('readonly', true);
+                    //$("#Nama").prop('readonly', true);
+                    //$("#txtAlamat1").prop('readonly', true);
+                    //$("#txtAlamat2").prop('readonly', true);
+                    //$("#txtAlamat3").prop('readonly', true);
+                    //$("#txtNoAkaunBank").prop('readonly', true);
+                    //$("#txtTelefon").prop('readonly', true);
+                    //$("#txtEmel").prop('readonly', true);
                     $("#ddlKodPembekal").prop('disabled', true);
                     $("#ddlKodPembekal").val(0);
                     $("#ddlJBank").val(msg.record.jBankId).change();
@@ -937,7 +937,7 @@
                                         checkJumlah();
                                     }
                                 }
-                                
+
                             }
                             else {
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
@@ -1147,6 +1147,7 @@
                     var txtTarPO = $("#txtTarPO");
                     var txtAmaunPO = $("#txtAmaunPO");
                     var txtJumlah = $("#jumlahInbois");
+                    var jumlah = $("#jumlahObjek");
 
                     var AkPV2 = {
                         AkBelianId: ddlAkBelian.val(),
@@ -1243,7 +1244,38 @@
                                 txtAmaunPO.val("0.00");
                                 checkJumlah();
 
+                                $.ajax({
+                                    type: "POST",
+                                    //url: "/AkPV/GetAllItemCartAkPV1",
+                                    url: '@Url.Action("GetAllItemCartAkPV1", "AkPV")',
+                                    dataType: "json",
+                                    success: function (r) {
 
+                                        //refresh updated table objek
+                                        $("table tbody#tbodyObjek").empty();
+                                        var sum = 0;
+                                        if (r.record.length > 0) {
+                                            for (var i = 0; i < r.record.length; i++) {
+                                                var item1 = r.record[i];
+                                                var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
+                                                    "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
+                                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                                                    "</td><td>" +
+                                                    "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                                    "</td><td>" +
+                                                    "<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                                    "</td><tr>";
+                                                $("table tbody#tbodyObjek").append(str);
+                                                sum += item1.amaun;
+                                            }
+                                        }
+
+                                        jumlah.val(sum.toFixed(2));
+                                        if ($('#ddlKodPembekal').val() != 0) {
+                                            checkJumlah();
+                                        }
+                                    }
+                                });
                             }
                             else {
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");

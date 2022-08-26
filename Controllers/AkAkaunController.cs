@@ -59,6 +59,8 @@ namespace MSNK.Controllers
                 return View(aka);
             }
             var akAkaun = await _akAkaunRepo.GetAll();
+            var Carta = await _context.AkCarta.FirstOrDefaultAsync(b => b.Kod == searchCarta);
+
             List<AkAkaun> akAkBakiAwal = new();
             decimal bakiawalDebit = 0;
             decimal bakiawalKredit = 0;
@@ -87,12 +89,26 @@ namespace MSNK.Controllers
 
                 if (bakiawalDebit>0 || bakiawalKredit > 0)
                 {
-                    akAkBakiAwal.Add(new AkAkaun() {
-                        Tarikh = date1,
-                        NoRujukan = "Baki Awal",
-                        Debit = bakiawalDebit,
-                        Kredit = bakiawalKredit
-                    });
+                    if (Carta.DebitKredit == "K")
+                    {
+                        akAkBakiAwal.Add(new AkAkaun()
+                        {
+                            Tarikh = date1,
+                            NoRujukan = "Baki Awal",
+                            Debit = bakiawalKredit,
+                            Kredit = bakiawalDebit
+                        });
+                    }
+                    else
+                    {
+                        akAkBakiAwal.Add(new AkAkaun()
+                        {
+                            Tarikh = date1,
+                            NoRujukan = "Baki Awal",
+                            Debit = bakiawalDebit,
+                            Kredit = bakiawalKredit
+                        });
+                    }
                     foreach(var i in akAkaun)
                     {
                         akAkBakiAwal.Add(new AkAkaun() {
