@@ -1072,6 +1072,7 @@ namespace MSNK.Controllers
 
                     int berjaya = 0;
                     int gagal = 0;
+
                     foreach (var cart in _cart.Lines1)
                     {
                         switch (cart.FlStatus)
@@ -1112,6 +1113,29 @@ namespace MSNK.Controllers
 
                     _context.Update(akCimbEFT);
 
+                    foreach (var cart in _cart.Lines1)
+                    {
+
+                        AkPV akPV = await _akPVRepo.GetById(cart.AkPVId);
+                        switch (cart.FlStatus)
+                        {
+                            case 1:
+                                berjaya++;
+                                break;
+                            case 2:
+                                akPV.NoCekAtauEFT = "";
+                                akPV.TarCekAtauEFT = null;
+                                gagal++;
+                                break;
+                            default:
+                                akPV.NoCekAtauEFT = "";
+                                akPV.TarCekAtauEFT = null;
+                                gagal++;
+                                break;
+                        }
+
+                        _context.Update(akPV);
+                    }
                     //insert applog
                     await AddLogAsync("Ubah", "Ubah Data", akCimbEFT.NoPBI, id, akCimbEFT.Jumlah, pekerjaId);
 

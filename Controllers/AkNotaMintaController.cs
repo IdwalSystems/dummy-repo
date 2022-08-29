@@ -222,7 +222,7 @@ namespace MSNK.Controllers
             return View(viewModel);
         }
 
-        private void PopulateList()
+        private void PopulateList(int? pekerjaId)
         {
             var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.UserName == User.Identity.Name);
 
@@ -241,6 +241,21 @@ namespace MSNK.Controllers
             }
 
             ViewBag.JBahagian = bahagianList;
+
+            string[] arr2 = _context.applicationUsers.Include(x => x.SuPekerja)
+                .Where(b => b.SuPekerjaId == pekerjaId).FirstOrDefault().JBahagianList.Split(',');
+
+            List<JBahagian> bahagianUbahList = new List<JBahagian>();
+
+            foreach (var item in arr2)
+            {
+                var bahagian = _context.JBahagian.FirstOrDefault(x => x.Id == int.Parse(item));
+
+                bahagianUbahList.Add(bahagian);
+
+            }
+
+            ViewBag.JBahagianUbah = bahagianUbahList;
 
             List<AkPembekal> akPembekalList = _context.AkPembekal
                 .Include(b => b.JBank)
@@ -373,7 +388,7 @@ namespace MSNK.Controllers
             }
 
             PopulateTable(id);
-            PopulateList();
+            PopulateList(akNotaMinta.SuPekerjaMasukId);
             return View(viewModel);
         }
 
@@ -407,8 +422,22 @@ namespace MSNK.Controllers
 
         // GET: AkNotaMinta/Create
         [Authorize(Policy = "NM001C")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            AkNotaMinta sp = new AkNotaMinta();
+
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+            if (pekerjaId == null)
+            {
+                sp.SuPekerjaMasukId = 1;
+            }
+            else
+            {
+                sp.SuPekerjaMasukId = pekerjaId;
+            }
+
             // get latest no rujukan running number 
             var year = DateTime.Now.Year.ToString();
             var data = 1;
@@ -416,7 +445,7 @@ namespace MSNK.Controllers
             ViewBag.NoRujukan = GetNoRujukan(data, year);
             // get latest no rujukan running number end
 
-            PopulateList();
+            PopulateList(sp.SuPekerjaMasukId);
             CartEmpty();
             return View();
         }
@@ -741,6 +770,10 @@ namespace MSNK.Controllers
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
+            if (user.Email == "superadmin@idwal.com.my")
+            {
+                akNotaMinta.SuPekerjaMasukId = 1;
+            }
             // checking for jumlah objek & jumlah perihal
             //if (akNotaMinta.Jumlah != JumlahPerihal)
             //{
@@ -816,7 +849,7 @@ namespace MSNK.Controllers
                 }
             }
             CartEmpty();
-            PopulateList();
+            PopulateList(akNotaMinta.SuPekerjaMasukId);
             return View(akNotaMinta);
         }
 
@@ -866,7 +899,7 @@ namespace MSNK.Controllers
 
             CartEmpty();
             PopulateTable(id);
-            PopulateList();
+            PopulateList(akNotaMinta.SuPekerjaMasukId);
             PopulateCartFromDb(akNotaMinta);
             return View(viewModel);
         }
@@ -984,7 +1017,7 @@ namespace MSNK.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             TempData[SD.Warning] = "Data tidak lengkap. Sila cuba sekali lagi";
-            PopulateList();
+            PopulateList(akNotaMinta.SuPekerjaMasukId);
             PopulateTable(id);
             return View(akNotaMinta);
         }
@@ -1067,7 +1100,7 @@ namespace MSNK.Controllers
 
             CartEmpty();
             PopulateTable(id);
-            PopulateList();
+            PopulateList(akNotaMinta.SuPekerjaMasukId);
             PopulateCartFromDb(akNotaMinta);
             return View(viewModel);
         }
@@ -1128,7 +1161,6 @@ namespace MSNK.Controllers
                     akNotaMinta.FlJenis = dataAsal.FlJenis;
                     akNotaMinta.Tahun = dataAsal.Tahun;
                     akNotaMinta.JKWId = dataAsal.JKWId;
-                    akNotaMinta.JBahagianId = dataAsal.JBahagianId;
                     akNotaMinta.NoRujukan = dataAsal.NoRujukan;
                     akNotaMinta.AkPembekalId = dataAsal.AkPembekalId;
                     akNotaMinta.Tajuk = dataAsal.Tajuk;
@@ -1191,7 +1223,7 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
             TempData[SD.Warning] = "Data tidak lengkap. Sila cuba sekali lagi";
-            PopulateList();
+            PopulateList(akNotaMinta.SuPekerjaMasukId);
             PopulateTable(id);
             return View(akNotaMinta);
         }
@@ -1242,7 +1274,7 @@ namespace MSNK.Controllers
             }
 
             PopulateTable(id);
-            PopulateList();
+            PopulateList(akNotaMinta.SuPekerjaMasukId);
             return View(viewModel);
         }
 

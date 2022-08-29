@@ -52,8 +52,8 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
-                        <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" required id="ddlBahagian" disabled>
-                            @foreach (var s in ViewBag.JBahagian)
+                        <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" required id="ddlBahagian">
+                            @foreach (var s in ViewBag.JBahagianUbah)
                             {
                                 <option value="@s.Id">@s.Kod - @s.Perihal </option>
                             }

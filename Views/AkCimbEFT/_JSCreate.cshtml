@@ -31,6 +31,8 @@
 
     // jana kelompok
     function JanaKelompok() {
+        $(".loading").prop('hidden', false);
+        var loading = 0;
         var tarDari = $("#TarDari").val();
         var tarHingga = $("#TarHingga").val();
 
@@ -67,13 +69,17 @@
                         $("table tbody#tbodyBaucer").append(str);
                         sum += item1.amaun;
                         bil++;
+                        
                     }
                 }
                 jumlah.val(sum.toFixed(2));
                 bilBaucer.val(bil);
+
+                $(".loading").prop('hidden', true);
             },
             error: function (req, status, error) {
                 alert(error);
+                $(".loading").prop('hidden', true);
             }
         });
     }

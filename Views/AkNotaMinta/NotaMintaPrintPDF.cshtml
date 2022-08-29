@@ -20,6 +20,18 @@
         font-weight: normal
     }
 
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+
     .max-lines {
         display: block; /* or inline-block */
         text-overflow: ellipsis;
@@ -108,8 +120,6 @@
     </div>
 </div>
 
-
-
 <br />
 <div class="table-responsive-sm mb-0">
     <table class="table table-bordered table-sm topic">
@@ -133,7 +143,7 @@
             }
             else
             {
-               @foreach (var item in Model.AkNotaMinta.AkNotaMinta2)
+                @foreach (var item in Model.AkNotaMinta.AkNotaMinta2)
                 {
                     <tr>
                         <td class="text-left">@item.Bil</td>
@@ -143,9 +153,9 @@
                         <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
                     </tr>
 
-                } 
+                }
             }
-            
+
             <tr class="font-weight-bold">
                 <td class="text-right text-uppercase" colspan="4">Jumlah RM</td>
                 <td class="text-right">@Convert.ToDecimal(Model.JumlahPerihal).ToString("#,##0.00")</td>
@@ -184,7 +194,6 @@
     </div>
 </div>
 
-<br />
 <div class="table-responsive-sm mb-0">
     <table class="table table-bordered table-sm topic">
         <tbody>
@@ -231,14 +240,12 @@
 
 @if (Model.AkNotaMinta.AkNotaMinta2.Count() >= 10)
 {
-    <div class="table-responsive-sm mb-0">
+    <p class="breakhere"></p>
         <table class="table table-bordered table-sm topic">
             <thead class="text-center">
                 <tr>
                     <th colspan="5">LAMPIRAN</th>
                 </tr>
-            </thead>
-            <tbody>
                 <tr style="line-height:0.8rem;">
                     <td class="text-center font-weight-bold" width="5%">BIL  </td>
                     <td class="text-center font-weight-bold" width="55%">BUTIR-BUTIR</td>
@@ -246,6 +253,9 @@
                     <td class="text-center font-weight-bold" width="7%">HARGA SEUNIT RM</td>
                     <td class="text-center font-weight-bold" width="7%">AMAUN RM</td>
                 </tr>
+            </thead>
+            <tbody>
+                
 
                 @foreach (var item in Model.AkNotaMinta.AkNotaMinta2)
                 {
@@ -257,12 +267,11 @@
                         <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
                     </tr>
 
-                } 
+                }
                 <tr class="font-weight-bold">
                     <td class="text-right text-uppercase" colspan="4">Jumlah RM</td>
                     <td class="text-right">@Convert.ToDecimal(Model.JumlahPerihal).ToString("#,##0.00")</td>
                 </tr>
             </tbody>
         </table>
-    </div>
 }
