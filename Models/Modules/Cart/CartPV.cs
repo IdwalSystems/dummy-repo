@@ -7,7 +7,7 @@ namespace MSNK.Models.Modules.Cart
 {
     public class CartPV
     {
-        //Belian 1
+        //PV 1
 
         private List<AkPV1> collection1 = new List<AkPV1>();
 
@@ -39,9 +39,9 @@ namespace MSNK.Models.Modules.Cart
         public virtual void Clear1() => collection1.Clear();
 
         public virtual IEnumerable<AkPV1> Lines1 => collection1;
-        // Belian1 End
+        // PV 1 End
 
-        //Belian 2
+        //PV 2
         private List<AkPV2> collection2 = new List<AkPV2>();
 
         public virtual void AddItem2(
@@ -71,6 +71,60 @@ namespace MSNK.Models.Modules.Cart
         public virtual void Clear2() => collection2.Clear();
 
         public virtual IEnumerable<AkPV2> Lines2 => collection2;
-        // Belian 2 end
+        // PV 2 end
+
+        //PVGanda 2
+        private List<AkPVGanda> collectionGanda = new List<AkPVGanda>();
+
+        public virtual void AddItemGanda(
+            int akPVId,
+            int indek,
+            int flKategoriPenerima,
+            int? suPekerjaId,
+            int? suAtletId,
+            int? suJurulatihId,
+            string nama,
+            string noKP,
+            string noAkaun,
+            int jBankId,
+            JBank jBank,
+            decimal amaun,
+            string noCekAtauEFT,
+            DateTime? tarCekAtauEFT,
+            int jCaraBayarId,
+            JCaraBayar jCaraBayar
+            )
+        {
+
+            {
+                collectionGanda.Add(new AkPVGanda
+                {
+                    AkPVId = akPVId,
+                    Indek = indek,
+                    FlKategoriPenerima = flKategoriPenerima,
+                    SuPekerjaId = suPekerjaId,
+                    SuAtletId = suAtletId,
+                    SuJurulatihId = suJurulatihId,
+                    Nama = nama,
+                    NoKp = noKP,
+                    NoAkaun = noAkaun,
+                    JBankId = jBankId,
+                    JBank = jBank,
+                    Amaun = amaun,
+                    NoCekAtauEFT = noCekAtauEFT,
+                    TarCekAtauEFT = tarCekAtauEFT,
+                    JCaraBayarId = jCaraBayarId,
+                    JCaraBayar = jCaraBayar
+                });
+            }
+        }
+
+        public virtual void RemoveItemGanda(int id) =>
+            collectionGanda.RemoveAll(l => l.Indek == id);
+
+
+        public virtual void ClearGanda() => collectionGanda.Clear();
+
+        public virtual IEnumerable<AkPVGanda> LinesGanda => collectionGanda;
     }
 }

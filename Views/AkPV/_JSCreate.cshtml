@@ -1,5 +1,72 @@
 ﻿<script type="text/javascript">
 
+        // on change kod pembekal
+    $("body").on('change', "#moGandaAnggota, #moGandaAtlet, #moGandaJurulatih", function () {
+
+        var kodPenerima = "0";
+        var kategoriPenerima = $('input[name="FlKategoriPenerima"]:checked').val();
+        var url = '';
+
+        switch (kategoriPenerima) {
+            case "1":
+                kodPenerima = $("#moGandaAnggota").val();
+                url = '@Url.Action("JsonGetPekerja", "AkPV")'
+                break;
+            case "2":
+                kodPenerima = $("#moGandaAtlet").val();
+                url = '@Url.Action("JsonGetAtlet", "AkPV")'
+                break;
+            case "3":
+                kodPenerima = $("#moGandaJurulatih").val();
+                url = '@Url.Action("JsonGetJurulatih", "AkPV")'
+                break;
+        }
+
+        if (kodPenerima != null) {
+            JsonModalKodPenerima(kodPenerima, kategoriPenerima, url);
+        } else {
+            //enable field
+            $("#moGandaNoKP").prop('readonly', false);
+            $("#moGandaNama").prop('readonly', false);
+            $("#moGandaNoAkaun").prop('readonly', false);
+
+            //empty field
+            $("#moGandaNoKP").val('');
+            $("#moGandaNama").val('');
+            $("#moGandaCaraBayar").val(0).change();
+            $("#moGandaBank").val(0).change();
+            $("#moGandaNoAkaun").val('');
+            $("#moGandaNoCekEFT").val('');
+            $("moGandaTarCekEFT").val('');
+            $("moGandaAmaun").val('');
+
+        }
+
+    });
+
+    function JsonModalKodPenerima(kodPenerima, kategoriPenerima, url) {
+        if (kodPenerima != '0') {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { data: kodPenerima },
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.record != null) {
+
+                        $("#moGandaNoKP").val(msg.record.noKp);
+                        $("#moGandaNama").val(msg.record.nama);
+                        $("#moGandaNoAkaun").val(msg.record.noAkaun ?? msg.record.noAkaunBank);
+                        $("#moGandaCaraBayar").val(msg.record.jCaraBayarId).change();
+                        $("#moGandaBank").val(msg.record.jBankId).change();
+                    }
+
+                }
+            });
+        }
+    }
+    //on change Kod Pembekal end
+
     // on change no Rujukan
     $("body").on('change', "#ddlKW , #Tarikh", function () {
         var kodkw = $("#ddlKW").val();
@@ -591,23 +658,50 @@
         var value = $("#ddlJCaraBayar option:selected");
         $("#txtNoCekAtauEFT").val("");
         $("#txtTarCekAtauEFT").val("");
-        if (value.text().indexOf("C -") >= 0 || value.text().indexOf("E -") >= 0 || value.text().indexOf("JP -") >= 0) {
+
+        if (value.text().indexOf("C -") >= 0 || value.text().indexOf("JP -") >= 0) {
             $("#txtNoCekAtauEFT").prop('disabled', false);
             $("#txtTarCekAtauEFT").prop('disabled', false);
             $("#ddlJBank").prop('disabled', false);
-            if (value.text().indexOf("E -") >= 0) {
-                $("#ddlJBank").prop('required', true);
-            }
-            else {
-                $("#ddlJBank").prop('required', false);
-            }
+
         } else {
             $("#txtNoCekAtauEFT").prop('disabled', true);
             $("#txtTarCekAtauEFT").prop('disabled', true);
             $("#ddlJBank").prop('disabled', true);
         }
+        if (value.text().indexOf("E -") >= 0) {
+            $("#ddlJBank").prop('disabled', false);
+            $("#ddlJBank").prop('required', true);
+        }
+        else {
+            $("#ddlJBank").prop('required', false);
+        }
     });
     //on change Cara Bayaran end
+
+    // on change Modal Ganda Cara Bayaran
+    $("body").on('change', "#moGandaCaraBayar", function () {
+        var value = $("#moGandaCaraBayar option:selected");
+        $("#moGandaNoCekEFT").val("");
+        $("#moGandaTarCekEFT").val("");
+        if (value.text().indexOf("C -") >= 0 || value.text().indexOf("JP -") >= 0) {
+            $("#moGandaNoCekEFT").prop('disabled', false);
+            $("#moGandaTarCekEFT").prop('disabled', false);
+            $("#moGandaBank").prop('disabled', false);
+
+        } else {
+            if (value.text().indexOf("E -") >= 0) {
+                $("#moGandaBank").prop('disabled', false);
+            } else {
+                $("#moGandaBank").prop('disabled', true);
+            }
+
+            $("#moGandaNoCekEFT").prop('disabled', true);
+            $("#moGandaTarCekEFT").prop('disabled', true);
+
+        }
+    });
+    //on change Modal Ganda Cara Bayaran end
 
     // on change kod Pekerja
     $("body").on('change', "#ddlKodPekerja", function () {
@@ -768,13 +862,22 @@
 
         });
 
-        // on change jenis baucer
+        // on change radio jenis baucer
         $('input[type=radio][name=FlJenisBaucer]').on('change', function () {
             $("#ddlPendahuluanPelbagai").val(0).change();
             $("#ddlSuProfil").val(0).change();
             $("#ddlKodPembekal").val(0).change();
             $("#ddlTunaiRuncit").val(0).change();
             $("#txtPerihal").val("");
+
+            let radioOptionTrue = jQuery('input[type=radio][name=IsGanda][value=true]');
+            let radioOptionFalse = jQuery('input[type=radio][name=IsGanda][value=false]');
+
+            radioOptionTrue.prop("checked", false);
+            radioOptionFalse.prop("checked", true);
+
+            ToggleGanda('hide');
+
             EmptyCart();
             switch ($(this).val()) {
                 case "0":
@@ -797,18 +900,23 @@
                 case "6":
                     $("#divPembekal").prop('hidden', true);
                     $("#cardSuProfil").removeAttr('hidden');
+
+
+                    radioOptionTrue.prop("checked", true);
+                    radioOptionFalse.prop("checked", false);
+                    ToggleGanda('show');
+
                     break;
             }
         });
-        //on change jenis baucer end
+        //on change radio jenis baucer end
 
-        // on change jenis baucer
+        // on change radio AKB
         $('input[type=radio][name=IsAKB]').on('change', function () {
             var tahun = new Date().getFullYear().toString();
             var tahunAKB = (parseInt(tahun) - 1).toString();
             EmptyCart();
             $("#txtPerihal").val("");
-            EmptyCart();
             switch ($(this).val()) {
                 case "false":
                     $("#txtTahun").val(tahun);
@@ -820,11 +928,128 @@
                     break;
             }
         });
-        //on change jenis baucer end
+        //on change radio AKB end
+
+        // on change radio Ganda
+        $('input[type=radio][name=IsGanda]').on('change', function () {
+            //empty field
+
+            $("#txtAlamat1").val('');
+            $("#txtAlamat2").val('');
+            $("#txtAlamat3").val('');
+            $("#txtNoAkaunBank").val('');
+            $("#txtTelefon").val('');
+            $("#txtEmel").val('');
+            $("#ddlKodPembekal").val(0).change();
+
+            EmptyCart();
+            switch ($(this).val()) {
+                case "false":
+                    ToggleGanda('hide');
+                    break;
+                case "true":
+                    ToggleGanda('show');
+                    break;
+            }
+
+            $("#ddlJBank").prop('disabled', false);
+            $("#txtNoCekAtauEFT").prop('disabled', false);
+            $("#txtTarCekAtauEFT").prop('disabled', false);
+        });
+        //on change radio Ganda end
+
+        // on change radio Kategori Penerima
+        $('input[type=radio][name=FlKategoriPenerima]').on('change', function () {
+            //empty field
+
+            $("#moGandaNoKP").val('');
+            $("#moGandaNama").val('');
+            $("#moGandaNoAkaun").val('');
+            $("#moGandaAmaun").val("0.00");
+
+            $("#moGandaCaraBayar").val(0).change();
+            $("#moGandaBank").val(0).change();
+
+
+            switch ($(this).val()) {
+                case "1":
+                    $("#moGandaAtlet").val(0).change();
+                    $("#moGandaJurulatih").val(0).change();
+
+                    $("#modalGandaAnggota").prop('hidden', false);
+                    $("#modalGandaAtlet").prop('hidden', true);
+                    $("#modalGandaJurulatih").prop('hidden', true);
+
+                    $("#moGandaNoKP").prop('readonly', true);
+                    $("#moGandaNama").prop('readonly', true);
+                    $("#moGandaNoAkaun").prop('readonly', true);
+                    break;
+                case "2":
+                    $("#moGandaAnggota").val(0).change();
+                    $("#moGandaJurulatih").val(0).change();
+
+                    $("#modalGandaAnggota").prop('hidden', true);
+                    $("#modalGandaAtlet").prop('hidden', false);
+                    $("#modalGandaJurulatih").prop('hidden', true);
+
+                    $("#moGandaNoKP").prop('readonly', true);
+                    $("#moGandaNama").prop('readonly', true);
+                    $("#moGandaNoAkaun").prop('readonly', true);
+                    break;
+                case "3":
+                    $("#moGandaAnggota").val(0).change();
+                    $("#moGandaAtlet").val(0).change();
+
+                    $("#modalGandaAnggota").prop('hidden', true);
+                    $("#modalGandaAtlet").prop('hidden', true);
+                    $("#modalGandaJurulatih").prop('hidden', false);
+
+                    $("#moGandaNoKP").prop('readonly', true);
+                    $("#moGandaNama").prop('readonly', true);
+                    $("#moGandaNoAkaun").prop('readonly', true);
+                    break;
+                case "0":
+                    $("#moGandaAnggota").val(0).change();
+                    $("#moGandaAtlet").val(0).change();
+                    $("#moGandaJurulatih").val(0).change();
+
+                    $("#modalGandaAnggota").prop('hidden', true);
+                    $("#modalGandaAtlet").prop('hidden', true);
+                    $("#modalGandaJurulatih").prop('hidden', true);
+
+                    $("#moGandaNoKP").prop('readonly', false);
+                    $("#moGandaNama").prop('readonly', false);
+                    $("#moGandaNoAkaun").prop('readonly', false);
+                    break;
+            }
+        });
+        //on change radio Ganda end
 
     });
     //validation form end
 
+    function ToggleGanda(cond) {
+        if (cond == 'hide') {
+            $("#txtNoKP").val('');
+            $("#Nama").val('');
+            $("#ddlJCaraBayar").val(0).change();
+            $("#ddlJBank").val(0).change();
+
+            $("#divPembekal").prop('hidden', false);
+            $("#cardGanda").prop('hidden', true);
+            $("#cardMaklumat").prop('hidden', false);
+        } else {
+            $("#txtNoKP").val('-');
+            $("#Nama").val('Baucer Berganda');
+            $("#ddlJCaraBayar").val(9999).change();
+            $("#ddlJBank").val(9999).change();
+
+            $("#divPembekal").prop('hidden', true);
+            $("#cardGanda").prop('hidden', false);
+            $("#cardMaklumat").prop('hidden', true);
+        }
+
+    }
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
@@ -1415,6 +1640,358 @@
         });
     };
     //update tbl Inbois end
+
+    // add tbl Ganda
+    var bil = $('#tblGanda tr').length;
+    if (bil == 0) {
+        bil = 1;
+    }
+
+    $("body").on("click", "#btnAdd3", function () {
+        //Reference the Name and Country TextBoxes.
+        $("#modalAdd3").prop('hidden', false);
+        $("#modalUpdate3").prop('hidden', true);
+    });
+
+    function modalAdd3() {
+        var indek = bil;
+        //var moIndek = $("#moIndek").val();
+        //if (moIndek != "") {
+        //    indek = moIndek;
+        //}
+        var kategoriPenerima = $('input[name="FlKategoriPenerima"]:checked').val();
+        var pekerjaId = $("#moGandaAnggota").val();
+        var atletId = $("#moGandaAtlet").val();
+        var jurulatihId = $("#moGandaJurulatih").val();
+        var noKP = $("#moGandaNoKP").val();
+        var nama = $("#moGandaNama").val();
+        var caraBayarId = $("#moGandaCaraBayar").val();
+        var bankId = $("#moGandaBank").val();
+        var noAkaun = $("#moGandaNoAkaun").val();
+        var noCekEFT = $("#moGandaNoCekEFT").val();
+        var tarCekEFT = $("#moGandaTarCekEFT").val();
+        var amaun = $("#moGandaAmaun").val();
+        var jumlah = $("#jumlahGanda");
+
+        var AkPVGanda = {
+            Indek: indek,
+            FlKategoriPenerima: kategoriPenerima,
+            SuPekerjaId: pekerjaId,
+            SuAtletId: atletId,
+            SuJurulatihId: jurulatihId,
+            NoKp: noKP,
+            Nama: nama,
+            JCaraBayarId: caraBayarId,
+            JBankId: bankId,
+            NoAkaun: noAkaun,
+            NoCekAtauEFT: noCekEFT,
+            TarCekAtauEFT: tarCekEFT,
+            Amaun: amaun
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveCartAkPVGanda", "AkPV")',
+            data: AkPVGanda,
+            dataType: "json",
+            success: function (r) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetAllItemCartAkPVGanda", "AkPV")',
+                    dataType: "json",
+                    success: function (r) {
+
+                        //refresh updated table Ganda
+                        $("table tbody#tbodyGanda").empty();
+                        var sum = 0;
+                        if (r.record.length > 0) {
+                            for (var i = 0; i < r.record.length; i++) {
+                                var item1 = r.record[i];
+                                var tarSlip = "";
+                                if (item1.tarCekAtauEFT == null) {
+                                } else {
+                                    tarSlip = showDate(item1.tarCekAtauEFT);
+                                }
+                                var noSlip = "";
+                                if (item1.noCekAtauEFT == null) {
+                                } else {
+                                    noSlip = item1.noCekAtauEFT;
+                                }
+                                var penerimaId = "";
+                                var kategoriPenerima = "";
+                                switch (item1.flKategoriPenerima) {
+                                    case 1:
+                                        kategoriPenerima = "ANGGOTA";
+                                        penerimaId = item1.suPekerjaId;
+                                        break;
+                                    case 2:
+                                        kategoriPenerima = "ATLET";
+                                        penerimaId = item1.suAtletId;
+                                        break;
+                                    case 3:
+                                        kategoriPenerima = "JURULATIH";
+                                        penerimaId = item1.suJurulatihId;
+                                        break;
+                                    case 0:
+                                        kategoriPenerima = "LAIN";
+                                        penerimaId = "";
+                                        break;
+                                }
+                                var str = "<tr><td hidden>" + item1.indek +
+                                    "</td><td class='text-left text-uppercase'>" + kategoriPenerima +
+                                    "</td><td class='text-left'>" + penerimaId +
+                                    "</td><td class='text-left'>" + item1.noKp +
+                                    "</td><td class='text-left text-uppercase'>" + item1.nama +
+                                    "</td><td class='text-left text-uppercase'>" + item1.jCaraBayar.perihal +
+                                    "</td><td class='text-left text-uppercase'>" + item1.jBank.kod +
+                                    "</td><td class='text-left'>" + item1.noAkaun +
+                                    "</td><td class='text-left'>" + noSlip +
+                                    "</td><td class='text-center'>" + tarSlip +
+                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                                    "</td><td>" +
+                                    "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate3' data-toggle='modal' data-target='#modalGanda' onclick='Update3(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "</td><td>" +
+                                    "<button class='btn ac-danger btn-sm' type='button' id='btnRemove3' onclick='Remove3(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "</td><tr>";
+                                $("table tbody#tbodyGanda").append(str);
+                                sum += item1.amaun;
+                            }
+                            bil++;
+                        }
+                        jumlah.val(sum.toFixed(2));
+                    }
+                });
+            }
+        });
+
+        $("#modalGanda").modal('hide');
+    }
+    // add tbl Ganda end
+
+    // update tbl Ganda
+    function Update3(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var indek = $("TD", row).eq(0).html();
+
+        var AkPVGanda = {
+            Indek: indek
+        }
+        $.ajax({
+            type: "POST",
+            //url: "/AkBelian/GetAnItemCartAkBelian2",
+            url: '@Url.Action("GetAnItemCartAkPVGanda", "AkPV")',
+            data: AkPVGanda,
+            dataType: "json",
+            success: function (r) {
+                //insert data in modal perihal
+                $("#moIndek").val(r.record.indek);
+                switch (r.record.flKategoriPenerima) {
+                    case 1:
+                        $("#FlKategoriPenerima1").prop("checked", true);
+
+                        $("#moGandaAnggota").val(r.record.suPekerjaId).change();
+                        $("#moGandaAtlet").val(0).change();
+                        $("#moGandaJurulatih").val(0).change();
+
+                        $("#modalGandaAnggota").prop('hidden', false);
+                        $("#modalGandaAtlet").prop('hidden', true);
+                        $("#modalGandaJurulatih").prop('hidden', true);
+                        break;
+                    case 2:
+                        $("#FlKategoriPenerima2").prop("checked", true);
+
+                        $("#moGandaAnggota").val(0).change();
+                        $("#moGandaAtlet").val(r.record.suAtletId).change();
+                        $("#moGandaJurulatih").val(0).change();
+
+                        $("#modalGandaAnggota").prop('hidden', true);
+                        $("#modalGandaAtlet").prop('hidden', false);
+                        $("#modalGandaJurulatih").prop('hidden', true);
+                        break;
+                    case 3:
+                        $("#FlKategoriPenerima3").prop("checked", true);
+
+                        $("#moGandaAnggota").val(0).change();
+                        $("#moGandaAtlet").val(0).change();
+                        $("#moGandaJurulatih").val(r.record.suJurulatihId).change();
+
+                        $("#modalGandaAnggota").prop('hidden', true);
+                        $("#modalGandaAtlet").prop('hidden', true);
+                        $("#modalGandaJurulatih").prop('hidden', false);
+                        break;
+                    case 0:
+                        $("#FlKategoriPenerima0").prop("checked", true);
+
+                        $("#moGandaAnggota").val(0).change();
+                        $("#moGandaAtlet").val(0).change();
+                        $("#moGandaJurulatih").val(0).change();
+
+                        $("#modalGandaAnggota").prop('hidden', true);
+                        $("#modalGandaAtlet").prop('hidden', true);
+                        $("#modalGandaJurulatih").prop('hidden', true);
+                        break;
+                }
+                $("#moGandaNoKP").val(r.record.noKp);
+                $("#moGandaNama").val(r.record.nama);
+                $("#moGandaCaraBayar").val(r.record.jCaraBayarId).change();
+                $("#moGandaBank").val(r.record.jBankId).change();
+                $("#moGandaNoAkaun").val(r.record.noAkaun);
+                $("#moGandaNoCekEFT").val(r.record.noCekAtauEFT);
+                $("#moGandaTarCekEFT").val(r.record.tarCekAtauEFT);
+                $("#moGandaAmaun").val(r.record.amaun.toFixed(2));
+
+                //show modal perihal
+                $("#modalGanda").modal({ backdrop: 'static', keyboard: false });
+                $("#modalAdd3").prop('hidden', true);
+                $("#modalUpdate3").prop('hidden', false);
+            }
+        });
+    };
+
+    function modalUpdate3() {
+        var indek = $("#moIndek").val();
+        var kategoriPenerima = $('input[name="FlKategoriPenerima"]:checked').val();
+        var pekerjaId = $("#moGandaAnggota").val();
+        var atletId = $("#moGandaAtlet").val();
+        var jurulatihId = $("#moGandaJurulatih").val();
+        var noKP = $("#moGandaNoKP").val();
+        var nama = $("#moGandaNama").val();
+        var caraBayarId = $("#moGandaCaraBayar").val();
+        var bankId = $("#moGandaBank").val();
+        var noAkaun = $("#moGandaNoAkaun").val();
+        var noCekEFT = $("#moGandaNoCekEFT").val();
+        var tarCekEFT = $("#moGandaTarCekEFT").val();
+        var amaun = $("#moGandaAmaun").val();
+        var jumlah = $("#jumlahGanda");
+
+        var AkPVGanda = {
+            Indek: indek,
+            FlKategoriPenerima: kategoriPenerima,
+            SuPekerjaId: pekerjaId,
+            SuAtletId: atletId,
+            SuJurulatihId: jurulatihId,
+            NoKp: noKP,
+            Nama: nama,
+            JCaraBayarId: caraBayarId,
+            JBankId: bankId,
+            NoAkaun: noAkaun,
+            NoCekAtauEFT: noCekEFT,
+            TarCekAtauEFT: tarCekEFT,
+            Amaun: amaun
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveCartAkPVGanda", "AkPV")',
+            data: AkPVGanda,
+            dataType: "json",
+            success: function (r) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetAllItemCartAkPVGanda", "AkPV")',
+                    dataType: "json",
+                    success: function (r) {
+
+                        //refresh updated table Ganda
+                        $("table tbody#tbodyGanda").empty();
+                        var sum = 0;
+                        if (r.record.length > 0) {
+                            for (var i = 0; i < r.record.length; i++) {
+                                var item1 = r.record[i];
+                                var tarSlip = "";
+                                if (item1.tarCekAtauEFT == null) {
+                                } else {
+                                    tarSlip = showDate(item1.tarCekAtauEFT);
+                                }
+                                var noSlip = "";
+                                if (item1.noCekAtauEFT == null) {
+                                } else {
+                                    noSlip = item1.noCekAtauEFT;
+                                }
+                                var penerimaId = "";
+                                var kategoriPenerima = "";
+                                switch (item1.flKategoriPenerima) {
+                                    case 1:
+                                        kategoriPenerima = "ANGGOTA";
+                                        penerimaId = item1.suPekerjaId;
+                                        break;
+                                    case 2:
+                                        kategoriPenerima = "ATLET";
+                                        penerimaId = item1.suAtletId;
+                                        break;
+                                    case 3:
+                                        kategoriPenerima = "JURULATIH";
+                                        penerimaId = item1.suJurulatihId;
+                                        break;
+                                    case 0:
+                                        kategoriPenerima = "LAIN";
+                                        penerimaId = "";
+                                        break;
+                                }
+                                var str = "<tr><td hidden>" + item1.indek +
+                                    "</td><td class='text-left text-uppercase'>" + kategoriPenerima +
+                                    "</td><td class='text-left'>" + penerimaId +
+                                    "</td><td class='text-left'>" + item1.noKp +
+                                    "</td><td class='text-left text-uppercase'>" + item1.nama +
+                                    "</td><td class='text-left text-uppercase'>" + item1.jCaraBayar.perihal +
+                                    "</td><td class='text-left text-uppercase'>" + item1.jBank.kod +
+                                    "</td><td class='text-left'>" + item1.noAkaun +
+                                    "</td><td class='text-left'>" + noSlip +
+                                    "</td><td class='text-center'>" + tarSlip +
+                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                                    "</td><td>" +
+                                    "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate3' data-toggle='modal' data-target='#modalGanda' onclick='Update3(this)'><i class='fa fa-edit' ></i></button>" +
+                                    "</td><td>" +
+                                    "<button class='btn ac-danger btn-sm' type='button' id='btnRemove3' onclick='Remove3(this)'><i class='fas fa-trash' ></i></button>" +
+                                    "</td><tr>";
+                                $("table tbody#tbodyGanda").append(str);
+                                sum += item1.amaun;
+                            }
+                            bil++;
+                        }
+                        jumlah.val(sum.toFixed(2));
+                    }
+                });
+            }
+        });
+
+        $("#modalGanda").modal('hide');
+    }
+    // update tbl Ganda end
+
+    //remove tbl Ganda
+    function Remove2(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var indek = $("TD", row).eq(0).html();
+        var name = $("TD", row).eq(5).html();
+        var amaun = $("TD", row).eq(10).html();
+        var JumlahGanda = $("#jumlahGanda");
+        if (confirm("Hapus : " + name + " ?")) {
+            //Get the reference of the Table.
+            var table = $("#tblPerihal")[0];
+
+            var sum = 0;
+            sum = parseFloat(JumlahGanda.val()) - parseFloat(amaun);
+            JumlahGanda.val(sum);
+
+            var AkPVGanda = {
+                Indek: indek,
+            }
+            if (name != null) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("RemoveAkPVGanda", "AkPV")',
+                    data: AkPVGanda,
+                    dataType: "json",
+                    success: function (r) {
+                        //Delete the Table row using it's Index.
+                        table.deleteRow(row[0].rowIndex);
+                    }
+                });
+            }
+        }
+    };
+    //remove tbl perihal end
 
     function displayObjekList(data) {
         $("table tbody#tbodyObjek").empty();

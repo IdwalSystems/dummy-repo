@@ -83,6 +83,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Kategori Penerima")]
         public int FlKategoriPenerima { get; set; }
         public bool denganTanggungan { get; set; }
+        public bool IsGanda { get; set; }
         public bool IsAKB { get; set; }
         //flag end
 
@@ -118,9 +119,8 @@ namespace MSNK.Models.Modules
         public int? AkPembekalId { get; set; }
         [DisplayName("Kod Anggota")]
         public int? SuPekerjaId { get; set; }
-        [Required(ErrorMessage = "Cara Bayaran Diperlukan.")]
         [DisplayName("Cara Bayaran")]
-        public int JCaraBayarId { get; set; }
+        public int? JCaraBayarId { get; set; }
         [DisplayName("Kod Kaunter Panjar")]
         public int? AkTunaiRuncitId { get; set; }
         [DisplayName("No Permohonan Aktiviti")]
@@ -144,6 +144,7 @@ namespace MSNK.Models.Modules
         public SuProfil SuProfil { get;set; }
         public ICollection<AkPV1> AkPV1 { get; set; }
         public ICollection<AkPV2> AkPV2 { get; set; }
+        public ICollection<AkPVGanda> AkPVGanda { get; set; }
         public ICollection<AkCimbEFT1> AkCimbEFT1 { get; set; }
         public int? AkPadananPenyataId { get; set; }
         public AkPadananPenyata AkPadananPenyata { get; set; }

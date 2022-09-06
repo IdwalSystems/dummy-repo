@@ -50,6 +50,7 @@ namespace MSNK.Data
         public DbSet<AkPV> AkPV { get; set; }
         public DbSet<AkPV1> AkPV1 { get; set; }
         public DbSet<AkPV2> AkPV2 { get; set; }
+        public DbSet<AkPVGanda> AkPVGanda { get; set; }
         public DbSet<SuPekerja> SuPekerja { get; set; }
         public DbSet<SuTanggunganPekerja> SuTanggunganPekerja { get; set; }
         public DbSet<SuAtlet> SuAtlet { get; set; }
@@ -477,6 +478,24 @@ namespace MSNK.Data
                     .WithMany(t => t.AkPV)
                     .HasForeignKey(m => m.JBahagianId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AkPV>()
+                .HasOne(m => m.JCaraBayar!)
+                .WithMany(t => t.AkPV)
+                .HasForeignKey(m => m.JCaraBayarId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkPVGanda>()
+                .HasOne(m => m.JCaraBayar!)
+                .WithMany(t => t.AkPVGanda)
+                .HasForeignKey(m => m.JCaraBayarId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<AkPVGanda>()
+                .HasOne(m => m.JBank!)
+                .WithMany(t => t.AkPVGanda)
+                .HasForeignKey(m => m.JBankId)
+                .OnDelete(DeleteBehavior.NoAction);
             //AKPV end
 
             //Biz Channel (CIMB EFT)

@@ -84,6 +84,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkCimbEFT> AkCimbEFT { get; set; }
         public ICollection<AkCimbEFT1> AkCimbEFT1 { get; set; }
         public ICollection<AkPenyataPemungut> AkPenyataPemungut { get; set; }
+        public ICollection<AkPVGanda> AkPVGanda { get; set; }
         //relationship end
 
         //soft delete

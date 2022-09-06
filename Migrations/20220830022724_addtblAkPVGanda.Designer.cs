@@ -4,14 +4,16 @@ using MSNK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220830022724_addtblAkPVGanda")]
+    partial class addtblAkPVGanda
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1904,7 +1906,7 @@ namespace MSNK.Migrations
                     b.Property<int?>("JBankId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("JCaraBayarId")
+                    b.Property<int>("JCaraBayarId")
                         .HasColumnType("int");
 
                     b.Property<int>("JKWId")
@@ -5573,7 +5575,8 @@ namespace MSNK.Migrations
                     b.HasOne("MSNK.Models.Modules.JCaraBayar", "JCaraBayar")
                         .WithMany("AkPV")
                         .HasForeignKey("JCaraBayarId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MSNK.Models.Modules.JKW", "JKW")
                         .WithMany("AkPV")
@@ -5676,7 +5679,7 @@ namespace MSNK.Migrations
                     b.HasOne("MSNK.Models.Modules.JBank", "JBank")
                         .WithMany("AkPVGanda")
                         .HasForeignKey("JBankId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MSNK.Models.Modules.JCaraBayar", "JCaraBayar")

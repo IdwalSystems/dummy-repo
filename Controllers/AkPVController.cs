@@ -35,6 +35,8 @@ namespace MSNK.Controllers
         private readonly IRepository<AkBelian, int, string> _akBelianRepo;
         private readonly IRepository<AkPembekal, int, string> _akPembekalRepo;
         private readonly IRepository<SuPekerja, int, string> _suPekerjaRepo;
+        private readonly IRepository<SuAtlet, int, string> _suAtletRepo;
+        private readonly IRepository<SuJurulatih, int, string> _suJurulatihRepo;
         private readonly IRepository<AkTunaiRuncit, int, string> _akTunaiRuncitRepo;
         private readonly IRepository<AkTunaiLejar, int, string> _akTunaiLejarRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;
@@ -47,6 +49,8 @@ namespace MSNK.Controllers
         private readonly IRepository<SuProfil, int, string> _suProfilRepo;
         private readonly IRepository<JPenyemak, int, string> _penyemakRepo;
         private readonly IRepository<JPelulus, int, string> _pelulusRepo;
+        private readonly IRepository<JBank, int, string> _jBankRepo;
+        private readonly IRepository<JCaraBayar, int, string> _jCaraBayarRepo;
         private CartPV _cart;
 
         public AkPVController(
@@ -59,6 +63,8 @@ namespace MSNK.Controllers
             IRepository<AkBelian, int, string> akBelian,
             IRepository<AkPembekal, int, string> akPembekal,
             IRepository<SuPekerja, int, string> suPekerja,
+            IRepository<SuJurulatih, int, string> suJurulatih,
+            IRepository<SuAtlet, int, string> suAtlet,
             IRepository<AkTunaiRuncit, int, string> akTunaiRuncitRepository,
             IRepository<AkTunaiLejar, int, string> akTunaiLejarRepository,
             IRepository<JKW, int, string> kwRepo,
@@ -71,6 +77,8 @@ namespace MSNK.Controllers
             IRepository<SuProfil, int, string> suProfilRepo,
             IRepository<JPenyemak, int, string> penyemakRepo,
             IRepository<JPelulus, int, string> pelulusRepo,
+            IRepository<JBank, int, string> jBankRepo,
+            IRepository<JCaraBayar, int, string> jCaraBayarRepo,
             CartPV cart
             )
         {
@@ -83,6 +91,8 @@ namespace MSNK.Controllers
             _akBelianRepo = akBelian;
             _akPembekalRepo = akPembekal;
             _suPekerjaRepo = suPekerja;
+            _suAtletRepo = suAtlet;
+            _suJurulatihRepo = suJurulatih;
             _akTunaiRuncitRepo = akTunaiRuncitRepository;
             _akTunaiLejarRepo = akTunaiLejarRepository;
             _kwRepo = kwRepo;
@@ -95,6 +105,8 @@ namespace MSNK.Controllers
             _suProfilRepo = suProfilRepo;
             _penyemakRepo = penyemakRepo;
             _pelulusRepo = pelulusRepo;
+            _jBankRepo = jBankRepo;
+            _jCaraBayarRepo= jCaraBayarRepo;
             _cart = cart;
         }
         private async Task AddLogAsync(
@@ -206,7 +218,7 @@ namespace MSNK.Controllers
                     Tarikh = item.Tarikh,
                     Jumlah = item.Jumlah,
                     Penerima = item.Nama,
-                    CaraBayar = item.JCaraBayar.Perihal,
+                    CaraBayar = item.JCaraBayar?.Perihal ?? "PELBAGAI",
                     FlHapus = item.FlHapus,
                     FlPosting = item.FlPosting,
                     FlCetak = item.FlCetak,
@@ -237,6 +249,12 @@ namespace MSNK.Controllers
             ViewBag.JKw = kwList;
 
             List<JBank> bankList = _context.JBank.OrderBy(b => b.Nama).ToList();
+            bankList.Add(new JBank
+            {
+                Id = 9999,
+                Kod = "X",
+                Nama = "BERGANDA"
+            });
             ViewBag.JBank = bankList;
 
             List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.Where(x => x.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
@@ -302,6 +320,14 @@ namespace MSNK.Controllers
                 .OrderBy(b => b.NoGaji).ToList();
             ViewBag.SuPekerja = suPekerjaList;
 
+            List<SuJurulatih> suJurulatihList = _context.SuJurulatih
+                .OrderBy(b => b.NoKp).Where(b => b.FlStatus == 1).ToList();
+            ViewBag.SuJurulatih = suJurulatihList;
+
+            List<SuAtlet> suAtletList = _context.SuAtlet
+                .OrderBy(b => b.NoKp).Where(b => b.FlStatus == 1).ToList();
+            ViewBag.SuAtlet = suAtletList;
+
             List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
                 .Include(b => b.JParas)
                 .Where(b => b.JParas.Kod == "4")
@@ -316,6 +342,12 @@ namespace MSNK.Controllers
             ViewBag.AkBank = akBankList;
 
             List<JCaraBayar> jCaraBayarList = _context.JCaraBayar.Where(b => b.Kod == "C" || b.Kod == "E" || b.Kod == "JP").ToList();
+            jCaraBayarList.Add(new JCaraBayar
+            {
+                Id = 9999,
+                Kod = "X",
+                Perihal = "BERGANDA"
+            });
             ViewBag.JCaraBayar = jCaraBayarList;
 
         }
@@ -1044,6 +1076,131 @@ namespace MSNK.Controllers
 
         //function json Create akPV2 end
 
+        // get an item from cart akPVGanda
+        public JsonResult GetAnItemCartAkPVGanda(AkPVGanda akPVGanda)
+        {
+
+            try
+            {
+                AkPVGanda data = _cart.LinesGanda.Where(x => x.Indek == akPVGanda.Indek).FirstOrDefault();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get an item from cart akPVGanda end
+
+        //save cart akPVGanda
+        public async Task<JsonResult> SaveCartAkPVGanda(AkPVGanda akPVGanda)
+        {
+
+            try
+            {
+
+                var akT3 = _cart.LinesGanda.Where(x => x.Indek == akPVGanda.Indek).FirstOrDefault();
+
+                var user = _userManager.GetUserName(User);
+
+                if (akPVGanda.JBankId != 0)
+                {
+                    akPVGanda.JBank = await _jBankRepo.GetById(akPVGanda.JBankId);
+                }
+
+                if (akPVGanda.JCaraBayarId != 0)
+                {
+                    akPVGanda.JCaraBayar = await _jCaraBayarRepo.GetById(akPVGanda.JCaraBayarId);
+                }
+                if (akT3 != null)
+                {
+                    _cart.RemoveItemGanda(akPVGanda.Indek);
+
+                    _cart.AddItemGanda(akPVGanda.AkPVId,
+                                       akPVGanda.Indek,
+                                       akPVGanda.FlKategoriPenerima,
+                                       akPVGanda.SuPekerjaId,
+                                       akPVGanda.SuAtletId,
+                                       akPVGanda.SuJurulatihId,
+                                       akPVGanda.Nama,
+                                       akPVGanda.NoKp,
+                                       akPVGanda.NoAkaun,
+                                       akPVGanda.JBankId,
+                                       akPVGanda.JBank,
+                                       akPVGanda.Amaun,
+                                       akPVGanda.NoCekAtauEFT,
+                                       akPVGanda.TarCekAtauEFT,
+                                       akPVGanda.JCaraBayarId,
+                                       akPVGanda.JCaraBayar);
+                }
+                else
+                {
+                    _cart.AddItemGanda(akPVGanda.AkPVId,
+                                       akPVGanda.Indek,
+                                       akPVGanda.FlKategoriPenerima,
+                                       akPVGanda.SuPekerjaId,
+                                       akPVGanda.SuAtletId,
+                                       akPVGanda.SuJurulatihId,
+                                       akPVGanda.Nama,
+                                       akPVGanda.NoKp,
+                                       akPVGanda.NoAkaun,
+                                       akPVGanda.JBankId,
+                                       akPVGanda.JBank,
+                                       akPVGanda.Amaun,
+                                       akPVGanda.NoCekAtauEFT,
+                                       akPVGanda.TarCekAtauEFT,
+                                       akPVGanda.JCaraBayarId,
+                                       akPVGanda.JCaraBayar);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //save cart akPV2 end
+
+        // get all item from cart akPV2
+        public JsonResult GetAllItemCartAkPVGanda()
+        {
+
+            try
+            {
+                List<AkPVGanda> data = _cart.LinesGanda.OrderBy(b => b.Nama).ToList();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart akPVGanda end
+
+        // remove item from cart akPVGanda
+        public JsonResult RemoveAkPVGanda(AkPVGanda akPVGanda)
+        {
+
+            try
+            {
+                if (akPVGanda != null)
+                {
+
+                    _cart.RemoveItemGanda(akPVGanda.Indek);
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // remove item from cart akPVGanda end
+
         // GET: AkPV/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -1143,7 +1300,7 @@ namespace MSNK.Controllers
             akPVView.NoCekAtauEFT = akPV.NoCekAtauEFT;
             akPVView.TarCekAtauEFT = akPV.TarCekAtauEFT;
             akPVView.Perihal = akPV.Perihal;
-            akPVView.CaraBayar = akPV.JCaraBayar.Perihal;
+            akPVView.CaraBayar = akPV.JCaraBayar?.Perihal ?? "PELBAGAI";
             akPVView.FlPosting = akPV.FlPosting;
             akPVView.FlCetak = akPV.FlCetak;
             akPVView.FlHapus = akPV.FlHapus;
@@ -1161,6 +1318,12 @@ namespace MSNK.Controllers
                 akPVView.JumlahInbois += item.Amaun;
             }
             akPVView.AkPV2 = akPV.AkPV2;
+
+            foreach (AkPVGanda item in akPV.AkPVGanda)
+            {
+                akPVView.JumlahGanda += item.Amaun;
+            }
+            akPVView.AkPVGanda = akPV.AkPVGanda;
 
             PopulateTable(id);
             PopulateList();
@@ -1237,6 +1400,7 @@ namespace MSNK.Controllers
             {
                 _cart.Clear1();
                 _cart.Clear2();
+                _cart.ClearGanda();
 
                 return Json(new { result = "OK" });
             }
@@ -1368,6 +1532,40 @@ namespace MSNK.Controllers
             try
             {
                 var result = await _suPekerjaRepo.GetById(data);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change kod Pekerja controller end
+
+        // on change kod Pekerja controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetAtlet(int data)
+        {
+            try
+            {
+                var result = await _suAtletRepo.GetById(data);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change kod Pekerja controller end
+
+        // on change kod Pekerja controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetJurulatih(int data)
+        {
+            try
+            {
+                var result = await _suJurulatihRepo.GetById(data);
 
                 return Json(new { result = "OK", record = result });
             }
@@ -1550,7 +1748,6 @@ namespace MSNK.Controllers
                     m.JKWId = JKWId;
                     m.JBahagianId = JBahagianId;
 
-                    
                     if (FlJenisBaucer == 1)
                     {
                         if (AkPembekalId != null)
@@ -1638,6 +1835,20 @@ namespace MSNK.Controllers
 
                     m.AkPV1 = _cart.Lines1.ToArray();
                     m.AkPV2 = _cart.Lines2.ToArray();
+
+                    if (akPV.IsGanda == true)
+                    {
+                        m.JCaraBayarId = null;
+                        m.JBankId = null;
+                    }
+
+                    foreach (var item in _cart.LinesGanda)
+                    {
+                        item.JCaraBayar = null;
+                        item.JBank = null;
+                    }
+
+                    m.AkPVGanda = _cart.LinesGanda.ToArray();
 
                     // check for baki peruntukan
                     // if jenis baucer is Am / pembekal && its not pembekal,
@@ -1868,7 +2079,7 @@ namespace MSNK.Controllers
             akPVView.NoCekAtauEFT = akPV.NoCekAtauEFT;
             akPVView.TarCekAtauEFT = akPV.TarCekAtauEFT;
             akPVView.Perihal = akPV.Perihal;
-            akPVView.CaraBayar = akPV.JCaraBayar.Perihal;
+            akPVView.CaraBayar = akPV.JCaraBayar?.Perihal ?? "PELBAGAI";
             akPVView.FlPosting = akPV.FlPosting;
             akPVView.FlCetak = akPV.FlCetak;
             akPVView.FlHapus = akPV.FlHapus;
@@ -1881,6 +2092,12 @@ namespace MSNK.Controllers
                 akPVView.JumlahInbois += item.Amaun;
             }
             akPVView.AkPV2 = akPV.AkPV2;
+
+            foreach (AkPVGanda item in akPV.AkPVGanda)
+            {
+                akPVView.JumlahGanda += item.Amaun;
+            }
+            akPVView.AkPVGanda = akPV.AkPVGanda;
 
             CartEmpty();
             PopulateTable(id);
@@ -2341,7 +2558,7 @@ namespace MSNK.Controllers
             akPVView.NoCekAtauEFT = akPV.NoCekAtauEFT;
             akPVView.TarCekAtauEFT = akPV.TarCekAtauEFT;
             akPVView.Perihal = akPV.Perihal;
-            akPVView.CaraBayar = akPV.JCaraBayar.Perihal;
+            akPVView.CaraBayar = akPV.JCaraBayar?.Perihal ?? "PELBAGAI";
             akPVView.FlPosting = akPV.FlPosting;
             akPVView.FlCetak = akPV.FlCetak;
             akPVView.FlHapus = akPV.FlHapus;
@@ -2359,6 +2576,12 @@ namespace MSNK.Controllers
                 akPVView.JumlahInbois += item.Amaun;
             }
             akPVView.AkPV2 = akPV.AkPV2;
+
+            foreach (AkPVGanda item in akPV.AkPVGanda)
+            {
+                akPVView.JumlahGanda += item.Amaun;
+            }
+            akPVView.AkPVGanda = akPV.AkPVGanda;
 
             CartEmpty();
             PopulateTable(id);

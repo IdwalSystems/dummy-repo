@@ -24,6 +24,7 @@ namespace MSNK.Models.Modules
         public ICollection<SuPekerja> SuPekerja { get; set; }
         public ICollection<SuProfil1> SuProfil1 { get; set; }
         public ICollection<AkPenyataPemungut> AkPenyataPemungut { get; set; }
+        public ICollection<AkPVGanda> AkPVGanda { get; set; }
         //relationship end
 
         //soft delete

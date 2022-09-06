@@ -11,5 +11,6 @@ namespace MSNK.Models.Modules.ViewModel
         public string Penerima { get; set; }
         public string CaraBayar { get; set; }
         public decimal JumlahInbois { get; set; }
+        public decimal JumlahGanda { get; set; }
     }
 }

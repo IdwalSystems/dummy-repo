@@ -101,6 +101,16 @@
                     @foreach (var item in Model)
                     {
                         var tabletype = item.FlHapus == 1 ? "table-danger" : null;
+                        var caraBayar = "";
+
+                        if (item.CaraBayar == null)
+                        {
+                            caraBayar = "PELBAGAI";
+                }
+                        else
+                        {
+                            caraBayar = item.CaraBayar;
+                        }
                         <tr class="@tabletype">
                             <td>
                             </td>

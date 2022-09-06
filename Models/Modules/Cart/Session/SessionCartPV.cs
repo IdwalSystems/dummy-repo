@@ -18,7 +18,7 @@ namespace MSNK.Models.Modules.Cart.Session
         }
         private ISession Session { get; set; }
 
-        //Belian1
+        // PV 1
         public override void AddItem1(
             int akPVId,
             decimal amaun,
@@ -42,9 +42,9 @@ namespace MSNK.Models.Modules.Cart.Session
             base.Clear1();
             Session.Remove("CartPV");
         }
-        //Belian1 End
+        // PV 1 End
 
-        //Belian2
+        // PV 2
         public override void AddItem2(
             int akPVId,
             int? akBelianId,
@@ -70,6 +70,57 @@ namespace MSNK.Models.Modules.Cart.Session
             base.Clear2();
             Session.Remove("CartPV");
         }
-        //Belian2 End
+        // PV 2 End
+
+        // PV Ganda
+        public override void AddItemGanda(
+            int akPVId, 
+            int indek, 
+            int flKategoriPenerima, 
+            int? suPekerjaId, 
+            int? suAtletId, 
+            int? suJurulatihId, 
+            string nama, 
+            string noKP, 
+            string noAkaun, 
+            int jBankId, 
+            JBank jBank,
+            decimal amaun, 
+            string noCekAtauEFT, 
+            DateTime? tarCekAtauEFT, 
+            int jCaraBayarId,
+            JCaraBayar jCaraBayar)
+        {
+            base.AddItemGanda(
+                akPVId, 
+                indek, 
+                flKategoriPenerima, 
+                suPekerjaId, 
+                suAtletId, 
+                suJurulatihId, 
+                nama, 
+                noKP, 
+                noAkaun, 
+                jBankId, 
+                jBank,
+                amaun, 
+                noCekAtauEFT, 
+                tarCekAtauEFT, 
+                jCaraBayarId,
+                jCaraBayar);
+
+            Session.SetJson("CartPV", this);
+        }
+        public override void RemoveItemGanda(int id)
+        {
+            base.RemoveItemGanda(id);
+            Session.SetJson("CartPV", this);
+        }
+        public override void ClearGanda()
+        {
+            base.ClearGanda();
+            Session.Remove("CartPV");
+        }
+        // PV 2 End
     }
 }

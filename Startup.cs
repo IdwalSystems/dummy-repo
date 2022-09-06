@@ -100,6 +100,7 @@ namespace MSNK
             services.AddTransient<IRepository<AkPV, int, string>, AkPVRepository>();
             services.AddTransient<ListViewIRepository<AkPV1, int>, AkPV1Repository>();
             services.AddTransient<ListViewIRepository<AkPV2, int>, AkPV2Repository>();
+            services.AddTransient<ListViewIRepository<AkPVGanda, int>, AkPVGandaRepository>();
             services.AddTransient<IRepository<SuPekerja, int, string>, SuPekerjaRepository>();
             services.AddTransient<ListViewIRepository<SuTanggunganPekerja, int>, SuTanggunganPekerjaRepository>();
             services.AddTransient<IRepository<JAgama, int, string>, JAgamaRepository>();
@@ -469,7 +470,7 @@ namespace MSNK
         {
             // debug shown on development
             app.UseDeveloperExceptionPage();
-            app.UseExceptionHandler("/Home/Error");
+            //app.UseExceptionHandler("/Home/Error");
             //app.UseHsts();
             //app.UseDeveloperExceptionPage();
             // debug shown on development end

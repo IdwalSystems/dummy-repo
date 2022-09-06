@@ -21,6 +21,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkPembekal> AkPembekal { get; set; }
         public ICollection<AkCimbEFT1> AkCimbEFT1 { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
+        public ICollection<AkPVGanda> AkPVGanda { get; set; }
         //field end
 
         //soft delete

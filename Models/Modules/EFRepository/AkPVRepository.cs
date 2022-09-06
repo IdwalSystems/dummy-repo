@@ -38,6 +38,16 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPV1)
                 .Include(b => b.AkPV2)
                 .ThenInclude(b=> b.AkBelian)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuAtlet)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.JBank)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.JCaraBayar)
                 .ToListAsync();
         }
 
@@ -57,6 +67,16 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPV1)
                 .Include(b => b.AkPV2)
                 .ThenInclude(b => b.AkBelian)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuAtlet)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.JBank)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.JCaraBayar)
                 .ToListAsync();
         }
 
@@ -78,6 +98,16 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPV2)
                     .ThenInclude(b => b.AkBelian)
                         .ThenInclude(b=>b.AkPO)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuAtlet)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.JBank)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.JCaraBayar)
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
         }
@@ -103,6 +133,16 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPV2)
                     .ThenInclude(b => b.AkBelian)
                         .ThenInclude(b => b.AkPO)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuAtlet)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.JBank)
+                .Include(b => b.AkPVGanda)
+                    .ThenInclude(b => b.JCaraBayar)
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
         }
