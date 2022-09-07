@@ -49,12 +49,10 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
-                            <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" required id="ddlBahagian" disabled>
-                                @foreach (var s in ViewBag.JBahagian)
-                                {
-                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                }
-                            </select>
+                            <div class="form-group">
+                                <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <input  class="form-control form-control-sm text-uppercase" value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " readonly />
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-2">
