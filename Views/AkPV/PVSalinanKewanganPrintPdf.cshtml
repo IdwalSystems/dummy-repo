@@ -1,5 +1,19 @@
 ﻿@model MSNK.Models.Modules.PrintModel.PVPrintModel
+@{
+    var caraBayar = "";
+    var bank = "";
 
+    if (Model.AkPV.IsGanda == true)
+    {
+        caraBayar = "PELBAGAI";
+        bank = "PELBAGAI";
+    }
+    else
+    {
+        caraBayar = Model.AkPV.JCaraBayar.Perihal;
+        bank = Model.AkPV.JBank.Kod + " - " + Model.AkPV.JBank.Nama;
+    }
+}
 <div class="row flexrow mb-1 ml-1">
     <div class="col-2 image-container">
         <img src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
@@ -43,7 +57,7 @@
                 <td class="text-center text-uppercase">@Model.AkPV.JBahagian.Kod - @Model.AkPV.JBahagian.Perihal</td>
                 <td class="text-center font-weight-bold" style="font-size:1.2rem;">@Model.AkPV.NoPV.Substring(3)</td>
                 <td class="text-center font-weight-bold" width="15%">@Convert.ToDateTime(Model.AkPV.Tarikh).ToString("dd/MM/yyyy")</td>
-                <td class="text-center">@Model.AkPV.JCaraBayar.Perihal</td>
+                <td class="text-center">@caraBayar</td>
             </tr>
         </tbody>
     </table>
@@ -147,7 +161,7 @@
 
                 </tr>
             }
-            
+
             <tr class="font-weight-bold">
                 <td class="text-center" colspan="6">PERBELANJAAN TELAH DIMASUKKAN KE DALAM PERUNTUKAN-PERUNTUKAN DI BAWAH</td>
             </tr>
@@ -194,17 +208,17 @@
                 <td class="text-left" width="20%">Nombor Cek/EFT</td>
                 <td class="text-center" width="30%">@Model.AkPV.NoCekAtauEFT</td>
                 <td class="text-left" width="20%">Nama Bank Pembayar</td>
-                <td class="text-center" width="30%">@Model.NamaBankPenerima</td>
+                <td class="text-center" width="30%">@Model.AkPV.AkBank.JBank.Nama</td>
             </tr>
             <tr>
                 <td class="text-left">Tarikh Bayaran</td>
                 @if (Model.TarikhCekAtauEFT == null)
                 {
-                <td class="text-center">-</td>
+                    <td class="text-center">-</td>
                 }
                 else
                 {
-                <td class="text-center">@Convert.ToDateTime(Model.TarikhCekAtauEFT).ToString("dd/MM/yyyy")</td>
+                    <td class="text-center">@Convert.ToDateTime(Model.TarikhCekAtauEFT).ToString("dd/MM/yyyy")</td>
                 }
 
                 <td class="text-left">No Akaun Bank Pembayar</td>

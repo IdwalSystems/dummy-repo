@@ -4,6 +4,7 @@
     ViewData["Title"] = "PV - Hapus";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<partial name="_JSDetails" />
 <div class="card box-shadow">
     <div class="card-body">
         <div class="row">
@@ -14,10 +15,10 @@
             <div class="col-4 text-right">
                 <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
             </div>
-    
+
         </div>
-        <hr class="mt-2"/>
-	  <p class="text-danger">Anda pasti untuk menghapuskan maklumat berikut?</p>
+        <hr class="mt-2" />
+        <p class="text-danger">Anda pasti untuk menghapuskan maklumat berikut?</p>
 
         <div class="form-row">
             <div class="col-lg-10">
@@ -129,8 +130,8 @@
                 <div class="form-row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="control-label">No Akaun Bank</label>
-                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkBank.NoAkaun - @Model.AkBank.JBank.Nama " readonly />
+                            <label class="control-label">Akaun Bank Penerima</label>
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.NoAkaunBank - @Model.BankPenerima " readonly />
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -447,20 +448,120 @@
                 break;
         }
         <hr />
+        @if (Model.AkPVGanda.Count() > 0)
+        {
+            @*table Ganda*@
+            <div class="card box-shadow mb-3" id="cardGanda">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-8">
+                            <h5>Senarai Penerima</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="tblGanda" class="table table-sm nowrap text-nowrap" cellpadding="0" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th hidden>Indek</th>
+                                    <th>Kat Penerima</th>
+                                    <th hidden>Id Penerima</th>
+                                    <th>No KP</th>
+                                    <th>Nama</th>
+                                    <th>Cara Bayar</th>
+                                    <th>Bank</th>
+                                    <th>No Akaun</th>
+                                    <th>No Cek / EFT</th>
+                                    <th>Tarikh Cek / EFT</th>
+                                    <th>Amaun RM</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyGanda">
+                                @foreach (var item in Model.AkPVGanda)
+                                {
+                                    var tarSlip = "";
+                                    if (item.TarCekAtauEFT == null)
+                                    {
+                                    }
+                                    else
+                                    {
+                                        tarSlip = item.TarCekAtauEFT?.ToString("dd/MM/yyyy");
+                                    }
+                                    var noSlip = "";
+                                    if (item.NoCekAtauEFT == null)
+                                    {
+                                    }
+                                    else
+                                    {
+                                        noSlip = item.NoCekAtauEFT;
+                                    }
+                                    var penerimaId = "";
+                                    var kategoriPenerima = "";
+                                    switch (item.FlKategoriPenerima)
+                                    {
+                                        case 1:
+                                            kategoriPenerima = "ANGGOTA";
+                                            penerimaId = item.SuPekerjaId?.ToString();
+                                            break;
+                                        case 2:
+                                            kategoriPenerima = "ATLET";
+                                            penerimaId = item.SuAtletId?.ToString();
+                                            break;
+                                        case 3:
+                                            kategoriPenerima = "JURULATIH";
+                                            penerimaId = item.SuJurulatihId?.ToString();
+                                            break;
+                                        case 0:
+                                            kategoriPenerima = "LAIN";
+                                            penerimaId = "";
+                                            break;
+                                    }
+
+                                    <tr>
+                                        <td hidden> item.Indek</td>
+                                        <td class="text-left text-uppercase">@kategoriPenerima</td>
+                                        <td class="text-left" hidden>@penerimaId</td>
+                                        <td class="text-left">@item.NoKp</td>
+                                        <td class="text-left text-uppercase">@item.Nama</td>
+                                        <td class="text-left text-uppercase">@item.JCaraBayar.Perihal</td>
+                                        <td class="text-left text-uppercase">@item.JBank.Kod</td>
+                                        <td class="text-left">@item.NoAkaun</td>
+                                        <td class="text-left">@noSlip</td>
+                                        <td class="text-left">@tarSlip</td>
+                                        <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="form-group">
+                        <label class="control-label">Jumlah RM</label>
+                        <input class="form-control form-control-sm" id="jumlahGanda" name="JumlahGanda" value="@Convert.ToDecimal(Model.JumlahGanda).ToString("#,##0.00")" readonly />
+                    </div>
+                </div>
+            </div>
+            @*table Ganda end*@
+        }
+        <hr />
         <div class="form-group">
-             <form asp-action="Delete">
+            <form asp-action="Delete">
                 <input type="hidden" asp-for="Id" />
-                 @if (Model.FlPosting == 1)
+                @if (Model.FlPosting == 1)
                 {
                 }
                 else
                 {
                     <input type="submit" value="Hapus" class="btn ac-danger btn-sm" />
                 }
-                
+
                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </form>
-            
+
         </div>
     </div>
 </div>

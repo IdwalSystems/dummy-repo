@@ -253,8 +253,10 @@
             success: function (msg) {
                 $("table tbody#tbodyObjek").empty();
                 $("table tbody#tbodyInbois").empty();
+                $("table tbody#tbodyGanda").empty();
                 $("#jumlahObjek").val("0.00");
                 $("#jumlahInbois").val("0.00");
+                $("#jumlahGanda").val("0.00");
                 $("#txtKodAkaun option").prop('disabled', false);
                 $("#txtKodAkaun option:selected").prop('disabled', true);
             },
@@ -620,6 +622,7 @@
 
                         $("#btnSave").show();
 
+                        // objek
                         $("table tbody#tbodyObjek").empty();
                         var jumlah = $("#jumlahObjek");
                         var sum = 0;
@@ -637,6 +640,74 @@
                         $("#txtKodAkaun option[value=" + msg.record.akCartaId + "]").prop('disabled', true);
 
                         jumlah.val(sum.toFixed(2));
+
+                        // ganda
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("GetAllItemCartAkPVGanda", "AkPV")',
+                            dataType: "json",
+                            success: function (r) {
+
+                                //refresh updated table Ganda
+                                $("table tbody#tbodyGanda").empty();
+                                var sumGanda = 0;
+                                var jumlahGanda = $("#jumlahGanda");
+                                if (r.record.length > 0) {
+                                    for (var i = 0; i < r.record.length; i++) {
+                                        var item1 = r.record[i];
+                                        var tarSlip = "";
+                                        if (item1.tarCekAtauEFT == null) {
+                                        } else {
+                                            tarSlip = showDate(item1.tarCekAtauEFT);
+                                        }
+                                        var noSlip = "";
+                                        if (item1.noCekAtauEFT == null) {
+                                        } else {
+                                            noSlip = item1.noCekAtauEFT;
+                                        }
+                                        var penerimaId = "";
+                                        var kategoriPenerima = "";
+                                        switch (item1.flKategoriPenerima) {
+                                            case 1:
+                                                kategoriPenerima = "ANGGOTA";
+                                                penerimaId = item1.suPekerjaId;
+                                                break;
+                                            case 2:
+                                                kategoriPenerima = "ATLET";
+                                                penerimaId = item1.suAtletId;
+                                                break;
+                                            case 3:
+                                                kategoriPenerima = "JURULATIH";
+                                                penerimaId = item1.suJurulatihId;
+                                                break;
+                                            case 0:
+                                                kategoriPenerima = "LAIN";
+                                                penerimaId = "";
+                                                break;
+                                        }
+                                        var str = "<tr><td hidden>" + item1.indek +
+                                            "</td><td class='text-left text-uppercase'>" + kategoriPenerima +
+                                            "</td><td class='text-left' hidden>" + penerimaId +
+                                            "</td><td class='text-left'>" + item1.noKp +
+                                            "</td><td class='text-left text-uppercase'>" + item1.nama +
+                                            "</td><td class='text-left text-uppercase'>" + item1.jCaraBayar.perihal +
+                                            "</td><td class='text-left text-uppercase'>" + item1.jBank.kod +
+                                            "</td><td class='text-left'>" + item1.noAkaun +
+                                            "</td><td class='text-left'>" + noSlip +
+                                            "</td><td class='text-center'>" + tarSlip +
+                                            "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                                            "</td><td>" +
+                                            "</td><td>" +
+                                            "<button class='btn ac-danger btn-sm' type='button' id='btnRemove3' onclick='Remove3(this)'><i class='fas fa-trash' ></i></button>" +
+                                            "</td><tr>";
+                                        $("table tbody#tbodyGanda").append(str);
+                                        sumGanda += item1.amaun;
+                                    }
+                                    bil++;
+                                }
+                                jumlahGanda.val(sum.toFixed(2));
+                            }
+                        });
 
                     }
                     else {
@@ -1738,7 +1809,7 @@
                                 }
                                 var str = "<tr><td hidden>" + item1.indek +
                                     "</td><td class='text-left text-uppercase'>" + kategoriPenerima +
-                                    "</td><td class='text-left'>" + penerimaId +
+                                    "</td><td class='text-left' hidden>" + penerimaId +
                                     "</td><td class='text-left'>" + item1.noKp +
                                     "</td><td class='text-left text-uppercase'>" + item1.nama +
                                     "</td><td class='text-left text-uppercase'>" + item1.jCaraBayar.perihal +
@@ -1929,7 +2000,7 @@
                                 }
                                 var str = "<tr><td hidden>" + item1.indek +
                                     "</td><td class='text-left text-uppercase'>" + kategoriPenerima +
-                                    "</td><td class='text-left'>" + penerimaId +
+                                    "</td><td class='text-left' hidden>" + penerimaId +
                                     "</td><td class='text-left'>" + item1.noKp +
                                     "</td><td class='text-left text-uppercase'>" + item1.nama +
                                     "</td><td class='text-left text-uppercase'>" + item1.jCaraBayar.perihal +
@@ -1959,7 +2030,7 @@
     // update tbl Ganda end
 
     //remove tbl Ganda
-    function Remove2(button) {
+    function Remove3(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var indek = $("TD", row).eq(0).html();
@@ -1991,7 +2062,7 @@
             }
         }
     };
-    //remove tbl perihal end
+    //remove tbl ganda end
 
     function displayObjekList(data) {
         $("table tbody#tbodyObjek").empty();

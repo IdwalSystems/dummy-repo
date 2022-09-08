@@ -4,7 +4,7 @@
     ViewData["Title"] = "PV - Papar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<partial name="_JSDetails" />
 <div class="card box-shadow">
     <div class="card-body">
         <div class="row">
@@ -136,8 +136,8 @@
                 <div class="form-row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="control-label">No Akaun Bank</label>
-                            <input class="form-control form-control-sm text-uppercase" value="@Model.AkBank.NoAkaun - @Model.AkBank.JBank.Nama " readonly />
+                            <label class="control-label">Akaun Bank Penerima</label>
+                            <input class="form-control form-control-sm text-uppercase" value="@Model.NoAkaunBank - @Model.BankPenerima " readonly />
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -555,7 +555,7 @@
                                     <tr>
                                         <td hidden> item.Indek</td>
                                         <td class="text-left text-uppercase">@kategoriPenerima</td>
-                                        <td class="text-left">@penerimaId</td>
+                                        <td class="text-left" hidden>@penerimaId</td>
                                         <td class="text-left">@item.NoKp</td>
                                         <td class="text-left text-uppercase">@item.Nama</td>
                                         <td class="text-left text-uppercase">@item.JCaraBayar.Perihal</td>

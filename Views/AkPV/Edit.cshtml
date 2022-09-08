@@ -1,4 +1,4 @@
-﻿@model MSNK.Models.Modules.AkPV
+﻿@model MSNK.Models.Modules.ViewModel.AkPVViewModel
 
 @{
     ViewData["Title"] = "PV - Ubah";
@@ -17,9 +17,9 @@
             <div class="col-4 text-right">
                 <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
             </div>
-    
+
         </div>
-        <hr class="mt-2"/>
+        <hr class="mt-2" />
         <form asp-action="Edit" class="needs-validation">
             <input type="hidden" asp-for="Id" />
 
@@ -193,70 +193,78 @@
                     <div class="form-group" hidden>
                         <input asp-for="Alamat3" class="form-control form-control-sm text-uppercase" id="txtAlamat3" />
                     </div>
-                    <div class="form-row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label asp-for="NoAkaunBank" class="control-label"></label>
-                                <input asp-for="NoAkaunBank" class="form-control form-control-sm text-uppercase" id="txtNoAkaunBank" />
+                    @if (Model.IsGanda == false)
+                    {
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="NoAkaunBank" class="control-label"></label>
+                                    <input asp-for="NoAkaunBank" class="form-control form-control-sm text-uppercase" id="txtNoAkaunBank" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="Telefon" class="control-label"></label>
+                                    <input asp-for="Telefon" class="form-control form-control-sm text-uppercase" id="txtTelefon" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="Emel" class="control-label"></label>
+                                    <input asp-for="Emel" class="form-control form-control-sm" id="txtEmel" />
+                                    <span asp-validation-for="Emel" class="text-danger"></span>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label asp-for="Telefon" class="control-label"></label>
-                                <input asp-for="Telefon" class="form-control form-control-sm text-uppercase" id="txtTelefon" />
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label asp-for="Emel" class="control-label"></label>
-                                <input asp-for="Emel" class="form-control form-control-sm" id="txtEmel" />
-                                <span asp-validation-for="Emel" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
+                    }
+
                     break;
             }
 
+            @if (Model.IsGanda == false)
+            {
 
-            <div class="form-row">
-                <div class="col-md-3">
-                    <label asp-for="JCaraBayarId" class="control-label"></label><span class="text-danger control-label">*</span>
-                    <select class="form-control form-control-sm" asp-for="JCaraBayarId" required>
-                        <option value="0" disabled selected>-- Pilih Cara Bayaran --</option>
-                        @foreach (var s in ViewBag.JCaraBayar)
-                        {
-                            <option value="@s.Id" class="text-uppercase">@s.Kod - @s.Perihal</option>
-                        }
-                    </select>
-                    <span asp-validation-for="JCaraBayarId" class="text-danger"></span>
-                </div>
-                <div class="col-md-3">
-                    <label asp-for="JBankId" class="control-label"></label>
-                    <select class="form-control form-control-sm select2" asp-for="JBankId" id="ddlJBank">
-                        <option value="0" disabled selected>-- Pilih Bank --</option>
-                        @foreach (var s in ViewBag.JBank)
-                        {
-                            <option value="@s.Id" class="text-uppercase">@s.Kod - @s.Nama</option>
-                        }
-                    </select>
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <label asp-for="JCaraBayarId" class="control-label"></label><span class="text-danger control-label">*</span>
+                        <select class="form-control form-control-sm" asp-for="JCaraBayarId" required>
+                            <option value="0" disabled selected>-- Pilih Cara Bayaran --</option>
+                            @foreach (var s in ViewBag.JCaraBayar)
+                            {
+                                <option value="@s.Id" class="text-uppercase">@s.Kod - @s.Perihal</option>
+                            }
+                        </select>
+                        <span asp-validation-for="JCaraBayarId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="JBankId" class="control-label"></label>
+                        <select class="form-control form-control-sm select2" asp-for="JBankId" id="ddlJBank">
+                            <option value="0" disabled selected>-- Pilih Bank --</option>
+                            @foreach (var s in ViewBag.JBank)
+                            {
+                                <option value="@s.Id" class="text-uppercase">@s.Kod - @s.Nama</option>
+                            }
+                        </select>
 
-                    <span asp-validation-for="JBankId" class="text-danger"></span>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label asp-for="NoCekAtauEFT" class="control-label"></label>
-                        <input asp-for="NoCekAtauEFT" class="form-control form-control-sm form-control-sm" />
-                        <span asp-validation-for="NoCekAtauEFT" class="text-danger"></span>
+                        <span asp-validation-for="JBankId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="NoCekAtauEFT" class="control-label"></label>
+                            <input asp-for="NoCekAtauEFT" class="form-control form-control-sm form-control-sm" />
+                            <span asp-validation-for="NoCekAtauEFT" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="TarCekAtauEFT" class="control-label"></label>
+                            <input asp-for="TarCekAtauEFT" class="form-control form-control-sm" />
+                            <span asp-validation-for="TarCekAtauEFT" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label asp-for="TarCekAtauEFT" class="control-label"></label>
-                        <input asp-for="TarCekAtauEFT" class="form-control form-control-sm" />
-                        <span asp-validation-for="TarCekAtauEFT" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
+            }
+
             <div class="form-group">
                 <label asp-for="Perihal" class="control-label"></label>
                 <textarea asp-for="Perihal" class="form-control form-control-sm text-uppercase" rows="2"></textarea>
@@ -278,13 +286,13 @@
                                 <label class="control-label">Jenis ABB</label>
                             </div>
                             <div class="form-row col-sm ml-2">
-                                <div class="custom-control custom-radio col-md-6 " >
+                                <div class="custom-control custom-radio col-md-6 ">
                                     <input class="custom-control-input " type="radio" id="IsAKB0" asp-for="IsAKB" value="false" checked>
                                     <label class="custom-control-label" for="IsAKB0">
                                         Tidak
                                     </label>
                                 </div>
-                                <div class="custom-control custom-radio col-md-6 " >
+                                <div class="custom-control custom-radio col-md-6 ">
                                     <input class="custom-control-input " type="radio" id="IsAKB1" asp-for="IsAKB" value="true">
                                     <label class="custom-control-label" for="IsAKB1">
                                         Ya
@@ -522,6 +530,117 @@
             @*table Inbois end*@
 
             <hr />
+            @if (Model.AkPVGanda.Count() > 0)
+            {
+                @*table Ganda*@
+                <div class="card box-shadow mb-3" id="cardGanda">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-8">
+                                <h5>Senarai Penerima</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tblGanda" class="table table-sm nowrap text-nowrap" cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th hidden>Indek</th>
+                                        <th>Kat Penerima</th>
+                                        <th hidden>Id Penerima</th>
+                                        <th>No KP</th>
+                                        <th>Nama</th>
+                                        <th>Cara Bayar</th>
+                                        <th>Bank</th>
+                                        <th>No Akaun</th>
+                                        <th>No Cek / EFT</th>
+                                        <th>Tarikh Cek / EFT</th>
+                                        <th>Amaun RM</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyGanda">
+                                    @foreach (var item in Model.AkPVGanda)
+                                    {
+                                        var tarSlip = "";
+                                        if (item.TarCekAtauEFT == null)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            tarSlip = item.TarCekAtauEFT?.ToString("dd/MM/yyyy");
+                                        }
+                                        var noSlip = "";
+                                        if (item.NoCekAtauEFT == null)
+                                        {
+                                        }
+                                        else
+                                        {
+                                            noSlip = item.NoCekAtauEFT;
+                                        }
+                                        var penerimaId = "";
+                                        var kategoriPenerima = "";
+                                        switch (item.FlKategoriPenerima)
+                                        {
+                                            case 1:
+                                                kategoriPenerima = "ANGGOTA";
+                                                penerimaId = item.SuPekerjaId?.ToString();
+                                                break;
+                                            case 2:
+                                                kategoriPenerima = "ATLET";
+                                                penerimaId = item.SuAtletId?.ToString();
+                                                break;
+                                            case 3:
+                                                kategoriPenerima = "JURULATIH";
+                                                penerimaId = item.SuJurulatihId?.ToString();
+                                                break;
+                                            case 0:
+                                                kategoriPenerima = "LAIN";
+                                                penerimaId = "";
+                                                break;
+                                        }
+
+                                        <tr>
+                                            <td hidden> item.Indek</td>
+                                            <td class="text-left text-uppercase">@kategoriPenerima</td>
+                                            <td class="text-left" hidden>@penerimaId</td>
+                                            <td class="text-left">@item.NoKp</td>
+                                            <td class="text-left text-uppercase">@item.Nama</td>
+                                            <td class="text-left text-uppercase">@item.JCaraBayar.Perihal</td>
+                                            <td class="text-left text-uppercase">@item.JBank.Kod</td>
+                                            <td class="text-left">@item.NoAkaun</td>
+                                            <td class="text-left">@noSlip</td>
+                                            <td class="text-left">@tarSlip</td>
+                                            <td class="text-right amaunGanda">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                                            <td>
+                                                <button class="btn ac-primary btn-sm" type="button" id="btnUpdate3" data-toggle="modal" data-target="#modalGanda" onclick="Update3(this)">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn ac-danger btn-sm" type="button" id="btnRemove3" onclick="Remove3(this)">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <label class="control-label">Jumlah RM</label>
+                            <input class="form-control form-control-sm" id="jumlahGanda" name="JumlahGanda" value="@Convert.ToDecimal(Model.JumlahGanda).ToString("#,##0.00")" readonly />
+                        </div>
+                    </div>
+                </div>
+                @*table Ganda end*@
+            }
+            <hr />
             <div class="form-group">
                 <input type="submit" value="Simpan" id="btnSave" class="btn ac-primary btn-sm" />
                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
@@ -655,3 +774,152 @@
     </div>
 </div>
 <!-- Modal Inbois End -->
+<!-- Modal Ganda -->
+<div class="modal fade bd-example-modal-lg" id="modalGanda" tabindex="-1" role="dialog" aria-hidden="true" data-toggle="modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Penerima</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input id="moId1" hidden />
+                    <input id="moIndek" hidden />
+                    <div class="card mb-2">
+                        <div class="card-body pb-1 pt-1">
+                            <div class="form-group mb-0 mt-1">
+                                <label class="control-label">Kategori Penerima</label>
+                            </div>
+                            <div class="form-row col-sm ml-2">
+                                <div class="custom-control custom-radio col-md-3 ">
+                                    <input class="custom-control-input " type="radio" id="FlKategoriPenerima1" name="FlKategoriPenerima" value="1">
+                                    <label class="custom-control-label" for="FlKategoriPenerima1">
+                                        Anggota
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-3 ">
+                                    <input class="custom-control-input " type="radio" id="FlKategoriPenerima2" name="FlKategoriPenerima" value="2">
+                                    <label class="custom-control-label" for="FlKategoriPenerima2">
+                                        Atlet
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-3 ">
+                                    <input class="custom-control-input " type="radio" id="FlKategoriPenerima3" name="FlKategoriPenerima" value="3">
+                                    <label class="custom-control-label" for="FlKategoriPenerima3">
+                                        Jurulatih
+                                    </label>
+                                </div>
+                                <div class="custom-control custom-radio col-md-3 ">
+                                    <input class="custom-control-input " type="radio" id="FlKategoriPenerima4" name="FlKategoriPenerima" value="0" checked>
+                                    <label class="custom-control-label" for="FlKategoriPenerima4">
+                                        Lain-lain
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" id="modalGandaAnggota" hidden>
+                        <label class="col-form-label">Anggota</label>
+                        <select class="form-control form-control-sm select2" name="moGandaAnggota" id="moGandaAnggota">
+                            <option value="0" disabled selected>-- Pilih Anggota --</option>
+                            @foreach (var s in ViewBag.SuPekerja)
+                            {
+                                <option value="@s.Id">@s.NoGaji - @s.Nama </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group" id="modalGandaAtlet" hidden>
+                        <label class="col-form-label">Atlet</label>
+                        <select class="form-control form-control-sm select2" name="moGandaAtlet" id="moGandaAtlet">
+                            <option value="0" disabled selected>-- Pilih Atlet --</option>
+                            @foreach (var s in ViewBag.SuAtlet)
+                            {
+                                <option value="@s.Id">@s.NoKp - @s.Nama </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group" id="modalGandaJurulatih" hidden>
+                        <label class="col-form-label">Jurulatih</label>
+                        <select class="form-control form-control-sm select2" name="moGandaJurulatih" id="moGandaJurulatih">
+                            <option value="0" disabled selected>-- Pilih Jurulatih --</option>
+                            @foreach (var s in ViewBag.SuJurulatih)
+                            {
+                                <option value="@s.Id">@s.NoKp - @s.Nama </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-4">
+                            <label class="col-form-label">No KP</label>
+                            <input type="text" name="moGandaNoKP" id="moGandaNoKP" class="form-control form-control-sm" />
+                        </div>
+                        <div class="form-group col-lg-8">
+                            <label class="col-form-label">Nama</label>
+                            <input type="text" name="moGandaNama" id="moGandaNama" class="form-control form-control-sm" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-lg-3">
+                            <label class="col-form-label">Cara Bayar</label>
+                            <select class="form-control form-control-sm select2" name="moGandaCaraBayar" id="moGandaCaraBayar">
+                                <option value="0" disabled selected>-- Pilih Cara Bayar --</option>
+                                @foreach (var s in ViewBag.JCaraBayar)
+                                {
+                                    if (s.Id == 9999)
+                                    {
+                                        continue;
+                                    }
+
+                                    <option value="@s.Id" class="text-uppercase">@s.Kod - @s.Perihal</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-form-label">Bank</label>
+                            <select class="form-control form-control-sm select2" name="moGandaBank" id="moGandaBank">
+                                <option value="0" disabled selected>-- Pilih Bank --</option>
+                                @foreach (var s in ViewBag.JBank)
+                                {
+                                    if (s.Id == 9999)
+                                    {
+                                        continue;
+                                    }
+                                    <option value="@s.Id" class="text-uppercase">@s.Kod - @s.Nama</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label class="col-form-label">No Akaun</label>
+                            <input type="text" name="moGandaNoAkaun" id="moGandaNoAkaun" class="form-control form-control-sm" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-lg-6">
+                            <label class="col-form-label">No Cek / EFT / JomPAY</label>
+                            <input type="text" name="moGandaNoCekEFT" id="moGandaNoCekEFT" class="form-control form-control-sm" />
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="col-form-label">Tarikh Cek / EFT / JomPAY</label>
+                            <input type="datetime-local" name="moGandaTarCekEFT" id="moGandaTarCekEFT" class="form-control form-control-sm" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-form-label">Amaun RM</label>
+                        <input type="number" name="moGandaAmaun" id="moGandaAmaun" class="form-control form-control-sm" step="0.01">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button hidden id="modalAdd3" type="button" class="btn btn-success" data-dismiss="modal" onclick="modalAdd3()">OK</button>
+                <button hidden id="modalUpdate3" type="button" class="btn btn-success" data-dismiss="modal" onclick="modalUpdate3()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Ganda End -->

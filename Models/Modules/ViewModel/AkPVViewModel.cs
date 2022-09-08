@@ -10,6 +10,7 @@ namespace MSNK.Models.Modules.ViewModel
         public string KodPenerima { get; set; }
         public string Penerima { get; set; }
         public string CaraBayar { get; set; }
+        public string BankPenerima { get; set; }
         public decimal JumlahInbois { get; set; }
         public decimal JumlahGanda { get; set; }
     }

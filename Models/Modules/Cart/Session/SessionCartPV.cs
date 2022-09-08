@@ -83,12 +83,12 @@ namespace MSNK.Models.Modules.Cart.Session
             string nama, 
             string noKP, 
             string noAkaun, 
-            int jBankId, 
+            int? jBankId, 
             JBank jBank,
             decimal amaun, 
             string noCekAtauEFT, 
             DateTime? tarCekAtauEFT, 
-            int jCaraBayarId,
+            int? jCaraBayarId,
             JCaraBayar jCaraBayar)
         {
             base.AddItemGanda(

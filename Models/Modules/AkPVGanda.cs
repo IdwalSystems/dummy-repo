@@ -34,7 +34,7 @@ namespace MSNK.Models.Modules
         [DisplayName("No Akaun")]
         public string NoAkaun { get; set; }
         [DisplayName("Bank")]
-        public int JBankId { get; set; }
+        public int? JBankId { get; set; }
         public JBank JBank { get; set; }
         [DisplayName("Amaun RM")]
         [Column(TypeName = "decimal(18,2)")]
@@ -44,7 +44,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Tar Cek / EFT")]
         public DateTime? TarCekAtauEFT { get; set; }
         [DisplayName("Cara Bayar")]
-        public int JCaraBayarId { get; set; }
+        public int? JCaraBayarId { get; set; }
         public JCaraBayar JCaraBayar { get; set; }
     }
 }
