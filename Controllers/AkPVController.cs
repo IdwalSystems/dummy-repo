@@ -1117,7 +1117,9 @@ namespace MSNK.Controllers
             {
                 var data = _cart.LinesGanda.Max(x => x.Indek);
 
-                return Json(new { result = "OK", record = data });
+                bool IsGanda = _cart.LinesGanda.Count() > 0;
+
+                return Json(new { result = "OK", record = data, ganda = IsGanda });
             }
             catch (Exception ex)
             {
@@ -1515,6 +1517,7 @@ namespace MSNK.Controllers
                 int? caraBayarId = 0;
                 JBank jBank = new JBank();
                 JCaraBayar jCaraBayar = new JCaraBayar();
+                decimal jumGanda = 0;
 
                 foreach ( var i in result.SuProfil1)
                 {
@@ -1547,7 +1550,8 @@ namespace MSNK.Controllers
                     jCaraBayar.SuProfil1 = null;
 
                     indek++;
-                    
+                    jumGanda = jumGanda + i.Jumlah;
+
                     _cart.AddItemGanda(AkPVId,
                                     indek,
                                     kategoriPenerima,
@@ -1964,8 +1968,10 @@ namespace MSNK.Controllers
                         m.JBankId = null;
                     }
 
+                    decimal ganda = 0;
                     foreach (var item in _cart.LinesGanda)
                     {
+                        ganda = ganda + item.Amaun;
                         item.JCaraBayar = null;
                         item.JBank = null;
                     }
@@ -2220,6 +2226,7 @@ namespace MSNK.Controllers
             {
                 akPVView.JumlahGanda += item.Amaun;
             }
+
             akPVView.AkPVGanda = akPV.AkPVGanda.OrderBy(b => b.Nama).ToList();
 
             CartEmpty();
@@ -2512,6 +2519,7 @@ namespace MSNK.Controllers
                     akPV.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
                     akPV.FlCetak = 0;
                     akPV.IsAKB = dataAsal.IsAKB;
+                    akPV.IsGanda = dataAsal.IsGanda;
                     // list of input that cannot be change end
 
                     foreach (AkPV1 item in dataAsal.AkPV1)
@@ -2531,11 +2539,22 @@ namespace MSNK.Controllers
                             _context.Remove(model);
                         }
                     }
+
+                    foreach (AkPVGanda item in dataAsal.AkPVGanda)
+                    {
+                        var model = _context.AkPVGanda.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+
                     var jumlahAsal = dataAsal.Jumlah;
                     _context.Entry(dataAsal).State = EntityState.Detached;
 
                     akPV.AkPV1 = _cart.Lines1.ToList();
                     akPV.AkPV2 = _cart.Lines2.ToList();
+                    akPV.AkPVGanda = _cart.LinesGanda.ToList();
 
                     akPV.TarSemak = null;
                     akPV.JPenyemakId = null;

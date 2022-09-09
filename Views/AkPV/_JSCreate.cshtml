@@ -1,5 +1,7 @@
 ﻿<script type="text/javascript">
 
+    var ganda = false;
+
         // on change kod pembekal
     $("body").on('change', "#moGandaAnggota, #moGandaAtlet, #moGandaJurulatih", function () {
 
@@ -267,21 +269,37 @@
     };
     //empty cart end
 
-    // check if jumlahObjek is equal to jumlahInbois
+    // check if jumlahObjek is equal to jumlahInbois / jumlahGanda
     function checkJumlah() {
         var jumlahObjek = $("#jumlahObjek").val();
         var jumlahInbois = $("#jumlahInbois").val();
+        var jumlahGanda = $("#jumlahGanda").val();
 
-        if (jumlahObjek == 0.00 && jumlahInbois == 0.00) {
-            $("#btnSave").show();
-        } else {
-            if (jumlahObjek == jumlahInbois) {
+        if (ganda == false) {
+            if (jumlahObjek == 0.00 && jumlahInbois == 0.00) {
                 $("#btnSave").show();
-            }
-            else {
-                $("#btnSave").hide();
+            } else {
+                if (jumlahObjek == jumlahInbois) {
+                    $("#btnSave").show();
+                }
+                else {
+                    $("#btnSave").hide();
+                }
             }
         }
+        else {
+            if (jumlahObjek == 0.00 && jumlahGanda == 0.00) {
+                $("#btnSave").show();
+            } else {
+                if (jumlahObjek == jumlahGanda) {
+                    $("#btnSave").show();
+                }
+                else {
+                    $("#btnSave").hide();
+                }
+            }
+        }
+
     }
     // check end
 
@@ -1004,7 +1022,7 @@
         // on change radio Ganda
         $('input[type=radio][name=IsGanda]').on('change', function () {
             //empty field
-
+            
             $("#txtAlamat1").val('');
             $("#txtAlamat2").val('');
             $("#txtAlamat3").val('');
@@ -1016,9 +1034,11 @@
             EmptyCart();
             switch ($(this).val()) {
                 case "false":
+                    ganda = false;
                     ToggleGanda('hide');
                     break;
                 case "true":
+                    ganda = true;
                     ToggleGanda('show');
                     break;
             }
@@ -1229,7 +1249,7 @@
                                 txtAmaunObjek.val("0.00");
 
                                 if ($('input[type="radio"][name="FlJenisBaucer"]:checked').val() != 0) {
-                                    if ($('#ddlKodPembekal').val() != 0) {
+                                    if ($('#ddlKodPembekal').val() != 0 || ganda == true) {
                                         checkJumlah();
                                     }
                                 }
@@ -1280,7 +1300,7 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
-                        if ($('#ddlKodPembekal').val()) {
+                        if ($('#ddlKodPembekal').val() || ganda == true) {
                             checkJumlah();
                         } else {
 
@@ -1396,7 +1416,7 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
-                        if ($('#ddlKodPembekal').val() != 0) {
+                        if ($('#ddlKodPembekal').val() != 0 || ganda == true) {
                             checkJumlah();
                         }
                     }
@@ -1829,6 +1849,8 @@
                             bil++;
                         }
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
+                        
                     }
                 });
             }
@@ -2020,6 +2042,7 @@
                             bil++;
                         }
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }
@@ -2034,12 +2057,12 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var indek = $("TD", row).eq(0).html();
-        var name = $("TD", row).eq(5).html();
+        var name = $("TD", row).eq(4).html();
         var amaun = $("TD", row).eq(10).html();
         var JumlahGanda = $("#jumlahGanda");
         if (confirm("Hapus : " + name + " ?")) {
             //Get the reference of the Table.
-            var table = $("#tblPerihal")[0];
+            var table = $("#tblGanda")[0];
 
             var sum = 0;
             sum = parseFloat(JumlahGanda.val()) - parseFloat(amaun);
@@ -2048,6 +2071,7 @@
             var AkPVGanda = {
                 Indek: indek,
             }
+
             if (name != null) {
                 $.ajax({
                     type: "POST",
@@ -2085,5 +2109,6 @@
             $("#txtKodAkaun option[value=" + item.akCartaId + "]").prop('disabled', true);
         }
         jumlah.val(sum.toFixed(2));
+        checkJumlah();
     }
 </script>

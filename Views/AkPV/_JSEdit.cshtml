@@ -1,5 +1,6 @@
 ﻿<script type="text/javascript">
     var bil = 1;
+    var ganda = false;
 
     $(document).ready(function () {
         // find latest number in perihal
@@ -11,6 +12,7 @@
             success: function (r) {
                 //insert data in modal perihal
                 bil = r.record + 1;
+                ganda = r.ganda;
             }
         });
         // find latest number in perihal end
@@ -32,9 +34,9 @@
 
         // get total amaun ganda for each row in tbl ganda
         var sum = 0;
-        $('#tbodyIGanda tr').each(function () {
+        $('#tbodyGanda tr').each(function () {
             var amaun = $(this).find(".amaunGanda").html();
-            sum += parseFloat(amaun);
+            sum += parseFloat(Number(amaun.replace(",", "")));
         });
         $('#jumlahGanda').val(sum.toFixed(2));
 
@@ -64,23 +66,40 @@
     });
     //validation form end
 
-    // check if jumlahObjek is equal to jumlahInbois
+    // check if jumlahObjek is equal to jumlahInbois / jumlahGanda
     function checkJumlah() {
         var jumlahObjek = $("#jumlahObjek").val();
         var jumlahInbois = $("#jumlahInbois").val();
+        var jumlahGanda = $("#jumlahGanda").val();
 
-        if (jumlahObjek == 0.00 && jumlahInbois == 0.00) {
-            $("#btnSave").show();
-        } else {
-            if (jumlahObjek == jumlahInbois) {
+        if (ganda == false) {
+            if (jumlahObjek == 0.00 && jumlahInbois == 0.00) {
                 $("#btnSave").show();
-            }
-            else {
-                $("#btnSave").hide();
+            } else {
+                if (jumlahObjek == jumlahInbois) {
+                    $("#btnSave").show();
+                }
+                else {
+                    $("#btnSave").hide();
+                }
             }
         }
+        else {
+            if (jumlahObjek == 0.00 && jumlahGanda == 0.00) {
+                $("#btnSave").show();
+            } else {
+                if (jumlahObjek == jumlahGanda) {
+                    $("#btnSave").show();
+                }
+                else {
+                    $("#btnSave").hide();
+                }
+            }
+        }
+        
     }
     // check end
+
 
     // on change kod Panjar
     $("body").on('change', "#ddlTunaiRuncit", function () {
@@ -551,7 +570,7 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
-                        if ($('#ddlKodPembekal').val() != 0) {
+                        if ($('#ddlKodPembekal').val() != 0 || ganda == true) {
                             checkJumlah();
                         }
                     }
@@ -950,6 +969,7 @@
                             bil++;
                         }
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }
@@ -1141,6 +1161,7 @@
                             bil++;
                         }
                         jumlah.val(sum.toFixed(2));
+                        checkJumlah();
                     }
                 });
             }
@@ -1155,16 +1176,16 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var indek = $("TD", row).eq(0).html();
-        var name = $("TD", row).eq(5).html();
+        var name = $("TD", row).eq(4).html();
         var amaun = $("TD", row).eq(10).html();
         var JumlahGanda = $("#jumlahGanda");
         if (confirm("Hapus : " + name + " ?")) {
             //Get the reference of the Table.
-            var table = $("#tblPerihal")[0];
+            var table = $("#tblGanda")[0];
 
             var sum = 0;
-            sum = parseFloat(JumlahGanda.val()) - parseFloat(amaun);
-            JumlahGanda.val(sum);
+            sum = parseFloat(JumlahGanda.val()) - parseFloat(Number(amaun.replace(",", "")));
+            JumlahGanda.val(sum.toFixed(2));
 
             var AkPVGanda = {
                 Indek: indek,
@@ -1178,6 +1199,7 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
+                        checkJumlah();
                     }
                 });
             }

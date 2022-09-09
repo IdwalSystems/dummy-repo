@@ -380,7 +380,7 @@
                         <thead>
                             <tr>
                                 <th style="width:70%">Kod</th>
-                                <th style="width:30%">Amaun</th>
+                                <th style="width:30%">Amaun RM</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -558,6 +558,7 @@
                                         <th>Tarikh Cek / EFT</th>
                                         <th>Amaun RM</th>
                                         <th></th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyGanda">
@@ -602,7 +603,7 @@
                                         }
 
                                         <tr>
-                                            <td hidden> item.Indek</td>
+                                            <td hidden> @item.Indek</td>
                                             <td class="text-left text-uppercase">@kategoriPenerima</td>
                                             <td class="text-left" hidden>@penerimaId</td>
                                             <td class="text-left">@item.NoKp</td>
@@ -640,6 +641,7 @@
                 </div>
                 @*table Ganda end*@
             }
+
             <hr />
             <div class="form-group">
                 <input type="submit" value="Simpan" id="btnSave" class="btn ac-primary btn-sm" />
