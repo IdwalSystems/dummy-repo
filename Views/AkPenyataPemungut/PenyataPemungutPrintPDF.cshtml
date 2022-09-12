@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Cetakan Penyata Pemungut";
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    var bil = 0;
 }
 <style>
 
@@ -22,6 +23,17 @@
 
     .breakhere {
         page-break-after: always
+    }
+
+    .date-span {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: inline-block;
+    }
+
+    .relative {
+        position: relative;
     }
 </style>
 <div class="row flexrow mb-1 ml-1">
@@ -125,7 +137,7 @@
                 <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
             </tr>
         }
-        
+
         <tfoot class="table-warning">
             <tr class="font-weight-bold">
                 <td class="text-right" colspan="4">Jumlah RM</td>
@@ -134,6 +146,7 @@
         </tfoot>
     </table>
 </div>
+
 
 @if (Model.AkPenyataPemungut.FlJenisCek != 0)
 {
@@ -161,7 +174,7 @@
                     <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
                 </tr>
             }
-            
+
             <tfoot class="table-warning">
                 <tr class="font-weight-bold">
                     <td class="text-right" colspan="3">Jumlah RM</td>
@@ -185,6 +198,48 @@
         </tfoot>
     </table>
 </div>
+
+
+@if (Model.AkPenyataPemungut.AkPenyataPemungut2.Count < 15)
+{
+    <div class="table-responsive-sm mb-0">
+        <table class="table table-bordered table-sm topic">
+            <thead class="text-center">
+                <tr>
+                    <th colspan="5" class="ac-light text-uppercase">Senarai Pembayar - Pembayar</th>
+                </tr>
+                <tr>
+                    <th width="2%" class="text-center">Bil</th>
+                    <th width="5%" class="text-center">No Resit</th>
+                    <th width="30%">Nama</th>
+                    <th width="5%" class="text-center">Tarikh</th>
+                    <th width="5%">AMAUN RM</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model.AkPenyataPemungut.AkPenyataPemungut2)
+            {
+                bil++;
+
+                <tr>
+                    <td>@bil</td>
+                    <td>@item.AkTerima2.AkTerima.NoRujukan</td>
+                    <td class="text-uppercase">@item.AkTerima2.AkTerima.Nama</td>
+                    <td class="text-center">@item.AkTerima2.AkTerima.Tarikh.ToString("dd/MM/yyyy")</td>
+                    <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                </tr>
+            }
+
+            <tfoot class="table-warning">
+                <tr class="font-weight-bold">
+                    <td class="text-right" colspan="4">Jumlah RM</td>
+                    <td class="text-right">@Convert.ToDecimal(Model.AkPenyataPemungut.Jumlah).ToString("#,##0.00")</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+}
 
 <div class="table-responsive-sm">
     <table class="table table-sm topic table-bordered">
@@ -227,3 +282,45 @@
         </tbody>
     </table>
 </div>
+
+@if (Model.AkPenyataPemungut.AkPenyataPemungut2.Count() >= 15)
+{
+    <p class="breakhere"></p>
+
+    <div class="table-responsive-sm mb-0">
+        <table class="table table-bordered table-sm topic">
+            <thead class="text-center">
+                <tr>
+                    <th colspan="5" class="ac-light text-uppercase">Senarai Pembayar - Pembayar</th>
+                </tr>
+                <tr>
+                    <th width="2%" class="text-center">Bil</th>
+                    <th width="5%" class="text-center">No Resit</th>
+                    <th width="30%">Nama</th>
+                    <th width="5%" class="text-center">Tarikh</th>
+                    <th width="5%">AMAUN RM</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model.AkPenyataPemungut.AkPenyataPemungut2)
+            {
+                bil++;
+
+                <tr>
+                    <td>@bil</td>
+                    <td>@item.AkTerima2.AkTerima.NoRujukan</td>
+                    <td class="text-uppercase">@item.AkTerima2.AkTerima.Nama</td>
+                    <td class="text-center">@item.AkTerima2.AkTerima.Tarikh.ToString("dd/MM/yyyy")</td>
+                    <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                </tr>
+            }
+
+            <tfoot class="table-warning">
+                <tr class="font-weight-bold">
+                    <td class="text-right" colspan="4">Jumlah RM</td>
+                    <td class="text-right">@Convert.ToDecimal(Model.AkPenyataPemungut.Jumlah).ToString("#,##0.00")</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}

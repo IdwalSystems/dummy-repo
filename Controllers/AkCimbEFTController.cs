@@ -323,7 +323,7 @@ namespace MSNK.Controllers
         }
 
         [HttpPost]
-        public JsonResult JsonGetBaucer(DateTime tarDari, DateTime tarHingga)
+        public async Task<JsonResult> JsonGetBaucer(DateTime tarDari, DateTime tarHingga)
         {
             try
             {
@@ -341,7 +341,7 @@ namespace MSNK.Controllers
                     // 2. type of data (Individual or Gandaan) 
                 
                 // get all PV where posting = 1
-                List<AkPV> pv = _context.AkPV
+                List<AkPV> pv = await _context.AkPV
                     .Include(b => b.JKW)
                     .Include(b => b.JBahagian)
                     .Include(b => b.JBank)
@@ -350,10 +350,6 @@ namespace MSNK.Controllers
                     .Include(b => b.SpPendahuluanPelbagai).ThenInclude(b => b.SuPekerja)
                     .Include(b => b.SuProfil)
                         .ThenInclude(b => b.AkCarta)
-                    .Include(b => b.SuProfil)
-                        .ThenInclude(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
-                    .Include(b => b.SuProfil)
-                        .ThenInclude(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih).ThenInclude(b => b.JBank)
                     .Include(b => b.AkPembekal).ThenInclude(x => x.JBank)
                     .Include(b => b.SuPekerja).ThenInclude(x => x.JBank)
                     .Include(b => b.AkBank).ThenInclude(b => b.JBank)
@@ -363,10 +359,19 @@ namespace MSNK.Controllers
                     .Include(b => b.AkPV2)
                         .ThenInclude(b => b.AkBelian)
                             .ThenInclude(b => b.AkPO)
-                    .Where(b => b.FlPosting == 1 
-                    && b.JCaraBayarId == caraBayar.Id )
+                    .Include(b => b.AkPVGanda)
+                        .ThenInclude(b => b.JBank)
+                    .Include(b => b.AkPVGanda)
+                        .ThenInclude(b => b.JCaraBayar)
+                    .Include(b => b.AkPVGanda)
+                        .ThenInclude(b => b.SuAtlet)
+                    .Include(b => b.AkPVGanda)
+                        .ThenInclude(b => b.SuJurulatih)
+                    .Include(b => b.AkPVGanda)
+                        .ThenInclude(b => b.SuPekerja)
+                    .Where(b => b.FlPosting == 1 )
                     .OrderBy(b => b.NoPV)
-                    .ToList();
+                    .ToListAsync();
 
                 // get all PV within date range
                 pv = pv.Where(x => x.Tarikh >= tarDari
@@ -380,7 +385,6 @@ namespace MSNK.Controllers
 
                 List<AkCimbEFT1ViewModel> pvTable = new List<AkCimbEFT1ViewModel>();
 
-                // individual
                 int indek = 0;
                 foreach (var item in pv)
                 {
@@ -390,86 +394,81 @@ namespace MSNK.Controllers
                         .Where(b => b.AkPVId == item.Id && b.FlStatus == 1 && b.AkCimbEFT.FlHapus == 0)
                         .Any();
 
-                    if (isExistPV == true)
+                    // individu
+                    if (item.IsGanda == false)
                     {
-                        continue;
-                    }
-
-                    // check if have no akaun bank or not
-                    bool isExistNoAkaun = _context.AkPV.Where(b => b.Id == item.Id && string.IsNullOrEmpty(b.NoAkaunBank)).Any();
-                    if (isExistNoAkaun == true)
-                    {
-                        continue;
-                    }
-
-                    var jBank = "";
-                    
-                    switch (item.FlJenisBaucer)
-                    {
-                        case 1:
-                            jBank = item.JBank.KodEFT;
-                            break;
-                        case 3:
-                            jBank = item.JBank.KodEFT;
-                            break ;
-                        case 6:
+                        if (isExistPV == true)
+                        {
                             continue;
-                        default:
-                            jBank = item.JBank.KodEFT;
-                            break;
+                        }
 
-                    }
-                    indek++;
-                    pvTable.Add(
-                        new AkCimbEFT1ViewModel
+                        // check if have no akaun bank or not
+                        bool isNotExistNoAkaun = _context.AkPV.Where(b => b.Id == item.Id && string.IsNullOrEmpty(b.NoAkaunBank)).Any();
+                        if (isNotExistNoAkaun == true)
                         {
-                            Id = 0,
-                            Indek = indek,
-                            AkPVId = item.Id,
-                            FlPenerimaEFT = item.FlKategoriPenerima,
-                            AkPembekalId = item.AkPembekalId == null ? null : item.AkPembekalId,
-                            SuPekerjaId = item.SuPekerjaId == null ? null : item.SuPekerjaId,
-                            SuAtletId = null,
-                            SuJurulatihId = null,
-                            NoPV = item.NoPV,
-                            NoKP = item.NoKP == null ? "" : item.NoKP,
-                            NoAkaun = item.NoAkaunBank,
-                            Penerima = item.Nama,
-                            NoCekAtauEFT = item.NoCekAtauEFT,
-                            Tarikh = item.Tarikh,
-                            KodBank = jBank,
-                            Amaun = item.Jumlah
-                        });
+                            continue;
+                        }
 
-                }
-
-                // gandaan
-                foreach (var item in pv)
-                {
-                    //checked if already jana PV in AkCimbEFT1
-                    bool isExistPV = _context.AkCimbEFT1
-                        .Include(b => b.AkCimbEFT)
-                        .Where(b => b.AkPVId == item.Id && b.FlStatus == 1 && b.AkCimbEFT.FlHapus == 0 )
-                        .Any();
-
-                    if (isExistPV == true)
-                    {
-                        continue;
-                    }
-
-                    if (item.FlJenisBaucer == 6)
-                    {
-                        var suProfil = _context.SuProfil
-                            .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet)
-                            .Include(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih)
-                            .Include(b => b.SuProfil1).ThenInclude(b => b.JCaraBayar)
-                            .Where(b => b.Id == item.SuProfilId).FirstOrDefault();
-
-                        if (suProfil != null)
+                        if (item.JBank.KodEFT == null)
                         {
-                            foreach (var itemProfil in suProfil.SuProfil1)
+                            return Json(new { result = "ERROR" , bank = item.JBank.Nama });
+                        }
+
+                        indek++;
+                        if (item.JCaraBayarId == caraBayar.Id)
+                        {
+                            pvTable.Add(
+                            new AkCimbEFT1ViewModel
                             {
-                                if (itemProfil.JCaraBayarId == caraBayar.Id)
+                                Id = 0,
+                                Indek = indek,
+                                AkPVId = item.Id,
+                                FlPenerimaEFT = item.FlKategoriPenerima,
+                                AkPembekalId = item.AkPembekalId == null ? null : item.AkPembekalId,
+                                SuPekerjaId = item.SuPekerjaId == null ? null : item.SuPekerjaId,
+                                SuAtletId = null,
+                                SuJurulatihId = null,
+                                NoPV = item.NoPV,
+                                NoKP = item.NoKP == null ? "" : item.NoKP,
+                                NoAkaun = item.NoAkaunBank,
+                                Penerima = item.Nama,
+                                NoCekAtauEFT = item.NoCekAtauEFT,
+                                Tarikh = item.Tarikh,
+                                KodBank = item.JBank.KodEFT,
+                                Amaun = item.Jumlah
+                            });
+                        }
+                    }
+                    // gandaan
+                    else
+                    {
+                        var pvGanda = item.AkPVGanda;
+
+                        if (pvGanda != null)
+                        {
+                            foreach (var itemGanda in pvGanda)
+                            {
+
+                                if (itemGanda.JBank.KodEFT == null)
+                                {
+                                    return Json(new { result = "ERROR", bank = itemGanda.JBank.Nama });
+                                }
+
+                                // check if have no akaun bank or not
+                                bool isNotExistNoAkaun = _context.AkPVGanda.Where(b => b.Id == item.Id && string.IsNullOrEmpty(b.NoAkaun)).Any();
+                                
+                                if (isNotExistNoAkaun == true)
+                                {
+                                    continue;
+                                }
+
+                                // check if already succeed jana txt in previous data
+                                if (!String.IsNullOrEmpty(itemGanda.NoCekAtauEFT) || !String.IsNullOrEmpty(itemGanda.TarCekAtauEFT?.ToString("dd/MM/yyyy")))
+                                {
+                                    continue;
+                                } ;
+                                
+                                if (itemGanda.JCaraBayarId == caraBayar.Id)
                                 {
 
                                     indek++;
@@ -481,28 +480,28 @@ namespace MSNK.Controllers
                                        AkPVId = item.Id,
                                        FlPenerimaEFT = item.FlKategoriPenerima,
                                        AkPembekalId = null,
-                                       SuPekerjaId = null,
-                                       SuAtletId = itemProfil.SuAtletId == null ? null : itemProfil.SuAtletId,
-                                       SuJurulatihId = itemProfil.SuJurulatihId == null ? null : itemProfil.SuJurulatihId,
+                                       SuPekerjaId = itemGanda.SuPekerjaId,
+                                       SuAtletId = itemGanda.SuAtletId,
+                                       SuJurulatihId = itemGanda.SuJurulatihId,
                                        NoPV = item.NoPV,
-                                       NoKP = itemProfil.SuAtletId == null ? itemProfil.SuJurulatih.NoKp : itemProfil.SuAtlet.NoKp,
-                                       NoAkaun = itemProfil.SuAtletId == null ? itemProfil.SuJurulatih.NoAkaunBank : itemProfil.SuAtlet.NoAkaunBank,
-                                       Penerima = itemProfil.SuAtletId== null ? itemProfil.SuJurulatih.Nama : itemProfil.SuAtlet.Nama,
-                                       NoCekAtauEFT = itemProfil.NoCekEFT,
+                                       NoKP = itemGanda.NoKp,
+                                       NoAkaun = itemGanda.NoAkaun,
+                                       Penerima = itemGanda.Nama,
+                                       NoCekAtauEFT = itemGanda.NoCekAtauEFT,
                                        Tarikh = item.Tarikh,
-                                       KodBank = itemProfil.SuAtletId == null ? itemProfil.SuJurulatih.JBank.KodEFT : itemProfil.SuAtlet.JBank.KodEFT,
-                                       Amaun = itemProfil.Jumlah
+                                       KodBank = itemGanda.JBank.KodEFT,
+                                       Amaun = itemGanda.Amaun
                                    });
                                 }
-                               
+
                             }
-                            
+
                         }
-                        
                     }
                     
 
                 }
+
                 // add to cart first
                 PopulateCart(pv, caraBayar);
 
@@ -525,81 +524,56 @@ namespace MSNK.Controllers
                 //checked if already jana PV in AkCimbEFT1
                 bool isExistPV = _context.AkCimbEFT1.Where(b => b.AkPVId == item.Id && b.FlStatus != 0 && b.AkCimbEFT.FlHapus == 0).Any();
 
-                if (isExistPV == true)
+
+                if (item.IsGanda == false)
                 {
-                    continue;
-                }
-
-                // check if have no akaun bank or not
-                bool isExistNoAkaun = _context.AkPV.Where(b => b.Id == item.Id && string.IsNullOrEmpty(b.NoAkaunBank)).Any();
-                if (isExistNoAkaun == true)
-                {
-                    continue;
-                }
-
-                int penerimaId = 0;
-                int jBank = 0;
-                switch (item.FlJenisBaucer)
-                {
-                    case 1:
-                        penerimaId = (int)item.AkPembekalId;
-                        jBank = item.AkPembekal.JBankId;
-                        break;
-                    case 3:
-                        penerimaId = (int)item.SuPekerjaId;
-                        jBank = item.SuPekerja.JBankId;
-                        break;
-                    case 6:
-                        continue;
-                    default:
-                        penerimaId = 0;
-                        jBank = (int)item.JBankId;
-                        break;
-
-                }
-
-                indek++;
-                _cart.AddItem1(0,
-                                indek,
-                                item.Id,
-
-                                item.FlKategoriPenerima,
-                                item.AkPembekalId == null ? null : item.AkPembekalId,
-                                item.SuPekerjaId == null ? null : item.SuPekerjaId,
-                                null,
-                                null,
-                                item.Jumlah,
-                                item.NoCekAtauEFT,
-                                "",
-                                jBank,
-                                1
-                                );
-            }
-
-            // gandaan
-            foreach (var item in pv)
-            {
-                //checked if already jana PV in AkCimbEFT1
-                bool isExistPV = _context.AkCimbEFT1.Where(b => b.AkPVId == item.Id && b.FlStatus != 0).Any();
-
-                if (isExistPV == true)
-                {
-                    continue;
-                }
-
-                if (item.FlJenisBaucer == 6)
-                {
-                    var suProfil = _context.SuProfil
-                        .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet)
-                        .Include(b => b.SuProfil1).ThenInclude(b => b.SuJurulatih)
-                        .Include(b => b.SuProfil1).ThenInclude(b => b.JCaraBayar)
-                        .Where(b => b.Id == item.SuProfilId).FirstOrDefault();
-
-                    if (suProfil != null)
+                    if (isExistPV == true)
                     {
-                        foreach (var itemProfil in suProfil.SuProfil1)
+                        continue;
+                    }
+
+                    // check if have no akaun bank or not
+                    bool isExistNoAkaun = _context.AkPV.Where(b => b.Id == item.Id && string.IsNullOrEmpty(b.NoAkaunBank)).Any();
+                    if (isExistNoAkaun == true)
+                    {
+                        continue;
+                    }
+
+                    if (item.JCaraBayarId == caraBayar.Id)
+                    {
+                        indek++;
+                        _cart.AddItem1(0,
+                                        indek,
+                                        item.Id,
+                                        item.FlKategoriPenerima,
+                                        item.AkPembekalId == null ? null : item.AkPembekalId,
+                                        item.SuPekerjaId == null ? null : item.SuPekerjaId,
+                                        null,
+                                        null,
+                                        item.Jumlah,
+                                        item.NoCekAtauEFT,
+                                        "",
+                                        item.JBankId,
+                                        1
+                                        );
+                    }
+                    
+                }
+                else
+                {
+                    var pvGanda = item.AkPVGanda;
+
+                    if (pvGanda != null)
+                    {
+                        foreach (var itemGanda in pvGanda)
                         {
-                            if (itemProfil.JCaraBayarId == caraBayar.Id)
+                            // check if already succeed jana txt in previous data
+                            if (!String.IsNullOrEmpty(itemGanda.NoCekAtauEFT) || !String.IsNullOrEmpty(itemGanda.TarCekAtauEFT?.ToString("dd/MM/yyyy")))
+                            {
+                                continue;
+                            };
+
+                            if (itemGanda.JCaraBayarId == caraBayar.Id)
                             {
 
                                 indek++;
@@ -608,22 +582,19 @@ namespace MSNK.Controllers
                                 item.Id,
                                 item.FlKategoriPenerima,
                                 null,
-                                null,
-                                itemProfil.SuAtletId == null ? null : itemProfil.SuAtletId,
-                                itemProfil.SuJurulatihId == null ? null : itemProfil.SuJurulatihId,
-                                itemProfil.Jumlah,
-                                itemProfil.SuAtletId == null ? itemProfil.SuJurulatih.NoAkaunBank : itemProfil.SuAtlet.NoAkaunBank,
+                                itemGanda.SuPekerjaId,
+                                itemGanda.SuAtletId,
+                                itemGanda.SuJurulatihId,
+                                itemGanda.Amaun,
+                                itemGanda.NoAkaun,
                                 "",
-                                itemProfil.SuAtletId == null ? itemProfil.SuJurulatih.JBankId : itemProfil.SuAtlet.JBankId,
+                                itemGanda.JBankId,
                                 1
                                 );
                             }
-                                
                         }
-
                     }
-
-                }
+                }   
             }
         }
         private string GetNoRujukan(DateTime tarJana, string year, string month)
@@ -707,9 +678,19 @@ namespace MSNK.Controllers
                     {
                         var akPV = await _akPVRepo.GetById(item.AkPVId);
 
-                        akPV.NoCekAtauEFT = noRujukan;
-                        akPV.TarCekAtauEFT = DateTime.Now;
-
+                        if (akPV.IsGanda == false)
+                        {
+                            akPV.NoCekAtauEFT = noRujukan;
+                            akPV.TarCekAtauEFT = DateTime.Now;
+                        }
+                        else
+                        {
+                            foreach (var itemGanda in akPV.AkPVGanda)
+                            {
+                                itemGanda.NoCekAtauEFT = noRujukan;
+                                itemGanda.TarCekAtauEFT = DateTime.Now;
+                            }
+                        }
                         await _akPVRepo.Update(akPV);
                     }
                     // update no EFT in AkPV end
@@ -799,11 +780,18 @@ namespace MSNK.Controllers
 
                     }
 
-                    noAkaun = noAkaun.PadRight(16);
-                    penerima = penerima.PadRight(40).ToUpper();
+                    noAkaun = TruncateNumbers(noAkaun,16).PadRight(16);
+                    penerima = TruncateText(penerima,40).PadRight(40).ToUpper();
                     string amaun = i.Amaun.ToString().Replace(".", "").PadLeft(11, '0');
                     string refNum = akCimbEFT.NoPBI.PadRight(30);
-                    NoKP = NoKP?.PadRight(20) ?? "".PadRight(20);
+                    if (NoKP != null)
+                    {
+                        NoKP = TruncateNumbers(NoKP,20).PadRight(20);
+                    } else
+                    {
+                        NoKP = "".PadRight(20);
+                    }
+                    
                     string description = i.Id.ToString().PadRight(20);
 
                     var nextLine = jenisRekod + KodBNM + noAkaun + penerima + amaun + refNum + NoKP + description;
@@ -1117,22 +1105,51 @@ namespace MSNK.Controllers
                     {
 
                         AkPV akPV = await _akPVRepo.GetById(cart.AkPVId);
-                        switch (cart.FlStatus)
+                        if (akPV.IsGanda == false)
                         {
-                            case 1:
-                                berjaya++;
-                                break;
-                            case 2:
-                                akPV.NoCekAtauEFT = "";
-                                akPV.TarCekAtauEFT = null;
-                                gagal++;
-                                break;
-                            default:
-                                akPV.NoCekAtauEFT = "";
-                                akPV.TarCekAtauEFT = null;
-                                gagal++;
-                                break;
+                            switch (cart.FlStatus)
+                            {
+                                case 1:
+                                    akPV.NoCekAtauEFT = akCimbEFT.NoPBI;
+                                    akPV.TarCekAtauEFT = akCimbEFT.TarJana;
+                                    berjaya++;
+                                    break;
+                                case 2:
+                                    akPV.NoCekAtauEFT = "";
+                                    akPV.TarCekAtauEFT = null;
+                                    gagal++;
+                                    break;
+                                default:
+                                    akPV.NoCekAtauEFT = "";
+                                    akPV.TarCekAtauEFT = null;
+                                    gagal++;
+                                    break;
+                            }
                         }
+                        else
+                        {
+                            var ganda = akPV.AkPVGanda.Where(b => b.NoAkaun == cart.NoCek).FirstOrDefault();
+
+                            switch (cart.FlStatus)
+                            {
+                                case 1:
+                                    ganda.NoCekAtauEFT = akCimbEFT.NoPBI;
+                                    ganda.TarCekAtauEFT = akCimbEFT.TarJana;
+                                    berjaya++;
+                                    break;
+                                case 2:
+                                    ganda.NoCekAtauEFT = "";
+                                    ganda.TarCekAtauEFT = null;
+                                    gagal++;
+                                    break;
+                                default:
+                                    ganda.NoCekAtauEFT = "";
+                                    ganda.TarCekAtauEFT = null;
+                                    gagal++;
+                                    break;
+                            }
+                        }
+                        
 
                         _context.Update(akPV);
                     }

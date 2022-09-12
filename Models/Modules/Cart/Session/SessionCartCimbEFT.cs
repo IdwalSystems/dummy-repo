@@ -31,7 +31,7 @@ namespace MSNK.Models.Modules.Cart.Session
             decimal amaun,
             string noCek,
             string catatan,
-            int jBankId,
+            int? jBankId,
             int? flStatus
             )
         {

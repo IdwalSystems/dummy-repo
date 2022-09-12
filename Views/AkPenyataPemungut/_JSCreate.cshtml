@@ -55,6 +55,7 @@
 
     // jana kelompok
     function JanaKelompok() {
+        $(".loading").prop('hidden', false);
         var tarDari = $("#TarDari").val();
         var tarHingga = $("#TarHingga").val();
         var caraBayarId = $("#ddlCaraBayar").val();
@@ -96,9 +97,12 @@
                 }
                 jumlah.val(sum.toFixed(2));
                 bilTerima.val(bil);
+
+                $(".loading").prop('hidden', true);
             },
             error: function (req, status, error) {
                 alert(error);
+                $(".loading").prop('hidden', true);
             }
         });
     }

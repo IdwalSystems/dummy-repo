@@ -51,31 +51,39 @@
             data: { tarDari: tarDari, tarHingga: tarHingga },
             dataType: "json",
             success: function (msg) {
-                //refresh updated table Baucer\
-                $("table tbody#tbodyBaucer").empty();
-                var sum = 0;
-                var bil = 0;
-                if (msg.table.length > 0) {
-                    for (var i = 0; i < msg.table.length; i++) {
-                        var item1 = msg.table[i];
-                        var str = "<tr><td id='Indek' hidden>" + item1.indek +
-                            "</td><td class='text-uppercase'>" + item1.indek +
-                            "</td><td class='text-uppercase'>" + item1.noPV +
-                            "</td><td class='text-uppercase'>" + item1.noKP +
-                            "</td><td class='text-uppercase'>" + item1.noAkaun +
-                            "</td><td class='text-uppercase'>" + item1.penerima +
-                            "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
-                            "</td><tr>";
-                        $("table tbody#tbodyBaucer").append(str);
-                        sum += item1.amaun;
-                        bil++;
-                        
-                    }
-                }
-                jumlah.val(sum.toFixed(2));
-                bilBaucer.val(bil);
+                if (msg.result == 'OK') {
+                    //refresh updated table Baucer\
+                    $("table tbody#tbodyBaucer").empty();
+                    var sum = 0;
+                    var bil = 0;
+                    if (msg.table.length > 0) {
+                        for (var i = 0; i < msg.table.length; i++) {
+                            var item1 = msg.table[i];
+                            var str = "<tr><td id='Indek' hidden>" + item1.indek +
+                                "</td><td class='text-uppercase'>" + item1.indek +
+                                "</td><td class='text-uppercase'>" + item1.noPV +
+                                "</td><td class='text-uppercase'>" + item1.noKP +
+                                "</td><td class='text-uppercase'>" + item1.noAkaun +
+                                "</td><td class='text-uppercase'>" + item1.penerima +
+                                "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                                "</td><tr>";
+                            $("table tbody#tbodyBaucer").append(str);
+                            sum += item1.amaun;
+                            bil++;
 
-                $(".loading").prop('hidden', true);
+                        }
+                    }
+                    jumlah.val(sum.toFixed(2));
+                    bilBaucer.val(bil);
+
+                    $(".loading").prop('hidden', true);
+                }
+                else {
+                    toastr.error("kod EFT bagi bank " + msg.bank + " tidak diisi. Sila isi di Jadual Bank", "Ralat");
+                    toastr.options.timeOut = 5000; // 5s
+                    $(".loading").prop('hidden', true);
+                }
+                
             },
             error: function (req, status, error) {
                 alert(error);

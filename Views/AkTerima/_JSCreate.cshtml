@@ -1013,14 +1013,18 @@
             EmptyCart();
             switch ($(this).val()) {
                 case "0":
+                    $("#cardPendahuluanPelbagai").prop('hidden', true);
                     $("#divPenghutang").prop('hidden', true);
                     break;
                 case "1":
+                    $("#cardPendahuluanPelbagai").prop('hidden', true);
                     $("#divPenghutang").removeAttr('hidden');
                     break;
                 case "2":
                     break;
                 case "3":
+                    $("#cardPendahuluanPelbagai").removeAttr('hidden');
+                    $("#divPenghutang").prop('hidden', true);
                     break;
                 case "4":
                     break;

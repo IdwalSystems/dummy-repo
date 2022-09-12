@@ -572,6 +572,18 @@ namespace MSNK.Controllers
                     await AddLogAsync("Tambah", m.NoDokumen, m.NoDokumen, 0, m.Jumlah, pekerjaId);
                     //insert applog end
 
+                    // update no EFT in akPV
+                    foreach (var item in _cart.Lines2)
+                    {
+                        var akTerima2 = await _akTerima2Repo.GetById(item.AkTerima2Id);
+
+                        akTerima2.NoSlip = noRujukan;
+                        akTerima2.TarSlip = DateTime.Now;
+
+                        await _akTerima2Repo.Update(akTerima2);
+                    }
+                    // update no EFT in AkPV end
+
                     await _context.SaveChangesAsync();
 
                     CartEmpty();

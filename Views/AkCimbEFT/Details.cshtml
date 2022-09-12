@@ -7,37 +7,7 @@
     var noGaji = Model.SuPekerja == null ? "00000" : Model.SuPekerja.NoGaji;
     var namaPekerja = Model.SuPekerja == null ? "superAdmin" : Model.SuPekerja.Nama;
 }
-<script>
-
-    function saveStaticDataToFile(id) {
-        var blob = "";
-        var namaFail = "@Model.NamaFail";
-        $.ajax({
-            type: "POST",
-            //url: "/AkPV/JsonGetKod",
-            url: '@Url.Action("JsonJanaTxt", "AkCimbEFT")',
-            data: { id: id },
-            dataType: "json",
-            success: function (msg) {
-                //if (msg.record.length > 0) {
-                //    for (var i = 0; i < msg.record.length; i++) {
-                //        var item1 = msg.record[i];
-                //         str += item1 + '/n'; 
-                //    }
-                //}
-                var blob = new Blob([msg.record.join('\n')],
-                    { type: "text/plain;charset=utf-8" });
-
-                saveAs(blob, namaFail);
-            },
-            error: function (req, status, error) {
-                alert(error);
-            }
-        });
-        
-    }
-		
-</script>
+<partial name="_JSDetails" />
 
 <div class="card box-shadow">
     <div class="card-body">

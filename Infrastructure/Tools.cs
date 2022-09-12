@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MSNK.Infrastructure
@@ -93,6 +94,8 @@ namespace MSNK.Infrastructure
             return strHasil;
         }
         // change currency to words end
+
+
 
         // find users' path
         public enum KnownFolder
@@ -210,6 +213,30 @@ namespace MSNK.Infrastructure
                 default:
                     break;
             }
+
+            return result;
+        }
+
+        public static string TruncateNumbers(string value, int maxLength, string truncationSuffix = "")
+        {
+            // get the text
+            var result = value;
+
+            //remove spaces, dash
+            result = Regex.Replace(result, @"[^0-9]", "");
+
+            return result;
+        }
+
+        public static string TruncateText(string value, int maxLength, string truncationSuffix = "")
+        {
+            // get the text
+            var result = value;
+
+            //remove spaces, dash
+            result = value?.Length > maxLength
+                ? value.Substring(0, maxLength) + truncationSuffix
+                : value;
 
             return result;
         }

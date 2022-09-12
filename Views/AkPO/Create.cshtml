@@ -79,7 +79,7 @@
                 <div class="col-md-2">
                     <div class="form-group">
                         <label asp-for="TarikhBekalan" class="control-label"></label><span class="text-danger">*</span>
-                        <input asp-for="TarikhBekalan" class="form-control form-control-sm" type="date" value="@DateTime.Now.AddDays(14).ToString("yyyy-MM-dd")" />
+                        <input asp-for="TarikhBekalan" class="form-control form-control-sm" type="date" value="@DateTime.Now.AddDays(90).ToString("yyyy-MM-dd")" readonly/>
                         <span asp-validation-for="TarikhBekalan" class="text-danger"></span>
                     </div>
                 </div>

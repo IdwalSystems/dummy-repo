@@ -232,8 +232,34 @@ namespace MSNK.Controllers
             List<JNegeri> negeriList = _context.JNegeri.OrderBy(b => b.Kod).ToList();
             ViewBag.JNegeri = negeriList;
 
-            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.OrderBy(b => b.NoPermohonan).ToList();
-            ViewBag.SpPendahuluanPelbagai = spList;
+            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.Where(b => b.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
+
+            List<SpPendahuluanPelbagai> spListUpdated = new List<SpPendahuluanPelbagai>();
+
+            foreach (var item in spList)
+            {
+                var ExistAkTerimaWithSp = _context.AkTerima.Any(b => b.SpPendahuluanPelbagaiId == item.Id);
+
+                if (ExistAkTerimaWithSp == true)
+                {
+                    continue;
+                    
+                }
+                else
+                {
+                    var ExistAkPVWithSp = _context.AkPV.Any(b => b.SpPendahuluanPelbagaiId == item.Id);
+                    if (ExistAkPVWithSp == true)
+                    {
+                        spListUpdated.Add(item);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }
+
+            ViewBag.SpPendahuluanPelbagai = spListUpdated;
 
             List<AkBank> akBankList = _context.AkBank.Include(b=> b.JBank).OrderBy(b => b.Kod).ToList();
             ViewBag.AkBank = akBankList;
@@ -1898,6 +1924,20 @@ namespace MSNK.Controllers
 
                 AkTerima akTerima = await _akTerimaRepo.GetById((int)id);
 
+                // if already exist in Penyata Pemungut, declare error
+                foreach(var akTerima2 in akTerima.AkTerima2)
+                {
+                    if (!String.IsNullOrEmpty(akTerima2.NoSlip) || !String.IsNullOrEmpty(akTerima2.TarSlip?.ToString("dd/MM/yyyy")))
+                    {
+                        bool IsExistPenyataPemungut = await _context.AkPenyataPemungut.AnyAsync(b => b.NoDokumen == akTerima2.NoSlip);
+                        if (IsExistPenyataPemungut == true)
+                        {
+                            TempData[SD.Error] = "Data terlibat dengan Penyata Pemungut " + akTerima2.NoSlip + ". Batal Posting tidak dibenarkan.";
+                            return RedirectToAction(nameof(Index));
+                        }
+                        
+                    } ;
+                }
                 List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akTerima.NoRujukan).ToList();
                 if (akAkaun == null)
                 {

@@ -18,6 +18,7 @@ using MSNK.Models.Modules.PrintModel;
 using MSNK.Models.Modules.ViewModel;
 using Rotativa.AspNetCore;
 
+
 namespace MSNK.Controllers
 {
     [Authorize(Roles = "SuperAdmin , Supervisor, User")]

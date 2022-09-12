@@ -242,6 +242,15 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
+
+            decimal jumlahPerihal = 0;
+            foreach (var item in akPO.AkPO2)
+            {
+                jumlahPerihal = jumlahPerihal + item.Amaun;
+            }
+
+            ViewBag.JumlahPerihal = jumlahPerihal;
+
             PopulateList();
             PopulateTable(id);
             return View(akPO);
@@ -262,6 +271,7 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
+
             PopulateList();
             PopulateTable(id);
             return View(akPO);
@@ -703,6 +713,7 @@ namespace MSNK.Controllers
                     m.FlHapus = 0;
                     m.FlCetak = 0;
                     m.IsInKewangan = IsInKewangan;
+                    m.TarikhBekalan = akPO.TarikhBekalan;
                     m.Tahun = akPO.Tahun;
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
@@ -896,8 +907,8 @@ namespace MSNK.Controllers
                                 return View(akPO);
                             }
                         }
-                        // check for baki peruntukan end
 
+                        // check for baki peruntukan end
                         akPO.UserIdKemaskini = user.UserName;
                         akPO.TarKemaskini = DateTime.Now;
                         akPO.SuPekerjaKemaskiniId = pekerjaId;

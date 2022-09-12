@@ -527,8 +527,7 @@ namespace MSNK.Data
                     .HasOne(m => m.JBank)
                     .WithMany(t => t.AkCimbEFT1)
                     .HasForeignKey(m => m.JBankId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .IsRequired();
+                    .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<AkCimbEFT>()
                     .HasOne(m => m.AkBank)

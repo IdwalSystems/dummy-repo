@@ -38,12 +38,12 @@ namespace MSNK.Models.Modules
         [DisplayName("Jumlah RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Amaun { get; set; }
-        public string NoCek { get; set; }
+        public string NoCek { get; set; } // noAkaunBank
         public string Catatan { get; set; }
 
         // note:
         // JBank - Jenis Bank Penerima
-        public int JBankId { get; set; }
+        public int? JBankId { get; set; }
         public JBank JBank { get; set; }
 
         // FlStatus = 0 -> Tolak / Gagal

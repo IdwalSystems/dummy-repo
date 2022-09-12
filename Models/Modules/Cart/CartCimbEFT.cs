@@ -20,7 +20,7 @@ namespace MSNK.Models.Modules.Cart
             decimal amaun,
             string noCek,
             string catatan,
-            int jBankId,
+            int? jBankId,
             int? flStatus
             )
         {
