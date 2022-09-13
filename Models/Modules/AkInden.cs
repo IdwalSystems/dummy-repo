@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSNK.Models.Modules
 {
-    public class AkInden : AppLogHelper, ISoftDelete
+    public class AkInden : AppLogHelper, ISoftDelete, ICancel
     {
         //field
         public int Id { get; set; }
@@ -32,7 +32,11 @@ namespace MSNK.Models.Modules
         //field end
 
         //flag
-        [DisplayName("Status Batal")]
+        [DisplayName("Batal")]
+        [DefaultValue("0")]
+        public int FlBatal { get; set; }
+        public DateTime? TarBatal { get; set; }
+        [DisplayName("Hapus")]
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkPOLaras : AppLogHelper, ISoftDelete
+    public class AkPOLaras : AppLogHelper, ISoftDelete, ICancel
     {
         //field
         public int Id { get; set; }
@@ -30,7 +30,11 @@ namespace MSNK.Models.Modules
         //field end
 
         //flag
-        [DisplayName("Status Batal")]
+        [DisplayName("Batal")]
+        [DefaultValue("0")]
+        public int FlBatal { get; set; }
+        public DateTime? TarBatal { get; set; }
+        [DisplayName("Hapus")]
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
@@ -56,6 +60,7 @@ namespace MSNK.Models.Modules
 
         public ICollection<AkPOLaras2> AkPOLaras2 { get; set; }
         public ICollection<AkPOLaras1> AkPOLaras1 { get; set; }
+        
 
         //relationship end
 

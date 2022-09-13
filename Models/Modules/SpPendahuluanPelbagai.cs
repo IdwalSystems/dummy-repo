@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class SpPendahuluanPelbagai : AppLogHelper, ISoftDelete
+    public class SpPendahuluanPelbagai : AppLogHelper, ISoftDelete, ICancel
     {
         public int Id { get; set; }
         public string NoPermohonan { get; set; }
@@ -49,6 +49,12 @@ namespace MSNK.Models.Modules
 
         public int FlPosting { get; set; }
         public int FlCetak { get; set; }
+        [DisplayName("Batal")]
+        [DefaultValue("0")]
+        public int FlBatal { get; set; }
+        public DateTime? TarBatal { get; set; }
+        [DisplayName("Hapus")]
+        [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
 
@@ -75,6 +81,6 @@ namespace MSNK.Models.Modules
         public ICollection<SpPendahuluanPelbagai2> SpPendahuluanPelbagai2 { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
         public ICollection<AkTerima> AkTerima { get; set; }
-
+        
     }
 }

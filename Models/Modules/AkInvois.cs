@@ -80,7 +80,7 @@ namespace MSNK.Models.Modules
 
         //relationship end
 
-        [DisplayName("Batal")]
+        [DisplayName("Hapus")]
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }

@@ -34,7 +34,7 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int FlPosting { get; set; }
         public DateTime? TarikhPosting { get; set; }
-        [DisplayName("Batal")]
+        [DisplayName("Hapus")]
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }

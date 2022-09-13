@@ -91,6 +91,8 @@
                                 <th width="5%">Tambah RM</th>
                                 <th width="5%">Pindah RM</th>
                                 <th width="5%">Jumlah RM</th>
+                                <th width="5%">TBS RM</th>
+                                <th width="5%">Belanja RM</th>
                                 <th width="5%">Telah Guna RM</th>
                                 <th width="5%">Baki RM</th>
                             </tr>
@@ -118,6 +120,12 @@
                                     </td>
                                     <td class="text-right">
                                         @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.TBS).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.Belanja).ToString("#,##0.00")
                                     </td>
                                     <td class="text-right">
                                         @Convert.ToDecimal(item.TelahGuna).ToString("#,##0.00")

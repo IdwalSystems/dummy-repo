@@ -109,9 +109,18 @@
                 <tbody>
                     @{
                         decimal baki = 0;
+                        decimal jumDebit = 0;
+                        decimal jumKredit = 0;
+                        decimal jumTanggungan = 0;
+                        decimal jumLiabiliti = 0;
+
                     }
                     @foreach (var item in Model)
                     {
+                        jumDebit += item.Debit;
+                        jumKredit += item.Kredit;
+                        jumTanggungan += item.Tanggungan;
+                        jumLiabiliti += item.Liabiliti;
                         <tr>
                             <td>
                             </td>
@@ -127,27 +136,38 @@
                             <td class="text-uppercase">
                                 @item.Rujukan
                             </td>
-                            <td>
+                            <td class="text-right">
                                 @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
                             </td>
-                            <td>
+                            <td class="text-right">
                                 @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
                             </td>
-                            <td>
+                            <td class="text-right">
                                 @Convert.ToDecimal(item.Tanggungan).ToString("#,##0.00")
                             </td>
-                            <td>
+                            <td class="text-right">
                                 @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
                             </td>
-                            <td>
+                            <td class="text-right">
                                 @{
-                                    baki += item.Kredit - item.Debit - item.Tanggungan - item.Liabiliti;
+                                    baki += item.Kredit - item.Debit - item.Tanggungan; // - item.Liabiliti;
                                 }
                                 @Convert.ToDecimal(baki).ToString("#,##0.00")
                             </td>
                         </tr>
                     }
+                    
                 </tbody>
+                <tfoot>
+                    <tr class="font-weight-bold table-warning">
+                        <td colspan="5" class="text-right font-weight-bold">JUMLAH RM</td>
+                        <td class="text-right">@Convert.ToDecimal(jumDebit).ToString("#,##0.00")</td>
+                        <td class="text-right">@Convert.ToDecimal(jumKredit).ToString("#,##0.00")</td>
+                        <td class="text-right">@Convert.ToDecimal(jumTanggungan).ToString("#,##0.00")</td>
+                        <td class="text-right">@Convert.ToDecimal(jumLiabiliti).ToString("#,##0.00")</td>
+                        <td class="text-right">@Convert.ToDecimal(baki).ToString("#,##0.00")</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
         <hr />

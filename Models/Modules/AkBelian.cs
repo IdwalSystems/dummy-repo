@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkBelian : AppLogHelper, ISoftDelete
+    public class AkBelian : AppLogHelper, ISoftDelete, ICancel
     {
         //field
         public int Id { get; set; }
@@ -42,6 +42,10 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int FlPosting { get; set; }
         [DisplayName("Batal")]
+        [DefaultValue("0")]
+        public int FlBatal { get; set; }
+        public DateTime? TarBatal { get; set; }
+        [DisplayName("Hapus")]
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
@@ -84,6 +88,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkBelian2> AkBelian2 { get; set; }
         public ICollection<AkPV2> AkPV2 { get; set; }
         
+
         //relationship end
     }
 }

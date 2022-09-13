@@ -16,16 +16,7 @@ namespace MSNK.Models.Modules.EFRepository
 
         public readonly ApplicationDbContext context;
         public BelanjawanSemasaRepository(ApplicationDbContext context) => this.context = context;
-        
 
-        decimal Asal = 0;
-        decimal Tambah = 0;
-        decimal Pindah = 0;
-        decimal Jumlah = 0;
-        decimal Belanja = 0;
-        decimal TBS = 0;
-        decimal TelahGuna = 0;
-        decimal Baki = 0;
         public async Task<List<AbWaran>> GetAbWaranBasedOnYear(string tahun, int jKWId, int jBahagianId, DateTime tarHingga)
         {
             var sql = await context.AbWaran
@@ -45,6 +36,15 @@ namespace MSNK.Models.Modules.EFRepository
 
         public List<AbBelanjawanSemasaViewModel> RunWaranObjekOperation(int JenisWaran, string TK, decimal Amaun, string KodCarta, string Perihal, string Paras)
         {
+            decimal Asal = 0;
+            decimal Tambah = 0;
+            decimal Pindah = 0;
+            decimal Jumlah = 0;
+            //decimal Belanja = 0;
+            //decimal TBS = 0;
+            //decimal TelahGuna = 0;
+            decimal Baki = 0;
+
             var list = new List<AbBelanjawanSemasaViewModel>();
             if (JenisWaran == 0) // WPA
             {
@@ -96,6 +96,23 @@ namespace MSNK.Models.Modules.EFRepository
                     );
 
             return list;
+        }
+
+        public async Task<List<SpPendahuluanPelbagai>> GetSpPendahuluanPelbagaiBasedOnYear(string tahun, int jKWId, int jBahagianId, DateTime tarHingga)
+        {
+            var newTahun = Convert.ToDateTime("31/12/" + tahun).Year;
+            var sql = await context.SpPendahuluanPelbagai
+                .Include(b => b.AkCarta)
+                    .ThenInclude(b => b.JParas)
+                .Where(
+                b => b.TarMasuk.Year == newTahun
+                && b.JKWId == jKWId
+                && b.JBahagianId == jBahagianId
+                && b.TarMasuk <= tarHingga
+                && b.FlPosting == 1).OrderBy(b => b.TarMasuk)
+                .ToListAsync();
+
+            return sql;
         }
 
         public async Task<List<AkPO>> GetAkPOBasedOnYear(string tahun, int jKWId, int jBahagianId, DateTime tarHingga)
@@ -150,8 +167,17 @@ namespace MSNK.Models.Modules.EFRepository
             return sql;
         }
 
-        public List<AbBelanjawanSemasaViewModel> RunPOPOLarasIndenCVObjekOperation(decimal Amaun, string KodCarta, string Perihal, string Paras)
+        public List<AbBelanjawanSemasaViewModel> RunSpPOPOLarasIndenCVObjekOperation(decimal Amaun, string KodCarta, string Perihal, string Paras)
         {
+            decimal Asal = 0;
+            decimal Tambah = 0;
+            decimal Pindah = 0;
+            decimal Jumlah = 0;
+            decimal Belanja = 0;
+            decimal TBS = 0;
+            decimal TelahGuna = 0;
+            decimal Baki = 0;
+
             var list = new List<AbBelanjawanSemasaViewModel>();
 
             TBS = Amaun;
@@ -197,6 +223,15 @@ namespace MSNK.Models.Modules.EFRepository
 
         public List<AbBelanjawanSemasaViewModel> RunBaucerObjekOperation(bool Tanggungan, decimal Amaun, string KodCarta, string Perihal, string Paras)
         {
+            decimal Asal = 0;
+            decimal Tambah = 0;
+            decimal Pindah = 0;
+            decimal Jumlah = 0;
+            decimal Belanja = 0;
+            decimal TBS = 0;
+            decimal TelahGuna = 0;
+            decimal Baki = 0;
+
             var list = new List<AbBelanjawanSemasaViewModel>();
 
             if (Tanggungan == true)
@@ -267,6 +302,15 @@ namespace MSNK.Models.Modules.EFRepository
 
         public List<AbBelanjawanSemasaViewModel> RunResitObjekOperation(decimal Amaun, string KodCarta, string Perihal, string Paras)
         {
+            decimal Asal = 0;
+            decimal Tambah = 0;
+            decimal Pindah = 0;
+            decimal Jumlah = 0;
+            decimal Belanja = 0;
+            decimal TBS = 0;
+            decimal TelahGuna = 0;
+            decimal Baki = 0;
+
             var list = new List<AbBelanjawanSemasaViewModel>();
 
             Belanja = 0 - Amaun;
@@ -312,6 +356,15 @@ namespace MSNK.Models.Modules.EFRepository
 
         public List<AbBelanjawanSemasaViewModel> RunJurnalObjekOperation(decimal Debit, decimal Kredit, string KodCarta, string Perihal, string Paras)
         {
+            decimal Asal = 0;
+            decimal Tambah = 0;
+            decimal Pindah = 0;
+            decimal Jumlah = 0;
+            decimal Belanja = 0;
+            decimal TBS = 0;
+            decimal TelahGuna = 0;
+            decimal Baki = 0;
+
             var list = new List<AbBelanjawanSemasaViewModel>();
 
             Belanja = Debit - Kredit;

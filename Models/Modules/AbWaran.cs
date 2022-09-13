@@ -30,7 +30,7 @@ namespace MSNK.Models.Modules
         //flag
         // WPA = 0(asal); WPT = 1 (tambah/tarik balik); WPP = 2(pindah);
         public int FlJenisWaran { get; set; }
-        [DisplayName("Status Batal")]
+        [DisplayName("Hapus")]
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }

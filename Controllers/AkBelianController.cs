@@ -1682,7 +1682,7 @@ namespace MSNK.Controllers
                                     Penerima = penerima,
                                     VotId = item.AkCartaId,
                                     Rujukan = akBelian.NoInbois,
-                                    Tanggungan = 0 - item.Amaun,
+                                    //Tanggungan = 0 - item.Amaun,
                                     Liabiliti = item.Amaun
 
                                 };

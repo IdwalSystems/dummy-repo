@@ -17,6 +17,8 @@ namespace MSNK.Models.Modules.IRepository
             string Perihal,
             string Paras);
 
+        Task<List<SpPendahuluanPelbagai>> GetSpPendahuluanPelbagaiBasedOnYear(T1 tahun, T2 jKWId, int jBahagianId, DateTime tarHingga);
+
         Task<List<AkPO>> GetAkPOBasedOnYear(T1 tahun, T2 jKWId, int jBahagianId, DateTime tarHingga);
 
         Task<List<AkPOLaras>> GetAkPOLarasBasedOnYear(T1 tahun, T2 jKWId, int jBahagianId, DateTime tarHingga);
@@ -25,7 +27,7 @@ namespace MSNK.Models.Modules.IRepository
 
         Task<List<AkTunaiCV>> GetAkTunaiCVBasedOnYear(T1 tahun, T2 jKWId, int jBahagianId, DateTime tarHingga);
 
-        List<AbBelanjawanSemasaViewModel> RunPOPOLarasIndenCVObjekOperation(
+        List<AbBelanjawanSemasaViewModel> RunSpPOPOLarasIndenCVObjekOperation(
             decimal Amaun,
             string KodCarta,
             string Perihal,

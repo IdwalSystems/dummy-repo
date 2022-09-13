@@ -57,13 +57,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label asp-for="AkNotaMintaId" class="control-label"></label>
-                                    <select class="form-control form-control-sm select2" asp-for="AkNotaMintaId" id="ddlNotaMinta" disabled>
-                                        <option value="" hidden>-- Pilih Nota Minta --</option>
-                                        @foreach (var s in ViewBag.AkNotaMinta)
-                                        {
-                                            <option value="@s.Id">@s.NoSiri - @s.NoRujukan </option>
-                                        }
-                                    </select>
+                                    <input class="form-control form-control-sm" value="@Model.AkNotaMinta?.NoRujukan" readonly />
                                 </div>
                             </div>
                             <div class="col-md-2">

@@ -63,6 +63,7 @@ namespace MSNK.Controllers
             string tahun,
             DateTime tarHingga)
         {
+            tarHingga = tarHingga.AddHours(23.99);
 
             List<AbBelanjawanSemasaViewModel> vm = new List<AbBelanjawanSemasaViewModel>();
 
@@ -96,12 +97,26 @@ namespace MSNK.Controllers
             {
                 foreach (var po1 in po.AkPO1)
                 {
-                    poList = _bsRepo.RunPOPOLarasIndenCVObjekOperation(po1.Amaun, po1.AkCarta.Kod, po1.AkCarta.Perihal, "4");
+                    poList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(po1.Amaun, po1.AkCarta.Kod, po1.AkCarta.Perihal, "4");
 
                     vm.AddRange(poList);
                 }
             }
             // PO End
+
+            // Pendahuluan Pelbagai
+            List<SpPendahuluanPelbagai> Sps = await _bsRepo.GetSpPendahuluanPelbagaiBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+
+            List<AbBelanjawanSemasaViewModel> spList = new List<AbBelanjawanSemasaViewModel>();
+
+            foreach (var sp in Sps)
+            {
+                spList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(sp.JumLulus, sp.AkCarta.Kod, sp.AkCarta.Perihal, "4");
+
+                vm.AddRange(spList);
+
+            }
+            // Pendahuluan Pelbagai End
 
             // POLaras
             List<AkPOLaras> POLarass = await _bsRepo.GetAkPOLarasBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
@@ -112,7 +127,7 @@ namespace MSNK.Controllers
             {
                 foreach (var poLaras1 in poLaras.AkPOLaras1)
                 {
-                    poLarasList = _bsRepo.RunPOPOLarasIndenCVObjekOperation(poLaras1.Amaun, poLaras1.AkCarta.Kod, poLaras1.AkCarta.Perihal, "4");
+                    poLarasList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(poLaras1.Amaun, poLaras1.AkCarta.Kod, poLaras1.AkCarta.Perihal, "4");
 
                     vm.AddRange(poLarasList);
                 }
@@ -128,7 +143,7 @@ namespace MSNK.Controllers
             {
                 foreach (var inden1 in inden.AkInden1)
                 {
-                    indenList = _bsRepo.RunPOPOLarasIndenCVObjekOperation(inden1.Amaun, inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
+                    indenList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(inden1.Amaun, inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
 
                     vm.AddRange(indenList);
                 }
@@ -160,7 +175,7 @@ namespace MSNK.Controllers
             {
                 foreach (var cv1 in cv.AkTunaiCV1)
                 {
-                    cvList = _bsRepo.RunPOPOLarasIndenCVObjekOperation(cv1.Amaun, cv1.AkCarta.Kod, cv1.AkCarta.Perihal, "4");
+                    cvList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(cv1.Amaun, cv1.AkCarta.Kod, cv1.AkCarta.Perihal, "4");
 
                     vm.AddRange(cvList);
                 }
@@ -220,12 +235,12 @@ namespace MSNK.Controllers
                     Jumlah = l.Sum(c => c.Asal + c.Tambah - c.Pindah),
                     Belanja = l.Sum(c => c.Belanja),
                     TBS = l.Sum(c => c.TBS),
-                    TelahGuna = l.Sum(c => c.Belanja),
-                    Baki = l.Sum(c => c.Asal + c.Tambah - c.Pindah - c.Belanja),
-                }).ToList();
+                    TelahGuna = l.Sum(c => c.TBS + c.Belanja),
+                    Baki = l.Sum(c => c.Asal + c.Tambah - c.Pindah - c.TBS - c.Belanja),
+                }).OrderBy(b => b.Objek).ToList();
 
             PopulateList();
-            return View(vm.OrderBy(b => b.Objek).ToList());
+            return View(vm);
         }
         // printing List of Carta
         [AllowAnonymous]
@@ -266,12 +281,26 @@ namespace MSNK.Controllers
             {
                 foreach (var po1 in po.AkPO1)
                 {
-                    poList = _bsRepo.RunPOPOLarasIndenCVObjekOperation(po1.Amaun, po1.AkCarta.Kod, po1.AkCarta.Perihal, "4");
+                    poList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(po1.Amaun, po1.AkCarta.Kod, po1.AkCarta.Perihal, "4");
 
                     vm.AddRange(poList);
                 }
             }
             // PO End
+
+            // Pendahuluan Pelbagai
+            List<SpPendahuluanPelbagai> Sps = await _bsRepo.GetSpPendahuluanPelbagaiBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+
+            List<AbBelanjawanSemasaViewModel> spList = new List<AbBelanjawanSemasaViewModel>();
+
+            foreach (var sp in Sps)
+            {
+                spList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(sp.JumLulus, sp.AkCarta.Kod, sp.AkCarta.Perihal, "4");
+
+                vm.AddRange(spList);
+
+            }
+            // Pendahuluan Pelbagai End
 
             // POLaras
             List<AkPOLaras> POLarass = await _bsRepo.GetAkPOLarasBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
@@ -282,7 +311,7 @@ namespace MSNK.Controllers
             {
                 foreach (var poLaras1 in poLaras.AkPOLaras1)
                 {
-                    poLarasList = _bsRepo.RunPOPOLarasIndenCVObjekOperation(poLaras1.Amaun, poLaras1.AkCarta.Kod, poLaras1.AkCarta.Perihal, "4");
+                    poLarasList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(poLaras1.Amaun, poLaras1.AkCarta.Kod, poLaras1.AkCarta.Perihal, "4");
 
                     vm.AddRange(poLarasList);
                 }
@@ -298,7 +327,7 @@ namespace MSNK.Controllers
             {
                 foreach (var inden1 in inden.AkInden1)
                 {
-                    indenList = _bsRepo.RunPOPOLarasIndenCVObjekOperation(inden1.Amaun, inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
+                    indenList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(inden1.Amaun, inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
 
                     vm.AddRange(indenList);
                 }
@@ -330,7 +359,7 @@ namespace MSNK.Controllers
             {
                 foreach (var cv1 in cv.AkTunaiCV1)
                 {
-                    cvList = _bsRepo.RunPOPOLarasIndenCVObjekOperation(cv1.Amaun, cv1.AkCarta.Kod, cv1.AkCarta.Perihal, "4");
+                    cvList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(cv1.Amaun, cv1.AkCarta.Kod, cv1.AkCarta.Perihal, "4");
 
                     vm.AddRange(cvList);
                 }

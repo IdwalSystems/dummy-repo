@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkPV : AppLogHelper, ISoftDelete
+    public class AkPV : AppLogHelper, ISoftDelete, ICancel
     {
         // note:
         // FlJenisBaucer = 0 ( Am )
@@ -75,6 +75,10 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int FlPosting { get; set; }
         [DisplayName("Batal")]
+        [DefaultValue("0")]
+        public int FlBatal { get; set; }
+        public DateTime? TarBatal { get; set; }
+        [DisplayName("Hapus")]
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
@@ -148,6 +152,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkCimbEFT1> AkCimbEFT1 { get; set; }
         public int? AkPadananPenyataId { get; set; }
         public AkPadananPenyata AkPadananPenyata { get; set; }
+        
         //relationship end
 
     }
