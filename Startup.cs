@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MSNK.Controllers;
 using MSNK.Data;
 using MSNK.Infrastructure;
 using MSNK.Models.Modules;
@@ -43,6 +44,7 @@ namespace MSNK
             //SendGrid
             services.AddTransient<SendGridEmailServices, SendGridEmailSender>();
             services.AddTransient<UserService, UserService>();
+            services.AddTransient<AkPOLarasController, AkPOLarasController>();
             services.AddDbContext<ApplicationDbContext>(
                 options=> {
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));

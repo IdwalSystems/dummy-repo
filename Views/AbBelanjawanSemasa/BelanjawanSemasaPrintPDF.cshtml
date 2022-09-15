@@ -101,6 +101,8 @@
             <th width="5%">Tambah RM</th>
             <th width="5%">Pindah RM</th>
             <th width="5%">Jumlah RM</th>
+            <th width="5%">TBS RM</th>
+            <th width="5%">Belanja RM</th>
             <th width="5%">Telah Guna RM</th>
             <th width="5%">Baki RM</th>
         </tr>
@@ -140,6 +142,12 @@
                     @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
                 </td>
                 <td class="text-right">
+                    @Convert.ToDecimal(item.TBS).ToString("#,##0.00")
+                </td>
+                <td class="text-right">
+                    @Convert.ToDecimal(item.Belanja).ToString("#,##0.00")
+                </td>
+                <td class="text-right">
                     @Convert.ToDecimal(item.TelahGuna).ToString("#,##0.00")
                 </td>
                 <td class="text-right">
@@ -147,26 +155,32 @@
                 </td>
             </tr>
         }
-        <tr class="table-warning">
-            <td colspan="3" class="font-weight-bold text-uppercase">Jumlah RM</td>
-            <td class="font-weight-bold text-right">
-                @Convert.ToDecimal(JumAsal).ToString("#,##0.00")
-            </td>
-            <td class="font-weight-bold text-right">
-                @Convert.ToDecimal(JumTambah).ToString("#,##0.00")
-            </td>
-            <td class="font-weight-bold text-right">
-                @Convert.ToDecimal(JumPindah).ToString("#,##0.00")
-            </td>
-            <td class="font-weight-bold text-right">
-                @Convert.ToDecimal(JumJumlah).ToString("#,##0.00")
-            </td>
-            <td class="font-weight-bold text-right">
-                @Convert.ToDecimal(JumTelahGuna).ToString("#,##0.00")
-            </td>
-            <td class="font-weight-bold text-right">
-                @Convert.ToDecimal(JumBaki).ToString("#,##0.00")
-            </td>
-        </tr>
+    <tr class="table-warning">
+        <td colspan="3" class="font-weight-bold text-uppercase">Jumlah RM</td>
+        <td class="font-weight-bold text-right">
+            @Convert.ToDecimal(JumAsal).ToString("#,##0.00")
+        </td>
+        <td class="font-weight-bold text-right">
+            @Convert.ToDecimal(JumTambah).ToString("#,##0.00")
+        </td>
+        <td class="font-weight-bold text-right">
+            @Convert.ToDecimal(JumPindah).ToString("#,##0.00")
+        </td>
+        <td class="font-weight-bold text-right">
+            @Convert.ToDecimal(JumJumlah).ToString("#,##0.00")
+        </td>
+        <td class="font-weight-bold text-right">
+            @Convert.ToDecimal(JumTBS).ToString("#,##0.00")
+        </td>
+        <td class="font-weight-bold text-right">
+            @Convert.ToDecimal(JumBelanja).ToString("#,##0.00")
+        </td>
+        <td class="font-weight-bold text-right">
+            @Convert.ToDecimal(JumTelahGuna).ToString("#,##0.00")
+        </td>
+        <td class="font-weight-bold text-right">
+            @Convert.ToDecimal(JumBaki).ToString("#,##0.00")
+        </td>
+    </tr>
     </tbody>
 </table>

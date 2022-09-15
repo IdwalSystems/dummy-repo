@@ -308,7 +308,7 @@ namespace MSNK.Controllers
         }
 
         //Function Running Number
-        private string RunningNumber(string year)
+        public string RunningNumber(string year)
         {
 
             string prefix = year ;
@@ -1158,6 +1158,13 @@ namespace MSNK.Controllers
 
                 AkPOLaras akPOLaras = await _akPOLarasRepo.GetById((int) id);
 
+                // cannot unposting cancelled document AkPO
+                if (0 - akPOLaras.Jumlah == akPOLaras.AkPO.Jumlah && akPOLaras.AkPO.FlBatal == 1)
+                {
+                    TempData[SD.Error] = "Data terkait dengan pembatalan PO.";
+                    return RedirectToAction(nameof(Index));
+                }
+
                 List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(akPOLaras.NoRujukan)).ToList();
                 if (abBukuVot == null)
                 {
@@ -1209,6 +1216,204 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
+
+        //// POST: AkPOLaras/Cancel/5
+        [Authorize(Policy = "PT001B")]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var obj = await _akPOLarasRepo.GetById(id);
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+            // check if not posting redirect back
+            if (obj.FlPosting == 0)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("PT/" + obj.NoRujukan)).ToList();
+            if (abBukuVot == null)
+            {
+                //duplicate id error
+                TempData[SD.Error] = "Data belum diluluskan.";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                // check if already linked with AkBelian
+                AkBelian Belian = _context.AkBelian.Where(x => x.AkPOId == obj.AkPOId && x.FlBatal == 0).FirstOrDefault();
+
+                if (Belian != null)
+                {
+
+                    //linkage id error
+                    TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoInbois.ToUpper() + ". Batal tidak dibenarkan";
+                    //}
+                }
+                else
+                {
+
+                    //unposting operation start here
+
+                    //insert contra data into abBukuVot
+                    foreach (AkPOLaras1 item in obj.AkPOLaras1)
+                    {
+                        //insert into AbBukuVot
+                        AbBukuVot abBukuVotCanceling = new AbBukuVot()
+                        {
+                            Tahun = obj.Tahun,
+                            JKWId = obj.JKWId,
+                            JBahagianId = obj.JBahagianId,
+                            Tarikh = obj.Tarikh,
+                            Kod = obj.AkPO.AkPembekal.KodSykt,
+                            Penerima = obj.AkPO.AkPembekal.NamaSykt,
+                            VotId = item.AkCartaId,
+                            Rujukan = obj.NoRujukan,
+                            Tanggungan = 0 - item.Amaun
+                        };
+
+                        await _abBukuVotRepo.Insert(abBukuVotCanceling);
+                        // insert into AbBukuVot end
+
+                    }
+
+                    //update AkPO
+
+                    obj.FlBatal = 1;
+                    obj.TarBatal = DateTime.Now;
+                    await _akPOLarasRepo.Update(obj);
+
+                    //insert applog
+                    await AddLogAsync("Batal", "Batal Data", obj.NoRujukan, (int)id, obj.Jumlah, pekerjaId);
+
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya dibatalkan.";
+                    //unposting operation end
+                }
+                
+
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        //// POST: AkPOLaras/Cancel/5
+        [Authorize(Policy = "PT001B")]
+        public async Task<IActionResult> CancelAll(int id)
+        {
+            var obj = await _akPOLarasRepo.GetById(id);
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+            // check if not posting redirect back
+            if (obj.FlPosting == 0)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("PT/" + obj.NoRujukan)).ToList();
+            if (abBukuVot == null)
+            {
+                //duplicate id error
+                TempData[SD.Error] = "Data belum diluluskan.";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                // check if already linked with AkBelian
+                AkBelian Belian = _context.AkBelian.Where(x => x.AkPOId == obj.AkPOId && x.FlBatal == 0).FirstOrDefault();
+
+                if (Belian != null)
+                {
+
+                    //linkage id error
+                    TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoInbois.ToUpper() + ". Batal tidak dibenarkan";
+                    //}
+                }
+                else
+                {
+
+                    //unposting operation start here
+
+                    // batal POLaras
+                    //insert contra data into abBukuVot
+                    foreach (AkPOLaras1 item in obj.AkPOLaras1)
+                    {
+                        //insert into AbBukuVot
+                        AbBukuVot abBukuVotCanceling = new AbBukuVot()
+                        {
+                            Tahun = obj.Tahun,
+                            JKWId = obj.JKWId,
+                            JBahagianId = obj.JBahagianId,
+                            Tarikh = obj.Tarikh,
+                            Kod = obj.AkPO.AkPembekal.KodSykt,
+                            Penerima = obj.AkPO.AkPembekal.NamaSykt,
+                            VotId = item.AkCartaId,
+                            Rujukan = obj.NoRujukan,
+                            Tanggungan = 0 - item.Amaun
+                        };
+
+                        await _abBukuVotRepo.Insert(abBukuVotCanceling);
+                        // insert into AbBukuVot end
+
+                    }
+
+                    //update AkPOLaras
+
+                    obj.FlBatal = 1;
+                    obj.TarBatal = DateTime.Now;
+                    await _akPOLarasRepo.Update(obj);
+
+                    // batal PO
+                    //insert contra data into abBukuVot
+                    foreach (AkPO1 item in obj.AkPO.AkPO1)
+                    {
+                        //insert into AbBukuVot
+                        AbBukuVot abBukuVotCanceling = new AbBukuVot()
+                        {
+                            Tahun = obj.AkPO.Tahun,
+                            JKWId = obj.AkPO.JKWId,
+                            JBahagianId = obj.AkPO.JBahagianId,
+                            Tarikh = obj.AkPO.Tarikh,
+                            Kod = obj.AkPO.AkPembekal.KodSykt,
+                            Penerima = obj.AkPO.AkPembekal.NamaSykt,
+                            VotId = item.AkCartaId,
+                            Rujukan = "PO/" + obj.AkPO.NoPO,
+                            Tanggungan = 0 - item.Amaun
+                        };
+
+                        await _abBukuVotRepo.Insert(abBukuVotCanceling);
+                        // insert into AbBukuVot end
+
+                    }
+
+                    //update AkPO
+
+                    obj.AkPO.FlBatal = 1;
+                    obj.AkPO.TarBatal = DateTime.Now;
+                    await _akPORepo.Update(obj.AkPO);
+
+                    //insert applog
+                    await AddLogAsync("Batal", "Batal Semua Data", obj.NoRujukan, (int)id, obj.Jumlah, pekerjaId);
+
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya dibatalkan.";
+                    //unposting operation end
+                }
+
+
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
 
         // printing pelarasan PO 
         [Authorize(Policy = "PT001P")]

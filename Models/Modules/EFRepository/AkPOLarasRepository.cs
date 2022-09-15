@@ -31,6 +31,15 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPO).ThenInclude(b => b.AkPembekal)
                 .Include(b => b.AkPOLaras1)
                 .Include(b => b.AkPOLaras2)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPembekal)
+                        .ThenInclude(d => d.JBank)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPembekal)
+                        .ThenInclude(d => d.JNegeri)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPO1)
+                        .ThenInclude(d => d.AkCarta)
                 .ToListAsync();
         }
 
@@ -43,6 +52,15 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPO).ThenInclude(b => b.AkPembekal)
                 .Include(b => b.AkPOLaras1)
                 .Include(b => b.AkPOLaras2)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPembekal)
+                        .ThenInclude(d => d.JBank)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPembekal)
+                        .ThenInclude(d => d.JNegeri)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPO1)
+                        .ThenInclude(d => d.AkCarta)
                 .ToListAsync();
         }
 
@@ -54,8 +72,15 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JBahagian)
                 .Include(d => d.AkPOLaras1).ThenInclude(d => d.AkCarta)
                 .Include(d => d.AkPOLaras2)
-                .Include(d => d.AkPO).ThenInclude(d => d.AkPembekal).ThenInclude(d => d.JBank)
-                .Include(d => d.AkPO).ThenInclude(d => d.AkPembekal).ThenInclude(d => d.JNegeri)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPembekal)
+                        .ThenInclude(d => d.JBank)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPembekal)
+                        .ThenInclude(d => d.JNegeri)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPO1)
+                        .ThenInclude(d => d.AkCarta)
                 .FirstOrDefaultAsync();
         }
 
@@ -68,8 +93,15 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JBahagian)
                 .Include(d => d.AkPOLaras1).ThenInclude(d => d.AkCarta)
                 .Include(d => d.AkPOLaras2)
-                .Include(d => d.AkPO).ThenInclude(d => d.AkPembekal).ThenInclude(d => d.JBank)
-                .Include(d => d.AkPO).ThenInclude(d => d.AkPembekal).ThenInclude(d => d.JNegeri)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPembekal)
+                        .ThenInclude(d => d.JBank)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPembekal)
+                        .ThenInclude(d => d.JNegeri)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPO1)
+                        .ThenInclude(d => d.AkCarta)
                 .FirstOrDefaultAsync();
         }
 

@@ -106,12 +106,14 @@
                         if (item.CaraBayar == null)
                         {
                             caraBayar = "PELBAGAI";
-                }
+                        }
                         else
                         {
                             caraBayar = item.CaraBayar;
                         }
-                        <tr class="@tabletype">
+                        var tableBatal = item.FlBatal == 1 ? "table-secondary" : null;
+
+                        <tr class="@tabletype @tableBatal">
                             <td>
                             </td>
                             <td hidden>@item.Id</td>
@@ -160,74 +162,82 @@
                             </td>
                             <td class="action-button">
                                 <div class="btn-group" role="group" aria-label="action">
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                                    <a data-toggle="modal" data-target="#modalCetak" class="btn text-secondary btn-sm bg-white" data-placement="top" title="Cetak" onclick="ModalClick(this)"><i class="fas fa-print"></i></a>
-                                    @if (item.FlHapus == 0)
+                                    @if (item.FlBatal == 0)
                                     {
-                                        if (item.FlPosting == 0)
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                        <a data-toggle="modal" data-target="#modalCetak" class="btn text-secondary btn-sm bg-white" data-placement="top" title="Cetak" onclick="ModalClick(this)"><i class="fas fa-print"></i></a>
+                                        @if (item.FlHapus == 0)
                                         {
-                                            if (item.Jumlah != 0)
+                                            if (item.FlPosting == 0)
                                             {
-                                                if (item.FlKategoriPenerima == 1 && item.FlJenisBaucer == 1)
+                                                if (item.Jumlah != 0)
                                                 {
-                                                    if (item.Jumlah == item.JumlahInbois && item.FlCetak != 0)
+                                                    if (item.FlKategoriPenerima == 1 && item.FlJenisBaucer == 1)
                                                     {
-                                                        @if (item.FlStatusSemak != 0)
+                                                        if (item.Jumlah == item.JumlahInbois && item.FlCetak != 0)
                                                         {
-                                                            <a data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
-                                                                <i class="fas fa-file-signature"></i>
-                                                            </a>
-                                                        }
-                                                        else
-                                                        {
-                                                            <a data-toggle="modal" data-target="#modalSemak" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Semak" onclick="ModalClick(this)">
-                                                                <i class="fas fa-file-signature"></i>
-                                                            </a>
+                                                            @if (item.FlStatusSemak != 0)
+                                                            {
+                                                                <a data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
+                                                                    <i class="fas fa-file-signature"></i>
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a data-toggle="modal" data-target="#modalSemak" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Semak" onclick="ModalClick(this)">
+                                                                    <i class="fas fa-file-signature"></i>
+                                                                </a>
+                                                            }
                                                         }
                                                     }
-                                                }
-                                                else
-                                                {
-                                                    if (item.FlCetak != 0)
+                                                    else
                                                     {
-                                                        @if (item.FlStatusSemak != 0)
+                                                        if (item.FlCetak != 0)
                                                         {
-                                                            <button data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
-                                                                <i class="fas fa-file-signature"></i>
-                                                            </button>
+                                                            @if (item.FlStatusSemak != 0)
+                                                            {
+                                                                <button data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
+                                                                    <i class="fas fa-file-signature"></i>
+                                                                </button>
+                                                            }
+                                                            else
+                                                            {
+                                                                <button data-toggle="modal" data-target="#modalSemak" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Semak" onclick="ModalClick(this)">
+                                                                    <i class="fas fa-file-signature"></i>
+                                                                </button>
+                                                            }
                                                         }
-                                                        else
-                                                        {
-                                                            <button data-toggle="modal" data-target="#modalSemak" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Semak" onclick="ModalClick(this)">
-                                                                <i class="fas fa-file-signature"></i>
-                                                            </button>
-                                                        }
+
                                                     }
 
                                                 }
+
+                                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
 
                                             }
-
-                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
-
+                                            else
+                                            {
+                                                <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn text-warning btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Batal Lulus">
+                                                    <i class="fas fa-file"></i>
+                                                </a>
+                                            }
                                         }
                                         else
                                         {
-                                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn text-warning btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Batal Lulus">
-                                                <i class="fas fa-file"></i>
-                                            </a>
+                                            if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                                            {
+                                                <a asp-action="Rollback" asp-route-id="@item.Id" class="btn text-info btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                                    <i class="fas fa-trash-restore"></i>
+                                                </a>
+
+                                            }
                                         }
                                     }
                                     else
                                     {
-                                        if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
-                                        {
-                                            <a asp-action="Rollback" asp-route-id="@item.Id" class="btn text-info btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
-                                                <i class="fas fa-trash-restore"></i>
-                                            </a>
-
-                                        }
+                                        <label class="mb-0 "><i class="fas fa-ban text-danger"></i> TELAH BATAL</label>
                                     }
+
                                 </div>
 
                             </td>

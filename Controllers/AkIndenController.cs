@@ -20,6 +20,7 @@ using Rotativa.AspNetCore;
 namespace MSNK.Controllers
 {
     [Authorize(Roles = "SuperAdmin , Supervisor, User")]
+    [Authorize(Policy = "TG003")]
     public class AkIndenController : Controller
     {
         public const string modul = "TG003";
@@ -676,6 +677,7 @@ namespace MSNK.Controllers
                     m.JBahagianId = JBahagianId;
                     m.NoInden = noRujukan;
                     m.Tarikh = akInden.Tarikh;
+                    m.TarikhBekalan = akInden.TarikhBekalan;
                     m.AkNotaMintaId = AkNotaMintaId;
                     m.TarikhPosting = akInden.TarikhPosting;
                     m.AkPembekal = pembekal;
@@ -1329,6 +1331,96 @@ namespace MSNK.Controllers
 
             return RedirectToAction(nameof(Index));
 
+        }
+
+        //// POST: AkPO/Cancel/5
+        [Authorize(Policy = "TG003B")]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var obj = await _akIndenRepo.GetById(id);
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+            // check if not posting redirect back
+            if (obj.FlPosting == 0)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("IK/" + obj.NoInden)).ToList();
+            if (abBukuVot == null)
+            {
+                //duplicate id error
+                TempData[SD.Error] = "Data belum diluluskan.";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                // check if already linked with AkBelian
+                AkBelian Belian = _context.AkBelian.Where(x => x.AkIndenId == id && x.FlBatal == 0).FirstOrDefault();
+
+                if (Belian != null)
+                {
+
+                    //linkage id error
+                    TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoInbois.ToUpper() + ". Batal tidak dibenarkan";
+                    //}
+                }
+                else
+                {
+                    // check if already linked with AkIndenLaras
+                    //AkIndenLaras akIndenLaras = _context.AkIndenLaras.Where(x => x.AkIndenId == id && x.FlBatal == 0).FirstOrDefault();
+
+                    //if (akIndenLaras != null)
+                    //{
+                    //    //linkage id error
+                    //    TempData[SD.Error] = "Data terkait pada No Pelarasan Inden " + akIndenLaras.NoRujukan.ToUpper() + ". Batal tidak dibenarkan";
+                    //    return RedirectToAction(nameof(Index));
+                    //}
+
+                    //canceling operation start here
+                    //insert contra data into abBukuVot
+                    foreach (AkInden1 item in obj.AkInden1)
+                    {
+                        //insert into AbBukuVot
+                        AbBukuVot abBukuVotCanceling = new AbBukuVot()
+                        {
+                            Tahun = obj.Tahun,
+                            JKWId = obj.JKWId,
+                            JBahagianId = obj.JBahagianId,
+                            Tarikh = obj.Tarikh,
+                            Kod = obj.AkPembekal.KodSykt,
+                            Penerima = obj.AkPembekal.NamaSykt,
+                            VotId = item.AkCartaId,
+                            Rujukan = "IK/"+obj.NoInden,
+                            Tanggungan = 0 - item.Amaun
+                        };
+
+                        await _abBukuVotRepo.Insert(abBukuVotCanceling);
+                        // insert into AbBukuVot end
+
+                    }
+
+                    //update AkPO
+
+                    obj.FlBatal = 1;
+                    obj.TarBatal = DateTime.Now;
+                    await _akIndenRepo.Update(obj);
+
+                    //insert applog
+                    await AddLogAsync("Batal", "Batal Data", obj.NoInden, (int)id, obj.Jumlah, pekerjaId);
+
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya dibatalkan.";
+                    //unposting operation end
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: AkPV/Cancel/5

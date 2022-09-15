@@ -127,21 +127,21 @@ namespace MSNK.Data
             // Terimaan End
 
             //Baucer
-            modelBuilder.Entity<AkPV>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0 && EF.Property<int>(m, "FlBatal") == 0);
+            modelBuilder.Entity<AkPV>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkJurnal>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             // Baucer End
             //Tanggungan
             modelBuilder.Entity<AkNotaMinta>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
-            modelBuilder.Entity<AkPO>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0 && EF.Property<int>(m, "FlBatal") == 0);
-            modelBuilder.Entity<AkInden>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0 && EF.Property<int>(m, "FlBatal") == 0);
-            modelBuilder.Entity<AkPOLaras>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0 && EF.Property<int>(m, "FlBatal") == 0);
-            modelBuilder.Entity<AkBelian>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0 && EF.Property<int>(m, "FlBatal") == 0);
+            modelBuilder.Entity<AkPO>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkInden>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkPOLaras>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkBelian>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Tanggungan End
             //Tunai Runcit
             modelBuilder.Entity<AkTunaiCV>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Tunai Runcit End
             //Permohonan
-            modelBuilder.Entity<SpPendahuluanPelbagai>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0 && EF.Property<int>(m, "FlBatal") == 0);
+            modelBuilder.Entity<SpPendahuluanPelbagai>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Permohonan End
             //Belanjawan
             modelBuilder.Entity<AbWaran>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);

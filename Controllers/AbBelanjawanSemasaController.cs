@@ -419,8 +419,8 @@ namespace MSNK.Controllers
                     Jumlah = l.Sum(c => c.Asal + c.Tambah - c.Pindah),
                     Belanja = l.Sum(c => c.Belanja),
                     TBS = l.Sum(c => c.TBS),
-                    TelahGuna = l.Sum(c => c.Belanja),
-                    Baki = l.Sum(c => c.Asal + c.Tambah - c.Pindah - c.Belanja),
+                    TelahGuna = l.Sum(c => c.TBS + c.Belanja),
+                    Baki = l.Sum(c => c.Asal + c.Tambah - c.Pindah - c.TBS - c.Belanja),
                 }).ToList();
 
             //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";

@@ -226,7 +226,8 @@ namespace MSNK.Controllers
                     FlStatusSemak = item.FlStatusSemak,
                     FlStatusLulus = item.FlStatusLulus,
                     JumlahInbois = jumlahInbois,
-                    FlKategoriPenerima = item.FlKategoriPenerima
+                    FlKategoriPenerima = item.FlKategoriPenerima,
+                    FlBatal = item.FlBatal
                 }
                 );
             }
@@ -3320,20 +3321,6 @@ namespace MSNK.Controllers
                                 }
 
                             }
-
-                            //abBukuVot = new AbBukuVot()
-                            //{
-                            //    Tahun = akPV.Tahun,
-                            //    JKWId = akPV.JKWId,
-                            //    JBahagianId = akPV.JBahagianId,
-                            //    Tarikh = akPV.Tarikh,
-                            //    Kod = kod,
-                            //    Penerima = penerima,
-                            //    VotId = item.AkCartaId,
-                            //    Rujukan = akPV.NoPV,
-                            //    Debit = item.Amaun
-
-                            //};
                         }
                         else
                         {
@@ -3543,6 +3530,63 @@ namespace MSNK.Controllers
 
         }
         // unposting function end
+
+        //// POST: AkPOLaras/Cancel/5
+        [Authorize(Policy = "PV001B")]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var obj = await _akPVRepo.GetById(id);
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+            // check if not posting redirect back
+            if (obj.FlPosting == 0)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("PV/" + obj.NoPV)).ToList();
+            if (abBukuVot == null)
+            {
+                //duplicate id error
+                TempData[SD.Error] = "Data belum diluluskan.";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+
+                List<AkPV1> akPV1 = obj.AkPV1.ToList();
+
+                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == obj.NoPV).FirstOrDefaultAsync();
+                if (akAkaun == null)
+                {
+
+                    //duplicate id error
+                    TempData[SD.Error] = "Data gagal dibatalkan.";
+
+                }
+                else
+                {
+                    
+                    obj.FlBatal = 1;
+                    obj.TarBatal = DateTime.Now;
+
+                    await _akPVRepo.Update(obj);
+
+                    //insert applog
+                    await AddLogAsync("Batal", "Batal Data", obj.NoPV, (int)id, obj.Jumlah, pekerjaId);
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+
+                    TempData[SD.Success] = "Data berjaya dibatalkan.";
+                }
+
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
 
         // POST: AkPV/Cancel/5
         [Authorize(Policy = "PV001R")]

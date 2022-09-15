@@ -42,6 +42,8 @@ namespace MSNK.Controllers
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly CustomIRepository<string, int> _customRepo;
+        private readonly AkPOLarasController _akPOLarasController;
+        private readonly IRepository<AkPOLaras, int, string> _akPoLarasRepo;
         private CartPO _cart;
 
         public AkPOController(ApplicationDbContext context,
@@ -60,6 +62,8 @@ namespace MSNK.Controllers
             IRepository<AkAkaun, int, string> akAkaunRepository,
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
             CustomIRepository<string, int> customRepo,
+            AkPOLarasController akPOLarasController,
+            IRepository<AkPOLaras, int, string> akPOLarasRepository,
             CartPO cart
             )
         {
@@ -80,6 +84,8 @@ namespace MSNK.Controllers
             _abBukuVotRepo = abBukuVotRepository;
             _customRepo = customRepo;
             _cart = cart;
+            _akPOLarasController = akPOLarasController;
+            _akPoLarasRepo = akPOLarasRepository;
         }
         private async Task AddLogAsync(
             string operasi,
@@ -1736,7 +1742,7 @@ namespace MSNK.Controllers
                                 Kod = obj.AkPembekal.KodSykt,
                                 Penerima = obj.AkPembekal.NamaSykt,
                                 VotId = item.AkCartaId,
-                                Rujukan = "PO/"+obj.NoPO,
+                                Rujukan = "PT/"+ _akPOLarasController.RunningNumber(DateTime.Now.ToString("yyyy")),
                                 Tanggungan = 0 - item.Amaun
                             };
 
@@ -1750,6 +1756,56 @@ namespace MSNK.Controllers
                         obj.FlBatal = 1;
                         obj.TarBatal = DateTime.Now;
                         await _akPORepo.Update(obj);
+
+                        AkPOLaras l = new AkPOLaras();
+                        l.JKWId = obj.JKWId;
+                        l.JBahagianId = obj.JBahagianId;
+                        l.NoRujukan = "PT/"+ _akPOLarasController.RunningNumber(DateTime.Now.ToString("yyyy"));
+                        l.Tarikh = DateTime.Now;
+                        l.AkPOId = obj.Id;
+                        l.TarikhPosting = DateTime.Now;
+                        l.Jumlah = 0 - obj.Jumlah;
+                        l.FlPosting = 1;
+                        l.FlHapus = 0;
+                        l.FlCetak = 1;
+                        l.Tahun = DateTime.Now.ToString("yyyy");
+                        l.UserId = user.UserName;
+                        l.TarMasuk = DateTime.Now;
+                        l.SuPekerjaMasukId = pekerjaId;
+
+                        List<AkPOLaras1> akPOLaras1 = new List<AkPOLaras1>();
+                        foreach (AkPO1 item in obj.AkPO1)
+                        {
+                            akPOLaras1.Add(new AkPOLaras1
+                            {
+                                AkCartaId = item.AkCartaId,
+                                Amaun = 0 - item.Amaun
+                            });
+                        }
+
+                        l.AkPOLaras1 = akPOLaras1;
+
+                        List<AkPOLaras2> akPOLaras2 = new List<AkPOLaras2>();
+
+                        foreach (AkPO2 item in obj.AkPO2)
+                        {
+                            akPOLaras2.Add(new AkPOLaras2
+                            {
+                                Indek = item.Indek,
+                                Bil = item.Bil,
+                                NoStok = item.NoStok,
+                                Perihal = "PELARASAN - " + item.Perihal,
+                                Kuantiti = item.Kuantiti,
+                                Unit = item.Unit,
+                                Harga = 0 - item.Harga,
+                                Amaun = 0 - item.Amaun
+
+                            });
+                        }
+
+                        l.AkPOLaras2 = akPOLaras2;
+
+                        await _akPoLarasRepo.Insert(l);
 
                         //insert applog
                         await AddLogAsync("Batal", "Batal Data", obj.NoPO, (int)id, obj.Jumlah, pekerjaId);
