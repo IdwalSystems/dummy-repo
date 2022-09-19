@@ -10,10 +10,10 @@
 </li>*@
 
 <li class="nav-item">
-    <a class="nav-link collapsed text-truncate 
+    <a class="nav-link collapsed text-truncate
     @Html.ActiveClass("AkTerima")
     @Html.ActiveClass("AkPenyataPemungut")
-    " href="#submenuTerimaan" data-toggle="collapse" data-target="#submenuTerimaan"><i class="fas fa-hand-holding-usd pr-2"></i><span class="pl-1">Terimaan</span></a>
+    " href="#submenuTerimaan" data-toggle="collapse" data-target="#submenuTerimaan"><object data="~/img/svg/terimaan.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Terimaan</span></a>
     <div class="collapse" id="submenuTerimaan" aria-expanded="false">
         <ul class="flex-column pl-2 nav">
             <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkTerima")" asp-controller="AkTerima" asp-action="Index"><span>Resit Rasmi</span></a></li>

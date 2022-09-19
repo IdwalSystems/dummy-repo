@@ -1,7 +1,9 @@
 ﻿<li class="nav-item">
     <a class="nav-link collapsed text-truncate
     @Html.ActiveClass("SuAtlet")
-    @Html.ActiveClass("SuJurulatih")" href="#submenuPengurusanDaftar" data-toggle="collapse" data-target="#submenuPengurusanDaftar"><i class="fa fa-user-edit pr-2"></i><span class="pl-0">Daftar</span></a>
+    @Html.ActiveClass("SuJurulatih")" href="#submenuPengurusanDaftar" data-toggle="collapse" data-target="#submenuPengurusanDaftar">
+        <object data="~/img/svg/daftar.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Daftar</span>
+    </a>
     <div class="collapse" id="submenuPengurusanDaftar" aria-expanded="false">
         <ul class="flex-column pl-2 nav">
             <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("SuAtlet")" asp-area="" asp-controller="SuAtlet" asp-action="Index"><span>Atlet</span></a></li>

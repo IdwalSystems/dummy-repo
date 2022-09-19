@@ -149,7 +149,6 @@ body {
 }
 
 .symbol-input100 {
-    font-size: 15px;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
@@ -162,9 +161,9 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    padding-left: 25px;
+    padding-left: 30px;
     pointer-events: none;
-    color: #666666;
+    filter: invert(15%);
     -webkit-transition: all 0.4s;
     -o-transition: all 0.4s;
     -moz-transition: all 0.4s;
@@ -172,8 +171,8 @@ body {
 }
 
 input:focus + .focus-input100 + .symbol-input100 {
-    color: #57b846;
-    font-size: 20px;
+    filter: invert(55%);
+    transform: scale(1.1);
 }
 
 
@@ -209,7 +208,7 @@ input:focus + .focus-input100 + .symbol-input100 {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 0;
+    top: -140px;
     left: 0;
     right: 0;
     height: 0;
@@ -220,7 +219,7 @@ input:focus + .focus-input100 + .symbol-input100 {
 }
 
 #forgot-pw:target {
-    height: 100%;
+    height: 121.5%;
     opacity: 1;
 }
 

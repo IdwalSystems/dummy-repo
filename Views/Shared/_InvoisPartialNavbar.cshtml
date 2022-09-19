@@ -1,6 +1,8 @@
 ﻿<li class="nav-item">
-    <a class="nav-link collapsed text-truncate 
-    @Html.ActiveClass("AkInvois")" href="#submenuInvois" data-toggle="collapse" data-target="#submenuInvois"><i class="fa fa-file-invoice pr-2"></i><span class="pl-2">Invois</span></a>
+    <a class="nav-link collapsed text-truncate
+    @Html.ActiveClass("AkInvois")" href="#submenuInvois" data-toggle="collapse" data-target="#submenuInvois">
+        <object data="~/img/svg/invois.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Invois</span>
+    </a>
     <div class="collapse" id="submenuInvois" aria-expanded="false">
         <ul class="flex-column pl-2 nav">
             <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkInvois")" asp-controller="AkInvois" asp-action="Index"><span>Inbois Dikeluarkan</span></a></li>

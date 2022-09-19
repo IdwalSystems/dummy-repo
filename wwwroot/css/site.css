@@ -67,7 +67,7 @@ for details on configuring this project to bundle and minify static web assets. 
     padding: 12px 16px;
     z-index: 9999;
     right: 0px;
-    top: 30px;
+    top: 40px;
 
 }
 
@@ -101,6 +101,7 @@ a:hover i {
     transform: scale(1.5);
     transition: 0.3s;
 }
+
 @-webkit-keyframes heartBeat {
     0% {
         -webkit-transform: scale(1);
@@ -156,6 +157,81 @@ a:hover i {
 }
 
 a:focus i {
+    -webkit-animation-name: heartBeat;
+    animation-name: heartBeat;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-duration: var(--animate-duration);
+    animation-duration: var(--animate-duration);
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+}
+
+a object {
+    animation: all 0.1s linear;
+}
+
+a:hover object {
+    transform: scale(1.2);
+    transition: 0.3s;
+    filter: invert(100%);
+}
+
+@-webkit-keyframes heartBeat {
+    0% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+
+    14% {
+        -webkit-transform: scale(1.3);
+        transform: scale(1.3);
+    }
+
+    28% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+
+    42% {
+        -webkit-transform: scale(1.3);
+        transform: scale(1.3);
+    }
+
+    70% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+@keyframes heartBeat {
+    0% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+
+    14% {
+        -webkit-transform: scale(1.3);
+        transform: scale(1.3);
+    }
+
+    28% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+
+    42% {
+        -webkit-transform: scale(1.3);
+        transform: scale(1.3);
+    }
+
+    70% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+a:focus object {
     -webkit-animation-name: heartBeat;
     animation-name: heartBeat;
     -webkit-animation-duration: 1s;
