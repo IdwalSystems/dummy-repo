@@ -570,9 +570,8 @@ namespace MSNK.Controllers
 
             if (user.Email == "superadmin@idwal.com.my")
             {
-                spPendahuluanPelbagai.SuPekerjaId = 1;
+                pekerjaId = 1;
             }
-
             if (ModelState.IsValid)
             {
                 if (spPendahuluanPelbagai != null && JKWId != 0)
@@ -581,7 +580,7 @@ namespace MSNK.Controllers
                     m.JKWId = JKWId;
                     m.JenisPermohonan = spPendahuluanPelbagai.JenisPermohonan;
                     m.NoPermohonan = RunningNumber(spPendahuluanPelbagai);
-                    m.Tarikh = spPendahuluanPelbagai.Tarikh;
+                    m.Tarikh = spPendahuluanPelbagai.Tarikh?.ToUpper() ?? null;
                     m.JNegeriId = spPendahuluanPelbagai.JNegeriId;
                     m.JSukan = sukan;
                     m.Aktiviti = spPendahuluanPelbagai.Aktiviti?.ToUpper() ?? null;
@@ -589,12 +588,12 @@ namespace MSNK.Controllers
                     m.JTahapAktiviti = tahap;
                     m.AkCartaId = spPendahuluanPelbagai.AkCartaId;
                     m.JumKeseluruhan = spPendahuluanPelbagai.JumKeseluruhan;
-                    m.SuPekerjaId = spPendahuluanPelbagai?.SuPekerjaId;
+                    m.SuPekerjaId = pekerjaId;
                     m.FlPosting = 0;
                     //m.TarikhPosting = spPendahuluanPelbagai.TarikhPosting;
                     m.FlHapus = 0;
                     m.FlCetak = 0;
-                    m.SuPekerjaId = SuPekerjaId;
+                    m.SuPekerjaId = pekerjaId;
                     m.TarMasuk = DateTime.Now;
                     m.JBahagian = bahagian;
                     m.UserId = user.UserName;

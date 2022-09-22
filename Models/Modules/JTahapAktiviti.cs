@@ -1,6 +1,7 @@
 ﻿using MSNK.Models.Helper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace MSNK.Models.Modules
     public class JTahapAktiviti : AppLogHelper, ISoftDelete
     {
         public int Id { get; set; }
+        [Required(ErrorMessage = "Perihal diperlukan")]
         public string Perihal { get; set; }
 
         //relationship

@@ -205,6 +205,7 @@
                     <div class="form-group">
                         <label asp-for="Nama" class="control-label"></label><span class="text-danger control-label">*</span>
                         <input asp-for="Nama" class="form-control form-control-sm text-uppercase" />
+                        <span asp-validation-for="Nama" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -247,8 +248,8 @@
             <div class="form-row">
                 <div class="col-md-4">
                     <label asp-for="JCaraBayarId" class="control-label"></label><span class="text-danger control-label">*</span>
-                    <select class="form-control form-control-sm" asp-for="JCaraBayarId" id="ddlJCaraBayar" required>
-                        <option value="0" disabled selected>-- Pilih Cara Bayaran --</option>
+                    <select class="form-control form-control-sm select2" asp-for="JCaraBayarId" id="ddlJCaraBayar" required>
+                        <option value="0" hidden>-- Pilih Cara Bayaran --</option>
                         @foreach (var s in ViewBag.JCaraBayar)
                         {
                             <option value="@s.Id" class="text-uppercase">@s.Kod - @s.Perihal</option>

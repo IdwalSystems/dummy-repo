@@ -13,12 +13,18 @@ namespace MSNK.Models.Modules
     {
         public int Id { get; set; }
         [DisplayName("Kod Kaunter Panjar")]
+        [Required(ErrorMessage = "Kod Kaunter Panjar diperlukan")]
         public int AkTunaiRuncitId { get; set; }
         public AkTunaiRuncit AkTunaiRuncit { get; set; }
         public int KategoriPenerima { get; set; }
+        [Required(ErrorMessage = "Tahun diperlukan")]
+        [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
+        [MaxLength(4)]
         public string Tahun { get; set; }
         [DisplayName("No CV")]
         public string NoCV { get; set; }
+        [DisplayName("Tarikh")]
+        [Required(ErrorMessage = "Tarikh diperlukan")]
         public DateTime Tarikh { get; set; }
         [DisplayName("Kod Anggota")]
         public int? SuPekerjaId { get; set; }
@@ -28,11 +34,13 @@ namespace MSNK.Models.Modules
         public AkPembekal AkPembekal { get; set; }
         [DisplayName("No KP")]
         public string NoKP { get; set; }
+        [Required(ErrorMessage = "Penerima diperlukan")]
         public string Penerima { get; set; }
         [DisplayName("Alamat")]
         public string Alamat1 { get; set; }
         public string Alamat2 { get; set; }
         public string Alamat3 { get; set; }
+        [Required(ErrorMessage = "Catatan diperlukan")]
         public string Catatan { get; set; }
         [DisplayName("Jumlah RM")]
         [Column(TypeName = "decimal(18, 2)")]

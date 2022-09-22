@@ -11,7 +11,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-8">
-                <h5 class="text-uppercase text-primary mb-0">Inbois Dikeluarkan - Ubah</h5>
+                <h5 class="text-uppercase text-primary mb-0">Invois Dikeluarkan - Ubah</h5>
                 <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / <a asp-action="Details" asp-route-id="@Model.Id" class="text-secondary">Papar</a> / Ubah</span>
             </div>
             <div class="col-4 text-right">
@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label asp-for="Tarikh" class="control-label"></label>
+                                <label asp-for="Tarikh" class="control-label"></label><span class="text-danger control-label">*</span>
                                 <input asp-for="Tarikh" class="form-control form-control-sm" required />
                                 <span asp-validation-for="Tarikh" class="text-danger"></span>
                             </div>
@@ -72,7 +72,7 @@
                     </div>
                     <div class="form-row">
                         <div class="col-md-12">
-                            <label asp-for="AkPenghutangId" class="control-label"></label><span class="text-danger control-label">*</span>
+                            <label asp-for="AkPenghutangId" class="control-label"></label>
                             <select class="form-control form-control-sm select2" asp-for="AkPenghutangId" id="ddlKodPenghutang" required>
                                 <option value="0" disabled selected>-- Pilih Kod Penghutang --</option>
                                 @foreach (var s in ViewBag.AkPenghutang)
@@ -157,7 +157,7 @@
                         </div>
                         <div class="card-footer">
                             <div class="form-group pb-2">
-                                <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
+                                <label asp-for="Jumlah" class="control-label">Jumlah Objek RM</label>
                                 <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly />
                                 <span asp-validation-for="Jumlah" class="text-danger"></span>
                             </div>
@@ -235,7 +235,7 @@
                         </div>
                         <div class="card-footer">
                             <div class="form-group">
-                                <label class="control-label">Jumlah Perihal</label>
+                                <label class="control-label">Jumlah Perihal RM</label>
                                 <input class="form-control form-control-sm" id="jumlahPerihal" value="0.00" name="JumlahPerihal" readonly />
                             </div>
                         </div>

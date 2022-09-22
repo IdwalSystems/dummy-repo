@@ -9,36 +9,9 @@
 
 <div class="card box-shadow">
     <div class="card-body">
-        <div class="row">
-            <div class="col-8">
-                <h5 class="text-uppercase mb-0">Senarai Negeri</h5>
-                <span class="ac-ref">Indeks</span>
-            </div>
-            <div class="col-4 text-right">
-                <a class="text-right btn ac-success" asp-action="Create">Tambah Baru</a>
-            </div>
-    
-        </div>
-        <hr class="mt-2"/>
-        <div class="card mb-2">
-            <div class="card-body pl-3 pb-2">
-                <label class="form-control-plaintext" for="columnSearch">Carian : </label>
-                <div class="form-actions no-color mb-2">
-                    <div class="form-row">
-                        <div class="col-sm-2 mb-2">
-                            <select class="custom-select form-control-sm" id="columnSearch">
-                                <option value="" selected>Semua</option>
-                                <option value=".kod">Kod</option>
-                                <option value=".perihal">Perihal</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-8 mb-2">
-                            <input class="form-control form-control-sm" type="text" id="myInput" style="text-transform:uppercase" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <partial name="_TitleIndexPartial" />
+
+        <partial name="_SearchJadualIndexPartial" />
 
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%" id="IndexTable">

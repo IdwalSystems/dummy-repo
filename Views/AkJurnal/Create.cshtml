@@ -25,14 +25,13 @@
             <div class="form-row">
                 <div class="form-group col-md">
                     <label asp-for="NoJurnal" class="control-label"></label>
-                    <input asp-for="NoJurnal" class="form-control form-control-sm" readonly id="txtNoJurnal" />
+                    <input asp-for="NoJurnal" class="form-control form-control-sm" value="@ViewBag.NoRujukan" readonly id="txtNoJurnal" />
                     <span asp-validation-for="NoJurnal" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md">
                     <label asp-for="JKWId" class="control-label"></label>
                     <span class="text-danger control-label">*</span>
                     <select asp-for="JKWId" class="form-control form-control-sm" id="ddlKW">
-                        <option value="" hidden>-- Pilih Kumpulan Wang --</option>
                         @foreach (var s in ViewBag.JKw)
                         {
                             <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -54,13 +53,13 @@
                 <div class="form-group col-md">
                     <label asp-for="Tarikh" class="control-label"></label>
                     <span class="text-danger control-label">*</span>
-                    <input asp-for="Tarikh" class="form-control form-control-sm" type="date" id="txtTarikh" />
+                    <input asp-for="Tarikh" class="form-control form-control-sm" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" id="txtTarikh" />
                     <span asp-validation-for="Tarikh" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group ">
                 <label asp-for="Catatan1" class="control-label">Catatan</label>
-                <textarea class="form-control form-control-sm text-uppercase" maxlength="400" rows="4" asp-for="Catatan1"></textarea>
+                <textarea class="form-control form-control-sm text-uppercase" maxlength="400" rows="4" asp-for="Catatan1" required></textarea>
                 <span asp-validation-for="Catatan1" class="text-danger"></span>
             </div>
             <div class="form-group pb-3">

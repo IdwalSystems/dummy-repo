@@ -19,7 +19,7 @@
         </div>
         <hr class="mt-2"/>
         <form asp-action="Edit" class="needs-validation">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="KodJurulatih" />
             <div class="row">
@@ -91,7 +91,7 @@
                         <div class="form-group col-md">
                             <label asp-for="JSukanId" class="control-label"></label>
                             <select asp-for="JSukanId" class="form-control form-control-sm select2" required>
-                                <option value="" hidden>-- Pilih Sukan --</option>
+                                <option value="0" hidden>-- Pilih Sukan --</option>
                                 @foreach (var s in ViewBag.JSukan)
                                 {
                                     <option value="@s.Id">@s.Perihal </option>
@@ -136,7 +136,7 @@
                         <div class="form-group col-md-4">
                             <label asp-for="JNegeriId" class="control-label"></label>
                             <select asp-for="JNegeriId" class="form-control form-control-sm">
-                                <option value="" hidden>-- Pilih Negeri --</option>
+                                <option value="0" hidden>-- Pilih Negeri --</option>
                                 @foreach (var s in ViewBag.JNegeri)
                                 {
                                     <option value="@s.Id">@s.Perihal </option>
@@ -148,7 +148,7 @@
                     <div class="form-row">
                         <div class="form-group col-md">
                             <label asp-for="TarikhAktif" class="control-label"></label>
-                            <input asp-for="TarikhAktif" class="form-control form-control-sm" />
+                            <input asp-for="TarikhAktif" class="form-control form-control-sm" required/>
                             <span asp-validation-for="TarikhAktif" class="text-danger"></span>
                         </div>
                         <div class="form-group col-md">
@@ -172,7 +172,7 @@
                         <div class="form-group col-md">
                             <label asp-for="JAgamaId" class="control-label"></label>
                             <select asp-for="JAgamaId" class="form-control form-control-sm">
-                                <option value="" hidden>-- Pilih Aama --</option>
+                                <option value="" hidden>-- Pilih Agama --</option>
                                 @foreach (var s in ViewBag.JAgama)
                                 {
                                     <option value="@s.Id">@s.Perihal </option>
@@ -201,7 +201,7 @@
                         <div class="form-group col-md-4">
                             <label asp-for="JBankId" class="control-label"></label>
                             <select asp-for="JBankId" class="form-control form-control-sm select2">
-                                <option value="" hidden>-- Pilih Nama Bank --</option>
+                                <option value="0" hidden>-- Pilih Nama Bank --</option>
                                 @foreach (var s in ViewBag.JBank)
                                 {
                                     <option value="@s.Id">@s.Kod - @s.Nama </option>

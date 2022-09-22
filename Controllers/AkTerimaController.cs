@@ -40,6 +40,7 @@ namespace MSNK.Controllers
         private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPPRepo;
         private readonly IRepository<AkPenghutang, int, string> _akPenghutangRepo;
         private readonly IRepository<AkInvois, int, string> _akInvoisRepo;
+        private readonly UserService _userService;
         private CartTerima _cart;
 
         public AkTerimaController(
@@ -57,6 +58,7 @@ namespace MSNK.Controllers
             IRepository<SpPendahuluanPelbagai, int, string> spPPRepo,
             IRepository<AkPenghutang, int, string> akPenghutangRepo,
             IRepository<AkInvois, int, string> akInvoisRepo,
+            UserService userService,
             CartTerima cart
             )
         {
@@ -74,6 +76,7 @@ namespace MSNK.Controllers
             _spPPRepo = spPPRepo;
             _akPenghutangRepo = akPenghutangRepo;
             _akInvoisRepo = akInvoisRepo;
+            _userService = userService;
             _cart = cart;
         }
 
@@ -2002,7 +2005,7 @@ namespace MSNK.Controllers
 
             ResitPrintModel data = new ResitPrintModel();
 
-            CompanyDetails company = new CompanyDetails();
+            CompanyDetails company = await _userService.GetCompanyDetails();
             data.CompanyDetail = company;
             data.AkTerima = akTerima;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;

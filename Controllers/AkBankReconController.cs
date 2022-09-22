@@ -123,6 +123,7 @@ namespace MSNK.Controllers
             PopulateList();
             ViewData["Tahun"] = Tahun;
             ViewData["Bulan"] = Bulan;
+
             return View(akRecon.OrderBy(b => b.Tahun).ThenBy(b => b.Bulan).ThenBy(b => b.AkBank.NoAkaun).ToList());
         }
             // GET: AkBankRecon/Details/5

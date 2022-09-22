@@ -11,7 +11,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-8">
-                <h5 class="text-uppercase text-primary mb-0">Inbois Pembekal - Ubah</h5>
+                <h5 class="text-uppercase text-primary mb-0">Invois Pembekal - Ubah</h5>
                 <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / <a asp-action="Details" asp-route-id="@Model.Id" class="text-secondary">Papar</a> / Ubah</span>
             </div>
             <div class="col-4 text-right">
@@ -40,14 +40,14 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label asp-for="Tarikh" class="control-label"></label>
+                                <label asp-for="Tarikh" class="control-label"></label><span class="text-danger control-label">*</span>
                                 <input asp-for="Tarikh" class="form-control form-control-sm" required />
                                 <span asp-validation-for="Tarikh" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <label asp-for="JKWId" class="control-label"></label>
                                 <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" disabled>
                                     @foreach (var s in ViewBag.JKW)
                                     {
@@ -59,7 +59,7 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <label asp-for="JBahagianId" class="control-label"></label>
                                 <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" disabled>
                                     @foreach (var s in ViewBag.JBahagian)
                                     {
@@ -71,7 +71,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="AkPOId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <label asp-for="AkPOId" class="control-label"></label>
                                 <select class="form-control form-control-sm select2" asp-for="AkPOId" id="ddlAkPOId" disabled>
                                     <option value="" disabled selected>-- Pilih No PO --</option>
                                     @foreach (var s in ViewBag.AkPO)

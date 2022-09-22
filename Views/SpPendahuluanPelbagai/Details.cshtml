@@ -61,9 +61,8 @@
             <div class="form-row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label name="Pemohon" class="control-label">Nama Pemohon</label><span class="text-danger control-label"></span>
+                        <label name="Pemohon" class="control-label">Nama Pemohon</label>
                         <input name="Pemohon" class="form-control form-control-sm" readonly value="@namaPekerja" />
-                        <input asp-for="SuPekerjaId" class="form-control form-control-sm" value="@ViewBag.IdPekerja" hidden />
                     </div>
                 </div>
 
@@ -78,13 +77,13 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label asp-for="JKWId" class="control-label"></label>
+                        <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
                         <input class="form-control form-control-sm text-uppercase" value="@Model.JKW.Kod - @Model.JKW.Perihal " readonly />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label asp-for="JBahagianId" class="control-label"></label>
+                        <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
                         <input class="form-control form-control-sm text-uppercase" value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " readonly />
                     </div>
                 </div>
@@ -130,11 +129,6 @@
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="col-md-4">
-
-                </div>
-            </div>
             <div class="form-row mb-3">
                 <div class="col-md-8">
                     <div class="form-group">
@@ -273,7 +267,7 @@
                                             <td class="text-right" id="td3Amaun">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
                                             <td class="text-center">
                                                 <div class="btn-group" role="group" aria-label="action">
-                                                    <a asp-controller="AkPV" asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                                    <a asp-controller="AkPV" asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Papar"><i class="fas fa-eye"></i></a>
                                                 </div>
                                             </td>
                                             

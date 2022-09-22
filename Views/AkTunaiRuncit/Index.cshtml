@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.AkTunaiRuncitViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Pem. Tunai Runcit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
@@ -9,17 +9,8 @@
 
 <div class="card box-shadow">
     <div class="card-body">
-        <div class="row">
-            <div class="col-8">
-                <h5 class="text-uppercase mb-0">Senarai Pemegang Tunai Runcit</h5>
-                <span class="ac-ref">Indeks</span>
-            </div>
-            <div class="col-4 text-right">
-                <a class="text-right btn ac-success" asp-action="Create">Tambah Baru</a>
-            </div>
-    
-        </div>
-        <hr class="mt-2"/>
+        <partial name="_TitleIndexPartial" />
+
         <div class="card mb-2">
             <div class="card-body pl-3 pb-2">
                 <label class="form-control-plaintext" for="columnSearch">Carian : </label>

@@ -31,17 +31,20 @@ namespace MSNK.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly IRepository<SuProfil, int, string> _suProfilRepo;
+        private readonly UserService _userService;
         private CartAtlet _cart;
         public SuProfilAtletController(ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
             AppLogIRepository<AppLog, int> appLog,
             IRepository<SuProfil, int, string> suProfilRepository,
+            UserService userService,
             CartAtlet cart)
         {
             _context = context;
             _userManager = userManager;
             _appLog = appLog;
             _suProfilRepo = suProfilRepository;
+            _userService = userService;
             _cart = cart;
         }
 
@@ -1012,7 +1015,7 @@ namespace MSNK.Controllers
 
             SuProfilAtletPrintModel data = new SuProfilAtletPrintModel();
 
-            CompanyDetails company = new CompanyDetails();
+            CompanyDetails company = await _userService.GetCompanyDetails();
             data.CompanyDetail = company;
             data.SuProfil = obj;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;

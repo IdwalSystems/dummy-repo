@@ -14,7 +14,8 @@ namespace MSNK.Models.Modules
     {
         //field
         public int Id { get; set; }
-        [Required(ErrorMessage = "Tahun Diperlukan.")]
+        [Required(ErrorMessage = "Tahun diperlukan")]
+        [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
         [MaxLength(4)]
         public string Tahun { get; set; }
         [Required(ErrorMessage = "Tarikh Diperlukan")]
@@ -29,7 +30,7 @@ namespace MSNK.Models.Modules
         public DateTime? TarikhKewanganTerima { get; set; }
         public DateTime? TarikhPosting { get; set; }
         [DisplayName("No Rujukan")]
-        [Required(ErrorMessage = "No Rujukan Diperlukan")]
+        [Required(ErrorMessage = "No Rujukan diperlukan")]
         public string NoInbois { get; set; }
         [BindProperty]
         [DisplayName("Jumlah RM")]
@@ -63,20 +64,25 @@ namespace MSNK.Models.Modules
         //flag end
 
         //Relationship
-        [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
+        [Required(ErrorMessage = "Kump. Wang diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kump. Wang")]
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         [DisplayName("Bahagian")]
+        [Required(ErrorMessage = "Bahagian diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
         [DisplayName("No Pesanan Tempatan")]
         public int? AkPOId { get; set; }
         [DisplayName("No Inden")]
         public int? AkIndenId { get; set; }
-        [Required(ErrorMessage = "Kod Pemiutang Diperlukan.")]
+        [Required(ErrorMessage = "Kod Pemiutang diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pemiutang")]
         [DisplayName("Kod Pemiutang")]
         public int KodObjekAPId { get; set; }
-        [Required(ErrorMessage = "Kod Pembekal Diperlukan.")]
+        [Required(ErrorMessage = "Kod Pembekal diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pembekal")]
         [DisplayName("Kod Pembekal")]
         public int AkPembekalId { get; set; }
         public JKW JKW { get; set; }

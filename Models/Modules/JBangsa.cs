@@ -11,6 +11,7 @@ namespace MSNK.Models.Modules
     public class JBangsa : AppLogHelper, ISoftDelete
     {
         public int Id { get; set; }
+        [Required(ErrorMessage = "Perihal diperlukan")]
         public string Perihal { get; set; }
 
         //relationship

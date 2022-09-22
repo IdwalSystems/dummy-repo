@@ -14,6 +14,7 @@ using MSNK.Models.Modules.FormModel;
 using Rotativa.AspNetCore;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using MSNK.Infrastructure;
 
 namespace MSNK.Controllers
 {
@@ -25,15 +26,18 @@ namespace MSNK.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly BelanjawanSemasaIRepository<string, int> _bsRepo;
+        private readonly UserService _userService;
 
         public AbBelanjawanSemasaController(
             ApplicationDbContext context,
             UserManager<IdentityUser> userManager,
-            BelanjawanSemasaIRepository<string, int> bsRepo)
+            BelanjawanSemasaIRepository<string, int> bsRepo,
+            UserService userService)
         {
             _context = context;
             _userManager = userManager;
             _bsRepo = bsRepo;
+            _userService = userService;
         }
         public IActionResult Index()
         {
@@ -434,11 +438,17 @@ namespace MSNK.Controllers
             var Bahagian = bahagian.Kod + " - " + bahagian.Perihal;
             var lastDate = tarHingga.ToString("dd/MM/yyyy"); 
 
+            var company = await _userService.GetCompanyDetails();
+
             return new ViewAsPdf("BelanjawanSemasaPrintPDF", vm,
                 new ViewDataDictionary(ViewData) {
                     { "KW", KW },
                     { "Bahagian", Bahagian },
-                    { "TarHingga", lastDate }
+                    { "TarHingga", lastDate },
+                    { "NamaSyarikat", company.NamaSyarikat },
+                    { "AlamatSyarikat1", company.AlamatSyarikat1 },
+                    { "AlamatSyarikat2", company.AlamatSyarikat2 },
+                    { "AlamatSyarikat3", company.AlamatSyarikat3 }
                 })
             {
                 PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },

@@ -151,7 +151,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="Alamat1" class="control-label">Alamat</label>
+                <label asp-for="Alamat1" class="control-label"></label>
                 <input asp-for="Alamat1" class="form-control form-control-sm text-uppercase" />
                 <span asp-validation-for="Alamat1" class="text-danger"></span>
             </div>
@@ -182,7 +182,7 @@
                     <div class="form-group">
                         <label asp-for="JNegeriId" class="control-label"></label><span class="text-danger control-label">*</span>
                         <select class="form-control form-control-sm select2" asp-for="JNegeriId" required id="ddlNegeri">
-                            <option value="" disabled selected>-- Pilih Negeri --</option>
+                            <option value="0" hidden>-- Pilih Negeri --</option>
                             @foreach (var s in ViewBag.JNegeri)
                             {
                                 <option value="@s.Id">@s.Kod - @s.Perihal </option>

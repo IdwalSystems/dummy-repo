@@ -5,6 +5,18 @@ for details on configuring this project to bundle and minify static web assets. 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.nav-link {
+    color: #343a40;
+}
+
+.bg-super {
+    background: rgb(238,174,202);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+}
+
+    .bg-super .nav-link {
+        color: white;
+    }
 
 .gradient-custom-2 {
     /* fallback for old browsers */
@@ -24,6 +36,7 @@ for details on configuring this project to bundle and minify static web assets. 
         display: none;
     }
 
+
 }
 
 @media (max-width: 767px) {
@@ -32,8 +45,16 @@ for details on configuring this project to bundle and minify static web assets. 
     }
 
     .show-mobile {
-        display:inherit;
+        display:block;
         transition:ease-in;
+    }
+
+    html, body {
+        overflow-x: hidden;
+    }
+
+    body {
+        position: relative
     }
 }
 
@@ -169,7 +190,14 @@ a:focus i {
 
 a object {
     animation: all 0.1s linear;
+    pointer-events: none;
 }
+
+button object {
+    animation: all 0.1s linear;
+    pointer-events: none;
+}
+
 
 a:hover object {
     transform: scale(1.2);
@@ -569,8 +597,10 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #0366d6;
+    cursor: pointer;
 }
+
 
 span, li, .dropdown-item, .navbar-light .navbar-nav .nav-link, .table, .col-form-label, a, .btn-sm {
     font-size: 0.8rem;
@@ -664,7 +694,7 @@ body {
     margin-bottom: 0.4rem;
 }
 
-.form-control-sm {
+.form-control-sm, .input-group-text {
     padding: 0.1rem 0.5rem;
     height: calc(1.4em + 0.5rem + 2px);
     font-size: .8rem;
@@ -697,21 +727,20 @@ label {
 /*ToTopBtn -----------------------------------------------------------------------*/
 #myBtn {
     display: none;
+    width: 40px;
+    height: 40px;
     position: fixed;
     bottom: 20px;
-    right: 30px;
+    right: 20px;
     z-index: 99;
     border: none;
     outline: none;
-    background-color: lightsalmon;
+    background-color: #5be3a4;
     color: white;
     cursor: pointer;
-    padding: 15px;
-    border-radius: 4px;
-}
-
-#myBtn:hover {
-    background-color: #555;
+    border-radius: 14px;
+    transition: 0.3s;
+    font-size: 15px;
 }
 
 /* Hide all steps by default: */

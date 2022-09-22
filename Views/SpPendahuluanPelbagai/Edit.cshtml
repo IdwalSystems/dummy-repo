@@ -62,13 +62,13 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label asp-for="JKWId" class="control-label">Kumpulan Wang</label>
+                                <label asp-for="JKWId" class="control-label">Kumpulan Wang</label><span class="text-danger control-label">*</span>
                                 <input value="@Model.JKW.Kod - @Model.JKW.Perihal " class="form-control form-control-sm form-control-sm text-uppercase" required id="ddlKW" readonly />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label asp-for="JBahagianId" class="control-label">Bahagian</label>
+                                <label asp-for="JBahagianId" class="control-label">Bahagian</label><span class="text-danger control-label">*</span>
                                 <select class="form-control form-control-sm" asp-for="JBahagianId" id="ddlBahagian">
                                     <option value="0" hidden>-- Pilih Bahagian --</option>
                                     @foreach (var s in ViewBag.JBahagianUbah)
@@ -142,7 +142,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-row mb-2">
+                    <div class="form-row mb-3">
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label asp-for="AkCartaId" class="control-label">Kod Objek/Vot</label>

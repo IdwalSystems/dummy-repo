@@ -44,6 +44,7 @@ namespace MSNK.Controllers
         private readonly CustomIRepository<string, int> _customRepo;
         private readonly AkPOLarasController _akPOLarasController;
         private readonly IRepository<AkPOLaras, int, string> _akPoLarasRepo;
+        private readonly UserService _userService;
         private CartPO _cart;
 
         public AkPOController(ApplicationDbContext context,
@@ -64,6 +65,7 @@ namespace MSNK.Controllers
             CustomIRepository<string, int> customRepo,
             AkPOLarasController akPOLarasController,
             IRepository<AkPOLaras, int, string> akPOLarasRepository,
+            UserService userService,
             CartPO cart
             )
         {
@@ -86,6 +88,7 @@ namespace MSNK.Controllers
             _cart = cart;
             _akPOLarasController = akPOLarasController;
             _akPoLarasRepo = akPOLarasRepository;
+            _userService = userService;
         }
         private async Task AddLogAsync(
             string operasi,
@@ -1902,8 +1905,7 @@ namespace MSNK.Controllers
 
             POPrintModel data = new POPrintModel();
 
-            CompanyDetails company = new CompanyDetails();
-            data.CompanyDetail = company;
+            data.CompanyDetail = await _userService.GetCompanyDetails();
             data.AkPO = akPO;
             //data.AkPO.JNegeri = negeri;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;

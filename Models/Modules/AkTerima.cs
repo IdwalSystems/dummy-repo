@@ -24,14 +24,14 @@ namespace MSNK.Models.Modules
 
         //field
         public int Id { get; set; }
-        [Required(ErrorMessage = "Tahun Diperlukan.")]
+        [Required(ErrorMessage = "Tahun diperlukan")]
         [MaxLength(4)]
+        [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
         public string Tahun { get; set; }
         [DisplayName("No Rujukan")]
         [MaxLength(20)]
         public string NoRujukan { get; set; }
-        [Required(ErrorMessage = "Tarikh Diperlukan")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [Required(ErrorMessage = "Tarikh diperlukan")]
         public DateTime Tarikh { get; set; }
         public DateTime? TarikhPosting { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
@@ -43,22 +43,24 @@ namespace MSNK.Models.Modules
         [DisplayName("No KP")]
         [MaxLength(15)]
         public string NoKp { get; set; }
-        [Required(ErrorMessage = "Nama Diperlukan")]
+        [Required(ErrorMessage = "Nama diperlukan")]
         [MaxLength(100)]
         public string Nama { get; set; }
         [MaxLength(100)]
+        [DisplayName("Alamat")]
         public string Alamat1 { get; set; }
         [MaxLength(100)]
         public string Alamat2 { get; set; }
         [MaxLength(100)]
         public string Alamat3 { get; set; }
         [MaxLength(5)]
+        [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
         public string Poskod { get; set; }
         [MaxLength(100)]
         public string Bandar { get; set; }
         [MaxLength(15)]
         public string Tel { get; set; }
-        [MaxLength(100)]
+        [EmailAddress(ErrorMessage = "Emel tidak sah"), MaxLength(100)]
         public string Emel { get; set; }
         [MaxLength(400)]
         public string Sebab { get; set; }
@@ -82,21 +84,25 @@ namespace MSNK.Models.Modules
         //flag end
 
         //Relationship
-        [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
+        [Required(ErrorMessage = "Kump. Wang diperlukan")]
         [DisplayName("Kumpulan Wang")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kump. Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
 
         [DisplayName("Bahagian")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
 
-        [Required(ErrorMessage = "Negeri Diperlukan.")]
+        [Required(ErrorMessage = "Negeri diperlukan")]
         [DisplayName("Negeri")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Negeri")]
         public int JNegeriId { get; set; }
         public JNegeri JNegeri { get; set; }
-        [Required(ErrorMessage = "Kod Bank Diperlukan")]
+        [Required(ErrorMessage = "Kod Bank diperlukan")]
         [DisplayName("Kod Bank")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Bank")]
         public int AkBankId { get; set; }
         public AkBank AkBank { get; set; }
         [DisplayName("No Permohonan Aktiviti")]

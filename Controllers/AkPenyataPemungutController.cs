@@ -33,6 +33,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkTerima, int, string> _akTerimaRepo;
         private readonly ListViewIRepository<AkTerima2, int> _akTerima2Repo;
         private readonly IRepository<AkBank, int, string> _akBankRepo;
+        private readonly UserService _userService;
         private CartPenyataPemungut _cart;
 
         public AkPenyataPemungutController(
@@ -44,6 +45,7 @@ namespace MSNK.Controllers
             IRepository<AkTerima, int, string> akTerimaRepo,
             ListViewIRepository<AkTerima2, int> akTerima2Repo,
             IRepository<AkBank, int, string> akBankRepo,
+            UserService userService,
             CartPenyataPemungut cart
             )
         {
@@ -55,6 +57,7 @@ namespace MSNK.Controllers
             _akTerimaRepo = akTerimaRepo;
             _akTerima2Repo = akTerima2Repo;
             _akBankRepo = akBankRepo;
+            _userService = userService;
             _cart = cart;
         }
 
@@ -872,7 +875,7 @@ namespace MSNK.Controllers
 
             PenyataPemungutPrintModel data = new PenyataPemungutPrintModel();
 
-            CompanyDetails company = new CompanyDetails();
+            CompanyDetails company = await _userService.GetCompanyDetails();
             data.CompanyDetail = company;
             data.AkPenyataPemungut = akPungut;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;

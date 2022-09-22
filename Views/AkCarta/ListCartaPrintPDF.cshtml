@@ -4,8 +4,6 @@
     ViewData["Title"] = "Cetakan Senarai Carta";
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
 
-    CompanyDetails company = new CompanyDetails();
-
     var bil = 0;
 }
 <style>
@@ -52,14 +50,14 @@
 <div class="row flexrow mb-1 text-center">
     <div class="col-12 text-uppercase">
         <img class="image-container mb-2" src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
-        <h5 class="mb-1"><strong>@company.NamaSyarikat</strong></h5>
-        <p class="mb-0"> @company.AlamatSyarikat1 , @company.AlamatSyarikat2</p>
-        <p class="mb-0"> @company.AlamatSyarikat3</p>
+        <h5 class="mb-1"><strong>@ViewData["NamaSyarikat"]</strong></h5>
+        <p class="mb-0"> @ViewData["AlamatSyarikat1"], @ViewData["AlamatSyarikat2"]</p>
+        <p class="mb-0"> @ViewData["AlamatSyarikat3"]</p>
         <p class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</p>
     </div>
 
     <!--<div class="col-2 text-right">-->
-        @*<h6 class="mb-0"><strong>SENARAI CARTA AKAUN</strong></h6>*@
+    @*<h6 class="mb-0"><strong>SENARAI CARTA AKAUN</strong></h6>*@
     <!--</div>-->
 </div>
 @*<div class="form-row flexrow mb-1 text-center">

@@ -15,25 +15,29 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         [DisplayName("No Gaji")]
         public string NoGaji { get; set; }
-        [Required(ErrorMessage = "No Kad Pengenalan Diperlukan")]
+        [Required(ErrorMessage = "No Kad Pengenalan diperlukan")]
         [DisplayName("No KP")]
         public string NoKp { get; set; }
+        [Required(ErrorMessage = "Nama diperlukan")]
         public string Nama { get; set; }
         [DisplayName("Alamat")]
         public string Alamat1 { get; set; }
         public string Alamat2 { get; set; }
         public string Alamat3 { get; set; }
+        [MaxLength(5)]
+        [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
         public string Poskod { get; set; }
         public string Bandar { get; set; }
         [DisplayName("Negeri")]
-        [Required(ErrorMessage = "Negeri Diperlukan")]
+        [Required(ErrorMessage = "Negeri diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Negeri")]
         public int JNegeriId { get; set; }
         [DisplayName("No Telefon Rumah")]
         public string TelefonRumah { get; set; }
         [DisplayName("No Telefon Bimbit")]
         public string TelefonBimbit { get; set; }
-        [Required(ErrorMessage = "Emel Diperlukan")]
-        [EmailAddress(ErrorMessage = "Emel Tidak Sah."), MaxLength(100)]
+        [Required(ErrorMessage = "Emel diperlukan")]
+        [EmailAddress(ErrorMessage = "Emel tidak sah"), MaxLength(100)]
         public string Emel { get; set; }
         [DefaultValue("0")]
         [DisplayName("Status Perkahwinan")]
@@ -51,6 +55,8 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Pencen")]
         public DateTime? TarikhPencen { get; set; }
         [DisplayName("Nama Bank")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bank")]
+        [Required(ErrorMessage = "Bank diperlukan")]
         public int JBankId { get; set; }
         [DisplayName("Agama")]
         public int? JAgamaId { get; set; }

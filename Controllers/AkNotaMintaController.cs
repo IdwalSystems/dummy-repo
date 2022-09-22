@@ -33,6 +33,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JKW, int, string> _kwRepo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
+        private readonly UserService _userService;
         private CartNotaMinta _cart;
 
         public AkNotaMintaController(
@@ -44,6 +45,7 @@ namespace MSNK.Controllers
             IRepository<JKW, int, string> kwRepo,
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
             IRepository<AkCarta, int, string> akCartaRepository,
+            UserService userService,
             CartNotaMinta cart
             )
         {
@@ -55,6 +57,7 @@ namespace MSNK.Controllers
             _kwRepo = kwRepo;
             _abBukuVotRepo = abBukuVotRepository;
             _akCartaRepo = akCartaRepository;
+            _userService = userService;
             _cart = cart;
         }
 
@@ -1625,9 +1628,9 @@ namespace MSNK.Controllers
                 data.TarikhKewangan = "";
             }
 
-            CompanyDetails company = new CompanyDetails();
+            CompanyDetails company = await _userService.GetCompanyDetails();
 
-            foreach( AkNotaMinta2 item in akNotaMinta.AkNotaMinta2)
+            foreach ( AkNotaMinta2 item in akNotaMinta.AkNotaMinta2)
             {
                 data.JumlahPerihal += item.Amaun;
             }

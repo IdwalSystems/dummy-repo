@@ -32,6 +32,14 @@
 //});
 // stop users from entering source code end
 
+// toggle sidebar 
+$(function () {
+    // Sidebar toggle behavior
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar, #content').toggleClass('active');
+    });
+});
+
 // toggle full screen
 function toggleFullScreen() {
     var a = $(window).height() - 10;
@@ -135,6 +143,10 @@ $(document).ready(function () {
         theme: "bootstrap"
     });  
 
+    $("select").on("select2:close", function (e) {
+        $(this).valid();
+    });
+
     $("#datepicker").datepicker({
         changeMonth: true,
         changeYear: false,
@@ -157,27 +169,5 @@ function openNav() {
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
 }
-
-//ToTopBtn------------------------------------------------------------------------
-//Get the button
-var mybutton = document.getElementById("myBtn");
-
-// When the user scrolls down 20px from the top of the document, show the button
-window.onscroll = function () { scrollFunction() };
-
-function scrollFunction() {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        mybutton.style.display = "block";
-    } else {
-        mybutton.style.display = "none";
-    }
-}
-
-// When the user clicks on the button, scroll to the top of the document
-function topFunction() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-}
-//ToTopBtn------------------------------------------------------------------------
 
 

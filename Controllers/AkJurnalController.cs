@@ -37,6 +37,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkTunaiRuncit, int, string> _akTunaiRuncitRepo;
         private readonly IRepository<AkTunaiLejar, int, string> _akTunaiLejarRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVot;
+        private readonly UserService _userService;
         private CartJurnal _cart;
 
         public AkJurnalController(
@@ -51,6 +52,7 @@ namespace MSNK.Controllers
             IRepository<AkTunaiRuncit, int, string> akTunaiRuncitRepository,
             IRepository<AkTunaiLejar, int, string> akTunaiLejarRepository,
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
+            UserService userService,
             CartJurnal cart
             )
         {
@@ -65,6 +67,7 @@ namespace MSNK.Controllers
             _akTunaiRuncitRepo = akTunaiRuncitRepository;
             _akTunaiLejarRepo = akTunaiLejarRepository;
             _abBukuVot = abBukuVotRepository;
+            _userService = userService;
             _cart = cart;
         }
         private async Task AddLogAsync(
@@ -152,6 +155,12 @@ namespace MSNK.Controllers
                 .OrderBy(b => b.Kod)
                 .ToList();
             ViewBag.AkCarta = cartaList;
+
+            var data = new AkJurnal();
+            data.Tarikh = DateTime.Now;
+            data.JKWId = 1;
+
+            ViewBag.NoRujukan = GetNoRujukan(data);
         }
         private void PopulateTable(int? id)
         {
@@ -1141,7 +1150,7 @@ namespace MSNK.Controllers
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email.ToUpper() == user.ToUpper());
             var jumDebitPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akJurnal.JumDebit)).ToUpper();
             var jumKreditPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akJurnal.JumKredit)).ToUpper();
-            CompanyDetails company = new CompanyDetails();
+            CompanyDetails company = await _userService.GetCompanyDetails();
 
             data.Username = namaUser.Nama;
             data.AkJurnal = akJurnal;

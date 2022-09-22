@@ -12,13 +12,15 @@ namespace MSNK.Models.Modules
     public class AkNotaMinta : AppLogHelper, ISoftDelete
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "Tahun Diperlukan.")]
+        [Required(ErrorMessage = "Tahun diperlukan")]
         [MaxLength(4)]
+        [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
         public string Tahun { get; set; }
-        [Required(ErrorMessage = "Tarikh Diperlukan")]
+        [Required(ErrorMessage = "Tarikh diperlukan")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Tarikh { get; set; }
         public string NoRujukan { get; set; }
+        [Required(ErrorMessage = "Tajuk diperlukan")]
         public string Tajuk { get; set; }
         [DisplayName("Jumlah RM")]
         [Column(TypeName = "decimal(18, 2)")]
@@ -67,15 +69,20 @@ namespace MSNK.Models.Modules
         public DateTime? TarLulus { get; set; }
         //untuk kelulusan end 
 
+        [Required(ErrorMessage = "Kump. Wang diperlukan")]
         [DisplayName("Kumpulan Wang")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kump. Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
 
         [DisplayName("Bahagian")]
+        [Required(ErrorMessage = "Bahagian diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
 
         [DisplayName("Kod Pembekal")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pembekal")]
         public int AkPembekalId { get; set; }
         public AkPembekal AkPembekal { get; set; }
         public ICollection<AkNotaMinta1> AkNotaMinta1 { get; set; }

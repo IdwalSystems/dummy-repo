@@ -8,40 +8,9 @@
 <partial name="_JSIndex" />
 <div class="card box-shadow">
     <div class="card-body border">
-        <div class="row">
-            <div class="col-8">
-                <h5 class="text-uppercase mb-0">Senarai Akaun Bank</h5>
-                <span class="ac-ref">Indeks</span>
-            </div>
-            <div class="col-4 text-right">
-                <a class="text-right btn ac-success" asp-action="Create">Tambah Baru</a>
-            </div>
-    
-        </div>
-        <hr class="mt-2"/>
+        <partial name="_TitleIndexPartial" />
 
-        <div class="card mb-2">
-            <div class="card-body pl-3 pb-2">
-                <label class="form-control-plaintext" for="columnSearch">Carian : </label>
-                <div class="form-actions no-color mb-2">
-                    <div class="form-row">
-                        <div class="col-sm-2 mb-2">
-                            <select class="custom-select form-control-sm" id="columnSearch">
-                                <option value="" selected>Semua</option>
-                                <option value=".kod">Kod Akaun</option>
-                                <option value=".nama">Nama Bank</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-8 mb-2">
-                            <input class="form-control form-control-sm" type="text" id="myInput" style="text-transform:uppercase" />
-                        </div>
-                        @*<div class="col-sm mb-2">
-                                <button class="btn btn-warning btn-sm" id="batalCari" value="Batal Carian"><i class="fas fa-backspace"></i></button>
-                            </div>*@
-                    </div>
-                </div>
-            </div>
-        </div>
+        <partial name="_SearchJadualIndexPartial" />
 
         <div class="table-responsive table-sm">
             <table class="table table-bordered table-hover display compact nowrap" width="100%">

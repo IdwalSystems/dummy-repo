@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MSNK.Models.Modules.ViewModel.AkPVViewModel>
 
 @{
-    ViewData["Title"] = "PV";
+    ViewData["Title"] = "Senarai Baucer Pembayaran";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,13 +11,16 @@
     <div class="card card-body border">
         <div class="row">
             <div class="col-8">
-                <h5 class="text-uppercase mb-0">Senarai Baucer Pembayaran</h5>
+                <h5 class="text-uppercase mb-0">@ViewData["Title"]</h5>
                 <span class="ac-ref">Indeks</span>
             </div>
-            <div class="col-4 text-right">
+            <div class="col-4 text-right hidden-mobile">
                 <button class="text-right btn ac-success" data-toggle="modal" data-target="#modalTambah">Tambah Baru</button>
             </div>
-    
+            <div class="col-4 text-right show-mobile">
+                <a class="text-right btn text-success"  data-toggle="modal" data-target="#modalTambah"><i class="fa fa-plus fa-2x"></i></a>
+            </div>
+
         </div>
         <hr class="mt-2"/>
         @*div carian*@

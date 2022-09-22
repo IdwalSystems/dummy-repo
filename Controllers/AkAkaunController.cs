@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
 using Rotativa.AspNetCore;
@@ -25,19 +26,22 @@ namespace MSNK.Controllers
         private readonly IRepository<JKW, int, string> _kwRepo;
         private readonly IRepository<AkCarta, int, string> _akCarta1Repo;
         private readonly IRepository<AkCarta, int, string> _akCarta2Repo;
+        private readonly UserService _userService;
 
         public AkAkaunController(
             ApplicationDbContext context,
             IRepository<AkAkaun, int, string> akAkaunRepository,
             IRepository<JKW, int, string> kwRepository,
             IRepository<AkCarta, int, string> akCarta1Repository,
-            IRepository<AkCarta, int, string> akCarta2Repository)
+            IRepository<AkCarta, int, string> akCarta2Repository,
+            UserService userService)
         {
             _context = context;
             _akAkaunRepo = akAkaunRepository;
             _kwRepo = kwRepository;
             _akCarta1Repo = akCarta1Repository;
             _akCarta2Repo = akCarta2Repository;
+            _userService = userService;
         }
 
         // GET: AkAkaun
@@ -141,7 +145,6 @@ namespace MSNK.Controllers
         {
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             List<SelectListItem> kwSelect = new();
-            kwSelect.Add(new SelectListItem() { Text = "-- Pilih Kumpulan Wang --", Value = "" });
             foreach (var q in kwList)
             {
                 kwSelect.Add(new SelectListItem() { Text = q.Kod + " - " + q.Perihal, Value = q.Kod });
@@ -155,9 +158,9 @@ namespace MSNK.Controllers
                 ViewBag.Kw = new SelectList(kwSelect, "Value", "Text", "");
             }
 
-            List<AkCarta> Carta1List = _context.AkCarta.OrderBy(b => b.Kod).ToList();
+            List<AkCarta> Carta1List = _context.AkCarta.Include(b => b.JParas).Where(b => b.JParas.Kod == "4").OrderBy(b => b.Kod).ToList();
             List<SelectListItem> carta1Select = new();
-            carta1Select.Add(new SelectListItem() { Text = "-- Pilih Carta 1 --", Value = "" });
+            carta1Select.Add(new SelectListItem() { Text = "-- Pilih Kod Akaun --", Value = "" });
             foreach (var q in Carta1List)
             {
                 carta1Select.Add(new SelectListItem() { Text = q.Kod + " - " + q.Perihal, Value = q.Kod });
@@ -182,6 +185,18 @@ namespace MSNK.Controllers
         {
             //IEnumerable<AkAkaun> akAkaun = await _akAkaunRepo.GetAll();
             
+            if (string.IsNullOrEmpty(searchKW))
+            {
+                TempData[SD.Error] = "Sila isi ruangan Kump. Wang";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (string.IsNullOrEmpty(searchCarta))
+            {
+                TempData[SD.Error] = "Sila isi ruangan Kod Akaun";
+                return RedirectToAction(nameof(Index));
+            }
+
             var akAkaun = await _context.AkAkaun
                 .Include(b => b.JKW)
                 .Include(b => b.AkCarta1)
@@ -260,11 +275,18 @@ namespace MSNK.Controllers
             searchCarta = carta.Kod + " - " + carta.Perihal;
             //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
 
+            var company = await _userService.GetCompanyDetails();
+
             return new ViewAsPdf("LejarAkaunPrintPDF", akAkaun, 
                 new ViewDataDictionary(ViewData) { {"searchKW", searchKW },
                 {"searchCarta", searchCarta },
                 {"tarDari", tarDari },
-                {"tarHingga", tarHingga } })
+                {"tarHingga", tarHingga },
+                { "NamaSyarikat", company.NamaSyarikat },
+                { "AlamatSyarikat1", company.AlamatSyarikat1 },
+                { "AlamatSyarikat2", company.AlamatSyarikat2 },
+                { "AlamatSyarikat3", company.AlamatSyarikat3 }
+            })
             {
                 PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,

@@ -13,6 +13,7 @@ namespace MSNK.Models.Modules
     {
         public int Id { get; set; }
         [DisplayName("Anggota")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Anggota")]
         [Required(ErrorMessage = "Anggota Diperlukan")]
         public int SuPekerjaId { get; set; }
         public SuPekerja SuPekerja { get; set; }

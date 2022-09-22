@@ -144,6 +144,11 @@ namespace MSNK.Controllers
                         s.KodAkaun.Substring(0, range.Item2.Length).CompareTo(range.Item2) <= 0)
                         .OrderBy(x => x.KodAkaun).ToList();
             }
+            else
+            {
+
+                return View(new List<AbBukuVotViewModel>());
+            }
             //filter range search end
 
             return View(vot);

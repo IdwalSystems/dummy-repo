@@ -12,6 +12,8 @@ namespace MSNK.Models.Modules
     public class SpPendahuluanPelbagai : AppLogHelper, ISoftDelete, ICancel
     {
         public int Id { get; set; }
+        [DisplayName("No Permohonan")]
+        [Required(ErrorMessage = "No Permohonan diperlukan")]
         public string NoPermohonan { get; set; }
 
         // note :
@@ -19,12 +21,18 @@ namespace MSNK.Models.Modules
         // JenisPermohonan = 2 -> Pentadbiran
         [DisplayName("Jenis Permohonan")]
         public int JenisPermohonan { get; set; }
+        [DisplayName("Tarikh Aktiviti")]
+        [Required(ErrorMessage = "Tarikh Aktiviti diperlukan")]
         public string Tarikh { get; set; }
+        [DisplayName("Aktiviti/Kejohanan")]
+        [Required(ErrorMessage = "Aktiviti/Kejohanan diperlukan")]
         public string Aktiviti { get; set; }
+        [Required(ErrorMessage = "Tempat diperlukan")]
         public string Tempat { get; set; }
 
         public DateTime? TarSedia { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
+        [DisplayName("Jumlah RM")]
         public decimal JumKeseluruhan { get; set; }
 
         // untuk kelulusan
@@ -59,22 +67,34 @@ namespace MSNK.Models.Modules
         public DateTime? TarHapus { get; set; }
 
         //relationship
+        [DisplayName("Kod Objek/Vot")]
         public int? AkCartaId { get; set; }
         public AkCarta AkCarta { get; set; }
         [DisplayName("Kumpulan Wang")]
+        [Required(ErrorMessage = "Kump. Wang diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kump. Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
 
         [DisplayName("Bahagian")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
-
+        [DisplayName("Negeri")]
+        [Required(ErrorMessage = "Negeri diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Negeri")]
         public int JNegeriId { get; set; }
         public JNegeri JNegeri { get; set; }
+        [DisplayName("Sukan")]
+        [Required(ErrorMessage = "Sukan diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Sukan")]
         public int JSukanId { get; set; }
         public JSukan JSukan { get; set; }
+        [DisplayName("Tahap")]
+        [Required(ErrorMessage = "Sila pilih Tahap Aktiviti")]
         public int JTahapAktivitiId { get; set; }
         public JTahapAktiviti JTahapAktiviti { get; set; }
+        [DisplayName("Nama Pemohon")]
         public int? SuPekerjaId { get; set; }
         public SuPekerja SuPekerja { get; set; }
         public ICollection<SpPendahuluanPelbagai1> SpPendahuluanPelbagai1 { get; set; }

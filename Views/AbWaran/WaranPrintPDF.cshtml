@@ -37,17 +37,17 @@
     </div>
 
     <div class="col-2 text-right">
-        <h6 class="mb-0"><strong>WARAN</strong></h6>
+        <h3 class="mb-0"><strong>WARAN</strong></h3>
         @switch (Model.AbWaran.FlJenisWaran)
         {
             case 0:
-                <h6 class="mb-0"><strong>Peruntukan Asal</strong></h6>
+                <h5 class="mb-0 text-gray text-uppercase"><strong>Peruntukan Asal</strong></h5>
                 break;
             case 1:
-                <h6 class="mb-0"><strong>Peruntukan Tambah/ Tarik Balik</strong></h6>
+                <h5 class="mb-0 text-gray text-uppercase"><strong>Peruntukan Tambah/ Tarik Balik</strong></h5>
                 break;
             default:
-                <h6 class="mb-0"><strong>Peruntukan Pindahan</strong></h6>
+                <h5 class="mb-0 text-gray text-uppercase"><strong>Peruntukan Pindahan</strong></h5>
                 break;
         }
 
@@ -56,6 +56,8 @@
         <h6 class="mb-0">TARIKH PESANAN TEMPATAN: @Html.DisplayFor(x => x.AkPO.Tarikh, "{0:dd/MM/yyyy}")</h6>*@
     </div>
 </div>
+<br />
+
 <div class="row flexrow mb-1">
     <div class="col-8 text-center text-uppercase">
         <h5 class="mb-1"><strong>Tahun Kewangan @Model.AbWaran.Tahun</strong></h5>
@@ -73,14 +75,16 @@
                 </td>
             </tr>
             <tr>
-                <td class="text-center">@Model.AbWaran.NoRujukan.Substring(3)</td>
-                <td class="text-center" width="15%">@Convert.ToDateTime(Model.AbWaran.Tarikh).ToString("dd/MM/yyyy")</td>
+                <td class="text-center font-weight-bold" style="font-size:1.2rem;">@Model.AbWaran.NoRujukan.Substring(3)</td>
+                <td class="text-center font-weight-bold" width="15%">@Convert.ToDateTime(Model.AbWaran.Tarikh).ToString("dd/MM/yyyy")</td>
                 <td class="text-center text-uppercase">@Model.AbWaran.JKW.Kod - @Model.AbWaran.JKW.Perihal</td>
                 <td class="text-center text-uppercase">@Model.AbWaran.JBahagian.Kod - @Model.AbWaran.JBahagian.Perihal</td>
             </tr>
         </tbody>
     </table>
 </div>
+
+<br />
 
 <div class="table-responsive-sm mb-0">
     <table class="table table-bordered table-sm topic">
@@ -117,16 +121,25 @@
     </table>
 </div>
 
+<br />
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <thead class="text-center">
+            <tr class="bg-dark text-white font-weight-bold">
+
+                <td class="text-center"><h6 class="mb-0"><strong>UNTUK KEGUNAAN BAHAGIAN KEWANGAN</strong></h6></td>
+            </tr>
+        </thead>
+    </table>
+</div>
+
 <div class="table-responsive-sm">
     <table class="table table-sm topic table-bordered">
         <thead class="table-dark">
 
         </thead>
         <tbody>
-            <tr class="bg-dark text-white font-weight-bold">
-
-                <td class="text-center" colspan="3"><h6 class="mb-0"><strong>UNTUK KEGUNAAN BAHAGIAN KEWANGAN</strong></h6></td>
-            </tr>
             <tr>
                 <td class="text-center" width="33%">Disedia </td>
                 <td class="text-center" width="33%">Disemak </td>

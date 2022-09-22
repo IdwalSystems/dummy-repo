@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
 using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
@@ -30,6 +32,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<JKW, int, string> _kwRepo;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserService _userService;
 
         public AkCartaController(
             ApplicationDbContext context,
@@ -37,7 +40,8 @@ namespace MSNK.Controllers
             UserManager<IdentityUser> userManager,
             IRepository<JKW, int, string> kwRepository,
             IRepository<AkCarta, int, string> akCartaRepository,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            UserService userService)
         {
             _context = context;
             _appLog = appLog;
@@ -45,6 +49,7 @@ namespace MSNK.Controllers
             _kwRepo = kwRepository;
             _akCartaRepo = akCartaRepository;
             _webHostEnvironment = webHostEnvironment;
+            _userService = userService;
         }
 
         private async Task AddLogAsync(
@@ -602,10 +607,17 @@ namespace MSNK.Controllers
         public async Task<IActionResult> PrintCarta()
         {
             IEnumerable<AkCarta> akCarta = await _akCartaRepo.GetAll();
-            
+
+            var company = await _userService.GetCompanyDetails();
             //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
 
-            return new ViewAsPdf("ListCartaPrintPDF",akCarta)
+            return new ViewAsPdf("ListCartaPrintPDF",akCarta,
+                new ViewDataDictionary(ViewData) {
+                    { "NamaSyarikat", company.NamaSyarikat },
+                    { "AlamatSyarikat1", company.AlamatSyarikat1 },
+                    { "AlamatSyarikat2", company.AlamatSyarikat2 },
+                    { "AlamatSyarikat3", company.AlamatSyarikat3 }
+                })
             {
                 PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,

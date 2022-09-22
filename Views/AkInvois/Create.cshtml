@@ -11,7 +11,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-8">
-                <h5 class="text-uppercase text-success mb-0">Inbois Dikeluarkan - Tambah</h5>
+                <h5 class="text-uppercase text-success mb-0">Invois Dikeluarkan - Tambah</h5>
                 <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Tambah</span>
             </div>
             <div class="col-4 text-right">
@@ -25,14 +25,14 @@
             <div class="form-row">
                 <div class="col-md-1">
                     <div class="form-group">
-                        <label asp-for="Tahun" class="control-label"></label>
+                        <label asp-for="Tahun" class="control-label"></label><span class="text-danger control-label">*</span>
                         <input asp-for="Tahun" class="form-control form-control-sm" value="@DateTime.Now.Year.ToString()" required />
                         <span asp-validation-for="Tahun" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label asp-for="Tarikh" class="control-label"></label>
+                        <label asp-for="Tarikh" class="control-label"></label><span class="text-danger control-label">*</span>
                         <input asp-for="Tarikh" class="form-control form-control-sm" value="@DateTime.Now.ToString("s")" required />
                         <span asp-validation-for="Tarikh" class="text-danger"></span>
                     </div>
@@ -74,7 +74,7 @@
                 <div class="col-md-12">
                     <label asp-for="AkPenghutangId" class="control-label"></label><span class="text-danger control-label">*</span>
                     <select class="form-control form-control-sm select2" asp-for="AkPenghutangId" id="ddlKodPenghutang" required>
-                        <option value="0" disabled selected>-- Pilih Kod Penghutang --</option>
+                        <option value="0" hidden>-- Pilih Kod Penghutang --</option>
                         @foreach (var s in ViewBag.AkPenghutang)
                         {
                             <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>

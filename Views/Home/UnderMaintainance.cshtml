@@ -2,7 +2,16 @@
     ViewData["Title"] = "Penyelenggaraan Sistem";
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
-<style>
+<div class="login-wrapper">
+    <div class="note text-center fade-in">
+        <h3 class="text-danger pb-2">Sistem dalam Penyelenggaraan</h3>
+        <h6 class="pb-2 text-muted">
+            Sebarang info terkini akan diberitahu kelak. Terima kasih.
+        </h6>
+        <a asp-controller="Account" asp-action="Login" class="text-primary">Kembali ke Log Masuk</a>
+    </div>
+</div>
+@*<style>
     .wrap-login {
         padding: 42px 50px 33px 55px;
         background: #fff;
@@ -31,4 +40,4 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@

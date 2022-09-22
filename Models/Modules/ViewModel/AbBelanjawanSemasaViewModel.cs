@@ -1,4 +1,5 @@
-﻿using MSNK.Models.Modules.FormModel;
+﻿using MSNK.Models.Administration;
+using MSNK.Models.Modules.FormModel;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

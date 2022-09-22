@@ -9,7 +9,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-8">
-                <h5 class="text-uppercase text-success mb-0">Bahagian - Tambah</h5>
+                <h5 class="text-uppercase text-success mb-0">Pel. Pesanan Tempatan - Tambah</h5>
                 <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Tambah</span>
             </div>
             <div class="col-4 text-right">
@@ -20,8 +20,8 @@
         <hr class="mt-2"/>
 
         <form asp-action="Create">
-            <div asp-validation-summary="All" class="text-danger"></div>
-                    <div class="form-row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-row mb-3">
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="Tahun" class="control-label"></label>
@@ -69,12 +69,13 @@
                             <div class="form-group">
                                 <label asp-for="AkPOId" class="control-label"></label>
                                 <select class="form-control form-control-sm select2" asp-for="AkPOId" id="ddlNoPO">
-                                    <option value="" hidden>-- Pilih Pesanan Tempatan --</option>
+                                    <option value="0" hidden>-- Pilih Pesanan Tempatan --</option>
                                     @foreach (var s in ViewBag.AkPO)
                                     {
                                         <option value="@s.Id">@s.NoPO - ( @s.Tarikh.ToString("dd/MM/yyyy") ) </option>
                                     }
                                 </select>
+                                <span asp-validation-for="AkPOId" class="text-danger"></span>
                             </div>
                         </div>
 

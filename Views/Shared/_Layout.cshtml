@@ -29,7 +29,7 @@
     <script src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
     <script src="~/lib/select2/js/select2.min.js"></script>
     <script src="~/lib/toastr.js/toastr.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.js" integrity="sha512-B+gr+zLWg81qxVwvtYwKrmjvQtZKD/GGFF7jD80OfzbqFw+NsbS5faEqpCO7Q7oRw1bYi0+WLJf54j8Vm7NADw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     @*<script>
@@ -41,30 +41,6 @@
 
 
 <body class="ac-bg">
-    <script type="text/javascript">
-        $(function () {
-            // Sidebar toggle behavior
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar, #content').toggleClass('active');
-            });
-        });
-    </script>
-    <style>
-
-        .nav-link {
-            color: #343a40;
-        }
-
-
-        .bg-super {
-            background: rgb(238,174,202);
-            background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
-        }
-
-            .bg-super .nav-link {
-                color: white;
-            }
-    </style>
 
     @{
         var navtype = "";
@@ -78,7 +54,7 @@
         {
             jawatan = pekerja.Jawatan;
         }
-   
+
         var bulan = Tools.BulanSingkatan(DateTime.Now.ToString("MM"));
 
         var tarikh = DateTime.Now.ToString("dd") + " " + bulan +  " " + DateTime.Now.ToString("yyyy");
@@ -138,7 +114,7 @@
             </div>
         </div>
         <div class="card-body" style="overflow-y: scroll;">
-            
+
             @if (User.Identity.IsAuthenticated)
             {
 
@@ -156,7 +132,7 @@
                             <partial name="_PenyesuaianBankPartialNavbar" />
                         </ul>
                     </div>
-                    
+
                     <div class="form-group">
                         <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Pengurusan</p>
 
@@ -167,8 +143,8 @@
                             <partial name="_PermohonanPartialNavbar" />
                         </ul>
                     </div>
-                    
-                    <div> 
+
+                    <div>
                         <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Transaksi</p>
 
                         <ul class="nav flex-column l-bg-light mb-0">
@@ -179,7 +155,7 @@
                             <partial name="_TunaiRuncitPartialNavbar" />
                         </ul>
                     </div>
-                    
+
                     <div class="form-group">
                         <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Laporan</p>
 
@@ -187,7 +163,7 @@
                             <partial name="_LaporanPartialNavbar" />
                         </ul>
                     </div>
-                    
+
                 }
                 else if (User.IsInRole("Admin"))
                 {
@@ -261,7 +237,7 @@
             }
 
         </div>
-        
+
     </div>
     <!-- End vertical navbar -->
     <!-- Page content holder -->
@@ -271,19 +247,22 @@
         <div class="container-fluid">
             <div class="d-inline">
                 <button id="sidebarCollapse" type="button" class="btn ac-tertiary shadow-sm mb-3 sticky-top">
-                    <i class="fa fa-bars pr-2"></i> Menu Utama</button>
+                    <i class="fa fa-bars pr-2"></i> Menu Utama
+                </button>
             </div>
             <div class="d-inline pl-2">
                 <button type="button" class="btn ac-light shadow-sm mb-3 sticky-top">
-                    <object data="~/img/svg/calendar.svg" class="fa fa-pull-left fa-0 pr-2" height="18"></object> 
-                    @hari, @tarikh <span id="ct6"></span></button>
+                    <object data="~/img/svg/calendar.svg" class="fa fa-pull-left fa-0 pr-2" height="18"></object>
+                    @hari, @tarikh <span id="ct6"></span>
+                </button>
             </div>
             <a id="timer"></a>
-            
+
 
             <main role="main" class="pb-3">
                 <partial name="_Notifications" />
-                <partial name="_ToTopButton" />
+                <button class="ac-tertiary" onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-chevron-up"></i></button>
+
                 @RenderBody()
             </main>
         </div>
@@ -297,20 +276,20 @@
                         <p class="float-left">&copy; 2022 - MSNK</p>
                     </div>
                     <div class="col-lg-4 text-right pr-5">
-                        
-                        
+
+
                     </div>
-    
+
                 </div>
                 <div class="form-row">
-                    
+
                     @*<p class="float-left">&copy; 2022 - MSNK - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privasi</a></p>
-                    <p class="float-right">@hari, @tarikh</p>
-                    <span class="text-right" id="ct6"></span> *@
+                        <p class="float-right">@hari, @tarikh</p>
+                        <span class="text-right" id="ct6"></span> *@
                 </div>
-                
-                
-                
+
+
+
             </div>
         </footer>
 
@@ -318,8 +297,28 @@
     <!-- End demo content -->
 
 
+    <script>
+        //Get the button
+        var mybutton = document.getElementById("myBtn");
 
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function () { scrollFunction() };
 
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -13,7 +13,6 @@
     .bil, .thbil {
         text-align: center;
     }
-
 </style>
 
 <partial name="_JSIndex" />
@@ -22,29 +21,30 @@
     <div class="card-body">
         <div class="row">
             <div class="col-8">
-                <h5 class="text-uppercase mb-0">Lejar Am</h5>
+                <h5 class="text-uppercase text-info mb-0">@ViewData["Title"]</h5>
                 <span class="ac-ref">Indeks</span>
             </div>
             <div class="col-4 text-right">
             </div>
-    
+
         </div>
-        <hr class="mt-2"/>
-        <div class="card mb-3">
-            <div class="card-body pl-3 pb-2 ">
-                <label class="form-control-plaintext" for="searchselect">Carian : </label>
-                <div class="form-actions no-color mb-2">
-                    <form asp-action="Index" method="get" class="needs-validation" novalidate>
+        <hr class="mt-2" />
+        <form asp-action="Index" method="get" class="needs-validation" novalidate>
+            <div class="card mb-3">
+                <div class="card-body pl-3 pb-2 ">
+                    <label class="form-control-plaintext" for="searchselect">Carian : </label>
+                    <div class="form-actions no-color mb-2">
+
                         <div class="form-actions no-color mb-3">
                             <div class="form-row">
                                 <div class="col-md">
                                     <div class="input-group mb-2 input-group-sm ">
                                         <select class="custom-select" name="searchKW" asp-items="@ViewBag.Kw" required id="searchKW"></select>
-                                        <label class="invalid-feedback">Kumpulan Wang Diperlukan.</label>
+                                        <label class="invalid-feedback">Kumpulan Wang diperlukan</label>
                                     </div>
                                     <div class="input-group mb-2 input-group-sm ">
-                                        <select class="custom-select select2" name="searchCarta" asp-items="@ViewBag.AkCarta1" id="searchCarta" style="width:100%" required></select>
-                                        <label class="invalid-feedback">Carta Diperlukan.</label>
+                                        <select class="custom-select select2" name="searchCarta" asp-items="@ViewBag.AkCarta1" id="searchCarta" required></select>
+                                        <label class="invalid-feedback">Kod Akaun diperlukan</label>
                                     </div>
                                 </div>
                                 <div class="col-md mb-2">
@@ -53,92 +53,119 @@
                                             <span class="input-group-text" id="basic-addon1">Daripada</span>
                                         </div>
                                         <input class="form-control" type="date" name="searchFrom" value="@ViewData["searchFrom"]" required id="tarDari" />
-                                        <label class="invalid-feedback">Tarikh Diperlukan.</label>
+                                        <label class="invalid-feedback">Tarikh diperlukan</label>
                                     </div>
                                     <div class="input-group mb- input-group-sm ">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">Sehingga</span>
                                         </div>
                                         <input class="form-control" type="date" name="searchUntil" value="@ViewData["searchUntil"]" required id="tarHingga" />
-                                        <label class="invalid-feedback">Tarikh Diperlukan.</label>
+                                        <label class="invalid-feedback">Tarikh diperlukan</label>
                                     </div>
                                 </div>
                             </div>
-                            <input type="submit" value="Papar" class="btn btn-outline-primary" /> |
-                            <a asp-action="Index" class="btn btn-link">Batal Papar</a>
+                            @*<input type="submit" value="Papar" class="btn btn-outline-primary" /> |
+                        <a asp-action="Index" class="btn btn-link">Batal Papar</a>*@
                             @*<button type="submit" class="btn btn-sm btn-info"><i class="fa fa-search"></i></button>*@
                         </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="mb-3">
-            <div class="text-center">
-                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                    <button class="btn btn-info" disabled="disabled"><i class="fas fa-print"></i></button>
-                    <a class="btn btn-info" onclick="printPDF()" style="color: white;" href="" id="printButton" target="_blank"> Cetak Lejar Akaun </a>
-                </div>
-                @*<a class="text-right btn btn-info text-white" asp-action="PrintCarta">Cetak Carta</a>*@
-            </div>
-        </div>
-        <div class="table-responsive table-sm">
-            <table class="table table-bordered table-hover display compact nowrap" width="100%">
-                <thead>
-                    <tr>
-                        <th class="thbil">
-                            Bil
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Tarikh)
-                        </th>
-                        <th>
-                            Objek
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.NoRujukan)
-                        </th>
-                        <th class="thdebit">
-                            @Html.DisplayNameFor(model => model.Debit)
-                        </th>
-                        <th class="thkredit">
-                            @Html.DisplayNameFor(model => model.Kredit)
-                        </th>
-                        <th class="thtotal">
-                            Baki RM
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{ int rowNo = 0; }
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td class="bil">
-                                @(rowNo += 1)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Tarikh)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.AkCarta2.Kod) - @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.NoRujukan)
-                            </td>
-                            <td class="debit">
-                                @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
-                            </td>
-                            <td class="kredit">
-                                @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
-                            </td>
-                            <td class="total">
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        @*@Model.Count()*@
-    </div>
 
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div>
+                <div class="text-center hidden-mobile">
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button class="btn ac-primary" disabled="disabled"><i class="fa fa-eye"></i></button>
+                        <button class="btn ac-primary" type="submit"> Papar </button>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button class="btn ac-warning" disabled="disabled"><i class="fa-solid fa-xmark"></i></button>
+                        <a class="btn ac-warning" asp-action="Index"> Batal Papar </a>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button class="btn ac-info" disabled="disabled"><i class="fas fa-print"></i></button>
+                        <a class="btn ac-info" onclick="printPDF()" href="" id="printButton" target="_blank"> Cetak Lejar Akaun </a>
+                    </div>
+
+                </div>
+                <div class="text-center show-mobile">
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button class="btn text-primary" type="submit" data-toggle="tooltip" data-placement="top" title="Papar"><i class="fa fa-eye fa-2x"></i></button>
+                        <a class="btn text-warning" asp-action="Index"><i class="fa-solid fa-xmark fa-2x"></i></a>
+                        <button class="btn text-info" onclick="printPDF()" href="" id="printButton" target="_blank" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print fa-2x"></i></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
 </div>
+@if (Model != null)
+{
+    @if (Model.Count() > 0)
+    {
+        <div class="card box-shadow">
+            <div class="card-body">
+                <div class="table-responsive table-sm">
+                    <table class="table table-bordered table-hover display compact nowrap" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="thbil">
+                                    Bil
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Tarikh)
+                                </th>
+                                <th>
+                                    Objek
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.NoRujukan)
+                                </th>
+                                <th class="thdebit">
+                                    @Html.DisplayNameFor(model => model.Debit)
+                                </th>
+                                <th class="thkredit">
+                                    @Html.DisplayNameFor(model => model.Kredit)
+                                </th>
+                                <th class="thtotal">
+                                    Baki RM
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int rowNo = 0; }
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="bil">
+                                        @(rowNo += 1)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Tarikh)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AkCarta2.Kod) - @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NoRujukan)
+                                    </td>
+                                    <td class="debit">
+                                        @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
+                                    </td>
+                                    <td class="kredit">
+                                        @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
+                                    </td>
+                                    <td class="total">
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+}

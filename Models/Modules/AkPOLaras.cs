@@ -17,14 +17,16 @@ namespace MSNK.Models.Modules
         [DisplayName("No. Rujukan")]
         public string NoRujukan { get; set; }
         [DisplayName("Tarikh")]
+        [Required(ErrorMessage = "Tarikh diperlukan")]
         public DateTime Tarikh { get; set; }
         [DisplayName("Tarikh Posting")]
         public DateTime? TarikhPosting { get; set; }
         [DisplayName("Jumlah RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
+        [Required(ErrorMessage = "Tahun diperlukan")]
+        [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
         [MaxLength(4)]
-        [DisplayName("Tahun")]
         public string Tahun { get; set; }
         public string Tajuk { get; set; }
         //field end
@@ -48,13 +50,19 @@ namespace MSNK.Models.Modules
 
         //relationship
         [DisplayName("No Pesanan Tempatan")]
+        [Required(ErrorMessage = "No Pesanan Tempatan diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih No Pesanan Tempatan")]
         public int AkPOId { get; set; }
         public AkPO AkPO { get; set; }
         [DisplayName("Kumpulan Wang")]
+        [Required(ErrorMessage = "Kump. Wang diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kump. Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
 
         [DisplayName("Bahagian")]
+        [Required(ErrorMessage = "Bahagian diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
 

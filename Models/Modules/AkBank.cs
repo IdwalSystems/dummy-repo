@@ -11,15 +11,18 @@ namespace MSNK.Models.Modules
     {
         
         public int Id { get; set; }
+        [Required(ErrorMessage = "Kod Diperlukan")]
         [MaxLength(6)]
         public string Kod { get; set; }
-        [Display(Name = "No Akaun")]
+        [DisplayName("No Akaun")]
+        [Required(ErrorMessage = "No Akaun Diperlukan")]
         [MaxLength(20)]
         public string NoAkaun { get; set; }
 
         //Relationship
         [Required(ErrorMessage = "Kumpulan Wang Diperlukan")]
-        [Display(Name = "Jenis Kumpulan Wang")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kumpulan Wang")]
+        [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
 
@@ -28,12 +31,15 @@ namespace MSNK.Models.Modules
         public JBahagian JBahagian { get; set; }
 
         [Required(ErrorMessage = "Bank Diperlukan")]
-        [Display(Name = "Nama Bank")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bank")]
+        [DisplayName("Nama Bank")]
         public int JBankId { get; set; }
         public JBank JBank { get; set; }
+
         [Required(ErrorMessage = "Kod Akaun Diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Akaun")]
+        [DisplayName("Kod Akaun")]
         public int AkCartaId { get; set; }
-        [Display(Name = "Kod Akaun")]
         public AkCarta AkCarta { get; set; }
         public ICollection<AkTerima> AkTerima { get; set; }
         public ICollection<AkPV> AkPV { get; set; }

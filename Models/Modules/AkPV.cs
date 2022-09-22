@@ -31,10 +31,11 @@ namespace MSNK.Models.Modules
         //field
         public int Id { get; set; }
         [DisplayName("Tahun")]
-        [Required(ErrorMessage = "Tahun Diperlukan.")]
+        [Required(ErrorMessage = "Tahun diperlukan")]
+        [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
         [MaxLength(4)]
         public string Tahun { get; set; }
-        [Required(ErrorMessage = "Tarikh Diperlukan")]
+        [Required(ErrorMessage = "Tarikh diperlukan")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Tarikh { get; set; }
         public DateTime? TarikhPosting { get; set; }
@@ -46,6 +47,7 @@ namespace MSNK.Models.Modules
         public decimal Jumlah { get; set; }
         [DisplayName("No KP")]
         public string NoKP { get; set; }
+        [Required(ErrorMessage = "Nama diperlukan")]
         public string Nama { get; set; }
         public string Alamat1 { get; set; }
         public string Alamat2 { get; set; }
@@ -53,6 +55,7 @@ namespace MSNK.Models.Modules
         public string Telefon { get; set; }
         [DisplayName("No Akaun Bank")]
         public string NoAkaunBank { get; set; }
+        [EmailAddress(ErrorMessage = "Emel tidak sah"), MaxLength(100)]
         public string Emel { get; set; }
         [DisplayName("No Cek / EFT / JomPAY")]
         [MaxLength(10)]
@@ -107,12 +110,13 @@ namespace MSNK.Models.Modules
         //untuk kelulusan end 
 
         //relationship
-        [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
-        [DisplayName("Jenis Kumpulan Wang")]
+        [DisplayName("Kumpulan Wang")]
+        [Required(ErrorMessage = "Kump. Wang diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kump. Wang")]
         public int JKWId { get; set; }
         
         // kod akaun bank pembayar
-        [Required(ErrorMessage = "Kod Bank Diperlukan.")]
+        [Required(ErrorMessage = "Kod Bank diperlukan")]
         [DisplayName("Kod Bank")]
         public int AkBankId { get; set; }
 
@@ -124,6 +128,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Kod Anggota")]
         public int? SuPekerjaId { get; set; }
         [DisplayName("Cara Bayaran")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Cara Bayar")]
         public int? JCaraBayarId { get; set; }
         [DisplayName("Kod Kaunter Panjar")]
         public int? AkTunaiRuncitId { get; set; }
@@ -133,6 +138,8 @@ namespace MSNK.Models.Modules
         public int? SuProfilId { get; set; }
 
         [DisplayName("Bahagian")]
+        [Required(ErrorMessage = "Bahagian diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
 

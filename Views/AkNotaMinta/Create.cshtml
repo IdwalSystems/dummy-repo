@@ -20,7 +20,7 @@
         </div>
         <hr class="mt-2"/>
         <form asp-action="Create" class="needs-validation">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="card mb-3">
                 <div class="card-body">
@@ -46,14 +46,14 @@
             <div class="form-row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label asp-for="Tarikh" class="control-label"></label>
+                        <label asp-for="Tarikh" class="control-label"></label><span class="text-danger control-label">*</span>
                         <input asp-for="Tarikh" class="form-control form-control-sm" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" required />
                         <span asp-validation-for="Tarikh" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-1">
                     <div class="form-group">
-                        <label asp-for="Tahun" class="control-label"></label>
+                        <label asp-for="Tahun" class="control-label"></label><span class="text-danger control-label">*</span>
                         <input asp-for="Tahun" class="form-control form-control-sm" value="@DateTime.Now.Year.ToString()" required id="txtTahun" />
                         <span asp-validation-for="Tahun" class="text-danger"></span>
                     </div>
@@ -96,7 +96,7 @@
             <div class="form-group">
                 <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
                 <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" required>
-                    <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
+                    <option value="0" hidden>-- Pilih Kod Pembekal --</option>
                     @foreach (var s in ViewBag.AkPembekal)
                     {
                         <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
@@ -106,8 +106,8 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Tajuk" class="control-label"></label>
-                <textarea asp-for="Tajuk" class="form-control form-control-sm text-uppercase" rows="2" id="txtTajuk"></textarea>
+                <label asp-for="Tajuk" class="control-label"></label><span class="text-danger control-label">*</span>
+                <textarea asp-for="Tajuk" class="form-control form-control-sm text-uppercase" rows="2" id="txtTajuk" required></textarea>
                 <span asp-validation-for="Tajuk" class="text-danger"></span>
             </div>
 

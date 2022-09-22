@@ -42,6 +42,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly CustomIRepository<string, int> _customRepo;
+        private readonly UserService _userService;
         private CartInden _cart;
 
         public AkIndenController(ApplicationDbContext context,
@@ -60,6 +61,7 @@ namespace MSNK.Controllers
             IRepository<AkAkaun, int, string> akAkaunRepository,
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
             CustomIRepository<string, int> customRepo,
+            UserService userService,
             CartInden cart
             )
         {
@@ -79,6 +81,7 @@ namespace MSNK.Controllers
             _akAkaunRepo = akAkaunRepository;
             _abBukuVotRepo = abBukuVotRepository;
             _customRepo = customRepo;
+            _userService = userService;
             _cart = cart;
         }
 
@@ -1501,7 +1504,7 @@ namespace MSNK.Controllers
 
             IndenPrintModel data = new IndenPrintModel();
 
-            CompanyDetails company = new CompanyDetails();
+            CompanyDetails company = await _userService.GetCompanyDetails();
             data.CompanyDetail = company;
             data.AkInden = akInden;
             //data.AkPO.JNegeri = negeri;

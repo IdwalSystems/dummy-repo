@@ -10,12 +10,17 @@ namespace MSNK.Models.Modules
     {
         //field
         public int Id { get; set; }
-        [Required]
-        [MaxLength(12)]
+        [Required(ErrorMessage = "Kod Diperlukan")]
+        [MaxLength(12, ErrorMessage = "Input tidak boleh melebihi 12 aksara")]
         public string Kod { get; set; }
-        [Required]
-        [MaxLength(100)]
+        [Required(ErrorMessage = "Nama Bank Diperlukan")]
+        [DisplayName("Nama Bank")]
+        [MaxLength(100, ErrorMessage = "Input tidak boleh melebihi 100 aksara")]
         public string Nama { get; set; }
+        [DisplayName("Kod EFT")]
+        [MaxLength(3, ErrorMessage = "Input tidak boleh melebihi 3 aksara")]
+        [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
+        //[Required(ErrorMessage = "Kod EFT Diperlukan")]
         public string KodEFT { get; set; }
         public ICollection<AkBank> AkBank { get; set; }
         public ICollection<AkPembekal> AkPembekal { get; set; }

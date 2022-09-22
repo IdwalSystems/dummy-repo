@@ -22,7 +22,7 @@
         <hr class="mt-2"/>
         <form asp-action="Edit" class="needs-validation">
             <input type="hidden" asp-for="Id" />
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     
                     <div class="form-row">
                         <div class="col-md-3">
@@ -41,7 +41,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <label asp-for="JKWId" class="control-label"></label>
                                 <select class="form-control form-control-sm" asp-for="JKWId" required id="ddlKW" disabled>
                                     @foreach (var s in ViewBag.JKW)
                                     {
@@ -53,7 +53,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <label asp-for="JBahagianId" class="control-label"></label>
                                 <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" required id="ddlBahagian" disabled>
                                     @foreach (var s in ViewBag.JBahagian)
                                     {
@@ -86,8 +86,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label asp-for="Tajuk" class="control-label"></label>
-                        <textarea asp-for="Tajuk" class="form-control form-control-sm text-uppercase" rows="2" id="txtTajuk"></textarea>
+                        <label asp-for="Tajuk" class="control-label"></label><span class="text-danger control-label">*</span>
+                        <textarea asp-for="Tajuk" class="form-control form-control-sm text-uppercase" rows="2" id="txtTajuk" required></textarea>
                         <span asp-validation-for="Tajuk" class="text-danger"></span>
                     </div>
 

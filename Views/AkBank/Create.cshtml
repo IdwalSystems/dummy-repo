@@ -11,7 +11,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-8">
-                <h5 class="text-uppercase text-primary mb-0">Bahagian - Tambah</h5>
+                <h5 class="text-uppercase text-primary mb-0">Akaun Bank - Tambah</h5>
                 <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Tambah</span>
             </div>
             <div class="col-4 text-right">
@@ -22,7 +22,7 @@
         <hr class="mt-2"/>
 
         <form asp-action="Create" class="needs-validation">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Kod" class="control-label"></label>
                 <input asp-for="Kod" class="form-control form-control-sm" />
@@ -64,7 +64,7 @@
                 <span asp-validation-for="JBahagianId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AkCarta" class="control-label"></label>
+                <label asp-for="AkCartaId" class="control-label"></label>
                 <select class="form-control form-control-sm select2" asp-for="AkCartaId" required>
                     @foreach (var s in ViewBag.AkCarta)
                     {

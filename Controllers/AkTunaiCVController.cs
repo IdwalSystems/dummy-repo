@@ -37,6 +37,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkPembekal, int, string> _akPembekalRepo;
         private readonly IRepository<AkBank, int, string> _akBankRepo;
         private readonly CustomIRepository<string, int> _customRepo;
+        private readonly UserService _userService;
         private CartTunaiCV _cart;
 
         public AkTunaiCVController(
@@ -51,6 +52,7 @@ namespace MSNK.Controllers
             IRepository<AkPembekal, int, string> akPembekalRepository,
             IRepository<AkBank, int, string> akBankRepository,
             CustomIRepository<string, int> customRepo,
+            UserService userService,
              CartTunaiCV cart
             )
         {
@@ -65,6 +67,7 @@ namespace MSNK.Controllers
             _akPembekalRepo = akPembekalRepository;
             _akBankRepo = akBankRepository;
             _customRepo = customRepo;
+            _userService = userService;
             _cart = cart;
         }
 
@@ -1073,7 +1076,7 @@ namespace MSNK.Controllers
 
             TunaiCVPrintModel data = new TunaiCVPrintModel();
 
-            CompanyDetails company = new CompanyDetails();
+            CompanyDetails company = await _userService.GetCompanyDetails();
             data.CompanyDetail = company;
             data.AkTunaiCV = obj;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;

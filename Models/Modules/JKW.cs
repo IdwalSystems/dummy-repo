@@ -10,10 +10,10 @@ namespace MSNK.Models.Modules
     {
         //field
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Kod Diperlukan")]
         [MaxLength(3)]
         public string Kod { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Perihal Diperlukan")]
         [MaxLength(100)]
         public string Perihal { get; set; }
         //field end

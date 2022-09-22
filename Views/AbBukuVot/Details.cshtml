@@ -19,11 +19,11 @@
 
         </div>
         <hr class="mt-2" />
+        <form asp-action="Details" method="get" class="needs-validation" novalidate>
 
-        <div class="card mb-2">
-            <div class="card-body pl-3 pb-2 ">
-                <div class="form-actions no-color mb-2">
-                    <form asp-action="Details" method="get" class="needs-validation" novalidate>
+            <div class="card mb-3">
+                <div class="card-body pl-3 pb-2 ">
+                    <div class="form-actions no-color mb-2">
                         <div class="form-actions no-color ">
                             <input type="hidden" name="id" value="@ViewData["VotId"]" id="votId" />
                             <input type="hidden" name="tahun" value="@ViewData["tahun"]" id="tahun" />
@@ -55,125 +55,143 @@
                                         <label class="invalid-feedback">Sila isi ruangan ini.</label>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                                        <button type="submit" class="btn text-info btn-sm" data-toggle="tooltip" data-placement="top" title="Cari"><i class="fas fa-search"></i></button>
-                                        <a class="btn text-success btn-sm" onclick="printPDF()" href="" id="printButton" target="_blank"><i class="fas fa-print"></i></a>
-                                    </div>
-                                </div>
                             </div>
 
                         </div>
-                    </form>
+
+                    </div>
+
                 </div>
-
             </div>
-        </div>
-
-        <div class="table-responsive table-sm">
-            <table class="table table-bordered table-hover display compact nowrap" width="100%">
-                <thead>
-                    <tr>
-                        <th>
-                            Bil
-                        </th>
-                        <th>
-                            Tarikh
-                        </th>
-                        <th>
-                            Kod
-                        </th>
-                        <th>
-                            Penerima
-                        </th>
-                        <th>
-                            No Rujukan
-                        </th>
-                        <th>
-                            Debit RM
-                        </th>
-                        <th>
-                            Kredit RM
-                        </th>
-                        <th>
-                            Tanggungan RM
-                        </th>
-                        <th>
-                            Liabiliti RM
-                        </th>
-                        <th>
-                            Baki RM
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        decimal baki = 0;
-                        decimal jumDebit = 0;
-                        decimal jumKredit = 0;
-                        decimal jumTanggungan = 0;
-                        decimal jumLiabiliti = 0;
-
-                    }
-                    @foreach (var item in Model)
-                    {
-                        jumDebit += item.Debit;
-                        jumKredit += item.Kredit;
-                        jumTanggungan += item.Tanggungan;
-                        jumLiabiliti += item.Liabiliti;
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                @item.Tarikh.ToString("dd/MM/yyyy")
-                            </td>
-                            <td>
-                                @item.Kod
-                            </td>
-                            <td class="text-uppercase">
-                                @item.Penerima
-                            </td>
-                            <td class="text-uppercase">
-                                @item.Rujukan
-                            </td>
-                            <td class="text-right">
-                                @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
-                            </td>
-                            <td class="text-right">
-                                @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
-                            </td>
-                            <td class="text-right">
-                                @Convert.ToDecimal(item.Tanggungan).ToString("#,##0.00")
-                            </td>
-                            <td class="text-right">
-                                @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
-                            </td>
-                            <td class="text-right">
-                                @{
-                                    baki += item.Kredit - item.Debit - item.Tanggungan; // - item.Liabiliti;
-                                }
-                                @Convert.ToDecimal(baki).ToString("#,##0.00")
-                            </td>
-                        </tr>
-                    }
-                    
-                </tbody>
-                <tfoot>
-                    <tr class="font-weight-bold table-warning">
-                        <td colspan="5" class="text-right font-weight-bold">JUMLAH RM</td>
-                        <td class="text-right">@Convert.ToDecimal(jumDebit).ToString("#,##0.00")</td>
-                        <td class="text-right">@Convert.ToDecimal(jumKredit).ToString("#,##0.00")</td>
-                        <td class="text-right">@Convert.ToDecimal(jumTanggungan).ToString("#,##0.00")</td>
-                        <td class="text-right">@Convert.ToDecimal(jumLiabiliti).ToString("#,##0.00")</td>
-                        <td class="text-right">@Convert.ToDecimal(baki).ToString("#,##0.00")</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-        <hr />
-        <div class="form-group">
-            <a asp-action="Index">Kembali Ke Indeks</a>
-        </div>
-
+            <hr />
+            <div>
+                <div class="text-center hidden-mobile">
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button class="btn ac-primary" disabled="disabled"><i class="fa fa-eye"></i></button>
+                        <button class="btn ac-primary" type="submit"> Papar </button>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button class="btn ac-info" disabled="disabled"><i class="fas fa-print"></i></button>
+                        <a class="btn ac-info" onclick="printPDF()" href="" id="printButton" target="_blank"> Cetak</a>
+                    </div>
+                </div>
+                <div class="text-center show-mobile">
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button class="btn text-primary" type="submit" data-toggle="tooltip" data-placement="top" title="Papar"><i class="fa fa-eye fa-2x"></i></button>
+                        <button class="btn text-info" onclick="printPDF()" href="" id="printButton" target="_blank" data-toggle="tooltip" data-placement="top" title="Cetak"><i class="fas fa-print fa-2x"></i></button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+@if (Model != null)
+{
+    @if (Model.Count() > 0)
+    {
+        <div class="card box-shadow">
+            <div class="card-body">
+                <div class="table-responsive table-sm">
+                    <table class="table table-bordered table-hover display compact nowrap" width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Bil
+                                </th>
+                                <th>
+                                    Tarikh
+                                </th>
+                                <th>
+                                    Kod
+                                </th>
+                                <th>
+                                    Penerima
+                                </th>
+                                <th>
+                                    No Rujukan
+                                </th>
+                                <th>
+                                    Debit RM
+                                </th>
+                                <th>
+                                    Kredit RM
+                                </th>
+                                <th>
+                                    Tanggungan RM
+                                </th>
+                                <th>
+                                    Liabiliti RM
+                                </th>
+                                <th>
+                                    Baki RM
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                decimal baki = 0;
+                                decimal jumDebit = 0;
+                                decimal jumKredit = 0;
+                                decimal jumTanggungan = 0;
+                                decimal jumLiabiliti = 0;
+
+                            }
+                            @foreach (var item in Model)
+                            {
+                                jumDebit += item.Debit;
+                                jumKredit += item.Kredit;
+                                jumTanggungan += item.Tanggungan;
+                                jumLiabiliti += item.Liabiliti;
+                                <tr>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        @item.Tarikh.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                        @item.Kod
+                                    </td>
+                                    <td class="text-uppercase">
+                                        @item.Penerima
+                                    </td>
+                                    <td class="text-uppercase">
+                                        @item.Rujukan
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.Tanggungan).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
+                                        @{
+                                            baki += item.Kredit - item.Debit - item.Tanggungan; // - item.Liabiliti;
+                                        }
+                                        @Convert.ToDecimal(baki).ToString("#,##0.00")
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                        <tfoot>
+                            <tr class="font-weight-bold table-warning">
+                                <td colspan="5" class="text-right font-weight-bold">JUMLAH RM</td>
+                                <td class="text-right">@Convert.ToDecimal(jumDebit).ToString("#,##0.00")</td>
+                                <td class="text-right">@Convert.ToDecimal(jumKredit).ToString("#,##0.00")</td>
+                                <td class="text-right">@Convert.ToDecimal(jumTanggungan).ToString("#,##0.00")</td>
+                                <td class="text-right">@Convert.ToDecimal(jumLiabiliti).ToString("#,##0.00")</td>
+                                <td class="text-right">@Convert.ToDecimal(baki).ToString("#,##0.00")</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+}

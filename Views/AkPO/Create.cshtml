@@ -18,12 +18,12 @@
         </div>
         <hr class="mt-2"/>
         <form asp-action="Create">
-            <div asp-validation-summary="All" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-row">
                 <div class="col-md-1">
                     <div class="form-group">
                         <label asp-for="Tahun" class="control-label"></label><span class="text-danger">*</span>
-                        <input asp-for="Tahun" class="form-control form-control-sm" id="txtTahun" value="@DateTime.Now.Year.ToString()" />
+                        <input asp-for="Tahun" class="form-control form-control-sm" id="txtTahun" value="@DateTime.Now.Year.ToString()" required/>
                         <span asp-validation-for="Tahun" class="text-danger"></span>
                     </div>
                 </div>
@@ -51,8 +51,8 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label asp-for="Tarikh" class="control-label"></label><span class="text-danger">*</span>
-                        <input asp-for="Tarikh" class="form-control form-control-sm" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <label asp-for="Tarikh" class="control-label"></label><span class="text-danger control-label">*</span>
+                        <input asp-for="Tarikh" class="form-control form-control-sm" value="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" required />
                         <span asp-validation-for="Tarikh" class="text-danger"></span>
                     </div>
                 </div>
@@ -87,13 +87,14 @@
                 <div class="col-sm form-group">
                     <div class="form-group">
                         <label asp-for="AkPembekalId" class="control-label"></label>
-                        <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlPembekal">
-                            <option value="" hidden>-- Pilih Pembekal --</option>
+                        <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlPembekal" required>
+                            <option value="0" hidden>-- Pilih Pembekal --</option>
                             @foreach (var s in ViewBag.AkPembekal)
                             {
                                 <option value="@s.Id">@s.KodSykt @s.NamaSykt </option>
                             }
                         </select>
+                        <span asp-validation-for="AkPembekalId" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Nama Syarikat</label>
@@ -177,7 +178,7 @@
                         </div>
                         <div class="card-footer">
                             <div class="form-group">
-                                <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
+                                <label asp-for="Jumlah" class="control-label">Jumlah Objek RM</label>
                                 <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" value="0.00" readonly />
                             </div>
                         </div>
@@ -225,7 +226,7 @@
                         </div>
                         <div class="card-footer">
                             <div class="form-group">
-                                <label class="control-label">Jumlah Perihal</label>
+                                <label class="control-label">Jumlah Perihal RM</label>
                                 <input class="form-control form-control-sm" id="txtJumlahPerihal" value="0.00" readonly />
                             </div>
                         </div>

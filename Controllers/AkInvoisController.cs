@@ -37,6 +37,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private readonly IRepository<AkTerima, int, string> _akTerimaRepo;
+        private readonly UserService _userService;
         private CartInvois _cart;
 
         public AkInvoisController(
@@ -52,6 +53,7 @@ namespace MSNK.Controllers
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
             IRepository<AkAkaun, int, string> akAkaunRepository,
             IRepository<AkTerima, int, string> akTerimaRepository,
+            UserService userService,
             CartInvois cart
             )
         {
@@ -67,6 +69,7 @@ namespace MSNK.Controllers
             _abBukuVotRepo = abBukuVotRepository;
             _akAkaunRepo = akAkaunRepository;
             _akTerimaRepo = akTerimaRepository;
+            _userService = userService;
             _cart = cart;
         }
 
@@ -1367,7 +1370,7 @@ namespace MSNK.Controllers
 
             InvoisPrintModel data = new InvoisPrintModel();
 
-            CompanyDetails company = new CompanyDetails();
+            CompanyDetails company = await _userService.GetCompanyDetails();
 
             foreach (AkInvois2 item in akI.AkInvois2)
             {

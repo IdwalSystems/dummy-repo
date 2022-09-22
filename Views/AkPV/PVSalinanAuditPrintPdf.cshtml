@@ -40,7 +40,7 @@
 
 <div class="row flexrow mb-1">
     <div class="col text-center">
-        <h5><strong>Tahun Kewangan @Model.AkPV.Tahun</strong></h5>
+        <h5 class="text-uppercase"><strong>Tahun Kewangan @Model.AkPV.Tahun</strong></h5>
     </div>
 </div>
 <div class="table-responsive-sm mb-0">
@@ -66,15 +66,20 @@
 
 <br />
 
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <thead class="text-center">
+            <tr class="bg-dark text-white font-weight-bold">
+
+                <td class="text-center"><h6 class="mb-0"><strong>BAYARAN KEPADA</strong></h6></td>
+            </tr>
+        </thead>
+    </table>
+</div>
+
 <div class="table-responsive-sm">
     <table class="table table-sm topic table-bordered">
-        <thead class="table-dark">
-
-        </thead>
         <tbody>
-            <tr class="bg-dark text-white font-weight-bold">
-                <td class="text-center" colspan="2"><strong>BAYARAN KEPADA</strong></td>
-            </tr>
             <tr>
                 <td class="text-left" width="15%">Nombor ID</td>
                 <td class="text-left ">@Model.KodPenerima</td>
@@ -196,16 +201,20 @@
 </div>
 <br />
 
-<div class="table-responsive-sm">
-    <table class="table table-sm topic table-bordered">
-        <thead class="table-dark">
-
-        </thead>
-        <tbody>
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic">
+        <thead class="text-center">
             <tr class="bg-dark text-white font-weight-bold">
 
-                <td class="text-center" colspan="4"><strong>MAKLUMAT PEMBAYARAN</strong></td>
+                <td class="text-center"><h6 class="mb-0"><strong>MAKLUMAT PEMBAYARAN</strong></h6></td>
             </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <tbody>
             <tr>
                 <td class="text-left" width="20%">Nombor Cek/EFT</td>
                 <td class="text-center" width="30%">@Model.AkPV.NoCekAtauEFT</td>

@@ -12,17 +12,8 @@
 <partial name="_JSIndex" />
 <div class="card box-shadow">
     <div class="card-body">
-        <div class="row">
-            <div class="col-8">
-                <h5 class="text-uppercase text-info mb-0">@ViewData["Title"]</h5>
-                <span class="ac-ref">Indeks</span>
-            </div>
-            <div class="col-4 text-right">
-                <a class="text-right btn ac-success" asp-action="Create">Tambah Baru</a>
-            </div>
+        <partial name="_TitleIndexPartial" />
 
-        </div>
-        <hr class="mt-2" />
         <form asp-action="Index" method="post">
 
             <div class="card">
@@ -56,8 +47,18 @@
             </div>
 
             <hr />
-            <div class="form-group text-right">
-                <input type="submit" value="Papar" class="btn ac-primary" />
+            <div>
+                <div class="text-center hidden-mobile">
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button class="btn ac-primary" disabled="disabled"><i class="fa fa-eye"></i></button>
+                        <button class="btn ac-primary" type="submit"> Papar </button>
+                    </div>
+                </div>
+                <div class="text-center show-mobile">
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button class="btn text-primary" type="submit" data-toggle="tooltip" data-placement="top" title="Papar"><i class="fa fa-eye fa-2x"></i></button>
+                    </div>
+                </div>
             </div>
 
         </form>

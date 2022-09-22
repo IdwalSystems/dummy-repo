@@ -41,6 +41,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JKW, int, string> _kwRepo;
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
+        private readonly UserService _userService;
         private CartPOLaras _cart;
 
         public AkPOLarasController(ApplicationDbContext context,
@@ -57,6 +58,7 @@ namespace MSNK.Controllers
             IRepository<JKW, int, string> kwRepository,
             IRepository<AkAkaun, int, string> akAkaunRepository,
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
+            UserService userService,
             CartPOLaras cart
             )
         {
@@ -74,6 +76,7 @@ namespace MSNK.Controllers
             _jbankRepo = JBankRepository;
             _akAkaunRepo = akAkaunRepository;
             _abBukuVotRepo = abBukuVotRepository;
+            _userService = userService;
             _cart = cart;
         }
 
@@ -1437,7 +1440,7 @@ namespace MSNK.Controllers
 
             POLarasPrintModel data = new POLarasPrintModel();
 
-            CompanyDetails company = new CompanyDetails();
+            CompanyDetails company = await _userService.GetCompanyDetails();
             data.CompanyDetail = company;
             data.AkPOLaras = akPOLaras;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;

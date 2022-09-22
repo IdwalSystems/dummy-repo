@@ -15,30 +15,37 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         [DisplayName("Kod Jurulatih")]
         public string KodJurulatih { get; set; }
-        [Required(ErrorMessage = "No Kad Pengenalan Diperlukan")]
+        [Required(ErrorMessage = "No Kad Pengenalan diperlukan")]
         [DisplayName("No KP")]
         public string NoKp { get; set; }
+        [Required(ErrorMessage = "Nama diperlukan")]
         public string Nama { get; set; }
         [DisplayName("Alamat")]
         public string Alamat1 { get; set; }
         public string Alamat2 { get; set; }
         public string Alamat3 { get; set; }
+        [MaxLength(5)]
+        [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
         public string Poskod { get; set; }
         public string Bandar { get; set; }
         [DisplayName("Negeri")]
-        [Required(ErrorMessage = "Negeri Diperlukan")]
+        [Required(ErrorMessage = "Negeri diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Negeri")]
         public int JNegeriId { get; set; }
         [DisplayName("No Telefon")]
         public string Telefon { get; set; }
-        [EmailAddress(ErrorMessage = "Emel Tidak Sah."), MaxLength(100)]
+        [EmailAddress(ErrorMessage = "Emel tidak sah"), MaxLength(100)]
         public string Emel { get; set; }
         [DisplayName("Status Aktif")]
         public int FlStatus { get; set; }
         [DisplayName("Tarikh Aktif")]
+        [Required(ErrorMessage = "Tarikh Aktif diperlukan")]
         public DateTime TarikhAktif { get; set; }
         [DisplayName("Tarikh Berhenti")]
         public DateTime? TarikhBerhenti { get; set; }
         [DisplayName("Nama Bank")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bank")]
+        [Required(ErrorMessage = "Bank diperlukan")]
         public int JBankId { get; set; }
         [DisplayName("Agama")]
         public int? JAgamaId { get; set; }
@@ -47,6 +54,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Jawatan")]
         public string Jawatan { get; set; }
         [DisplayName("Cara Bayar")]
+        [Required(ErrorMessage = "Sila pilih Cara Bayar")]
         public int? JCaraBayarId { get; set; }
         [DisplayName("No Akaun Bank")]
         public string NoAkaunBank { get; set; }
@@ -66,7 +74,8 @@ namespace MSNK.Models.Modules
         [DisplayName("Sukan")]
         public JSukan JSukan { get; set; }
         [DisplayName("Sukan")]
-        [Required(ErrorMessage = "Sukan Diperlukan")]
+        [Required(ErrorMessage = "Sukan diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Sukan")]
         public int JSukanId { get; set; }
         [DisplayName("Negeri")]
         public JNegeri JNegeri { get; set; }

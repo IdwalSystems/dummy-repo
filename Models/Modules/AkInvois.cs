@@ -12,14 +12,15 @@ namespace MSNK.Models.Modules
     {
         //field
         public int Id { get; set; }
-        [Required(ErrorMessage = "Tahun Diperlukan.")]
+        [Required(ErrorMessage = "Tahun diperlukan")]
+        [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
         [MaxLength(4)]
         public string Tahun { get; set; }
-        [Required(ErrorMessage = "Tarikh Diperlukan")]
+        [Required(ErrorMessage = "Tarikh diperlukan")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Tarikh { get; set; }
         [DisplayName("No Rujukan")]
-        [Required(ErrorMessage = "No Rujukan Diperlukan")]
+        [Required(ErrorMessage = "No Rujukan diperlukan")]
         public string NoInbois { get; set; }
         [BindProperty]
         [DisplayName("Jumlah RM")]
@@ -56,7 +57,7 @@ namespace MSNK.Models.Modules
         //untuk kelulusan end 
 
         //Relationship
-        [Required(ErrorMessage = "Jenis Kumpulan Wang Diperlukan.")]
+        [Required(ErrorMessage = "Kump. Wang diperlukan")]
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         [DisplayName("Bahagian")]
@@ -64,10 +65,11 @@ namespace MSNK.Models.Modules
         public JBahagian JBahagian { get; set; }
         [DisplayName("No Pesanan Tempatan")]
         public int? AkPOId { get; set; }
-        [Required(ErrorMessage = "Kod Akaun Penghutang Diperlukan.")]
+        [Required(ErrorMessage = "Kod Akaun Penghutang diperlukan")]
         [DisplayName("Kod Akaun Penghutang")]
         public int KodObjekAPId { get; set; }
-        [Required(ErrorMessage = "Kod Penghutang Diperlukan.")]
+        [Required(ErrorMessage = "Kod Penghutang diperlukan")]
+        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Penghutang")]
         [DisplayName("Kod Penghutang")]
         public int AkPenghutangId { get; set; }
         public JKW JKW { get; set; }

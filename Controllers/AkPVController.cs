@@ -52,6 +52,7 @@ namespace MSNK.Controllers
         private readonly IRepository<JPelulus, int, string> _pelulusRepo;
         private readonly IRepository<JBank, int, string> _jBankRepo;
         private readonly IRepository<JCaraBayar, int, string> _jCaraBayarRepo;
+        private readonly UserService _userService;
         private CartPV _cart;
 
         public AkPVController(
@@ -80,6 +81,7 @@ namespace MSNK.Controllers
             IRepository<JPelulus, int, string> pelulusRepo,
             IRepository<JBank, int, string> jBankRepo,
             IRepository<JCaraBayar, int, string> jCaraBayarRepo,
+            UserService userService,
             CartPV cart
             )
         {
@@ -108,6 +110,7 @@ namespace MSNK.Controllers
             _pelulusRepo = pelulusRepo;
             _jBankRepo = jBankRepo;
             _jCaraBayarRepo= jCaraBayarRepo;
+            _userService = userService;
             _cart = cart;
         }
         private async Task AddLogAsync(
@@ -2808,7 +2811,7 @@ namespace MSNK.Controllers
             decimal jumlahInbois = 0;
             decimal jumlahPO = 0;
 
-            CompanyDetails company = new CompanyDetails();
+            CompanyDetails company = await _userService.GetCompanyDetails();
             data.Username = namaUser.Nama;
             data.Penyemak = penyemak;
             data.Pelulus = pelulus;

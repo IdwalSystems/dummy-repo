@@ -37,7 +37,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
+                            <label asp-for="JKWId" class="control-label"></label>
                             <select class="form-control form-control-sm" asp-for="JKWId" required id="ddlKW" disabled>
                                 @foreach (var s in ViewBag.JKW)
                                 {
@@ -48,11 +48,8 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
-                            <div class="form-group">
-                                <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
+                                <label asp-for="JBahagianId" class="control-label"></label>
                                 <input  class="form-control form-control-sm text-uppercase" value="@Model.JBahagian.Kod - @Model.JBahagian.Perihal " readonly />
-                            </div>
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -63,7 +60,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
+                    <label asp-for="AkPembekalId" class="control-label"></label>
                     <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" required disabled>
                         <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
                         @foreach (var s in ViewBag.AkPembekal)
