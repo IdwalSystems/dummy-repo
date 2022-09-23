@@ -15,6 +15,8 @@ namespace MSNK.Models.Administration
     {
 
         public string Nama { get; set; }
+        [DisplayName("Tandatangan")]
+        public string Tandatangan { get; set; }
         [NotMapped]
         public string RoleId { get; set; }
         [NotMapped]

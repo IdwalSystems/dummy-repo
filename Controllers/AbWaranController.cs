@@ -1164,6 +1164,13 @@ namespace MSNK.Controllers
 
             await _context.SaveChangesAsync();
 
+            var preparedBySignature = _context.applicationUsers.FirstOrDefault(b => b.Id == user.Id).Tandatangan;
+            
+            if (preparedBySignature != null)
+            {
+               data.TandatanganSedia = preparedBySignature;
+            }
+
             return new ViewAsPdf("WaranPrintPdf", data)
             {
                 PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },

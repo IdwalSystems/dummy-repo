@@ -146,7 +146,19 @@
                 <td class="text-center" width="33%">Diluluskan </td>
             </tr>
             <tr>
-                <td class="text-center" height="50px"></td>
+                @if (string.IsNullOrEmpty(Model.TandatanganSedia))
+                {
+                    <td class="text-center" height="50px"></td>
+                } 
+                else
+                {
+                    <td class="text-center" height="50px">
+                        <span>
+                            <img src="~/img/signature/@Model.TandatanganSedia" class="sign" alt="signature1" />
+                        </span>
+                    </td>
+                }
+                
                 <td class="text-center" height="50px"></td>
                 <td class="text-center" height="50px"></td>
 

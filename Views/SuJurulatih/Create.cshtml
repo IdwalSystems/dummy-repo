@@ -44,40 +44,28 @@
                     <div class="form-row ml-4 mt-2">    
                         <div class="col-md-4">
                             <div class="form-row">
-                                <div class="col-9">
-                                    <label asp-for="IsJSMBakat"></label>
-                                </div>
-                                <div class="col-3">
-                                     <div class="input-group input-group-sm ">
-                                        <input type="checkbox" data-val="true" id="IsJSMBakat" asp-for="IsJSMBakat" value="true" class="form-control-sm">
-                                        <input asp-for="IsJSMBakat" type="hidden" value="false">
-                                    </div>
+                                <div class="form-group form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="IsJSMBakat" /> @Html.DisplayNameFor(model => model.IsJSMBakat)
+                                    </label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-row">
-                                <div class="col-9">
-                                    <label asp-for="IsJSMPelapis"></label>
-                                </div>
-                                <div class="col-3">
-                                    <div class="input-group input-group-sm ">
-                                        <input type="checkbox" data-val="true" id="IsJSMPelapis" asp-for="IsJSMPelapis" value="true" class="form-control-sm">
-                                        <input asp-for="IsJSMPelapis" type="hidden" value="false">
-                                    </div>
+                                <div class="form-group form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="IsJSMPelapis" /> @Html.DisplayNameFor(model => model.IsJSMPelapis)
+                                    </label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-row">
-                                <div class="col-9">
-                                    <label asp-for="IsSukma"></label>
-                                </div>
-                                <div class="col-3">
-                                    <div class="input-group input-group-sm ">
-                                        <input type="checkbox" data-val="true" id="IsSukma" asp-for="IsSukma" value="true" class="form-control-sm">
-                                        <input asp-for="IsSukma" type="hidden" value="false">
-                                    </div>
+                                <div class="form-group form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="IsSukma" /> @Html.DisplayNameFor(model => model.IsSukma)
+                                    </label>
                                 </div>
                             </div>
                         </div>

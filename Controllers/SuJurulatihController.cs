@@ -306,8 +306,6 @@ namespace MSNK.Controllers
                     suJurulatih.FlStatus = dataAsal.FlStatus;
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
-                    suJurulatih.UserId = dataAsal.UserId;
-                    suJurulatih.TarMasuk = dataAsal.TarMasuk;
                     suJurulatih.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
                     // list of input that cannot be change end
 

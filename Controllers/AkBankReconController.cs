@@ -127,7 +127,7 @@ namespace MSNK.Controllers
             return View(akRecon.OrderBy(b => b.Tahun).ThenBy(b => b.Bulan).ThenBy(b => b.AkBank.NoAkaun).ToList());
         }
             // GET: AkBankRecon/Details/5
-            public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -171,6 +171,7 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "PB001C")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AkBankRecon akBankRecon)
         {
@@ -203,7 +204,7 @@ namespace MSNK.Controllers
                 await _akReconRepo.Insert(m);
 
                 //insert applog
-                await AddLogAsync("Tambah", m.Tahun + "" + m.Bulan + "" + m.AkBankId, m.Tahun + "" + m.Bulan + "" + m.AkBankId, 0, m.BakiPenyata, pekerjaId);
+                await AddLogAsync("Tambah", m.Tahun + "/" + m.Bulan + "/" + m.AkBankId, m.Tahun + "/" + m.Bulan + "/" + m.AkBankId, 0, m.BakiPenyata, pekerjaId);
                 //insert applog end
                 await _akReconRepo.Save();
                 TempData[SD.Success] = "Maklumat berjaya ditambah.";
@@ -216,6 +217,7 @@ namespace MSNK.Controllers
         }
 
         // GET: AkBankRecon/Edit/5
+        [Authorize(Policy = "PB001E")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -237,8 +239,9 @@ namespace MSNK.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Policy = "PB001E")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Tahun,Bulan,BakiPenyata,AkBankId,FlMuatNaik,TarMuatNaik,IsKunci,TarKunci,FlHapus,TarHapus,SuPekerjaMasukId,UserId,TarMasuk,SuPekerjaKemaskiniId,UserIdKemaskini,TarKemaskini")] AkBankRecon akBankRecon)
+        public async Task<IActionResult> Edit(int id, AkBankRecon akBankRecon)
         {
             if (id != akBankRecon.Id)
             {
@@ -249,7 +252,34 @@ namespace MSNK.Controllers
             {
                 try
                 {
+                    var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+                    AkBankRecon dataAsal = await _akReconRepo.GetByIdIncludeDeletedItems(id);
+
+                    // list of input that cannot be change
+                    //suJurulatih.Emel = dataAsal.Emel;
+                    akBankRecon.TarMasuk = dataAsal.TarMasuk;
+                    akBankRecon.UserId = dataAsal.UserId;
+                    akBankRecon.Tahun = dataAsal.Tahun;
+                    akBankRecon.Bulan = dataAsal.Bulan;
+                    akBankRecon.AkBankId = dataAsal.AkBankId;
+                    var bakiPenyata = dataAsal.BakiPenyata;
+                    akBankRecon.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
+                    // list of input that cannot be change end
+
+                    _context.Entry(dataAsal).State = EntityState.Detached;
+
+                    akBankRecon.UserIdKemaskini = user.UserName;
+                    akBankRecon.TarKemaskini = DateTime.Now;
+                    akBankRecon.SuPekerjaKemaskiniId = pekerjaId;
+
                     _context.Update(akBankRecon);
+
+                    await AddLogAsync("Ubah", bakiPenyata + " -> " + akBankRecon.BakiPenyata
+                            , akBankRecon.Tahun + "/" + akBankRecon.Bulan + "/" + akBankRecon.AkBankId
+                            , id, akBankRecon.BakiPenyata, pekerjaId);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -263,13 +293,16 @@ namespace MSNK.Controllers
                         throw;
                     }
                 }
+                TempData[SD.Success] = "Data berjaya diubah..!";
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AkBankId"] = new SelectList(_context.AkBank, "Id", "Id", akBankRecon.AkBankId);
+
+            PopulateList();
             return View(akBankRecon);
         }
 
         // GET: AkBankRecon/Delete/5
+        [Authorize(Policy = "PB001D")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -277,9 +310,8 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var akBankRecon = await _context.AkBankRecon
-                .Include(a => a.AkBank)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akBankRecon = await _akReconRepo.GetByIdIncludeDeletedItems((int)id);
+
             if (akBankRecon == null)
             {
                 return NotFound();
@@ -290,11 +322,29 @@ namespace MSNK.Controllers
 
         // POST: AkBankRecon/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "PB001D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var akBankRecon = await _context.AkBankRecon.FindAsync(id);
+            // check if already posting redirect back
+            if (!string.IsNullOrEmpty(akBankRecon.TarKunci?.ToString("yyyy/MM/dd")))
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+            akBankRecon.UserIdKemaskini = user.UserName;
+            akBankRecon.TarKemaskini = DateTime.Now;
+            akBankRecon.SuPekerjaKemaskiniId = pekerjaId;
+
             _context.AkBankRecon.Remove(akBankRecon);
+            //insert applog
+            await AddLogAsync("Hapus", "Hapus Data", akBankRecon.Tahun + "/" + akBankRecon.Bulan + "/" + akBankRecon.AkBankId, id, akBankRecon.BakiPenyata, pekerjaId);
+            //insert applog end
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

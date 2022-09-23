@@ -56,6 +56,14 @@ for details on configuring this project to bundle and minify static web assets. 
     body {
         position: relative
     }
+
+    .nav-item li a {
+        /* (80px - line-height of 27px) / 2 = 26.5px */
+        padding-top: 26.5px;
+        padding-bottom: 26.5px;
+        line-height: 27px;
+    }
+
 }
 
 @media (min-width: 769px) {

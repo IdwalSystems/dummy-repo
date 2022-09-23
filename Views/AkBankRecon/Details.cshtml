@@ -9,7 +9,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-8">
-                <h5 class="text-uppercase text-dark mb-0">Penyesuaian Bank - Papar</h5>
+                <h5 class="text-uppercase text-dark mb-0">@ViewData["Title"]</h5>
                 <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Papar</span>
             </div>
             <div class="col-4 text-right">
@@ -32,16 +32,23 @@
                 </div>
             </div>
 
-            <div class="col-md-7">
+            <div class="col-md-5">
                 <div class="form-group">
-                    <label asp-for="AkBankId" class="control-label"></label><span class="text-danger control-label">*</span>
+                    <label asp-for="AkBankId" class="control-label"></label>
                     <input value="@Model.AkBank.NoAkaun - @Model.AkBank.JBank.Nama" class="form-control form-control-sm" id="txtAkBankId" readonly />
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label asp-for="TarKunci" class="control-label"></label>
+                    <input asp-for="TarKunci" class="form-control form-control-sm form-control-sm-custom" readonly/>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="form-group">
-                    <label asp-for="BakiPenyata" class="control-label"></label><span class="text-danger control-label">*</span>
+                    <label asp-for="BakiPenyata" class="control-label"></label>
                     <input asp-for="BakiPenyata" class="form-control form-control-sm form-control-sm-custom" type="number" id="txtBakiPenyata" readonly />
                 </div>
             </div>
