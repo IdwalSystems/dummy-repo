@@ -19,7 +19,7 @@ namespace MSNK.Models.Modules.Cart
             decimal debit,
             decimal kredit,
             decimal baki,
-            int akPadananPenyataId)
+            int? akPadananPenyataId)
         {
             collection1.Add(new AkBankReconPenyataBank
             {

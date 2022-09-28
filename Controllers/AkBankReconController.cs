@@ -11,6 +11,7 @@ using MSNK.Data;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
@@ -26,9 +27,9 @@ namespace MSNK.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkBankRecon, int, string> _akReconRepo;
         private readonly ListViewIRepository<AkBankReconPenyataBank, int> _akReconPenyataRepo;
-        private readonly IRepository<AkPV, int, string> _akPVRepo;
+        //private readonly IRepository<AkPV, int, string> _akPVRepo;
         private readonly IRepository<AkTerima, int, string> _akTerimaRepo;
-        private readonly IRepository<AkBank, int, string> _akBankRepo;
+        //private readonly IRepository<AkBank, int, string> _akBankRepo;
         private CartBankRecon _cart;
 
 
@@ -216,6 +217,77 @@ namespace MSNK.Controllers
             return View(akBankRecon);
         }
 
+        // GET: AkBankRecon/Upload/5
+        public async Task<IActionResult> Upload(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var akBankRecon = await _akReconRepo.GetByIdIncludeDeletedItems((int)id);
+            if (akBankRecon == null)
+            {
+                return NotFound();
+            }
+
+            return View(akBankRecon);
+        }
+
+        public class Thing
+        {
+            public int Id { get; set; }
+            public string Color { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult SaveAkBankReconPenyataBank(
+           [FromBody] List<AkBankReconPenyataBankViewModel> akBankReconPenyataBankViewModel)
+        {
+            CartEmpty();
+
+            if (akBankReconPenyataBankViewModel != null)
+            {
+                var bil = 1;
+
+                foreach (var i in akBankReconPenyataBankViewModel)
+                {
+                    _cart.AddItem1(i.Indek,
+                            i.AkBankReconId,
+                            i.NoAkaunBank,
+                            i.Tarikh,
+                            i.KodTransaksi,
+                            i.PerihalTransaksi,
+                            i.NoDokumen,
+                            i.Debit,
+                            i.Kredit,
+                            i.Baki,
+                            null);
+                    bil++;
+                }
+                
+
+            }
+            return Json(new { Result = "OK" });
+        }
+
+        // get all item from cart akPO1
+        public JsonResult GetAllItemCartAkBankReconPenyataBank(int Id)
+        {
+
+            try
+            {
+                List<AkBankReconPenyataBank> data = _cart.Lines1.OrderBy(b => b.Indek).ToList();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get all item from cart akPO1 end
+
         // GET: AkBankRecon/Edit/5
         [Authorize(Policy = "PB001E")]
         public async Task<IActionResult> Edit(int? id)
@@ -268,7 +340,18 @@ namespace MSNK.Controllers
                     akBankRecon.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
                     // list of input that cannot be change end
 
+                    foreach (AkBankReconPenyataBank item in dataAsal.AkBankReconPenyataBank)
+                    {
+                        var model = _context.AkBankReconPenyataBank.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+
                     _context.Entry(dataAsal).State = EntityState.Detached;
+
+                    akBankRecon.AkBankReconPenyataBank = _cart.Lines1.ToList();
 
                     akBankRecon.UserIdKemaskini = user.UserName;
                     akBankRecon.TarKemaskini = DateTime.Now;

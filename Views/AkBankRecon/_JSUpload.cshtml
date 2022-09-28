@@ -1,0 +1,222 @@
+﻿<script type="text/javascript">
+
+    function displaySenaraiList(data) {
+        //refresh updated table objek
+        $("table tbody#tbodySenarai").empty();
+        var jumlah = $("#Jumlah");
+        var sum = 0;
+        var jumDebit = 0;
+        var jumKredit = 0;
+
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            if (item.kredit != 0) {
+                sum -= item.kredit;
+                jumKredit += item.kredit;
+            }
+            else {
+                sum += item.debit;
+                jumDebit += item.debit;
+            }
+            var str = "<tr><td class='text-left'>" + item.indek +
+                "</td><td class='text-left text-uppercase' >" + item.noAkaunBank +
+                "</td><td class='text-left'>" + showDate(item.tarikh) +
+                "</td><td class='text-left text-uppercase'>" + item.kodTransaksi +
+                "</td><td class='text-left text-uppercase'>" + item.perihalTransaksi +
+                "</td><td class='text-left text-uppercase'>" + item.noDokumen +
+                "</td><td class='text-right'>" + item.debit.format(2) +
+                "</td><td class='text-right'>" + item.kredit.format(2) +
+                "</td><td class='text-right'>" + item.baki.format(2) +
+                "</td></tr>";
+            $("table tbody#tbodySenarai").append(str);
+            
+        }
+        var str = "<tr class='table-secondary'><td class='text-right font-weight-bold' colspan='6'>Jumlah RM" +
+            "</td><td class='text-right font-weight-bold'>" + jumDebit.format(2) +
+            "</td><td class='text-right font-weight-bold'>" + jumKredit.format(2) +
+            "</td><td></td></tr>";
+
+        $("table tbody#tbodySenarai").append(str);
+
+        jumlah.val(sum.format(2));
+    }
+
+    function Upload() {
+        var fileInput = $('#files');
+
+        if (!window.FileReader) {
+            alert('Pelayar anda tidak sokong')
+        }
+        var input = fileInput.get(0);
+
+        // Create a reader object
+        var reader = new FileReader();
+        if (input.files.length) {
+            var textFile = input.files[0];
+            reader.readAsText(textFile);
+            $(reader).on('load', processFile);
+        } else {
+            alert('Sila muat naik fail dahulu')
+        }
+    }
+
+    //empty cart
+    function EmptyCart() {
+        $.ajax({
+            type: "POST",
+            //url: "/AkPV/JsonEmptyCart",
+            url: '@Url.Action("CartEmpty", "AkBankRecon")',
+            dataType: "json",
+            success: function (msg) {
+                $("table tbody#tbodySenarai").empty();
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    };
+    //empty cart end
+
+    function processFile(e) {
+
+        var id = $("#Id");
+        var jumlah = $("#jumlah");
+        var oBalance = $("#openBalance");
+        var cBalance = $("#closeBalance");
+        var tahun = $("#Tahun").val();
+        var bulan = $("#Bulan").val();
+        var noAkaun = $("#NoAkaun").val();
+        var sum = 0;
+        var bil = 1;
+
+        var file = e.target.result,
+            results;
+        if (file && file.length) {
+            results = file.split("\n");
+            //console.log(results)
+            
+            //check if txt equal to month and year of statement
+            var bulanHingga = results[7].substring(22, 24);
+            var tahunHingga = results[7].substring(24, 28);
+
+            $("table tbody#tbodySenarai").empty();
+
+            for (var i = 7; i < results.length; i++) {
+                if (results[i] != "") {
+                    var item = results[i];
+                    var noAkaunPenyata = results[i].substring(0, 10);
+                    var bulanDari = item.substring(22, 24);
+                    var tahunDari = item.substring(24, 28);
+                    var baris = i + 1;
+                    if (bulanDari != bulanHingga) {
+                        alert("Bulan penyata baris " + baris + " tidak sama");
+                        return;
+                    }
+
+                    if (tahunDari != tahunHingga) {
+                        alert("Tahun penyata baris " + baris + " tidak sama");
+                        return;
+                    }
+
+                    if (tahun != tahunHingga) {
+                        alert("Tahun tidak sama");
+                        return;
+                    }
+
+                    if (bulan != bulanHingga) {
+                        alert("Bulan tidak sama");
+                        return;
+                    }
+
+                    if (noAkaun != noAkaunPenyata) {
+                        alert("No Akaun baris " + baris + " tidak sama");
+                        return;
+                    }
+
+                }
+            }
+
+            oBalance.val(parseFloat(results[4].substring(28, 46).trim()).format(2));
+            cBalance.val(parseFloat(results[5].substring(28, 46).trim()).format(2));
+
+            results.splice(0, 7);
+
+            AkBankReconPenyataBankViewModel = [];
+            $.each(results, function (i, item) {
+                if (results[i] != "") {
+                    var noAkaun = item.substring(0, 10);
+                    var tarikh = item.substring(20, 22) + "/" + item.substring(22, 24) + "/" + item.substring(24, 28);
+                    var transCode = item.substring(28, 32)
+                    var perihal = item.substring(32, 47);
+                    var oriDoc = item.substring(47, 59);
+                    var amaun = parseFloat(item.substring(59, 72).trim());
+                    var b_r = item.substring(72, 73);
+                    var balance = parseFloat(item.substring(73, 86).trim());
+                    var resitBaucer = "";
+                    var debit = 0;
+                    var kredit = 0;
+
+                    if (b_r == "D") {
+                        sum -= amaun;
+                        resitBaucer = "Baucer";
+                        debit = amaun;
+                    }
+                    else {
+                        sum += amaun;
+                        resitBaucer = "Resit";
+                        kredit = amaun;
+                    }
+
+                    AkBankReconPenyataBankViewModel.push({
+                        Id: 0,
+                        Indek: bil,
+                        AkBankReconId: id.val(),
+                        NoAkaunBank: noAkaun,
+                        Tarikh: item.substring(24, 28) + "-" + item.substring(22, 24) + "-" + item.substring(20, 22),
+                        KodTransaksi: transCode,
+                        PerihalTransaksi: perihal,
+                        NoDokumen: oriDoc,
+                        Debit: debit,
+                        Kredit: kredit,
+                        Baki: balance,
+                        AkPadananId: null
+                    });
+
+                    bil++;
+                }
+            });
+
+            $.ajax({
+                dataType: 'json',
+                type: 'POST',
+                url: '@Url.Action("SaveAkBankReconPenyataBank", "AkBankRecon")',
+                data: JSON.stringify(AkBankReconPenyataBankViewModel),
+                contentType: 'application/json; charset=utf-8',
+                success: function () {
+                    console.log('success');
+                    $.ajax({
+                    type: "POST",
+                    //url: "/AkPO/GetAllItemCartAkPO1",
+                        url: '@Url.Action("GetAllItemCartAkBankReconPenyataBank", "AkBankRecon")',
+                        data: {Id : id.val()},
+                        dataType: "json",
+                        success: function (r) {
+
+                            //refresh updated table senarai
+                            $("table tbody#tbodySenarai").empty();
+                            if (r.record.length > 0) {
+                                displaySenaraiList(r.record);
+                            }
+                        }
+                    });
+                },
+                failure: function (response) {
+                    console.log('error');
+                }
+            })
+
+
+        }
+    }
+
+</script>

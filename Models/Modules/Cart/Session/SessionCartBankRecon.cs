@@ -29,7 +29,7 @@ namespace MSNK.Models.Modules.Cart.Session
             decimal debit,
             decimal kredit,
             decimal baki,
-            int akPadananPenyataId
+            int? akPadananPenyataId
             )
         {
             base.AddItem1(indek,

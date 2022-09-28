@@ -2,14 +2,13 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MSNK.Models.Modules
+namespace MSNK.Models.Modules.ViewModel
 {
-    public class AkBankReconPenyataBank
+    public class AkBankReconPenyataBankViewModel
     {
         public int Id { get; set; }
         public int Indek { get; set; }
         public int AkBankReconId { get; set; }
-        public AkBankRecon AkBankRecon { get; set; }
         public string NoAkaunBank { get; set; }
         public DateTime Tarikh { get; set; }
         public string KodTransaksi { get; set; }
@@ -25,6 +24,5 @@ namespace MSNK.Models.Modules
         [Column(TypeName = "decimal(18,2)")]
         public decimal Baki { get; set; }
         public int? AkPadananPenyataId { get; set; }
-        public AkPadananPenyata AkPadananPenyata { get; set; }
     }
 }
