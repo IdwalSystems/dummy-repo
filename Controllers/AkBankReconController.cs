@@ -102,6 +102,28 @@ namespace MSNK.Controllers
 
         }
 
+        private void PopulateCartFromDb(AkBankRecon akBankRecon)
+        {
+
+            CartEmpty();
+
+            foreach (AkBankReconPenyataBank item in akBankRecon.AkBankReconPenyataBank)
+            {
+                _cart.AddItem1(item.Indek,
+                            item.AkBankReconId,
+                            item.NoAkaunBank,
+                            item.Tarikh,
+                            item.KodTransaksi,
+                            item.PerihalTransaksi,
+                            item.NoDokumen,
+                            item.Debit,
+                            item.Kredit,
+                            item.Baki,
+                            item.AkPadananPenyataId);
+            }
+
+        }
+
         [HttpPost]
         public async Task<IActionResult> Index(
             int AkBankId,
@@ -288,6 +310,107 @@ namespace MSNK.Controllers
         }
         // get all item from cart akPO1 end
 
+        // get list of bank statement search result
+        public JsonResult GetBankStatementList(DateTime tarDari, DateTime tarHingga)
+        {
+
+            try
+            {
+                List<AkBankReconPenyataBank> data = _cart.Lines1.OrderBy(b => b.Indek).ToList();
+
+                tarHingga = tarHingga.AddHours(23.99);
+                data = data.Where(x => x.Tarikh >= tarDari && x.Tarikh <= tarHingga).ToList();
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get list of bank statement search result end
+
+        // get list of system statement search result
+        public JsonResult GetSystemStatementList(DateTime tarDari, DateTime tarHingga)
+        {
+
+            try
+            {
+                List<AkBankReconPenyataSistemViewModel> data = new List<AkBankReconPenyataSistemViewModel>();
+
+                // select single pv
+                var singlePV = _context.AkPV
+                    .Where(b => b.IsGanda == false && b.FlPosting == 1 && b.FlBatal == 0).ToList();
+
+                foreach (var row in singlePV)
+                {
+                    data.Add( new AkBankReconPenyataSistemViewModel
+                    {
+                        Indek = row.Id,
+                        Tarikh = row.Tarikh,
+                        NoRujukan = row.NoPV,
+                        Perihal = row.Nama,
+                        NoSlip = row.NoCekAtauEFT,
+                        Debit = row.Jumlah,
+                        Kredit = 0
+
+                    });
+                }
+
+                // select multiple pv
+                List<AkPV> multiplePV = _context.AkPV
+                    .Include(b => b.AkPVGanda)
+                    .Where(b => b.IsGanda == true && b.FlPosting == 1 && b.FlBatal == 0)
+                    .ToList();
+
+                foreach (var akPV in multiplePV)
+                {
+                    foreach (var row in akPV.AkPVGanda)
+                    {
+                        data.Add(new AkBankReconPenyataSistemViewModel
+                        {
+                            Indek = akPV.Id,
+                            Tarikh = akPV.Tarikh,
+                            NoRujukan = akPV.NoPV,
+                            Perihal = row.Nama,
+                            NoSlip = row.NoCekAtauEFT,
+                            Debit = row.Amaun,
+                            Kredit = 0
+
+                        });
+                    }
+                    
+                }
+
+                tarHingga = tarHingga.AddHours(23.99);
+                data = data.Where(x => x.Tarikh >= tarDari && x.Tarikh <= tarHingga).ToList();
+
+                return Json(new { result = "OK", record = data.OrderBy(b => b.Tarikh) });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get list of system statement search result end
+
+        // get list of system statement search result
+        public JsonResult MatchStatementList(
+            int idBank, 
+            decimal amaunBank,
+            List<ListItemViewModel> arrayOfValues)
+        {
+            // insert 
+            try
+            {
+                return Json(new { result = "OK"});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get list of system statement search result end
         // GET: AkBankRecon/Edit/5
         [Authorize(Policy = "PB001E")]
         public async Task<IActionResult> Edit(int? id)
@@ -304,6 +427,26 @@ namespace MSNK.Controllers
             }
 
             PopulateList();
+            return View(akBankRecon);
+        }
+
+        // GET: AkBankRecon/Edit/5
+        [Authorize(Policy = "PB001E")]
+        public async Task<IActionResult> BankStatement(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var akBankRecon = await _akReconRepo.GetByIdIncludeDeletedItems((int)id);
+            if (akBankRecon == null)
+            {
+                return NotFound();
+            }
+
+            PopulateList();
+            PopulateCartFromDb(akBankRecon);
             return View(akBankRecon);
         }
 

@@ -1,10 +1,15 @@
 ﻿@model MSNK.Models.Modules.AkBankRecon
 
 @{
-    ViewData["Title"] = "Penyesuaian Bank - Muat Naik";
+    ViewData["Title"] = "Penyesuaian Bank - Penyata";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<partial name="_JSUpload" />
+<partial name="_JSBankStatement" />
+<style>
+    input[name='send-quality'] {
+        display: none;
+    }
+</style>
 <div class="card box-shadow">
     <div class="card-body">
         <div class="row">
@@ -20,7 +25,7 @@
         <hr class="mt-2" />
         <form asp-action="Edit" class="needs-validation">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <input asp-for="Id" hidden/>
+            <input asp-for="Id" hidden />
             <div class="form-row mb-2">
                 <div class="col-md-3">
                     <div class="form-group">
@@ -47,58 +52,46 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row mb-2">
-                <div class="col-md-12">
-                    <div class="input-group">
-                        <input type="file" class="form-control" id="files" readonly style="
-    padding: 10px 10px 40px 10px;" />
-                        <div class="input-group-append">
-                            <a id="upload" class="btn ac-primary text-white" onclick="Upload()"><span style="position: relative; top: calc(50% - 10px);"><i class="fa fa-upload"></i></span></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="form-row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label class="control-label">Baki Pembukaan RM</label>
-                        <input class="form-control form-control-sm" readonly id="openBalance" value="0.00" />
+                        <label class="control-label">Baki Penyata Bank RM</label>
+                        <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly id="openBalance" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label class="control-label">Baki Penutupan RM</label>
-                        <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly id="closeBalance" value="0.00" />
+                        <label class="control-label">Baki Penyata Sistem RM</label>
+                        <input class="form-control form-control-sm" readonly id="closeBalance" value="0.00" />
                     </div>
                 </div>
             </div>
-            @*table Senarai*@
-            <div class="card box-shadow mb-3 mt-2">
-                <div class="card-header">
-                    <h6>Senarai</h6>
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#matchBankStatement" id="tabMatch">
+                        Padanan Penyata
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#unmatchBankStatement" id="tabUnmatch">
+                        Batal Padanan Penyata
+                    </a>
+                </li>
+            </ul>
+            @*Tab panes*@
+            <div class="tab-content">
+                <div id="matchBankStatement" class="tab-pane active">
+                    <br>
+                    <partial name="_MatchBankStatement" />
                 </div>
-                <div class="card-body">
-                    <table id="tblSenarai" class="table table-sm nowrap table-hover" cellpadding="0" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th style="width:10%">Indek</th>
-                                <th style="width:10%">No Akaun</th>
-                                <th style="width:5%">Tarikh</th>
-                                <th style="width:5%">Kod Trans.</th>
-                                <th style="width:50%">Perihal</th>
-                                <th style="width:20%">Dokumen Asal</th>
-                                <th style="width:10%">Debit RM</th>
-                                <th style="width:10%">Kredit RM</th>
-                                <th style="width:10%">Baki RM</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbodySenarai">
-                        </tbody>
-                    </table>
+                <div id="unmatchBankStatement" class="tab-pane fade">
+                    <br>
+                    <partial name="_UnmatchBankStatement" />
                 </div>
             </div>
-            @*table Objek end*@
 
 
             <hr />
