@@ -54,6 +54,9 @@ namespace MSNK.Models.Modules.EFRepository
                     .ThenInclude(b => b.AkPadananPenyata)
                         .ThenInclude(b => b.AkTerima2)
                             .ThenInclude(b => b.AkTerima)
+                .Include(b => b.AkBankReconPenyataBank)
+                    .ThenInclude(b => b.AkPadananPenyata)
+                        .ThenInclude(b => b.AkJurnal)
                 .ToListAsync();
         }
 
@@ -70,6 +73,9 @@ namespace MSNK.Models.Modules.EFRepository
                     .ThenInclude(b => b.AkPadananPenyata)
                         .ThenInclude(b => b.AkTerima2)
                             .ThenInclude(b => b.AkTerima)
+                .Include(b => b.AkBankReconPenyataBank)
+                    .ThenInclude(b => b.AkPadananPenyata)
+                        .ThenInclude(b => b.AkJurnal)
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
@@ -86,6 +92,9 @@ namespace MSNK.Models.Modules.EFRepository
                     .ThenInclude(b => b.AkPadananPenyata)
                         .ThenInclude(b => b.AkTerima2)
                             .ThenInclude(b => b.AkTerima)
+                .Include(b => b.AkBankReconPenyataBank)
+                    .ThenInclude(b => b.AkPadananPenyata)
+                        .ThenInclude(b => b.AkJurnal)
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 

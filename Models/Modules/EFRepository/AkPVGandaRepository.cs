@@ -36,14 +36,19 @@ namespace MSNK.Models.Modules.EFRepository
                 .ToListAsync();
         }
 
-        public Task<AkPVGanda> GetBy2Id(int id1, int id2)
+        public async Task<AkPVGanda> GetBy2Id(int akPVId, int indek)
         {
-            throw new System.NotImplementedException();
+            return await context.AkPVGanda
+                .Include(b => b.AkPadananPenyata)
+                .Where(b => b.AkPVId == akPVId && b.Indek == indek)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<AkPVGanda> GetById(int id)
         {
-            return await context.AkPVGanda.FindAsync(id);
+            return await context.AkPVGanda
+                .Include(b=> b.AkPadananPenyata)
+                .Where( b => b.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<AkPVGanda> Insert(AkPVGanda entity)

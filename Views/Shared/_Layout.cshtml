@@ -1,7 +1,7 @@
 ﻿
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="overflow-x:hidden;">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,7 +29,7 @@
     <script src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
     <script src="~/lib/select2/js/select2.min.js"></script>
     <script src="~/lib/toastr.js/toastr.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.js" integrity="sha512-B+gr+zLWg81qxVwvtYwKrmjvQtZKD/GGFF7jD80OfzbqFw+NsbS5faEqpCO7Q7oRw1bYi0+WLJf54j8Vm7NADw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     @*<script>
@@ -40,7 +40,7 @@
 </head>
 
 
-<body class="ac-bg">
+<body class="ac-bg" style="overflow-x: hidden;">
 
     @{
         var navtype = "";
@@ -267,9 +267,9 @@
             </main>
         </div>
 
-
-
-        <footer class="border-top footer text-muted">
+    </div>
+    <!--<div>
+        <footer class="border-top footer text-muted" style="z-index:0; position:absolute; bottom:1px;">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
@@ -281,19 +281,18 @@
                     </div>
 
                 </div>
-                <div class="form-row">
+                <div class="form-row">-->
 
                     @*<p class="float-left">&copy; 2022 - MSNK - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privasi</a></p>
-                        <p class="float-right">@hari, @tarikh</p>
-                        <span class="text-right" id="ct6"></span> *@
-                </div>
+                    <p class="float-right">@hari, @tarikh</p>
+                    <span class="text-right" id="ct6"></span> *@
+                <!--</div>
 
 
 
             </div>
         </footer>
-
-    </div>
+    </div>-->
     <!-- End demo content -->
 
 

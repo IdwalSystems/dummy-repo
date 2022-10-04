@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSNK.Models.Helper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSNK.Models.Modules
 {
-    public class AkTerima2
+    public class AkTerima2 : IRecon
     {
         // note:
         // FlJenis = 0 || null ( Lain - lain )
@@ -36,15 +37,18 @@ namespace MSNK.Models.Modules
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? TarSlip { get; set; }
         public int? AkPenyataPemungutId { get; set; }
-        public int? AkPadananPenyataId { get; set; }
-        public AkPadananPenyata AkPadananPenyata { get; set; }
+        public ICollection<AkPadananPenyata> AkPadananPenyata { get; set; }
         //field end
 
 
         //Relationship
         public JCaraBayar JCaraBayar { get; set; }
         public ICollection<AkPenyataPemungut2> AkPenyataPemungut2 { get; set; }
+
         //relationship end
+
+        public int FlTunai { get; set; }
+        public DateTime? TarTunai { get; set; }
 
 
     }

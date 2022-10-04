@@ -4,14 +4,16 @@ using MSNK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221003090950_AddFieldFlTunaiTarTunaiTblAkPVAkJurnalAkTerima2")]
+    partial class AddFieldFlTunaiTarTunaiTblAkPVAkJurnalAkTerima2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,21 +49,6 @@ namespace MSNK.Migrations
                     b.HasIndex("AkPadananPenyataId");
 
                     b.ToTable("AkPVAkPadananPenyata");
-                });
-
-            modelBuilder.Entity("AkPVGandaAkPadananPenyata", b =>
-                {
-                    b.Property<int>("AkPVGandaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AkPadananPenyataId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AkPVGandaId", "AkPadananPenyataId");
-
-                    b.HasIndex("AkPadananPenyataId");
-
-                    b.ToTable("AkPVGandaAkPadananPenyata");
                 });
 
             modelBuilder.Entity("AkPadananPenyataAkTerima2", b =>
@@ -2275,9 +2262,6 @@ namespace MSNK.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("AkJurnalId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AkPVGandaId")
                         .HasColumnType("int");
 
                     b.Property<int?>("AkPVId")
@@ -5032,21 +5016,6 @@ namespace MSNK.Migrations
                     b.HasOne("MSNK.Models.Modules.AkPV", null)
                         .WithMany()
                         .HasForeignKey("AkPVId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MSNK.Models.Modules.AkPadananPenyata", null)
-                        .WithMany()
-                        .HasForeignKey("AkPadananPenyataId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AkPVGandaAkPadananPenyata", b =>
-                {
-                    b.HasOne("MSNK.Models.Modules.AkPVGanda", null)
-                        .WithMany()
-                        .HasForeignKey("AkPVGandaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

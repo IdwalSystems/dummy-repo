@@ -9,6 +9,7 @@ namespace MSNK.Models.Modules.Cart
         private List<AkBankReconPenyataBank> collection1 = new List<AkBankReconPenyataBank>();
 
         public virtual void AddItem1(
+            int id,
             int indek,
             int akBankReconId,
             string noAkaunBank,
@@ -19,10 +20,11 @@ namespace MSNK.Models.Modules.Cart
             decimal debit,
             decimal kredit,
             decimal baki,
-            int? akPadananPenyataId)
+            bool isPadan)
         {
             collection1.Add(new AkBankReconPenyataBank
             {
+                Id = id,
                 Indek = indek,
                 AkBankReconId = akBankReconId,
                 NoAkaunBank = noAkaunBank,
@@ -33,7 +35,7 @@ namespace MSNK.Models.Modules.Cart
                 Debit = debit,
                 Kredit = kredit,
                 Baki = baki,
-                AkPadananPenyataId = akPadananPenyataId
+                IsPadan = isPadan
             });
         }
 

@@ -22,6 +22,7 @@
             });
         }).draw();
 
+        // match tab
         $("#tblSenaraiBank input[class='bank-statement-status']").on("click", function (e) {
             e.stopPropagation();
         });
@@ -138,7 +139,12 @@
         $("#matchButton").on("click", function () {
 
             var arrayOfValues = [];
-            var idBank = $("#indek-system-statement").val();
+            var tarDari1 = $("#inputTarikh1").val();
+            var tarHingga1 = $("#inputTarikh2").val();
+            var tarDari2 = $("#inputTarikh3").val();
+            var tarHingga2 = $("#inputTarikh4").val();
+            var idBank = $("#id-bank-statement").val();
+            var indekBank = $("#indek-bank-statement").val();
             var amaunBank = $("#amaun-bank-statement").val();
             var amaunSistem = $("#amaun-system-statement").val();
             if (amaunBank != amaunSistem) {
@@ -150,9 +156,11 @@
 
             $('#tblSenaraiSistem input:checkbox:checked', tableControl).each(function () {
                 var row = $(this).closest('tr');
-                var indek = $("TD", row).eq(0).html();
+                var id = $("TD", row).eq(0).html();
+                var indek = $("TD", row).eq(7).html();
+                var isGanda = $("TD", row).eq(8).html();
                 var refNo = $("TD", row).eq(2).html();
-                arrayOfValues.push({id: indek, perihal: refNo});
+                arrayOfValues.push({id: id, indek: indek, perihal: refNo, isGanda: isGanda});
             }).get();
 
             console.log(arrayOfValues);
@@ -162,16 +170,51 @@
                 url: '@Url.Action("MatchStatementList", "AkBankRecon")',
                 data: {
                     "idBank": idBank,
+                    "indekBank": indekBank,
                     "amaunBank": amaunBank,
                     "arrayOfValues": arrayOfValues
                 },
                 success: function (response) {
                     toastr.success("Padanan Berjaya");
                     if (response.dataBank != null) {
-                        displaySenaraiBankList(response.dataBank);
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("GetBankStatementList", "AkBankRecon")',
+                            data: { "tarDari": tarDari1, "tarHingga": tarHingga1 },
+                            success: function (response) {
+                                console.log("success");
+                                if (response.record != null) {
+                                    displaySenaraiBankList(response.record);
+                                }
+
+                            },
+                            failure: function (response) {
+                                alert(response.responseText);
+                            },
+                            error: function (response) {
+                                alert(response.responseText);
+                            }
+                        });
                     }
                     if (response.dataSistem != null) {
-                        displaySenaraiBankList(response.dataBank);
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("GetSystemStatementList", "AkBankRecon")',
+                            data: { "tarDari": tarDari2, "tarHingga": tarHingga2 },
+                            success: function (response) {
+                                console.log("success");
+                                if (response.record != null) {
+                                    displaySenaraiSistemList(response.record);
+                                }
+
+                            },
+                            failure: function (response) {
+                                alert(response.responseText);
+                            },
+                            error: function (response) {
+                                alert(response.responseText);
+                            }
+                        });
                     }
 
                 },
@@ -183,21 +226,160 @@
                 }
             });
         });
+        // match tab end
+
+        // unmatch tab
+        $("#tblSenaraiBank input[class='bank-statement-status']").on("click", function (e) {
+            e.stopPropagation();
+        });
+
+        $("#tblSenaraiBank input[class='bank-statement-status']").on("click", function () {
+            if ($(this).is(":checked")) {
+                var row = $(this).closest("tr");
+                var indek = $("TD", row).eq(0).html();
+                var id = $("#Id").val();
+                console.log(indek + ", " + id);
+            }
+            else {
+            }
+        });
+
+        $("#searchButtonBankUnmatch").on("click", function () {
+            var tarDari = $("#inputTarikhUnmatch1").val();
+            var tarHingga = $("#inputTarikhUnmatch2").val();
+            if (tarDari == "" || tarHingga == "") {
+                toastr.error("Tarikh Mula dan Akhir diperlukan");
+                return;
+            }
+            if (tarDari > tarHingga) {
+                toastr.error("Tarikh Akhir lebih dari Tarikh Mula.");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetBankMatchedStatementList", "AkBankRecon")',
+                data: { "tarDari": tarDari, "tarHingga": tarHingga },
+                success: function (response) {
+                    console.log("success");
+                    if (response.record != null) {
+                        displaySenaraiBankMatchedList(response.record);
+                    }
+
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+
+        $("#unmatchButton").on("click", function () {
+
+            var arrayOfValues = [];
+            var tarDari1 = $("#inputTarikhUnmatch1").val();
+            var tarHingga1 = $("#inputTarikhUnmatch2").val();
+            var idBank = $("#id-bank-matched-statement").val();
+            var indekBank = $("#indek-bank-matched-statement").val();
+            var amaunBank = $("#amaun-bank-matched-statement").val();
+            var amaunSistem = $("#amaun-system-matched-statement").val();
+            if (amaunSistem == 0.00) {
+                toastr.error("Amaun Sistem RM 0.00");
+                return;
+            }
+
+            var tableControl = document.getElementById('#tblUnmatchSenaraiSistem');
+
+            $('#tblUnmatchSenaraiSistem input:checkbox:checked', tableControl).each(function () {
+                var row = $(this).closest('tr');
+                var indek = $("TD", row).eq(0).html();
+                var refNo = $("TD", row).eq(2).html();
+                arrayOfValues.push({id: indek, perihal: refNo});
+            }).get();
+
+            console.log(arrayOfValues);
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("UnMatchStatementList", "AkBankRecon")',
+                data: {
+                    "idBank": idBank,
+                    "indekBank": indekBank,
+                    "amaunBank": amaunBank,
+                    "arrayOfValues": arrayOfValues
+                },
+                success: function (response) {
+                    toastr.success("Batal Padanan Berjaya");
+                    if (response.dataBank != null) {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("GetBankMatchedStatementList", "AkBankRecon")',
+                            data: { "tarDari": tarDari1, "tarHingga": tarHingga1 },
+                            success: function (response) {
+                                console.log("success");
+                                if (response.record != null) {
+                                    displaySenaraiBankMatchedList(response.record);
+                                }
+
+                            },
+                            failure: function (response) {
+                                alert(response.responseText);
+                            },
+                            error: function (response) {
+                                alert(response.responseText);
+                            }
+                        });
+                    }
+                    if (response.dataSistem != null) {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("GetSystemMatchedStatementList", "AkBankRecon")',
+                            data: { "idBank": idBank },
+                            success: function (response) {
+                                console.log("success");
+                                if (response.record != null) {
+                                    displaySenaraiSistemMatchedList(response.record);
+                                }
+
+                            },
+                            failure: function (response) {
+                                alert(response.responseText);
+                            },
+                            error: function (response) {
+                                alert(response.responseText);
+                            }
+                        });
+                    }
+
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        });
+        // unmatch tab end
     });
 
+    // match tab
     function displaySenaraiBankList(data) {
         //refresh updated table objek
         $("table tbody#tbodySenaraiBank").empty();
 
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
-            var str = "<tr><td class='text-left' hidden>" + item.indek +
+            var str = "<tr><td class='text-left' hidden>" + item.id +
                 "</td><td class='text-left'>" + showDate(item.tarikh) +
                 "</td><td class='text-left text-uppercase'>" + item.kodTransaksi +
                 "</td><td class='text-left text-uppercase'>" + item.perihalTransaksi +
                 "</td><td class='text-left text-uppercase'>" + item.noDokumen +
                 "</td><td class='text-right'>" + item.debit.format(2) +
                 "</td><td class='text-right'>" + item.kredit.format(2) +
+                "</td><td class='text-right' hidden>" + item.indek +
                 "</td><td><input type='checkbox' class='bank-statement-status' id='bank-statement-status" + i + "' onclick='CheckedBankStatement(this)'/>" +
                 "</td></tr>";
             $("table tbody#tbodySenaraiBank").append(str);
@@ -209,7 +391,8 @@
     function CheckedBankStatement(button) {
         var row = $(button).closest("TR");
         var checkId = "#" + button.id;
-        var indek = $("TD", row).eq(0).html();
+        var id = $("TD", row).eq(0).html();
+        var indek = $("TD", row).eq(7).html();
         var noDokumen = $("TD", row).eq(4).html();
         var debit = $("TD", row).eq(5).html().replace(',', '');
         var kredit = $("TD", row).eq(6).html().replace(',', '');
@@ -222,15 +405,17 @@
         }
 
         var checked = button.checked;
-        console.log(indek + ", " + noDokumen + ", " + debit + ", " + kredit);
+        console.log(id + ", " + noDokumen + ", " + debit + ", " + kredit);
         console.log(checked);
         if (checked == true) {
+            $("#id-bank-statement").val(id);
             $("#indek-bank-statement").val(indek);
             $("#amaun-bank-statement").val(amaun);
             $(".bank-statement-status").prop('disabled', true);
             $(checkId).prop('disabled', false);
         }
         else {
+            $("#id-bank-statement").val("");
             $("#indek-bank-statement").val("");
             $("#amaun-bank-statement").val("");
             $(".bank-statement-status").prop('disabled', false);
@@ -288,6 +473,138 @@
         else {
             sum -= amaun;
             $("#indek-system-statement").val("");
+        }
+        jumlah.val(sum.toFixed(2));
+
+    }
+    // match tab end
+
+    // unmatched tab
+    function displaySenaraiBankMatchedList(data) {
+        //refresh updated table objek
+        $("table tbody#tbodyUnmatchSenaraiBank").empty();
+
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            var str = "<tr><td class='text-left' hidden>" + item.id +
+                "</td><td class='text-left'>" + showDate(item.tarikh) +
+                "</td><td class='text-left text-uppercase'>" + item.kodTransaksi +
+                "</td><td class='text-left text-uppercase'>" + item.perihalTransaksi +
+                "</td><td class='text-left text-uppercase'>" + item.noDokumen +
+                "</td><td class='text-right'>" + item.debit.format(2) +
+                "</td><td class='text-right'>" + item.kredit.format(2) +
+                "</td><td class='text-right' hidden>" + item.indek +
+                "</td><td><input type='checkbox' class='bank-matched-statement-status' id='bank-matched-statement-status" + i + "' onclick='CheckedBankMatchedStatement(this)'/>" +
+                "</td></tr>";
+            $("table tbody#tbodyUnmatchSenaraiBank").append(str);
+
+        }
+
+    }
+
+    function displaySenaraiSistemMatchedList(data) {
+        //refresh updated table objek
+        $("table tbody#tbodyUnmatchSenaraiSistem").empty();
+
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            var str = "<tr><td class='text-left' hidden>" + item.indek +
+                "</td><td class='text-left'>" + showDate(item.tarikh) +
+                "</td><td class='text-left text-uppercase'>" + item.noRujukan +
+                "</td><td class='text-left text-uppercase'>" + item.perihal +
+                "</td><td class='text-left text-uppercase'>" + item.noSlip +
+                "</td><td class='text-right'>" + item.debit.format(2) +
+                "</td><td class='text-right'>" + item.kredit.format(2) +
+                "</td><td><input type='checkbox' class='system-matched-statement-status' id='system-matched-statement-status" + i + "' onclick='CheckedSystemMatchedStatement(this)'/>" +
+                "</td></tr>";
+            $("table tbody#tbodyUnmatchSenaraiSistem").append(str);
+
+        }
+
+    }
+
+    function CheckedBankMatchedStatement(button) {
+        var row = $(button).closest("TR");
+        var checkId = "#" + button.id;
+        var id = $("TD", row).eq(0).html();
+        var indek = $("TD", row).eq(7).html();
+        var noDokumen = $("TD", row).eq(4).html();
+        var debit = $("TD", row).eq(5).html().replace(',', '');
+        var kredit = $("TD", row).eq(6).html().replace(',', '');
+
+        if (debit != 0.00) {
+            amaun = debit;
+        }
+        else {
+            amaun = kredit;
+        }
+
+        var checked = button.checked;
+        console.log(id + ", " + noDokumen + ", " + debit + ", " + kredit);
+        console.log(checked);
+        if (checked == true) {
+            $("#id-bank-matched-statement").val(id);
+            $("#indek-bank-matched-statement").val(indek);
+            $("#amaun-bank-matched-statement").val(amaun);
+            $(".bank-statement-matched-status").prop('disabled', true);
+            $(checkId).prop('disabled', false);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetSystemMatchedStatementList", "AkBankRecon")',
+                data: { "idBank": id},
+                success: function (response) {
+                    console.log("success");
+                    if (response.record != null) {
+                        displaySenaraiSistemMatchedList(response.record);
+                    }
+
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+        else {
+            $("#id-bank-matched-statement").val("");
+            $("#indek-bank-matched-statement").val("");
+            $("#amaun-bank-matched-statement").val("");
+            $(".bank-statement-matched-status").prop('disabled', false);
+        }
+
+    }
+
+    function CheckedSystemMatchedStatement(button) {
+        var row = $(button).closest("TR");
+        var indek = $("TD", row).eq(0).html();
+        var amaun = 0;
+        var sum = 0;
+        var jumlah = $("#amaun-system-matched-statement");
+        var noDokumen = $("TD", row).eq(4).html();
+        var debit = $("TD", row).eq(5).html().replace(',', '');
+        var kredit = $("TD", row).eq(6).html().replace(',', '');
+
+        sum = parseFloat(jumlah.val());
+
+        if (debit != 0.00) {
+            amaun = parseFloat(debit);
+        }
+        else {
+            amaun = parseFloat(kredit);
+        }
+
+        var checked = button.checked;
+        console.log(indek + ", " + noDokumen + ", " + debit + ", " + kredit);
+        console.log(checked);
+        if (checked == true) {
+            sum += amaun;
+            $("#indek-system-matched-statement").val(indek);
+        }
+        else {
+            sum -= amaun;
+            $("#indek-system-matched-statement").val("");
         }
         jumlah.val(sum.toFixed(2));
 

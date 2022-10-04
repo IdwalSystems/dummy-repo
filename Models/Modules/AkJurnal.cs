@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules
 {
-    public class AkJurnal : AppLogHelper, ISoftDelete
+    public class AkJurnal : AppLogHelper, ISoftDelete, IRecon
     {
         // note:
         // FlJenisJurnal = 0 ( Am )
@@ -78,6 +78,8 @@ namespace MSNK.Models.Modules
         public int FlKategoriPenerima { get; set; }
         [DisplayName("Objek")]
         public ICollection<AkJurnal1> AkJurnal1 { get; set; }
-
+        public ICollection<AkPadananPenyata> AkPadananPenyata { get; set; }
+        public int FlTunai { get; set; }
+        public DateTime? TarTunai { get; set; }
     }
 }

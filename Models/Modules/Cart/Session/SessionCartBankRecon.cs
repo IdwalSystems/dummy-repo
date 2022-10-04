@@ -19,6 +19,7 @@ namespace MSNK.Models.Modules.Cart.Session
         private ISession Session { get; set; }
         // BankRecon
         public override void AddItem1(
+            int id,
             int indek,
             int akBankReconId,
             string noAkaunBank,
@@ -29,10 +30,11 @@ namespace MSNK.Models.Modules.Cart.Session
             decimal debit,
             decimal kredit,
             decimal baki,
-            int? akPadananPenyataId
+            bool isPadan
             )
         {
-            base.AddItem1(indek,
+            base.AddItem1(id,
+                indek,
                 akBankReconId,
                 noAkaunBank,
                 tarikh,
@@ -42,7 +44,7 @@ namespace MSNK.Models.Modules.Cart.Session
                 debit,
                 kredit,
                 baki,
-                akPadananPenyataId);
+                isPadan);
 
             Session.SetJson("CartBankRecon", this);
         }

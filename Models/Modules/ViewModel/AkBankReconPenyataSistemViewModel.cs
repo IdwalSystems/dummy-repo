@@ -6,6 +6,7 @@ namespace MSNK.Models.Modules.ViewModel
 {
     public class AkBankReconPenyataSistemViewModel 
     {
+        public int Id { get; set; }
         public int Indek { get; set; }
         public DateTime Tarikh { get; set; }
         public string NoRujukan { get;set; }
@@ -13,5 +14,6 @@ namespace MSNK.Models.Modules.ViewModel
         public string NoSlip { get; set; }
         public decimal Debit { get; set; }
         public decimal Kredit { get; set; }
+        public bool IsGanda { get; set; }
     }
 }

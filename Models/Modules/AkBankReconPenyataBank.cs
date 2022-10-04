@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -24,7 +25,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Baki RM")]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Baki { get; set; }
-        public int? AkPadananPenyataId { get; set; }
-        public AkPadananPenyata AkPadananPenyata { get; set; }
+        public bool IsPadan { get; set; }
+        public ICollection<AkPadananPenyata> AkPadananPenyata { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using MSNK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221003073413_AddFieldAkJurnalIdTblAkPadananPenyata")]
+    partial class AddFieldAkJurnalIdTblAkPadananPenyata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,21 +49,6 @@ namespace MSNK.Migrations
                     b.HasIndex("AkPadananPenyataId");
 
                     b.ToTable("AkPVAkPadananPenyata");
-                });
-
-            modelBuilder.Entity("AkPVGandaAkPadananPenyata", b =>
-                {
-                    b.Property<int>("AkPVGandaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AkPadananPenyataId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AkPVGandaId", "AkPadananPenyataId");
-
-                    b.HasIndex("AkPadananPenyataId");
-
-                    b.ToTable("AkPVGandaAkPadananPenyata");
                 });
 
             modelBuilder.Entity("AkPadananPenyataAkTerima2", b =>
@@ -1338,9 +1325,6 @@ namespace MSNK.Migrations
                     b.Property<int>("FlKategoriPenerima")
                         .HasColumnType("int");
 
-                    b.Property<int>("FlTunai")
-                        .HasColumnType("int");
-
                     b.Property<int?>("JBahagianId")
                         .HasColumnType("int");
 
@@ -1373,9 +1357,6 @@ namespace MSNK.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("TarMasuk")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("TarTunai")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("Tarikh")
@@ -1992,9 +1973,6 @@ namespace MSNK.Migrations
                     b.Property<int>("FlStatusSemak")
                         .HasColumnType("int");
 
-                    b.Property<int>("FlTunai")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsAKB")
                         .HasColumnType("bit");
 
@@ -2087,9 +2065,6 @@ namespace MSNK.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("TarSemak")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("TarTunai")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("Tarikh")
@@ -2208,9 +2183,6 @@ namespace MSNK.Migrations
                     b.Property<int>("FlKategoriPenerima")
                         .HasColumnType("int");
 
-                    b.Property<int>("FlTunai")
-                        .HasColumnType("int");
-
                     b.Property<int>("Indek")
                         .HasColumnType("int");
 
@@ -2244,9 +2216,6 @@ namespace MSNK.Migrations
                     b.Property<DateTime?>("TarCekAtauEFT")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("TarTunai")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AkPVId");
@@ -2275,9 +2244,6 @@ namespace MSNK.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("AkJurnalId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AkPVGandaId")
                         .HasColumnType("int");
 
                     b.Property<int?>("AkPVId")
@@ -2810,9 +2776,6 @@ namespace MSNK.Migrations
                     b.Property<decimal>("Amaun")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("FlTunai")
-                        .HasColumnType("int");
-
                     b.Property<int>("JCaraBayarId")
                         .HasColumnType("int");
 
@@ -2832,9 +2795,6 @@ namespace MSNK.Migrations
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<DateTime?>("TarSlip")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("TarTunai")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TempatCek")
@@ -5032,21 +4992,6 @@ namespace MSNK.Migrations
                     b.HasOne("MSNK.Models.Modules.AkPV", null)
                         .WithMany()
                         .HasForeignKey("AkPVId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MSNK.Models.Modules.AkPadananPenyata", null)
-                        .WithMany()
-                        .HasForeignKey("AkPadananPenyataId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AkPVGandaAkPadananPenyata", b =>
-                {
-                    b.HasOne("MSNK.Models.Modules.AkPVGanda", null)
-                        .WithMany()
-                        .HasForeignKey("AkPVGandaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
