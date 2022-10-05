@@ -216,6 +216,10 @@
                             }
                         });
                     }
+                    $("#id-bank-statement").val("");
+                    $("#indek-bank-statement").val("");
+                    $("#amaun-bank-statement").val(0.00);
+                    $("#amaun-system-statement").val(0.00);
 
                 },
                 failure: function (response) {
@@ -294,9 +298,11 @@
 
             $('#tblUnmatchSenaraiSistem input:checkbox:checked', tableControl).each(function () {
                 var row = $(this).closest('tr');
-                var indek = $("TD", row).eq(0).html();
+                var id = $("TD", row).eq(0).html();
+                var indek = $("TD", row).eq(7).html();
+                var isGanda = $("TD", row).eq(8).html();
                 var refNo = $("TD", row).eq(2).html();
-                arrayOfValues.push({id: indek, perihal: refNo});
+                arrayOfValues.push({ id: id, indek: indek, perihal: refNo, isGanda: isGanda });
             }).get();
 
             console.log(arrayOfValues);
@@ -352,6 +358,10 @@
                             }
                         });
                     }
+                    $("#id-bank-matched-statement").val("");
+                    $("#indek-bank-matched-statement").val("");
+                    $("#amaun-bank-matched-statement").val(0.00);
+                    $("#amaun-system-matched-statement").val(0.00);
 
                 },
                 failure: function (response) {
@@ -429,13 +439,15 @@
 
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
-            var str = "<tr><td class='text-left' hidden>" + item.indek +
+            var str = "<tr><td class='text-left'>" + item.id +
                 "</td><td class='text-left'>" + showDate(item.tarikh) +
                 "</td><td class='text-left text-uppercase'>" + item.noRujukan +
                 "</td><td class='text-left text-uppercase'>" + item.perihal +
                 "</td><td class='text-left text-uppercase'>" + item.noSlip +
                 "</td><td class='text-right'>" + item.debit.format(2) +
                 "</td><td class='text-right'>" + item.kredit.format(2) +
+                "</td><td class='text-right'>" + item.indek +
+                "</td><td class='text-right'>" + item.isGanda +
                 "</td><td><input type='checkbox' class='system-statement-status' id='system-statement-status" + i + "' onclick='CheckedSystemStatement(this)'/>" +
                 "</td></tr>";
             $("table tbody#tbodySenaraiSistem").append(str);
@@ -508,13 +520,15 @@
 
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
-            var str = "<tr><td class='text-left' hidden>" + item.indek +
+            var str = "<tr><td class='text-left' hidden>" + item.id +
                 "</td><td class='text-left'>" + showDate(item.tarikh) +
                 "</td><td class='text-left text-uppercase'>" + item.noRujukan +
                 "</td><td class='text-left text-uppercase'>" + item.perihal +
                 "</td><td class='text-left text-uppercase'>" + item.noSlip +
                 "</td><td class='text-right'>" + item.debit.format(2) +
                 "</td><td class='text-right'>" + item.kredit.format(2) +
+                "</td><td class='text-right'>" + item.indek +
+                "</td><td class='text-right'>" + item.isGanda +
                 "</td><td><input type='checkbox' class='system-matched-statement-status' id='system-matched-statement-status" + i + "' onclick='CheckedSystemMatchedStatement(this)'/>" +
                 "</td></tr>";
             $("table tbody#tbodyUnmatchSenaraiSistem").append(str);
@@ -546,7 +560,7 @@
             $("#id-bank-matched-statement").val(id);
             $("#indek-bank-matched-statement").val(indek);
             $("#amaun-bank-matched-statement").val(amaun);
-            $(".bank-statement-matched-status").prop('disabled', true);
+            $(".bank-matched-statement-status").prop('disabled', true);
             $(checkId).prop('disabled', false);
             $.ajax({
                 type: "POST",
@@ -571,7 +585,7 @@
             $("#id-bank-matched-statement").val("");
             $("#indek-bank-matched-statement").val("");
             $("#amaun-bank-matched-statement").val("");
-            $(".bank-statement-matched-status").prop('disabled', false);
+            $(".bank-matched-statement-status").prop('disabled', false);
         }
 
     }

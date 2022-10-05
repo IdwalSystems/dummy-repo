@@ -49,6 +49,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JBahagian)
                 .Include(b => b.AkTunaiRuncit)
                 .Include(b => b.JKW)
+                .Include(b => b.AkPadananPenyata)
                 .Include(b => b.AkJurnal1).ThenInclude(b => b.AkCarta)
                 .Where(x => x.Id == id).FirstOrDefaultAsync();
         }

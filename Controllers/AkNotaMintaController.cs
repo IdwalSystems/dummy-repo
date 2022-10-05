@@ -867,34 +867,6 @@ namespace MSNK.Controllers
 
             var akNotaMinta = await _akNotaMintaRepo.GetById((int)id);
 
-            AkNotaMintaViewModel viewModel = new AkNotaMintaViewModel();
-
-            viewModel.Id = akNotaMinta.Id;
-            viewModel.AkPembekalId = akNotaMinta.AkPembekalId;
-            viewModel.AkPembekal = akNotaMinta.AkPembekal;
-            viewModel.Tahun = akNotaMinta.Tahun;
-            viewModel.Tarikh = akNotaMinta.Tarikh;
-            viewModel.JKW = akNotaMinta.JKW;
-            viewModel.JKWId = akNotaMinta.JKWId;
-            viewModel.JBahagian = akNotaMinta.JBahagian;
-            viewModel.JBahagianId = akNotaMinta.JBahagianId;
-            viewModel.NoRujukan = akNotaMinta.NoRujukan.Substring(3);
-            viewModel.Tajuk = akNotaMinta.Tajuk;
-            viewModel.NoSiri = akNotaMinta.NoSiri;
-            viewModel.NoCAS = akNotaMinta.NoCAS;
-            viewModel.TarikhSeksyenKewangan = akNotaMinta.TarikhSeksyenKewangan;
-            viewModel.FlPosting = akNotaMinta.FlPosting;
-            viewModel.FlCetak = akNotaMinta.FlCetak;
-            viewModel.FlHapus = akNotaMinta.FlHapus;
-
-            viewModel.Jumlah = akNotaMinta.Jumlah;
-            viewModel.AkNotaMinta1 = akNotaMinta.AkNotaMinta1;
-            foreach (AkNotaMinta2 item in akNotaMinta.AkNotaMinta2)
-            {
-                viewModel.JumlahPerihal += item.Amaun;
-            }
-            viewModel.AkNotaMinta2 = akNotaMinta.AkNotaMinta2.OrderBy(b => b.Bil).ToList();
-
             if (akNotaMinta == null)
             {
                 return NotFound();
@@ -904,7 +876,7 @@ namespace MSNK.Controllers
             PopulateTable(id);
             PopulateList(akNotaMinta.SuPekerjaMasukId);
             PopulateCartFromDb(akNotaMinta);
-            return View(viewModel);
+            return View(akNotaMinta);
         }
 
         // get latest Index number in AkNotaMinta2
@@ -935,94 +907,93 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
-                if (ModelState.IsValid)
+            AkNotaMinta dataAsal = await _akNotaMintaRepo.GetById(id);
+            if (ModelState.IsValid)
                 {
-                    try
-                    {
-                        var user = await _userManager.GetUserAsync(User);
-                        int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+                try
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
-                        AkNotaMinta dataAsal = await _akNotaMintaRepo.GetById(id);
+                    // list of input that cannot be change
+                    akNotaMinta.FlJenis = dataAsal.FlJenis;
+                    akNotaMinta.Tahun = dataAsal.Tahun;
+                    akNotaMinta.JKWId = dataAsal.JKWId;
+                    akNotaMinta.JBahagianId = dataAsal.JBahagianId;
+                    akNotaMinta.NoRujukan = dataAsal.NoRujukan;
+                    akNotaMinta.NoCAS = dataAsal.NoCAS;
+                    akNotaMinta.TarikhSeksyenKewangan = dataAsal.TarikhSeksyenKewangan;
+                    akNotaMinta.NoSiri = dataAsal.NoSiri;
+                    akNotaMinta.TarMasuk = dataAsal.TarMasuk;
+                    akNotaMinta.UserId = dataAsal.UserId;
+                    akNotaMinta.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
+                    akNotaMinta.FlCetak = 0;
+                    // list of input that cannot be change end
 
-                        // list of input that cannot be change
-                        akNotaMinta.FlJenis = dataAsal.FlJenis;
-                        akNotaMinta.Tahun = dataAsal.Tahun;
-                        akNotaMinta.JKWId = dataAsal.JKWId;
-                        akNotaMinta.JBahagianId = dataAsal.JBahagianId;
-                        akNotaMinta.NoRujukan = dataAsal.NoRujukan;
-                        akNotaMinta.NoCAS = dataAsal.NoCAS;
-                        akNotaMinta.TarikhSeksyenKewangan = dataAsal.TarikhSeksyenKewangan;
-                        akNotaMinta.NoSiri = dataAsal.NoSiri;
-                        akNotaMinta.TarMasuk = dataAsal.TarMasuk;
-                        akNotaMinta.UserId = dataAsal.UserId;
-                        akNotaMinta.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
-                        akNotaMinta.FlCetak = 0;
-                        // list of input that cannot be change end
-
-                        decimal jumlahAsal = 0;
-                        foreach (AkNotaMinta2 item in dataAsal.AkNotaMinta2)
-                            {
-                            var model = _context.AkNotaMinta2.FirstOrDefault(b => b.Id == item.Id);
-                            if (model != null)
-                            {
-                                jumlahAsal += model.Amaun;
-                                _context.Remove(model);
-                            }
+                    decimal jumlahAsal = 0;
+                    foreach (AkNotaMinta2 item in dataAsal.AkNotaMinta2)
+                        {
+                        var model = _context.AkNotaMinta2.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            jumlahAsal += model.Amaun;
+                            _context.Remove(model);
                         }
+                    }
                         
-                        _context.Entry(dataAsal).State = EntityState.Detached;
+                    _context.Entry(dataAsal).State = EntityState.Detached;
 
-                        akNotaMinta.AkNotaMinta1 = dataAsal.AkNotaMinta1;
-                        akNotaMinta.AkNotaMinta2 = _cart.Lines2.ToList();
+                    akNotaMinta.AkNotaMinta1 = dataAsal.AkNotaMinta1;
+                    akNotaMinta.AkNotaMinta2 = _cart.Lines2.ToList();
 
-                        akNotaMinta.TarSemak = null;
-                        akNotaMinta.JPenyemakId = null;
-                        akNotaMinta.FlStatusSemak = 0;
+                    akNotaMinta.TarSemak = null;
+                    akNotaMinta.JPenyemakId = null;
+                    akNotaMinta.FlStatusSemak = 0;
 
-                        akNotaMinta.TarLulus = null;
-                        akNotaMinta.JPelulusId = null;
-                        akNotaMinta.FlStatusLulus = 0;
+                    akNotaMinta.TarLulus = null;
+                    akNotaMinta.JPelulusId = null;
+                    akNotaMinta.FlStatusLulus = 0;
 
-                        akNotaMinta.UserIdKemaskini = user.UserName;
-                        akNotaMinta.TarKemaskini = DateTime.Now;
-                        akNotaMinta.SuPekerjaKemaskiniId = pekerjaId;
+                    akNotaMinta.UserIdKemaskini = user.UserName;
+                    akNotaMinta.TarKemaskini = DateTime.Now;
+                    akNotaMinta.SuPekerjaKemaskiniId = pekerjaId;
 
-                        _context.Update(akNotaMinta);
+                    _context.Update(akNotaMinta);
 
-                        //insert applog
-                        if (jumlahAsal != JumlahPerihal)
-                        {
-                            await AddLogAsync("Ubah","RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" + 
-                                Convert.ToDecimal(JumlahPerihal).ToString("#,##0.00"), akNotaMinta.NoRujukan, id, JumlahPerihal, pekerjaId);
-
-                        }
-                        else
-                        {
-                            await AddLogAsync("Ubah", "Ubah Data", akNotaMinta.NoRujukan, id, JumlahPerihal, pekerjaId);
-                        }
-                        //insert applog end
-
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (DbUpdateConcurrencyException)
+                    //insert applog
+                    if (jumlahAsal != JumlahPerihal)
                     {
-                        if (!AkNotaMintaExists(akNotaMinta.Id))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
+                        await AddLogAsync("Ubah","RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" + 
+                            Convert.ToDecimal(JumlahPerihal).ToString("#,##0.00"), akNotaMinta.NoRujukan, id, JumlahPerihal, pekerjaId);
+
                     }
-                    CartEmpty();
-                    TempData[SD.Success] = "Data berjaya diubah..!";
-                    return RedirectToAction(nameof(Index));
+                    else
+                    {
+                        await AddLogAsync("Ubah", "Ubah Data", akNotaMinta.NoRujukan, id, JumlahPerihal, pekerjaId);
+                    }
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
                 }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AkNotaMintaExists(akNotaMinta.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                CartEmpty();
+                TempData[SD.Success] = "Data berjaya diubah..!";
+                return RedirectToAction(nameof(Index));
+            }
             TempData[SD.Warning] = "Data tidak lengkap. Sila cuba sekali lagi";
-            PopulateList(akNotaMinta.SuPekerjaMasukId);
+            PopulateList(dataAsal.SuPekerjaMasukId);
             PopulateTable(id);
-            return View(akNotaMinta);
+            return View(dataAsal);
         }
 
         // GET: AkNotaMinta/Edit/5

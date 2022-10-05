@@ -21,6 +21,8 @@
         <hr class="mt-2"/>
         <form asp-action="EditKewangan" class="needs-validation">
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="JKWId" />
+            <input type="hidden" asp-for="AkPembekalId" />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-row">
                 <div class="col-md-3">
@@ -39,13 +41,8 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label asp-for="JKWId" class="control-label"></label><span class="text-danger control-label">*</span>
-                        <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" required id="ddlKW" disabled>
-                            @foreach (var s in ViewBag.JKW)
-                            {
-                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                            }
-                        </select>
+                        <label asp-for="JKWId" class="control-label"></label>
+                        <input class="form-control form-control-sm" value="@Model.JKW.Kod - @Model.JKW.Perihal" required readonly />
                         <span asp-validation-for="JKWId" class="text-danger"></span>
                     </div>
                 </div>
@@ -71,13 +68,7 @@
 
             <div class="form-group">
                 <label asp-for="AkPembekalId" class="control-label"></label><span class="text-danger control-label">*</span>
-                <select class="form-control form-control-sm select2" asp-for="AkPembekalId" id="ddlKodPembekal" required disabled>
-                    <option value="0" disabled selected>-- Pilih Kod Pembekal --</option>
-                    @foreach (var s in ViewBag.AkPembekal)
-                    {
-                        <option value="@s.Id">@s.KodSykt - @s.NamaSykt</option>
-                    }
-                </select>
+                <input class="form-control form-control-sm " value="@Model.AkPembekal.KodSykt - @Model.AkPembekal.NamaSykt" id="ddlKodPembekal" required readonly />
                 <span asp-validation-for="AkPembekalId" class="text-danger"></span>
             </div>
 
@@ -211,7 +202,7 @@
                                 }
                             </tbody>
                             <tfoot>
-                                       
+
                             </tfoot>
                         </table>
                     </div>
