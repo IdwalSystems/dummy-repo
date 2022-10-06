@@ -776,6 +776,9 @@ namespace MSNK.Controllers
             if (user.Email == "superadmin@idwal.com.my")
             {
                 akNotaMinta.SuPekerjaMasukId = 1;
+            } else
+            {
+                akNotaMinta.SuPekerjaMasukId = pekerjaId;
             }
             // checking for jumlah objek & jumlah perihal
             //if (akNotaMinta.Jumlah != JumlahPerihal)
@@ -850,9 +853,13 @@ namespace MSNK.Controllers
                     TempData[SD.Success] = "Maklumat berjaya ditambah. No rujukan pendaftaran adalah " + noRujukan;
                     return RedirectToAction(nameof(Index));
                 }
+                if (AkPembekalId == 0)
+                {
+                    TempData[SD.Error] = "Sila pilih kod pembekal";
+                }
             }
             CartEmpty();
-            PopulateList(akNotaMinta.SuPekerjaMasukId);
+            PopulateList(pekerjaId);
             return View(akNotaMinta);
         }
 
@@ -1091,14 +1098,15 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
+
+            AkNotaMinta dataAsal = await _akNotaMintaRepo.GetById(id);
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     var user = await _userManager.GetUserAsync(User);
                     int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
-
-                    AkNotaMinta dataAsal = await _akNotaMintaRepo.GetById(id);
 
                     // get latest no rujukan running number if not existed 
                     if (dataAsal.NoSiri == null)
@@ -1197,9 +1205,9 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
             TempData[SD.Warning] = "Data tidak lengkap. Sila cuba sekali lagi";
-            PopulateList(akNotaMinta.SuPekerjaMasukId);
+            PopulateList(dataAsal.SuPekerjaMasukId);
             PopulateTable(id);
-            return View(akNotaMinta);
+            return View(dataAsal);
         }
 
         // GET: AkNotaMinta/Delete/5

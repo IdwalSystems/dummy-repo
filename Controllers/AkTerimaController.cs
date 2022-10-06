@@ -2002,6 +2002,13 @@ namespace MSNK.Controllers
 
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+            string penyedia = "SuperAdmin";
+
+            if (akTerima.SuPekerjaMasukId != null)
+            {
+                penyedia = _context.SuPekerja.FirstOrDefault(b => b.Id == akTerima.SuPekerjaMasukId).Nama;
+
+            }
 
             ResitPrintModel data = new ResitPrintModel();
 
@@ -2009,6 +2016,7 @@ namespace MSNK.Controllers
             data.CompanyDetail = company;
             data.AkTerima = akTerima;
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
+            data.penyedia = penyedia;
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
 
             data.username = namaUser.Nama;

@@ -1,7 +1,31 @@
 ﻿<script type="text/javascript">
     var tblSenaraiBank;
     var tblSenaraiSistem;
+    var bakiBukuTunai;
+    var debitKreditBankPadan;
+    var debitKreditBankBatalPadan;
+    var rowCountSysteMatchedStatement = 0;
+
     $(document).ready(function () {
+        bakiBukuTunai = $("#bakiBukuTunai").val();
+        $("#myInputNoPadananUnmatch2").hide();
+
+        $("#searchColumnUnmatch").change(function () {
+            $("#inputNoPadananUnmatch2").val("");
+            $("#inputTarikhUnmatch1").val("");
+            $("#inputTarikhUnmatch2").val("");
+
+            if (this.value === "tarikh") {
+                $("#myInputNoPadananUnmatch2").hide();
+                $("#myInputDateUnmatch1").show();
+                $("#myInputDateUnmatch2").show();
+            }
+            if (this.value === "padan") {
+                $("#myInputNoPadananUnmatch2").show();
+                $("#myInputDateUnmatch1").hide();
+                $("#myInputDateUnmatch2").hide();
+            }
+        });
 
         tblSenaraiBank = $('#tblSenaraiBank').DataTable({
             "paging": false,
@@ -58,6 +82,7 @@
                     console.log("success");
                     if (response.record != null) {
                         displaySenaraiBankList(response.record);
+                        tblSenaraiBank.columns.adjust();
                     }
 
                 },
@@ -124,6 +149,7 @@
                     console.log("success");
                     if (response.record != null) {
                         displaySenaraiSistemList(response.record);
+                        tblSenaraiSistem.columns.adjust();
                     }
 
                 },
@@ -185,6 +211,7 @@
                                 console.log("success");
                                 if (response.record != null) {
                                     displaySenaraiBankList(response.record);
+                                    
                                 }
 
                             },
@@ -218,8 +245,16 @@
                     }
                     $("#id-bank-statement").val("");
                     $("#indek-bank-statement").val("");
-                    $("#amaun-bank-statement").val(0.00);
-                    $("#amaun-system-statement").val(0.00);
+                    $("#amaun-bank-statement").val("0.00");
+                    $("#amaun-system-statement").val("0.00");
+                    if (debitKreditBankPadan == '+') {
+                        bakiBukuTunai += parseFloat(amaunSistem);
+                    }
+                    else {
+                        bakiBukuTunai -= parseFloat(amaunSistem);
+                    }
+                    
+                    $("#bakiBukuTunai").val(bakiBukuTunai).toFixed(2);
 
                 },
                 failure: function (response) {
@@ -251,19 +286,30 @@
         $("#searchButtonBankUnmatch").on("click", function () {
             var tarDari = $("#inputTarikhUnmatch1").val();
             var tarHingga = $("#inputTarikhUnmatch2").val();
-            if (tarDari == "" || tarHingga == "") {
-                toastr.error("Tarikh Mula dan Akhir diperlukan");
-                return;
+            var padananId = $("#inputNoPadananUnmatch2").val();
+            var scol = $("#searchColumnUnmatch").val();
+            if (scol == "tarikh") {
+                if (tarDari == "" || tarHingga == "") {
+                    toastr.error("Tarikh Mula dan Akhir diperlukan");
+                    return;
+                }
+                if (tarDari > tarHingga) {
+                    toastr.error("Tarikh Akhir lebih dari Tarikh Mula.");
+                    return;
+                }
             }
-            if (tarDari > tarHingga) {
-                toastr.error("Tarikh Akhir lebih dari Tarikh Mula.");
-                return;
+            else {
+                if (padananId == "" || padananId == 0) {
+                    toastr.error("No padanan yang betul diperlukan");
+                    return;
+                }
             }
+            
 
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("GetBankMatchedStatementList", "AkBankRecon")',
-                data: { "tarDari": tarDari, "tarHingga": tarHingga },
+                data: { "tarDari": tarDari, "tarHingga": tarHingga, "padananId": padananId },
                 success: function (response) {
                     console.log("success");
                     if (response.record != null) {
@@ -314,7 +360,8 @@
                     "idBank": idBank,
                     "indekBank": indekBank,
                     "amaunBank": amaunBank,
-                    "arrayOfValues": arrayOfValues
+                    "arrayOfValues": arrayOfValues,
+                    "rowSystemCount": rowCountSysteMatchedStatement
                 },
                 success: function (response) {
                     toastr.success("Batal Padanan Berjaya");
@@ -362,7 +409,14 @@
                     $("#indek-bank-matched-statement").val("");
                     $("#amaun-bank-matched-statement").val(0.00);
                     $("#amaun-system-matched-statement").val(0.00);
+                    if (debitKreditBankBatalPadan == '+') {
+                        bakiBukuTunai += parseFloat(amaunSistem);
+                    }
+                    else {
+                        bakiBukuTunai -= parseFloat(amaunSistem);
+                    }
 
+                    $("#bakiBukuTunai").val(bakiBukuTunai);
                 },
                 failure: function (response) {
                     alert(response.responseText);
@@ -390,7 +444,7 @@
                 "</td><td class='text-right'>" + item.debit.format(2) +
                 "</td><td class='text-right'>" + item.kredit.format(2) +
                 "</td><td class='text-right' hidden>" + item.indek +
-                "</td><td><input type='checkbox' class='bank-statement-status' id='bank-statement-status" + i + "' onclick='CheckedBankStatement(this)'/>" +
+                "</td><td class='action-button'><input type='checkbox' class='bank-statement-status' id='bank-statement-status" + i + "' onclick='CheckedBankStatement(this)'/>" +
                 "</td></tr>";
             $("table tbody#tbodySenaraiBank").append(str);
 
@@ -409,9 +463,11 @@
 
         if (debit != 0.00) {
             amaun = debit;
+            debitKreditBankPadan = '+';
         }
         else {
             amaun = kredit;
+            debitKreditBankPadan = '-';
         }
 
         var checked = button.checked;
@@ -427,7 +483,7 @@
         else {
             $("#id-bank-statement").val("");
             $("#indek-bank-statement").val("");
-            $("#amaun-bank-statement").val("");
+            $("#amaun-bank-statement").val("0.00");
             $(".bank-statement-status").prop('disabled', false);
         }
 
@@ -439,16 +495,16 @@
 
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
-            var str = "<tr><td class='text-left'>" + item.id +
+            var str = "<tr><td class='text-left' hidden>" + item.id +
                 "</td><td class='text-left'>" + showDate(item.tarikh) +
                 "</td><td class='text-left text-uppercase'>" + item.noRujukan +
                 "</td><td class='text-left text-uppercase'>" + item.perihal +
                 "</td><td class='text-left text-uppercase'>" + item.noSlip +
                 "</td><td class='text-right'>" + item.debit.format(2) +
                 "</td><td class='text-right'>" + item.kredit.format(2) +
-                "</td><td class='text-right'>" + item.indek +
-                "</td><td class='text-right'>" + item.isGanda +
-                "</td><td><input type='checkbox' class='system-statement-status' id='system-statement-status" + i + "' onclick='CheckedSystemStatement(this)'/>" +
+                "</td><td class='text-right' hidden>" + item.indek +
+                "</td><td class='text-right' hidden>" + item.isGanda +
+                "</td><td class='action-button'><input type='checkbox' class='system-statement-status' id='system-statement-status" + i + "' onclick='CheckedSystemStatement(this)'/>" +
                 "</td></tr>";
             $("table tbody#tbodySenaraiSistem").append(str);
 
@@ -498,7 +554,7 @@
 
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
-            var str = "<tr><td class='text-left' hidden>" + item.id +
+            var str = "<tr><td class='text-left'>" + item.id +
                 "</td><td class='text-left'>" + showDate(item.tarikh) +
                 "</td><td class='text-left text-uppercase'>" + item.kodTransaksi +
                 "</td><td class='text-left text-uppercase'>" + item.perihalTransaksi +
@@ -506,7 +562,7 @@
                 "</td><td class='text-right'>" + item.debit.format(2) +
                 "</td><td class='text-right'>" + item.kredit.format(2) +
                 "</td><td class='text-right' hidden>" + item.indek +
-                "</td><td><input type='checkbox' class='bank-matched-statement-status' id='bank-matched-statement-status" + i + "' onclick='CheckedBankMatchedStatement(this)'/>" +
+                "</td><td class='action-button'><input type='checkbox' class='bank-matched-statement-status' id='bank-matched-statement-status" + i + "' onclick='CheckedBankMatchedStatement(this)'/>" +
                 "</td></tr>";
             $("table tbody#tbodyUnmatchSenaraiBank").append(str);
 
@@ -517,6 +573,7 @@
     function displaySenaraiSistemMatchedList(data) {
         //refresh updated table objek
         $("table tbody#tbodyUnmatchSenaraiSistem").empty();
+        rowCountSysteMatchedStatement = 0;
 
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
@@ -527,11 +584,12 @@
                 "</td><td class='text-left text-uppercase'>" + item.noSlip +
                 "</td><td class='text-right'>" + item.debit.format(2) +
                 "</td><td class='text-right'>" + item.kredit.format(2) +
-                "</td><td class='text-right'>" + item.indek +
-                "</td><td class='text-right'>" + item.isGanda +
-                "</td><td><input type='checkbox' class='system-matched-statement-status' id='system-matched-statement-status" + i + "' onclick='CheckedSystemMatchedStatement(this)'/>" +
+                "</td><td class='text-right' hidden>" + item.indek +
+                "</td><td class='text-right' hidden>" + item.isGanda +
+                "</td><td class='action-button'><input type='checkbox' class='system-matched-statement-status' id='system-matched-statement-status" + i + "' onclick='CheckedSystemMatchedStatement(this)'/>" +
                 "</td></tr>";
             $("table tbody#tbodyUnmatchSenaraiSistem").append(str);
+            rowCountSysteMatchedStatement++;
 
         }
 
@@ -548,9 +606,11 @@
 
         if (debit != 0.00) {
             amaun = debit;
+            debitKreditBankBatalPadan = '-';
         }
         else {
             amaun = kredit;
+            debitKreditBankBatalPadan = '+';
         }
 
         var checked = button.checked;

@@ -103,6 +103,10 @@ namespace MSNK.Controllers
                     var user = await _userManager.GetUserAsync(User);
                     int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
+                    bank.SuPekerjaMasukId = pekerjaId ?? 1;
+                    bank.UserId = user.Id;
+                    bank.TarMasuk = DateTime.Now;
+
                     _context.Add(bank);
                     await AddLogAsync("Tambah", bank.Kod + " - " + bank.Nama , bank.Kod, 0, 0, pekerjaId); 
                     await _context.SaveChangesAsync();

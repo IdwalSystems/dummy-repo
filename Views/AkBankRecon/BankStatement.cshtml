@@ -57,13 +57,13 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="control-label">Baki Penyata Bank RM</label>
-                        <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly id="openBalance" />
+                        <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly id="bakiPenyata" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label class="control-label">Baki Penyata Sistem RM</label>
-                        <input class="form-control form-control-sm" readonly id="closeBalance" value="0.00" />
+                        <label class="control-label">Baki Buku Tunai RM</label>
+                        <input class="form-control form-control-sm" readonly id="bakiBukuTunai" value="@ViewBag.BakiBukuTunai" />
                     </div>
                 </div>
             </div>

@@ -3,7 +3,7 @@
     <div class="col-md-12">
 
         <div class="form-row">
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 @*table Senarai Bank*@
                 <div class="card box-shadow mb-3 mt-2">
                     <div class="card-header">
@@ -15,6 +15,7 @@
                                 <select class="custom-select form-control-sm"
                                         name="searchColumnUnmatch" id="searchColumnUnmatch">
                                     <option value="tarikh">Tarikh</option>
+                                    <option value="padan">No Padanan</option>
                                 </select>
                             </div>
                             <div class="col-sm-9 mb-2">
@@ -26,6 +27,9 @@
                                             </div>
                                             <div class="col-6" id="myInputDateUnmatch2">
                                                 <input class="form-control form-control-sm" type="date" name="searchDateUnmatch2" id="inputTarikhUnmatch2" value="@ViewBag.SearchData2" />
+                                            </div>
+                                            <div class="col-12" id="myInputNoPadananUnmatch2">
+                                                <input class="form-control form-control-sm" type="number" name="searchNoPadananUnmatch2" id="inputNoPadananUnmatch2" />
                                             </div>
                                         </div>
                                     </div>
@@ -39,12 +43,12 @@
                         </div>
                         <input id="id-bank-matched-statement" hidden />
                         <input id="indek-bank-matched-statement" hidden />
-                        <input id="amaun-bank-matched-statement" hidden />
-                        <div class="table-responsive table-sm">
+                        @*<input id="amaun-bank-matched-statement" hidden />*@
+                        <div class="table-responsive table-sm pb-2">
                             <table id="tblUnmatchSenaraiBank" class="table display compact nowrap table-hover" cellpadding="0" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th style="width:5%" hidden>Id</th>
+                                        <th style="width:5%">No Padanan</th>
                                         <th style="width:5%">Tarikh</th>
                                         <th style="width:5%">Kod Trans.</th>
                                         <th style="width:50%">Perihal</th>
@@ -59,11 +63,17 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="form-group form-row text-right">
+                            <label for="amaun-bank-matched-statement" class="col-sm-8 col-form-label">Jumlah RM</label>
+                            <div class="col-sm-4">
+                                <input class="form-control form-control-sm input-group-sm" name="amaun-bank-matched-statement" id="amaun-bank-matched-statement" value="0.00" type="number" readonly />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 @*table Senarai Bank end*@
             </div>
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 @*table Senarai Sistem*@
                 <div class="card box-shadow mb-3 mt-2">
                     <div class="card-header">
@@ -71,8 +81,8 @@
                     </div>
                     <div class="card-body">
                         <input id="indek-system-matched-statement" hidden />
-                        <input id="amaun-system-matched-statement" hidden value="0.00" type="number" />
-                        <div class="table-responsive table-sm">
+                        @*<input id="amaun-system-matched-statement" hidden value="0.00" type="number" />*@
+                        <div class="table-responsive table-sm pb-2">
                             <table id="tblUnmatchSenaraiSistem" class="table display compact nowrap table-hover" width="100%">
                                 <thead>
                                     <tr>
@@ -83,14 +93,20 @@
                                         <th>No Slip</th>
                                         <th>Debit RM</th>
                                         <th>Kredit RM</th>
-                                        <th>Indek</th>
-                                        <th>IsGanda</th>
+                                        <th hidden>Indek</th>
+                                        <th hidden>IsGanda</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyUnmatchSenaraiSistem">
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="form-group form-row text-right">
+                            <label for="amaun-system-matched-statement" class="col-sm-8 col-form-label">Jumlah RM</label>
+                            <div class="col-sm-4">
+                                <input class="form-control form-control-sm input-group-sm" name="amaun-system-matched-statement" id="amaun-system-matched-statement" value="0.00" type="number" readonly />
+                            </div>
                         </div>
                     </div>
                 </div>

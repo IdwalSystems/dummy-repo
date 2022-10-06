@@ -320,17 +320,25 @@ namespace MSNK.Controllers
         // get all item from cart akPO1 end
 
         // get list of bank matched statement search result
-        public JsonResult GetBankMatchedStatementList(DateTime tarDari, DateTime tarHingga)
+        public JsonResult GetBankMatchedStatementList(DateTime tarDari, DateTime tarHingga, int? padananId)
         {
 
             try
             {
                 List<AkBankReconPenyataBank> data = _cart.Lines1.Where(b => b.IsPadan == true).OrderBy(b => b.Indek).ToList();
 
-                tarHingga = tarHingga.AddHours(23.99);
-                data = data.Where(x => x.Tarikh >= tarDari && x.Tarikh <= tarHingga).ToList();
+                if (padananId != null )
+                {
+                    data = data.Where(b => b.Id == padananId).ToList();
+                }
+                else
+                {
+                    tarHingga = tarHingga.AddHours(23.99);
+                    data = data.Where(x => x.Tarikh >= tarDari && x.Tarikh <= tarHingga).ToList();
+                }
+                
 
-                return Json(new { result = "OK", record = data });
+                return Json(new { result = "OK", record = data.OrderBy(b => b.Tarikh) });
             }
             catch (Exception ex)
             {
@@ -493,7 +501,7 @@ namespace MSNK.Controllers
                 tarHingga = tarHingga.AddHours(23.99);
                 data = data.Where(x => x.Tarikh >= tarDari && x.Tarikh <= tarHingga).ToList();
 
-                return Json(new { result = "OK", record = data });
+                return Json(new { result = "OK", record = data.OrderBy(b => b.Tarikh) });
             }
             catch (Exception ex)
             {
@@ -776,7 +784,8 @@ namespace MSNK.Controllers
             int idBank,
             int indekBank,
             decimal amaunBank,
-            List<ListItemViewModel> arrayOfValues)
+            List<ListItemViewModel> arrayOfValues,
+            int rowSystemCount)
         {
             // insert 
             try
@@ -851,7 +860,7 @@ namespace MSNK.Controllers
 
                 }
 
-                if (amaunBank == amaun)
+                if (rowSystemCount == 1)
                 {
                     AkBankReconPenyataBank penyataBank = await _context.AkBankReconPenyataBank.FirstOrDefaultAsync(b => b.Id == idBank);
                     if (penyataBank != null)
@@ -928,6 +937,28 @@ namespace MSNK.Controllers
 
             PopulateList();
             PopulateCartFromDb(akBankRecon);
+
+            decimal bakiBukuTunai = 0;
+
+            // get baki buku tunai
+
+            foreach (AkBankReconPenyataBank item in akBankRecon.AkBankReconPenyataBank)
+            {
+                if (item.IsPadan == true)
+                {
+                    if(item.Debit != 0)
+                    {
+                        bakiBukuTunai += item.Debit;
+                    }
+                    else
+                    {
+                        bakiBukuTunai -= item.Kredit;
+                    }
+                }
+            }
+
+            ViewBag.BakiBukuTunai = bakiBukuTunai;
+
             return View(akBankRecon);
         }
 

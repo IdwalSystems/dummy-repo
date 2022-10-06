@@ -2784,6 +2784,15 @@ namespace MSNK.Controllers
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
+            JBank bankPelbagai = new JBank(){
+                Kod = "-",
+                Nama = "-"
+            };
+
+            if (akPV.JBank == null)
+            {
+                akPV.JBank = bankPelbagai;
+            }
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
             var pekerja = _context.SuPekerja.FirstOrDefault(x => x.Id == namaUser.SuPekerjaId);
             var jawatan = "Super Admin";
@@ -2816,6 +2825,7 @@ namespace MSNK.Controllers
             data.Penyemak = penyemak;
             data.Pelulus = pelulus;
             data.AkPV = akPV;
+            
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
             data.AkPV2 = akPV.AkPV2;
             data.IsAKB = akPV.IsAKB;

@@ -82,7 +82,7 @@ namespace MSNK.Models.Modules
         public JBahagian JBahagian { get; set; }
 
         [DisplayName("Kod Pembekal")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pembekal")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pembekal")]
         public int AkPembekalId { get; set; }
         public AkPembekal AkPembekal { get; set; }
         public ICollection<AkNotaMinta1> AkNotaMinta1 { get; set; }
