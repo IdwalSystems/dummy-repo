@@ -23,6 +23,8 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="NoGaji" />
+            <input type="hidden" asp-for="JNegeriId" />
+            <input type="hidden" asp-for="JBankId" />
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label asp-for="NoKp" class="control-label"></label>
@@ -81,9 +83,9 @@
                     <span asp-validation-for="JNegeriId" class="text-danger"></span>
                 </div>
             </div>
-                    
+
             <div class="form-row">
-                       
+
                 <div class="form-group col-md-4">
                     <label asp-for="NoAkaunBank" class="control-label"></label>
                     <input asp-for="NoAkaunBank" class="form-control form-control-sm" />

@@ -56,17 +56,17 @@ namespace MSNK.Models.Modules
         //relationship
         [Required(ErrorMessage = "Kod Pembekal diperlukan")]
         [DisplayName("Kod Pembekal")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pembekal")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pembekal")]
         public int AkPembekalId { get; set; }
         public AkPembekal AkPembekal { get; set; }
         [DisplayName("Kumpulan Wang")]
         [Required(ErrorMessage = "Kump. Wang diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kump. Wang")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kump. Wang")]
         public int JKWId { get; set; }
 
         [DisplayName("Bahagian")]
         [Required(ErrorMessage = "Bahagian diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
 

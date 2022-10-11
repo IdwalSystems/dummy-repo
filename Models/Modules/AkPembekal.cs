@@ -54,13 +54,13 @@ namespace MSNK.Models.Modules
 
         //Relationship
         [Required(ErrorMessage = "Negeri diperlukan.")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Negeri")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Negeri")]
         [Display(Name = "Negeri")]
         public int JNegeriId { get; set; }
         [Display(Name = "Negeri")]
         public JNegeri JNegeri { get; set; }
         [Required(ErrorMessage = "Nama Bank diperlukan.")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bank")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bank")]
         [Display(Name = "Bank")]
         public int JBankId { get; set; }
         [Display(Name = "Bank")]

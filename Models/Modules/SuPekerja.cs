@@ -30,7 +30,7 @@ namespace MSNK.Models.Modules
         public string Bandar { get; set; }
         [DisplayName("Negeri")]
         [Required(ErrorMessage = "Negeri diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Negeri")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Negeri")]
         public int JNegeriId { get; set; }
         [DisplayName("No Telefon Rumah")]
         public string TelefonRumah { get; set; }
@@ -55,7 +55,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Pencen")]
         public DateTime? TarikhPencen { get; set; }
         [DisplayName("Nama Bank")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bank")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bank")]
         [Required(ErrorMessage = "Bank diperlukan")]
         public int JBankId { get; set; }
         [DisplayName("Agama")]
