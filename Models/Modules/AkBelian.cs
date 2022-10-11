@@ -65,12 +65,12 @@ namespace MSNK.Models.Modules
 
         //Relationship
         [Required(ErrorMessage = "Kump. Wang diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kump. Wang")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kump. Wang")]
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         [DisplayName("Bahagian")]
         [Required(ErrorMessage = "Bahagian diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
         [DisplayName("No Pesanan Tempatan")]
@@ -78,7 +78,7 @@ namespace MSNK.Models.Modules
         [DisplayName("No Inden")]
         public int? AkIndenId { get; set; }
         [Required(ErrorMessage = "Kod Pemiutang diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pemiutang")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pemiutang")]
         [DisplayName("Kod Pemiutang")]
         public int KodObjekAPId { get; set; }
         [Required(ErrorMessage = "Kod Pembekal diperlukan")]
