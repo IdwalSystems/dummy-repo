@@ -942,20 +942,85 @@ namespace MSNK.Controllers
 
             // get baki buku tunai
 
-            foreach (AkBankReconPenyataBank item in akBankRecon.AkBankReconPenyataBank)
+            // PV --
+            // select single pv
+            var singlePV = await _context.AkPV.Include(b => b.AkPadananPenyata)
+                .Where(b => b.IsGanda == false && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0
+                && b.FlTunai == 1)
+                .ToListAsync();
+
+            foreach (var row in singlePV)
             {
-                if (item.IsPadan == true)
+                if (row.AkPadananPenyata.Count() == 0)
                 {
-                    if(item.Debit != 0)
+                    continue;
+                }
+
+                bakiBukuTunai += row.Jumlah;
+            }
+
+            // select multiple pv
+            List<AkPV> multiplePV = await _context.AkPV
+                .Include(b => b.AkPVGanda).ThenInclude(b => b.AkPadananPenyata)
+                .Where(b => b.IsGanda == true && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0)
+                .ToListAsync();
+
+            foreach (var akPV in multiplePV)
+            {
+                foreach (var row in akPV.AkPVGanda)
+                {
+
+                    if (row.AkPadananPenyata.Count() > 0)
                     {
-                        bakiBukuTunai += item.Debit;
-                    }
-                    else
-                    {
-                        bakiBukuTunai -= item.Kredit;
+                        bakiBukuTunai += row.Amaun;
                     }
                 }
+
             }
+            // PV END --
+            // RESIT --
+            // select terima2
+            List<AkTerima> multipleReceipt = await _context.AkTerima
+                .Include(b => b.AkTerima2).ThenInclude(b => b.AkPadananPenyata)
+                .Where(b => b.FlPosting == 1 && b.FlHapus == 0)
+                .ToListAsync();
+
+            foreach (var akTerima in multipleReceipt)
+            {
+                foreach (var row in akTerima.AkTerima2)
+                {
+
+                    if (row.AkPadananPenyata.Count() > 0)
+                    {
+                        bakiBukuTunai -= row.Amaun;
+                    }
+                }
+
+            }
+            // RESIT END --
+            // JURNAL --
+            var jurnal = await _context.AkJurnal.Include(b => b.AkPadananPenyata)
+                .Where(b => b.Posting == 1 && b.FlHapus == 0)
+                .ToListAsync();
+
+            foreach (var row in jurnal)
+            {
+                if (row.AkPadananPenyata.Count() == 0)
+                {
+                    continue;
+                }
+
+                if (row.JumDebit != 0)
+                {
+                    bakiBukuTunai += row.JumDebit;
+                } 
+                else
+                {
+                    bakiBukuTunai -= row.JumKredit;
+                }
+
+            }
+            // JURNAL END --
 
             ViewBag.BakiBukuTunai = bakiBukuTunai;
 
