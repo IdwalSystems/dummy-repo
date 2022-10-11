@@ -82,7 +82,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Kod Pemiutang")]
         public int KodObjekAPId { get; set; }
         [Required(ErrorMessage = "Kod Pembekal diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pembekal")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pembekal")]
         [DisplayName("Kod Pembekal")]
         public int AkPembekalId { get; set; }
         public JKW JKW { get; set; }

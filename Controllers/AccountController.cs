@@ -419,6 +419,7 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
@@ -426,6 +427,8 @@ namespace MSNK.Controllers
                 {
                     return RedirectToAction("ResetPasswordConfirmation");
                 }
+                model.Code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
                 var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
                 if(result.Succeeded)
                 {
