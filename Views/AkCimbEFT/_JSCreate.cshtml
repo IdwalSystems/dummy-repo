@@ -66,6 +66,8 @@
                                 "</td><td class='text-uppercase'>" + item1.noAkaun +
                                 "</td><td class='text-uppercase'>" + item1.penerima +
                                 "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                                "</td><td>" +
+                                "<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
                                 "</td><tr>";
                             $("table tbody#tbodyBaucer").append(str);
                             sum += item1.amaun;
@@ -83,7 +85,7 @@
                     toastr.options.timeOut = 5000; // 5s
                     $(".loading").prop('hidden', true);
                 }
-                
+
             },
             error: function (req, status, error) {
                 alert(error);
@@ -92,4 +94,45 @@
         });
     }
     // jana kelompok end
+
+    // remove tbl baucer
+    function Remove1(button) {
+        var row = $(button).closest("TR");
+        var indek = $("TD", row).eq(0).html();
+        var noPV = $("TD", row).eq(2).html();
+        var amaun = $("TD", row).eq(6).html();
+        var jumlah = $("#jumlahBaucer");
+        var bil = $("#bilBaucer");
+        if (confirm("Hapus No Baucer : " + noPV + " ?")) {
+            //Get the reference of the Table.
+            var table = $("#tblBaucer")[0];
+
+            var AkCimbEFT1 = {
+                Indek: indek,
+            }
+            if (name != null) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("RemoveAkCimbEFT1", "AkCimbEFT")',
+                    data: AkCimbEFT1,
+                    dataType: "json",
+                    success: function (r) {
+                        //Delete the Table row using it's Index.
+                        table.deleteRow(row[0].rowIndex);
+                        //Sum value to Total text field
+                        var sum = 0;
+                        sum = parseFloat(jumlah.val()) - parseFloat(amaun);
+                        jumlah.val(sum.toFixed(2));
+
+                        var bilBaucer = 0;
+                        bilBaucer = parseFloat(bil.val()) - 1;
+                        bil.val(bilBaucer);
+
+                        toastr.success("No Baucer " + noPV+ " berjaya dihapuskan.")
+                    }
+                });
+            }
+        }
+    }
+    // remove tbl baucer end
 </script>

@@ -621,6 +621,30 @@ namespace MSNK.Controllers
             return noRujukan;
         }
 
+        //remove cart akCimbEFT1
+        public JsonResult RemoveAkCimbEFT1(AkCimbEFT1 akCimbEFT1)
+        {
+
+            try
+            {
+
+                var ak1 = _cart.Lines1.Where(x => x.Indek == akCimbEFT1.Indek).FirstOrDefault();
+
+                if (ak1 != null)
+                {
+                    _cart.RemoveItem1(akCimbEFT1.Indek);
+
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        //remove cart akCimbEFT1 end
+
         // POST: AkCimbEFT/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
