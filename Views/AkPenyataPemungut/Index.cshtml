@@ -59,8 +59,12 @@
             <table class="table table-bordered table-hover display compact nowrap" width="100%">
                 <thead>
                     <tr>
+
                         <th>
                             Bil
+                        </th>
+                        <th hidden>
+                            Id
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.NoDokumen)
@@ -70,6 +74,9 @@
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Tarikh)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NoSlip)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.JCaraBayarId)
@@ -95,7 +102,11 @@
 
                         var tabletype = item.FlHapus == 1 ? "table-danger" : null;
                         <tr class="@tabletype">
+
                             <td>
+                            </td>
+                            <td hidden>
+                                @item.Id
                             </td>
                             <td class="text-uppercase">
                                 @item.NoDokumen
@@ -111,6 +122,16 @@
                             {
                                 <td width="5%" data-sort='YYYYMMDD'>
                                     @item.Tarikh.ToString("dd/MM/yyyy")
+                                </td>
+                            }
+                            @if (string.IsNullOrEmpty(item.NoSlip))
+                            {
+                                <td>-</td>
+                            }
+                            else
+                            {
+                                <td width="5%">
+                                    @item.NoSlip
                                 </td>
                             }
                             <td class="text-uppercase">
@@ -161,6 +182,9 @@
                                     <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
                                     @if (item.FlHapus == 0)
                                     {
+                                        <a data-toggle="modal" data-target="#modalKemaskini" class="btn text-success btn-sm bg-white" data-placement="top" title="Kemaskini No Slip / Tarikh Slip" onclick="ModalClick(this)">
+                                            <i class="fas fa-calendar-check"></i>
+                                        </a>
                                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
                                     }
                                     else
@@ -182,3 +206,49 @@
         @*div table end*@
     </div>
 </div>
+
+<!-- Modal Kemaskini -->
+<div class="modal fade bd-example-modal-lg" id="modalKemaskini" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#a54ea8;">
+                <h5 class="modal-title">Kemaskini No Slip / Tarikh Slip</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
+                </button>
+            </div>
+            <form asp-action="UpdateSlip" asp-controller="AkPenyataPemungut" class="needs-validation">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="modal-body">
+
+                    <input hidden name="id" class="moId" />
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">No Dokumen</label>
+                                <input type="text" class="form-control form-control-sm moNoRujukan" name="noRujukan" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">No Slip</label>
+                                <input type="text" class="form-control form-control-sm moNoSlip" name="NoSlip">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Tarikh Slip</label>
+                                <input type="date" class="form-control form-control-sm moTarSlip" name="TarSlip">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn ac-danger btn-sm" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn ac-success btn-sm">Kemaskini</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Kemaskini End -->

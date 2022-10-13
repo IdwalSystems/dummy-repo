@@ -520,7 +520,54 @@ namespace MSNK.Controllers
             return noRujukan;
         }
 
+        [HttpPost]
+        [Authorize(Policy = "PR002E")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateSlip (AkPenyataPemungut akPenyata, int id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+            else
+            {
+                if (akPenyata.TarSlip != null)
+                {
+                    var akP = await _akPungutRepo.GetById(id);
 
+                    if (akP != null)
+                    {
+                        foreach (var item in akP.AkPenyataPemungut2)
+                        {
+                            AkTerima2 akTerima2 = await _context.AkTerima2.Where(b => b.Id == item.AkTerima2Id).FirstOrDefaultAsync();
+
+                            akTerima2.NoSlip = akPenyata.NoSlip;
+                            akTerima2.TarSlip = akPenyata.TarSlip;
+
+                            _context.Update(akTerima2);
+
+                        }
+
+                        akP.NoSlip = akPenyata.NoSlip;
+
+                        await _akPungutRepo.Update(akP);
+
+                        TempData[SD.Success] = "No Slip / Tarikh Slip Penyata Pemungut berjaya dikemaskini";
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        TempData[SD.Error] = "No Dokumen Penyata Pemungut tidak wujud";
+                    }
+                }
+                else
+                {
+                    TempData[SD.Error] = "Tarikh Slip diperlukan";
+                }
+                
+            }
+            return RedirectToAction(nameof(Index));
+        }
         // POST: AkPenyataPemungut/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.

@@ -21,6 +21,9 @@ namespace MSNK.Controllers
     {
         public const string modul = "PB001";
         public const string namamodul = "Penyesuaian Bank";
+        private decimal _bakiBukuTunai = 0;
+        private decimal _bakiPenyataBank = 0;
+        private decimal _beza = 0;
 
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;
@@ -114,6 +117,9 @@ namespace MSNK.Controllers
 
             CartEmpty();
 
+            decimal bayaranBelumAkuiBukuTunai = 0;
+            decimal terimaanBelumAkuiBukuTunai = 0;
+
             foreach (AkBankReconPenyataBank item in akBankRecon.AkBankReconPenyataBank)
             {
                 _cart.AddItem1(item.Id,
@@ -128,7 +134,21 @@ namespace MSNK.Controllers
                         item.Kredit,
                         item.Baki,
                         item.IsPadan);
+
+                _bakiPenyataBank += item.Debit;
+                _bakiPenyataBank -= item.Kredit;
+                
+                if (item.IsPadan == false)
+                {
+                    bayaranBelumAkuiBukuTunai += item.Debit;
+                    terimaanBelumAkuiBukuTunai -= item.Kredit;
+                }
             }
+
+            ViewBag.BayaranBelumAkuiBukuTunai = bayaranBelumAkuiBukuTunai;
+            ViewBag.TerimaanBelumAkuiBukuTunai = terimaanBelumAkuiBukuTunai;
+            ViewBag.BakiSepatutnyaPenyataBank = bayaranBelumAkuiBukuTunai + terimaanBelumAkuiBukuTunai;
+            ViewBag.BakiPenyataBank = _bakiPenyataBank;
 
         }
 
@@ -938,31 +958,36 @@ namespace MSNK.Controllers
             PopulateList();
             PopulateCartFromDb(akBankRecon);
 
-            decimal bakiBukuTunai = 0;
+            _bakiBukuTunai = 0;
+            decimal bayaranBelumJelasPenyataBank = 0;
 
+            decimal terimaanBelumJelasPenyataBank = 0;
             // get baki buku tunai
 
             // PV --
             // select single pv
             var singlePV = await _context.AkPV.Include(b => b.AkPadananPenyata)
-                .Where(b => b.IsGanda == false && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0
-                && b.FlTunai == 1)
+                .Where(b => b.Tarikh.Year <= int.Parse(akBankRecon.Tahun) && b.Tarikh.Month == int.Parse(akBankRecon.Bulan)
+                && b.IsGanda == false && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0)
                 .ToListAsync();
+
 
             foreach (var row in singlePV)
             {
                 if (row.AkPadananPenyata.Count() == 0)
                 {
+                    bayaranBelumJelasPenyataBank += row.Jumlah;
                     continue;
                 }
 
-                bakiBukuTunai += row.Jumlah;
+                _bakiBukuTunai += row.Jumlah;
             }
 
             // select multiple pv
             List<AkPV> multiplePV = await _context.AkPV
                 .Include(b => b.AkPVGanda).ThenInclude(b => b.AkPadananPenyata)
-                .Where(b => b.IsGanda == true && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0)
+                .Where(b => b.Tarikh.Year <= int.Parse(akBankRecon.Tahun) && b.Tarikh.Month == int.Parse(akBankRecon.Bulan)
+                && b.IsGanda == true && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0)
                 .ToListAsync();
 
             foreach (var akPV in multiplePV)
@@ -972,7 +997,11 @@ namespace MSNK.Controllers
 
                     if (row.AkPadananPenyata.Count() > 0)
                     {
-                        bakiBukuTunai += row.Amaun;
+                        _bakiBukuTunai += row.Amaun;
+                    }
+                    else
+                    {
+                        bayaranBelumJelasPenyataBank += row.Amaun;
                     }
                 }
 
@@ -982,7 +1011,8 @@ namespace MSNK.Controllers
             // select terima2
             List<AkTerima> multipleReceipt = await _context.AkTerima
                 .Include(b => b.AkTerima2).ThenInclude(b => b.AkPadananPenyata)
-                .Where(b => b.FlPosting == 1 && b.FlHapus == 0)
+                .Where(b => b.Tarikh.Year <= int.Parse(akBankRecon.Tahun) && b.Tarikh.Month == int.Parse(akBankRecon.Bulan)
+                && b.FlPosting == 1 && b.FlHapus == 0)
                 .ToListAsync();
 
             foreach (var akTerima in multipleReceipt)
@@ -992,7 +1022,11 @@ namespace MSNK.Controllers
 
                     if (row.AkPadananPenyata.Count() > 0)
                     {
-                        bakiBukuTunai -= row.Amaun;
+                        _bakiBukuTunai -= row.Amaun;
+                    }
+                    else
+                    {
+                        terimaanBelumJelasPenyataBank -= row.Amaun;
                     }
                 }
 
@@ -1000,29 +1034,43 @@ namespace MSNK.Controllers
             // RESIT END --
             // JURNAL --
             var jurnal = await _context.AkJurnal.Include(b => b.AkPadananPenyata)
-                .Where(b => b.Posting == 1 && b.FlHapus == 0)
+                .Where(b => b.Tarikh.Year <= int.Parse(akBankRecon.Tahun) && b.Tarikh.Month == int.Parse(akBankRecon.Bulan)
+                && b.Posting == 1 && b.FlHapus == 0)
                 .ToListAsync();
 
             foreach (var row in jurnal)
             {
                 if (row.AkPadananPenyata.Count() == 0)
                 {
+                    if (row.JumDebit != 0)
+                    {
+                        bayaranBelumJelasPenyataBank += row.JumDebit;
+                    }
+                    else
+                    {
+                        terimaanBelumJelasPenyataBank -= row.JumKredit;
+                    }
                     continue;
                 }
 
                 if (row.JumDebit != 0)
                 {
-                    bakiBukuTunai += row.JumDebit;
+                    _bakiBukuTunai += row.JumDebit;
                 } 
                 else
                 {
-                    bakiBukuTunai -= row.JumKredit;
+                    _bakiBukuTunai -= row.JumKredit;
                 }
 
             }
             // JURNAL END --
 
-            ViewBag.BakiBukuTunai = bakiBukuTunai;
+            _beza = _bakiBukuTunai - _bakiPenyataBank;
+            ViewBag.BakiBukuTunai = _bakiBukuTunai;
+            ViewBag.BayaranBelumJelasPenyataBank = bayaranBelumJelasPenyataBank;
+            ViewBag.TerimaanBelumJelasPenyataBank = terimaanBelumJelasPenyataBank;
+            ViewBag.Beza = _beza;
+
 
             return View(akBankRecon);
         }

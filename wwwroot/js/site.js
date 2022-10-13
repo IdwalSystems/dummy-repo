@@ -144,6 +144,10 @@ function showDate(d) {
     return (day < 10 ? '0' + day : day) + "/" + (month < 10 ? '0' + month : month) + "/" + year;
 }
 
+function showSQLFormatDate(d) {
+    return d.trim().split('/').reverse().join('-');
+}
+
 $(document).ready(function () {
     $(".select2").select2({
         theme: "bootstrap"

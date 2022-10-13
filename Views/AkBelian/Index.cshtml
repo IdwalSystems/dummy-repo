@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Invois Pembekal";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var noInvois = "";
 }
 
 <partial name="_JSIndex" />
@@ -88,6 +90,11 @@
                     {
 
                         var tabletype = item.FlHapus == 1 ? "table-danger" : null;
+                        noInvois = item.NoInbois;
+                        if (noInvois.Length > 9)
+                        {
+                            noInvois = noInvois.Substring(9);
+                        }
                         <tr class="@tabletype">
                             <td>
                             </td>
@@ -95,7 +102,7 @@
                                 @Html.DisplayFor(modelItem => item.Tahun)
                             </td>
                             <td class="text-uppercase">
-                                @item.NoInbois.Substring(9)
+                                @noInvois
                             </td>
                             <td width="5%" data-sort='YYYYMMDD'>
                                 @item.Tarikh.ToString("dd/MM/yyyy")

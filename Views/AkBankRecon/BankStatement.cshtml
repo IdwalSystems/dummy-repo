@@ -10,7 +10,7 @@
         display: none;
     }
 </style>
-<div class="card box-shadow">
+<div class="card box-shadow mb-2" >
     <div class="card-body">
         <div class="row">
             <div class="col-8">
@@ -53,20 +53,21 @@
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label">Baki Penyata Bank RM</label>
-                        <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly id="bakiPenyata" />
-                    </div>
-                </div>
+            @*<div class="form-row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="control-label">Baki Buku Tunai RM</label>
                         <input class="form-control form-control-sm" readonly id="bakiBukuTunai" value="@ViewBag.BakiBukuTunai" />
                     </div>
                 </div>
-            </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label">Baki Penyata Bank RM</label>
+                        <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly id="bakiPenyata" />
+                    </div>
+                </div>
+
+            </div>*@
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
@@ -100,6 +101,141 @@
                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="accordion" id="accordionRingkasan">
+    <div class="card">
+        <div class="card-header" id="headingRingkasan">
+            <h2 class="mb-0">
+                <a class="btn btn-block text-left" style="font-size:17px;" data-toggle="collapse" data-target="#collapseRingkasan" aria-expanded="true" aria-controls="collapseRingkasan">
+                    <strong>Ringkasan Penyata</strong>
+                </a>
+            </h2>
+        </div>
+
+        <div id="collapseRingkasan" class="collapse show" aria-labelledby="headingRingkasan" data-parent="#accordionRingkasan">
+            <div class="card-body">
+                <div class="container">
+                    <form>
+                        <div class="form-row p-2">
+                            <div class="col-sm-1">
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="control-label">Baki Di Buku Tunai</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input class="form-control form-control-sm text-right" readonly id="bakiBukuTunai" value="@ViewBag.BakiBukuTunai" />
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                        <div class="form-row p-2">
+                            <div class="col-sm-1">
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="control-label">(+) Bayaran Belum Jelas Di Penyata Bank</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input class="form-control form-control-sm text-right" readonly id="bayaranBelumJelasPenyataBank" value="@ViewBag.BayaranBelumJelasPenyataBank" />
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                        <div class="form-row p-2">
+                            <div class="col-sm-1">
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="control-label">(-) Bayaran Di Penyata Bank Belum Diakui Di Buku Tunai</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input class="form-control form-control-sm text-right" readonly id="bakiPenyata" value="@ViewBag.BayaranBelumAkuiBukuTunai" />
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                        <div class="form-row p-2">
+                            <div class="col-sm-1">
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="control-label">(-) Terimaan Belum Jelas Di Penyata Bank</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input class="form-control form-control-sm text-right" readonly id="terimaanBelumJelasPenyataBank" value="@ViewBag.TerimaanBelumJelasPenyataBank" />
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                        <div class="form-row p-2">
+                            <div class="col-sm-1">
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="control-label">(-) Terimaan Di Penyata Bank Belum Diakui Di Buku Tunai</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input class="form-control form-control-sm text-right" readonly id="terimaanBelumAkuiBukuTunai" value="@ViewBag.TerimaanBelumAkuiBukuTunai" />
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                        <div class="form-row p-2">
+                            <div class="col-sm-1">
+                            </div>
+                            <div class="col-sm-10">
+                                <hr />
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                        <div class="form-row p-2">
+                            <div class="col-sm-1">
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="control-label"><strong>Baki SEPATUTNYA Di Penyata Bank</strong></label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input class="form-control form-control-sm text-right" readonly id="bakiSepatutnyaPenyata" value="@ViewBag.BakiSepatutnyaPenyataBank" />
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                        <div class="form-row p-2">
+                            <div class="col-sm-1">
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="control-label"><strong>Baki SEBENAR Di Penyata Bank</strong></label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input class="form-control form-control-sm text-right" id="bakiPenyataBank" readonly value="@ViewBag.BakiPenyataBank" />
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                        <div class="form-row p-2">
+                            <div class="col-sm-1">
+                            </div>
+                            <div class="col-sm-10">
+                                <hr />
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                        <div class="form-row p-2">
+                            <div class="col-sm-1">
+                            </div>
+                            <div class="col-sm-5">
+                                <label class="control-label"><strong>Beza</strong></label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input class="form-control form-control-sm text-right" readonly id="beza" value="@ViewBag.Beza" />
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

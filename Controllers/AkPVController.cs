@@ -203,6 +203,7 @@ namespace MSNK.Controllers
             // searching with date range condition end
             else
             {
+                akPV = akPV.OrderByDescending(b => b.Tarikh).Take(100);
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
             }
 
@@ -309,7 +310,15 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    item.NoInbois = item.NoInbois.Substring(9);
+                    if (item.NoInbois.Length > 9)
+                    {
+                        item.NoInbois = item.NoInbois.Substring(9);
+                    }
+                    else
+                    {
+                        item.NoInbois = "xx/xxxxx/" + item.NoInbois;
+                    }
+
                     akBelianListUpdated.Add(item);
                 }
                 
