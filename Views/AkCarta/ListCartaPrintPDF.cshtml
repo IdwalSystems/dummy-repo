@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MSNK.Models.Modules.AkCarta>
 
 @{
-    ViewData["Title"] = "Cetakan Senarai Carta";
+    ViewData["Title"] = "Cetakan Log Pengguna";
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
 
     var bil = 0;
@@ -56,23 +56,12 @@
         <p class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</p>
     </div>
 
-    <!--<div class="col-2 text-right">-->
-    @*<h6 class="mb-0"><strong>SENARAI CARTA AKAUN</strong></h6>*@
-    <!--</div>-->
 </div>
-@*<div class="form-row flexrow mb-1 text-center">
-    <div class="col-12 image-container text-uppercase text-center">
-        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" class="mb-3" />
-        <h5 class="mb-1"><strong>@company.NamaSyarikat</strong></h5>
-        <p class="mb-2"> @company.AlamatSyarikat1 , @company.AlamatSyarikat2, @company.AlamatSyarikat3</p>
-        <h5 class="mb-0 bg-dark text-white"> <strong>SENARAI CARTA AKAUN</strong></h5>
-    </div>
-</div>*@
 <br />
     <table class="table table-bordered table-sm topic">
         <thead>
             <tr class="bg-dark text-white">
-                <th colspan="11" class="text-center bg-dark text-white" style="line-height: 1.8rem;"><strong>SENARAI CARTA AKAUN</strong></th>
+                <th colspan="11" class="text-center bg-dark text-white" style="line-height: 1.8rem;"><strong>CETAKAN LOG PENGGUNA</strong></th>
             </tr>
             <tr style="line-height:0.8rem;" class="bg-secondary text-white">
 

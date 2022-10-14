@@ -2461,7 +2461,7 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             int id,
-            AkPV akPV,
+            AkPVViewModel akPV,
             int JKWId,
             string Penerima,
             int AkBankId,

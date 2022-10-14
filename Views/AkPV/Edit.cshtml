@@ -22,7 +22,7 @@
         <hr class="mt-2" />
         <form asp-action="Edit" class="needs-validation">
             <input type="hidden" asp-for="Id" />
-
+            <input asp-for="Nama" readonly hidden />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-row">
                 <div class="col-md-1">
@@ -178,7 +178,7 @@
                             <input id="ddlKodPekerja" value="0" hidden />
                             <div class="form-group">
                                 <label asp-for="Nama" class="control-label"></label><span class="text-danger control-label">*</span>
-                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" id="txtNamaPembekal" required readonly />
+                                <input asp-for="Nama" class="form-control form-control-sm text-uppercase" id="txtNamaPembekal" readonly />
                                 <span asp-validation-for="Nama" class="text-danger"></span>
                             </div>
                         </div>

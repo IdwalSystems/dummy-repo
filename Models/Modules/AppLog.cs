@@ -33,6 +33,7 @@ namespace MSNK.Models.Modules
         public decimal Jumlah { get; set; }
         public string SysCode { get; set; }
         public int? SuPekerjaId { get; set; }
+        public SuPekerja SuPekerja { get; set; }
         
     }
 }
