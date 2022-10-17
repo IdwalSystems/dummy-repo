@@ -149,7 +149,6 @@ namespace MSNK.Controllers
             ViewBag.TerimaanBelumAkuiBukuTunai = terimaanBelumAkuiBukuTunai;
             ViewBag.BakiSepatutnyaPenyataBank = bayaranBelumAkuiBukuTunai + terimaanBelumAkuiBukuTunai;
             ViewBag.BakiPenyataBank = _bakiPenyataBank;
-
         }
 
         [HttpPost]
@@ -159,6 +158,7 @@ namespace MSNK.Controllers
             string Bulan)
         {
             List<AkBankRecon> akRecon = await _context.AkBankRecon
+                .Include(b => b.AkBankReconPenyataBank)
                 .Where(b => b.AkBankId == AkBankId).ToListAsync();
 
             if (!string.IsNullOrEmpty(Tahun))
@@ -282,12 +282,6 @@ namespace MSNK.Controllers
             }
 
             return View(akBankRecon);
-        }
-
-        public class Thing
-        {
-            public int Id { get; set; }
-            public string Color { get; set; }
         }
 
         [HttpPost]

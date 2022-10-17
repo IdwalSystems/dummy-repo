@@ -144,7 +144,7 @@
                         </ul>
                     </div>
 
-                    <div>
+                    <div class="form-group">
                         <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Transaksi</p>
 
                         <ul class="nav flex-column l-bg-light mb-0">
@@ -153,6 +153,14 @@
                             <partial name="_TanggunganPartialNavbar" />
                             <partial name="_BaucerPartialNavbar" />
                             <partial name="_TunaiRuncitPartialNavbar" />
+                        </ul>
+                    </div>
+
+                    <div class="form-group">
+                        <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Penyata</p>
+
+                        <ul class="nav flex-column l-bg-light mb-0">
+                            <partial name="_PenyataKewanganPartialNavbar" />
                         </ul>
                     </div>
 
@@ -167,72 +175,84 @@
                 }
                 else if (User.IsInRole("Admin"))
                 {
-                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Menu Utama</p>
+                    <div class="form-group">
+                        <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Menu Utama</p>
 
-                    <ul class="nav flex-column l-bg-light mb-0">
-                        <partial name="_SistemPartialNavbar" />
-                    </ul>
+                        <ul class="nav flex-column l-bg-light mb-0">
+                            <partial name="_SistemPartialNavbar" />
+                        </ul>
+                    </div>
+
                 }
                 else if (User.IsInRole("Supervisor"))
                 {
-                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Menu Utama</p>
+                    <div class="form-group">
+                        <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Menu Utama</p>
 
-                    <ul class="nav flex-column l-bg-light mb-0">
-                        <partial name="_JadualPartialNavbar" />
-                        <partial name="_DaftarPartialNavbar" />
-                        <partial name="_BelanjawanPartialNavbar" />
-                        <partial name="_LejarPartialNavbar" />
-                    </ul>
+                        <ul class="nav flex-column l-bg-light mb-0">
+                            <partial name="_JadualPartialNavbar" />
+                            <partial name="_DaftarPartialNavbar" />
+                            <partial name="_BelanjawanPartialNavbar" />
+                            <partial name="_LejarPartialNavbar" />
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Pengurusan</p>
 
-                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Pengurusan</p>
+                        <ul class="nav flex-column l-bg-light mb-0">
+                            <partial name="_PengurusanJadualPartialNavbar" />
+                            <partial name="_PengurusanDaftarPartialNavbar" />
+                            <partial name="_ProfilPartialNavbar" />
+                            <partial name="_PermohonanPartialNavbar" />
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Transaksi</p>
 
-                    <ul class="nav flex-column l-bg-light mb-0">
-                        <partial name="_PengurusanJadualPartialNavbar" />
-                        <partial name="_PengurusanDaftarPartialNavbar" />
-                        <partial name="_ProfilPartialNavbar" />
-                        <partial name="_PermohonanPartialNavbar" />
-                    </ul>
+                        <ul class="nav flex-column l-bg-light mb-0">
+                            <partial name="_TerimaanPartialNavbar" />
+                            <partial name="_TanggunganPartialNavbar" />
+                            <partial name="_BaucerPartialNavbar" />
+                            <partial name="_TunaiRuncitPartialNavbar" />
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Laporan</p>
 
-                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Transaksi</p>
-
-                    <ul class="nav flex-column l-bg-light mb-0">
-                        <partial name="_TerimaanPartialNavbar" />
-                        <partial name="_TanggunganPartialNavbar" />
-                        <partial name="_BaucerPartialNavbar" />
-                        <partial name="_TunaiRuncitPartialNavbar" />
-                    </ul>
-
-                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Laporan</p>
-
-                    <ul class="nav flex-column l-bg-light mb-0">
-                        <partial name="_LaporanPartialNavbar" />
-                    </ul>
+                        <ul class="nav flex-column l-bg-light mb-0">
+                            <partial name="_LaporanPartialNavbar" />
+                        </ul>
+                    </div>
                 }
                 else
                 {
-                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Pengurusan</p>
+                    <div class="form-group">
+                        <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Pengurusan</p>
 
-                    <ul class="nav flex-column l-bg-light mb-0">
-                        <partial name="_PengurusanJadualPartialNavbar" />
-                        <partial name="_PengurusanDaftarPartialNavbar" />
-                        <partial name="_ProfilPartialNavbar" />
-                        <partial name="_PermohonanPartialNavbar" />
-                    </ul>
+                        <ul class="nav flex-column l-bg-light mb-0">
+                            <partial name="_PengurusanJadualPartialNavbar" />
+                            <partial name="_PengurusanDaftarPartialNavbar" />
+                            <partial name="_ProfilPartialNavbar" />
+                            <partial name="_PermohonanPartialNavbar" />
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Transaksi</p>
 
-                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Transaksi</p>
+                        <ul class="nav flex-column l-bg-light mb-0">
+                            <partial name="_TerimaanPartialNavbar" />
+                            <partial name="_TanggunganPartialNavbar" />
+                            <partial name="_BaucerPartialNavbar" />
+                            <partial name="_TunaiRuncitPartialNavbar" />
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Laporan</p>
 
-                    <ul class="nav flex-column l-bg-light mb-0">
-                        <partial name="_TerimaanPartialNavbar" />
-                        <partial name="_TanggunganPartialNavbar" />
-                        <partial name="_BaucerPartialNavbar" />
-                        <partial name="_TunaiRuncitPartialNavbar" />
-                    </ul>
-
-                    <p class="text-gray font-weight-bold text-uppercase px-3 small pb-2 mb-0">Laporan</p>
-
-                    <ul class="nav flex-column l-bg-light mb-0">
-                        <partial name="_LaporanPartialNavbar" />
-                    </ul>
+                        <ul class="nav flex-column l-bg-light mb-0">
+                            <partial name="_LaporanPartialNavbar" />
+                        </ul>
+                    </div>
                 }
             }
 

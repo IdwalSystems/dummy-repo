@@ -106,6 +106,7 @@
         var jumlah = $("#jumlah");
         var oBalance = $("#openBalance");
         var cBalance = $("#closeBalance");
+        var bankStatementBalance = $("#BakiPenyata");
         var tahun = $("#Tahun").val();
         var bulan = $("#Bulan").val();
         var noAkaun = $("#NoAkaun").val();
@@ -208,6 +209,8 @@
                     bil++;
                 }
             });
+
+            bankStatementBalance.val(parseFloat(sum).format(2));
 
             $.ajax({
                 dataType: 'json',

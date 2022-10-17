@@ -121,10 +121,14 @@
 
                                             @if (item.FlHapus == 0)
                                             {
-                                                <a asp-action="Upload" asp-route-id="@item.Id"
-                                                   class="btn text-purple btn-sm bg-white" type="button"
-                                                   data-toggle="tooltip" data-placement="top"
-                                                   title="Muat Naik Fail"><i class="fas fa-upload"></i></a>
+                                                if (item.AkBankReconPenyataBank.Count() == 0)
+                                                {
+                                                    <a asp-action="Upload" asp-route-id="@item.Id"
+                                                       class="btn text-purple btn-sm bg-white" type="button"
+                                                       data-toggle="tooltip" data-placement="top"
+                                                       title="Muat Naik Fail"><i class="fas fa-upload"></i></a>
+                                                }
+                                                
                                                 <a asp-action="BankStatement" asp-route-id="@item.Id"
                                                    class="btn text-secondary btn-sm bg-white" type="button"
                                                    data-toggle="tooltip" data-placement="top"

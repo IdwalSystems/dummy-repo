@@ -13,6 +13,7 @@ namespace MSNK.Models.Modules
         public int Id { get; set; }
         [Display(Name = "No Rujukan")]
         public int AkJurnalId { get; set; }
+        public AkJurnal AkJurnal { get; set; }
         public int Indeks { get; set; }
         [DisplayName("Kod Objek")]
         public int AkCartaId { get; set; }

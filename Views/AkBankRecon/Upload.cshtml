@@ -60,16 +60,22 @@
             </div>
 
             <div class="form-row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label class="control-label">Baki Pembukaan RM</label>
                         <input class="form-control form-control-sm" readonly id="openBalance" value="0.00" />
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label class="control-label">Baki Penutupan RM</label>
-                        <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly id="closeBalance" value="0.00" />
+                        <input class="form-control form-control-sm" readonly id="closeBalance" value="0.00" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">Baki Di Penyata Bank RM</label>
+                        <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly value="0.00" />
                     </div>
                 </div>
             </div>

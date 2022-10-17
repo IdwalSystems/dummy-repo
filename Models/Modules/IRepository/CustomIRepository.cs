@@ -10,5 +10,7 @@ namespace MSNK.Models.Modules.IRepository
     {
         Task<decimal> GetBalanceFromAbBukuVot(T1 tahun, int? akCartaId, int jKW, int? jBahagian);
         Task<decimal> GetBalanceFromKaunterPanjar(T1 bakiAwal, T2 akTunaiRuncitId);
+        Task<decimal> GetCarryPreviousBalanceBasedOnStartingDate(T2 akBankId, int? JKWId, int? JBahagianId, DateTime TarMula);
+        Task<List<AbBukuTunaiViewModel>> GetListBukuTunaiBasedOnRangeDate(T2 akBankId, int? JKWId, int? JBahagianId, DateTime TarMula, DateTime TarHingga);
     }
 }

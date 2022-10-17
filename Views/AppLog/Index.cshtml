@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MSNK.Models.Modules.AppLog>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Log Transaksi Pengguna";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,7 +10,7 @@
     <div class="card-body border">
         <div class="row">
             <div class="col-8">
-                <h5 class="text-uppercase mb-0">Log Transaksi Pengguna</h5>
+                <h5 class="text-uppercase mb-0">@ViewData["Title"]</h5>
                 <span class="ac-ref">Indeks</span>
             </div>
 

@@ -1,0 +1,29 @@
+﻿<li class="nav-item">
+    <a class="nav-link collapsed text-truncate
+    @Html.ActiveClass("BukuTunai")
+    @Html.ActiveClass("AlirTunai")
+    @Html.ActiveClass("PerubahanEkuiti")
+    @Html.ActiveClass("TimbangDuga")
+    @Html.ActiveClass("UntungRugi")
+    @Html.ActiveClass("KunciKiraKira")" href="#submenuPenyata" data-toggle="collapse" data-target="#submenuPenyata"><object data="~/img/svg/penyata-kewangan.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Penyata Kewangan</span></a>
+    <div class="collapse" id="submenuPenyata" aria-expanded="false">
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("BukuTunai")" asp-controller="AbBukuTunai" asp-action="Index"><span>Buku Tunai</span></a></li>
+        </ul>
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("AlirTunai")" asp-controller="AbAlirTunai" asp-action="Index"><span>Penyata Alir Tunai</span></a></li>
+        </ul>
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("PerubahanEkuiti")" asp-controller="AbPerubahanEkuiti" asp-action="Index"><span>Penyata Perubahan Ekuiti</span></a></li>
+        </ul>
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("TimbangDuga")" asp-controller="AbTimbangDuga" asp-action="Index"><span>Timbang Duga</span></a></li>
+        </ul>
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("UntungRugi")" asp-controller="AbUntungRugi" asp-action="Index"><span>Lebihan Pendapatan (Untung Rugi)</span></a></li>
+        </ul>
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("KunciKiraKira")" asp-controller="AbKunciKiraKira" asp-action="Index"><span>Penyata Kedudukan Kewangan (Kunci Kira-Kira)</span></a></li>
+        </ul>
+    </div>
+</li>
