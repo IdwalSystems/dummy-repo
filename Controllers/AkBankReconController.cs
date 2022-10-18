@@ -6,12 +6,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Infrastructure;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.PrintModel;
 using MSNK.Models.Modules.ViewModel;
+using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
@@ -34,7 +38,7 @@ namespace MSNK.Controllers
         private readonly ListViewIRepository<AkPVGanda, int> _akPVGandaRepo;
         private readonly ListViewIRepository<AkTerima2, int> _akTerima2Repo;
         private readonly IRepository<AkJurnal, int, string> _akJurnalRepo;
-        //private readonly IRepository<AkBank, int, string> _akBankRepo;
+        private readonly UserService _userService;
         private CartBankRecon _cart;
 
 
@@ -48,6 +52,7 @@ namespace MSNK.Controllers
             ListViewIRepository<AkPVGanda, int> akPVGandaRepo,
             ListViewIRepository<AkTerima2, int> akTerima2Repo,
             IRepository<AkJurnal, int, string> akJurnalRepo,
+            UserService userService,
             CartBankRecon cart)
         {
             _context = context;
@@ -60,6 +65,7 @@ namespace MSNK.Controllers
             _akPVRepo=akPVRepo;
             _akPVGandaRepo=akPVGandaRepo;
             _akJurnalRepo = akJurnalRepo;
+            _userService = userService;
         }
 
         private async Task AddLogAsync(
@@ -146,7 +152,7 @@ namespace MSNK.Controllers
             }
 
             ViewBag.BayaranBelumAkuiBukuTunai = bayaranBelumAkuiBukuTunai;
-            ViewBag.TerimaanBelumAkuiBukuTunai = terimaanBelumAkuiBukuTunai;
+            ViewBag.TerimaanBelumAkuiBukuTunai = 0 - terimaanBelumAkuiBukuTunai;
             ViewBag.BakiSepatutnyaPenyataBank = bayaranBelumAkuiBukuTunai + terimaanBelumAkuiBukuTunai;
             ViewBag.BakiPenyataBank = _bakiPenyataBank;
         }
@@ -1062,7 +1068,7 @@ namespace MSNK.Controllers
             _beza = _bakiBukuTunai - _bakiPenyataBank;
             ViewBag.BakiBukuTunai = _bakiBukuTunai;
             ViewBag.BayaranBelumJelasPenyataBank = bayaranBelumJelasPenyataBank;
-            ViewBag.TerimaanBelumJelasPenyataBank = terimaanBelumJelasPenyataBank;
+            ViewBag.TerimaanBelumJelasPenyataBank = 0 - terimaanBelumJelasPenyataBank;
             ViewBag.Beza = _beza;
 
 
@@ -1197,6 +1203,243 @@ namespace MSNK.Controllers
         private bool AkBankReconExists(int id)
         {
             return _context.AkBankRecon.Any(e => e.Id == id);
+        }
+
+        [Authorize(Policy = "PB001P")]
+        public async Task<IActionResult> PrintPdf(int id)
+        {
+            var vm = new BankReconPrintModel();
+            var akBankRecon = await _akReconRepo.GetByIdIncludeDeletedItems((int)id);
+
+            DateTime tarikhAkhirPenyataBank = new DateTime();
+            _bakiBukuTunai = 0;
+            decimal bayaranBelumJelasPenyataBank = 0;
+
+            decimal terimaanBelumJelasPenyataBank = 0;
+            // get baki buku tunai
+            decimal bayaranBelumAkuiBukuTunai = 0;
+            decimal terimaanBelumAkuiBukuTunai = 0;
+
+            foreach (AkBankReconPenyataBank item in akBankRecon.AkBankReconPenyataBank.OrderBy(b => b.Tarikh))
+            {
+                _bakiPenyataBank += item.Debit;
+                _bakiPenyataBank -= item.Kredit;
+
+                tarikhAkhirPenyataBank = item.Tarikh;
+
+                if (item.IsPadan == false)
+                {
+                    bayaranBelumAkuiBukuTunai += item.Debit;
+                    terimaanBelumAkuiBukuTunai -= item.Kredit;
+
+                    var details = new AkBankReconPenyataBank()
+                    {
+                        Id = item.Id,
+                        Indek = item.Indek,
+                        AkBankReconId = item.AkBankReconId,
+                        NoAkaunBank = item.NoAkaunBank,
+                        Tarikh = item.Tarikh,
+                        KodTransaksi = item.KodTransaksi,
+                        PerihalTransaksi = item.PerihalTransaksi,
+                        NoDokumen = item.NoDokumen,
+                        Debit = item.Debit,
+                        Kredit = item.Kredit,
+                        Baki = item.Baki,
+                        IsPadan = item.IsPadan
+                    };
+
+                    if (item.Debit != 0)
+                    {
+                        vm.bayaranBelumAkuiBukuTunai?.Add(details);
+                    }
+                    else
+                    {
+                        vm.terimaanBelumAkuiBukuTunai?.Add(details);
+                    }
+                }
+            }
+
+            // PV --
+            // select single pv
+            var singlePV = await _context.AkPV.Include(b => b.AkPadananPenyata)
+                .Where(b => b.Tarikh.Year <= int.Parse(akBankRecon.Tahun) && b.Tarikh.Month == int.Parse(akBankRecon.Bulan)
+                && b.IsGanda == false && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0)
+                .ToListAsync();
+
+
+            foreach (var row in singlePV)
+            {
+                if (row.AkPadananPenyata.Count() == 0)
+                {
+                    bayaranBelumJelasPenyataBank += row.Jumlah;
+
+                    var details = new CashBookDetails() 
+                    { 
+                        date = row.Tarikh,
+                        refNo = row.NoPV,
+                        name = row.Nama,
+                        cekNo = row.NoCekAtauEFT,
+                        amount = row.Jumlah
+                    };
+
+                    vm.bayaranBelumJelasPenyataBank?.Add(details);
+
+                    continue;
+                }
+
+                _bakiBukuTunai += row.Jumlah;
+            }
+
+            // select multiple pv
+            List<AkPV> multiplePV = await _context.AkPV
+                .Include(b => b.AkPVGanda).ThenInclude(b => b.AkPadananPenyata)
+                .Where(b => b.Tarikh.Year <= int.Parse(akBankRecon.Tahun) && b.Tarikh.Month == int.Parse(akBankRecon.Bulan)
+                && b.IsGanda == true && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0)
+                .ToListAsync();
+
+            foreach (var akPV in multiplePV)
+            {
+                foreach (var row in akPV.AkPVGanda)
+                {
+
+                    if (row.AkPadananPenyata.Count() > 0)
+                    {
+                        _bakiBukuTunai += row.Amaun;
+                    }
+                    else
+                    {
+                        bayaranBelumJelasPenyataBank += row.Amaun;
+
+                        var details = new CashBookDetails()
+                        {
+                            date = akPV.Tarikh,
+                            refNo = akPV.NoPV,
+                            name = row.Nama,
+                            cekNo = row.NoCekAtauEFT,
+                            amount = row.Amaun
+                        };
+
+                        vm.bayaranBelumJelasPenyataBank?.Add(details);
+                    }
+                }
+
+            }
+            // PV END --
+            // RESIT --
+            // select terima2
+            List<AkTerima> multipleReceipt = await _context.AkTerima
+                .Include(b => b.AkTerima2).ThenInclude(b => b.AkPadananPenyata)
+                .Where(b => b.Tarikh.Year <= int.Parse(akBankRecon.Tahun) && b.Tarikh.Month == int.Parse(akBankRecon.Bulan)
+                && b.FlPosting == 1 && b.FlHapus == 0)
+                .ToListAsync();
+
+            foreach (var akTerima in multipleReceipt)
+            {
+                foreach (var row in akTerima.AkTerima2)
+                {
+
+                    if (row.AkPadananPenyata.Count() > 0)
+                    {
+                        _bakiBukuTunai -= row.Amaun;
+                    }
+                    else
+                    {
+                        terimaanBelumJelasPenyataBank -= row.Amaun;
+
+                        var details = new CashBookDetails()
+                        {
+                            date = akTerima.Tarikh,
+                            refNo = akTerima.NoRujukan,
+                            name = akTerima.Nama,
+                            cekNo = row.NoCek,
+                            amount = row.Amaun
+                        };
+
+                        vm.terimaanBelumJelasPenyataBank?.Add(details);
+                    }
+                }
+
+            }
+            // RESIT END --
+            // JURNAL --
+            var jurnal = await _context.AkJurnal.Include(b => b.AkPadananPenyata)
+                .Where(b => b.Tarikh.Year <= int.Parse(akBankRecon.Tahun) && b.Tarikh.Month == int.Parse(akBankRecon.Bulan)
+                && b.Posting == 1 && b.FlHapus == 0)
+                .ToListAsync();
+
+            foreach (var row in jurnal)
+            {
+                if (row.AkPadananPenyata.Count() == 0)
+                {
+                    if (row.JumDebit != 0)
+                    {
+                        bayaranBelumJelasPenyataBank += row.JumDebit;
+
+                        var details = new CashBookDetails()
+                        {
+                            date = row.Tarikh,
+                            refNo = row.NoJurnal,
+                            name = row.Catatan1,
+                            cekNo = "",
+                            //cekNo = row.NoCekAtauEFT,
+                            amount = row.JumDebit
+                        };
+
+                        vm.bayaranBelumJelasPenyataBank?.Add(details);
+                    }
+                    else
+                    {
+                        terimaanBelumJelasPenyataBank -= row.JumKredit;
+
+                        var details = new CashBookDetails()
+                        {
+                            date = row.Tarikh,
+                            refNo = row.NoJurnal,
+                            name = row.Catatan1,
+                            cekNo = "",
+                            //cekNo = row.NoCekAtauEFT,
+                            amount = row.JumKredit
+                        };
+
+                        vm.bayaranBelumJelasPenyataBank?.Add(details);
+                    }
+                    continue;
+                }
+
+                if (row.JumDebit != 0)
+                {
+                    _bakiBukuTunai += row.JumDebit;
+                }
+                else
+                {
+                    _bakiBukuTunai -= row.JumKredit;
+                }
+
+            }
+            // JURNAL END --
+
+            _beza = _bakiBukuTunai - _bakiPenyataBank;
+
+            vm.bakiPenyata = _bakiPenyataBank;
+            vm.bakiBukuTunai = _bakiBukuTunai;
+            vm.JumBayaranBelumJelasPenyataBank = bayaranBelumJelasPenyataBank;
+            vm.JumBayaranBelumAkuiBukuTunai = bayaranBelumAkuiBukuTunai;
+            vm.JumTerimaanBelumJelasPenyataBank = terimaanBelumJelasPenyataBank;
+            vm.JumTerimaanBelumAkuiBukuTunai = terimaanBelumAkuiBukuTunai;
+            vm.Beza = _beza;
+            vm.company = await _userService.GetCompanyDetails();
+            vm.Bank = akBankRecon.AkBank.AkCarta.Kod + " - " + akBankRecon.AkBank.AkCarta.Perihal;
+            vm.Tarikh = tarikhAkhirPenyataBank;
+
+            return new ViewAsPdf("BankReconPrintPDF", vm)
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Portrait,
+                //CustomSwitches = "--footer-center \"  Tarikh: " +
+                //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
         }
     }
 }

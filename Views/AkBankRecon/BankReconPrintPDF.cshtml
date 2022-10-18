@@ -1,0 +1,208 @@
+﻿@model MSNK.Models.Modules.PrintModel.BankReconPrintModel
+
+@{
+    ViewData["Title"] = "Cetakan Penyesuaian Bank";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+<style>
+    th {
+        break-inside: avoid;
+    }
+    td h5 {
+        font-size: 0.9rem;
+        line-height: 1.1rem;
+    }
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    .row {
+        display: -webkit-box; /* wkhtmltopdf uses this one */
+        display: flex;
+        -webkit-box-pack: center; /* wkhtmltopdf uses this one */
+        justify-content: center;
+    }
+
+    .row > div {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+    }
+
+    .row > div:last-child {
+        margin-right: 0;
+    }
+</style>
+
+<div class="row flexrow mb-5 ml-0 ">
+    <div class="col-2 image-container">
+        <img src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@Model.company.NamaSyarikat</strong></h5>
+        <h6 class="mb-0">
+            PENYATA PENYESUAIAN BANK
+            BANK : @Model.Bank
+        </h6>
+        <h6 class="mb-0">PADA @Model.Tarikh.ToString("dd/MM/yyyy")</h6>
+    </div>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</h6>
+        <h6 class="mb-0">Laporan: PB001</h6>
+    </div>
+</div>
+
+<div class="mb-0">
+    <table class="table table-borderless table-sm topic">
+        <tbody>
+            <tr>
+                <td colspan="5"><h5 class="font-weight-bold">BAKI SEBENAR PENYATA BANK</h5></td>
+                <td align="right"><h5 class="font-weight-bold">@Convert.ToDecimal(Model.bakiPenyata).ToString("#,##0.00")</h5></td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <h5 class="font-weight-bold">
+                        TAMBAH: BAYARAN BELUM DIJELASKAN DI PENYATA BANK
+                    </h5>
+                </td>
+            </tr>
+            @foreach (var item in Model.bayaranBelumJelasPenyataBank)
+            {
+                <tr>
+                    <td><h5>@item.date.ToString("dd/MM/yyyy")</h5></td>
+                    <td><h5>@item.refNo</h5></td>
+                    <td><h5>@item.name</h5></td>
+                    <td><h5>@item.cekNo</h5></td>
+                    <td align="right"><h5>@Convert.ToDecimal(item.amount).ToString("#,##0.00")</h5></td>
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <td colspan="5">
+                    <h5 class="text-white">
+                        -
+                    </h5>
+                </td>
+                <td class="border-bottom">
+                    <h5 class="font-weight-bold" align="right">@Convert.ToDecimal(Model.JumBayaranBelumJelasPenyataBank).ToString("#,##0.00")</h5>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <h5 class="font-weight-bold">
+                        TOLAK: BAYARAN PENYATA BANK BELUM DIAKUI TERIMA DI BUKU TUNAI
+                    </h5>
+                </td>
+            </tr>
+            @foreach (var item in Model.bayaranBelumAkuiBukuTunai)
+            {
+                <tr style="page-break-inside: avoid !important">
+                    <td><h5>@item.Tarikh.ToString("dd/MM/yyyy")</h5></td>
+                    <td><h5>@item.KodTransaksi</h5></td>
+                    <td><h5>@item.PerihalTransaksi</h5></td>
+                    <td><h5>@item.NoDokumen</h5></td>
+                    <td align="right"><h5>@Convert.ToDecimal(item.Debit).ToString("#,##0.00")</h5></td>
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <td colspan="5">
+                    <h5 class="text-white">
+                        -
+                    </h5>
+                </td>
+                <td class="border-bottom">
+                    <h5 class="font-weight-bold" align="right">@Convert.ToDecimal(Model.JumBayaranBelumAkuiBukuTunai).ToString("#,##0.00")</h5>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <h5 class="font-weight-bold">
+                        TOLAK: TERIMAAN BELUM DIJELASKAN DI PENYATA BANK
+                    </h5>
+                </td>
+            </tr>
+            @foreach (var item in Model.terimaanBelumJelasPenyataBank)
+            {
+                <tr style="page-break-inside: avoid !important">
+                    <td><h5>@item.date.ToString("dd/MM/yyyy")</h5></td>
+                    <td><h5>@item.refNo</h5></td>
+                    <td><h5 class="text-uppercase">@item.name</h5></td>
+                    <td><h5>@item.cekNo</h5></td>
+                    <td align="right"><h5>@Convert.ToDecimal(item.amount).ToString("#,##0.00")</h5></td>
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <td colspan="5">
+                    <h5 class="text-white">
+                        -
+                    </h5>
+                </td>
+                <td class="border-bottom">
+                    <h5 class="font-weight-bold" align="right">@Convert.ToDecimal(0 -Model.JumTerimaanBelumJelasPenyataBank).ToString("#,##0.00")</h5>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <h5 class="font-weight-bold">
+                        TAMBAH: TERIMAAN PENYATA BANK BELUM DIAKUI TERIMA DI BUKU TUNAI
+                    </h5>
+                </td>
+            </tr>
+            @foreach (var item in Model.terimaanBelumAkuiBukuTunai)
+            {
+                <tr style="page-break-inside: avoid !important">
+                    <td><h5>@item.Tarikh.ToString("dd/MM/yyyy")</h5></td>
+                    <td><h5>@item.KodTransaksi</h5></td>
+                    <td><h5>@item.PerihalTransaksi</h5></td>
+                    <td><h5>@item.NoDokumen</h5></td>
+                    <td align="right"><h5>@Convert.ToDecimal(item.Kredit).ToString("#,##0.00")</h5></td>
+                    <td></td>
+                </tr>
+            }
+            <tr>
+                <td colspan="5">
+                    <h5 class="text-white">
+                        -
+                    </h5>
+                </td>
+                <td class="border-bottom ">
+                    <h5 class="font-weight-bold" align="right">@Convert.ToDecimal(0 -  Model.JumTerimaanBelumAkuiBukuTunai).ToString("#,##0.00")</h5>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5"><h5 class="font-weight-bold">BAKI DALAM BUKU TUNAI</h5></td>
+                <td align="right" class="border-bottom">
+                    <h5 class="font-weight-bold">
+                        @Convert.ToDecimal(Model.bakiBukuTunai).ToString("#,##0.00")
+                    </h5>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5"><h5 class="font-weight-bold">PERBEZAAN BAKI PENYATA</h5></td>
+                <td align="right" class="border-top border-bottom">
+                    <h5 class="font-weight-bold">
+                        @Convert.ToDecimal(Model.Beza).ToString("#,##0.00")
+                    </h5>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
