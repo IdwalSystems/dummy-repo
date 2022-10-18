@@ -1180,7 +1180,8 @@ namespace MSNK.Controllers
                             AkCartaId1 = akInvois.KodObjekAPId,
                             AkCartaId2 = item.AkCartaId,
                             Tarikh = akInvois.Tarikh,
-                            Debit = item.Amaun
+                            Debit = item.Amaun,
+                            AkPenghutangId = akInvois.AkPenghutangId
                         };
 
                         await _akAkaunRepo.Insert(akHutang);
@@ -1193,7 +1194,8 @@ namespace MSNK.Controllers
                             AkCartaId1 = item.AkCartaId,
                             AkCartaId2 = akInvois.KodObjekAPId,
                             Tarikh = akInvois.Tarikh,
-                            Kredit = item.Amaun
+                            Kredit = item.Amaun,
+                            AkPenghutangId = akInvois.AkPenghutangId
                         };
 
                         await _akAkaunRepo.Insert(akAObjek);

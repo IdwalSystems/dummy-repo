@@ -1870,7 +1870,9 @@ namespace MSNK.Controllers
                             AkCartaId1 = akTerima.AkBank.AkCartaId,
                             AkCartaId2 = item.AkCartaId,
                             Tarikh = akTerima.Tarikh,
-                            Debit = item.Amaun
+                            Debit = item.Amaun,
+                            AkPenghutangId = akTerima.AkPenghutangId,
+                            JSukanId = akTerima.SpPendahuluanPelbagai?.JSukanId
                         };
                         await _akAkaunRepo.Insert(akAKodBank);
 
@@ -1882,7 +1884,9 @@ namespace MSNK.Controllers
                             AkCartaId1 = item.AkCartaId,
                             AkCartaId2 = akTerima.AkBank.AkCartaId,
                             Tarikh = akTerima.Tarikh,
-                            Kredit = item.Amaun
+                            Kredit = item.Amaun,
+                            AkPenghutangId = akTerima.AkPenghutangId,
+                            JSukanId = akTerima.SpPendahuluanPelbagai?.JSukanId
                         };
 
                         await _akAkaunRepo.Insert(akAObjek);

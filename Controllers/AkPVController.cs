@@ -3379,7 +3379,8 @@ namespace MSNK.Controllers
                                     AkCartaId1 = akPV.AkBank.AkCartaId,
                                     AkCartaId2 = i.AkBelian.KodObjekAPId,
                                     Tarikh = akPV.Tarikh,
-                                    Kredit = item.Amaun
+                                    Kredit = item.Amaun,
+                                    AkPembekalId = akPV.AkPembekalId
                                 };
 
                                 await _akAkaunRepo.Insert(akAKodBank);
@@ -3392,7 +3393,8 @@ namespace MSNK.Controllers
                                     AkCartaId1 = i.AkBelian.KodObjekAPId,
                                     AkCartaId2 = akPV.AkBank.AkCartaId,
                                     Tarikh = akPV.Tarikh,
-                                    Debit = item.Amaun
+                                    Debit = item.Amaun,
+                                    AkPembekalId = akPV.AkPembekalId
                                 };
 
                                 await _akAkaunRepo.Insert(akAObjek);
@@ -3411,7 +3413,9 @@ namespace MSNK.Controllers
                                 AkCartaId1 = akPV.AkBank.AkCartaId,
                                 AkCartaId2 = item.AkCartaId,
                                 Tarikh = akPV.Tarikh,
-                                Kredit = item.Amaun
+                                Kredit = item.Amaun,
+                                AkPembekalId = akPV.AkPembekalId,
+                                JSukanId = akPV.SpPendahuluanPelbagai?.JSukanId
                             };
 
                             await _akAkaunRepo.Insert(akAKodBank);
@@ -3424,7 +3428,9 @@ namespace MSNK.Controllers
                                 AkCartaId1 = item.AkCartaId,
                                 AkCartaId2 = akPV.AkBank.AkCartaId,
                                 Tarikh = akPV.Tarikh,
-                                Debit = item.Amaun
+                                Debit = item.Amaun,
+                                AkPembekalId = akPV.AkPembekalId,
+                                JSukanId = akPV.SpPendahuluanPelbagai?.JSukanId
                             };
 
                             await _akAkaunRepo.Insert(akAObjek);

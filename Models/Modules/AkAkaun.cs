@@ -50,6 +50,12 @@ namespace MSNK.Models.Modules
         [DefaultValue(0)]
         [MaxLength(1)]
         public int? Ganding { get; set; }
+        [DisplayName("Sukan")]
+        public int? JSukanId { get; set; }
+        [DisplayName("Pembekal")]
+        public int? AkPembekalId { get; set; }
+        [DisplayName("Penghutang")]
+        public int? AkPenghutangId { get; set; }
 
         //Relationship
 

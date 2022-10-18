@@ -1718,7 +1718,8 @@ namespace MSNK.Controllers
                                 AkCartaId1 = akBelian.KodObjekAPId,
                                 AkCartaId2 = item.AkCartaId,
                                 Tarikh = akBelian.Tarikh,
-                                Kredit = item.Amaun
+                                Kredit = item.Amaun,
+                                AkPembekalId = akBelian.AkPembekalId
                             };
 
                             await _akAkaunRepo.Insert(akALiabiliti);
@@ -1731,7 +1732,8 @@ namespace MSNK.Controllers
                                 AkCartaId1 = item.AkCartaId,
                                 AkCartaId2 = akBelian.KodObjekAPId,
                                 Tarikh = akBelian.Tarikh,
-                                Debit = item.Amaun
+                                Debit = item.Amaun,
+                                AkPembekalId = akBelian.AkPembekalId
                             };
 
                             await _akAkaunRepo.Insert(akAObjek);
