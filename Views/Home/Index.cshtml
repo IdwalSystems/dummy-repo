@@ -18,127 +18,130 @@
     <div class="col-8">
         <h5 class="text-secondary text-uppercase">Dashboard</h5>
     </div>
-    
+
 </div>
 <hr class="mt-0" />
-@*div Header end*@
-
-@*div Header*@
 <div class="row mb-3">
     <div class="col-lg-8">
         <h5 class=" mb-0">Selamat Datang, @namaUser.Nama</h5>
     </div>
-    
+
 </div>
 
 @*div Header end*@
 
-
-        <div class="card-group  shadow">
-          <div class="card ac-light">
-            <div class="card-body ac-warning">
-              <h5 class="card-title">Transaksi</h5>
-              <p class="card-text">Senarai Nota Minta</p>
-              <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
-                    <a class="btn-block" asp-controller="AkNotaMinta" asp-action="Index">
-                        <i class="fas fa-handshake fa-10x"></i>
-                    </a>
-                </div> 
+@*card group shortcut*@
+<div class="card-group  shadow">
+    <div class="card ac-light">
+        <div class="card-body ac-warning">
+            <h5 class="card-title">Transaksi</h5>
+            <p class="card-text">Senarai Nota Minta</p>
+            <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
+                <a class="btn-block" asp-controller="AkNotaMinta" asp-action="Index">
+                    <i class="fas fa-handshake fa-10x"></i>
+                </a>
             </div>
-          </div>
-          <div class="card ac-light">
-            <div class="card-body ac-tertiary">
-              <h5 class="card-title">Permohonan</h5>
-              <p class="card-text">Senarai Permohonan Pendahuluan Pelbagai</p>
-              <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
-                    <a class="btn-block" asp-controller="SpPendahuluanPelbagai" asp-action="Index">
-                        <i class="fas fa-file-alt fa-10x"></i>
-                    </a>
-                </div> 
-            </div>
-          </div>
-          <div class="card ac-light">
-            <div class="card-body ac-warning">
-              <h5 class="card-title">Profil</h5>
-              <p class="card-text">Skim Kecemerlangan Atlet</p>
-                <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
-                    <a class="btn-block" asp-controller="SuProfilAtlet" asp-action="Index">
-                        <i class="fa-solid fa-medal fa-10x"></i>
-                    </a>
-                </div>  
-          </div>
-          </div>
-          <div class="card ac-light">
-            <div class="card-body ac-tertiary">
-              <h5 class="card-title">Profil</h5>
-              <p class="card-text">Elaun JSM</p>
-                <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
-                    <a class="btn-block" asp-controller="SuProfilJurulatih" asp-action="Index">
-                        <i class="fa-solid fa-person-running fa-10x"></i>
-                    </a>
-                </div>  
-          </div>
-          </div>
         </div>
+    </div>
+    <div class="card ac-light">
+        <div class="card-body ac-tertiary">
+            <h5 class="card-title">Permohonan</h5>
+            <p class="card-text">Senarai Permohonan Pendahuluan Pelbagai</p>
+            <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
+                <a class="btn-block" asp-controller="SpPendahuluanPelbagai" asp-action="Index">
+                    <i class="fas fa-file-alt fa-10x"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card ac-light">
+        <div class="card-body ac-warning">
+            <h5 class="card-title">Profil</h5>
+            <p class="card-text">Skim Kecemerlangan Atlet</p>
+            <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
+                <a class="btn-block" asp-controller="SuProfilAtlet" asp-action="Index">
+                    <i class="fa-solid fa-medal fa-10x"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card ac-light">
+        <div class="card-body ac-tertiary">
+            <h5 class="card-title">Profil</h5>
+            <p class="card-text">Elaun JSM</p>
+            <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
+                <a class="btn-block" asp-controller="SuProfilJurulatih" asp-action="Index">
+                    <i class="fa-solid fa-person-running fa-10x"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 <br />
+@*card group shortcut end*@
 
-@*div Header*@
+@*card access application*@
 <div class="card">
-<div class="card-body ac-info">
-    <h5 class="card-title">Capaian Anda Dinafikan?</h5>
-    <p class="card-text">Sila klik butang ini untuk cetakan borang permohonan capaian</p>
-    <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
-        <a class="btn-block" target="_blank" asp-action="PrintPermohonanCapaian">
-            <i class="fas fa-print fa-10x"></i>
-        </a>
-    </div>  
+    <div class="card-body ac-info">
+        <h5 class="card-title">Capaian Anda Dinafikan?</h5>
+        <p class="card-text">Sila klik butang ini untuk cetakan borang permohonan capaian</p>
+        <div class="card-img-overlay text-right" style="overflow:hidden; opacity:20%;">
+            <a class="btn-block" target="_blank" asp-action="PrintPermohonanCapaian">
+                <i class="fas fa-print fa-10x"></i>
+            </a>
+        </div>
+    </div>
 </div>
-</div>
-@*div Header end*@
+@*card access application end*@
 
+@*tab makluman kewangan*@
 <br />
-    @if (!User.IsInRole("User"))
-    {
+@if (!User.IsInRole("User"))
+{
     <div class="card box-shadow">
         <div class="card-body">
             <h5 class=" text-uppercase">Makluman Kewangan</h5>
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#statusNotaMinta" id="tabNM">Nota Minta 
-                        @if(Model.bilKewNM != 0)
+                    <a class="nav-link active" data-toggle="tab" href="#statusNotaMinta" id="tabNM">
+                        Nota Minta
+                        @if (Model.bilKewNM != 0)
                         {
-                            <span class="badge ac-warning text-white">@Model.bilKewNM</span>  
+                            <span class="badge ac-warning text-white">@Model.bilKewNM</span>
                         }
-                        @if(Model.bilLulusNM != 0)
+                        @if (Model.bilLulusNM != 0)
                         {
                             <span class="badge ac-success">@Model.bilLulusNM</span>
                         }
-                    </a> 
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#StatusPO" id="tabPO">Pesanan Tempatan
-                        @if(Model.bilLess5Days != 0)
+                    <a class="nav-link" data-toggle="tab" href="#StatusPO" id="tabPO">
+                        Pesanan Tempatan
+                        @if (Model.bilLess5Days != 0)
                         {
-                            <span class="badge ac-warning text-white">@Model.bilLess5Days</span>  
+                            <span class="badge ac-warning text-white">@Model.bilLess5Days</span>
                         }
-                        @if(Model.bilMore5Days != 0)
+                        @if (Model.bilMore5Days != 0)
                         {
                             <span class="badge ac-danger">@Model.bilMore5Days</span>
                         }
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#StatusPendahuluanPelbagai" id="tabPendahuluanPelbagai">Pendahuluan Pelbagai
-                        @if(Model.bilKewPP != 0)
+                    <a class="nav-link" data-toggle="tab" href="#StatusPendahuluanPelbagai" id="tabPendahuluanPelbagai">
+                        Pendahuluan Pelbagai
+                        @if (Model.bilKewPP != 0)
                         {
                             <span class="badge ac-warning text-white">@Model.bilKewPP</span>
                         }
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#StatusProfilJuruAtlet" id="tabProfilJuruAtlet">Elaun / Skim
-                        @if(Model.bilKewP != 0)
+                    <a class="nav-link" data-toggle="tab" href="#StatusProfilJuruAtlet" id="tabProfilJuruAtlet">
+                        Elaun / Skim
+                        @if (Model.bilKewP != 0)
                         {
                             <span class="badge ac-warning text-white">@Model.bilKewP</span>
                         }
@@ -180,21 +183,77 @@
                     </div>
                 </div>
             </div>
-                
+
         </div>
-            
+
     </div>
+}
+@*tab makluman kewangan end*@
+<br />
+@*card graph bar*@
+<partial name="_GrafJumlahKutipanBayaranTahunIni" />
+@*card graph bar end*@
+
+<script>
+    var barCanvas = document.getElementById("barchart");
+    var Kutipan = [];//these are all javascript array variables
+    var Bayaran = [];
+    var Month = [];
+    @if(Model.MarkList.Count>0)
+    {
+        foreach(var item in Model.MarkList)
+        {
+            @:Kutipan.push(@item.Kutipan);
+            @:Bayaran.push(@item.Bayaran);
+            @:Month.push("@item.Month");
+        }
     }
+    var Kutipan = {
+        label: 'Kutipan',
+        data: Kutipan,
+        backgroundColor: 'rgb(75, 192, 192, 0.8)',
+        borderWidth: 0,
+        lineTension: 0,
+    };
+    var Bayaran = {
+        label: 'Bayaran',
+        data: Bayaran,
+        backgroundColor: 'rgb(255, 159, 64, 0.8)',
+        borderWidth: 0,
+    };
+    const labels = Month;
 
-    
-@*<div class="form-row mb-3">
-    <div class="col-md-12">
-        <partial name="_StatusNotaMintaWidget" />
-    </div>
-</div>
-<div class="form-row mb-3">
-    <div class="col-md-12">
-        <partial name="_StatusPOWidget" />
-    </div>
-</div>*@
-
+    var datasetvalues = {
+        labels: labels,//x-axis label values
+        datasets: [Kutipan, Bayaran ]//y-axis
+    };
+    var chartOptions = {
+        tooltips: {
+            callbacks: {
+                label: function (tooltipItem, data) {
+                    return Number(tooltipItem.yLabel).toFixed(2);
+                }
+            }
+        },
+        legend: {
+            display: true,
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    callback: function (value, index, ticks) {
+                        return 'RM' + value;
+                    }
+                }
+            }
+        }
+    };
+ 
+    var barChart = new Chart(barCanvas, {
+        type: 'bar',
+        data: datasetvalues,
+        options: chartOptions
+    });
+</script>

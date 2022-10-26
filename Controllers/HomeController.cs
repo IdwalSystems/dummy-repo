@@ -163,6 +163,8 @@ namespace MSNK.Controllers
                     .Where(x => x.IsNotaMinta == true).OrderBy(b => b.SuPekerja.Nama).ToList();
                 ViewBag.JPelulusNM = pelulus;
 
+                var markList = await GetKutipanBayaranMarkList();
+
                 dynamic dyModel = new ExpandoObject();
                 dyModel.AkPO = akPO;
                 dyModel.bilMore5Days = bilMore5Days;
@@ -174,9 +176,152 @@ namespace MSNK.Controllers
                 dyModel.bilKewPP = bilKewPP;
                 dyModel.SuProfil = suProfil;
                 dyModel.bilKewP = bilKewP;
+                dyModel.MarkList = markList;
                 return View(dyModel);
             }
             
+        }
+
+        //Make function in models and get data from database as per your requirement... //Dont do in controller like this
+        public async Task<List<KutipanBayaranMarkDetails>> GetKutipanBayaranMarkList()
+        {
+            var markList = new List<KutipanBayaranMarkDetails>();
+
+            var akAkaun = await _context.AkAkaun
+                .Where(b => b.Tarikh.Year.ToString() == DateTime.Now.Year.ToString() 
+                && b.AkCarta1.Id == 24
+                && (b.NoRujukan.StartsWith("RR") || b.NoRujukan.StartsWith("PV")) ) // 24 id carta untuk bank testing
+                .ToListAsync();
+
+            foreach (var item in akAkaun)
+            {
+                var mark = new KutipanBayaranMarkDetails();
+                var month = item.Tarikh.ToString("MM");
+
+                switch (month)
+                {
+                    case "01":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                    break;
+                    case "02":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                        break;
+                    case "03":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                        break;
+                    case "04":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                        break;
+                    case "05":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                        break;
+                    case "06":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                        break;
+                    case "07":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                        break;
+                    case "08":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                        break;
+                    case "09":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                        break;
+                    case "10":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                        break;
+                    case "11":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                        break;
+                    case "12":
+                        mark = new KutipanBayaranMarkDetails()
+                        {
+                            NumMonth = month,
+                            Month = Tools.BulanSingkatan(month),
+                            Bayaran = item.Kredit,
+                            Kutipan = item.Debit
+                        };
+                        break;
+                }
+                markList.Add(mark);
+            }
+
+            markList = markList.GroupBy(b => b.Month)
+                .Select(l => new KutipanBayaranMarkDetails
+             {
+                 NumMonth = l.First().NumMonth,
+                 Month = l.First().Month,
+                 Kutipan = l.Sum(c => c.Kutipan),
+                 Bayaran = l.Sum(c => c.Bayaran)
+             }).OrderBy(b => b.NumMonth).ToList();
+
+            return markList;
         }
 
         [Authorize(Roles = "SuperAdmin")]
@@ -288,5 +433,13 @@ namespace MSNK.Controllers
         }
         // printing List of Carta end
 
+    }
+
+    public class KutipanBayaranMarkDetails
+    {
+        public string NumMonth { get; set; }
+        public string Month { get; set; }
+        public decimal Kutipan { get;  set; }
+        public decimal Bayaran { get;  set; }
     }
 }
