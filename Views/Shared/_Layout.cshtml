@@ -30,7 +30,9 @@
     <script src="~/lib/select2/js/select2.min.js"></script>
     <script src="~/lib/toastr.js/toastr.min.js"></script>
     <script src="~/lib/Chart.js/chart.min.js"></script>
-    <script src="~/js/site.min.js" asp-append-version="true"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.js" integrity="sha512-B+gr+zLWg81qxVwvtYwKrmjvQtZKD/GGFF7jD80OfzbqFw+NsbS5faEqpCO7Q7oRw1bYi0+WLJf54j8Vm7NADw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     @*<script>
@@ -283,7 +285,7 @@
             <main role="main" class="pb-3">
                 <partial name="_Notifications" />
                 <button class="ac-tertiary" onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-chevron-up"></i></button>
-
+                <input type="hidden" id="hfUsername" value="@namaUser" />
                 @RenderBody()
             </main>
         </div>
@@ -338,7 +340,7 @@
             document.documentElement.scrollTop = 0;
         }
     </script>
-    
+    <script src="~/js/notification.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

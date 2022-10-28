@@ -10,14 +10,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MSNK.Controllers;
 using MSNK.Data;
+using MSNK.Hubs;
 using MSNK.Infrastructure;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart.Session;
 using MSNK.Models.Modules.EFRepository;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Services;
+using MSNK.SubscribeTableDependency;
 using Rotativa.AspNetCore;
 using System;
+using System.Threading.Tasks;
 
 namespace MSNK
 {
@@ -35,6 +38,11 @@ namespace MSNK
         {
             services.AddSession();
             services.AddMemoryCache();
+            services.AddSignalR();
+
+            // DI 
+            services.AddTransient<NotificationHub>();
+            services.AddTransient<SubscribeNotificationTableDependency>();
 
             //MailJet
             //MailJetOptions settings = Configuration.GetSection("MailJet").Get<MailJetOptions>();
@@ -51,9 +59,11 @@ namespace MSNK
                     options.UseTriggers(triggerOptions =>
                     {
                         triggerOptions.AddTrigger<SoftDeleteTrigger>();
+
                     });
+                    
                 });
-            
+
 
             services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider); ;
@@ -69,10 +79,12 @@ namespace MSNK
             services.ConfigureApplicationCookie(opt =>
             {
                 opt.AccessDeniedPath = new PathString("/Home/Accessdenied");
-                opt.ExpireTimeSpan = TimeSpan.FromSeconds(600);
+                opt.ExpireTimeSpan = TimeSpan.FromSeconds(50);
                 opt.LoginPath = "/Account/Login";
                 opt.SlidingExpiration = true;
+                opt.LogoutPath = "/Account/LogOff";
             });
+
 
             services.AddTransient<IRepository<AkBank, int, string>, AkBankRepository>();
             services.AddTransient<IRepository<JKW, int, string>, JKWRepository>();
@@ -513,7 +525,13 @@ namespace MSNK
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapHub<NotificationHub>("/notificationHub");
             });
+
+            // call table dependency here
+            // create a middleware and call tableDependency method in middleware
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            app.UseSqlTableDependency<SubscribeNotificationTableDependency>(connectionString);
 
             SeedData.SeedUsers(userManager);
             RotativaConfiguration.Setup(env.ContentRootPath, "wwwroot/plugins/Rotativa");

@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MSNK.Controllers
@@ -265,6 +267,7 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
+            HttpContext.Session.Remove("Username");
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
@@ -272,6 +275,7 @@ namespace MSNK.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl=null)
         {
+            
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
@@ -304,6 +308,7 @@ namespace MSNK.Controllers
                 {
                     var user = _db.applicationUsers.FirstOrDefault(b => b.UserName == model.Emel);
                     var roles = _db.UserRoles.FirstOrDefault(b => b.RoleId == "1f24d001-e893-491e-bbc1-974d2ee2e0f1");
+                    HttpContext.Session.SetString("Username", user.UserName);
                     return LocalRedirect(returnurl);
                 }
                 if (result.IsLockedOut) 
@@ -317,6 +322,8 @@ namespace MSNK.Controllers
                 }
 
             }
+            
+
             return View(model);
         }
 
@@ -455,4 +462,5 @@ namespace MSNK.Controllers
             }
         }
     }
+    
 }

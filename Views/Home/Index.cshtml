@@ -190,11 +190,14 @@
 }
 @*tab makluman kewangan end*@
 <br />
-@*card graph bar*@
-<partial name="_GrafJumlahKutipanBayaranTahunIni" />
-@*card graph bar end*@
 
-<script>
+
+    <!--
+    @*card graph bar*@
+    <partial name="_GrafJumlahKutipanBayaranTahunIni" />
+    @*card graph bar end*@
+
+    <script>
     var barCanvas = document.getElementById("barchart");
     var Kutipan = [];//these are all javascript array variables
     var Bayaran = [];
@@ -250,10 +253,11 @@
             }
         }
     };
- 
+
     var barChart = new Chart(barCanvas, {
         type: 'bar',
         data: datasetvalues,
         options: chartOptions
     });
-</script>
+    </script>
+    -->

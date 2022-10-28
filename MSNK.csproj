@@ -36,11 +36,14 @@
     <PackageReference Include="Rotativa" Version="1.7.3" />
     <PackageReference Include="Rotativa.AspNetCore" Version="1.2.0" />
     <PackageReference Include="SendGrid" Version="9.28.0" />
+    <PackageReference Include="SqlTableDependency" Version="8.5.8" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Hubs\Akaun\" />
     <Folder Include="wwwroot\img\svg\" />
+    <Folder Include="wwwroot\js\Akaun\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
