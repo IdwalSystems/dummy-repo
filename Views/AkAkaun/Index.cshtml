@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Lejar Am";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = _http.HttpContext.Request.PathBase;
 }
 
 <style>
@@ -15,12 +16,12 @@
     }
 
     td.details-name {
-        background: url("@Url.Content("/img/details_open.png")") no-repeat center center;
+        background: url("@Url.Content(baseUrl + "/img/details_open.png")") no-repeat center center;
         cursor: pointer;
     }
 
     tr.details td.details-name {
-        background: url("@Url.Content("/img/details_close.png")") no-repeat center center;
+        background: url("@Url.Content(baseUrl + "/img/details_close.png")") no-repeat center center;
     }
 </style>
 
