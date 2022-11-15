@@ -13,6 +13,15 @@
     .bil, .thbil {
         text-align: center;
     }
+
+    td.details-name {
+        background: url("@Url.Content("/img/details_open.png")") no-repeat center center;
+        cursor: pointer;
+    }
+
+    tr.details td.details-name {
+        background: url("@Url.Content("/img/details_close.png")") no-repeat center center;
+    }
 </style>
 
 <partial name="_JSIndex" />
@@ -112,6 +121,8 @@
                     <table class="table table-bordered table-hover display compact nowrap" width="100%">
                         <thead>
                             <tr>
+                                <th class="details-name">
+                                </th>
                                 <th class="thbil">
                                     Bil
                                 </th>
@@ -140,6 +151,7 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                    <td class="details-name"></td>
                                     <td class="bil">
                                         @(rowNo += 1)
                                     </td>

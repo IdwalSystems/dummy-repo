@@ -1,6 +1,16 @@
 ﻿"use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/notificationHub").build();
+// local / live
+var connection = new signalR.HubConnectionBuilder().withUrl("/notificationHub", {
+    skipNegotiation: true,
+    transport: signalR.HttpTransportType.WebSockets
+}).build();
+
+// staging
+//var connection = new signalR.HubConnectionBuilder().withUrl("/msnk/notificationHub", {
+//    skipNegotiation: true,
+//    transport: signalR.HttpTransportType.WebSockets
+//}).build();
 
 connection.start().then(function () {
     console.log('connected to hub');

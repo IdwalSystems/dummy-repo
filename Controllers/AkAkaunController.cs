@@ -11,6 +11,7 @@ using MSNK.Data;
 using MSNK.Infrastructure;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Modules.ViewModel;
 using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
@@ -296,5 +297,146 @@ namespace MSNK.Controllers
             };
         }
         // printing List of Carta end
+
+        public JsonResult JsonGetPenerima(string noRujukan)
+        {
+            try
+            {
+                var jenis = noRujukan.Substring(0, 2);
+
+                List<ListItemViewModel> penerima = new List<ListItemViewModel>();
+                switch (jenis) {
+                    // nota minta
+                    case "NM":
+                        AkNotaMinta nm = _context.AkNotaMinta.Where(b => b.NoRujukan == noRujukan).FirstOrDefault();
+                        if (nm != null)
+                        {
+                            penerima.Add(new ListItemViewModel
+                            {
+                                id = nm.Id,
+                                indek = 1,
+                                perihal = nm.AkPembekal.NamaSykt?.ToUpper()
+                            });
+                        }
+                        break;
+                    // po
+                    case "PO":
+                        AkPO po = _context.AkPO.Where(b => "PO/" + b.NoPO == noRujukan).FirstOrDefault();
+                        if (po != null)
+                        {
+                            penerima.Add(new ListItemViewModel
+                            {
+                                id = po.Id,
+                                indek = 1,
+                                perihal = po.AkPembekal.NamaSykt?.ToUpper()
+                            });
+                        }
+                        break;
+                    // inden
+                    case "IK":
+                        AkInden inden = _context.AkInden.Where(b => "IK/" + b.NoInden == noRujukan).FirstOrDefault();
+                        if (inden != null)
+                        {
+                            penerima.Add(new ListItemViewModel
+                            {
+                                id = inden.Id,
+                                indek = 1,
+                                perihal = inden.AkPembekal.NamaSykt?.ToUpper()
+                            });
+                        }
+                        break;
+                    // belian (invois pembekal)
+                    case "IN":
+                        AkBelian belian = _context.AkBelian.Where(b => b.NoInbois == noRujukan).FirstOrDefault();
+                        if (belian != null)
+                        {
+                            penerima.Add(new ListItemViewModel
+                            {
+                                id = belian.Id,
+                                indek = 1,
+                                perihal = belian.AkPembekal.NamaSykt?.ToUpper()
+                            });
+                        }
+                        break;
+                    // baucer
+                    case "PV":
+                        AkPV pv = _context.AkPV.Include(b => b.AkPVGanda).Where(b => b.NoPV == noRujukan).FirstOrDefault();
+                        if (pv != null)
+                        {
+                            if (pv.IsGanda == true)
+                            {
+                                var bil = 1;
+                                foreach (var item in pv.AkPVGanda)
+                                {
+                                    penerima.Add(new ListItemViewModel
+                                    {
+                                        id = pv.Id,
+                                        indek = bil,
+                                        perihal = item.Nama?.ToUpper()
+                                    });
+                                    bil++;
+                                }
+                            }
+                            else
+                            {
+                                penerima.Add(new ListItemViewModel
+                                {
+                                    id = pv.Id,
+                                    indek = 1,
+                                    perihal = pv.Nama?.ToUpper()
+                                });
+                            }
+                            
+                        }
+                        break;
+                    // jurnal
+                    case "JR":
+                        AkJurnal jurnal = _context.AkJurnal.Where(b => "JR/" + b.NoJurnal == noRujukan).FirstOrDefault();
+                        if (jurnal != null)
+                        {
+                            penerima.Add(new ListItemViewModel
+                            {
+                                id = jurnal.Id,
+                                indek = 1,
+                                perihal = jurnal.Catatan1?.ToUpper()
+                            });
+                        }
+                        break;
+                    // invois dikeluarkan
+                    case "DI":
+                        AkInvois invois = _context.AkInvois.Where(b => b.NoInbois == noRujukan).FirstOrDefault();
+                        if (invois != null)
+                        {
+                            penerima.Add(new ListItemViewModel
+                            {
+                                id = invois.Id,
+                                indek = 1,
+                                perihal = invois.AkPenghutang.NamaSykt?.ToUpper()
+                            });
+                        }
+                        break;
+                    // resit rasmi
+                    case "RR":
+                        AkTerima resit = _context.AkTerima.Where(b => b.NoRujukan == noRujukan).FirstOrDefault();
+                        if (resit != null)
+                        {
+                            penerima.Add(new ListItemViewModel
+                            {
+                                id = resit.Id,
+                                indek = 1,
+                                perihal = resit.Nama?.ToUpper()
+                            });
+                        }
+                        break;
+                }
+
+                return Json(new { result = "OK", record = penerima });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+
+        }
     }
 }

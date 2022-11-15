@@ -4,13 +4,37 @@
     var tblUnmatchSenaraiBank;
     var tblUnmatchSenaraiSistem;
     var bakiBukuTunai;
+    var bakiPenyataBank;
+    var beza;
+    var bayaranBelumJelasPenyataBank;
+    var bayaranBelumAkuiBukuTunai;
+    var terimaanBelumJelasPenyataBank;
+    var terimaanBelumAkuiBukuTunai;
     var debitKreditBankPadan;
     var debitKreditBankBatalPadan;
     var rowCountSysteMatchedStatement = 0;
 
     $(document).ready(function () {
+        year = $("#Tahun").val();
+        month = $("#Bulan").val();
+
+        date1 = year + "-" + month + "-" + "01";
+        $("[id^=inputTarikh]").val(date1);
         bakiBukuTunai = $("#bakiBukuTunai").val();
         bakiBukuTunai = parseFloat(bakiBukuTunai).toFixed(2);
+        bakiPenyataBank = $("#bakiPenyataBank").val();
+        bakiPenyataBank = parseFloat(bakiPenyataBank).toFixed(2);
+        beza = parseFloat(bakiBukuTunai) - parseFloat(bakiPenyataBank);
+        beza = beza.toFixed(2);
+        $("#beza").val(beza);
+        bayaranBelumJelasPenyataBank = $("#bayaranBelumJelasPenyataBank").val();
+        bayaranBelumJelasPenyataBank = parseFloat(bayaranBelumJelasPenyataBank).toFixed(2);
+        bayaranBelumAkuiBukuTunai = $("#bayaranBelumAkuiBukuTunai").val();
+        bayaranBelumAkuiBukuTunai = parseFloat(bayaranBelumAkuiBukuTunai).toFixed(2);
+        terimaanBelumJelasPenyataBank = $("#terimaanBelumJelasPenyataBank").val();
+        terimaanBelumJelasPenyataBank = parseFloat(terimaanBelumJelasPenyataBank).toFixed(2);
+        terimaanBelumAkuiBukuTunai = $("#terimaanBelumAkuiBukuTunai").val();
+        terimaanBelumAkuiBukuTunai = parseFloat(terimaanBelumAkuiBukuTunai).toFixed(2);
         $("#myInputNoPadananUnmatch2").hide();
 
         $("#searchColumnUnmatch").change(function () {
@@ -252,13 +276,34 @@
                     $("#amaun-system-statement").val("0.00");
                     if (debitKreditBankPadan == '+') {
                         bakiBukuTunai = parseFloat(bakiBukuTunai) + parseFloat(amaunSistem);
+                        bayaranBelumJelasPenyataBank = parseFloat(bayaranBelumJelasPenyataBank) + parseFloat(amaunSistem);
+                        bayaranBelumAkuiBukuTunai = parseFloat(bayaranBelumAkuiBukuTunai) + parseFloat(amaunSistem);
+                        terimaanBelumJelasPenyataBank = parseFloat(terimaanBelumJelasPenyataBank);
+                        terimaanBelumAkuiBukuTunai = parseFloat(terimaanBelumAkuiBukuTunai);
                     }
                     else {
                         bakiBukuTunai = parseFloat(bakiBukuTunai) - parseFloat(amaunSistem);
+                        bayaranBelumJelasPenyataBank = parseFloat(bayaranBelumJelasPenyataBank);
+                        bayaranBelumAkuiBukuTunai = parseFloat(bayaranBelumAkuiBukuTunai);
+                        terimaanBelumJelasPenyataBank = parseFloat(terimaanBelumJelasPenyataBank) - parseFloat(amaunSistem);
+                        terimaanBelumAkuiBukuTunai = parseFloat(terimaanBelumAkuiBukuTunai) - parseFloat(amaunSistem);
+                        
+                        
                     }
                     bakiBukuTunai = bakiBukuTunai.toFixed(2);
+                    beza = parseFloat(bakiBukuTunai) - parseFloat(bakiPenyataBank);
+                    beza = beza.toFixed(2);
+                    bayaranBelumJelasPenyataBank = bayaranBelumJelasPenyataBank.toFixed(2);
+                    bayaranBelumAkuiBukuTunai = bayaranBelumAkuiBukuTunai.toFixed(2);
+                    terimaanBelumJelasPenyataBank = terimaanBelumJelasPenyataBank.toFixed(2);
+                    terimaanBelumAkuiBukuTunai = terimaanBelumAkuiBukuTunai.toFixed(2);
 
                     $("#bakiBukuTunai").val(bakiBukuTunai);
+                    $("#beza").val(beza);
+                    $("#bayaranBelumJelasPenyataBank").val(bayaranBelumJelasPenyataBank);
+                    $("#bayaranBelumAkuiBukuTunai").val(bayaranBelumAkuiBukuTunai);
+                    $("#terimaanBelumJelasPenyataBank").val(terimaanBelumJelasPenyataBank);
+                    $("#terimaanBelumAkuiBukuTunai").val(terimaanBelumAkuiBukuTunai);
 
                 },
                 failure: function (response) {
@@ -453,15 +498,35 @@
                     $("#amaun-bank-matched-statement").val(0.00);
                     $("#amaun-system-matched-statement").val(0.00);
                     if (debitKreditBankBatalPadan == '+') {
-                        bakiBukuTunai += parseFloat(amaunSistem);
+                        bakiBukuTunai = parseFloat(bakiBukuTunai) + parseFloat(amaunSistem);
+                        bayaranBelumJelasPenyataBank = parseFloat(bayaranBelumJelasPenyataBank);
+                        bayaranBelumAkuiBukuTunai = parseFloat(bayaranBelumAkuiBukuTunai);
+                        terimaanBelumJelasPenyataBank = parseFloat(terimaanBelumJelasPenyataBank) + parseFloat(amaunSistem);
+                        terimaanBelumAkuiBukuTunai = parseFloat(terimaanBelumAkuiBukuTunai) + parseFloat(amaunSistem);
                     }
                     else {
-                        bakiBukuTunai -= parseFloat(amaunSistem);
+                        bakiBukuTunai = parseFloat(bakiBukuTunai) - parseFloat(amaunSistem);
+                        bayaranBelumJelasPenyataBank = parseFloat(bayaranBelumJelasPenyataBank) - parseFloat(amaunSistem);
+                        bayaranBelumAkuiBukuTunai = parseFloat(bayaranBelumAkuiBukuTunai) - parseFloat(amaunSistem);
+                        terimaanBelumJelasPenyataBank = parseFloat(terimaanBelumJelasPenyataBank);
+                        terimaanBelumAkuiBukuTunai = parseFloat(terimaanBelumAkuiBukuTunai);
                     }
 
                     bakiBukuTunai = bakiBukuTunai.toFixed(2);
+                    beza = parseFloat(bakiBukuTunai) - parseFloat(bakiPenyataBank);
+                    beza = beza.toFixed(2);
+                    bayaranBelumJelasPenyataBank = bayaranBelumJelasPenyataBank.toFixed(2);
+                    bayaranBelumAkuiBukuTunai = bayaranBelumAkuiBukuTunai.toFixed(2);
+                    terimaanBelumJelasPenyataBank = terimaanBelumJelasPenyataBank.toFixed(2);
+                    terimaanBelumAkuiBukuTunai = terimaanBelumAkuiBukuTunai.toFixed(2);
 
                     $("#bakiBukuTunai").val(bakiBukuTunai);
+                    $("#beza").val(beza);
+                    $("#bayaranBelumJelasPenyataBank").val(bayaranBelumJelasPenyataBank);
+                    $("#bayaranBelumAkuiBukuTunai").val(bayaranBelumAkuiBukuTunai);
+                    $("#terimaanBelumJelasPenyataBank").val(terimaanBelumJelasPenyataBank);
+                    $("#terimaanBelumAkuiBukuTunai").val(terimaanBelumAkuiBukuTunai);
+
                 },
                 failure: function (response) {
                     alert(response.responseText);

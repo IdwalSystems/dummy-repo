@@ -3,7 +3,7 @@
         val = val.toString().replace(/,/g, ''); //remove existing commas first
         var valRZ = val.replace(/^0+/, ''); //remove leading zeros, optional
         var valSplit = valRZ.split('.'); //then separate decimals
-    
+
         while (/(\d+)(\d{3})/.test(valSplit[0].toString())){
             valSplit[0] = valSplit[0].toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
         }
@@ -11,7 +11,7 @@
         if(valSplit.length == 2){ //if there were decimals
             val = valSplit[0] + "." + valSplit[1]; //add decimals back
         }else{
-            val = valSplit[0]; 
+            val = valSplit[0];
         }
 
         return val;
@@ -23,7 +23,7 @@
         var tarDari = $("#tarDari").val();
         var tarHingga = $("#tarHingga").val();
         var URL = "AkAkaun/PrintLejarAkaun?searchKW=" + searchKW + "&searchCarta=" + searchCarta + "&tarDari=" + tarDari + "&tarHingga=" + tarHingga;
-        $('<a href="'+ URL +'" target="_blank"></a>')[0].click();        
+        $('<a href="'+ URL +'" target="_blank"></a>')[0].click();
     }
 
     $(document).ready(function () {
@@ -34,6 +34,21 @@
             columnDefs: [
                 { orderable: false, targets: '_all' }
             ],
+            columns: [
+                {
+                    class: 'details-name',
+                    orderable: false,
+                    data: null,
+                    defaultContent: '',
+                },
+                { data: 'bil' },
+                { data: 'tarikh' },
+                { data: 'objek' },
+                { data: 'no_rujukan' },
+                { data: 'debit' },
+                { data: 'kredit' },
+                { data: 'baki' },
+            ],
             "scrollY": "50vh",
             "scrollX": true,
             "scrollCollapse": true,
@@ -41,11 +56,11 @@
             dom: 'lrt'
         });
 
-        table.on('order.dt search.dt', function () {
-            table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                cell.innerHTML = i + 1;
-            });
-        }).draw();
+        //table.on('order.dt search.dt', function () {
+        //    table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+        //        cell.innerHTML = i + 1;
+        //    });
+        //}).draw();
 
         $(".select2").select2({
             theme: "bootstrap"
@@ -55,14 +70,14 @@
         $('tr').each(function () {
             $(this).find('.debit').each(function () {
                 var debit = $(this).text().replace(/[^\d.]/g, '');
-                
+
                 if (!isNaN(debit) && debit.length !== 0) {
                     sum += parseFloat(debit);
                 }
             });
             $(this).find('.kredit').each(function () {
                 var kredit = $(this).text().replace(/[^\d.]/g, '');
-                
+
                 if (!isNaN(kredit) && kredit.length !== 0) {
                     sum -= parseFloat(kredit);
                 }
@@ -82,6 +97,63 @@
         }
 
         $('#ddlKW').val("100");
+
+        // Array to track the ids of the details displayed rows
+        var detailRows = [];
+
+        $('.table tbody').on('click', 'tr td.details-name', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+            var idx = detailRows.indexOf(tr.attr('id'));
+
+            if (row.child.isShown()) {
+                tr.removeClass('details');
+                row.child.hide();
+
+                // Remove from the 'open' array
+                detailRows.splice(idx, 1);
+            } else {
+                tr.addClass('details');
+                var d = row.data()
+                var str = '<strong>PENERIMA / CATATAN</strong> <br>';
+                if (d.objek != '-') {
+                    $.ajax({
+                        type: "POST",
+                        url: '/AkAkaun/JsonGetPenerima',
+                        data: { noRujukan: d.no_rujukan },
+                        dataType: "json",
+                        success: function (msg) {
+
+                            if (msg.record.length > 0) {
+                                for (var i = 0; i < msg.record.length; i++) {
+                                    var item = msg.record[i];
+                                    str +=  item.indek + " - " + item.perihal + "<br>";
+                                }
+                                row.child(str).show();
+                            }
+                        },
+                        error: function (req, status, error) {
+                            alert(error);
+                        }
+                    });
+                }
+                /*row.child(format(row.data())).show();*/
+
+                // Add to the 'open' array
+                if (idx === -1) {
+                    detailRows.push(tr.attr('id'));
+                }
+            }
+        });
+
+        // On each draw, loop over the `detailRows` array and show any child rows
+        table.on('draw', function () {
+            detailRows.forEach(function (id, i) {
+                $('#' + id + ' td.details-name').trigger('click');
+            });
+        });
+
+        table.columns.adjust();
 
     });
 

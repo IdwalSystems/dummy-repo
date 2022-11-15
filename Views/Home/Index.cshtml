@@ -188,76 +188,74 @@
 
     </div>
 }
-@*tab makluman kewangan end*@
 <br />
+@*card graph bar*@
+<partial name="_GrafJumlahKutipanBayaranTahunIni" />
+@*card graph bar end*@
 
-
-    <!--
-    @*card graph bar*@
-    <partial name="_GrafJumlahKutipanBayaranTahunIni" />
-    @*card graph bar end*@
-
-    <script>
-    var barCanvas = document.getElementById("barchart");
-    var Kutipan = [];//these are all javascript array variables
-    var Bayaran = [];
-    var Month = [];
-    @if(Model.MarkList.Count>0)
+<script>
+var barCanvas = document.getElementById("barchart");
+var Kutipan = [];//these are all javascript array variables
+var Bayaran = [];
+var Month = [];
+@if(Model.MarkList.Count>0)
+{
+    foreach(var item in Model.MarkList)
     {
-        foreach(var item in Model.MarkList)
-        {
-            @:Kutipan.push(@item.Kutipan);
-            @:Bayaran.push(@item.Bayaran);
-            @:Month.push("@item.Month");
+        @:Kutipan.push(@item.Kutipan);
+        @:Bayaran.push(@item.Bayaran);
+        @:Month.push("@item.Month");
+    }
+}
+var Kutipan = {
+    label: 'Kutipan',
+    data: Kutipan,
+    backgroundColor: 'rgb(75, 192, 192, 0.8)',
+    borderWidth: 0,
+    lineTension: 0,
+};
+var Bayaran = {
+    label: 'Bayaran',
+    data: Bayaran,
+    backgroundColor: 'rgb(255, 159, 64, 0.8)',
+    borderWidth: 0,
+};
+const labels = Month;
+
+var datasetvalues = {
+    labels: labels,//x-axis label values
+    datasets: [Kutipan, Bayaran ]//y-axis
+};
+var chartOptions = {
+    tooltips: {
+        callbacks: {
+            label: function (tooltipItem, data) {
+                return Number(tooltipItem.yLabel).toFixed(2);
+            }
+        }
+    },
+    legend: {
+        display: true,
+    },
+    scales: {
+        y: {
+            beginAtZero: true,
+            ticks: {
+                // Include a dollar sign in the ticks
+                callback: function (value, index, ticks) {
+                    return 'RM' + value;
+                }
+            }
         }
     }
-    var Kutipan = {
-        label: 'Kutipan',
-        data: Kutipan,
-        backgroundColor: 'rgb(75, 192, 192, 0.8)',
-        borderWidth: 0,
-        lineTension: 0,
-    };
-    var Bayaran = {
-        label: 'Bayaran',
-        data: Bayaran,
-        backgroundColor: 'rgb(255, 159, 64, 0.8)',
-        borderWidth: 0,
-    };
-    const labels = Month;
+};
 
-    var datasetvalues = {
-        labels: labels,//x-axis label values
-        datasets: [Kutipan, Bayaran ]//y-axis
-    };
-    var chartOptions = {
-        tooltips: {
-            callbacks: {
-                label: function (tooltipItem, data) {
-                    return Number(tooltipItem.yLabel).toFixed(2);
-                }
-            }
-        },
-        legend: {
-            display: true,
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    // Include a dollar sign in the ticks
-                    callback: function (value, index, ticks) {
-                        return 'RM' + value;
-                    }
-                }
-            }
-        }
-    };
+var barChart = new Chart(barCanvas, {
+    type: 'bar',
+    data: datasetvalues,
+    options: chartOptions
+});
+</script>
+@*tab makluman kewangan end*@
 
-    var barChart = new Chart(barCanvas, {
-        type: 'bar',
-        data: datasetvalues,
-        options: chartOptions
-    });
-    </script>
-    -->
+
