@@ -119,7 +119,7 @@
                 if (d.objek != '-') {
                     $.ajax({
                         type: "POST",
-                        url: '/AkAkaun/JsonGetPenerima',
+                        url: '@Url.Action("JsonGetPenerima", "AkAkaun")',
                         data: { noRujukan: d.no_rujukan },
                         dataType: "json",
                         success: function (msg) {

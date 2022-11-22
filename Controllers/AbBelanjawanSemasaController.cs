@@ -65,14 +65,14 @@ namespace MSNK.Controllers
             int JKWId,
             int JBahagianId,
             string tahun,
-            DateTime tarHingga)
+            string tarHingga)
         {
-            tarHingga = tarHingga.AddHours(23.99);
+            DateTime date2 = DateTime.Parse(tarHingga).AddHours(23.99);
 
             List<AbBelanjawanSemasaViewModel> vm = new List<AbBelanjawanSemasaViewModel>();
 
             // Waran
-            List<AbWaran> warans = await _bsRepo.GetAbWaranBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AbWaran> warans = await _bsRepo.GetAbWaranBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> waranList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -93,7 +93,7 @@ namespace MSNK.Controllers
             // Waran End
 
             // PO
-            List<AkPO> POs = await _bsRepo.GetAkPOBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkPO> POs = await _bsRepo.GetAkPOBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> poList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -109,7 +109,7 @@ namespace MSNK.Controllers
             // PO End
 
             // Pendahuluan Pelbagai
-            List<SpPendahuluanPelbagai> Sps = await _bsRepo.GetSpPendahuluanPelbagaiBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<SpPendahuluanPelbagai> Sps = await _bsRepo.GetSpPendahuluanPelbagaiBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> spList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -123,7 +123,7 @@ namespace MSNK.Controllers
             // Pendahuluan Pelbagai End
 
             // POLaras
-            List<AkPOLaras> POLarass = await _bsRepo.GetAkPOLarasBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkPOLaras> POLarass = await _bsRepo.GetAkPOLarasBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> poLarasList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -139,7 +139,7 @@ namespace MSNK.Controllers
             // POLaras End
 
             // Inden
-            List<AkInden> Indens = await _bsRepo.GetAkIndenBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkInden> Indens = await _bsRepo.GetAkIndenBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> indenList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -155,7 +155,7 @@ namespace MSNK.Controllers
             // Inden End
 
             // PV
-            List<AkPV> PVs = await _bsRepo.GetAkPVBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkPV> PVs = await _bsRepo.GetAkPVBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> pvList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -171,7 +171,7 @@ namespace MSNK.Controllers
             // Pv End
 
             // Tunai CV
-            List<AkTunaiCV> CVs = await _bsRepo.GetAkTunaiCVBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkTunaiCV> CVs = await _bsRepo.GetAkTunaiCVBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> cvList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -187,7 +187,7 @@ namespace MSNK.Controllers
             // TunaiCV End
 
             // Terima
-            List<AkTerima> Terimas = await _bsRepo.GetAkTerimaBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkTerima> Terimas = await _bsRepo.GetAkTerimaBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> terimaList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -207,7 +207,7 @@ namespace MSNK.Controllers
             // Terima End
 
             // Jurnal
-            List<AkJurnal> Jurnals = await _bsRepo.GetAkJurnalBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkJurnal> Jurnals = await _bsRepo.GetAkJurnalBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> jurnalList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -251,12 +251,14 @@ namespace MSNK.Controllers
         public async Task<IActionResult> PrintPDF(int JKWId,
             int JBahagianId,
             string tahun,
-            DateTime tarHingga)
+            string tarHingga)
         {
+            DateTime date2 = DateTime.Parse(tarHingga).AddHours(23.99);
+
             List<AbBelanjawanSemasaViewModel> vm = new List<AbBelanjawanSemasaViewModel>();
 
             // Waran
-            List<AbWaran> warans = await _bsRepo.GetAbWaranBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AbWaran> warans = await _bsRepo.GetAbWaranBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> waranList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -277,7 +279,7 @@ namespace MSNK.Controllers
             // Waran End
 
             // PO
-            List<AkPO> POs = await _bsRepo.GetAkPOBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkPO> POs = await _bsRepo.GetAkPOBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> poList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -293,7 +295,7 @@ namespace MSNK.Controllers
             // PO End
 
             // Pendahuluan Pelbagai
-            List<SpPendahuluanPelbagai> Sps = await _bsRepo.GetSpPendahuluanPelbagaiBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<SpPendahuluanPelbagai> Sps = await _bsRepo.GetSpPendahuluanPelbagaiBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> spList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -307,7 +309,7 @@ namespace MSNK.Controllers
             // Pendahuluan Pelbagai End
 
             // POLaras
-            List<AkPOLaras> POLarass = await _bsRepo.GetAkPOLarasBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkPOLaras> POLarass = await _bsRepo.GetAkPOLarasBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> poLarasList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -323,7 +325,7 @@ namespace MSNK.Controllers
             // POLaras End
 
             // Inden
-            List<AkInden> Indens = await _bsRepo.GetAkIndenBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkInden> Indens = await _bsRepo.GetAkIndenBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> indenList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -339,7 +341,7 @@ namespace MSNK.Controllers
             // Inden End
 
             // PV
-            List<AkPV> PVs = await _bsRepo.GetAkPVBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkPV> PVs = await _bsRepo.GetAkPVBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> pvList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -355,7 +357,7 @@ namespace MSNK.Controllers
             // Pv End
 
             // Tunai CV
-            List<AkTunaiCV> CVs = await _bsRepo.GetAkTunaiCVBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkTunaiCV> CVs = await _bsRepo.GetAkTunaiCVBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> cvList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -371,7 +373,7 @@ namespace MSNK.Controllers
             // TunaiCV End
 
             // Terima
-            List<AkTerima> Terimas = await _bsRepo.GetAkTerimaBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkTerima> Terimas = await _bsRepo.GetAkTerimaBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> terimaList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -391,7 +393,7 @@ namespace MSNK.Controllers
             // Terina End
 
             // Jurnal
-            List<AkJurnal> Jurnals = await _bsRepo.GetAkJurnalBasedOnYear(tahun, JKWId, JBahagianId, tarHingga);
+            List<AkJurnal> Jurnals = await _bsRepo.GetAkJurnalBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> jurnalList = new List<AbBelanjawanSemasaViewModel>();
 
@@ -436,7 +438,7 @@ namespace MSNK.Controllers
 
             var KW = kw.Kod + " - " + kw.Perihal;
             var Bahagian = bahagian.Kod + " - " + bahagian.Perihal;
-            var lastDate = tarHingga.ToString("dd/MM/yyyy"); 
+            var lastDate = date2;
 
             var company = await _userService.GetCompanyDetails();
 
