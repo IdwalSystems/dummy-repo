@@ -100,12 +100,11 @@ namespace MSNK.Models.Modules.EFRepository
 
         public async Task<List<SpPendahuluanPelbagai>> GetSpPendahuluanPelbagaiBasedOnYear(string tahun, int jKWId, int jBahagianId, DateTime tarHingga)
         {
-            var newTahun = Convert.ToDateTime("31/12/" + tahun).Year;
             var sql = await context.SpPendahuluanPelbagai
                 .Include(b => b.AkCarta)
                     .ThenInclude(b => b.JParas)
                 .Where(
-                b => b.TarMasuk.Year == newTahun
+                b => b.TarMasuk.Year.ToString() == tahun
                 && b.JKWId == jKWId
                 && b.JBahagianId == jBahagianId
                 && b.TarMasuk <= tarHingga
