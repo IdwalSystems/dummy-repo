@@ -179,6 +179,13 @@ namespace MSNK
             services.AddTransient<IRepository<AkBankRecon, int, string>, AkBankReconRepository>();
             services.AddTransient<ListViewIRepository<AkBankReconPenyataBank, int>, AkBankReconPenyataBankRepository>();
             // BANK RECON END
+
+            //NOTA DEBIT KREDIT BELIAN
+            services.AddTransient<IRepository<AkNotaDebitKreditBelian, int, string>, AkNotaDebitKreditBelianRepository>();
+            services.AddTransient<ListViewIRepository<AkNotaDebitKreditBelian1, int>, AkNotaDebitKreditBelian1Repository>();
+            services.AddTransient<ListViewIRepository<AkNotaDebitKreditBelian2, int>, AkNotaDebitKreditBelian2Repository>();
+            //NOTA DEBIT KREDIT BELIAN END
+
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPendahuluan.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
@@ -198,6 +205,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartInvois.GetCart(ss));
             services.AddScoped(ss => SessionCartPenyataPemungut.GetCart(ss));
             services.AddScoped(ss => SessionCartBankRecon.GetCart(ss));
+            services.AddScoped(ss => SessionCartNotaDebitKreditBelian.GetCart(ss));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -265,6 +273,17 @@ namespace MSNK
                 options.AddPolicy("PT001T", policy => policy.RequireClaim("PT001T"));
                 options.AddPolicy("PT001UT", policy => policy.RequireClaim("PT001UT"));
                 //Pesanan PO End
+                //Nota Debit Kredit Belian
+                options.AddPolicy("ND001", policy => policy.RequireClaim("ND001"));
+                options.AddPolicy("ND001C", policy => policy.RequireClaim("ND001C"));
+                options.AddPolicy("ND001E", policy => policy.RequireClaim("ND001E"));
+                options.AddPolicy("ND001D", policy => policy.RequireClaim("ND001D"));
+                options.AddPolicy("ND001P", policy => policy.RequireClaim("ND001P"));
+                options.AddPolicy("ND001B", policy => policy.RequireClaim("ND001B"));
+                options.AddPolicy("ND001R", policy => policy.RequireClaim("ND001R"));
+                options.AddPolicy("ND001T", policy => policy.RequireClaim("ND001T"));
+                options.AddPolicy("ND001UT", policy => policy.RequireClaim("ND001UT"));
+                //Nota Debit Kredit Belian End
                 //Invois Pembekal
                 options.AddPolicy("TG002", policy => policy.RequireClaim("TG002"));
                 options.AddPolicy("TG002C", policy => policy.RequireClaim("TG002C"));

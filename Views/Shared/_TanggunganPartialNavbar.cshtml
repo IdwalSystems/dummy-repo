@@ -17,14 +17,12 @@
     @Html.ActiveClass("AkNotaMinta")
     @Html.ActiveClass("AkPO")
     @Html.ActiveClass("AkInden")
-    @Html.ActiveClass("AkBelian")
-    @Html.ActiveClass("AkPOLaras")" href="#submenuTanggungan" data-toggle="collapse" data-target="#submenuTanggungan"><object data="~/img/svg/tanggungan.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Tanggungan</span></a>
+    @Html.ActiveClass("AkBelian")" href="#submenuTanggungan" data-toggle="collapse" data-target="#submenuTanggungan"><object data="~/img/svg/tanggungan.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Tanggungan</span></a>
     <div class="collapse" id="submenuTanggungan" aria-expanded="false">
         <ul class="flex-column pl-2 nav">
             <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("AkNotaMinta")" asp-controller="AkNotaMinta" asp-action="Index"><span>Nota Minta</span></a></li>
             <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("AkPO")" asp-area="" asp-controller="AkPO" asp-action="Index"><span>Pesanan Tempatan</span></a></li>
             <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("AkInden")" asp-area="" asp-controller="AkInden" asp-action="Index"><span>Inden Kerja</span></a></li>
-            <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("AkPOLaras")" asp-area="" asp-controller="AkPOLaras" asp-action="Index"><span>Pelarasan Pesanan Tempatan</span></a></li>
             <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkBelian")" asp-area="" asp-controller="AkBelian" asp-action="Index"><span>Invois Pembekal</span></a></li>
         </ul>
     </div>

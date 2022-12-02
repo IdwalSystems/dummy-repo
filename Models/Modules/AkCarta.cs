@@ -81,6 +81,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkInvois> AkInvois { get; set; }
         public ICollection<AkInden> AkInden { get; set; }
         public ICollection<AkPenyataPemungut1> AkPenyataPemungut1 { get; set; }
+        public ICollection<AkNotaDebitKreditBelian1> AkNotaDebitKreditBelian1 { get; set; }
 
         //relationship end
 

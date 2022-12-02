@@ -73,6 +73,17 @@ namespace MSNK.Data
             new Claim("TG002T","TG002 Invois Pembekal - Posting"),
             new Claim("TG002UT","TG002 Invois Pembekal - UnPosting"),
             //Invois Pembekal end
+            //Nota Debit Kredit Belian
+            new Claim("ND001","ND001 Nota Debit Kredit Belian"),
+            new Claim("ND001C","ND001 Nota Debit Kredit Belian - Tambah"),
+            new Claim("ND001E","ND001 Nota Debit Kredit Belian - Ubah"),
+            new Claim("ND001D","ND001 Nota Debit Kredit Belian - Hapus"),
+            new Claim("ND001P","ND001 Nota Debit Kredit Belian - Cetak"),
+            new Claim("ND001B","ND001 Nota Debit Kredit Belian - Batal"),
+            new Claim("ND001R","ND001 Nota Debit Kredit Belian - Rollback"),
+            new Claim("ND001T","ND001 Nota Debit Kredit Belian - Posting"),
+            new Claim("ND001UT","ND001 Nota Debit Kredit Belian - UnPosting"),
+            //Nota Debit Kredit Belian end
             //Menu Baucer
             //Baucer Pembayaran
             new Claim("PV001","PV001 Baucer Pembayaran"),

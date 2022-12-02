@@ -32,8 +32,6 @@ namespace MSNK.Models.Modules.Cart.Session
             Session.SetJson("CartBelian", this);
         }
 
-
-
         public override void RemoveItem1(int id)
         {
             base.RemoveItem1(id);

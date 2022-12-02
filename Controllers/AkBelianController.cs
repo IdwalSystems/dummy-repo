@@ -331,6 +331,11 @@ namespace MSNK.Controllers
             // admin access
             var akBelian = await _akBelianRepo.GetByIdIncludeDeletedItems((int)id);
 
+            if (akBelian == null)
+            {
+                return NotFound();
+            }
+
             var kodObjekAkaunPemiutang = await _akCartaRepo.GetByIdIncludeDeletedItems(akBelian.KodObjekAPId);
 
             var akPO = new AkPO();
@@ -350,10 +355,7 @@ namespace MSNK.Controllers
 
             var pembekal = await _akPembekalRepo.GetByIdIncludeDeletedItems(akBelian.AkPembekalId);
 
-            if (akBelian == null)
-            {
-                return NotFound();
-            }
+
             // admin access end
 
             // normal user access
@@ -375,10 +377,6 @@ namespace MSNK.Controllers
 
                 pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
 
-                if (akBelian == null)
-                {
-                    return NotFound();
-                }
             }
             //normal user access end
 
@@ -841,6 +839,15 @@ namespace MSNK.Controllers
             AkBelian m = new AkBelian();
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+            if (user.Email == "superadmin@idwal.com.my")
+            {
+                akBelian.SuPekerjaMasukId = 1;
+            }
+            else
+            {
+                akBelian.SuPekerjaMasukId = pekerjaId;
+            }
 
             var pembekal = await _akPembekalRepo.GetById(AkPembekalId);
             if (pembekal == null)
@@ -1471,6 +1478,16 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            // check if already link with AkNotaDebitKreditBelian
+            var akNota = await _context.AkNotaDebitKreditBelian.FirstOrDefaultAsync(b => b.AkBelianId == id);
+
+            if (akNota != null)
+            {
+                //duplicate id error
+                TempData[SD.Error] = "Data terkait dengan nota debit/kredit " + akNota.NoRujukan + ".";
+                return RedirectToAction(nameof(Index));
+            }
+
             // check if already link with akPV, Batal akPV included
             var akPV = await _akPVRepo.GetAll();
             var akPV2 = _context.AkPV2.ToList();
@@ -1786,6 +1803,16 @@ namespace MSNK.Controllers
                 AkBelian akBelian = await _akBelianRepo.GetById((int) id);
 
                 List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akBelian.NoInbois).ToList();
+
+                // check if already link with AkNotaDebitKreditBelian
+                var akNota = await _context.AkNotaDebitKreditBelian.FirstOrDefaultAsync(b => b.AkBelianId == id);
+
+                if (akNota != null)
+                {
+                    //duplicate id error
+                    TempData[SD.Error] = "Data terkait dengan nota debit/kredit " + akNota.NoRujukan + ".";
+                    return RedirectToAction(nameof(Index));
+                }
 
                 List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan == akBelian.NoInbois).ToList();
                 if (akAkaun == null)
