@@ -727,8 +727,6 @@ namespace MSNK.Controllers
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
             var pembekal = _context.AkPembekal.FirstOrDefault(x => x.Id == akPO.AkPembekalId);
 
-            var username = User.FindFirstValue(ClaimTypes.Name).Substring(0, 15);
-
             // get latest no rujukan running number  
             var noRujukan = RunningNumber(akPO);
             // get latest no rujukan running number end

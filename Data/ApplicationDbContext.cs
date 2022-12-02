@@ -95,6 +95,9 @@ namespace MSNK.Data
         public DbSet<AkBankRecon> AkBankRecon { get; set; }
         public DbSet<AkBankReconPenyataBank> AkBankReconPenyataBank { get; set; }
         public DbSet<AkPadananPenyata> AkPadananPenyata { get; set; }
+        public DbSet<AkNotaDebitKreditBelian> AkNotaDebitKreditBelian { get; set; }
+        public DbSet<AkNotaDebitKreditBelian1> AkNotaDebitKreditBelian1 { get; set; }
+        public DbSet<AkNotaDebitKreditBelian2> AkNotaDebitKreditBelian2 { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -154,6 +157,9 @@ namespace MSNK.Data
             //Invois
             modelBuilder.Entity<AkInvois>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Invois end
+            //Nota Debit Kredit Belian
+            modelBuilder.Entity<AkNotaDebitKreditBelian>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            //Nota Debit Kredit Belian end
             //BankRecon
             modelBuilder.Entity<AkBankRecon>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //BankRecon end
@@ -423,6 +429,23 @@ namespace MSNK.Data
                     .HasForeignKey(m => m.JBahagianId)
                     .OnDelete(DeleteBehavior.Restrict);
             //AkInvois end
+
+            //AkNotaDebitKreditBelian
+            modelBuilder.Entity<AkNotaDebitKreditBelian>()
+                .HasOne(m => m.JBahagian)
+                .WithMany(m => m.AkNotaDebitKreditBelian)
+                .HasForeignKey(m => m.JBahagianId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<AkNotaDebitKreditBelian>()
+                .HasOne(m => m.AkBelian)
+                .WithMany(m => m.AkNotaDebitKreditBelian)
+                .HasForeignKey(m => m.AkBelianId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            //AkNotaDebitKreditBelian End
 
             //AkPV
             modelBuilder.Entity<AkPV>()

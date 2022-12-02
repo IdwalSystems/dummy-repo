@@ -790,7 +790,7 @@ namespace MSNK.Controllers
             //}
 
             // get latest no rujukan running number  
-            var kw = _context.JKW.FirstOrDefault(x => x.Id == akNotaMinta.JKWId);
+            var kw = _context.JKW.FirstOrDefault(x => x.Id == JKWId);
 
             var kumpulanWang = kw.Kod;
             var year = akNotaMinta.Tahun;
@@ -800,7 +800,7 @@ namespace MSNK.Controllers
 
             var LatestNoRujukan = _context.AkNotaMinta
                 .IgnoreQueryFilters()
-                        .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
+                        .Where(x => x.Tahun == year && x.JKWId == JKWId)
                         .Max(x => x.NoRujukan);
 
             if (LatestNoRujukan == null)
