@@ -308,7 +308,7 @@ namespace MSNK.Controllers
                 switch (jenis) {
                     // nota minta
                     case "NM":
-                        AkNotaMinta nm = _context.AkNotaMinta.Where(b => b.NoRujukan == noRujukan).FirstOrDefault();
+                        AkNotaMinta nm = _context.AkNotaMinta.Include(b => b.AkPembekal).Where(b => b.NoRujukan == noRujukan).FirstOrDefault();
                         if (nm != null)
                         {
                             penerima.Add(new ListItemViewModel
@@ -321,7 +321,7 @@ namespace MSNK.Controllers
                         break;
                     // po
                     case "PO":
-                        AkPO po = _context.AkPO.Where(b => "PO/" + b.NoPO == noRujukan).FirstOrDefault();
+                        AkPO po = _context.AkPO.Include(b => b.AkPembekal).Where(b => "PO/" + b.NoPO == noRujukan).FirstOrDefault();
                         if (po != null)
                         {
                             penerima.Add(new ListItemViewModel
@@ -334,7 +334,7 @@ namespace MSNK.Controllers
                         break;
                     // inden
                     case "IK":
-                        AkInden inden = _context.AkInden.Where(b => "IK/" + b.NoInden == noRujukan).FirstOrDefault();
+                        AkInden inden = _context.AkInden.Include(b => b.AkPembekal).Where(b => "IK/" + b.NoInden == noRujukan).FirstOrDefault();
                         if (inden != null)
                         {
                             penerima.Add(new ListItemViewModel
@@ -347,7 +347,7 @@ namespace MSNK.Controllers
                         break;
                     // belian (invois pembekal)
                     case "IN":
-                        AkBelian belian = _context.AkBelian.Where(b => b.NoInbois == noRujukan).FirstOrDefault();
+                        AkBelian belian = _context.AkBelian.Include(b => b.AkPembekal).Where(b => b.NoInbois == noRujukan).FirstOrDefault();
                         if (belian != null)
                         {
                             penerima.Add(new ListItemViewModel
@@ -355,6 +355,22 @@ namespace MSNK.Controllers
                                 id = belian.Id,
                                 indek = 1,
                                 perihal = belian.AkPembekal.NamaSykt?.ToUpper()
+                            });
+                        }
+                        break;
+                    // belian (invois pembekal)
+                    case "NB":
+                        AkNotaDebitKreditBelian akNota = _context.AkNotaDebitKreditBelian
+                            .Include(b => b.AkBelian)
+                            .ThenInclude(b => b.AkPembekal)
+                            .Where(b => b.NoRujukan == noRujukan).FirstOrDefault();
+                        if (akNota != null)
+                        {
+                            penerima.Add(new ListItemViewModel
+                            {
+                                id = akNota.Id,
+                                indek = 1,
+                                perihal = akNota.AkBelian.AkPembekal.NamaSykt?.ToUpper()
                             });
                         }
                         break;
@@ -404,7 +420,7 @@ namespace MSNK.Controllers
                         break;
                     // invois dikeluarkan
                     case "DI":
-                        AkInvois invois = _context.AkInvois.Where(b => b.NoInbois == noRujukan).FirstOrDefault();
+                        AkInvois invois = _context.AkInvois.Include(b => b.AkPenghutang).Where(b => b.NoInbois == noRujukan).FirstOrDefault();
                         if (invois != null)
                         {
                             penerima.Add(new ListItemViewModel
