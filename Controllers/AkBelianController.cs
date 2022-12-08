@@ -350,6 +350,9 @@ namespace MSNK.Controllers
                 };     
             }
 
+            // check if linked with Nota Debit/ Kredit, show list of nota debit/kredit
+            var akNota = _context.AkNotaDebitKreditBelian.Where(b => b.AkBelianId == id).ToList();
+
             // check if already paid, show list of PVs in AkBelian
             var akPV2 = _context.AkPV2.Include(b=> b.AkPV).Where(b => b.AkBelianId == id).ToList();
 
@@ -394,6 +397,23 @@ namespace MSNK.Controllers
 
                 akBelianView.AkPV2 = akPV2;
             }
+            
+            if (akNota != null)
+            {
+                foreach( var i in akNota)
+                {
+                    if (i.FlJenis == 0)
+                    {
+                        akBelianView.JumlahNota += i.Jumlah;
+                    }
+                    else
+                    {
+                        akBelianView.JumlahNota -= i.Jumlah;
+                    }
+                }
+                akBelianView.AkNotaDebitKreditBelian = akNota;
+            }
+
             akBelianView.AkPembekal = pembekal;
             akBelianView.Id = akBelian.Id;
             akBelianView.Tahun = akBelian.Tahun;

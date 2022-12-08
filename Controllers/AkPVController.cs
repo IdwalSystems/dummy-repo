@@ -1654,6 +1654,26 @@ namespace MSNK.Controllers
                     result.AkPO.Jumlah += akPOLaras.Jumlah;
                 }
 
+                // if akBelian link with debitKreditBelian
+                var akNota = _context.AkNotaDebitKreditBelian
+                    .Where(b => b.AkBelianId == data).FirstOrDefault();
+
+                if (akNota != null)
+                {
+                    // debit
+                    if (akNota.FlJenis == 0)
+                    {
+                        result.Jumlah += akNota.Jumlah;
+                        result.AkPO.Jumlah += akNota.Jumlah;
+                    }
+                    else
+                    {
+                        result.Jumlah -= akNota.Jumlah;
+                        result.AkPO.Jumlah -= akNota.Jumlah;
+                    }
+                }
+                // endif
+
                 return Json(new { result = "OK", record = result });
             }
             catch (Exception ex)
