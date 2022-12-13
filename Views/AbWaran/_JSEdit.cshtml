@@ -1,20 +1,44 @@
 ﻿<script type="text/javascript">
+    // function check jumlah if jenis waran pindahan (WPP)
+    function JsonCheckJumlah() {
+        $.ajax({
+            type: "POST",
+            //url: "/AkPV/JsonGetKod",
+            url: '@Url.Action("JsonCheckJumlahFromCart", "AbWaran")',
+            dataType: "json",
+            success: function (msg) {
+                if (msg.result == "OK") {
+                    $("#btnSave").removeAttr("hidden");
+                } else {
+                    $("#btnSave").prop("hidden", true);
+                }
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    }
+    // function WPP end
+
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
         var Id = $("#Id");
         var txtKodAkaun = $("#txtKodAkaun");
+        var txtJBahagianId = $("#txtJBahagianId");
+
         if (txtKodAkaun.val() != null) {
-            GetCarta(txtKodAkaun.val(), Id.val());
+            GetCarta(txtKodAkaun.val(), Id.val(), txtJBahagianId.val());
         }
 
     });
 
-    function GetCarta(id,abWaranId) {
+    function GetCarta(id,abWaranId, id2) {
         var Objek = {
-            Id: id
+            Id: id,
+            Id2: id2
         }
-        if (id != "") {
+        if (id != "" && id2 != null) {
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
@@ -25,6 +49,7 @@
                 success: function (r) {
                     //Reference the TextBoxes.
                     var txtKodAkaun = $("#txtKodAkaun");
+                    var txtJBahagianId = $("#txtJBahagianId");
                     var txtAmaunObjek = $("#txtAmaunObjek");
                     var txtTK = $("#txtTK");
                     var txtJumlah = $("#jumlahObjek");
@@ -32,18 +57,17 @@
                     var AbWaran1 = {
                         AbWaranId: abWaranId,
                         AkCartaId: txtKodAkaun.val(),
+                        JBahagianId: txtJBahagianId.val(),
                         Amaun: txtAmaunObjek.val(),
                         TK: txtTK.val()
                     }
 
                     var tahun = $("#txtTahun").val();
                     var jKWId = $("#JKWId").val();
-                    var jBahagianId = $("#JBahagianId").val();
                     var myData = {};
                     myData.AbWaran1 = AbWaran1;
                     myData.tahun = tahun;
                     myData.jKWId = jKWId;
-                    myData.jBahagianId = jBahagianId;
 
                     $.ajax({
                         type: "POST",
@@ -72,13 +96,22 @@
                                 var cell = $(row.insertCell(-1));
                                 cell.html(r.record.kod + ' - ' + r.record.perihal);
 
+                                //Add bahagianId cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(r.bahagian.id);
+                                cell.prop("hidden", !this.checked);
+
+                                //Add bahagian cell.
+                                var cell = $(row.insertCell(-1));
+                                cell.html(r.bahagian.kod + ' - ' + r.bahagian.perihal);
+
                                 //Add amaun cell.
                                 var cell = $(row.insertCell(-1));
                                 cell.html(parseFloat(txtAmaunObjek.val()).toFixed(2));
                                 cell.attr("id", "td1Amaun_" + r.record.Id);
                                 cell.addClass("text-right");
 
-                                //Add kod cell.
+                                //Add TK cell.
                                 var cell = $(row.insertCell(-1));
                                 cell.html(txtTK.val());
 
@@ -99,10 +132,20 @@
                                 txtAmaunObjek.val("");
                                 txtTK.val("+");
 
-                                $("#txtKodAkaun option[value=" + txtKodAkaun.val() + "]").prop('disabled', true);
+                                if ($('#FlJenisPindahan1').is(':checked')) {
+
+                                }
+                                else {
+                                    $("#txtJBahagianId option[value!=" + txtJBahagianId.val() + "]").prop('disabled', true);
+                                }
+
+                                if ($('#FlJenisWaran2').is(':checked')) {
+                                    // check jumlah foreach row
+                                    JsonCheckJumlah();
+                                }
                             }
                             else {
-                                toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
+                                toastr.error(b.message, "Ralat");
                                 toastr.options.timeOut = 2000; // 2s
                             }
                         }
@@ -113,13 +156,15 @@
     }
     //add tbl objek end
 
+
     //remove tbl objek
     function Remove1(button) {
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var akCartaId = $("TD", row).eq(0).html();
         var namaAkaun = $("TD", row).eq(1).html();
-        var amaun = $("TD", row).eq(2).html();
+        var bahagian = $("TD", row).eq(2).html();
+        var amaun = $("TD", row).eq(4).html();
         var txtJumlah = $("#jumlahObjek");
         if (confirm("Hapus kod Akaun : " + namaAkaun + " ?")) {
             //Get the reference of the Table.
@@ -131,7 +176,8 @@
             txtJumlah.val(sum.toFixed(2));
 
             var AbWaran1 = {
-                AkCartaId: akCartaId
+                AkCartaId: akCartaId,
+                JBahagianId: bahagian
             }
             if (name != null) {
                 $.ajax({
@@ -143,10 +189,13 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
+                        if ($('#FlJenisWaran2').is(':checked')) {
+                            // check jumlah foreach row
+                            JsonCheckJumlah();
+                        }
                     }
                 });
             }
-            $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', false);
         }
     };
     //remove tbl objek end
@@ -156,9 +205,11 @@
         //Determine the reference of the Row using the Button.
         var row = $(button).closest("TR");
         var akCartaId = $("TD", row).eq(0).html();
+        var bahagianId = $("TD", row).eq(2).html();
 
         var AbWaran1 = {
-            AkCartaId: akCartaId
+            AkCartaId: akCartaId,
+            JBahagianId: bahagianId
         }
         if (akCartaId != null) {
             $.ajax({
@@ -171,6 +222,7 @@
                     //insert data in modal objek
                     $("#moId1").val(r.record.id);
                     $("#moKodAkaun").val(r.record.akCartaId);
+                    $("#moBahagian").val(r.record.jBahagianId);
                     $("#moAmaun1").val(r.record.amaun.toFixed(2));
                     $("#moTK").val(r.record.tk);
 
@@ -187,6 +239,7 @@
         var abWaranId = $("#Id").val();
         var amaun = $("#moAmaun1").val();
         var akCartaId = $("#moKodAkaun").val();
+        var bahagianId = $("#moBahagian").val();
         var tK = $("#moTK").val();
         var jumlah = $("#jumlahObjek");
 
@@ -194,17 +247,16 @@
             Id: id,
             AbWaranId: abWaranId,
             akCartaId: akCartaId,
+            JBahagianId: bahagianId,
             Amaun: amaun,
             TK: tK
         }
         var tahun = $("#txtTahun").val();
         var jKWId = $("#JKWId").val();
-        var jBahagianId = $("#JBahagianId").val();
         var myData = {};
         myData.AbWaran1 = AbWaran1;
         myData.tahun = tahun;
         myData.jKWId = jKWId;
-        myData.jBahagianId = jBahagianId;
 
         $.ajax({
             type: "POST",
@@ -232,6 +284,8 @@
                                 var item1 = r.record[i];
                                 var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
                                     "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
+                                    "<td id='jBahagianId' hidden>" + item1.jBahagianId +
+                                    "</td><td>" + item1.jBahagian.kod + " - " + item1.jBahagian.perihal +
                                     "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" + item1.tk +
                                     "</td><td>" +
@@ -245,10 +299,15 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
+
+                        if ($('#FlJenisWaran2').is(':checked')) {
+                            // check jumlah foreach row
+                            JsonCheckJumlah();
+                        }
                     }
                 });
                 } else {
-                    toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
+                    toastr.error(b.message, "Ralat");
                     toastr.options.timeOut = 2000; // 2s
                 }
 
@@ -277,25 +336,6 @@
     })();
 
     $(document).ready(function () {
-        // disable each kod akaun that has been picked
-        $('#tbodyObjek tr').each(function () {
-            var akCartaId = $(this).find("#akCartaId").html();
-            $("#txtKodAkaun option[value=" + akCartaId + "]").prop('disabled', true);
-        });
-
-        // disable each JCarabayar that has been picked
-        $('#tbodyUrusniaga tr').each(function () {
-            var jCaraBayarId = $(this).find("#jCaraBayarId").html();
-            $("#ddlCaraBayar option[value=" + jCaraBayarId + "]").prop('disabled', true);
-        });
-
-        // get total amaun perihal for each row in tbl perihal
-        var sum = 0;
-        $('#tbodyUrusniaga tr').each(function () {
-            var amaun = $(this).find(".amaunUrusniaga").html();
-            sum += parseFloat(amaun);
-        });
-        $('#jumlahUrusniaga').val(sum.toFixed(2));
 
         $.validator.setDefaults({
             errorElement: "span",
@@ -320,6 +360,16 @@
             },
 
         });
+
+        // onchange jenis waran
+        $('input[type=radio][name=FlJenisPindahan]').on('change', function () {
+            if ($('#FlJenisWaran2').is(':checked')) {
+                // check jumlah foreach row
+                JsonCheckJumlah();
+            }
+
+        });
+        // onchange jenis waran end
     });
     //validation form end
 </script>

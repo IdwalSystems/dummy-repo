@@ -23,20 +23,22 @@ namespace MSNK.Models.Modules.Cart.Session
             int abWaranId,
             decimal amaun,
             int akCartaId,
+            int? jBahagianId,
             string tk
            )
         {
             base.AddItem1(abWaranId,
                           amaun,
                           akCartaId,
+                          jBahagianId,
                           tk);
 
             Session.SetJson("CartWaran", this);
         }
 
-        public override void RemoveItem1(int id)
+        public override void RemoveItem1(int id, int id2)
         {
-            base.RemoveItem1(id);
+            base.RemoveItem1(id, id2);
             Session.SetJson("CartWaran", this);
         }
         public override void Clear1()

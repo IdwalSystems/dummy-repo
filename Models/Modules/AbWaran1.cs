@@ -26,6 +26,10 @@ namespace MSNK.Models.Modules
         public int AkCartaId { get; set; }
         public AkCarta AkCarta { get; set; }
 
+        [DisplayName("Bahagian")]
+        public int? JBahagianId { get; set; }
+        public JBahagian JBahagian { get; set; }
+
         //relationship end
     }
 }

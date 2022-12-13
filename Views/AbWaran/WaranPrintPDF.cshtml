@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Cetakan Waran";
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    var bahagian = "";
 }
 <style>
 
@@ -69,16 +70,14 @@
             <tr>
                 <td class="text-center text-uppercase font-weight-bold" width="15%">No Rujukan</td>
                 <td class="text-center text-uppercase font-weight-bold" width="15%">Tarikh</td>
-                <td class="text-center text-uppercase font-weight-bold" width="15%">Kumpulan Wang </td>
-                <td class="text-center text-uppercase font-weight-bold" width="15%">
-                    Bahagian
-                </td>
+                <td class="text-center text-uppercase font-weight-bold" width="25%">Kumpulan Wang </td>
             </tr>
             <tr>
                 <td class="text-center font-weight-bold" style="font-size:1.2rem;">@Model.AbWaran.NoRujukan.Substring(3)</td>
                 <td class="text-center font-weight-bold" width="15%">@Convert.ToDateTime(Model.AbWaran.Tarikh).ToString("dd/MM/yyyy")</td>
                 <td class="text-center text-uppercase">@Model.AbWaran.JKW.Kod - @Model.AbWaran.JKW.Perihal</td>
-                <td class="text-center text-uppercase">@Model.AbWaran.JBahagian.Kod - @Model.AbWaran.JBahagian.Perihal</td>
+
+
             </tr>
         </tbody>
     </table>
@@ -91,6 +90,7 @@
         <thead class="text-center">
             <tr>
                 <th>TK</th>
+                <th>BHG.</th>
                 <th>KOD</th>
                 <th>OBJEK</th>
                 <th>AMAUN</th>
@@ -99,10 +99,19 @@
 
         @foreach (var item in Model.AbWaran.AbWaran1)
         {
+            if (Model.AbWaran.JBahagianId != null)
+            {
+                bahagian = Model.AbWaran.JBahagian.Kod;
+            }
+            else
+            {
+                bahagian = item.JBahagian.Kod;
+            }
 
             <tr>
                 <td class="text-center">@item.TK</td>
-                <td class="text-uppercase">@item.AkCarta.Kod</td>
+                <td class="text-center">@bahagian</td>
+                <td class="text-center">@item.AkCarta.Kod</td>
                 <td class="text-uppercase">@item.AkCarta.Perihal</td>
                 <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
             </tr>
@@ -112,7 +121,7 @@
                 </tr>*@
         }
         <tr class="font-weight-bold">
-            <td class="text-right" colspan="3">Jumlah RM</td>
+            <td class="text-right" colspan="4">Jumlah RM</td>
             <td class="text-right">@Convert.ToDecimal(Model.AbWaran.Jumlah).ToString("#,##0.00")</td>
         </tr>
         <tfoot>

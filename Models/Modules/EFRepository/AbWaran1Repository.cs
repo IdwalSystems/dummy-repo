@@ -26,6 +26,7 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<AbWaran1>> GetAll(int abWaranId)
         {
             return await context.AbWaran1.Include(b => b.AkCarta)
+                .Include(b => b.JBahagian)
                 .Where(x => x.AbWaranId == abWaranId)
                 .ToArrayAsync();
         }
@@ -40,6 +41,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AbWaran1
                 .Include(d => d.AkCarta)
+                .Include(b => b.JBahagian)
                 .Where(d => d.Id == id)
                 .FirstOrDefaultAsync();
         }

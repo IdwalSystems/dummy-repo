@@ -15,11 +15,12 @@ namespace MSNK.Models.Modules.Cart
             int abWaranId,
             decimal amaun,
             int akCartaId,
+            int? jBahagianId,
             string tk
             )
         {
             AbWaran1 line = collection1
-            .Where(p => p.AkCartaId == akCartaId)
+            .Where(p => p.AkCartaId == akCartaId && p.JBahagianId == jBahagianId)
             .FirstOrDefault();
 
             if (line == null)
@@ -29,13 +30,14 @@ namespace MSNK.Models.Modules.Cart
                     AbWaranId = abWaranId,
                     Amaun = amaun,
                     AkCartaId = akCartaId,
+                    JBahagianId = jBahagianId,
                     TK = tk
                 });
             }
         }
 
-        public virtual void RemoveItem1(int id) =>
-            collection1.RemoveAll(l => l.AkCartaId == id);
+        public virtual void RemoveItem1(int id, int id2) =>
+            collection1.RemoveAll(l => l.AkCartaId == id && l.JBahagianId == id2);
 
 
         public virtual void Clear1() => collection1.Clear();

@@ -9,7 +9,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-8">
-                <h5 class="text-uppercase text-primary mb-0">Waran - Ubah</h5>
+                <h5 class="text-uppercase text-primary mb-0">@ViewData["Title"]</h5>
                 <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / <a asp-action="Details" asp-route-id="@Model.Id" class="text-secondary">Papar</a> / Ubah</span>
             </div>
             <div class="col-4 text-right">
@@ -22,27 +22,27 @@
             <input type="hidden" asp-for="Id" />
             <div asp-validation-summary="ModelOnly" class="text-danger">
             </div>
-            <div class="card mb-2">
+            <div class="card mb-2" hidden>
                 <div class="card-body pb-1 pt-1">
                     <div class="form-group mb-0 mt-1">
                         <label class="control-label">Jenis Waran</label>
                     </div>
                     <div class="form-row col-sm ml-2">
                         <div class="custom-control custom-radio col-md-4 ">
-                            <input class="custom-control-input" type="radio" id="0" asp-for="FlJenisWaran" value="0" checked>
-                            <label class="custom-control-label" for="0">
+                            <input class="custom-control-input" type="radio" id="FlJenisWaran0" asp-for="FlJenisWaran" value="0" checked>
+                            <label class="custom-control-label" for="FlJenisWaran0">
                                 WPA (Asal)
                             </label>
                         </div>
                         <div class="custom-control custom-radio col-md-4">
-                            <input class="custom-control-input" type="radio" asp-for="FlJenisWaran" id="1" value="1">
-                            <label class="custom-control-label" for="1">
+                            <input class="custom-control-input" type="radio" asp-for="FlJenisWaran" id="FlJenisWaran1" value="1">
+                            <label class="custom-control-label" for="FlJenisWaran1">
                                 WPT (Tambah / Tarik Balik)
                             </label>
                         </div>
                         <div class="custom-control custom-radio col-md-4">
-                            <input class="custom-control-input" type="radio" asp-for="FlJenisWaran" id="2" value="2">
-                            <label class="custom-control-label" for="2">
+                            <input class="custom-control-input" type="radio" asp-for="FlJenisWaran" id="FlJenisWaran2" value="2">
+                            <label class="custom-control-label" for="FlJenisWaran2">
                                 WPP (Pindahan)
                             </label>
                         </div>
@@ -50,6 +50,30 @@
                 </div>
 
             </div>
+            @if (Model.FlJenisWaran == 2)
+            {
+                <div class="card mb-2" id="divJenisPindahan">
+                    <div class="card-body pb-1 pt-1">
+                        <div class="form-group mb-0 mt-1">
+                            <label class="control-label">Jenis Pindahan</label>
+                        </div>
+                        <div class="form-row col-sm ml-2">
+                            <div class="custom-control custom-radio col-md-6 ">
+                                <input class="custom-control-input" type="radio" id="FlJenisPindahan0" asp-for="FlJenisPindahan" value="0" checked>
+                                <label class="custom-control-label" for="FlJenisPindahan0">
+                                    Dalam Bahagian
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio col-md-6">
+                                <input class="custom-control-input" type="radio" asp-for="FlJenisPindahan" id="FlJenisPindahan1" value="1">
+                                <label class="custom-control-label" for="FlJenisPindahan1">
+                                    Antara Bahagian
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
 
             <div class="form-row">
                 <div class="col-md-1">
@@ -80,18 +104,6 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
-                        <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" required>
-                            @foreach (var s in ViewBag.JBahagian)
-                            {
-                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                            }
-                        </select>
-                        <span asp-validation-for="JBahagianId" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
                         <label asp-for="NoRujukan" class="control-label"></label>
                         <input id="txtNoRujukan" asp-for="NoRujukan" class="form-control form-control-sm" readonly />
                         <span asp-validation-for="NoRujukan" class="text-danger"></span>
@@ -108,9 +120,10 @@
                     <table id="tblObjek" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
                         <thead>
                             <tr>
-                                <th style="width:50%">Kod</th>
-                                <th style="width:10%">Amaun</th>
-                                <th style="width:30%">TK</th>
+                                <th style="width:40%%">Kod</th>
+                                <th style="width:40%%">Bahagian</th>
+                                <th style="width:10%%" class="text-right">Amaun RM</th>
+                                <th style="width:10%%">TK</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -121,6 +134,8 @@
                                 <tr id="@item.Id">
                                     <td id="akCartaId" hidden>@item.AkCartaId</td>
                                     <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
+                                    <td id="bahagianId" hidden>@item.JBahagianId</td>
+                                    <td>@item.JBahagian?.Kod - @item.JBahagian?.Perihal</td>
                                     <td class="editable-txt text-right" id="td1Amaun">@item.Amaun</td>
                                     <td class="editable-txt text-left">@item.TK</td>
                                     <td>
@@ -149,6 +164,15 @@
                                         }
                                     </select>
                                 </td>
+                                <td>
+                                    <select class="form-control form-control-sm select2" id="txtJBahagianId">
+                                        <option value="" selected disabled>-- Sila Pilih Bahagian -- </option>
+                                        @foreach (var s in ViewBag.JBahagian)
+                                        {
+                                            <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                        }
+                                    </select>
+                                </td>
                                 <td style="width:40%"><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" value="0.00"></td>
                                 <td>
                                     <select class="form-control form-control-sm text-uppercase" id="txtTK">
@@ -164,7 +188,7 @@
                 <div class="card-footer">
                     <div class="form-group pb-2">
                         <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
-                        <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly  />
+                        <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly />
                         <span asp-validation-for="Jumlah" class="text-danger"></span>
                     </div>
                 </div>
@@ -174,7 +198,7 @@
 
             <hr />
             <div class="form-group">
-                <input type="submit" value="Simpan" class="btn ac-primary btn-sm" />
+                <input type="submit" value="Simpan" class="btn ac-primary btn-sm" id="btnSave" />
                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
         </form>
@@ -196,7 +220,7 @@
                 <form>
                     <input id="moId1" hidden />
                     <div class="form-row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="col-form-label">Kod Akaun</label>
                                 <select class="form-control form-control-sm" id="moKodAkaun" disabled>
@@ -208,13 +232,24 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="col-form-label">Bahagian</label>
+                                <select class="form-control form-control-sm" id="moBahagian" disabled>
+                                    @foreach (var s in ViewBag.JBahagian)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="col-form-label">Amaun</label>
                                 <input type="number" class="form-control form-control-sm" id="moAmaun1">
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label class="col-form-label">TK</label>
                                 <select class="form-control form-control-sm text-uppercase" id="moTK">

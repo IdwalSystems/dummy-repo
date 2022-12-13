@@ -29,7 +29,12 @@ namespace MSNK.Models.Modules
 
         //flag
         // WPA = 0(asal); WPT = 1 (tambah/tarik balik); WPP = 2(pindah);
+        [DisplayName("Jenis Waran")]
         public int FlJenisWaran { get; set; }
+        //flag
+        // Dalam Bahagian = 0; Antara Bahagian = 1;
+        [DisplayName("Jenis Pindahan")]
+        public int FlJenisPindahan { get; set; }
         [DisplayName("Hapus")]
         [DefaultValue("0")]
         public int FlHapus { get; set; }
@@ -47,9 +52,8 @@ namespace MSNK.Models.Modules
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         public JKW JKW {get;set;}
-        [Required(ErrorMessage = "Bahagian diperlukan")]
         [DisplayName("Bahagian")]
-        public int JBahagianId { get; set; }
+        public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
         public ICollection<AbWaran1> AbWaran1 { get; set; }
         //relationship end
