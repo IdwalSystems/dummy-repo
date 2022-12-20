@@ -17,6 +17,23 @@ namespace MSNK.Models.Modules.EFRepository
         public readonly ApplicationDbContext context;
         public BelanjawanSemasaRepository(ApplicationDbContext context) => this.context = context;
 
+        //public async Task<List<AbWaran>> GetAbWaranBasedOnYear(string tahun, int jKWId, int jBahagianId, DateTime tarHingga)
+        //{
+        //    var sql = await context.AbWaran
+        //        .Include(b => b.AbWaran1)
+        //            .ThenInclude(b => b.AkCarta)
+        //                .ThenInclude(b => b.JParas)
+        //        .Where(
+        //        b => b.Tahun == tahun
+        //        && b.JKWId == jKWId
+        //        && b.JBahagianId == jBahagianId
+        //        && b.Tarikh <= tarHingga
+        //        && b.FlPosting == 1).OrderBy(b => b.Tarikh)
+        //        .ToListAsync();
+
+        //    return sql;
+        //}
+
         public async Task<List<AbWaran>> GetAbWaranBasedOnYear(string tahun, int jKWId, int jBahagianId, DateTime tarHingga)
         {
             var sql = await context.AbWaran
@@ -26,15 +43,39 @@ namespace MSNK.Models.Modules.EFRepository
                 .Where(
                 b => b.Tahun == tahun
                 && b.JKWId == jKWId
-                && b.JBahagianId == jBahagianId
                 && b.Tarikh <= tarHingga
                 && b.FlPosting == 1).OrderBy(b => b.Tarikh)
                 .ToListAsync();
 
-            return sql;
+            List<AbWaran> abWaran = new List<AbWaran>();
+
+            foreach(var item in sql)
+            {
+                var flag = 0;
+                foreach(var item1 in item.AbWaran1)
+                {
+                    
+
+                    if (flag == 1)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if (item1.JBahagianId == jBahagianId)
+                        {
+                            abWaran.Add(item);
+                            flag = 1;
+                        }
+                    }
+                }
+                
+            }
+
+            return abWaran;
         }
 
-        public List<AbBelanjawanSemasaViewModel> RunWaranObjekOperation(int JenisWaran, string TK, decimal Amaun, string KodCarta, string Perihal, string Paras)
+        public List<AbBelanjawanSemasaViewModel> RunWaranObjekOperation(int Bahagian, int JenisWaran, string TK, decimal Amaun, string KodCarta, string Perihal, string Paras)
         {
             decimal Asal = 0;
             decimal Tambah = 0;
@@ -49,38 +90,82 @@ namespace MSNK.Models.Modules.EFRepository
             if (JenisWaran == 0) // WPA
             {
                 Asal = Amaun;
+                if (TK == "-")
+                {
+                    Jumlah =  0 - Amaun;
+                }
+                else
+                {
+                    Jumlah = Amaun;
+                }
+
+                if (TK == "-")
+                {
+                    Baki =  0 - Amaun;
+                }
+                else
+                {
+                    Baki = Amaun;
+                }
             }
             else if (JenisWaran == 1) // WPT
             {
                 Tambah = Amaun;
+                if (TK == "-")
+                {
+                    Jumlah =  0 - Amaun;
+                }
+                else
+                {
+                    Jumlah = Amaun;
+                }
+
+                if (TK == "-")
+                {
+                    Baki =  0 - Amaun;
+                }
+                else
+                {
+                    Baki = Amaun;
+                }
             }
             else if (JenisWaran == 2) // WPP
             {
+                if (TK == "-")
+                {
+                    Pindah =  0 - Amaun;
+                }
+                else
+                {
+                    Pindah = Amaun;
+                }
 
-                Pindah = Amaun;
+                
+                if (TK == "-")
+                {
+                    Jumlah =  0 - Amaun;
+                }
+                else
+                {
+                    Jumlah = Amaun;
+                }
+
+                if (TK == "-")
+                {
+                    Baki =  0 - Amaun;
+                }
+                else
+                {
+                    Baki = Amaun;
+                }
             }
 
-            if (TK == "-")
-            {
-                Jumlah =  0 - Amaun;
-            }
-            else
-            {
-                Jumlah = Amaun;
-            }
-
-            if (TK == "-")
-            {
-                Baki =  0 - Amaun;
-            }
-            else
-            {
-                Baki = Amaun;
-            }
+            
 
             list.Add(
                         new AbBelanjawanSemasaViewModel
                         {
+                            JBahagianId = Bahagian,
                             Objek = KodCarta,
                             Perihalan = Perihal,
                             Paras = Paras,
@@ -166,7 +251,7 @@ namespace MSNK.Models.Modules.EFRepository
             return sql;
         }
 
-        public List<AbBelanjawanSemasaViewModel> RunSpPOPOLarasIndenCVObjekOperation(decimal Amaun, string KodCarta, string Perihal, string Paras)
+        public List<AbBelanjawanSemasaViewModel> RunSpPOPOLarasIndenCVObjekOperation(int Bahagian, decimal Amaun, string KodCarta, string Perihal, string Paras)
         {
             decimal Asal = 0;
             decimal Tambah = 0;
@@ -186,6 +271,7 @@ namespace MSNK.Models.Modules.EFRepository
             list.Add(
                         new AbBelanjawanSemasaViewModel
                         {
+                            JBahagianId = Bahagian,
                             Objek = KodCarta,
                             Perihalan = Perihal,
                             Paras = Paras,
@@ -220,7 +306,7 @@ namespace MSNK.Models.Modules.EFRepository
             return sql;
         }
 
-        public List<AbBelanjawanSemasaViewModel> RunBaucerObjekOperation(bool Tanggungan, decimal Amaun, string KodCarta, string Perihal, string Paras)
+        public List<AbBelanjawanSemasaViewModel> RunBaucerObjekOperation(int Bahagian, bool Tanggungan, decimal Amaun, string KodCarta, string Perihal, string Paras)
         {
             decimal Asal = 0;
             decimal Tambah = 0;
@@ -244,6 +330,7 @@ namespace MSNK.Models.Modules.EFRepository
             list.Add(
                         new AbBelanjawanSemasaViewModel
                         {
+                            JBahagianId = Bahagian,
                             Objek = KodCarta,
                             Perihalan = Perihal,
                             Paras = Paras,
@@ -299,7 +386,7 @@ namespace MSNK.Models.Modules.EFRepository
             return sql;
         }
 
-        public List<AbBelanjawanSemasaViewModel> RunResitObjekOperation(decimal Amaun, string KodCarta, string Perihal, string Paras)
+        public List<AbBelanjawanSemasaViewModel> RunResitObjekOperation(int Bahagian, decimal Amaun, string KodCarta, string Perihal, string Paras)
         {
             decimal Asal = 0;
             decimal Tambah = 0;
@@ -319,6 +406,7 @@ namespace MSNK.Models.Modules.EFRepository
             list.Add(
                         new AbBelanjawanSemasaViewModel
                         {
+                            JBahagianId = Bahagian,
                             Objek = KodCarta,
                             Perihalan = Perihal,
                             Paras = Paras,
@@ -353,7 +441,7 @@ namespace MSNK.Models.Modules.EFRepository
             return sql;
         }
 
-        public List<AbBelanjawanSemasaViewModel> RunJurnalObjekOperation(decimal Debit, decimal Kredit, string KodCarta, string Perihal, string Paras)
+        public List<AbBelanjawanSemasaViewModel> RunJurnalObjekOperation(int Bahagian, decimal Debit, decimal Kredit, string KodCarta, string Perihal, string Paras)
         {
             decimal Asal = 0;
             decimal Tambah = 0;
@@ -373,6 +461,7 @@ namespace MSNK.Models.Modules.EFRepository
             list.Add(
                         new AbBelanjawanSemasaViewModel
                         {
+                            JBahagianId = Bahagian,
                             Objek = KodCarta,
                             Perihalan = Perihal,
                             Paras = Paras,

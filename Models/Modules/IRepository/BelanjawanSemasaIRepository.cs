@@ -10,6 +10,7 @@ namespace MSNK.Models.Modules.IRepository
         Task<List<AbWaran>> GetAbWaranBasedOnYear(T1 tahun, T2 jKWId, int jBahagianId, DateTime tarHingga);
 
         List<AbBelanjawanSemasaViewModel> RunWaranObjekOperation(
+            int Bahagian,
             int JenisWaran,
             string TK,
             decimal Amaun,
@@ -28,6 +29,7 @@ namespace MSNK.Models.Modules.IRepository
         Task<List<AkTunaiCV>> GetAkTunaiCVBasedOnYear(T1 tahun, T2 jKWId, int jBahagianId, DateTime tarHingga);
 
         List<AbBelanjawanSemasaViewModel> RunSpPOPOLarasIndenCVObjekOperation(
+            int Bahagian,
             decimal Amaun,
             string KodCarta,
             string Perihal,
@@ -36,6 +38,7 @@ namespace MSNK.Models.Modules.IRepository
         Task<List<AkPV>> GetAkPVBasedOnYear(T1 tahun, T2 jKWId, int jBahagianId, DateTime tarHingga);
 
         List<AbBelanjawanSemasaViewModel> RunBaucerObjekOperation(
+            int Bahagian,
            bool Tanggungan,
            decimal Amaun,
            string KodCarta,
@@ -45,6 +48,7 @@ namespace MSNK.Models.Modules.IRepository
         Task<List<AkTerima>> GetAkTerimaBasedOnYear(T1 tahun, T2 jKWId, int jBahagianId, DateTime tarHingga);
 
         List<AbBelanjawanSemasaViewModel> RunResitObjekOperation(
+            int Bahagian,
            decimal Amaun,
            string KodCarta,
            string Perihal,
@@ -53,6 +57,7 @@ namespace MSNK.Models.Modules.IRepository
         Task<List<AkJurnal>> GetAkJurnalBasedOnYear(T1 tahun, T2 jKWId, int jBahagianId, DateTime tarHingga);
 
         List<AbBelanjawanSemasaViewModel> RunJurnalObjekOperation(
+            int Bahagian,
            decimal Debit,
            decimal Kredit,
            string KodCarta,

@@ -80,12 +80,16 @@ namespace MSNK.Controllers
             {
                 foreach (var waran1 in waran.AbWaran1)
                 {
-                    waranList = _bsRepo.RunWaranObjekOperation(waran.FlJenisWaran,
+                    if (waran1.JBahagianId == JBahagianId)
+                    {
+                        waranList = _bsRepo.RunWaranObjekOperation((int)waran1.JBahagianId,
+                        waran.FlJenisWaran,
                         waran1.TK,
                         waran1.Amaun,
                         waran1.AkCarta.Kod,
                         waran1.AkCarta.Perihal,
                         waran1.AkCarta.JParas.Kod);
+                    }
 
                     vm.AddRange(waranList);
                 }
@@ -99,12 +103,16 @@ namespace MSNK.Controllers
 
             foreach (var po in POs)
             {
-                foreach (var po1 in po.AkPO1)
+                if (po.JBahagianId == JBahagianId)
                 {
-                    poList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(po1.Amaun, po1.AkCarta.Kod, po1.AkCarta.Perihal, "4");
+                    foreach (var po1 in po.AkPO1)
+                    {
+                        poList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)po.JBahagianId, po1.Amaun, po1.AkCarta.Kod, po1.AkCarta.Perihal, "4");
 
-                    vm.AddRange(poList);
+                        vm.AddRange(poList);
+                    }
                 }
+                
             }
             // PO End
 
@@ -115,9 +123,13 @@ namespace MSNK.Controllers
 
             foreach (var sp in Sps)
             {
-                spList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(sp.JumLulus, sp.AkCarta.Kod, sp.AkCarta.Perihal, "4");
+                if (sp.JBahagianId == JBahagianId)
+                {
+                    spList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)sp.JBahagianId, sp.JumLulus, sp.AkCarta.Kod, sp.AkCarta.Perihal, "4");
 
-                vm.AddRange(spList);
+                    vm.AddRange(spList);
+                }
+                
 
             }
             // Pendahuluan Pelbagai End
@@ -128,13 +140,17 @@ namespace MSNK.Controllers
             List<AbBelanjawanSemasaViewModel> poLarasList = new List<AbBelanjawanSemasaViewModel>();
 
             foreach (var poLaras in POLarass)
-            {
-                foreach (var poLaras1 in poLaras.AkPOLaras1)
+            {   
+                if (poLaras.JBahagianId == JBahagianId)
                 {
-                    poLarasList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(poLaras1.Amaun, poLaras1.AkCarta.Kod, poLaras1.AkCarta.Perihal, "4");
+                    foreach (var poLaras1 in poLaras.AkPOLaras1)
+                    {
+                        poLarasList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)poLaras.JBahagianId, poLaras1.Amaun, poLaras1.AkCarta.Kod, poLaras1.AkCarta.Perihal, "4");
 
-                    vm.AddRange(poLarasList);
+                        vm.AddRange(poLarasList);
+                    }
                 }
+                
             }
             // POLaras End
 
@@ -145,12 +161,16 @@ namespace MSNK.Controllers
 
             foreach (var inden in Indens)
             {
-                foreach (var inden1 in inden.AkInden1)
+                if (inden.JBahagianId == JBahagianId)
                 {
-                    indenList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(inden1.Amaun, inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
+                    foreach (var inden1 in inden.AkInden1)
+                    {
+                        indenList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)inden.JBahagianId, inden1.Amaun, inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
 
-                    vm.AddRange(indenList);
+                        vm.AddRange(indenList);
+                    }
                 }
+                
             }
             // Inden End
 
@@ -161,12 +181,16 @@ namespace MSNK.Controllers
 
             foreach (var pv in PVs)
             {
-                foreach (var pv1 in pv.AkPV1)
+                if (pv.JBahagianId == JBahagianId)
                 {
-                    pvList = _bsRepo.RunBaucerObjekOperation(pv.denganTanggungan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal, "4");
+                    foreach (var pv1 in pv.AkPV1)
+                    {
+                        pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal, "4");
 
-                    vm.AddRange(pvList);
+                        vm.AddRange(pvList);
+                    }
                 }
+                
             }
             // Pv End
 
@@ -177,12 +201,16 @@ namespace MSNK.Controllers
 
             foreach (var cv in CVs)
             {
-                foreach (var cv1 in cv.AkTunaiCV1)
+                if (cv.AkTunaiRuncit.JBahagianId == JBahagianId)
                 {
-                    cvList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(cv1.Amaun, cv1.AkCarta.Kod, cv1.AkCarta.Perihal, "4");
+                    foreach (var cv1 in cv.AkTunaiCV1)
+                    {
+                        cvList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)cv.AkTunaiRuncit.JBahagianId, cv1.Amaun, cv1.AkCarta.Kod, cv1.AkCarta.Perihal, "4");
 
-                    vm.AddRange(cvList);
+                        vm.AddRange(cvList);
+                    }
                 }
+                
             }
             // TunaiCV End
 
@@ -193,16 +221,20 @@ namespace MSNK.Controllers
 
             foreach (var terima in Terimas)
             {
-                foreach (var terima1 in terima.AkTerima1)
+                if (terima.JBahagianId == JBahagianId)
                 {
-                    if (terima1.AkCarta.JJenis.Kod == "B")
+                    foreach (var terima1 in terima.AkTerima1)
                     {
-                        terimaList = _bsRepo.RunResitObjekOperation(terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
+                        if (terima1.AkCarta.JJenis.Kod == "B")
+                        {
+                            terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
 
-                        vm.AddRange(terimaList);
+                            vm.AddRange(terimaList);
+                        }
+
                     }
-
                 }
+                
             }
             // Terima End
 
@@ -213,21 +245,25 @@ namespace MSNK.Controllers
 
             foreach (var jurnal in Jurnals)
             {
-                foreach (var jurnal1 in jurnal.AkJurnal1)
+                if (jurnal.JBahagianId == JBahagianId)
                 {
-                    if (jurnal1.AkCarta.JJenis.Kod == "B" || jurnal1.AkCarta.JJenis.Kod == "A")
+                    foreach (var jurnal1 in jurnal.AkJurnal1)
                     {
-                        jurnalList = _bsRepo.RunJurnalObjekOperation(jurnal1.Debit, jurnal1.Kredit, jurnal1.AkCarta.Kod, jurnal1.AkCarta.Perihal, "4");
+                        if (jurnal1.AkCarta.JJenis.Kod == "B" || jurnal1.AkCarta.JJenis.Kod == "A")
+                        {
+                            jurnalList = _bsRepo.RunJurnalObjekOperation((int)jurnal.JBahagianId, jurnal1.Debit, jurnal1.Kredit, jurnal1.AkCarta.Kod, jurnal1.AkCarta.Perihal, "4");
 
-                        vm.AddRange(jurnalList);
+                            vm.AddRange(jurnalList);
+                        }
+
                     }
-
                 }
+                
             }
             // Jurnal End
 
             //
-            vm = vm.GroupBy(b => b.Objek)
+            vm = vm.GroupBy(b => new { b.JBahagianId, b.Objek})
                 .Select(l => new AbBelanjawanSemasaViewModel
                 {
                     Objek = l.First().Objek,
@@ -236,11 +272,11 @@ namespace MSNK.Controllers
                     Asal = l.Sum(c => c.Asal),
                     Tambah = l.Sum(c => c.Tambah),
                     Pindah = l.Sum(c => c.Pindah),
-                    Jumlah = l.Sum(c => c.Asal + c.Tambah - c.Pindah),
+                    Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
                     Belanja = l.Sum(c => c.Belanja),
                     TBS = l.Sum(c => c.TBS),
                     TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                    Baki = l.Sum(c => c.Asal + c.Tambah - c.Pindah - c.TBS - c.Belanja),
+                    Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
                 }).OrderBy(b => b.Objek).ToList();
 
             PopulateList();
@@ -266,12 +302,16 @@ namespace MSNK.Controllers
             {
                 foreach (var waran1 in waran.AbWaran1)
                 {
-                    waranList = _bsRepo.RunWaranObjekOperation(waran.FlJenisWaran,
+                    if (waran1.JBahagianId == JBahagianId)
+                    {
+                        waranList = _bsRepo.RunWaranObjekOperation((int)waran1.JBahagianId,
+                        waran.FlJenisWaran,
                         waran1.TK,
                         waran1.Amaun,
                         waran1.AkCarta.Kod,
                         waran1.AkCarta.Perihal,
                         waran1.AkCarta.JParas.Kod);
+                    }
 
                     vm.AddRange(waranList);
                 }
@@ -285,12 +325,16 @@ namespace MSNK.Controllers
 
             foreach (var po in POs)
             {
-                foreach (var po1 in po.AkPO1)
+                if (po.JBahagianId == JBahagianId)
                 {
-                    poList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(po1.Amaun, po1.AkCarta.Kod, po1.AkCarta.Perihal, "4");
+                    foreach (var po1 in po.AkPO1)
+                    {
+                        poList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)po.JBahagianId, po1.Amaun, po1.AkCarta.Kod, po1.AkCarta.Perihal, "4");
 
-                    vm.AddRange(poList);
+                        vm.AddRange(poList);
+                    }
                 }
+
             }
             // PO End
 
@@ -301,9 +345,13 @@ namespace MSNK.Controllers
 
             foreach (var sp in Sps)
             {
-                spList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(sp.JumLulus, sp.AkCarta.Kod, sp.AkCarta.Perihal, "4");
+                if (sp.JBahagianId == JBahagianId)
+                {
+                    spList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)sp.JBahagianId, sp.JumLulus, sp.AkCarta.Kod, sp.AkCarta.Perihal, "4");
 
-                vm.AddRange(spList);
+                    vm.AddRange(spList);
+                }
+
 
             }
             // Pendahuluan Pelbagai End
@@ -315,12 +363,16 @@ namespace MSNK.Controllers
 
             foreach (var poLaras in POLarass)
             {
-                foreach (var poLaras1 in poLaras.AkPOLaras1)
+                if (poLaras.JBahagianId == JBahagianId)
                 {
-                    poLarasList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(poLaras1.Amaun, poLaras1.AkCarta.Kod, poLaras1.AkCarta.Perihal, "4");
+                    foreach (var poLaras1 in poLaras.AkPOLaras1)
+                    {
+                        poLarasList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)poLaras.JBahagianId, poLaras1.Amaun, poLaras1.AkCarta.Kod, poLaras1.AkCarta.Perihal, "4");
 
-                    vm.AddRange(poLarasList);
+                        vm.AddRange(poLarasList);
+                    }
                 }
+
             }
             // POLaras End
 
@@ -331,12 +383,16 @@ namespace MSNK.Controllers
 
             foreach (var inden in Indens)
             {
-                foreach (var inden1 in inden.AkInden1)
+                if (inden.JBahagianId == JBahagianId)
                 {
-                    indenList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(inden1.Amaun, inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
+                    foreach (var inden1 in inden.AkInden1)
+                    {
+                        indenList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)inden.JBahagianId, inden1.Amaun, inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
 
-                    vm.AddRange(indenList);
+                        vm.AddRange(indenList);
+                    }
                 }
+
             }
             // Inden End
 
@@ -347,12 +403,16 @@ namespace MSNK.Controllers
 
             foreach (var pv in PVs)
             {
-                foreach (var pv1 in pv.AkPV1)
+                if (pv.JBahagianId == JBahagianId)
                 {
-                    pvList = _bsRepo.RunBaucerObjekOperation(pv.denganTanggungan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal, "4");
+                    foreach (var pv1 in pv.AkPV1)
+                    {
+                        pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal, "4");
 
-                    vm.AddRange(pvList);
+                        vm.AddRange(pvList);
+                    }
                 }
+
             }
             // Pv End
 
@@ -363,12 +423,16 @@ namespace MSNK.Controllers
 
             foreach (var cv in CVs)
             {
-                foreach (var cv1 in cv.AkTunaiCV1)
+                if (cv.AkTunaiRuncit.JBahagianId == JBahagianId)
                 {
-                    cvList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation(cv1.Amaun, cv1.AkCarta.Kod, cv1.AkCarta.Perihal, "4");
+                    foreach (var cv1 in cv.AkTunaiCV1)
+                    {
+                        cvList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)cv.AkTunaiRuncit.JBahagianId, cv1.Amaun, cv1.AkCarta.Kod, cv1.AkCarta.Perihal, "4");
 
-                    vm.AddRange(cvList);
+                        vm.AddRange(cvList);
+                    }
                 }
+
             }
             // TunaiCV End
 
@@ -379,18 +443,22 @@ namespace MSNK.Controllers
 
             foreach (var terima in Terimas)
             {
-                foreach (var terima1 in terima.AkTerima1)
+                if (terima.JBahagianId == JBahagianId)
                 {
-                    if (terima1.AkCarta.JJenis.Kod == "B")
+                    foreach (var terima1 in terima.AkTerima1)
                     {
-                        terimaList = _bsRepo.RunResitObjekOperation(terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
+                        if (terima1.AkCarta.JJenis.Kod == "B")
+                        {
+                            terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
 
-                        vm.AddRange(terimaList);
+                            vm.AddRange(terimaList);
+                        }
+
                     }
-
                 }
+
             }
-            // Terina End
+            // Terima End
 
             // Jurnal
             List<AkJurnal> Jurnals = await _bsRepo.GetAkJurnalBasedOnYear(tahun, JKWId, JBahagianId, date2);
@@ -399,21 +467,25 @@ namespace MSNK.Controllers
 
             foreach (var jurnal in Jurnals)
             {
-                foreach (var jurnal1 in jurnal.AkJurnal1)
+                if (jurnal.JBahagianId == JBahagianId)
                 {
-                    if (jurnal1.AkCarta.JJenis.Kod == "B" || jurnal1.AkCarta.JJenis.Kod == "A")
+                    foreach (var jurnal1 in jurnal.AkJurnal1)
                     {
-                        jurnalList = _bsRepo.RunJurnalObjekOperation(jurnal1.Debit, jurnal1.Kredit, jurnal1.AkCarta.Kod, jurnal1.AkCarta.Perihal, "4");
+                        if (jurnal1.AkCarta.JJenis.Kod == "B" || jurnal1.AkCarta.JJenis.Kod == "A")
+                        {
+                            jurnalList = _bsRepo.RunJurnalObjekOperation((int)jurnal.JBahagianId, jurnal1.Debit, jurnal1.Kredit, jurnal1.AkCarta.Kod, jurnal1.AkCarta.Perihal, "4");
 
-                        vm.AddRange(jurnalList);
+                            vm.AddRange(jurnalList);
+                        }
+
                     }
-
                 }
+
             }
             // Jurnal End
 
             //
-            vm = vm.GroupBy(b => b.Objek)
+            vm = vm.GroupBy(b => new { b.JBahagianId, b.Objek })
                 .Select(l => new AbBelanjawanSemasaViewModel
                 {
                     Objek = l.First().Objek,
@@ -422,12 +494,12 @@ namespace MSNK.Controllers
                     Asal = l.Sum(c => c.Asal),
                     Tambah = l.Sum(c => c.Tambah),
                     Pindah = l.Sum(c => c.Pindah),
-                    Jumlah = l.Sum(c => c.Asal + c.Tambah - c.Pindah),
+                    Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
                     Belanja = l.Sum(c => c.Belanja),
                     TBS = l.Sum(c => c.TBS),
                     TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                    Baki = l.Sum(c => c.Asal + c.Tambah - c.Pindah - c.TBS - c.Belanja),
-                }).ToList();
+                    Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                }).OrderBy(b => b.Objek).ToList();
 
             //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
 
