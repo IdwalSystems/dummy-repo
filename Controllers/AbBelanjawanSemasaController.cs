@@ -78,6 +78,7 @@ namespace MSNK.Controllers
 
             foreach (var waran in warans)
             {
+
                 foreach (var waran1 in waran.AbWaran1)
                 {
                     if (waran1.JBahagianId == JBahagianId)
@@ -89,9 +90,9 @@ namespace MSNK.Controllers
                         waran1.AkCarta.Kod,
                         waran1.AkCarta.Perihal,
                         waran1.AkCarta.JParas.Kod);
-                    }
 
-                    vm.AddRange(waranList);
+                        vm.AddRange(waranList);
+                    }
                 }
             }
             // Waran End
@@ -112,7 +113,7 @@ namespace MSNK.Controllers
                         vm.AddRange(poList);
                     }
                 }
-                
+
             }
             // PO End
 
@@ -129,7 +130,7 @@ namespace MSNK.Controllers
 
                     vm.AddRange(spList);
                 }
-                
+
 
             }
             // Pendahuluan Pelbagai End
@@ -140,7 +141,7 @@ namespace MSNK.Controllers
             List<AbBelanjawanSemasaViewModel> poLarasList = new List<AbBelanjawanSemasaViewModel>();
 
             foreach (var poLaras in POLarass)
-            {   
+            {
                 if (poLaras.JBahagianId == JBahagianId)
                 {
                     foreach (var poLaras1 in poLaras.AkPOLaras1)
@@ -150,7 +151,7 @@ namespace MSNK.Controllers
                         vm.AddRange(poLarasList);
                     }
                 }
-                
+
             }
             // POLaras End
 
@@ -170,7 +171,7 @@ namespace MSNK.Controllers
                         vm.AddRange(indenList);
                     }
                 }
-                
+
             }
             // Inden End
 
@@ -190,7 +191,7 @@ namespace MSNK.Controllers
                         vm.AddRange(pvList);
                     }
                 }
-                
+
             }
             // Pv End
 
@@ -210,7 +211,7 @@ namespace MSNK.Controllers
                         vm.AddRange(cvList);
                     }
                 }
-                
+
             }
             // TunaiCV End
 
@@ -234,7 +235,7 @@ namespace MSNK.Controllers
 
                     }
                 }
-                
+
             }
             // Terima End
 
@@ -258,12 +259,12 @@ namespace MSNK.Controllers
 
                     }
                 }
-                
+
             }
             // Jurnal End
 
             //
-            vm = vm.GroupBy(b => new { b.JBahagianId, b.Objek})
+            vm = vm.GroupBy(b => new { b.JBahagianId, b.Objek })
                 .Select(l => new AbBelanjawanSemasaViewModel
                 {
                     Objek = l.First().Objek,
