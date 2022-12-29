@@ -11,10 +11,10 @@ namespace MSNK.Models.Modules.FormModel
         public int JBahagianId { get; set; }
         [Required(ErrorMessage = "Tahun Diperlukan")]
         public string Tahun { get; set; }
-        [Required(ErrorMessage = "Tarikh Diperlukan")]
+        public string BulanDari { get; set; }
+        public string BulanHingga { get; set; }
         [Display(Name = "Tarikh Dari")]
         public DateTime TarDari { get; set; }
-        [Required(ErrorMessage = "Tarikh Diperlukan")]
         [Display(Name = "Tarikh Hingga")]
         public DateTime TarHingga { get; set; }
         [Display(Name = "Bank")]
