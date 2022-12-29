@@ -709,6 +709,10 @@ body {
     /*background: aliceblue;*/
 }
 
+.form-control-label {
+    padding-top : 5px;
+}
+
 label {
     height: calc(1.5em + 0.5rem + 2px);
     font-size: .8rem;
