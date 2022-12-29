@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Infrastructure;
@@ -10,6 +11,7 @@ using MSNK.Models.Modules;
 using MSNK.Models.Modules.FormModel;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.ViewModel;
+using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -155,6 +157,102 @@ namespace MSNK.Controllers
                 ViewBag.bahagian = new SelectList(bahagianSelect, "Value", "Text", 0);
             }
             // populate list bahagian end
+
+        }
+
+        public async Task<IActionResult> PrintPDF(PenyataFormModel form)
+        {
+            var alirTunai = new List<AbAlirTunaiViewModel>();
+
+            PopulateSelectList(form.AkBankId, form.JBahagianId, form.Tahun);
+
+            if (form.JBahagianId != 0)
+            {
+                int jKWId = _context.JBahagian.FirstOrDefault(b => b.Id == form.JBahagianId).JKWId;
+
+                form.JKWId = jKWId;
+            }
+            var date1 = DateTime.Now.Year.ToString() + "-01-01T00:00:01";
+            var date2 = DateTime.Now.Year.ToString() + "-12-31T23:59:59";
+            ViewData["Tahun"] = DateTime.Now.Year.ToString();
+
+            if (form.AkBankId != 0)
+            {
+
+                AbAlirTunaiViewModel bakiAwal = await _custom.GetCarryPreviousBalanceEachStartingMonth(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun);
+
+                alirTunai.Add(bakiAwal);
+
+                List<AbAlirTunaiViewModel> tunaiMasuk = await _custom.GetListAlirTunaiMasukBasedOnYear(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun);
+
+                alirTunai.AddRange(tunaiMasuk);
+
+                List<AbAlirTunaiViewModel> tunaiKeluar = await _custom.GetListAlirTunaiKeluarBasedOnYear(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun);
+
+                alirTunai.AddRange(tunaiKeluar);
+
+                AbAlirTunaiViewModel bakiAkhir = new AbAlirTunaiViewModel();
+
+                bakiAkhir.NoAkaun = bakiAwal.NoAkaun;
+                bakiAkhir.NamaAkaun = bakiAwal.NoAkaun;
+                bakiAkhir.KeluarMasuk = 3;
+                bakiAkhir.Jan = bakiAwal.Feb;
+                bakiAkhir.Feb = bakiAwal.Mac;
+                bakiAkhir.Mac = bakiAwal.Apr;
+                bakiAkhir.Apr = bakiAwal.Mei;
+                bakiAkhir.Mei = bakiAwal.Jun;
+                bakiAkhir.Jun = bakiAwal.Jul;
+                bakiAkhir.Jul = bakiAwal.Ogo;
+                bakiAkhir.Ogo = bakiAwal.Sep;
+                bakiAkhir.Sep = bakiAwal.Okt;
+                bakiAkhir.Okt = bakiAwal.Nov;
+                bakiAkhir.Nov = bakiAwal.Dis;
+                bakiAkhir.Dis = bakiAwal.Jan2;
+                bakiAkhir.JumAkaun = bakiAwal.Jan2;
+
+                alirTunai.Add(bakiAkhir);
+
+                var bank = await _context.AkBank
+                    .Include(b => b.AkCarta)
+                    .FirstOrDefaultAsync(b => b.Id == form.AkBankId);
+
+                var bahagian = await _context.JBahagian
+                    .Include(b => b.JKW)
+                    .FirstOrDefaultAsync(b => b.Id == form.JBahagianId);
+
+                var company = await _userService.GetCompanyDetails();
+
+                return new ViewAsPdf("AlirTunaiPrintPDF", alirTunai,
+                    new ViewDataDictionary(ViewData)
+                    {
+                        { "NamaBahagian", bahagian.Kod + " - " + bahagian.Perihal },
+                        { "NamaBank", bank.NoAkaun + " (" + bank.AkCarta.Kod + " - " + bank.AkCarta.Perihal +") "},
+                        { "NamaSyarikat", company.NamaSyarikat },
+                        { "AlamatSyarikat1", company.AlamatSyarikat1 },
+                        { "AlamatSyarikat2", company.AlamatSyarikat2 },
+                        { "AlamatSyarikat3", company.AlamatSyarikat3 }
+                    })
+                {
+                    PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                    PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                    CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
+                        " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                    PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                };
+            }
+            else
+            {
+
+                date1 = DateTime.Now.Year.ToString() + "-01-01T00:00:01";
+                date2 = DateTime.Now.Year.ToString() + "-12-31T23:59:59";
+                ViewData["Tahun"] = DateTime.Now.Year.ToString();
+
+                PopulateSelectList(form.AkBankId, form.JBahagianId, form.Tahun);
+
+                TempData[SD.Error] = "Akaun Bank Tidak Wujud.";
+
+                return View(alirTunai.OrderBy(b => b.KeluarMasuk).ToList());
+            }
 
         }
     }
