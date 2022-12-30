@@ -148,7 +148,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                bankSelect.Add(new SelectListItem()
+                bahagianSelect.Add(new SelectListItem()
                 {
                     Text = "-- Tiada Bahagian Berdaftar --",
                     Value = ""
