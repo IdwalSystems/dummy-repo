@@ -20,5 +20,9 @@ namespace MSNK.Models.Modules.IRepository
         Task<List<AbAlirTunaiViewModel>> GetListAlirTunaiMasukBasedOnYear(T2 akBankId, int? JKWId, int? JBahagianId, string Tahun);
         Task<List<AbAlirTunaiViewModel>> GetListAlirTunaiKeluarBasedOnYear(T2 akBankId, int? JKWId, int? JBahagianId, string Tahun);
         // Penyata Alir Tunai END
+
+        // Timbang Duga 
+        Task<List<AbTimbangDugaViewModel>> GetListTimbangDugaBasedOnDate(T2 JBahagianId, int? JKWId, DateTime TarHingga);
+        // Timbang Duga END
     }
 }

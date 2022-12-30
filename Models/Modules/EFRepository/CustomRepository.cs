@@ -778,7 +778,7 @@ namespace MSNK.Models.Modules.EFRepository
 
             }
 
-            tunaiKeluar = tunaiKeluar.GroupBy(b => new { b.NoAkaun })
+            return tunaiKeluar.GroupBy(b => new { b.NoAkaun })
                 .Select(l => new AbAlirTunaiViewModel
                 {
                     NoAkaun = l.First().NoAkaun,
@@ -798,7 +798,86 @@ namespace MSNK.Models.Modules.EFRepository
                     Dis = l.Sum(c => c.Dis),
                     JumAkaun = l.Sum(c => c.JumAkaun)
                 }).OrderBy(b => b.NoAkaun).ToList();
-            return tunaiKeluar;
+        }
+
+        public async Task<List<AbTimbangDugaViewModel>> GetListTimbangDugaBasedOnDate(int JBahagianId, int? JKWId, DateTime TarHingga)
+        {
+            List<AbTimbangDugaViewModel> timbangDuga = new List<AbTimbangDugaViewModel>();
+
+            var company = await _userService.GetCompanyDetails();
+
+            List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
+                .Where(b => b.Tarikh <= TarHingga).ToList();
+
+            if (JKWId != 0)
+            {
+                akAkaun = akAkaun.Where(b => b.JKWId == JKWId).ToList();
+            }
+
+            if (JBahagianId != 0)
+            {
+                akAkaun = akAkaun.Where(b => b.JBahagianId == JBahagianId).ToList();
+            }
+
+            foreach (var a in akAkaun)
+            {
+                var carta = await context.AkCarta.Include(b => b.JJenis)
+                    .FirstOrDefaultAsync(b => b.Id == a.AkCartaId1);
+
+                if (carta != null)
+                {
+                    if (carta.DebitKredit == "D")
+                    {
+                        timbangDuga.Add(new AbTimbangDugaViewModel()
+                        {
+                            NoAkaun = a.AkCarta1.Kod,
+                            NamaAkaun = a.AkCarta1.Perihal,
+                            DebitKredit = "D - DEBIT",
+                            Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
+                            Debit = a.Debit
+                        });
+
+                        timbangDuga.Add(new AbTimbangDugaViewModel()
+                        {
+                            NoAkaun = a.AkCarta1.Kod,
+                            NamaAkaun = a.AkCarta1.Perihal,
+                            DebitKredit = "D - DEBIT",
+                            Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
+                            Debit = -a.Kredit
+                        });
+                    }
+                    else
+                    {
+                        timbangDuga.Add(new AbTimbangDugaViewModel()
+                        {
+                            NoAkaun = a.AkCarta1.Kod,
+                            NamaAkaun = a.AkCarta1.Perihal,
+                            DebitKredit = "K - KREDIT",
+                            Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
+                            Kredit = a.Kredit
+                        });
+
+                        timbangDuga.Add(new AbTimbangDugaViewModel()
+                        {
+                            NoAkaun = a.AkCarta1.Kod,
+                            NamaAkaun = a.AkCarta1.Perihal,
+                            DebitKredit = "K - KREDIT",
+                            Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
+                            Kredit = -a.Debit
+                        });
+                    }
+                }
+            }
+            return timbangDuga.GroupBy(b => new {b.DebitKredit, b.NoAkaun})
+                .Select( l => new AbTimbangDugaViewModel
+                {
+                    NoAkaun = l.First().NoAkaun,
+                    NamaAkaun = l.First().NamaAkaun,
+                    DebitKredit = l.First().DebitKredit,
+                    Jenis = l.First().Jenis,
+                    Debit = l.Sum(b => b.Debit),
+                    Kredit = l.Sum(b => b.Kredit)
+                }).OrderBy(b => b.NoAkaun).ToList();
         }
 
     }
