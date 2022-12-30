@@ -880,6 +880,64 @@ namespace MSNK.Models.Modules.EFRepository
                 }).OrderBy(b => b.NoAkaun).ToList();
         }
 
+        public async Task<List<AbUntungRugiViewModel>> GetListUntungRugiBasedOnRangeDate(int JBahagianId, int? JKWId, DateTime TarDari , DateTime TarHingga)
+        {
+            List<AbUntungRugiViewModel> untungRugi = new List<AbUntungRugiViewModel>();
+
+            var company = await _userService.GetCompanyDetails();
+
+            List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
+                .Where(b => b.Tarikh >= TarDari && b.Tarikh <= TarHingga).ToList();
+
+            if (JKWId != 0)
+            {
+                akAkaun = akAkaun.Where(b => b.JKWId == JKWId).ToList();
+            }
+
+            if (JBahagianId != 0)
+            {
+                akAkaun = akAkaun.Where(b => b.JBahagianId == JBahagianId).ToList();
+            }
+
+            foreach (var a in akAkaun)
+            {
+                var carta = await context.AkCarta.Include(b => b.JJenis)
+                    .FirstOrDefaultAsync(b => b.Id == a.AkCartaId1);
+
+                // pendapatan
+                if (carta.JJenis.Kod == "H")
+                {
+                    untungRugi.Add( new AbUntungRugiViewModel()
+                    {
+                        Jenis = "H",
+                        NoAkaun = a.AkCarta1.Kod,
+                        NamaAkaun = a.AkCarta1.Perihal,
+                        Amaun = a.Kredit - a.Debit,
+                    } );
+
+                }
+                // belanja
+                else if (carta.JJenis.Kod == "B")
+                {
+                    untungRugi.Add(new AbUntungRugiViewModel()
+                    {
+                        Jenis = "B",
+                        NoAkaun = a.AkCarta1.Kod,
+                        NamaAkaun = a.AkCarta1.Perihal,
+                        Amaun = a.Debit - a.Kredit,
+                    });
+
+                }
+            }
+            return untungRugi.GroupBy(b => new { b.Jenis, b.NoAkaun })
+                .Select(l => new AbUntungRugiViewModel
+                {
+                    NoAkaun = l.First().NoAkaun,
+                    NamaAkaun = l.First().NamaAkaun,
+                    Jenis = l.First().Jenis,
+                    Amaun = l.Sum(b => b.Amaun)
+                }).OrderByDescending(b => b.Jenis).ThenBy(b => b.NoAkaun).ToList();
+        }
     }
 }
 
