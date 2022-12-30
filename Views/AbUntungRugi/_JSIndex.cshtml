@@ -1,0 +1,24 @@
+﻿
+<script>
+
+    $(document).ready(function () {
+
+        var tbl = $('#tblUntungRugi').DataTable({
+            "paging": false,
+            rowReorder: false,
+            order: [[3, 'desc']],
+            columnDefs: [
+                { orderable: false, targets: '_all' }
+                
+            ],
+            "scrollY": "40vh",
+            "scrollX": true,
+            "scrollCollapse": true,
+            "paging": false,
+            dom: 'lrt'
+        });
+
+        tbl.draw();
+
+    });
+</script>
