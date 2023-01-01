@@ -1,0 +1,252 @@
+﻿@model dynamic;
+@{
+    ViewData["Title"] = "Cetakan Kunci Kira-kira";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+
+    decimal aset = 0;
+    decimal liabiliti = 0;
+    decimal asetBersih = 0;
+    decimal ekuiti = 0;
+    decimal untungRugi = 0;
+    decimal ekuitiPlusUntungRugi = 0;
+    string dateTo = "";
+    string key = "";
+
+    dateTo = ViewData["DateTo"].ToString();
+    string date = dateTo.Substring(8, 2) + "/" + dateTo.Substring(5, 2) + "/" + dateTo.Substring(0, 4);
+
+}
+<style>
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .max-lines {
+        display: block; /* or inline-block */
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 5.8em;
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+
+<div class="row flexrow mb-1 text-center">
+    <div class="col-12 text-uppercase">
+        <img class="image-container mb-2" src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
+        <h5 class="mb-1"><strong>@ViewData["NamaSyarikat"]</strong></h5>
+        <p class="mb-0"> @ViewData["AlamatSyarikat1"], @ViewData["AlamatSyarikat2"]</p>
+        <p class="mb-0"> @ViewData["AlamatSyarikat3"]</p>
+        <p class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</p>
+    </div>
+</div>
+<br />
+<table class="table table-bordered table-sm topic">
+    <thead>
+        <tr class="bg-dark text-white">
+            <th class="text-center bg-dark text-white">
+                <strong>
+                    LAPORAN KUNCI KIRA-KIRA HINGGA TARIKH : @ViewData["TarHingga"]
+                    <br />
+                    MENGIKUT BAHAGIAN : @ViewData["NamaBahagian"]
+                </strong>
+            </th>
+        </tr>
+    </thead>
+</table>
+
+<div class="row flex-row">
+    <div class="col-12">
+        <table class="table table-bordered table-sm topic">
+            <thead>
+                <tr>
+                    <th colspan="3" class="text-center table-dark text-uppercase">
+                        KUNCI KIRA-KIRA PADA TARIKH : @date
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        No Akaun
+                    </th>
+                    <th>
+                        Nama Akaun
+                    </th>
+                    <th align="right">
+                        Baki RM
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tbodyKunciKirakira">
+
+                @foreach (var group in Model.KunciKirakiraGrouped)
+                {
+                    switch (group.Key)
+                    {
+                        case 1:
+                            key = "ASET";
+                            break;
+                        case 2:
+                            key = "LIABILITI";
+                            break;
+                        case 4:
+                            key = "EKUITI";
+                            break;
+                        case 5:
+                            key = "UNTUNG/RUGI";
+                            break;
+                    }
+                    <tr>
+                        <td colspan="3" class="text-uppercase ac-secondary font-weight-bold text-white">@key</td>
+                    </tr>
+                    @foreach (var item in group)
+                    {
+
+                        switch (item.Jenis)
+                        {
+                            case "A":
+                                aset += item.Amaun;
+                                asetBersih += item.Amaun;
+                                break;
+                            case "L":
+                                liabiliti += item.Amaun;
+                                asetBersih -= item.Amaun;
+                                break;
+                            case "E":
+                                ekuiti += item.Amaun;
+                                break;
+                            case "H":
+                                untungRugi += item.Amaun;
+                                ekuitiPlusUntungRugi += item.Amaun;
+                                //continue;
+                                break;
+                            case "B":
+                                untungRugi -= item.Amaun;
+                                ekuitiPlusUntungRugi -= item.Amaun;
+                                //continue;
+                                break;
+                        }
+                        <tr>
+                            <td>
+                                @item.NoAkaun
+                            </td>
+                            <td>
+                                @item.NamaAkaun
+                            </td>
+                            <td>
+                                @Convert.ToDecimal(item.Amaun).ToString("#,##0.00")
+                            </td>
+                        </tr>
+
+                    }
+
+                    @switch (group.Key)
+                    {
+                        case 1:
+                            <tr class=" font-weight-bold">
+                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Aset RM</td>
+                                <td>@Convert.ToDecimal(aset).ToString("#,##0.00")</td>
+                            </tr>
+
+                            break;
+                        case 2:
+                            <tr class=" font-weight-bold">
+                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Liabiliti RM</td>
+                                <td>@Convert.ToDecimal(liabiliti).ToString("#,##0.00")</td>
+                            </tr>
+                            <tr class=" font-weight-bold">
+                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Aset Bersih RM</td>
+                                <td>@Convert.ToDecimal(asetBersih).ToString("#,##0.00")</td>
+                            </tr>
+                            break;
+                        case 4:
+                            <tr class=" font-weight-bold">
+                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Ekuiti RM</td>
+                                <td>@Convert.ToDecimal(ekuiti).ToString("#,##0.00")</td>
+                            </tr>
+                            break;
+                        case 5:
+                            <tr class=" font-weight-bold">
+                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Untung/Rugi RM</td>
+                                <td>@Convert.ToDecimal(untungRugi).ToString("#,##0.00")</td>
+                            </tr>
+                            <tr class=" font-weight-bold">
+                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Ekuiti + Untung/Rugi RM</td>
+                                <td>@Convert.ToDecimal(ekuitiPlusUntungRugi).ToString("#,##0.00")</td>
+                            </tr>
+                            break;
+                    }
+
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+
+<hr />
+<div class="table-responsive-sm">
+    <table class="table table-sm topic table-bordered">
+        <thead class="table-dark">
+
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center" width="33%">Disedia </td>
+                <td class="text-center" width="33%">Disemak </td>
+                <td class="text-center" width="33%">Diluluskan </td>
+            </tr>
+            <tr>
+                <td class="text-center" height="50px"></td>
+
+                <td class="text-center" height="50px"></td>
+                <td class="text-center" height="50px"></td>
+
+            </tr>
+            <tr>
+                <td class="text-left">Nama:</td>
+                <td class="text-left">Nama:</td>
+                <td class="text-left">Nama:</td>
+
+            </tr>
+            <tr>
+                <td class="text-left">Jawatan:</td>
+                <td class="text-left">Jawatan:</td>
+                <td class="text-left">Jawatan:</td>
+
+            </tr>
+            <tr>
+                <td class="text-left">Tarikh: @DateTime.Now</td>
+                <td class="text-left">Tarikh:</td>
+                <td class="text-left">Tarikh:</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
