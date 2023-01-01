@@ -120,6 +120,8 @@ namespace MSNK.Models.Modules.EFRepository
         {
             var bukuTunai = new List<AbBukuTunaiViewModel>();
 
+            var company = await _userService.GetCompanyDetails();
+
             //var previousBalance = await GetCarryPreviousBalanceBasedOnStartingDate(akBankId, JKWId, JBahagianId, TarMula);
 
             // search CartaId from AkBankId
@@ -129,6 +131,7 @@ namespace MSNK.Models.Modules.EFRepository
             List<AkAkaun> bukuTunaiPV = await context.AkAkaun
                 .Include(b => b.AkCarta2)
                 .Where(b => b.NoRujukan.Contains("PV")
+                && b.Tarikh >= company.TarMula
                 && b.Tarikh >= TarMula && b.Tarikh <= TarHingga
                 && b.AkCartaId1 == akBank.AkCartaId
                 && b.Kredit != 0).OrderBy(b => b.Tarikh).ToListAsync();
@@ -168,6 +171,7 @@ namespace MSNK.Models.Modules.EFRepository
             List<AkAkaun> bukuTunaiResit = await context.AkAkaun
                 .Include(b => b.AkCarta2)
                 .Where(b => b.NoRujukan.Contains("RR")
+                && b.Tarikh >= company.TarMula
                 && b.Tarikh >= TarMula && b.Tarikh <= TarHingga
                 && b.AkCartaId1 == akBank.AkCartaId
                 && b.Debit != 0).OrderBy(b => b.Tarikh).ToListAsync();
@@ -207,6 +211,7 @@ namespace MSNK.Models.Modules.EFRepository
             List<AkAkaun> bukuTunaiJurnal = await context.AkAkaun
                 .Include(b => b.AkCarta2)
                 .Where(b => b.NoRujukan.Contains("JU")
+                && b.Tarikh >= company.TarMula
                 && b.Tarikh >= TarMula && b.Tarikh <= TarHingga
                 && b.AkCartaId1 == akBank.AkCartaId).OrderBy(b => b.Tarikh).ToListAsync();
 
@@ -558,7 +563,8 @@ namespace MSNK.Models.Modules.EFRepository
 
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
                 .Where(b => b.AkCartaId1 == akBank.AkCartaId
-                && b.Tarikh.Year >= int.Parse(Tahun) && b.Tarikh.Year <= int.Parse(Tahun)
+                && b.Tarikh >= company.TarMula
+                && b.Tarikh.Year == int.Parse(Tahun)
                 && b.Debit != 0).ToList();
 
             if (JKWId != 0)
@@ -684,7 +690,8 @@ namespace MSNK.Models.Modules.EFRepository
 
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
                 .Where(b => b.AkCartaId2 == akBank.AkCartaId
-                && b.Tarikh.Year >= int.Parse(Tahun) && b.Tarikh.Year <= int.Parse(Tahun)
+                && b.Tarikh >= company.TarMula
+                && b.Tarikh.Year == int.Parse(Tahun)
                 && b.Kredit != 0).ToList();
 
             if (JKWId != 0)
@@ -800,14 +807,14 @@ namespace MSNK.Models.Modules.EFRepository
                 }).OrderBy(b => b.NoAkaun).ToList();
         }
 
-        public async Task<List<AbTimbangDugaViewModel>> GetListTimbangDugaBasedOnDate(int JBahagianId, int? JKWId, DateTime TarHingga)
+        public async Task<List<AbTimbangDugaViewModel>> GetListTimbangDugaBasedOnLastDate(int JBahagianId, int? JKWId, DateTime TarHingga)
         {
             List<AbTimbangDugaViewModel> timbangDuga = new List<AbTimbangDugaViewModel>();
 
             var company = await _userService.GetCompanyDetails();
 
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                .Where(b => b.Tarikh <= TarHingga).ToList();
+                .Where(b => b.Tarikh >= company.TarMula && b.Tarikh <= TarHingga).ToList();
 
             if (JKWId != 0)
             {
@@ -887,7 +894,8 @@ namespace MSNK.Models.Modules.EFRepository
             var company = await _userService.GetCompanyDetails();
 
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                .Where(b => b.Tarikh >= TarDari && b.Tarikh <= TarHingga).ToList();
+                .Where(b => b.Tarikh >= company.TarMula
+                && b.Tarikh >= TarDari && b.Tarikh <= TarHingga).ToList();
 
             if (JKWId != 0)
             {
@@ -937,6 +945,104 @@ namespace MSNK.Models.Modules.EFRepository
                     Jenis = l.First().Jenis,
                     Amaun = l.Sum(b => b.Amaun)
                 }).OrderByDescending(b => b.Jenis).ThenBy(b => b.NoAkaun).ToList();
+        }
+
+        public async Task<List<AbKunciKiraKiraViewModel>> GetListKunciKirakiraBasedOnLastDate(int JBahagianId, int? JKWId, DateTime TarHingga)
+        {
+            List<AbKunciKiraKiraViewModel> aset = new List<AbKunciKiraKiraViewModel>();
+
+            var company = await _userService.GetCompanyDetails();
+
+            List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
+                .Where(b => b.Tarikh >= company.TarMula && b.Tarikh <= TarHingga).ToList();
+
+            if (JKWId != 0)
+            {
+                akAkaun = akAkaun.Where(b => b.JKWId == JKWId).ToList();
+            }
+
+            if (JBahagianId != 0)
+            {
+                akAkaun = akAkaun.Where(b => b.JBahagianId == JBahagianId).ToList();
+            }
+
+            foreach (var a in akAkaun)
+            {
+                var carta = await context.AkCarta.Include(b => b.JJenis)
+                    .FirstOrDefaultAsync(b => b.Id == a.AkCartaId1);
+
+                
+                switch (carta.JJenis.Kod)
+                {
+                    // Aset
+                    case "A":
+                        aset.Add(new AbKunciKiraKiraViewModel()
+                        {
+                            Order = 1,
+                            Jenis = "A",
+                            NoAkaun = a.AkCarta1.Kod,
+                            NamaAkaun = a.AkCarta1.Perihal,
+                            Amaun = a.Debit - a.Kredit,
+                        });
+                        break;
+                    // Liabiliti
+                    case "L":
+                        aset.Add(new AbKunciKiraKiraViewModel()
+                        {
+                            Order = 2,
+                            Jenis = "L",
+                            NoAkaun = a.AkCarta1.Kod,
+                            NamaAkaun = a.AkCarta1.Perihal,
+                            Amaun = a.Kredit - a.Debit,
+                        });
+                        break;
+                    // Ekuiti
+                    case "E":
+                        aset.Add(new AbKunciKiraKiraViewModel()
+                        {
+                            Order = 4,
+                            Jenis = "E",
+                            NoAkaun = a.AkCarta1.Kod,
+                            NamaAkaun = a.AkCarta1.Perihal,
+                            Amaun = a.Kredit - a.Debit,
+                        });
+                        break;
+                    // Untung /Rugi
+                    // Pendapatan (Hasil)
+                    case "H":
+                        aset.Add(new AbKunciKiraKiraViewModel()
+                        {
+                            Order = 5,
+                            Jenis = "H",
+                            NoAkaun = a.AkCarta1.Kod,
+                            NamaAkaun = a.AkCarta1.Perihal,
+                            Amaun = a.Kredit - a.Debit,
+                        });
+                        break;
+                    // Belanja
+                    case "B":
+                        aset.Add(new AbKunciKiraKiraViewModel()
+                        {
+                            Order = 5,
+                            Jenis = "B",
+                            NoAkaun = a.AkCarta1.Kod,
+                            NamaAkaun = a.AkCarta1.Perihal,
+                            Amaun = a.Debit - a.Kredit,
+                        });
+                        break;
+                    // Untung / Rugi END
+                }
+            }
+            return aset.GroupBy(b => new { b.Jenis, b.NoAkaun })
+                .Select(l => new AbKunciKiraKiraViewModel
+                {
+                    Order = l.First().Order,
+                    Jenis = l.First().Jenis,
+                    NoAkaun = l.First().NoAkaun,
+                    NamaAkaun = l.First().NamaAkaun,
+                    Amaun = l.Sum(b => b.Amaun)
+                }).OrderBy(b => b.Order).ThenBy(b => b.NoAkaun).ToList();
+
         }
     }
 }

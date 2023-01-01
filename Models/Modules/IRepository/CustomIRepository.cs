@@ -22,11 +22,15 @@ namespace MSNK.Models.Modules.IRepository
         // Penyata Alir Tunai END
 
         // Timbang Duga 
-        Task<List<AbTimbangDugaViewModel>> GetListTimbangDugaBasedOnDate(T2 JBahagianId, int? JKWId, DateTime TarHingga);
+        Task<List<AbTimbangDugaViewModel>> GetListTimbangDugaBasedOnLastDate(T2 JBahagianId, int? JKWId, DateTime TarHingga);
         // Timbang Duga END
         
         // Untung Rugi
         Task<List<AbUntungRugiViewModel>> GetListUntungRugiBasedOnRangeDate(T2 JBahagianId, int? JKWId, DateTime TarDari , DateTime TarHingga);
         // Untung Rugi END
+        
+        // Kunci Kira-kira
+        Task<List<AbKunciKiraKiraViewModel>> GetListKunciKirakiraBasedOnLastDate(T2 JBahagianId, int? JKWId, DateTime TarHingga);
+        // Kunci Kira-kira END
     }
 }
