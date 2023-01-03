@@ -946,6 +946,28 @@ namespace MSNK.Controllers
                         }
                         //check for print end
 
+                        // check peruntukan
+                            bool IsExistAbBukuVot = await _context.AbBukuVot
+                                       .Where(x => x.Tahun == sp.TarMasuk.Year.ToString() && x.VotId == sp.AkCartaId && x.JKWId == sp.JKWId && x.JBahagianId == sp.JBahagianId)
+                                       .AnyAsync();
+
+                            if (IsExistAbBukuVot == true)
+                            {
+                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(sp.TarMasuk.Year.ToString(), sp.AkCartaId, sp.JKWId, sp.JBahagianId);
+
+                                if (sum < jumLulus)
+                                {
+                                    TempData[SD.Error] = "Bajet untuk kod akaun " + sp.AkCarta.Kod + " tidak mencukupi.";
+                                    return RedirectToAction(nameof(Index));
+                                }
+                            }
+                            else
+                            {
+                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + sp.AkCarta.Kod;
+                                return RedirectToAction(nameof(Index));
+                            }
+                        // check peruntukan end
+
                         var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("SP/" + sp.NoPermohonan)).FirstOrDefaultAsync();
                         if (abBukuVot != null)
                         {

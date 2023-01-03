@@ -36,6 +36,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private readonly IRepository<AkPV, int, string> _akPVRepo;
+        private readonly CustomIRepository<string, int> _customRepo;
         private CartBelian _cart;
 
         public AkBelianController(
@@ -53,6 +54,7 @@ namespace MSNK.Controllers
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
             IRepository<AkAkaun, int, string> akAkaunRepository,
             IRepository<AkPV, int, string> akPVRepository,
+            CustomIRepository<string, int> customRepo,
             CartBelian cart
             )
         {
@@ -70,6 +72,7 @@ namespace MSNK.Controllers
             _abBukuVotRepo = abBukuVotRepository;
             _akAkaunRepo = akAkaunRepository;
             _akPVRepo = akPVRepository;
+            _customRepo = customRepo;
             _cart = cart;
         }
 
@@ -1679,6 +1682,32 @@ namespace MSNK.Controllers
                 AkBelian akBelian = await _akBelianRepo.GetById((int)id);
 
                 List<AkBelian1> akB1 = akBelian.AkBelian1.ToList();
+
+                // check peruntukan
+                foreach(var item in akB1)
+                {
+                    bool IsExistAbBukuVot = await _context.AbBukuVot
+                               .Where(x => x.Tahun == akBelian.Tahun && x.VotId == item.AkCartaId && x.JKWId == akBelian.JKWId && x.JBahagianId == akBelian.JBahagianId)
+                               .AnyAsync();
+
+                    if (IsExistAbBukuVot == true)
+                    {
+                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akBelian.Tahun, item.AkCartaId, akBelian.JKWId, akBelian.JBahagianId);
+
+                        if (sum < item.Amaun)
+                        {
+                            TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                    else
+                    {
+                        TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
+                        return RedirectToAction(nameof(Index));
+                    }
+
+                }
+                // check peruntukan end
 
                 var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akBelian.NoInbois).FirstOrDefaultAsync();
                 if (akAkaun != null)
