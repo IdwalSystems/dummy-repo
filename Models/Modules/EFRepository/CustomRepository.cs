@@ -689,7 +689,7 @@ namespace MSNK.Models.Modules.EFRepository
             var akBank = await context.AkBank.Where(b => b.Id == akBankId).FirstOrDefaultAsync();
 
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                .Where(b => b.AkCartaId2 == akBank.AkCartaId
+                .Where(b => b.AkCartaId1 == akBank.AkCartaId
                 && b.Tarikh >= company.TarMula
                 && b.Tarikh.Year == int.Parse(Tahun)
                 && b.Kredit != 0).ToList();
@@ -835,6 +835,10 @@ namespace MSNK.Models.Modules.EFRepository
                 {
                     if (carta.DebitKredit == "D")
                     {
+                        if (a.AkCarta1.Kod == "B27299")
+                        {
+                            var test = a.AkCarta1.Kod;
+                        }
                         timbangDuga.Add(new AbTimbangDugaViewModel()
                         {
                             NoAkaun = a.AkCarta1.Kod,

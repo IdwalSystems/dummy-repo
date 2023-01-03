@@ -35,7 +35,7 @@ namespace MSNK.Models.Modules
         [MaxLength(100)]
         [Display(Name = "Catatan 2")]
         public string Catatan2 { get; set; }
-        [Display(Name = "Baki RM")]
+        [Display(Name = "Baki RM (Setakat 31 Dis 2021)")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Baki { get; set; }
         // cek if kod akaun is in bajet or not

@@ -233,60 +233,67 @@
         {
             @if (Model.AkNotaDebitKreditBelian.Count() != 0)
             {
-                <div class="card box-shadow mb-3">
-                    <div class="card-header bg-success text-white">
-                        <h6>Nota Debit/Kredit Belian</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
+                foreach (var nota in Model.AkNotaDebitKreditBelian)
+                {
+                    if (nota.FlPosting == 1)
+                    {
+                        <div class="card box-shadow mb-3">
+                            <div class="card-header bg-success text-white">
+                                <h6>Nota Debit/Kredit Belian</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
 
-                            <table id="tblAkNota" class="table table-sm table-borderless" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th style="width:40%">Kod</th>
-                                        <th style="width:50%" class="text-right">Amaun</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyObjek">
-                                    @foreach (var item in Model.AkNotaDebitKreditBelian)
-                                    {
-                                        <tr id="@item.Id">
-                                            <td>@item.NoRujukan</td>
-                                            @if (item.FlJenis == 0)
+                                    <table id="tblAkNota" class="table table-sm table-borderless" cellpadding="0" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:40%">Kod</th>
+                                                <th style="width:50%" class="text-right">Amaun</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyObjek">
+                                            @foreach (var item in Model.AkNotaDebitKreditBelian)
                                             {
-                                                <td class="text-right" id="td3Amaun">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+                                                <tr id="@item.Id">
+                                                    <td>@item.NoRujukan</td>
+                                                    @if (item.FlJenis == 0)
+                                                    {
+                                                        <td class="text-right" id="td3Amaun">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="tdext-right" id="td3Amaun">@Convert.ToDecimal(0 - item.Jumlah).ToString("#,##0.00")</td>
+                                                    }
+
+                                                    <td class="text-center">
+                                                        <div class="btn-group" role="group" aria-label="action">
+                                                            <a asp-controller="AkNotaDebitKreditBelian" asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+
                                             }
-                                            else
-                                            {
-                                                <td class="tdext-right" id="td3Amaun">@Convert.ToDecimal(0 - item.Jumlah).ToString("#,##0.00")</td>
-                                            }
+                                        </tbody>
+                                        <tfoot>
 
-                                            <td class="text-center">
-                                                <div class="btn-group" role="group" aria-label="action">
-                                                    <a asp-controller="AkNotaDebitKreditBelian" asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                                                </div>
-                                            </td>
+                                        </tfoot>
+                                    </table>
 
-                                        </tr>
-
-                                    }
-                                </tbody>
-                                <tfoot>
-
-                                </tfoot>
-                            </table>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="form-group pb-2">
+                                    <label class="control-label">Jumlah RM</label>
+                                    <input value="@Model.JumlahNota" class="form-control form-control-sm" id="jumlahNota" readonly />
+                                </div>
+                            </div>
 
                         </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="form-group pb-2">
-                            <label class="control-label">Jumlah RM</label>
-                            <input value="@Model.JumlahNota" class="form-control form-control-sm" id="jumlahNota" readonly />
-                        </div>
-                    </div>
+                    }
+                }
 
-                </div>
             }
 
         }
@@ -298,52 +305,59 @@
         {
             @if (Model.AkPV2.Count() != 0)
             {
-                <div class="card box-shadow mb-3">
-                    <div class="card-header bg-success text-white">
-                        <h6>Baucer Pembayaran</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
+                foreach (var pv2 in Model.AkPV2)
+                {
+                    if (pv2.AkPV.FlPosting == 1)
+                    {
+                        <div class="card box-shadow mb-3">
+                            <div class="card-header bg-success text-white">
+                                <h6>Baucer Pembayaran</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
 
-                            <table id="tblAkPV2" class="table table-sm table-borderless" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th style="width:40%">Kod</th>
-                                        <th style="width:50%" class="text-right">Amaun</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyObjek">
-                                    @foreach (var item in Model.AkPV2)
-                                    {
-                                        <tr id="@item.Id">
-                                            <td>@item.AkPV.NoPV</td>
-                                            <td class="text-right" id="td3Amaun">@Convert.ToDecimal(item.AkPV.Jumlah).ToString("#,##0.00")</td>
-                                            <td class="text-center">
-                                                <div class="btn-group" role="group" aria-label="action">
-                                                    <a asp-controller="AkPV" asp-action="Details" asp-route-id="@item.AkPV.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                                                </div>
-                                            </td>
+                                    <table id="tblAkPV2" class="table table-sm table-borderless" cellpadding="0" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:40%">Kod</th>
+                                                <th style="width:50%" class="text-right">Amaun</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyObjek">
+                                            @foreach (var item in Model.AkPV2)
+                                            {
+                                                <tr id="@item.Id">
+                                                    <td>@item.AkPV.NoPV</td>
+                                                    <td class="text-right" id="td3Amaun">@Convert.ToDecimal(item.AkPV.Jumlah).ToString("#,##0.00")</td>
+                                                    <td class="text-center">
+                                                        <div class="btn-group" role="group" aria-label="action">
+                                                            <a asp-controller="AkPV" asp-action="Details" asp-route-id="@item.AkPV.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                                        </div>
+                                                    </td>
 
-                                        </tr>
+                                                </tr>
 
-                                    }
-                                </tbody>
-                                <tfoot>
+                                            }
+                                        </tbody>
+                                        <tfoot>
 
-                                </tfoot>
-                            </table>
+                                        </tfoot>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="form-group pb-2">
+                                    <label class="control-label">Jumlah Baucer RM</label>
+                                    <input value="@Model.JumlahPV" class="form-control form-control-sm" id="jumlahPV" readonly />
+                                </div>
+                            </div>
 
                         </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="form-group pb-2">
-                            <label class="control-label">Jumlah Baucer RM</label>
-                            <input value="@Model.JumlahPV" class="form-control form-control-sm" id="jumlahPV" readonly />
-                        </div>
-                    </div>
+                    }
+                }
 
-                </div>
             }
 
         }

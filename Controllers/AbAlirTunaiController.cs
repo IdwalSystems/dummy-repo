@@ -71,7 +71,7 @@ namespace MSNK.Controllers
                 AbAlirTunaiViewModel bakiAkhir = new AbAlirTunaiViewModel();
 
                 bakiAkhir.NoAkaun = bakiAwal.NoAkaun;
-                bakiAkhir.NamaAkaun = bakiAwal.NoAkaun;
+                bakiAkhir.NamaAkaun = bakiAwal.NamaAkaun;
                 bakiAkhir.KeluarMasuk = 3;
                 bakiAkhir.Jan = bakiAwal.Feb;
                 bakiAkhir.Feb = bakiAwal.Mac;
@@ -221,6 +221,8 @@ namespace MSNK.Controllers
                     .FirstOrDefaultAsync(b => b.Id == form.JBahagianId);
 
                 var company = await _userService.GetCompanyDetails();
+
+                ViewData["Tahun"] = form.Tahun;
 
                 return new ViewAsPdf("AlirTunaiPrintPDF", alirTunai,
                     new ViewDataDictionary(ViewData)
