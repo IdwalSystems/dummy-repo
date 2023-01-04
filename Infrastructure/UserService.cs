@@ -52,6 +52,7 @@ namespace MSNK.Infrastructure
                 company.EmelSyarikat = appInfo.EmelSyarikat;
                 company.CompanyLogoWeb = "MainLogo_Syarikat.webp";
                 company.CompanyLogoPrintPDF = "MainLogo_Syarikat.png";
+                company.TarMula = appInfo.TarMula;
             };
 
             return company; 
