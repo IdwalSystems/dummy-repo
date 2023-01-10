@@ -367,6 +367,19 @@ namespace MSNK.Data
                 .IsRequired();
             //AkJurnal end
             //AkBelian
+
+                // Temporal Table
+                modelBuilder.Entity<AkBelian>().Property(x => x.ValidFromUTC)
+                            .IsRequired()
+                            .ValueGeneratedOnAddOrUpdate()
+                            .HasDefaultValueSql("SYSUTCDATETIME()");
+
+                modelBuilder.Entity<AkBelian>().Property(x => x.ValidToUTC)
+                            .IsRequired()
+                            .ValueGeneratedOnAddOrUpdate()
+                            .HasDefaultValueSql("CONVERT(DATETIME2, '9999-12-31 23:59:59.9999999')");
+                //Temporal Table end
+
             modelBuilder.Entity<AkBelian>()
                 .HasOne(m => m.JKW)
                 .WithMany(t => t.AkBelian)
@@ -694,5 +707,6 @@ namespace MSNK.Data
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan4).HasDefaultValue("");
 
         }
+
     }
 }

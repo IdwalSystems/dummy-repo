@@ -94,8 +94,14 @@ namespace MSNK.Models.Modules
         public ICollection<AkBelian2> AkBelian2 { get; set; }
         public ICollection<AkPV2> AkPV2 { get; set; }
         public ICollection<AkNotaDebitKreditBelian> AkNotaDebitKreditBelian { get; set; }
-        
+
 
         //relationship end
+
+        // Temporal Table
+        public DateTime? ValidFromUTC { get; }
+        public DateTime? ValidToUTC { get; }
+
+        // Temporal Table end
     }
 }
