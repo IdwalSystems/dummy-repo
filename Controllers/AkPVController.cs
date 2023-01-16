@@ -957,7 +957,7 @@ namespace MSNK.Controllers
                     // check if Inbois has PO or not
                     var po = _context.AkBelian.Include(x => x.AkBelian1).ThenInclude(x=> x.AkCarta).Where(b => b.Id == akPV2.AkBelianId).FirstOrDefault();
 
-                    if (po.AkPOId != null)
+                    if (po.AkPOId != null || po.AkIndenId != null)
                     {
                         akPV2.HavePO = true;
                     }
