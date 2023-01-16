@@ -553,15 +553,19 @@ namespace MSNK.Controllers
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
-            // check start
-            // check if Tahun, FlJenisWaran ,JBahagianId, JKWId already exist or not 
-            if (FlJenisWaran == 0)
+            if (FlJenisPindahan == 0)
             {
                 foreach (var item in _cart.Lines1)
                 {
                     JBahagianId = item.JBahagianId;
                     abWaran.JBahagianId = item.JBahagianId;
                 }
+            }
+
+            // check start
+            // check if Tahun, FlJenisWaran ,JBahagianId, JKWId already exist or not 
+            if (FlJenisWaran == 0)
+            {
 
                 var w = await _context.AbWaran.Where(x => x.Tahun == abWaran.Tahun
                                                                 && x.FlJenisWaran == FlJenisWaran
@@ -583,6 +587,8 @@ namespace MSNK.Controllers
             // check if jenis Waran pindah, total value should be 0, if not return view(abWaran)
             if (FlJenisWaran == 2)
             {
+
+
                 var abWaran1 = _cart.Lines1.ToList();
 
                 decimal total = 0;
