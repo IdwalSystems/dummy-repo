@@ -557,6 +557,12 @@ namespace MSNK.Controllers
             // check if Tahun, FlJenisWaran ,JBahagianId, JKWId already exist or not 
             if (FlJenisWaran == 0)
             {
+                foreach (var item in _cart.Lines1)
+                {
+                    JBahagianId = item.JBahagianId;
+                    abWaran.JBahagianId = item.JBahagianId;
+                }
+
                 var w = await _context.AbWaran.Where(x => x.Tahun == abWaran.Tahun
                                                                 && x.FlJenisWaran == FlJenisWaran
                                                                 && x.JKWId == JKWId

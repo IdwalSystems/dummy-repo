@@ -275,6 +275,29 @@ a:focus i {
     transform: scale(1.5);
 }
 */
+.svg-grey {
+    filter: invert(60%) sepia(87%) saturate(0%) hue-rotate(0deg) brightness(53%) contrast(107%);
+    transition: 0.3s;
+}
+
+.text-primary {
+    color: #4ea5ff !important;
+    transition: 0.3s;
+}
+
+    .text-primary:hover {
+        color: #1b84e7 !important;
+    }
+
+.text-danger {
+    color: #fd707e !important;
+    transition: 0.3s;
+}
+
+    .text-danger:hover {
+        color: #e83043 !important;
+    }
+
 .ac-ref {
     font-size: 0.8rem;
     color: #b1a9a9;
