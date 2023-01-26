@@ -151,7 +151,7 @@ namespace MSNK.Controllers
 
             var LatestNoRujukan = _context.AkInden
                 .IgnoreQueryFilters()
-                .Where(x => x.NoInden.Substring(0, 9) == prefix)
+                .Where(x => x.Tahun == year && x.JKWId == data.JKWId)
                 .Max(x => x.NoInden);
             if (LatestNoRujukan == null)
             {
