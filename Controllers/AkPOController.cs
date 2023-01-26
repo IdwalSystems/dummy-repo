@@ -119,7 +119,7 @@ namespace MSNK.Controllers
             var kumpulanWang = kw.Kod;
             //var year = DateTime.Now.Year.ToString();
             var year = data.Tahun;
-            string prefix = year + "/" + kumpulanWang + "/";
+            string prefix = "PO/" + year + "/" + kumpulanWang + "/";
             int x = 1;
             string noRujukan = prefix + "000000";
 
@@ -527,7 +527,7 @@ namespace MSNK.Controllers
             var kumpulanWang = kw.Kod;
             var year = DateTime.Now.Year.ToString();
             //var year = data.Tahun;
-            string prefix = year + "/" + kumpulanWang + "/";
+            string prefix = "PO/" + year + "/" + kumpulanWang + "/";
             int x = 1;
             string noRujukan = prefix + "000000";
 
@@ -1513,7 +1513,7 @@ namespace MSNK.Controllers
                             Kod = akPO.AkPembekal.KodSykt,
                             Penerima = akPO.AkPembekal.NamaSykt,
                             VotId = item.AkCartaId,
-                            Rujukan = "PO/"+akPO.NoPO,
+                            Rujukan = akPO.NoPO,
                             Tanggungan = item.Amaun
                         };
 
@@ -1525,7 +1525,8 @@ namespace MSNK.Controllers
                     //update AkNotaMinta
                     if(akPO.AkNotaMintaId != null)
                     {
-                        var noPO = "PO/" + akPO.NoPO;
+                        //var noPO = "PO/" + akPO.NoPO;
+                        var noPO = akPO.NoPO;
                         var tarikhPO = DateTime.Now;
 
                         AkNotaMinta akNM = await _akNotaMintaRepo.GetById((int)akPO.AkNotaMintaId);
