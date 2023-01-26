@@ -1265,7 +1265,7 @@ namespace MSNK.Controllers
                     .Include(x => x.AkInden2)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("IK/" + akInden.NoInden)).ToList();
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan == akInden.NoInden).ToList();
                 if (abBukuVot == null)
                 {
 

@@ -1582,7 +1582,7 @@ namespace MSNK.Controllers
                     .Include(x => x.AkPO2)
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("PO/" + akPO.NoPO)).ToList();
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan == akPO.NoPO).ToList();
                 if (abBukuVot == null)
                 {
 
