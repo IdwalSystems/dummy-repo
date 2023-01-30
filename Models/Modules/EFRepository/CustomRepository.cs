@@ -46,7 +46,7 @@ namespace MSNK.Models.Modules.EFRepository
                            Baki = tbl.Baki
                        }).GroupBy(x => new { x.Tahun, x.KodAkaun, x.KW, x.Bahagian }).FirstOrDefault();
 
-            return sql.Select(t => t.Baki + t.Kredit - t.Debit - t.Tanggungan - t.Liabiliti).Sum();
+            return sql.Select(t => t.Baki + t.Kredit - t.Debit - t.Tanggungan).Sum();
         }
 
         public async Task<decimal> GetBalanceFromKaunterPanjar(string bakiAwal, int akTunaiRuncitId)
