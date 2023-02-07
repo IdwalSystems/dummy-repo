@@ -77,17 +77,17 @@ namespace MSNK.Models.Modules
         public JKW JKW { get; set; }
 
         [DisplayName("Bahagian")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bahagian")]
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
         [DisplayName("Negeri")]
         [Required(ErrorMessage = "Negeri diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Negeri")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Negeri")]
         public int JNegeriId { get; set; }
         public JNegeri JNegeri { get; set; }
         [DisplayName("Sukan")]
         [Required(ErrorMessage = "Sukan diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Sukan")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Sukan")]
         public int JSukanId { get; set; }
         public JSukan JSukan { get; set; }
         [DisplayName("Tahap")]

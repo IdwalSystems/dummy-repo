@@ -81,5 +81,9 @@ namespace MSNK.Models.Modules
         public ICollection<AkPadananPenyata> AkPadananPenyata { get; set; }
         public int FlTunai { get; set; }
         public DateTime? TarTunai { get; set; }
+        // jika melibatkan tanggungan pada Buku vot, true
+        // jika tidak melibatkan tanggungan pada Buku vot, false
+        [DisplayName("Akaun Belum Bayar (ABB)")]
+        public bool IsAKB { get; set; }
     }
 }

@@ -50,13 +50,9 @@
                 <td class="text-center font-weight-bold" width="15%">Tarikh</td>
             </tr>
             <tr>
-                <td class="text-right font-weight-bold" width="15%">Bahagian : </td>
-                <td class="text-uppercase">@Model.AkJurnal.JBahagian.Kod - @Model.AkJurnal.JBahagian.Perihal </td>
-                <td class="text-center" width="15%" rowspan="2">@Convert.ToDateTime(Model.AkJurnal.Tarikh).ToString("dd/MM/yyyy")</td>
-            </tr>
-            <tr>
                 <td class="text-right font-weight-bold" width="15%">No Jurnal : </td>
                 <td>@Model.AkJurnal.NoJurnal</td>
+                <td class="text-center" width="15%" rowspan="2">@Convert.ToDateTime(Model.AkJurnal.Tarikh).ToString("dd/MM/yyyy")</td>
             </tr>
         </tbody>
     </table>
@@ -65,6 +61,7 @@
     <table class="table table-bordered table-sm topic">
         <thead class="text-center">
             <tr>
+                <th width="10%">Bhg.</th>
                 <th width="10%">Kod</th>
                 <th>Perihal Akaun ( Objek )</th>
                 <th width="15%">Debit RM</th>
@@ -75,6 +72,7 @@
             @foreach (var item in Model.AkJurnal.AkJurnal1)
             {
                 <tr>
+                    <td class="text-center">@item.JBahagian.Kod</td>
                     <td class="text-center">@item.AkCarta.Kod</td>
                     <td>@item.AkCarta.Perihal</td>
                     <td class="text-right">@Convert.ToDecimal(item.Debit).ToString("#,##0.00")</td>
@@ -84,6 +82,7 @@
         </tbody>
         <tfoot>
             <tr class="font-weight-bold">
+                <td style="border:none;"></td>
                 <td style="border:none;"></td>
                 <td class="text-right" style="border:none;">Jumlah RM</td>
                 <td class="text-right">@Convert.ToDecimal(Model.AkJurnal.JumDebit).ToString("#,##0.00")</td>
@@ -124,6 +123,10 @@
             <tr>
                 <td><label></label></td>
                 <td><label></label></td>
+            </tr>
+            <tr>
+                <td>Tarikh: @DateTime.Now</td>
+                <td>Tarikh: </td>
             </tr>
         </tbody>
     </table>

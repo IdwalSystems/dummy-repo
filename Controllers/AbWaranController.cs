@@ -311,8 +311,7 @@ namespace MSNK.Controllers
         public async Task<JsonResult> SaveAbWaran1(
             AbWaran1 abWaran1, 
             string tahun, 
-            int jKWId, 
-            int jBahagianId)
+            int jKWId)
         {
 
             try

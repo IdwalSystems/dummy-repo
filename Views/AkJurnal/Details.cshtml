@@ -56,7 +56,20 @@
                         </div>
                     </div>
                 }
-                        
+                <div class="form-group">
+                    <div class="card mb-2">
+                        <div class="card-body pl-3 pr-3 pt-2">
+
+                            <label class="control-label">Maklumat Tambahan : </label>
+                            <div class="custom-control custom-radio">
+                                <input type="checkbox" data-val="true" id="IsAKB" asp-for="IsAKB" disabled>
+                                <label class="control-label">Jurnal ini melibatkan Akaun Belum Bayar (ABB)</label>
+                                <input type="hidden" name="IsAKB" value="false" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>        
 
             </div>
             <div class="col-lg-2">
@@ -119,7 +132,8 @@
                         <thead>
                             <tr>
                                 <th>Indeks</th>
-                                <th style="width:60%">Kod</th>
+                                <th style="width:40%%">Bahagian</th>
+                                <th style="width:40%">Kod</th>
                                 <th class="text-right">Debit RM</th>
                                 <th class="text-right">Kredit RM</th>
                                 <th></th>
@@ -130,6 +144,8 @@
                             {
                                 <tr id="@item.Id">
                                     <td>@(item.Indeks.ToString().Length<2?"0"+ item.Indeks.ToString(): item.Indeks.ToString())</td>
+                                    <td id="bahagianId" hidden>@item.JBahagianId</td>
+                                    <td>@item.JBahagian?.Kod - @item.JBahagian?.Perihal</td>
                                     <td id="akCartaId" hidden>@item.AkCartaId</td>
                                     <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
                                     <td class="editable-txt text-right" id="td1Amaun">@item.Debit</td>

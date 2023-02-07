@@ -39,17 +39,17 @@
                     </select>
                     <span asp-validation-for="JKWId" class="text-danger"></span>
                 </div>
-                <div class="form-group col-md">
-                    <label asp-for="JBahagianId" class="control-label"></label>
-                    <span class="text-danger control-label">*</span>
-                    <select asp-for="JBahagianId" class="form-control form-control-sm text-uppercase" id="ddlJBahagian">
-                        @foreach (var s in ViewBag.JBahagian)
-                        {
-                            <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                        }
-                    </select>
-                    <span asp-validation-for="JBahagianId" class="text-danger"></span>
-                </div>
+                @*<div class="form-group col-md">
+                <label asp-for="JBahagianId" class="control-label"></label>
+                <span class="text-danger control-label">*</span>
+                <select asp-for="JBahagianId" class="form-control form-control-sm text-uppercase" id="ddlJBahagian">
+                    @foreach (var s in ViewBag.JBahagian)
+                    {
+                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                    }
+                </select>
+                <span asp-validation-for="JBahagianId" class="text-danger"></span>
+            </div>*@
                 <div class="form-group col-md">
                     <label asp-for="Tarikh" class="control-label"></label>
                     <span class="text-danger control-label">*</span>
@@ -73,6 +73,17 @@
                     }
                 </select>
             </div>
+            <div class="card mb-2">
+                <div class="card-body pl-3 pr-3 pt-2">
+
+                    <label class="control-label">Maklumat Tambahan : </label>
+                    
+                    <div class="custom-control custom-radio">
+                        @Html.CheckBoxFor(m => m.IsAKB)
+                        <label class="control-label">Jurnal ini melibatkan Akaun Belum Bayar (ABB)</label>
+                    </div>
+                </div>
+            </div>
 
             @*table Objek*@
             <div class="card box-shadow mb-3">
@@ -84,7 +95,8 @@
                         <thead>
                             <tr>
                                 <th>Indeks</th>
-                                <th style="width:60%">Kod</th>
+                                <th style="width:30%">Bhg.</th>
+                                <th style="width:30%">Kod</th>
                                 <th class="text-right">Debit RM</th>
                                 <th class="text-right">Kredit RM</th>
                                 <th></th>
@@ -97,6 +109,15 @@
                             <tr>
                                 <td id="akCartaId" hidden></td>
                                 <td><input class="form-control form-control-sm" type="number" id="txtIndeksObjek" step="1" min="0" max="99" value="5" /></td>
+                                <td>
+                                    <select class="form-control form-control-sm select2" id="txtJBahagianId">
+                                        <option value="" selected disabled>-- Sila Pilih Bahagian -- </option>
+                                        @foreach (var s in ViewBag.JBahagian)
+                                        {
+                                            <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                        }
+                                    </select>
+                                </td>
                                 <td>
                                     <select class="form-control form-control-sm select2" id="txtKodAkaun" style="width:100%">
                                         <option value="" hidden>-- Pilih Kod Akaun --</option>
@@ -144,7 +165,7 @@
             <hr />
             <div class="form-group">
                 <input type="submit" value="Simpan" class="btn ac-primary btn-sm" />
-                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
         </form>
     </div>
@@ -167,6 +188,15 @@
                         <label class="col-form-label">Indeks</label>
                         <input type="number" class="form-control form-control-sm" id="moIndeks" step="1" min="0" max="99">
                         <span class="errModelIndeks text-danger" style="display:none">Indeks telah digunakan.</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Bahagian</label>
+                        <select class="form-control form-control-sm" id="moBahagian" disabled>
+                            @foreach (var s in ViewBag.JBahagian)
+                            {
+                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                            }
+                        </select>
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Kod Akaun</label>

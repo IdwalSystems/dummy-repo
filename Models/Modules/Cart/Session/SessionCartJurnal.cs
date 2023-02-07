@@ -22,12 +22,13 @@ namespace MSNK.Models.Modules.Cart.Session
         public override void AddItem1(
             int AkJurnalId,
             int Indeks,
+            int JBahagianId,
             int AkCartaId,
             decimal Debit,
             decimal Kredit
            )
         {
-            base.AddItem1(AkJurnalId, Indeks, AkCartaId, Debit, Kredit);
+            base.AddItem1(AkJurnalId, Indeks,JBahagianId, AkCartaId, Debit, Kredit);
             Session.SetJson("CartJurnal", this);
         }
         public override void RemoveItem1(int id, int id2)
