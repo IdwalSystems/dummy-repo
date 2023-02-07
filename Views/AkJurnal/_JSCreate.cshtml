@@ -7,12 +7,14 @@
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
         var txtKodAkaun = $("#txtKodAkaun");
-        GetCarta(txtKodAkaun.val());
+        var txtJBahagianId = $("#txtJBahagianId");
+        GetCarta(txtKodAkaun.val(), txtJBahagianId.val());
     });
 
-    function GetCarta(id) {
+    function GetCarta(id, id2) {
         var Objek = {
-            Id: id
+            Id: id,
+            Id2: id2
         }
         if (id) {
             //Send the JSON array to Controller using AJAX.
@@ -25,6 +27,7 @@
                 success: function (r) {
                     //Reference the TextBoxes.
                     var txtKodAkaun = $("#txtKodAkaun");
+                    var txtJBahagianId = $("#txtJBahagianId");
                     var txtKodAkaunText = $("#txtKodAkaun option:selected");
                     var txtDebitObjek = $("#txtDebitObjek");
                     var txtKreditObjek = $("#txtKreditObjek");
@@ -63,6 +66,15 @@
                         var cell = $(row.insertCell(-1));
                         cell.html(indeks.val().length < 2 ? "0" + indeks.val() : indeks.val());
 
+                        //Add bahagianId cell.
+                        var cell = $(row.insertCell(-1));
+                        cell.html(r.bahagian.id);
+                        cell.prop("hidden", !this.checked);
+
+                        //Add bahagian cell.
+                        var cell = $(row.insertCell(-1));
+                        cell.html(r.bahagian.kod + ' - ' + r.bahagian.perihal);
+
                         //Add kod cell.
                         var cell = $(row.insertCell(-1));
                         cell.html(r.record.kod + " - " + r.record.perihal);
@@ -96,6 +108,7 @@
 
                         var AkJurnal1 = {
                             AkCartaId: txtKodAkaun.val(),
+                            JBahagianId: txtJBahagianId.val(),
                             Debit: txtDebitObjek.val(),
                             Kredit: txtKreditObjek.val(),
                             Indeks: indeks.val()
@@ -145,6 +158,7 @@
                                                     var str =
                                                         "<tr id='" + item1.id + "'><td id='akCartaId' hidden>" + item1.akCartaId +
                                                         "</td><td>" + (((item1.indeks.toString()).length < 2) ? ("0" + (item1.indeks).toString()) : item1.indeks) +
+                                                        "</td><td>" + item1.jBahagian.kod + ' - ' + item1.jBahagian.perihal +
                                                         "</td><td>" + item1.akCarta.kod + ' - ' + item1.akCarta.perihal +
                                                         "</td><td class='text-right'>" + (item1.debit).toFixed(2) +
                                                         "</td><td class='text-right'>" + (item1.kredit).toFixed(2) +
@@ -220,10 +234,12 @@
         var row = $(button).closest("TR");
         var akCartaId = $("TD", row).eq(0).html();
         var indeks = $("TD", row).eq(1).html();
+        var bahagianId = $("TD", row).eq(2).html();
 
         var AkJurnal1 = {
             AkCartaId: akCartaId,
-            Indeks: indeks
+            Indeks: indeks,
+            JBahagianId: bahagianId
         }
         if (name != null) {
             $.ajax({
@@ -237,6 +253,7 @@
                     $("#moIndeks").val(r.record.indeks);
                     varIndeksLama = r.record.indeks;
                     $("#moKodAkaun").val(r.record.akCartaId);
+                    $("#moBahagian").val(r.record.jBahagianId);
                     $("#moDebit").val(r.record.debit.toFixed(2));
                     $("#moKredit").val(r.record.kredit.toFixed(2));
                     $("#modalObjek").modal({ backdrop: 'static', keyboard: false });
@@ -249,6 +266,7 @@
         var debit = $("#moDebit").val();
         var kredit = $("#moKredit").val();
         var akCartaId = $("#moKodAkaun").val();
+        var bahagianId = $("#moBahagian").val();
         var indeks = $("#moIndeks").val();
         var txtCarta = $("#moKodAkaun option:selected").text();
         var jumDebit = $("#JumDebit");
@@ -259,7 +277,7 @@
         table.find('tr').each(function (i, el) {
             var $tds = $(this).find('td');
             var idx = $tds.eq(1).text();
-            var carta = $tds.eq(2).text();
+            var carta = $tds.eq(3).text();
             var intidx = parseInt(idx);
 
             if (indeks === parseInt(intidx).toString()) {
@@ -275,6 +293,7 @@
         var AkJurnal1 = {
             Id: id,
             AkCartaId: akCartaId,
+            JBahagianId: bahagianId,
             Debit: debit,
             Kredit: kredit,
             IndeksLama: varIndeksLama,
@@ -307,6 +326,7 @@
                                     var str =
                                         "<tr id='" + item1.id + "'><td id='akCartaId' hidden>" + item1.akCartaId +
                                         "</td><td>" + (((item1.indeks.toString()).length < 2) ? ("0" + (item1.indeks).toString()) : item1.indeks) +
+                                        "</td><td>" + item1.jBahagian.kod + ' - ' + item1.jBahagian.perihal +
                                         "</td><td>" + item1.akCarta.kod + ' - ' + item1.akCarta.perihal +
                                         "</td><td class='text-right'>" + (item1.debit).toFixed(2) +
                                         "</td><td class='text-right'>" + (item1.kredit).toFixed(2) +

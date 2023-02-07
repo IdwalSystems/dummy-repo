@@ -11,6 +11,7 @@ namespace MSNK.Models.Modules.Cart
         public virtual void AddItem1(
             int AkJurnalId,
             int Indeks,
+            int JBahagianId,
             int AkCartaId,
             decimal Debit,
             decimal Kredit
@@ -26,6 +27,7 @@ namespace MSNK.Models.Modules.Cart
                 {
                     AkJurnalId = AkJurnalId,
                     Indeks = Indeks,
+                    JBahagianId = JBahagianId,
                     AkCartaId = AkCartaId,
                     Debit = Debit,
                     Kredit = Kredit

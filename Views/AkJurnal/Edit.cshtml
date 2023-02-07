@@ -25,7 +25,7 @@
             <input type="hidden" asp-for="NoJurnal" />
             <input type="hidden" asp-for="Tarikh" />
             <input type="hidden" asp-for="JKWId" />
-            <input type="hidden" asp-for="JBahagianId" />
+            @*<input type="hidden" asp-for="JBahagianId" />*@
 
             <input type="hidden" asp-for="Catatan2" />
             <input type="hidden" asp-for="Catatan3" />
@@ -41,14 +41,14 @@
                     <label asp-for="JKWId" class="control-label"></label>
                     <span class="text-danger control-label">*</span>
                     <input class="form-control form-control-sm text-uppercase" id="jkwtxt"
-                            value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
+                           value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
                 </div>
-                <div class="form-group col-md">
+                @*<div class="form-group col-md">
                     <label asp-for="JBahagianId" class="control-label"></label>
                     <span class="text-danger control-label">*</span>
                     <input class="form-control form-control-sm text-uppercase" id="jBahagiantxt"
-                            value="@Html.DisplayFor(model => model.JBahagian.Kod) - @Html.DisplayFor(model => model.JBahagian.Perihal)" readonly />
-                </div>
+                           value="@Html.DisplayFor(model => model.JBahagian.Kod) - @Html.DisplayFor(model => model.JBahagian.Perihal)" readonly />
+                </div>*@
                 <div class="form-group col-md">
                     <label asp-for="Tarikh" class="control-label"></label>
                     <span class="text-danger control-label">*</span>
@@ -77,6 +77,23 @@
                 </div>
             }
 
+            <div class="form-group">
+                <div class="card mb-2">
+                    <div class="card-body pl-3 pr-3 pt-2">
+
+                        <label class="control-label">Maklumat Tambahan : </label>
+                        <div class="custom-control custom-radio">
+                            <div class="custom-control custom-radio">
+                                <input type="checkbox" data-val="true" id="IsAKB" asp-for="IsAKB">
+                                <label class="control-label">Jurnal ini melibatkan Akaun Belum Bayar (ABB)</label>
+                                <input type="hidden" name="IsAKB" value="false" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
             <br />
             @*table Objek*@
             <div class="card box-shadow mb-3">
@@ -89,7 +106,8 @@
                             <thead>
                                 <tr>
                                     <th>Indeks</th>
-                                    <th style="width:60%">Kod</th>
+                                    <th style="width:40%">Bahagian</th>
+                                    <th style="width:40%">Kod</th>
                                     <th class="text-right">Debit RM</th>
                                     <th class="text-right">Kredit RM</th>
                                     <th></th>
@@ -102,6 +120,8 @@
                                     <tr id="@item.Id">
                                         <td id="akCartaId" hidden>@item.AkCartaId</td>
                                         <td>@(item.Indeks.ToString().Length<2?"0"+ item.Indeks.ToString(): item.Indeks.ToString())</td>
+                                        <td id="bahagianId" hidden>@item.JBahagianId</td>
+                                        <td>@item.JBahagian?.Kod - @item.JBahagian?.Perihal</td>
                                         <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
                                         <td class="editable-txt text-right" id="td1Amaun">@item.Debit</td>
                                         <td class="editable-txt text-right" id="td1Amaun">@item.Kredit</td>
@@ -127,7 +147,16 @@
                                     <td id="akCartaId" hidden></td>
                                     <td hidden><input id="txtAkJurnal1" value="@Model.Id" /></td>
                                     <td><input class="form-control form-control-sm" type="number" id="txtIndeksObjek" step="1" min="0" max="99" value="5" /></td>
-                                    <td style="width:60%">
+                                    <td>
+                                        <select class="form-control form-control-sm select2" id="txtJBahagianId">
+                                            <option value="" selected disabled>-- Sila Pilih Bahagian -- </option>
+                                            @foreach (var s in ViewBag.JBahagian)
+                                            {
+                                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                            }
+                                        </select>
+                                    </td>
+                                    <td style="width:40%">
                                         <select class="form-control form-control-sm select2" id="txtKodAkaun">
                                             <option value="" disabled selected>-- Pilih Kod Akaun --</option>
                                             @foreach (var s in ViewBag.AkCarta)
@@ -199,6 +228,15 @@
                         <label class="col-form-label">Indeks</label>
                         <input type="number" class="form-control form-control-sm" id="moIndeks" step="1" min="0" max="99">
                         <span class="errModelIndeks text-danger" style="display:none">Indeks telah digunakan.</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Bahagian</label>
+                        <select class="form-control form-control-sm" id="moBahagian" disabled>
+                            @foreach (var s in ViewBag.JBahagian)
+                            {
+                                <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                            }
+                        </select>
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Kod Akaun</label>

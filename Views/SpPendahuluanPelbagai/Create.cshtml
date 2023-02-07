@@ -88,7 +88,7 @@
                     <div class="form-group">
                         <label asp-for="JNegeriId" class="control-label"></label><span class="text-danger control-label">*</span>
                         <select class="form-control form-control-sm select2" asp-for="JNegeriId" required>
-                            <option value="0" hidden>-- Pilih Negeri --</option>
+                            <option value="" hidden>-- Pilih Negeri --</option>
                             @foreach (var s in ViewBag.JNegeri)
                             {
                                 <option value="@s.Id">@s.Perihal </option>
@@ -102,7 +102,7 @@
                     <div class="form-group">
                         <label asp-for="JSukanId" class="control-label"></label><span class="text-danger control-label">*</span>
                         <select class="form-control form-control-sm select2" asp-for="JSukanId" required>
-                            <option value="0" hidden>-- Pilih Sukan --</option>
+                            <option value="" hidden>-- Pilih Sukan --</option>
                             @foreach (var s in ViewBag.JSukan)
                             {
                                 <option value="@s.Id">@s.Perihal </option>

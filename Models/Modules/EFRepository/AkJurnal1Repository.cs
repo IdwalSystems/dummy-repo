@@ -25,6 +25,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkJurnal1
                 .Include(b => b.AkCarta)
+                .Include(b => b.JBahagian)
                 .Where(x => x.AkJurnalId == id)
                 .ToListAsync();
         }

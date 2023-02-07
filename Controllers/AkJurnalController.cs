@@ -183,6 +183,7 @@ namespace MSNK.Controllers
                 _cart.AddItem1(
                     akJurnal1.AkJurnalId, 
                     akJurnal1.Indeks, 
+                    akJurnal1.JBahagianId,
                     akJurnal1.AkCartaId, 
                     akJurnal1.Debit, 
                     akJurnal1.Kredit
@@ -320,7 +321,7 @@ namespace MSNK.Controllers
         // POST: AkJurnal/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AkJurnal akJurnal, int JKWId, decimal JumDebit, decimal JumKredit, int JBahagianId, int? AkTunaiRuncitId = 0)
+        public async Task<IActionResult> Create(AkJurnal akJurnal, int JKWId, decimal JumDebit, decimal JumKredit, int JBahagianId, bool IsAKB, int? AkTunaiRuncitId = 0)
         {
             AkJurnal m = new AkJurnal();
             var user = await _userManager.GetUserAsync(User);
@@ -346,7 +347,7 @@ namespace MSNK.Controllers
                 if (ModelState.IsValid)
                 {
                     string noRujukan = GetNoRujukan(akJurnal);
-                    if (akJurnal != null && JKWId != 0 && JBahagianId != 0)
+                    if (akJurnal != null && JKWId != 0)
                     {
                         m.JKWId = akJurnal.JKWId;
                         m.JBahagianId = akJurnal.JBahagianId;
@@ -358,6 +359,7 @@ namespace MSNK.Controllers
                         m.Catatan2 = akJurnal.Catatan2;
                         m.Catatan3 = akJurnal.Catatan3;
                         m.Catatan4 = akJurnal.Catatan4;
+                        m.IsAKB = IsAKB;
                         m.Posting = akJurnal.Posting;
                         m.Cetak = akJurnal.Cetak;
                         m.FlHapus = akJurnal.FlHapus;
@@ -595,12 +597,15 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        public JsonResult GetCarta(AkCarta akCarta)
+        public JsonResult GetCarta(int id, int id2)
         {
             try
             {
-                var result = _context.AkCarta.Where(b => b.Id == akCarta.Id).FirstOrDefault();
-                return Json(new { result = "OK", record = result });
+                var result = _context.AkCarta.Where(b => b.Id == id).FirstOrDefault();
+
+                var bahagian = _context.JBahagian.FirstOrDefault(b => b.Id == id2);
+
+                return Json(new { result = "OK", record = result, bahagian = bahagian });
             }
             catch (Exception ex)
             {
@@ -621,6 +626,7 @@ namespace MSNK.Controllers
                     _cart.AddItem1(
                         akJurnal1.AkJurnalId,
                         akJurnal1.Indeks, 
+                        akJurnal1.JBahagianId,
                         akJurnal1.AkCartaId, 
                         akJurnal1.Debit, 
                         akJurnal1.Kredit
@@ -781,7 +787,7 @@ namespace MSNK.Controllers
 
                 foreach (AkJurnal1 item in akJ1)
                 {
-                    _cart.AddItem1(item.AkJurnalId, item.Indeks, item.AkCartaId, item.Debit, item.Kredit);
+                    _cart.AddItem1(item.AkJurnalId, item.Indeks, item.JBahagianId, item.AkCartaId, item.Debit, item.Kredit);
                 }
 
                 decimal debit = 0;
@@ -832,6 +838,7 @@ namespace MSNK.Controllers
                     _cart.AddItem1(
                         akJurnal1.AkJurnalId,
                         akJurnal1.IndeksBaru,
+                        akJurnal1.JBahagianId,
                         akJurnal1.AkCartaId,
                         akJurnal1.Debit,
                         akJurnal1.Kredit
@@ -855,6 +862,9 @@ namespace MSNK.Controllers
                 {
                     var akCarta = _context.AkCarta.Find(item.AkCartaId);
                     item.AkCarta = akCarta;
+
+                    var bahagian = _context.JBahagian.Find(item.JBahagianId);
+                    item.JBahagian = bahagian;
                 }
                 return Json(new { result = "OK", record = data });
             }
@@ -910,7 +920,7 @@ namespace MSNK.Controllers
                             AkAkaun akADebit = new AkAkaun();
                             akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
                             akADebit.JKWId = akJurnal.JKWId;
-                            akADebit.JBahagianId = akJurnal.JBahagianId;
+                            akADebit.JBahagianId = kredit1.JBahagianId;
                             akADebit.Tarikh = akJurnal.Tarikh;
                             akADebit.AkCartaId1 = debit1.AkCartaId;
                             akADebit.Debit = kredit1.Kredit;
@@ -930,7 +940,7 @@ namespace MSNK.Controllers
                                 akADebit = new AkAkaun();
                                 akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
                                 akADebit.JKWId = akJurnal.JKWId;
-                                akADebit.JBahagianId = akJurnal.JBahagianId;
+                                akADebit.JBahagianId = debit1.JBahagianId;
                                 akADebit.Tarikh = akJurnal.Tarikh;
                                 akADebit.AkCartaId1 = kredit1.AkCartaId;
                                 akADebit.Debit = 0;
@@ -942,23 +952,29 @@ namespace MSNK.Controllers
                         };
                     };
 
-                    foreach(AkJurnal1 keVot in akJ1)
+
+                    foreach (AkJurnal1 keVot in akJ1)
                     {
-                        if (GetJenisObjek(keVot.AkCartaId) == "B")
+                        if (GetJenisObjek(keVot.AkCartaId) == "B" || akJurnal.IsAKB == true)
                         {
-                            AbBukuVot vot = new()
+                            if (keVot.Kredit > 0)
                             {
-                                Rujukan = "JR/" + akJurnal.NoJurnal,
-                                JKWId = akJurnal.JKWId,
-                                JBahagianId = akJurnal.JBahagianId,
-                                Tarikh = akJurnal.Tarikh,
-                                VotId = keVot.AkCartaId,
-                                Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length<200? akJurnal.Catatan1.Length:200),
-                                Debit = keVot.Debit,
-                                Kredit = keVot.Kredit,
-                                Tahun = akJurnal.Tarikh.Year.ToString()
-                            };
-                            await _abBukuVot.Insert(vot);
+                                AbBukuVot vot = new()
+                                {
+                                    Rujukan = "JR/" + akJurnal.NoJurnal,
+                                    JKWId = akJurnal.JKWId,
+                                    JBahagianId = keVot.JBahagianId,
+                                    Tarikh = akJurnal.Tarikh,
+                                    VotId = keVot.AkCartaId,
+                                    Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length<200 ? akJurnal.Catatan1.Length : 200),
+                                    Debit = keVot.Debit,
+                                    Kredit = keVot.Kredit,
+                                    Tanggungan = 0 - keVot.Kredit,
+                                    Tahun = akJurnal.Tarikh.Year.ToString()
+                                };
+                                await _abBukuVot.Insert(vot);
+                            }
+                            
                         }
                     }
 
