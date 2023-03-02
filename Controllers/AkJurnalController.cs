@@ -99,7 +99,7 @@ namespace MSNK.Controllers
             var year = data.Tarikh.Year;
             string prefix = year +"/"+ kumpulanWang+"/";
             int x = 1;
-            string noRujukan = prefix + "000000";
+            string noRujukan = prefix + "000";
 
             var LatestNoRujukan = _context.AkJurnal
                 .IgnoreQueryFilters()
@@ -107,13 +107,13 @@ namespace MSNK.Controllers
                 .Max(x => x.NoJurnal);
             if (LatestNoRujukan == null)
             {
-                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+                noRujukan = string.Format("{0:" + prefix + "000}", x);
             }
             else
             {
-                x = int.Parse(LatestNoRujukan.Substring(12));
+                x = int.Parse(LatestNoRujukan.Substring(9));
                 x++;
-                noRujukan = string.Format("{0:" + prefix + "000000}", x);
+                noRujukan = string.Format("{0:" + prefix + "000}", x);
             }
             return noRujukan;
         }

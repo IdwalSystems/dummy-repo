@@ -21,8 +21,28 @@
         font-weight: normal
     }
 
+    .max-lines {
+        display: block; /* or inline-block */
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 5.8em;
+    }
+
     .breakhere {
         page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
     }
 </style>
 <div class="row flexrow mb-1 ml-1">
@@ -85,50 +105,48 @@
 
 <br />
 
-<div class="table-responsive-sm mb-0">
-    <table class="table table-bordered table-sm topic">
-        <thead class="text-center">
-            <tr>
-                <th>TK</th>
-                <th>BHG.</th>
-                <th>KOD</th>
-                <th>OBJEK</th>
-                <th>AMAUN</th>
-            </tr>
-        </thead>
-
-        @foreach (var item in Model.AbWaran.AbWaran1)
-        {
-            if (Model.AbWaran.JBahagianId != null)
-            {
-                bahagian = Model.AbWaran.JBahagian.Kod;
-            }
-            else
-            {
-                bahagian = item.JBahagian.Kod;
-            }
-
-            <tr>
-                <td class="text-center">@item.TK</td>
-                <td class="text-center">@bahagian</td>
-                <td class="text-center">@item.AkCarta.Kod</td>
-                <td class="text-uppercase">@item.AkCarta.Perihal</td>
-                <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
-            </tr>
-            @*<tr class="bg-light">
-                    <td class="text-right">JUMLAH OBJEK (RM)</td>
-                    <td class="text-right">@Convert.ToDecimal(@Model.AkPO.Jumlah).ToString("#,##0.00")</td>
-                </tr>*@
-        }
-        <tr class="font-weight-bold">
-            <td class="text-right" colspan="4">Jumlah RM</td>
-            <td class="text-right">@Convert.ToDecimal(Model.AbWaran.Jumlah).ToString("#,##0.00")</td>
+<table class="table table-bordered table-sm topic">
+    <thead class="text-center">
+        <tr>
+            <th>TK</th>
+            <th>BHG.</th>
+            <th>KOD</th>
+            <th>OBJEK</th>
+            <th>AMAUN</th>
         </tr>
-        <tfoot>
+    </thead>
 
-        </tfoot>
-    </table>
-</div>
+    @foreach (var item in Model.AbWaran.AbWaran1)
+    {
+        if (Model.AbWaran.JBahagianId != null)
+        {
+            bahagian = Model.AbWaran.JBahagian.Kod;
+        }
+        else
+        {
+            bahagian = item.JBahagian.Kod;
+        }
+
+        <tr>
+            <td class="text-center">@item.TK</td>
+            <td class="text-center">@bahagian</td>
+            <td class="text-center">@item.AkCarta.Kod</td>
+            <td class="text-uppercase">@item.AkCarta.Perihal</td>
+            <td align="right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+        </tr>
+        @*<tr class="bg-light">
+                <td class="text-right">JUMLAH OBJEK (RM)</td>
+                <td class="text-right">@Convert.ToDecimal(@Model.AkPO.Jumlah).ToString("#,##0.00")</td>
+            </tr>*@
+    }
+    <tr class="font-weight-bold">
+        <td class="text-right" colspan="4">Jumlah RM</td>
+        <td class="text-right">@Convert.ToDecimal(Model.AbWaran.Jumlah).ToString("#,##0.00")</td>
+    </tr>
+    <tfoot>
+
+    </tfoot>
+</table>
 
 <br />
 

@@ -75,7 +75,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                carianDari = searchFrom.ToUpper();
+                carianDari = searchFrom.Trim().ToUpper();
             }
 
             if (string.IsNullOrEmpty(searchTo))
@@ -84,7 +84,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                carianHingga = searchTo.ToUpper();
+                carianHingga = searchTo.Trim().ToUpper();
             }
 
             ViewData["searchFrom"] = carianDari;
