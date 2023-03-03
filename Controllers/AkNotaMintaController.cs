@@ -1439,13 +1439,13 @@ namespace MSNK.Controllers
 
                 AkNotaMinta akNotaMinta = await _akNotaMintaRepo.GetById((int) id);
 
-                List<AkPO> akPO = _context.AkPO.Where(x => x.AkNotaMintaId == id).ToList();
+                AkPO akPO = await _context.AkPO.FirstOrDefaultAsync(x => x.AkNotaMintaId == id);
 
-                if (akPO == null)
+                if (akPO != null)
                 {
 
                     //duplicate id error
-                    TempData[SD.Error] = "Data belum diluluskan.";
+                    TempData[SD.Error] = "Data terkait pada Pesanan Tempatan " + akPO.NoPO?.ToUpper() + ". Batal kelulusan tidak dibenarkan"; 
 
                 }
                 else

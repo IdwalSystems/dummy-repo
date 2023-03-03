@@ -150,7 +150,7 @@
                 </td>
                 <td class="total text-right">
                     @{
-                        baki += item.Kredit - item.Debit - item.Tanggungan - item.Liabiliti;
+                        baki += item.Kredit - item.Debit - item.Tanggungan;// - item.Liabiliti;
                     }
                     @Convert.ToDecimal(baki).ToString("#,##0.00")
                 </td>

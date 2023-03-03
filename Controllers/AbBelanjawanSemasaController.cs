@@ -216,27 +216,27 @@ namespace MSNK.Controllers
             // TunaiCV End
 
             // Terima
-            List<AkTerima> Terimas = await _bsRepo.GetAkTerimaBasedOnYear(tahun, JKWId, JBahagianId, date2);
+            //List<AkTerima> Terimas = await _bsRepo.GetAkTerimaBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
-            List<AbBelanjawanSemasaViewModel> terimaList = new List<AbBelanjawanSemasaViewModel>();
+            //List<AbBelanjawanSemasaViewModel> terimaList = new List<AbBelanjawanSemasaViewModel>();
 
-            foreach (var terima in Terimas)
-            {
-                if (terima.JBahagianId == JBahagianId)
-                {
-                    foreach (var terima1 in terima.AkTerima1)
-                    {
-                        if (terima1.AkCarta.JJenis.Kod == "B")
-                        {
-                            terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
+            //foreach (var terima in Terimas)
+            //{
+            //    if (terima.JBahagianId == JBahagianId)
+            //    {
+            //        foreach (var terima1 in terima.AkTerima1)
+            //        {
+            //            if (terima1.AkCarta.JJenis.Kod == "B")
+            //            {
+            //                terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
 
-                            vm.AddRange(terimaList);
-                        }
+            //                vm.AddRange(terimaList);
+            //            }
 
-                    }
-                }
+            //        }
+            //    }
 
-            }
+            //}
             // Terima End
 
             // Jurnal
@@ -438,27 +438,27 @@ namespace MSNK.Controllers
             // TunaiCV End
 
             // Terima
-            List<AkTerima> Terimas = await _bsRepo.GetAkTerimaBasedOnYear(tahun, JKWId, JBahagianId, date2);
+            //List<AkTerima> Terimas = await _bsRepo.GetAkTerimaBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
-            List<AbBelanjawanSemasaViewModel> terimaList = new List<AbBelanjawanSemasaViewModel>();
+            //List<AbBelanjawanSemasaViewModel> terimaList = new List<AbBelanjawanSemasaViewModel>();
 
-            foreach (var terima in Terimas)
-            {
-                if (terima.JBahagianId == JBahagianId)
-                {
-                    foreach (var terima1 in terima.AkTerima1)
-                    {
-                        if (terima1.AkCarta.JJenis.Kod == "B")
-                        {
-                            terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
+            //foreach (var terima in Terimas)
+            //{
+            //    if (terima.JBahagianId == JBahagianId)
+            //    {
+            //        foreach (var terima1 in terima.AkTerima1)
+            //        {
+            //            if (terima1.AkCarta.JJenis.Kod == "B")
+            //            {
+            //                terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
 
-                            vm.AddRange(terimaList);
-                        }
+            //                vm.AddRange(terimaList);
+            //            }
 
-                    }
-                }
+            //        }
+            //    }
 
-            }
+            //}
             // Terima End
 
             // Jurnal
