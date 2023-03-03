@@ -265,8 +265,6 @@ namespace MSNK.Controllers
             // Jurnal End
 
             //
-            if (ParasId != 0)
-            {
                 switch (ParasId)
                 {
                     // paras 1
@@ -342,8 +340,6 @@ namespace MSNK.Controllers
                             }).OrderBy(b => b.Objek).ToList();
                         break;
                 }
-                    
-            }
 
             PopulateList();
             return View(vm);
@@ -554,8 +550,6 @@ namespace MSNK.Controllers
             //
             var paras = "4";
 
-            if (ParasId != 0)
-            {
                 switch (ParasId)
                 {
                     // paras 1
@@ -640,7 +634,6 @@ namespace MSNK.Controllers
                         break;
                 }
 
-            }
 
             //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
 
