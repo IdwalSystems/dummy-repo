@@ -3169,8 +3169,6 @@ namespace MSNK.Controllers
                             AbBukuVot abBukuVot = new AbBukuVot();
 
                             decimal liabiliti = 0;
-                            decimal tanggungan = 0;
-                            bool havePO = false;
 
                             if (akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == 1)
                             {
@@ -3183,22 +3181,6 @@ namespace MSNK.Controllers
 
                             if (akPV.FlKategoriPenerima == 1)
                             {
-                                foreach (var akPV2 in akPV.AkPV2)
-                                {
-                                    if (akPV2.HavePO == true)
-                                    {
-                                        havePO = true;
-                                    }
-                                }
-
-                                if (havePO == true)
-                                {
-                                    tanggungan = 0 - item.Amaun;
-                                }
-                                else
-                                {
-                                    tanggungan = 0;
-                                }
 
                                 //dengan tanggungan
                                 abBukuVot = new AbBukuVot()
@@ -3212,7 +3194,6 @@ namespace MSNK.Controllers
                                     VotId = item.AkCartaId,
                                     Rujukan = akPV.NoPV,
                                     Debit = item.Amaun,
-                                    Tanggungan = tanggungan,
                                     Liabiliti = liabiliti
 
                                 };
@@ -3468,6 +3449,7 @@ namespace MSNK.Controllers
                     akPV.JPelulusId = pelulusId;
 
                     akPV.FlPosting = 1;
+                    akPV.TarikhPosting = akPV.TarLulus;
                     akPV.TarKemaskini = DateTime.Now;
 
                     //insert applog
