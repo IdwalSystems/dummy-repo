@@ -89,7 +89,7 @@ namespace MSNK.Controllers
                         waran1.TK,
                         waran1.Amaun,
                         waran1.AkCarta.Kod,
-                        waran1.AkCarta.Perihal + " - " + waran.NoRujukan,
+                        waran1.AkCarta.Perihal,
                         waran1.AkCarta.JParas.Kod);
 
                         vm.AddRange(waranList);
