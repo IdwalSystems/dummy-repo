@@ -40,6 +40,7 @@ namespace MSNK.Models.Modules.IRepository
         List<AbBelanjawanSemasaViewModel> RunBaucerObjekOperation(
             int Bahagian,
            bool Tanggungan,
+           bool Pendahuluan,
            decimal Amaun,
            string KodCarta,
            string Perihal,

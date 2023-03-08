@@ -306,7 +306,7 @@ namespace MSNK.Models.Modules.EFRepository
             return sql;
         }
 
-        public List<AbBelanjawanSemasaViewModel> RunBaucerObjekOperation(int Bahagian, bool Tanggungan, decimal Amaun, string KodCarta, string Perihal, string Paras)
+        public List<AbBelanjawanSemasaViewModel> RunBaucerObjekOperation(int Bahagian, bool Tanggungan,bool Pendahuluan, decimal Amaun, string KodCarta, string Perihal, string Paras)
         {
             decimal Asal = 0;
             decimal Tambah = 0;
@@ -323,9 +323,22 @@ namespace MSNK.Models.Modules.EFRepository
             {
                 TBS = 0 - Amaun;
             }
+            else
+            {
+                Baki = 0 - Amaun;
+            }
+
+            if (Pendahuluan == true)
+            {
+                TBS = 0 - Amaun;
+            }
+            else
+            {
+                Baki = 0 - Amaun;
+            }
+
             Belanja = Amaun;
-            TelahGuna = Amaun;
-            Baki = 0 - Amaun;
+            TelahGuna = TBS + Belanja;
 
             list.Add(
                         new AbBelanjawanSemasaViewModel
