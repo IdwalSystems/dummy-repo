@@ -1,4 +1,5 @@
 ﻿using MSNK.Models.Helper;
+using MSNK.Models.Operations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,15 +10,24 @@ namespace MSNK.Models.Modules
     public class AkPVGanda : IRecon
     {
         // note :
+        // lama
         // FlKategoriPenerima = 1 -- pekerja
         // FlKategoriPenerima = 2 -- atlet
         // FlKategoriPenerima = 3 -- jurulatih
         // FlKategoriPenerima = 0 -- null
+
+        // baru
+        // FlKategoriPenerima = 0 ( Am / Null )
+        // FlKategoriPenerima = 1 ( pembekal )
+        // FlKategoriPenerima = 2 ( pekerja )
+        // FlKategoriPenerima = 3 ( pemegang panjar )
+        // FlKategoriPenerima = 4 ( jurulatih )
+        // FlKategoriPenerima = 5 ( atlet )
         public int Id { get; set; }
         public int AkPVId { get; set; }
         public AkPV AkPV { get; set; }
         public int Indek { get; set; }
-        public int FlKategoriPenerima { get; set; }
+        public KategoriPenerima FlKategoriPenerima { get; set; }
         [DisplayName("Anggota")]
         public int? SuPekerjaId { get; set; }
         public SuPekerja SuPekerja { get; set; }

@@ -81,7 +81,7 @@
             </div>
             @switch (Model.FlKategoriPenerima)
             {
-                case 1:
+                case KategoriPenerima.Pembekal:
                     <div class="form-row">
                         <div class="col-md-2">
                             <div class="form-group">
@@ -104,7 +104,7 @@
                         </div>
                     </div>
                     break;
-                case 2:
+                case KategoriPenerima.Pekerja:
                     <div class="form-row">
                         <div class="col-md-2">
                             <div class="form-group">
@@ -127,7 +127,7 @@
                         </div>
                     </div>
                     break;
-                case 3:
+                case KategoriPenerima.PemegangPanjar:
                     <div class="card box-shadow mb-3">
                         <div class="card-header">
                             <h6>Maklumat Panjar</h6>
@@ -437,7 +437,7 @@
             @*table Objek end*@
 
             @*table Inbois*@
-            @if (Model.FlKategoriPenerima == 1)
+            @if (Model.FlJenisBaucer == JenisBaucer.Inbois)
             {
                 <div class="card box-shadow mb-3" id="cardInbois">
                     <div class="card-header">
@@ -584,19 +584,19 @@
                                         var kategoriPenerima = "";
                                         switch (item.FlKategoriPenerima)
                                         {
-                                            case 1:
+                                            case KategoriPenerima.Pekerja:
                                                 kategoriPenerima = "ANGGOTA";
                                                 penerimaId = item.SuPekerjaId?.ToString();
                                                 break;
-                                            case 2:
+                                            case KategoriPenerima.Atlet:
                                                 kategoriPenerima = "ATLET";
                                                 penerimaId = item.SuAtletId?.ToString();
                                                 break;
-                                            case 3:
+                                            case KategoriPenerima.Jurulatih:
                                                 kategoriPenerima = "JURULATIH";
                                                 penerimaId = item.SuJurulatihId?.ToString();
                                                 break;
-                                            case 0:
+                                            case KategoriPenerima.Am:
                                                 kategoriPenerima = "LAIN";
                                                 penerimaId = "";
                                                 break;

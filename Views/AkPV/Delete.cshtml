@@ -52,7 +52,7 @@
                 </div>
                 @switch (Model.FlKategoriPenerima)
                 {
-                    case 1:
+                    case KategoriPenerima.Pembekal:
                         <div class="form-row">
                             <div class="col-md-2">
                                 <div class="form-group">
@@ -73,7 +73,7 @@
                             </div>
                         </div>
                         break;
-                    case 2:
+                    case KategoriPenerima.Pekerja:
                         <div class="form-row">
                             <div class="col-md-2">
                                 <div class="form-group">
@@ -320,7 +320,7 @@
 
         @switch (Model.FlJenisBaucer)
         {
-            case 1:
+            case JenisBaucer.Inbois:
                 @*table Inbois*@
                 <div class="card box-shadow mb-3" id="cardInbois">
                     <div class="card-header">
@@ -377,9 +377,9 @@
 
                 @*table Inbois end*@
                 break;
-            case 2:
+            case JenisBaucer.Gaji:
                 break;
-            case 3:
+            case JenisBaucer.Pendahuluan:
                 @*pendahuluan pelbagai*@
                 <div class="card box-shadow mb-3" id="cardPendahuluanPelbagai">
                     <div class="card-header">
@@ -396,7 +396,7 @@
 
                 @*pendahuluan pelbagai end*@
                 break;
-            case 4:
+            case JenisBaucer.Rekupan:
                 @*maklumat panjar*@
                 <div class="card box-shadow mb-3 mt-2">
                     <div class="card-header">
@@ -427,7 +427,7 @@
                 </div>
                 @*maklumat panjar end*@
                 break;
-            case 6:
+            case JenisBaucer.ProfilAtletJurulatih:
                 @*profil atlet / jurulatih*@
                 <div class="card box-shadow mb-3" id="cardProfil">
                     <div class="card-header">
@@ -500,19 +500,19 @@
                                     var kategoriPenerima = "";
                                     switch (item.FlKategoriPenerima)
                                     {
-                                        case 1:
+                                        case KategoriPenerima.Pekerja:
                                             kategoriPenerima = "ANGGOTA";
                                             penerimaId = item.SuPekerjaId?.ToString();
                                             break;
-                                        case 2:
+                                        case KategoriPenerima.Atlet:
                                             kategoriPenerima = "ATLET";
                                             penerimaId = item.SuAtletId?.ToString();
                                             break;
-                                        case 3:
+                                        case KategoriPenerima.Jurulatih:
                                             kategoriPenerima = "JURULATIH";
                                             penerimaId = item.SuJurulatihId?.ToString();
                                             break;
-                                        case 0:
+                                        case KategoriPenerima.Am:
                                             kategoriPenerima = "LAIN";
                                             penerimaId = "";
                                             break;

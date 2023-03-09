@@ -15,6 +15,7 @@ using Rotativa.AspNetCore;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Infrastructure;
+using MSNK.Models.Operations;
 
 namespace MSNK.Controllers
 {
@@ -187,7 +188,7 @@ namespace MSNK.Controllers
 
                 foreach (var pv1 in pv.AkPV1)
                 {
-                    if (pv.FlJenisBaucer == 3)
+                    if (pv.FlJenisBaucer == JenisBaucer.Pendahuluan)
                         isPendahuluan = true;
 
                     pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal, "4");
@@ -475,7 +476,7 @@ namespace MSNK.Controllers
 
                     foreach (var pv1 in pv.AkPV1)
                     {
-                        if (pv.FlJenisBaucer == 3)
+                        if (pv.FlJenisBaucer == JenisBaucer.Pendahuluan)
                             isPendahuluan = true;
 
                         pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal, "4");

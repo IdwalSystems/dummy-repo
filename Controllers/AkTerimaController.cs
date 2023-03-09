@@ -17,6 +17,7 @@ using Rotativa.AspNetCore;
 using MSNK.Infrastructure;
 using MSNK.Models.Modules.ViewModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MSNK.Models.Operations;
 
 namespace MSNK.Controllers
 {
@@ -809,14 +810,14 @@ namespace MSNK.Controllers
 
             if (FlJenisTerima == 1)
             {
-                akTerima.FlKategoriPembayar = 1;
+                akTerima.FlKategoriPembayar = KategoriPembayar.Penghutang;
             }
 
             if (spPendahuluan != null)
             {
                 var pekerja = _context.SuPekerja.Find(spPendahuluan.SuPekerjaId);
                 jenis = "CreatePekerja";
-                akTerima.FlKategoriPembayar = 2;
+                akTerima.FlKategoriPembayar = KategoriPembayar.Pekerja;
             }
             
 
@@ -886,7 +887,7 @@ namespace MSNK.Controllers
 
                     m.FlKategoriPembayar = akTerima.FlKategoriPembayar;
                     
-                    if (akTerima.FlKategoriPembayar == 1)
+                    if (akTerima.FlKategoriPembayar == KategoriPembayar.Penghutang)
                     {
                         m.AkPenghutangId = akTerima.AkPenghutangId;
                     }

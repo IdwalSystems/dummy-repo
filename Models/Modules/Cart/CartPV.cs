@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSNK.Models.Operations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -79,7 +80,7 @@ namespace MSNK.Models.Modules.Cart
         public virtual void AddItemGanda(
             int akPVId,
             int indek,
-            int flKategoriPenerima,
+            KategoriPenerima flKategoriPenerima,
             int? suPekerjaId,
             int? suAtletId,
             int? suJurulatihId,

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using MSNK.Models.Operations;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSNK.Models.Modules
@@ -26,7 +27,7 @@ namespace MSNK.Models.Modules
         public AkCimbEFT AkCimbEFT { get; set; }
         public int AkPVId { get; set; }
         public AkPV AkPV { get; set; }
-        public int FlPenerimaEFT { get; set; }
+        public KategoriPenerima FlPenerimaEFT { get; set; }
         public int? AkPembekalId { get; set; }
         public AkPembekal AkPembekal { get; set; }
         public int? SuPekerjaId { get; set; }

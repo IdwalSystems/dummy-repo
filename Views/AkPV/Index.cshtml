@@ -125,13 +125,13 @@
                             </td>
                             @switch (item.FlKategoriPenerima)
                             {
-                                case 1:
+                                case KategoriPenerima.Pembekal:
                                     <td>PEMBEKAL</td>
                                     break;
-                                case 2:
+                                case KategoriPenerima.Pekerja:
                                     <td>PEKERJA</td>
                                     break;
-                                case 3:
+                                case KategoriPenerima.PemegangPanjar:
                                     <td>PEMEGANG PANJAR</td>
                                     break;
                                 default:
@@ -175,7 +175,7 @@
                                             {
                                                 if (item.Jumlah != 0)
                                                 {
-                                                    if (item.FlKategoriPenerima == 1 && item.FlJenisBaucer == 1)
+                                                    if (item.FlKategoriPenerima == KategoriPenerima.Pembekal && item.FlJenisBaucer == JenisBaucer.Inbois)
                                                     {
                                                         if (item.Jumlah == item.JumlahInbois && item.FlCetak != 0)
                                                         {

@@ -14,6 +14,7 @@ using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.ViewModel;
+using MSNK.Models.Operations;
 using Newtonsoft.Json;
 using static MSNK.Infrastructure.Tools;
 
@@ -201,25 +202,25 @@ namespace MSNK.Controllers
 
                 switch (item.FlPenerimaEFT)
                 {
-                    case 1:
+                    case KategoriPenerima.Pembekal:
                         noKP = "";
                         noAkaunBank = item.AkPV.NoAkaunBank;
                         nama = item.AkPV.Nama;
                         jBank = item.AkPV.JBank.KodEFT;
                         break;
-                    case 2:
+                    case KategoriPenerima.Pekerja:
                         noKP = "";
                         noAkaunBank = item.AkPV.NoAkaunBank;
                         nama = item.AkPV.Nama;
                         jBank = item.JBank.KodEFT;
                         break;
-                    case 4:
+                    case KategoriPenerima.Jurulatih:
                         noKP = item.SuJurulatih.NoKp;
                         noAkaunBank = item.SuJurulatih.NoAkaunBank;
                         nama = item.SuJurulatih.Nama;
                         jBank = item.SuJurulatih.JBank.KodEFT;
                         break;
-                    case 5:
+                    case KategoriPenerima.Atlet:
                         noKP = item.SuAtlet.NoKp;
                         noAkaunBank = item.SuAtlet.NoAkaunBank;
                         nama = item.SuAtlet.Nama;
@@ -378,9 +379,9 @@ namespace MSNK.Controllers
                     && x.Tarikh <= tarHingga.AddHours(23.99)).ToList();
 
                 // get all PV where it is not jenis baucer panjar or jenis baucer gaji
-                pv = pv.Where(x => x.FlJenisBaucer != 2 
-                                || x.FlJenisBaucer != 4 
-                                || x.FlJenisBaucer != 5)
+                pv = pv.Where(x => x.FlJenisBaucer != JenisBaucer.Gaji 
+                                || x.FlJenisBaucer != JenisBaucer.Rekupan 
+                                || x.FlJenisBaucer != JenisBaucer.TambahHadPanjar)
                                 .ToList();
 
                 List<AkCimbEFT1ViewModel> pvTable = new List<AkCimbEFT1ViewModel>();
@@ -776,22 +777,22 @@ namespace MSNK.Controllers
                     // FlPenerimaEFT = 5 ( atlet )
                     switch (i.FlPenerimaEFT)
                     {
-                        case 1:
+                        case KategoriPenerima.Pembekal:
                             noAkaun = i.AkPV.NoAkaunBank;
                             penerima = i.AkPV.Nama;
                             NoKP = "";
                             break;
-                        case 2:
+                        case KategoriPenerima.Pekerja:
                             noAkaun = i.AkPV.NoAkaunBank;
                             penerima = i.AkPV.Nama;
                             NoKP = i.AkPV.NoKP;
                             break;
-                        case 4:
+                        case KategoriPenerima.Jurulatih:
                             noAkaun = i.SuJurulatih.NoAkaunBank;
                             penerima = i.SuJurulatih.Nama;
                             NoKP = i.SuJurulatih.NoKp;
                             break;
-                        case 5:
+                        case KategoriPenerima.Atlet:
                             noAkaun = i.SuAtlet.NoAkaunBank;
                             penerima = i.SuAtlet.Nama;
                             NoKP = i.SuAtlet.NoKp;
@@ -887,22 +888,22 @@ namespace MSNK.Controllers
                     // FlPenerimaEFT = 5 ( atlet )
                     switch (i.FlPenerimaEFT)
                     {
-                        case 1:
+                        case KategoriPenerima.Pembekal:
                             noAkaun = i.AkPV.NoAkaunBank;
                             penerima = i.AkPV.Nama;
                             NoKP = "";
                             break;
-                        case 2:
+                        case KategoriPenerima.Pekerja:
                             noAkaun = i.AkPV.NoAkaunBank;
                             penerima = i.AkPV.Nama;
                             NoKP = i.AkPV.NoKP;
                             break;
-                        case 4:
+                        case KategoriPenerima.Jurulatih:
                             noAkaun = i.SuJurulatih.NoAkaunBank;
                             penerima = i.SuJurulatih.Nama;
                             NoKP = i.SuJurulatih.NoKp;
                             break;
-                        case 5:
+                        case KategoriPenerima.Atlet:
                             noAkaun = i.SuAtlet.NoAkaunBank;
                             penerima = i.SuAtlet.Nama;
                             NoKP = i.SuAtlet.NoKp;

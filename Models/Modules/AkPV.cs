@@ -1,4 +1,5 @@
 ﻿using MSNK.Models.Helper;
+using MSNK.Models.Operations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -86,9 +87,9 @@ namespace MSNK.Models.Modules
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
         [DisplayName("Jenis Baucer")]
-        public int FlJenisBaucer { get; set; }
+        public JenisBaucer FlJenisBaucer { get; set; }
         [DisplayName("Kategori Penerima")]
-        public int FlKategoriPenerima { get; set; }
+        public KategoriPenerima FlKategoriPenerima { get; set; }
         public bool denganTanggungan { get; set; }
         public bool IsGanda { get; set; }
         public bool IsAKB { get; set; }

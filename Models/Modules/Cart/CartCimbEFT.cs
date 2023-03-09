@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MSNK.Models.Operations;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MSNK.Models.Modules.Cart
@@ -12,7 +13,7 @@ namespace MSNK.Models.Modules.Cart
             int akCimbEFTId,
             int Indek,
             int akPVId,
-            int flPenerimaEFT,
+            KategoriPenerima flPenerimaEFT,
             int? akPembekalId,
             int? suPekerjaId,
             int? suAtletId,

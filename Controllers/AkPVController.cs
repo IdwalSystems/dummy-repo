@@ -16,6 +16,7 @@ using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
 using MSNK.Models.Modules.ViewModel;
+using MSNK.Models.Operations;
 using Rotativa.AspNetCore;
 
 
@@ -636,7 +637,7 @@ namespace MSNK.Controllers
                     if (IsAKB == true)
                     {
                         // check if this is the first year using the system
-                        var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year == DateTime.Now.Year).FirstOrDefault();
+                        var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year <= DateTime.Now.Year).FirstOrDefault();
 
                         // if system already run for after a year, check Waran Peruntukan for past year
                         if (AppInfo == null)
@@ -784,7 +785,7 @@ namespace MSNK.Controllers
 
                     if (IsAKB == true)
                     {
-                        var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year == DateTime.Now.Year).FirstOrDefault();
+                        var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year <= DateTime.Now.Year).FirstOrDefault();
 
                         if (AppInfo == null)
                         {
@@ -1308,7 +1309,7 @@ namespace MSNK.Controllers
             switch (akPV.FlKategoriPenerima)
             {
                 //pembekal
-                case 1:
+                case KategoriPenerima.Pembekal:
                     akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
                     akPVView.NoKP = "-";
                     akPVView.Penerima = akPV.AkPembekal.NamaSykt;
@@ -1320,7 +1321,7 @@ namespace MSNK.Controllers
                     akPVView.Emel = akPV.AkPembekal.Emel;
                     break;
                 //pekerja
-                case 2:
+                case KategoriPenerima.Pekerja:
                     akPVView.KodPenerima = akPV.SuPekerja.NoGaji;
                     akPVView.NoKP = akPV.SuPekerja.NoKp;
                     akPVView.Penerima = akPV.SuPekerja.Nama;
@@ -1333,7 +1334,7 @@ namespace MSNK.Controllers
                     akPVView.SpPendahuluanPelbagai = akPV.SpPendahuluanPelbagai;
                     break;
                 // panjar
-                case 3:
+                case KategoriPenerima.PemegangPanjar:
                     akPVView.AkTunaiRuncit = akPV.AkTunaiRuncit;
                     akPVView.KodPenerima = akPV.AkTunaiRuncit.KaunterPanjar;
                     akPVView.NoKP = akPV.NoKP;
@@ -1526,7 +1527,7 @@ namespace MSNK.Controllers
                 var nama = "";
                 var noKP = "";
                 var noAkaun = "";
-                int kategoriPenerima = 0;
+                KategoriPenerima kategoriPenerima = KategoriPenerima.Am; // null / 0
                 int? bankId = 0;
                 int? caraBayarId = 0;
                 JBank jBank = new JBank();
@@ -1545,7 +1546,7 @@ namespace MSNK.Controllers
                         jBank = i.SuAtlet.JBank;
                         caraBayarId = i.SuAtlet.JCaraBayarId;
                         jCaraBayar = i.SuAtlet.JCaraBayar;
-                        kategoriPenerima = 2; // refer pada kategori penerima table AkPVGanda
+                        kategoriPenerima = KategoriPenerima.Atlet; // refer pada kategori penerima table AkPVGanda
                     }
                     // jurulatih
                     else
@@ -1557,7 +1558,7 @@ namespace MSNK.Controllers
                         jBank = i.SuJurulatih.JBank;
                         caraBayarId = i.SuJurulatih.JCaraBayarId;
                         jCaraBayar = i.SuJurulatih.JCaraBayar;
-                        kategoriPenerima = 3; // refer pada kategori penerima table AkPVGanda
+                        kategoriPenerima = KategoriPenerima.Jurulatih; // refer pada kategori penerima table AkPVGanda
 
                     }
 
@@ -1834,7 +1835,7 @@ namespace MSNK.Controllers
 
             if (tunaiRuncit != null)
             {
-                akPV.FlKategoriPenerima = 3;
+                akPV.FlKategoriPenerima = KategoriPenerima.PemegangPanjar;
                 akPV.AkTunaiRuncitId = AkTunaiRuncitId;
                 jenis = "CreatePanjar";
             }
@@ -1850,8 +1851,8 @@ namespace MSNK.Controllers
                     akPV.Telefon = pembekal.Telefon1;
                     akPV.Emel = pembekal.Emel;
                     akPV.NoAkaunBank = pembekal.AkaunBank;
-                    akPV.FlJenisBaucer = 1;
-                    akPV.FlKategoriPenerima = 1;
+                    akPV.FlJenisBaucer = JenisBaucer.Inbois;
+                    akPV.FlKategoriPenerima = KategoriPenerima.Pembekal;
                     jenis = "CreateAm";
 
                     //check if PV dengan tanggungan or tanpa tanggungan
@@ -1873,19 +1874,19 @@ namespace MSNK.Controllers
             if (pekerja != null )
             {
 
-                akPV.FlKategoriPenerima = 2;
+                akPV.FlKategoriPenerima = KategoriPenerima.Pekerja;
                 jenis = "CreatePekerja";
             }
 
             if (FlJenisBaucer == 2)
             {
-                akPV.FlKategoriPenerima = 2;
+                akPV.FlKategoriPenerima = KategoriPenerima.Pekerja;
                 jenis = "CreatePekerja";
             }
 
             if (FlJenisBaucer == 0 && pembekal != null)
             {
-                akPV.FlKategoriPenerima = 1;
+                akPV.FlKategoriPenerima = KategoriPenerima.Pembekal;
                 jenis = "CreateAm";
             }
             // get latest no rujukan running number  
@@ -1979,12 +1980,12 @@ namespace MSNK.Controllers
                     {
                         if (suProfil.FlKategori == 1)
                         {
-                            m.FlKategoriPenerima = 4;
+                            m.FlKategoriPenerima = KategoriPenerima.Jurulatih;
                         }
 
                         if (suProfil.FlKategori == 0)
                         {
-                            m.FlKategoriPenerima = 5;
+                            m.FlKategoriPenerima = KategoriPenerima.Atlet;
                         }
                         m.SuProfilId = SuProfilId;
                     }
@@ -2033,13 +2034,13 @@ namespace MSNK.Controllers
 
                     if (IsAKB == true)
                     {
-                        var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year == DateTime.Now.Year).FirstOrDefault();
+                        var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year <= DateTime.Now.Year).FirstOrDefault();
 
                         if (AppInfo == null)
                         {
                             if ((m.FlJenisBaucer == 0 && m.FlKategoriPenerima == 0)
-                                                    || (m.FlKategoriPenerima == 1 && m.denganTanggungan == false)
-                                                    || (m.FlJenisBaucer == 2) || (m.FlJenisBaucer == 6))
+                                                    || (m.FlKategoriPenerima == KategoriPenerima.Pembekal && m.denganTanggungan == false)
+                                                    || (m.FlJenisBaucer == JenisBaucer.Gaji) || (m.FlJenisBaucer == JenisBaucer.ProfilAtletJurulatih))
                             {
                                 foreach (AkPV1 item in m.AkPV1)
                                 {
@@ -2088,8 +2089,8 @@ namespace MSNK.Controllers
                     else
                     {
                         if ((m.FlJenisBaucer == 0 && m.FlKategoriPenerima == 0)
-                        || (m.FlKategoriPenerima == 1 && m.denganTanggungan == false)
-                        || (m.FlJenisBaucer == 2) || (m.FlJenisBaucer == 6))
+                        || (m.FlKategoriPenerima == KategoriPenerima.Pembekal && m.denganTanggungan == false)
+                        || (m.FlJenisBaucer == JenisBaucer.Gaji) || (m.FlJenisBaucer == JenisBaucer.ProfilAtletJurulatih))
                         {
                             foreach (AkPV1 item in m.AkPV1)
                             {
@@ -2200,7 +2201,7 @@ namespace MSNK.Controllers
             switch (akPV.FlKategoriPenerima)
             {
                 //pembekal
-                case 1:
+                case KategoriPenerima.Pembekal:
                     akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
                     akPVView.NoKP = "-";
                     akPVView.Nama = akPV.AkPembekal.NamaSykt;
@@ -2212,7 +2213,7 @@ namespace MSNK.Controllers
                     akPVView.Emel = akPV.AkPembekal.Emel;
                     break;
                 //pekerja
-                case 2:
+                case KategoriPenerima.Pekerja:
                     akPVView.KodPenerima = akPV.SuPekerja.NoGaji;
                     akPVView.NoKP = akPV.SuPekerja.NoKp;
                     akPVView.Nama = akPV.SuPekerja.Nama;
@@ -2506,7 +2507,7 @@ namespace MSNK.Controllers
 
                     switch (akPV.FlKategoriPenerima)
                     {
-                        case 1:
+                        case KategoriPenerima.Pembekal:
                             var pembekal = dataAsal.AkPembekal;
                             akPV.SuPekerjaId = null;
                             akPV.Nama = pembekal.NamaSykt;
@@ -2517,7 +2518,7 @@ namespace MSNK.Controllers
                             akPV.Telefon = pembekal.Telefon1;
                             akPV.NoAkaunBank = pembekal.AkaunBank;
                             break;
-                        case 2:
+                        case KategoriPenerima.Pekerja:
                             var pekerja = dataAsal.SuPekerja;
                             akPV.AkPembekalId = null;
                             akPV.Nama = pekerja.Nama;
@@ -2693,7 +2694,7 @@ namespace MSNK.Controllers
             switch (akPV.FlKategoriPenerima)
             {
                 //pembekal
-                case 1:
+                case KategoriPenerima.Pembekal:
                     akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
                     akPVView.NoKP = "-";
                     akPVView.Nama = akPV.AkPembekal.NamaSykt;
@@ -2705,7 +2706,7 @@ namespace MSNK.Controllers
                     akPVView.Emel = akPV.AkPembekal.Emel;
                     break;
                 //pekerja
-                case 2:
+                case KategoriPenerima.Pekerja:
                     akPVView.KodPenerima = akPV.SuPekerja.NoGaji;
                     akPVView.NoKP = akPV.SuPekerja.NoKp;
                     akPVView.Nama = akPV.SuPekerja.Nama;
@@ -2862,7 +2863,7 @@ namespace MSNK.Controllers
             switch (akPV.FlKategoriPenerima)
             {
                 //pembekal
-                case 1:
+                case KategoriPenerima.Pembekal:
                     data.KodPenerima = akPV.AkPembekal.KodSykt;
                     namaBankPenerima = akPV.AkPembekal.JBank.Nama;
                     noAkaunBank = akPV.AkPembekal.AkaunBank;
@@ -2879,7 +2880,7 @@ namespace MSNK.Controllers
                     data.jumlahPO = jumlahPO;
                     break;
                 //pekerja
-                case 2:
+                case KategoriPenerima.Pekerja:
                     var noGaji = akPV.SuPekerja == null ? "00000" : akPV.SuPekerja.NoGaji;
                     var noKP = akPV.SuPekerja == null ? "012345678901" : akPV.SuPekerja.NoKp;
                     var nama = akPV.SuPekerja == null ? "SuperAdmin" : akPV.SuPekerja.Nama;
@@ -3012,7 +3013,7 @@ namespace MSNK.Controllers
 
                 AkPV akPV = await _akPVRepo.GetById((int)id);
 
-                var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year == DateTime.Now.Year).FirstOrDefault();
+                var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year <= DateTime.Now.Year).FirstOrDefault();
 
                 //check for print
                 if (akPV.FlCetak == 0)
@@ -3049,12 +3050,12 @@ namespace MSNK.Controllers
                     switch (akPV.FlKategoriPenerima)
                     {
                         //pembekal
-                        case 1:
+                        case KategoriPenerima.Pembekal:
                             kod = akPV.AkPembekal.KodSykt;
                             penerima = akPV.AkPembekal.NamaSykt;
                             break;
                         //pekerja
-                        case 2:
+                        case KategoriPenerima.Pekerja:
                             var noGaji = akPV.SuPekerja == null ? "00000" : akPV.SuPekerja.NoGaji;
                             var nama = akPV.SuPekerja == null ? "SuperAdmin" : akPV.SuPekerja.Nama;
                             kod = noGaji;
@@ -3062,7 +3063,7 @@ namespace MSNK.Controllers
 
                             break;
                         //panjar
-                        case 3:
+                        case KategoriPenerima.PemegangPanjar:
                             kod = akPV.NoKP;
                             penerima = akPV.Nama;
                             break;
@@ -3091,8 +3092,8 @@ namespace MSNK.Controllers
                                     // check for baki peruntukan
                                     //if ((akPV.FlKategoriPenerima != 1) || (akPV.FlKategoriPenerima != 3) || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false))
                                     if ((akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == 0)
-                                || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false)
-                                || (akPV.FlJenisBaucer == 2))
+                                || (akPV.FlKategoriPenerima == KategoriPenerima.Pembekal && akPV.denganTanggungan == false)
+                                || (akPV.FlJenisBaucer == JenisBaucer.Gaji))
                                     {
                                         bool IsExistAbBukuVot = await _context.AbBukuVot
                                             .Where(x => x.Tahun == akPV.Tahun && x.VotId == item.AkCartaId && x.JKWId == akPV.JKWId && x.JBahagianId == akPV.JBahagianId)
@@ -3133,8 +3134,8 @@ namespace MSNK.Controllers
                                 // check for baki peruntukan
                                 //if ((akPV.FlKategoriPenerima != 1) || (akPV.FlKategoriPenerima != 3) || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false))
                                 if ((akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == 0)
-                            || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false)
-                            || (akPV.FlJenisBaucer == 2))
+                            || (akPV.FlKategoriPenerima == KategoriPenerima.Pembekal && akPV.denganTanggungan == false)
+                            || (akPV.FlJenisBaucer == JenisBaucer.Gaji))
                                 {
                                     bool IsExistAbBukuVot = await _context.AbBukuVot
                                         .Where(x => x.Tahun == akPV.Tahun && x.VotId == item.AkCartaId && x.JKWId == akPV.JKWId && x.JBahagianId == akPV.JBahagianId)
@@ -3172,7 +3173,7 @@ namespace MSNK.Controllers
                             decimal tanggungan = 0;
                             bool havePO = false;
 
-                            if (akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == 1)
+                            if (akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == KategoriPenerima.Pembekal)
                             {
                                 liabiliti = 0;
                             }
@@ -3181,7 +3182,7 @@ namespace MSNK.Controllers
                                 liabiliti = 0 - item.Amaun;
                             }
 
-                            if (akPV.FlKategoriPenerima == 1)
+                            if (akPV.FlKategoriPenerima == KategoriPenerima.Pembekal)
                             {
                                 foreach (var akPV2 in akPV.AkPV2)
                                 {
@@ -3219,9 +3220,9 @@ namespace MSNK.Controllers
 
                                 await _abBukuVotRepo.Insert(abBukuVot);
                             }
-                            else if (akPV.FlKategoriPenerima == 2)
+                            else if (akPV.FlKategoriPenerima == KategoriPenerima.Pekerja)
                             {
-                                if (akPV.FlJenisBaucer == 3)
+                                if (akPV.FlJenisBaucer == JenisBaucer.Pendahuluan)
                                 {
                                     abBukuVot = new AbBukuVot()
                                     {
@@ -3257,11 +3258,11 @@ namespace MSNK.Controllers
 
                                 await _abBukuVotRepo.Insert(abBukuVot);
                             }
-                            else if (akPV.FlKategoriPenerima == 3)
+                            else if (akPV.FlKategoriPenerima == KategoriPenerima.PemegangPanjar)
                             {
                                 //insert akTunaiLejar
                                 // kalau tambah had maksimum untuk kaunter panjar
-                                if (akPV.FlJenisBaucer == 5)
+                                if (akPV.FlJenisBaucer == JenisBaucer.TambahHadPanjar)
                                 {
                                     // update Had maksimum di AkTunaiRuncit
                                     AkTunaiRuncit akTunaiRuncit = await _akTunaiRuncitRepo.GetById((int)akPV.AkTunaiRuncitId);
@@ -3297,7 +3298,7 @@ namespace MSNK.Controllers
 
                                     await _akTunaiLejarRepo.Insert(akTunaiLejar);
                                 }
-                                if (akPV.FlJenisBaucer == 4)
+                                if (akPV.FlJenisBaucer == JenisBaucer.Rekupan)
                                 {
                                     //find latest baki with noRekup and AkTunaiRuncitId
                                     var rekupanList = (from tbl in _context.AkTunaiLejar
@@ -3538,7 +3539,7 @@ namespace MSNK.Controllers
                     {
                         await _akTunaiLejarRepo.Delete(item.Id);
 
-                        if (akPV.FlJenisBaucer == 4)
+                        if (akPV.FlJenisBaucer == JenisBaucer.Rekupan)
                         {
                             List<AkTunaiLejar> TunaiLejarPaid = await _context.AkTunaiLejar
                                         .Where(x => x.AkTunaiRuncitId == akPV.AkTunaiRuncitId && x.Rekup == akPV.NoRekup)

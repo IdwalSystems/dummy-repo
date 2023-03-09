@@ -1,4 +1,5 @@
 ﻿using MSNK.Models.Helper;
+using MSNK.Models.Operations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -68,9 +69,9 @@ namespace MSNK.Models.Modules
 
         //flag
         [DisplayName("Jenis Terimaan")]
-        public int FlJenisTerima { get; set; }
+        public JenisBaucer FlJenisTerima { get; set; }
         [DisplayName("Kategori Pembayar")]
-        public int FlKategoriPembayar { get; set; }
+        public KategoriPembayar FlKategoriPembayar { get; set; }
         [DisplayName("Cetak")]
         [DefaultValue("0")]
         public int FlCetak { get; set; }

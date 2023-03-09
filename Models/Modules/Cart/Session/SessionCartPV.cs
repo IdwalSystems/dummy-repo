@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using MSNK.Infrastructure;
+using MSNK.Models.Operations;
 using System;
 
 namespace MSNK.Models.Modules.Cart.Session
@@ -76,7 +77,7 @@ namespace MSNK.Models.Modules.Cart.Session
         public override void AddItemGanda(
             int akPVId, 
             int indek, 
-            int flKategoriPenerima, 
+            KategoriPenerima flKategoriPenerima, 
             int? suPekerjaId, 
             int? suAtletId, 
             int? suJurulatihId, 

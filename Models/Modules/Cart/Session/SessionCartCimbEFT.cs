@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using MSNK.Infrastructure;
+using MSNK.Models.Operations;
 using System;
 
 namespace MSNK.Models.Modules.Cart.Session
@@ -23,7 +24,7 @@ namespace MSNK.Models.Modules.Cart.Session
             int akCimbEFTId,
             int Indek,
             int akPVId,
-            int flPenerimaEFT,
+            KategoriPenerima flPenerimaEFT,
             int? akPembekalId,
             int? suPekerjaId,
             int? suAtletId,

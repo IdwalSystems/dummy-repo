@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSNK.Models.Operations;
+using System;
 
 namespace MSNK.Models.Modules.ViewModel
 {
@@ -7,7 +8,7 @@ namespace MSNK.Models.Modules.ViewModel
         public int Id { get; set; }
         public int Indek { get; set; }
         public int AkPVId { get; set; }
-        public int FlPenerimaEFT { get; set; }
+        public KategoriPenerima FlPenerimaEFT { get; set; }
         public int? AkPembekalId { get; set; }
         public int? SuPekerjaId { get; set; }
         public int? SuAtletId { get; set; }
