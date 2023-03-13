@@ -404,7 +404,8 @@
                                 txtKodAkaun.val("").trigger('change');
                                 txtAmaunObjek.val("0.00");
 
-                                if ($('#ddlKodPembekal').val() != 0) {
+                                console.log($('#FlJenisBaucer').val());
+                                if ($('#FlJenisBaucer').val() == 1) {
                                     checkJumlah();
                                 } else {
                                     $("#btnSave").show();
@@ -454,7 +455,7 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
-                        if ($('#ddlKodPembekal').val()) {
+                        if ($('#FlJenisBaucer').val() == 1) {
                             checkJumlah();
                         } else {
 
@@ -572,7 +573,7 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
-                        if ($('#ddlKodPembekal').val() != 0 || ganda == true) {
+                        if ($('#FlJenisBaucer').val() == 1) {
                             checkJumlah();
                         }
                     }

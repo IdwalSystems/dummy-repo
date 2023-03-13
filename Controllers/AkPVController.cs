@@ -1130,11 +1130,19 @@ namespace MSNK.Controllers
 
             try
             {
-                var data = _cart.LinesGanda.Max(x => x.Indek);
+                if (_cart.LinesGanda != null && _cart.LinesGanda.Count() > 0)
+                {
+                    var data = _cart.LinesGanda.Max(x => x.Indek);
 
-                bool IsGanda = _cart.LinesGanda.Count() > 0;
+                    bool IsGanda = _cart.LinesGanda.Count() > 0;
 
-                return Json(new { result = "OK", record = data, ganda = IsGanda });
+                    return Json(new { result = "OK", record = data, ganda = IsGanda });
+                }
+                else
+                {
+                    return Json(new { result = "OK", record = 0, ganda = false });
+                }
+                
             }
             catch (Exception ex)
             {
@@ -1305,6 +1313,7 @@ namespace MSNK.Controllers
             akPVView.Jumlah = akPV.Jumlah;
             akPVView.TarikhPosting = akPV.TarikhPosting;
             akPVView.IsAKB = akPV.IsAKB;
+
 
             switch (akPV.FlKategoriPenerima)
             {
@@ -2197,6 +2206,7 @@ namespace MSNK.Controllers
             akPVView.NoRekup = akPV.NoRekup;
             akPVView.IsAKB = akPV.IsAKB;
             akPVView.JBankId = akPV.JBankId;
+            akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
 
             switch (akPV.FlKategoriPenerima)
             {
@@ -2633,11 +2643,15 @@ namespace MSNK.Controllers
                 }
                 CartEmpty();
                 // checking for jumlah objek & jumlah inbois (untuk pembekal)
-                if (akPV.AkPembekalId != null)
+                if (akPV.FlJenisBaucer == JenisBaucer.Inbois)
                 {
                     if (akPV.Jumlah != JumlahInbois)
                     {
                         TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Inbois";
+                        PopulateList();
+                        PopulateTable(id);
+                        PopulateCartFromDb(akPV);
+                        return View(akPV);
                     }
                     else
                     {
@@ -2653,6 +2667,7 @@ namespace MSNK.Controllers
             }
             PopulateList();
             PopulateTable(id);
+            PopulateCartFromDb(akPV);
             return View(akPV);
         }
 

@@ -93,69 +93,44 @@ namespace MSNK.Models.Modules.EFRepository
                 if (TK == "-")
                 {
                     Jumlah =  0 - Amaun;
-                }
-                else
-                {
-                    Jumlah = Amaun;
-                }
-
-                if (TK == "-")
-                {
                     Baki =  0 - Amaun;
                 }
                 else
                 {
+                    Jumlah = Amaun;
                     Baki = Amaun;
                 }
+
             }
             else if (JenisWaran == 1) // WPT
             {
-                Tambah = Amaun;
+                
                 if (TK == "-")
                 {
                     Jumlah =  0 - Amaun;
-                }
-                else
-                {
-                    Jumlah = Amaun;
-                }
-
-                if (TK == "-")
-                {
+                    Tambah = 0 - Amaun;
                     Baki =  0 - Amaun;
                 }
                 else
                 {
+                    Jumlah = Amaun;
+                    Tambah = Amaun;
                     Baki = Amaun;
                 }
+
             }
             else if (JenisWaran == 2) // WPP
             {
                 if (TK == "-")
                 {
                     Pindah =  0 - Amaun;
-                }
-                else
-                {
-                    Pindah = Amaun;
-                }
-
-                
-                if (TK == "-")
-                {
                     Jumlah =  0 - Amaun;
-                }
-                else
-                {
-                    Jumlah = Amaun;
-                }
-
-                if (TK == "-")
-                {
                     Baki =  0 - Amaun;
                 }
                 else
                 {
+                    Pindah = Amaun;
+                    Jumlah = Amaun;
                     Baki = Amaun;
                 }
             }

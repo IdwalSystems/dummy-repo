@@ -267,7 +267,7 @@ namespace MSNK.Controllers
             }
             // Jurnal End
 
-            //vm = vm.Where(b => b.Objek == "B52203" && b.JBahagianId == 3).ToList();
+            //vm = vm.Where(b => b.Objek == "B52256" && b.JBahagianId == 4).ToList();
             //
             switch (ParasId)
             {
@@ -367,6 +367,7 @@ namespace MSNK.Controllers
 
             foreach (var waran in warans)
             {
+
                 foreach (var waran1 in waran.AbWaran1)
                 {
                     if (waran1.JBahagianId == JBahagianId)
@@ -378,9 +379,9 @@ namespace MSNK.Controllers
                         waran1.AkCarta.Kod,
                         waran1.AkCarta.Perihal,
                         waran1.AkCarta.JParas.Kod);
-                    }
 
-                    vm.AddRange(waranList);
+                        vm.AddRange(waranList);
+                    }
                 }
             }
             // Waran End
@@ -470,19 +471,16 @@ namespace MSNK.Controllers
 
             foreach (var pv in PVs)
             {
-                if (pv.JBahagianId == JBahagianId)
+                var isPendahuluan = false;
+
+                foreach (var pv1 in pv.AkPV1)
                 {
-                    var isPendahuluan = false;
+                    if (pv.FlJenisBaucer == JenisBaucer.Pendahuluan)
+                        isPendahuluan = true;
 
-                    foreach (var pv1 in pv.AkPV1)
-                    {
-                        if (pv.FlJenisBaucer == JenisBaucer.Pendahuluan)
-                            isPendahuluan = true;
+                    pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal, "4");
 
-                        pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal, "4");
-
-                        vm.AddRange(pvList);
-                    }
+                    vm.AddRange(pvList);
                 }
 
             }
@@ -556,94 +554,93 @@ namespace MSNK.Controllers
             }
             // Jurnal End
 
-
-            //
             var paras = "4";
+            //vm = vm.Where(b => b.Objek == "B52203" && b.JBahagianId == 3).ToList();
+            //
+            switch (ParasId)
+            {
+                // paras 1
+                case 1:
+                    vm = vm.GroupBy(b => (b.JBahagianId, b.Objek.Substring(0, 2)))
+                        .Select(l => new AbBelanjawanSemasaViewModel
+                        {
+                            Objek = l.First().Objek.Substring(0, 2) + "0000",
+                            Perihalan = l.First().Perihalan,
+                            Paras = l.First().Paras,
+                            Asal = l.Sum(c => c.Asal),
+                            Tambah = l.Sum(c => c.Tambah),
+                            Pindah = l.Sum(c => c.Pindah),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Belanja = l.Sum(c => c.Belanja),
+                            TBS = l.Sum(c => c.TBS),
+                            TelahGuna = l.Sum(c => c.TBS + c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                        }).OrderBy(b => b.Objek).ToList();
 
-                switch (ParasId)
-                {
-                    // paras 1
-                    case 1:
-                        vm = vm.GroupBy(b => (b.JBahagianId, b.Objek.Substring(0, 2)))
-                            .Select(l => new AbBelanjawanSemasaViewModel
-                            {
-                                Objek = l.First().Objek.Substring(0, 2) + "0000",
-                                Perihalan = l.First().Perihalan,
-                                Paras = l.First().Paras,
-                                Asal = l.Sum(c => c.Asal),
-                                Tambah = l.Sum(c => c.Tambah),
-                                Pindah = l.Sum(c => c.Pindah),
-                                Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
-                                Belanja = l.Sum(c => c.Belanja),
-                                TBS = l.Sum(c => c.TBS),
-                                TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                                Baki = l.Sum(c => c.Baki),
-                            }).OrderBy(b => b.Objek).ToList();
+                    paras = "1";
 
-                        paras = "1";
-                        break;
-                    // paras 2
-                    case 2:
-                        vm = vm.GroupBy(b => (b.JBahagianId, b.Objek.Substring(0, 3)))
-                            .Select(l => new AbBelanjawanSemasaViewModel
-                            {
-                                Objek = l.First().Objek.Substring(0, 3) + "000",
-                                Perihalan = l.First().Perihalan,
-                                Paras = l.First().Paras,
-                                Asal = l.Sum(c => c.Asal),
-                                Tambah = l.Sum(c => c.Tambah),
-                                Pindah = l.Sum(c => c.Pindah),
-                                Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
-                                Belanja = l.Sum(c => c.Belanja),
-                                TBS = l.Sum(c => c.TBS),
-                                TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                                Baki = l.Sum(c => c.Baki),
-                            }).OrderBy(b => b.Objek).ToList();
+                    break;
+                // paras 2
+                case 2:
+                    vm = vm.GroupBy(b => (b.JBahagianId, b.Objek.Substring(0, 3)))
+                        .Select(l => new AbBelanjawanSemasaViewModel
+                        {
+                            Objek = l.First().Objek.Substring(0, 3) + "000",
+                            Perihalan = l.First().Perihalan,
+                            Paras = l.First().Paras,
+                            Asal = l.Sum(c => c.Asal),
+                            Tambah = l.Sum(c => c.Tambah),
+                            Pindah = l.Sum(c => c.Pindah),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Belanja = l.Sum(c => c.Belanja),
+                            TBS = l.Sum(c => c.TBS),
+                            TelahGuna = l.Sum(c => c.TBS + c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                        }).OrderBy(b => b.Objek).ToList();
 
-                        paras = "2";
-                        break;
-                    // paras 3
-                    case 3:
-                        vm = vm.GroupBy(b => (b.JBahagianId, b.Objek.Substring(0, 4)))
-                            .Select(l => new AbBelanjawanSemasaViewModel
-                            {
-                                Objek = l.First().Objek.Substring(0, 4) + "00",
-                                Perihalan = l.First().Perihalan,
-                                Paras = l.First().Paras,
-                                Asal = l.Sum(c => c.Asal),
-                                Tambah = l.Sum(c => c.Tambah),
-                                Pindah = l.Sum(c => c.Pindah),
-                                Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
-                                Belanja = l.Sum(c => c.Belanja),
-                                TBS = l.Sum(c => c.TBS),
-                                TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                                Baki = l.Sum(c => c.Baki),
-                            }).OrderBy(b => b.Objek).ToList();
+                    paras = "2";
+                    break;
+                // paras 3
+                case 3:
+                    vm = vm.GroupBy(b => (b.JBahagianId, b.Objek.Substring(0, 4)))
+                        .Select(l => new AbBelanjawanSemasaViewModel
+                        {
+                            Objek = l.First().Objek.Substring(0, 4) + "00",
+                            Perihalan = l.First().Perihalan,
+                            Paras = l.First().Paras,
+                            Asal = l.Sum(c => c.Asal),
+                            Tambah = l.Sum(c => c.Tambah),
+                            Pindah = l.Sum(c => c.Pindah),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Belanja = l.Sum(c => c.Belanja),
+                            TBS = l.Sum(c => c.TBS),
+                            TelahGuna = l.Sum(c => c.TBS + c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                        }).OrderBy(b => b.Objek).ToList();
 
-                        paras = "3";
-                        break;
-                    // paras 4
-                    default:
-                        vm = vm.GroupBy(b => (b.JBahagianId, b.Objek))
-                            .Select(l => new AbBelanjawanSemasaViewModel
-                            {
-                                Objek = l.First().Objek,
-                                Perihalan = l.First().Perihalan,
-                                Paras = l.First().Paras,
-                                Asal = l.Sum(c => c.Asal),
-                                Tambah = l.Sum(c => c.Tambah),
-                                Pindah = l.Sum(c => c.Pindah),
-                                Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
-                                Belanja = l.Sum(c => c.Belanja),
-                                TBS = l.Sum(c => c.TBS),
-                                TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                                Baki = l.Sum(c => c.Baki),
-                            }).OrderBy(b => b.Objek).ToList();
+                    paras = "3";
+                    break;
+                // paras 4
+                default:
+                    vm = vm.GroupBy(b => (b.JBahagianId, b.Objek))
+                        .Select(l => new AbBelanjawanSemasaViewModel
+                        {
+                            Objek = l.First().Objek,
+                            Perihalan = l.First().Perihalan,
+                            Paras = l.First().Paras,
+                            Asal = l.Sum(c => c.Asal),
+                            Tambah = l.Sum(c => c.Tambah),
+                            Pindah = l.Sum(c => c.Pindah),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Belanja = l.Sum(c => c.Belanja),
+                            TBS = l.Sum(c => c.TBS),
+                            TelahGuna = l.Sum(c => c.TBS + c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                        }).OrderBy(b => b.Objek).ToList();
 
-                        paras = "4";
-                        break;
-                }
-
+                    paras = "4";
+                    break;
+            }
 
             //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
 
