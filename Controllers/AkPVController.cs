@@ -1047,12 +1047,15 @@ namespace MSNK.Controllers
         }
 
         // get an item from cart akPV2
-        public JsonResult GetAnItemCartAkPV2(AkPV2 akPV2)
+        public async Task<JsonResult> GetAnItemCartAkPV2(AkPV2 akPV2)
         {
 
             try
             {
                 AkPV2 data = _cart.Lines2.Where(x => x.AkBelianId == akPV2.AkBelianId).FirstOrDefault();
+
+                if (data.AkBelianId != null)
+                    data.AkBelian = await _akBelianRepo.GetById((int)data.AkBelianId);
 
                 return Json(new { result = "OK", record = data });
             }

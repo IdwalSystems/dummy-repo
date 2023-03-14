@@ -404,12 +404,13 @@
                                 txtKodAkaun.val("").trigger('change');
                                 txtAmaunObjek.val("0.00");
 
-                                console.log($('#FlJenisBaucer').val());
-                                if ($('#FlJenisBaucer').val() == 1) {
+                                if ($('#FlJenisBaucer1').is(":checked") || $('#FlJenisBaucer2').is(":checked")) {
+                                    // it is checked
                                     checkJumlah();
                                 } else {
                                     $("#btnSave").show();
                                 }
+                                
                             }
                             else {
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
@@ -455,10 +456,10 @@
                     success: function (r) {
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
-                        if ($('#FlJenisBaucer').val() == 1) {
+                        if ($('#FlJenisBaucer1').is(":checked") || $('#FlJenisBaucer2').is(":checked")) {
+                            // it is checked
                             checkJumlah();
                         } else {
-
                         }
                     }
                 });
@@ -573,7 +574,9 @@
                         }
 
                         jumlah.val(sum.toFixed(2));
-                        if ($('#FlJenisBaucer').val() == 1) {
+
+                        if ($('#FlJenisBaucer1').is(":checked") || $('#FlJenisBaucer2').is(":checked")) {
+                            // it is checked
                             checkJumlah();
                         }
                     }
@@ -783,7 +786,7 @@
             success: function (r) {
                 //insert data in modal urusniaga
                 $("#moId2").val(r.record.akBelianId);
-                $("#moAkBelian").val(r.record.akBelianId);
+                $("#moAkBelian").val(r.record.akBelian.noInbois);
                 $("#moAmaun2").val(r.record.amaun);
 
                 //show modal objek
@@ -797,7 +800,7 @@
         var id = $("#moId2").val();
         var amaun = $("#moAmaun2").val();
         var akPVId = $("#Id").val();
-        var jumlah = $("#jumlahPerihal");
+        var jumlah = $("#jumlahInbois");
 
         var AkPV2 = {
             AkBelianId: id,
