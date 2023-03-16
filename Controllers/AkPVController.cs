@@ -1081,6 +1081,9 @@ namespace MSNK.Controllers
                 {
                     _cart.RemoveItem2(akPV2.AkBelianId);
 
+                    if(akPV2.AkBelianId != 0)
+                        akPV2.HavePO = true;
+
                     _cart.AddItem2(akPV2.AkPVId,
                                    akPV2.AkBelianId,
                                    akPV2.Amaun,
@@ -1104,18 +1107,31 @@ namespace MSNK.Controllers
             {
                 List<AkPV2> data = _cart.Lines2.ToList();
 
+                string PoType = String.Empty;
+
                 foreach (AkPV2 item in data)
                 {
                     var akBelian = _context.AkBelian
                         .Include(d => d.AkPO)
+                        .Include(d => d.AkInden)
                         .Where(d => d.Id == item.AkBelianId)
                         .FirstOrDefault();
 
                     item.AkBelian = akBelian;
 
+                    if (akBelian.AkPO != null)
+                    {
+                        PoType = "PO";
+                    }
+
+                    if (akBelian.AkInden != null)
+                    {
+                        PoType = "Inden";
+                    }
+
                 }
 
-                return Json(new { result = "OK", record = data });
+                return Json(new { result = "OK", record = data, type = PoType });
             }
             catch (Exception ex)
             {
@@ -1317,13 +1333,12 @@ namespace MSNK.Controllers
             akPVView.TarikhPosting = akPV.TarikhPosting;
             akPVView.IsAKB = akPV.IsAKB;
 
-
             switch (akPV.FlKategoriPenerima)
             {
                 //pembekal
                 case KategoriPenerima.Pembekal:
                     akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
-                    akPVView.NoKP = "-";
+                    akPVView.NoKP = akPV.AkPembekal.KodSykt ?? "-";
                     akPVView.Penerima = akPV.AkPembekal.NamaSykt;
                     akPVView.Alamat1 = akPV.AkPembekal.Alamat1;
                     akPVView.Alamat2 = akPV.AkPembekal.Alamat2;
@@ -1335,7 +1350,7 @@ namespace MSNK.Controllers
                 //pekerja
                 case KategoriPenerima.Pekerja:
                     akPVView.KodPenerima = akPV.SuPekerja.NoGaji;
-                    akPVView.NoKP = akPV.SuPekerja.NoKp;
+                    akPVView.NoKP = akPV.SuPekerja?.NoKp ?? "-";
                     akPVView.Penerima = akPV.SuPekerja.Nama;
                     akPVView.Alamat1 = akPV.SuPekerja.Alamat1;
                     akPVView.Alamat2 = akPV.SuPekerja.Alamat2;
@@ -1363,7 +1378,7 @@ namespace MSNK.Controllers
                 default:
                     akPVView.denganTanggungan = akPV.denganTanggungan;
                     akPVView.KodPenerima = "-";
-                    akPVView.NoKP = akPV.NoKP;
+                    akPVView.NoKP = akPV.NoKP ?? "-";
                     akPVView.Penerima = akPV.Nama;
                     akPVView.Alamat1 = akPV.Alamat1;
                     akPVView.Alamat2 = akPV.Alamat2;

@@ -47,7 +47,7 @@ namespace MSNK.Models.Modules
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
         [DisplayName("No KP")]
-        public string NoKP { get; set; }
+        public string NoKP { get; set; } = String.Empty;
         [Required(ErrorMessage = "Nama diperlukan")]
         public string Nama { get; set; }
         public string Alamat1 { get; set; }

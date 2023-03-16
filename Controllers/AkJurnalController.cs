@@ -955,7 +955,7 @@ namespace MSNK.Controllers
 
                     foreach (AkJurnal1 keVot in akJ1)
                     {
-                        if (GetJenisObjek(keVot.AkCartaId) == "B" || akJurnal.IsAKB == true)
+                        if (GetJenisObjek(keVot.AkCartaId) == "B")
                         {
                             if (keVot.Kredit > 0)
                             {

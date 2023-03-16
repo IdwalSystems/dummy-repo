@@ -2,6 +2,34 @@
 
     var bil = 1;
 
+    // onchange No Inden
+    $("body").on('change', "#ddlAkIndenId", function () {
+        $("#txtKodAkaun option").prop('disabled', false);
+        $("#txtKodAkaun option[value='']").prop('disabled', true);
+        var noInden = $("#ddlAkIndenId").val();
+        JsonNoInden(noInden);
+    });
+    function JsonNoInden(id) {
+        if (id != null) {
+            $.ajax({
+                type: "POST",
+                //url: "/AkBelian/JsonGetNoPO",
+                url: '@Url.Action("JsonGetNoInden", "AkBelian")',
+                data: { id: id },
+                dataType: "json",
+                success: function (msg) {
+                    $("#ddlKodPembekal").val(msg?.record?.akPembekal?.id).change();
+                    displayObjekList(msg.record.akInden1);
+                    displayPerihalList(msg.record.akInden2);
+                    checkJumlah();
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+
      // onchange No PO
     $("body").on('change', "#ddlAkPOId", function () {
         $("#txtKodAkaun option").prop('disabled', false);

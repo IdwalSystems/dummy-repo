@@ -42,11 +42,11 @@ namespace MSNK.Controllers
         }
         public IActionResult Index()
         {
-            PopulateList();
+            PopulateList(1,1, DateTime.Now.ToString("yyyy"), DateTime.Now.ToString("yyyy-MM-dd"),4);
             return View();
         }
 
-        private void PopulateList()
+        private void PopulateList(int JKWId,int JBahagianId, string Tahun, string TarHingga, int ParasId)
         {
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
@@ -54,10 +54,14 @@ namespace MSNK.Controllers
             List<JBahagian> bahagianList = _context.JBahagian.ToList();
             ViewBag.JBahagian = bahagianList;
 
-            ViewData["Tahun"] = DateTime.Now.ToString("yyyy");
-            ViewData["TarHingga"] = DateTime.Now.ToString("yyyy-MM-dd");
-            ViewBag.JKWId = 1;
-            ViewBag.JBahagianId = 1;
+            List<JParas> parasList = _context.JParas.ToList();
+            ViewBag.JParas = parasList.OrderBy(b => b.Kod);
+
+            ViewData["Tahun"] = Tahun;
+            ViewData["TarHingga"] = TarHingga;
+            ViewData["JParasId"] = ParasId;
+            ViewData["JKWId"] = JKWId;
+            ViewData["JBahagianId"] = JBahagianId;
 
         }
 
@@ -193,6 +197,8 @@ namespace MSNK.Controllers
 
                     pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal, "4");
 
+                    //pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal + " " + pv.NoPV, "4");
+
                     vm.AddRange(pvList);
                 }
 
@@ -267,7 +273,7 @@ namespace MSNK.Controllers
             }
             // Jurnal End
 
-            //vm = vm.Where(b => b.Objek == "B52256" && b.JBahagianId == 4).ToList();
+            //vm = vm.Where(b => b.Objek == "B29301" && b.JBahagianId == 2).ToList();
             //
             switch (ParasId)
             {
@@ -345,7 +351,7 @@ namespace MSNK.Controllers
                     break;
             }
 
-            PopulateList();
+            PopulateList(JKWId,JBahagianId, tahun, tarHingga,ParasId);
             return View(vm);
         }
         // printing List of Carta

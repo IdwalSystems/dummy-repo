@@ -3,6 +3,14 @@
 @{
     ViewData["Title"] = "Invois Pembekal - Papar";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var noPOInden = "-";
+
+    if (Model.AkPO != null)
+        noPOInden = Model.AkPO.NoPO;
+
+    if (Model.AkInden != null)
+        noPOInden = Model.AkInden.NoInden;
 }
 
 <div class="card box-shadow">
@@ -53,8 +61,8 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label asp-for="AkPOId" class="control-label"></label>
-                            <input class="form-control form-control-sm" value="@Model.AkPO.NoPO" readonly />
+                            <label class="control-label">No PO / Inden</label>
+                            <input class="form-control form-control-sm" value="@noPOInden" readonly />
                         </div>
                     </div>
                 </div>

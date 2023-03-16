@@ -66,6 +66,58 @@
     });
     //validation form end
 
+    // on change no Inbois pembekal
+    $("body").on('change', "#txtAkBelian", function () {
+        var noInbois = $("#txtAkBelian").val();
+
+        if (noInbois != 0) {
+            JsonNoInbois(noInbois);
+        }
+
+    });
+
+    function JsonNoInbois(id) {
+        if (id != null) {
+            $.ajax({
+                type: "POST",
+                //url: "/AkPV/JsonGetAkBelian",
+                url: '@Url.Action("JsonGetAkBelian", "AkPV")',
+                data: { data: id },
+                dataType: "json",
+                success: function (msg) {
+                    $("#txtTarInbois").val(msg.record.tarikh);
+                    $("#txtAmaunInbois").val(msg.record.jumlah.toFixed(2));
+                    if (msg.record.akPO == null && msg.record.akInden == null) {
+                        $("#txtNoPO").val("-");
+                        $("#txtTarPO").val("");
+                        $("#txtAmaunPO").val("0.00");
+                    } else {
+                        if (msg.record.akPO != null) {
+                            $("#txtNoPO").val(msg.record.akPO.noPO);
+                            $("#txtTarPO").val(msg.record.akPO.tarikh);
+                            $("#txtAmaunPO").val(msg.record.akPO.jumlah.toFixed(2));
+                        }
+                        else {
+                            $("#txtNoPO").val(msg.record.akInden.noInden);
+                            $("#txtTarPO").val(msg.record.akInden.tarikh);
+                            $("#txtAmaunPO").val(msg.record.akInden.jumlah.toFixed(2));
+                        }
+
+                    }
+
+
+
+                },
+                error: function (req, status, error) {
+                    alert(error);
+                }
+            });
+        }
+
+    }
+
+    //on change no Inbois pembekal end
+
     // check if jumlahObjek is equal to jumlahInbois / jumlahGanda
     function checkJumlah() {
         var jumlahObjek = $("#jumlahObjek").val();
@@ -96,7 +148,7 @@
                 }
             }
         }
-        
+
     }
     // check end
 
@@ -410,7 +462,7 @@
                                 } else {
                                     $("#btnSave").show();
                                 }
-                                
+
                             }
                             else {
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
@@ -829,22 +881,30 @@
                         if (r.record.length > 0) {
                             for (var i = 0; i < r.record.length; i++) {
                                 var item1 = r.record[i];
-                                var noPO = "-";
-                                var tarPO = "";
-                                var jumlahPO = 0.00;
-                                if (item1.havePO == true) {
-                                    noPO = item1.akBelian.akPO.noPO;
-                                    tarPO = showDate(item1.akBelian.akPO.tarikh);
-                                    jumlahPO = item1.akBelian.akPO.jumlah;
+                                var noPOInden = "-";
+                                var tarPOInden = null;
+                                var jumlahPOInden = 0;
+                                if (r.type != null) {
+                                    if (r.type == "PO") {
+                                        noPOInden = item1.akBelian.akPO.noPO;
+                                        tarPOInden = showDate(item1.akBelian.akPO.tarikh);
+                                        jumlahPOInden = (item1.akBelian.akPO.jumlah).toFixed(2);
+                                    }
+
+                                    if (r.type == "Inden") {
+                                        noPOInden = item1.akBelian.akInden.noInden;
+                                        tarPOInden = showDate(item1.akBelian.akInden.tarikh);
+                                        jumlahPOInden = (item1.akBelian.akInden.jumlah).toFixed(2);
+                                    }
                                 }
 
                                 var str = "<tr><td id='akBelianId' hidden>" + item1.akBelianId +
                                     "</td><td>" + item1.akBelian.noInbois +
                                     "</td><td>" + showDate(item1.akBelian.tarikh) +
                                     "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
-                                    "</td><td>" + noPO +
-                                    "</td><td>" + tarPO +
-                                    "</td><td class='text-right'>" + jumlahPO.toFixed(2) +
+                                    "</td><td>" + noPOInden +
+                                    "</td><td>" + tarPOInden +
+                                    "</td><td class='text-right'>" + jumlahPOInden +
                                     "</td><td>" +
                                     "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate2' data-toggle='modal' data-target='#modalInbois' onclick='Update2(this)'><i class='fa fa-edit' ></i></button>" +
                                     "</td><td>" +

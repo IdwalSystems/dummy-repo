@@ -21,14 +21,14 @@
 
         </div>
         <hr class="mt-2" />
-        <form asp-action="Index" method="post">
+        <form asp-action="Index" asp- method="post">
 
             <div class="card">
                 <div class="card-body">
                     <div class="form-group form-row">
                         <label class="col-sm-2 col-form-label">Kumpulan Wang</label>
                         <div class="col-sm-5">
-                            <select class="form-control form-control-sm text-uppercase" name="JKWId" id="ddlKW" value="@ViewBag.JKWId">
+                            <select class="form-control form-control-sm text-uppercase" name="JKWId" id="ddlKW" value="@ViewData["JKWId"]">
                                 @foreach (var s in ViewBag.JKW)
                                 {
                                     <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -39,10 +39,18 @@
                     <div class="form-group form-row">
                         <label class="col-sm-2 col-form-label">Bahagian</label>
                         <div class="col-sm-5">
-                            <select class="form-control form-control-sm text-uppercase" name="JBahagianId" id="ddlBahagian" value="@ViewBag.JBahagianId">
+                            <select class="form-control form-control-sm text-uppercase" name="JBahagianId" id="ddlBahagian">
                                 @foreach (var s in ViewBag.JBahagian)
                                 {
-                                    <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    if ((int)ViewData["JBahagianId"] == s.Id)
+                                    {
+                                        <option value="@s.Id" selected>@s.Kod - @s.Perihal </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+
                                 }
                             </select>
                         </div>
@@ -63,10 +71,19 @@
                         <label class="col-sm-2 col-form-label">Paras</label>
                         <div class="col-sm-5">
                             <select class="form-control form-control-sm text-uppercase" name="ParasId" id="ddlParas">
-                                <option value="1" >Paras 1</option>
-                                <option value="2" >Paras 2</option>
-                                <option value="3" >Paras 3</option>
-                                <option value="0" selected>Paras 4</option>
+
+                                @foreach (var s in ViewBag.JParas)
+                                {
+                                    if ((int)ViewData["JParasId"] == Int32.Parse(s.Kod))
+                                    {
+                                        <option value="@s.Kod" selected>Paras @s.Kod </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@s.Kod">Paras @s.Kod</option>
+                                    }
+
+                                }
                             </select>
                         </div>
                     </div>

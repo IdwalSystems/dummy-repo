@@ -212,7 +212,7 @@
                                 <input asp-for="FlJenisBaucer" type="radio" id="1" name="FlJenisBaucer1" class="custom-control-input" value="Inbois">
                                 <label class="custom-control-label" for="FlJenisBaucer1">Inbois</label>
                             </div>
-                            <div class="custom-control custom-radio" hidden>
+                            <div class="custom-control custom-radio">
                                 <input asp-for="FlJenisBaucer" type="radio" id="2" name="FlJenisBaucer2" class="custom-control-input" value="Gaji">
                                 <label class="custom-control-label" for="FlJenisBaucer2">Gaji</label>
                             </div>
@@ -366,11 +366,11 @@
                                 <thead>
                                     <tr>
                                         <th width="20%">No Inbois</th>
-                                        <th width="5%">Tarikh Inbois</th>
-                                        <th width="5%">Amaun Inbois RM</th>
-                                        <th width="20%">No PO</th>
-                                        <th width="5%">Tar PO</th>
-                                        <th width="5%">Amaun PO RM</th>
+                                        <th width="10%">Tarikh Inbois</th>
+                                        <th width="10%" class="text-right">Amaun Inbois RM</th>
+                                        <th width="20%">No PO / Inden</th>
+                                        <th width="10%">Tar PO / Inden</th>
+                                        <th width="10%" class="text-right">Amaun PO / Inden RM</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyInbois">
@@ -381,11 +381,21 @@
                                             <td class="text-left">@item.AkBelian.NoInbois</td>
                                             <td>@item.AkBelian.Tarikh.ToString("dd/MM/yyyy")</td>
                                             <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
-                                            @if (item.AkBelian.AkPO != null)
+                                            @if (item.AkBelian.AkPO != null || item.AkBelian.AkInden != null)
                                             {
-                                                <td class="text-left">@item.AkBelian.AkPO.NoPO</td>
-                                                <td>@item.AkBelian.AkPO.Tarikh.ToString("dd/MM/yyyy")</td>
-                                                <td class="text-right">@Convert.ToDecimal(item.AkBelian.AkPO.Jumlah).ToString("#,##0.00")</td>
+                                                if (item.AkBelian.AkPO != null)
+                                                {
+                                                    <td class="text-left">@item.AkBelian.AkPO.NoPO</td>
+                                                    <td>@item.AkBelian.AkPO.Tarikh.ToString("dd/MM/yyyy")</td>
+                                                    <td class="text-right">@item.AkBelian.AkPO.Jumlah</td>
+                                                }
+                                                if (item.AkBelian.AkInden != null)
+                                                {
+                                                    <td class="text-left">@item.AkBelian.AkInden.NoInden</td>
+                                                    <td>@item.AkBelian.AkInden.Tarikh.ToString("dd/MM/yyyy")</td>
+                                                    <td class="text-right">@item.AkBelian.AkInden.Jumlah</td>
+                                                }
+
                                             }
                                             else
                                             {

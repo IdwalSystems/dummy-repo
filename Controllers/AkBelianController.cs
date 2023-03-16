@@ -353,6 +353,19 @@ namespace MSNK.Controllers
                 };     
             }
 
+            var akInden = new AkInden();
+            if (akBelian.AkIndenId != null)
+            {
+                akInden = await _akIndenRepo.GetByIdIncludeDeletedItems((int)akBelian.AkIndenId);
+            }
+            else
+            {
+                akInden = new AkInden()
+                {
+                    NoInden = "-"
+                };
+            }
+
             // check if linked with Nota Debit/ Kredit, show list of nota debit/kredit
             var akNota = _context.AkNotaDebitKreditBelian.Where(b => b.AkBelianId == id).ToList();
 
@@ -381,6 +394,18 @@ namespace MSNK.Controllers
                     };
                 }
 
+                if (akBelian.AkIndenId != null)
+                {
+                    akInden = await _akIndenRepo.GetById((int)akBelian.AkIndenId);
+                }
+                else
+                {
+                    akInden = new AkInden()
+                    {
+                        NoInden = "-"
+                    };
+                }
+
                 pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
 
             }
@@ -391,6 +416,7 @@ namespace MSNK.Controllers
             //fill in view model AkPVViewModel from akPV
             akBelianView.AkPembekalId = akBelian.AkPembekalId;
             akBelianView.AkPO = akPO;
+            akBelianView.AkInden = akInden;
             if (akPV2 != null)
             {
                 foreach( var i in akPV2)
@@ -544,6 +570,7 @@ namespace MSNK.Controllers
             }
         }
 
+
         private void PopulateCartFromAkPO(int id)
         {
             var user = _userManager.GetUserName(User);
@@ -628,7 +655,7 @@ namespace MSNK.Controllers
                 CartEmpty();
                 PopulateCartFromAkInden(id);
                 var result = await _akIndenRepo.GetById(id);
-          
+
                 List<AkInden1> akInden1Table = await _context.AkInden1
                 .Include(b => b.AkCarta)
                 .Where(b => b.AkIndenId == id)
@@ -709,7 +736,7 @@ namespace MSNK.Controllers
 
 
         }
-        //on change no PO controller end
+        //on change no Inden controller end
 
         // get an item from cart akBelian1
         public JsonResult GetAnItemCartAkBelian1(AkBelian1 akBelian1)
@@ -990,6 +1017,11 @@ namespace MSNK.Controllers
 
             var akBelian = await _akBelianRepo.GetById((int)id);
 
+            if (akBelian == null)
+            {
+                return NotFound();
+            }
+
             var akPO = new AkPO();
             if (akBelian.AkPOId != null)
             {
@@ -1005,10 +1037,20 @@ namespace MSNK.Controllers
 
             akBelian.AkPO = akPO;
 
-            if (akBelian == null)
+            var akInden = new AkInden();
+            if (akBelian.AkIndenId != null)
             {
-                return NotFound();
+                akInden = await _akIndenRepo.GetByIdIncludeDeletedItems((int)akBelian.AkIndenId);
             }
+            else
+            {
+                akInden = new AkInden()
+                {
+                    NoInden = "-"
+                };
+            }
+
+            akBelian.AkInden = akInden;
 
             CartEmpty();
             PopulateList();
@@ -1683,8 +1725,8 @@ namespace MSNK.Controllers
 
                 List<AkBelian1> akB1 = akBelian.AkBelian1.ToList();
 
-                // if belian not include PO, check peruntukan
-                if (akBelian.AkPOId == null)
+                // if belian not include PO and Inden, check peruntukan
+                if (akBelian.AkPOId == null && akBelian.AkIndenId == null)
                 {
                     // check peruntukan
                     foreach (var item in akB1)
@@ -1740,7 +1782,7 @@ namespace MSNK.Controllers
                         {
                             //insert into AbBukuVot
                             AbBukuVot abBukuVot = new AbBukuVot();
-                            if (akBelian.AkPO != null)
+                            if (akBelian.AkPO != null || akBelian.AkInden != null)
                             {
                                 //dengan tanggungan
                                 abBukuVot = new AbBukuVot()
