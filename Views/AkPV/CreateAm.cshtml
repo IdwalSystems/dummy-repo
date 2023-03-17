@@ -19,8 +19,10 @@
 
         </div>
         <hr class="mt-2" />
+        
         <form asp-action="CreateByJenis" class="needs-validation" novalidate>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*base form*@
             <div class="form-row">
                 <div class="col-lg-6">
                     <div class="card mb-2">
@@ -193,8 +195,8 @@
             </div>
             @*profil Atlet / Jurulatih end*@
 
-            <div class="form-row mb-2"  id="divPembekal">
-                <div class="col-md-12" >
+            <div class="form-row mb-2" id="divPembekal">
+                <div class="col-md-12">
                     <input id="ddlKodPekerja" value="0" hidden />
                     <input id="ddlPanjar" value="0" hidden />
                     <label asp-for="AkPembekalId" class="control-label"></label>
@@ -318,50 +320,7 @@
                 <span asp-validation-for="Perihal" class="text-danger"></span>
             </div>
             <br />
-            @*table Objek*@
-            <div class="card box-shadow mb-3 mt-2">
-                <div class="card-header">
-                    <h6>Objek</h6>
-                </div>
-                <div class="card-body">
-                    <table id="tblObjek" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th style="width:70%">Kod</th>
-                                <th style="width:30%">Amaun</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbodyObjek">
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td id="akCartaId" hidden></td>
-                                <td>
-                                    <select class="form-control form-control-sm select2" id="txtKodAkaun">
-                                        <option value="" disabled selected>-- Pilih Kod Akaun --</option>
-                                        @foreach (var s in ViewBag.AkCarta)
-                                        {
-                                            <option value="@s.Id">@s.Kod - @s.Perihal </option>
-                                        }
-                                    </select>
-                                </td>
-                                <td><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" value="0.00"></td>
-                                <td><button class="btn ac-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div class="card-footer">
-                    <div class="form-group pb-2">
-                        <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
-                        <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly value="0.00" />
-                        <span asp-validation-for="Jumlah" class="text-danger"></span>
-                    </div>
-                </div>
-
-            </div>
-            @*table Objek end*@
+            @*base form end*@
 
             @*table Inbois*@
             <div class="card box-shadow mb-3" id="cardInbois" hidden>
@@ -417,6 +376,52 @@
                 </div>
             </div>
             @*table Inbois end*@
+
+            @*table Objek*@
+            <div class="card box-shadow mb-3 mt-2">
+                <div class="card-header">
+                    <h6>Objek</h6>
+                </div>
+                <div class="card-body">
+                    <table id="tblObjek" class="table table-sm nowrap" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th style="width:70%">Kod</th>
+                                <th style="width:30%">Amaun</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyObjek">
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td id="akCartaId" hidden></td>
+                                <td>
+                                    <select class="form-control form-control-sm select2" id="txtKodAkaun">
+                                        <option value="" disabled selected>-- Pilih Kod Akaun --</option>
+                                        @foreach (var s in ViewBag.AkCarta)
+                                        {
+                                            <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                        }
+                                    </select>
+                                </td>
+                                <td><input class="form-control form-control-sm" type="number" id="txtAmaunObjek" step="0.01" value="0.00"></td>
+                                <td><button class="btn ac-success btn-sm" type="button" id="btnAdd1"><i class="fas fa-plus"></i></button></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <div class="form-group pb-2">
+                        <label asp-for="Jumlah" class="control-label">Jumlah Objek</label>
+                        <input asp-for="Jumlah" class="form-control form-control-sm" id="jumlahObjek" readonly value="0.00" />
+                        <span asp-validation-for="Jumlah" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+            @*table Objek end*@
+
 
             @*table Ganda*@
             <div class="card box-shadow mb-3" id="cardGanda" hidden>
@@ -523,6 +528,7 @@
             @*hidden type input end*@
 
         </form>
+        
     </div>
 </div>
 

@@ -18,6 +18,7 @@
 
         </div>
         <hr class="mt-2" />
+        @*base form*@
         <div class="form-row ">
             <div class="col-lg-10">
                 <div class="form-row">
@@ -308,6 +309,76 @@
                 </div>
             </div>
         </div>
+        @*@base form end*@
+        
+        @if (Model.FlJenisBaucer == JenisBaucer.Inbois)
+        {
+            @*table Inbois*@
+            <div class="card box-shadow mb-3" id="cardInbois">
+                <div class="card-header">
+                    <h6>PO dan Inbois</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="tblInbois" class="table table-sm nowrap text-nowrap" cellpadding="0" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th width="20%">No Inbois</th>
+                                    <th width="10%">Tarikh Inbois</th>
+                                    <th width="10%" class="text-right">Amaun Inbois RM</th>
+                                    <th width="20%">No PO / Inden</th>
+                                    <th width="10%">Tar PO / Inden</th>
+                                    <th width="10%" class="text-right">Amaun PO / Inden RM</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyInbois">
+                                @foreach (var item in ViewBag.AkPV2)
+                                {
+                                    <tr id="@item.Id">
+                                        <td id="akBelianId" hidden>@item.AkBelianId</td>
+                                        <td class="text-left">@item.AkBelian.NoInbois</td>
+                                        <td>@item.AkBelian.Tarikh.ToString("dd/MM/yyyy")</td>
+                                        <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                                        @if (item.AkBelian.AkPO != null || item.AkBelian.AkInden != null)
+                                        {
+                                            if (item.AkBelian.AkPO != null)
+                                            {
+                                                <td class="text-left">@item.AkBelian.AkPO.NoPO</td>
+                                                <td>@item.AkBelian.AkPO.Tarikh.ToString("dd/MM/yyyy")</td>
+                                                <td class="text-right">@item.AkBelian.AkPO.Jumlah</td>
+                                            }
+                                            if (item.AkBelian.AkInden != null)
+                                            {
+                                                <td class="text-left">@item.AkBelian.AkInden.NoInden</td>
+                                                <td>@item.AkBelian.AkInden.Tarikh.ToString("dd/MM/yyyy")</td>
+                                                <td class="text-right">@item.AkBelian.AkInden.Jumlah</td>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            <td class="text-left">-</td>
+                                            <td></td>
+                                            <td class="text-right">0.00</td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="form-group">
+                        <label class="control-label">Jumlah RM</label>
+                        <input class="form-control form-control-sm" id="jumlahInbois" value="@Model.JumlahInbois" readonly />
+                    </div>
+                </div>
+            </div>
+
+            @*table Inbois end*@
+        }
         @*table Objek*@
         <div class="card box-shadow mb-3">
             <div class="card-header">
@@ -355,71 +426,7 @@
         @switch (Model.FlJenisBaucer)
         {
             case JenisBaucer.Inbois:
-                @*table Inbois*@
-                <div class="card box-shadow mb-3" id="cardInbois">
-                    <div class="card-header">
-                        <h6>PO dan Inbois</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="tblInbois" class="table table-sm nowrap text-nowrap" cellpadding="0" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th width="20%">No Inbois</th>
-                                        <th width="10%">Tarikh Inbois</th>
-                                        <th width="10%" class="text-right">Amaun Inbois RM</th>
-                                        <th width="20%">No PO / Inden</th>
-                                        <th width="10%">Tar PO / Inden</th>
-                                        <th width="10%" class="text-right">Amaun PO / Inden RM</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbodyInbois">
-                                    @foreach (var item in ViewBag.AkPV2)
-                                    {
-                                        <tr id="@item.Id">
-                                            <td id="akBelianId" hidden>@item.AkBelianId</td>
-                                            <td class="text-left">@item.AkBelian.NoInbois</td>
-                                            <td>@item.AkBelian.Tarikh.ToString("dd/MM/yyyy")</td>
-                                            <td class="text-right">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
-                                            @if (item.AkBelian.AkPO != null || item.AkBelian.AkInden != null)
-                                            {
-                                                if (item.AkBelian.AkPO != null)
-                                                {
-                                                    <td class="text-left">@item.AkBelian.AkPO.NoPO</td>
-                                                    <td>@item.AkBelian.AkPO.Tarikh.ToString("dd/MM/yyyy")</td>
-                                                    <td class="text-right">@item.AkBelian.AkPO.Jumlah</td>
-                                                }
-                                                if (item.AkBelian.AkInden != null)
-                                                {
-                                                    <td class="text-left">@item.AkBelian.AkInden.NoInden</td>
-                                                    <td>@item.AkBelian.AkInden.Tarikh.ToString("dd/MM/yyyy")</td>
-                                                    <td class="text-right">@item.AkBelian.AkInden.Jumlah</td>
-                                                }
 
-                                            }
-                                            else
-                                            {
-                                                <td class="text-left">-</td>
-                                                <td></td>
-                                                <td class="text-right">0.00</td>
-                                            }
-                                        </tr>
-                                    }
-                                </tbody>
-                                <tfoot>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="form-group">
-                            <label class="control-label">Jumlah RM</label>
-                            <input class="form-control form-control-sm" id="jumlahInbois" value="@Model.JumlahInbois" readonly />
-                        </div>
-                    </div>
-                </div>
-
-                @*table Inbois end*@
                 break;
             case JenisBaucer.Gaji:
                 break;
