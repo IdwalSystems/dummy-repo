@@ -31,7 +31,7 @@ namespace MSNK.Models.Modules
 
         //field
         public int Id { get; set; }
-        [DisplayName("Tahun")]
+        [DisplayName("Tahun Bel.")]
         [Required(ErrorMessage = "Tahun diperlukan")]
         [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
         [MaxLength(4)]

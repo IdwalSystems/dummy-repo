@@ -631,6 +631,7 @@ namespace MSNK.Controllers
                     m.JKWId = JKWId;
                     m.JBahagianId = JBahagianId;
                     m.Jumlah = abWaran.Jumlah;
+                    m.Catatan = abWaran.Catatan?.ToUpper();
                     m.UserId = user.UserName;
                     m.TarMasuk = DateTime.Now;
                     m.SuPekerjaMasukId = pekerjaId;
@@ -822,6 +823,7 @@ namespace MSNK.Controllers
                     abWaran.UserIdKemaskini = user.UserName;
                     abWaran.TarKemaskini = DateTime.Now;
                     abWaran.SuPekerjaKemaskiniId = pekerjaId;
+                    abWaran.Catatan = abWaran.Catatan?.ToUpper();
 
                     _context.Update(abWaran);
                     // insert applog

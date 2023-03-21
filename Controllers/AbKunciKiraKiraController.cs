@@ -59,15 +59,9 @@ namespace MSNK.Controllers
         {
             var kunciKiraKira = new List<AbKunciKiraKiraViewModel>();
 
-            PopulateSelectList(form.JBahagianId, form.TarHingga);
-            
-            if (form.JBahagianId != 0)
-            {
-                int jKWId = _context.JBahagian.FirstOrDefault(b => b.Id == form.JBahagianId).JKWId;
-                form.JKWId = jKWId;
+            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga);
 
-                kunciKiraKira = await _custom.GetListKunciKirakiraBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga);
-            }
+            kunciKiraKira = await _custom.GetListKunciKirakiraBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga);
 
             dynamic dyModel = new ExpandoObject();
             dyModel.KunciKirakira = kunciKiraKira;
@@ -75,8 +69,35 @@ namespace MSNK.Controllers
             return View(dyModel);
         }
 
-        public void PopulateSelectList(int JBahagianId, DateTime TarHingga)
+        public void PopulateSelectList(int JKWId, int JBahagianId, DateTime TarHingga)
         {
+            // populate list JKW
+            List<JKW> jKWList = _context.JKW.ToList();
+
+            var jKWSelect = new List<SelectListItem>();
+
+            if (jKWList != null)
+            {
+                foreach (var item in jKWList)
+                {
+                    jKWSelect.Add(new SelectListItem()
+                    {
+                        Text = item.Kod + " - " + item.Perihal,
+                        Value = item.Id.ToString()
+                    });
+                }
+                ViewBag.jKW = new SelectList(jKWSelect, "Value", "Text", JKWId);
+            }
+            else
+            {
+                jKWSelect.Add(new SelectListItem()
+                {
+                    Text = "-- Tiada Kump. Wang Berdaftar --",
+                    Value = ""
+                });
+                ViewBag.jKW = new SelectList(jKWSelect, "Value", "Text", 0);
+            }
+
             // populate list bahagian
             List<JBahagian> akBahagianList = _context.JBahagian.Include(b => b.JKW).ToList();
 
@@ -84,14 +105,20 @@ namespace MSNK.Controllers
 
             if (akBahagianList != null)
             {
-                foreach (var item in akBahagianList)
+                bahagianSelect.Add(new SelectListItem()
                 {
-                    bahagianSelect.Add(new SelectListItem()
-                    {
-                        Text = item.Kod + " - " + item.Perihal,
-                        Value = item.Id.ToString()
-                    });
-                }
+                    Text = "Semua",
+                    Value = "0"
+                });
+
+                //foreach (var item in akBahagianList)
+                //{
+                //    bahagianSelect.Add(new SelectListItem()
+                //    {
+                //        Text = item.Kod + " - " + item.Perihal,
+                //        Value = item.Id.ToString()
+                //    });
+                //}
                 ViewBag.bahagian = new SelectList(bahagianSelect, "Value", "Text", JBahagianId);
 
             }
@@ -120,22 +147,17 @@ namespace MSNK.Controllers
         {
             var kunciKiraKira = new List<AbKunciKiraKiraViewModel>();
 
-            PopulateSelectList(form.JBahagianId, form.TarHingga);
+            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga);
 
-            if (form.JBahagianId != 0)
+            if (form.JKWId != 0)
             {
-                int jKWId = _context.JBahagian.FirstOrDefault(b => b.Id == form.JBahagianId).JKWId;
-                form.JKWId = jKWId;
-
                 kunciKiraKira = await _custom.GetListKunciKirakiraBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga);
 
                 dynamic dyModel = new ExpandoObject();
                 dyModel.KunciKirakira = kunciKiraKira;
                 dyModel.KunciKirakiraGrouped = kunciKiraKira.GroupBy(b => b.Order);
 
-                var bahagian = await _context.JBahagian
-                    .Include(b => b.JKW)
-                    .FirstOrDefaultAsync(b => b.Id == form.JBahagianId);
+                var jkw = await _context.JKW.FirstOrDefaultAsync(b => b.Id == form.JKWId);
 
                 var company = await _userService.GetCompanyDetails();
 
@@ -143,7 +165,7 @@ namespace MSNK.Controllers
                         new ViewDataDictionary(ViewData)
                         {
                         { "TarHingga", form.TarHingga.ToString("dd/MM/yyyy hh:mm:ss tt") },
-                        { "NamaBahagian", bahagian.Kod + " - " + bahagian.Perihal },
+                        { "NamaKW", jkw.Kod + " - " + jkw.Perihal },
                         { "NamaSyarikat", company.NamaSyarikat },
                         { "AlamatSyarikat1", company.AlamatSyarikat1 },
                         { "AlamatSyarikat2", company.AlamatSyarikat2 },
@@ -162,9 +184,9 @@ namespace MSNK.Controllers
                 var date2 = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss");
                 ViewData["DateTo"] = date2;
 
-                PopulateSelectList(form.JBahagianId, form.TarHingga);
+                PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga);
 
-                TempData[SD.Error] = "Bahagian Tidak Wujud.";
+                TempData[SD.Error] = "Kump. Wang Tidak Wujud.";
 
                 return View(kunciKiraKira);
             }

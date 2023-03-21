@@ -396,6 +396,7 @@
                     var jKWId = $("#ddlKW").val();
                     var jBahagianId = $("#ddlBahagian").val();
                     var IsAKB = $('input[type="radio"][name="IsAKB"]:checked').val();
+                    var akBankId = $("#AkBankId").val();
                     var myData = {};
                     myData.AkPV1 = AkPV1;
                     myData.tahun = tahun;
@@ -403,6 +404,7 @@
                     myData.jBahagianId = jBahagianId;
                     myData.FlKategoriPenerima = FlKategoriPenerima;
                     myData.IsAKB = IsAKB;
+                    myData.AkBankId = akBankId;
 
                     $.ajax({
                         type: "POST",
@@ -580,6 +582,7 @@
         var tahun = $("#txtTahun").val();
         var jKWId = $("#ddlKW").val();
         var jBahagianId = $("#ddlBahagian").val();
+        var akBankId = $("#AkBankId").val();
         var IsAKB = $('input[type="radio"][name="IsAKB"]:checked').val();
         var myData = {};
         myData.AkPV1 = AkPV1;
@@ -588,6 +591,7 @@
         myData.jBahagianId = jBahagianId;
         myData.FlKategoriPenerima = FlKategoriPenerima;
         myData.IsAKB = IsAKB;
+        myData.AkBankId = akBankId;
 
         $.ajax({
             type: "POST",
@@ -681,11 +685,13 @@
                     var tahun = $("#txtTahun").val();
                     var jKWId = $("#ddlKW").val();
                     var jBahagianId = $("#ddlBahagian").val();
+                    var akBankId = $("#AkBankId").val();
                     var myData = {};
                     myData.AkPV2 = AkPV2;
                     myData.tahun = tahun;
                     myData.jKWId = jKWId;
                     myData.jBahagianId = jBahagianId;
+                    myData.AkBankId = akBankId;
 
                     $.ajax({
                         type: "POST",

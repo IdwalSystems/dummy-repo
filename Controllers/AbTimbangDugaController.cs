@@ -41,22 +41,42 @@ namespace MSNK.Controllers
         {
             var timbangDuga = new List<AbTimbangDugaViewModel>();
 
-            PopulateSelectList(form.JBahagianId, form.TarHingga);
+            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga);
 
-            if (form.JBahagianId != 0)
-            {
-                int jKWId = _context.JBahagian.FirstOrDefault(b => b.Id == form.JBahagianId).JKWId;
-                form.JKWId = jKWId;
-
-                timbangDuga = await _custom.GetListTimbangDugaBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga);
-
-            }
+            timbangDuga = await _custom.GetListTimbangDugaBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga);
 
             return View(timbangDuga);
         }
 
-        public void PopulateSelectList(int JBahagianId, DateTime TarHingga)
+        public void PopulateSelectList(int JKWId, int JBahagianId, DateTime TarHingga)
         {
+            // populate list JKW
+            List<JKW> jKWList = _context.JKW.ToList();
+
+            var jKWSelect = new List<SelectListItem>();
+
+            if (jKWList != null)
+            {
+                foreach (var item in jKWList)
+                {
+                    jKWSelect.Add(new SelectListItem()
+                    {
+                        Text = item.Kod + " - " + item.Perihal,
+                        Value = item.Id.ToString()
+                    });
+                }
+                ViewBag.jKW = new SelectList(jKWSelect, "Value", "Text", JKWId);
+            }
+            else
+            {
+                jKWSelect.Add(new SelectListItem()
+                {
+                    Text = "-- Tiada Kump. Wang Berdaftar --",
+                    Value = ""
+                });
+                ViewBag.jKW = new SelectList(jKWSelect, "Value", "Text", 0);
+            }
+
             // populate list bahagian
             List<JBahagian> akBahagianList = _context.JBahagian.Include(b => b.JKW).ToList();
 
@@ -64,14 +84,20 @@ namespace MSNK.Controllers
 
             if (akBahagianList != null)
             {
-                foreach (var item in akBahagianList)
+                bahagianSelect.Add(new SelectListItem()
                 {
-                    bahagianSelect.Add(new SelectListItem()
-                    {
-                        Text = item.Kod + " - " + item.Perihal,
-                        Value = item.Id.ToString()
-                    });
-                }
+                    Text = "Semua",
+                    Value = "0"
+                });
+
+                //foreach (var item in akBahagianList)
+                //{
+                //    bahagianSelect.Add(new SelectListItem()
+                //    {
+                //        Text = item.Kod + " - " + item.Perihal,
+                //        Value = item.Id.ToString()
+                //    });
+                //}
                 ViewBag.bahagian = new SelectList(bahagianSelect, "Value", "Text", JBahagianId);
 
             }
@@ -101,22 +127,19 @@ namespace MSNK.Controllers
         {
             var timbangDuga = new List<AbTimbangDugaViewModel>();
 
-            if (form.JBahagianId != 0)
+            if (form.JKWId != 0)
             {
-                int jKWId = _context.JBahagian.FirstOrDefault(b => b.Id == form.JBahagianId).JKWId;
-                form.JKWId = jKWId;
-
+                
                 timbangDuga = await _custom.GetListTimbangDugaBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga);
 
-                var bahagian = await _context.JBahagian.Include(b => b.JKW)
-                    .FirstOrDefaultAsync(b => b.Id == form.JBahagianId);
+                var jkw = await _context.JKW.FirstOrDefaultAsync(b => b.Id == form.JKWId);
 
                 var company = await _userService.GetCompanyDetails();
 
                 return new ViewAsPdf("TimbangDugaPrintPDF", timbangDuga,
                     new ViewDataDictionary(ViewData)
                     {
-                        { "NamaBahagian", bahagian.Kod + " - " + bahagian.Perihal },
+                        { "NamaKW", jkw.Kod + " - " + jkw.Perihal },
                         { "TarHingga", form.TarHingga.ToString("dd/MM/yyyy hh:mm:ss tt") },
                         { "NamaSyarikat", company.NamaSyarikat },
                         { "AlamatSyarikat1", company.AlamatSyarikat1 },
@@ -133,9 +156,9 @@ namespace MSNK.Controllers
             }
             else
             {
-                TempData[SD.Error] = "Bahagian Tidak Wujud.";
+                TempData[SD.Error] = "Kump. Wang Tidak Wujud.";
 
-                PopulateSelectList(form.JBahagianId,form.TarHingga);
+                PopulateSelectList(form.JKWId, form.JBahagianId,form.TarHingga);
 
                 return View(timbangDuga);
             }

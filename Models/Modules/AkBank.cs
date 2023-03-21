@@ -21,7 +21,7 @@ namespace MSNK.Models.Modules
 
         //Relationship
         [Required(ErrorMessage = "Kumpulan Wang Diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kumpulan Wang")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kumpulan Wang")]
         [DisplayName("Kumpulan Wang")]
         public int JKWId { get; set; }
         public JKW JKW { get; set; }
@@ -37,10 +37,13 @@ namespace MSNK.Models.Modules
         public JBank JBank { get; set; }
 
         [Required(ErrorMessage = "Kod Akaun Diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Akaun")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Akaun")]
         [DisplayName("Kod Akaun")]
         public int AkCartaId { get; set; }
         public AkCarta AkCarta { get; set; }
+        // cek if kod bank using bajet or not
+        [Display(Name = "Dikira Dalam Peruntukan")]
+        public bool IsBajet { get; set; }
         public ICollection<AkTerima> AkTerima { get; set; }
         public ICollection<AkPV> AkPV { get; set; }
         public ICollection<AkCimbEFT> AkCimbEFT { get; set; }
@@ -52,6 +55,9 @@ namespace MSNK.Models.Modules
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
         //soft delete end
-
+        public AkBank()
+        {
+            IsBajet = true;
+        }
     }
 }

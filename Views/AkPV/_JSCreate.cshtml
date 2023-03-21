@@ -1151,6 +1151,7 @@
         }
 
     }
+
     //add tbl objek
     $("body").on("click", "#btnAdd1", function () {
         //Reference the Name and Country TextBoxes.
@@ -1200,6 +1201,7 @@
                     var tahun = $("#txtTahun").val();
                     var jKWId = $("#ddlKW").val();
                     var jBahagianId = $("#ddlBahagian").val();
+                    var akBankId = $("#AkBankId").val();
                     var IsAKB = $('input[type="radio"][name="IsAKB"]:checked').val();
                     var myData = {};
                     myData.AkPV1 = AkPV1;
@@ -1208,6 +1210,7 @@
                     myData.jBahagianId = jBahagianId;
                     myData.FlKategoriPenerima = FlKategoriPenerima;
                     myData.IsAKB = IsAKB;
+                    myData.AkBankId = akBankId;
 
                     $.ajax({
                         type: "POST",
@@ -1266,7 +1269,7 @@
 
                             }
                             else {
-                                toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
+                                toastr.error(b.message, "Ralat");
                                 toastr.options.timeOut = 5000; // 5s
                             }
 
@@ -1380,6 +1383,7 @@
         var tahun = $("#txtTahun").val();
         var jKWId = $("#ddlKW").val();
         var jBahagianId = $("#ddlBahagian").val();
+        var akBankId = $("#AkBankId").val();
         var IsAKB = $('input[type="radio"][name="IsAKB"]:checked').val();
         var myData = {};
         myData.AkPV1 = AkPV1;
@@ -1387,7 +1391,8 @@
         myData.jKWId = jKWId;
         myData.jBahagianId = jBahagianId;
         myData.FlKategoriPenerima = FlKategoriPenerima;
-        myData.IsAKB =IsAKB;
+        myData.IsAKB = IsAKB;
+        myData.AkBankId = akBankId;
 
         $.ajax({
             type: "POST",
@@ -1482,11 +1487,13 @@
                     var tahun = $("#txtTahun").val();
                     var jKWId = $("#ddlKW").val();
                     var jBahagianId = $("#ddlBahagian").val();
+                    var akBankId = $("#AkBankId").val();
                     var myData = {};
                     myData.AkPV2 = AkPV2;
                     myData.tahun = tahun;
                     myData.jKWId = jKWId;
                     myData.jBahagianId = jBahagianId;
+                    myData.AkBankId = akBankId;
 
                     $.ajax({
                         type: "POST",

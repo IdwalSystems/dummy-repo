@@ -27,6 +27,7 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Tahun diperlukan")]
         [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
         [MaxLength(4)]
+        [DisplayName("Tahun Bel.")]
         public string Tahun { get; set; }
         public string Tajuk { get; set; }
         //field end

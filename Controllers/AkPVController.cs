@@ -281,7 +281,7 @@ namespace MSNK.Controllers
                     spListUpdated.Add(item);
                 }
             }
-            
+
             ViewBag.SpPendahuluanPelbagai = spListUpdated;
 
             List<SuProfil> suProfilList = _context.SuProfil.Where(x => x.FlPosting == 1).OrderBy(b => b.NoRujukan).ToList();
@@ -292,7 +292,7 @@ namespace MSNK.Controllers
 
             List<AkTunaiRuncit> tunaiRuncitList = _context.AkTunaiRuncit
                 .Include(c => c.AkTunaiPemegang)
-                .ThenInclude(c=> c.SuPekerja).ToList();
+                .ThenInclude(c => c.SuPekerja).ToList();
             ViewBag.AkTunaiRuncit = tunaiRuncitList;
 
             List<AkBelian> akBelianList = _context.AkBelian
@@ -322,7 +322,7 @@ namespace MSNK.Controllers
 
                     akBelianListUpdated.Add(item);
                 }
-                
+
             }
             ViewBag.AkBelian = akBelianListUpdated;
 
@@ -468,7 +468,7 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    if(year != null)
+                    if (year != null)
                     {
                         year = year.Substring(2, 2);
 
@@ -492,7 +492,7 @@ namespace MSNK.Controllers
         {
             try
             {
-                
+
                 var akTunaiRuncit = await _context.AkTunaiRuncit
                     .Include(b => b.AkTunaiPemegang)
                     .ThenInclude(b => b.SuPekerja).ThenInclude(b => b.JBank)
@@ -535,7 +535,7 @@ namespace MSNK.Controllers
                     if (akTunaiRuncit.HadMaksimum != 0)
                     {
                         var rekupanList = (from tbl in _context.AkTunaiLejar
-                                                       .Include(x => x.AkTunaiRuncit).ThenInclude(x=> x.AkCarta)
+                                                       .Include(x => x.AkTunaiRuncit).ThenInclude(x => x.AkCarta)
                                                        .Where(x => x.AkTunaiRuncitId == data && x.Rekup == noRekup).ToList()
                                            select new
                                            {
@@ -545,7 +545,7 @@ namespace MSNK.Controllers
                                                Kredit = tbl.Kredit
                                            }).GroupBy(x => x.noRekup).FirstOrDefault();
 
-                       
+
                         decimal JumlahDebit = 0;
 
                         decimal JumlahKredit = 0;
@@ -556,7 +556,7 @@ namespace MSNK.Controllers
                             JumlahKredit = JumlahKredit + item.Kredit;
                         }
 
-                        if(JumlahDebit == akTunaiRuncit.HadMaksimum)
+                        if (JumlahDebit == akTunaiRuncit.HadMaksimum)
                         {
                             decimal JumlahRekupan = JumlahKredit;
 
@@ -572,9 +572,9 @@ namespace MSNK.Controllers
 
                             return Json(new { result = "OK", record = noRekup, objek = objRekup });
                         }
-                        
+
                     }
-                    
+
                 }
 
                 return Json(new { result = "OK", record = noRekup });
@@ -587,7 +587,7 @@ namespace MSNK.Controllers
 
         private void PopulateCartFromAkTunaiRuncit(int id, string noRekup, int akCartaId, decimal Amaun)
         {
-            
+
             var akPVId = 0;
 
             _cart.AddItem1(akPVId,
@@ -619,7 +619,8 @@ namespace MSNK.Controllers
             int jKWId,
             int jBahagianId,
             int FlKategoriPenerima,
-            bool IsAKB)
+            bool IsAKB,
+            int AkBankId)
         {
 
             try
@@ -642,73 +643,100 @@ namespace MSNK.Controllers
                         // if system already run for after a year, check Waran Peruntukan for past year
                         if (AppInfo == null)
                         {
-                            // check AkCarta is it bypass peruntukan or not
-                            var CartaDgnPeruntukan = await _context.AkCarta
-                                .Where(d => d.Id == akPV1.AkCartaId && d.IsBajet == true)
-                                .FirstOrDefaultAsync();
-
-                            if (CartaDgnPeruntukan != null)
+                            // check if akaun bank bypass peruntukan or not
+                            var akBank = _context.AkBank.FirstOrDefault(b => b.Id == AkBankId);
+                            if (akBank != null)
                             {
-                                bool IsExistAbBukuVot = await _context.AbBukuVot
-                                .Where(x => x.Tahun == tahun && x.VotId == akPV1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
-                                .AnyAsync();
-
-                                if (IsExistAbBukuVot == true)
+                                // if akaun bank is in bajet, check peruntukan
+                                if (akBank.IsBajet == true)
                                 {
-                                    if (FlKategoriPenerima == 0 || FlKategoriPenerima == 2)
-                                    {
-                                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akPV1.AkCartaId, jKWId, jBahagianId);
+                                    // check AkCarta is it bypass peruntukan or not
+                                    var CartaDgnPeruntukan = await _context.AkCarta
+                                        .Where(d => d.Id == akPV1.AkCartaId && d.IsBajet == true)
+                                        .FirstOrDefaultAsync();
 
-                                        if (sum < akPV1.Amaun)
+                                    if (CartaDgnPeruntukan != null)
+                                    {
+                                        bool IsExistAbBukuVot = await _context.AbBukuVot
+                                        .Where(x => x.Tahun == tahun && x.VotId == akPV1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                                        .AnyAsync();
+
+                                        if (IsExistAbBukuVot == true)
                                         {
-                                            return Json(new { result = "ERROR" });
+                                            if (FlKategoriPenerima == 0 || FlKategoriPenerima == 2)
+                                            {
+                                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akPV1.AkCartaId, jKWId, jBahagianId);
+
+                                                if (sum < akPV1.Amaun)
+                                                {
+                                                    return Json(new { result = "ERROR", message = "Bajet untuk kod akaun ini tidak mencukupi." });
+                                                }
+                                            }
                                         }
+                                        else
+                                        {
+                                            return Json(new { result = "ERROR", message = "Bajet untuk kod akaun ini tidak wujud." });
+                                        }
+
                                     }
-                                }
-                                else
-                                {
-                                    return Json(new { result = "ERROR" });
-                                }
-
-                            }
-                            // check for baki peruntukan end
-                        }
-                    } 
-                    else
-                    {
-                        // check AkCarta is it bypass peruntukan or not
-                        var CartaDgnPeruntukan = await _context.AkCarta
-                            .Where(d => d.Id == akPV1.AkCartaId && d.IsBajet == true)
-                            .FirstOrDefaultAsync();
-
-                        if (CartaDgnPeruntukan != null)
-                        {
-                            bool IsExistAbBukuVot = await _context.AbBukuVot
-                            .Where(x => x.Tahun == tahun && x.VotId == akPV1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
-                            .AnyAsync();
-
-                            if (IsExistAbBukuVot == true)
-                            {
-                                if (FlKategoriPenerima == 0 || FlKategoriPenerima == 2)
-                                {
-                                    decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akPV1.AkCartaId, jKWId, jBahagianId);
-
-                                    if (sum < akPV1.Amaun)
-                                    {
-                                        return Json(new { result = "ERROR" });
-                                    }
+                                    // check for baki peruntukan end
                                 }
                             }
                             else
                             {
-                                return Json(new { result = "ERROR" });
+                                return Json(new { result = "ERROR", message = "Sila pilih akaun bank." });
                             }
 
                         }
-                        // check for baki peruntukan end
                     }
+                    else
+                    {
+                        // check if akaun bank bypass peruntukan or not
+                        var akBank = _context.AkBank.FirstOrDefault(b => b.Id == AkBankId);
+                        if (akBank != null)
+                        {
+                            // if akaun bank is in bajet, check peruntukan
+                            if (akBank.IsBajet == true)
+                            {
+                                // check AkCarta is it bypass peruntukan or not
+                                var CartaDgnPeruntukan = await _context.AkCarta
+                                    .Where(d => d.Id == akPV1.AkCartaId && d.IsBajet == true)
+                                    .FirstOrDefaultAsync();
 
+                                if (CartaDgnPeruntukan != null)
+                                {
+                                    bool IsExistAbBukuVot = await _context.AbBukuVot
+                                    .Where(x => x.Tahun == tahun && x.VotId == akPV1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                                    .AnyAsync();
 
+                                    if (IsExistAbBukuVot == true)
+                                    {
+                                        if (FlKategoriPenerima == 0 || FlKategoriPenerima == 2)
+                                        {
+                                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akPV1.AkCartaId, jKWId, jBahagianId);
+
+                                            if (sum < akPV1.Amaun)
+                                            {
+                                                return Json(new { result = "ERROR", message = "Bajet untuk kod akaun ini tidak mencukupi." });
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        return Json(new { result = "ERROR", message = "Bajet untuk kod akaun ini tidak wujud." });
+                                    }
+
+                                }
+                                // check for baki peruntukan end
+                            }
+
+                        }
+                        else
+                        {
+                            return Json(new { result = "ERROR", message = "Sila pilih akaun bank." });
+                        }
+
+                    }
 
                     _cart.AddItem1(akPV1.AkPVId,
                                    akPV1.Amaun,
@@ -766,7 +794,8 @@ namespace MSNK.Controllers
             int jKWId,
             int jBahagianId,
             int FlKategoriPenerima,
-            bool IsAKB)
+            bool IsAKB,
+            int AkBankId)
         {
 
             try
@@ -782,78 +811,99 @@ namespace MSNK.Controllers
                     // FlKategoriPenerima = 2 (pekerja)
                     // FlKategoriPenerima = 3 (panjar)
                     // FlKategoriPenerima = 0 (other than above)
-
-                    if (IsAKB == true)
+                    // check if akaun bank bypass peruntukan or not
+                    var akBank = _context.AkBank.FirstOrDefault(b => b.Id == AkBankId);
+                    if (akBank != null)
                     {
-                        var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year <= DateTime.Now.Year).FirstOrDefault();
-
-                        if (AppInfo == null)
+                        // if akaun bank is in bajet, check peruntukan
+                        if (akBank.IsBajet == true)
                         {
-                            // check AkCarta is it bypass peruntukan or not
-                            var CartaDgnPeruntukan = await _context.AkCarta
-                                .Where(d => d.Id == akPV1.AkCartaId && d.IsBajet == true)
-                                .FirstOrDefaultAsync();
-
-                            if (CartaDgnPeruntukan != null)
+                            if (IsAKB == true)
                             {
-                                if (FlKategoriPenerima == 0 || FlKategoriPenerima == 2)
+                                // check if this is the first year using the system
+                                var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year <= DateTime.Now.Year).FirstOrDefault();
+
+                                // if system already run for after a year, check Waran Peruntukan for past year
+                                if (AppInfo == null)
+                                {
+
+                                    // check AkCarta is it bypass peruntukan or not
+                                    var CartaDgnPeruntukan = await _context.AkCarta
+                                        .Where(d => d.Id == akPV1.AkCartaId && d.IsBajet == true)
+                                        .FirstOrDefaultAsync();
+
+                                    if (CartaDgnPeruntukan != null)
+                                    {
+                                        bool IsExistAbBukuVot = await _context.AbBukuVot
+                                        .Where(x => x.Tahun == tahun && x.VotId == akPV1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                                        .AnyAsync();
+
+                                        if (IsExistAbBukuVot == true)
+                                        {
+                                            if (FlKategoriPenerima == 0 || FlKategoriPenerima == 2)
+                                            {
+                                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akPV1.AkCartaId, jKWId, jBahagianId);
+
+                                                if (sum < akPV1.Amaun)
+                                                {
+                                                    return Json(new { result = "ERROR" });
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            return Json(new { result = "ERROR" });
+                                        }
+
+                                    }
+                                    // check for baki peruntukan end
+
+                                }
+                            }
+                            else
+                            {
+
+                                // check AkCarta is it bypass peruntukan or not
+                                var CartaDgnPeruntukan = await _context.AkCarta
+                                    .Where(d => d.Id == akPV1.AkCartaId && d.IsBajet == true)
+                                    .FirstOrDefaultAsync();
+
+                                if (CartaDgnPeruntukan != null)
                                 {
                                     bool IsExistAbBukuVot = await _context.AbBukuVot
-                                       .Where(x => x.Tahun == tahun && x.VotId == akPV1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
-                                       .AnyAsync();
+                                    .Where(x => x.Tahun == tahun && x.VotId == akPV1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                                    .AnyAsync();
 
                                     if (IsExistAbBukuVot == true)
                                     {
-                                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akPV1.AkCartaId, jKWId, jBahagianId);
-
-                                        if (sum < akPV1.Amaun)
+                                        if (FlKategoriPenerima == 0 || FlKategoriPenerima == 2)
                                         {
-                                            return Json(new { result = "ERROR" });
+                                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akPV1.AkCartaId, jKWId, jBahagianId);
+
+                                            if (sum < akPV1.Amaun)
+                                            {
+                                                return Json(new { result = "ERROR" });
+                                            }
                                         }
                                     }
                                     else
                                     {
                                         return Json(new { result = "ERROR" });
                                     }
+
                                 }
+                                // check for baki peruntukan end
+
+
                             }
-                                
                         }
+
                     }
                     else
                     {
-                        // check AkCarta is it bypass peruntukan or not
-                        var CartaDgnPeruntukan = await _context.AkCarta
-                            .Where(d => d.Id == akPV1.AkCartaId && d.IsBajet == true)
-                            .FirstOrDefaultAsync();
-
-                        if (CartaDgnPeruntukan != null)
-                        {
-                            if (FlKategoriPenerima == 0 || FlKategoriPenerima == 2)
-                            {
-                                bool IsExistAbBukuVot = await _context.AbBukuVot
-                                   .Where(x => x.Tahun == tahun && x.VotId == akPV1.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
-                                   .AnyAsync();
-
-                                if (IsExistAbBukuVot == true)
-                                {
-                                    decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akPV1.AkCartaId, jKWId, jBahagianId);
-
-                                    if (sum < akPV1.Amaun)
-                                    {
-                                        return Json(new { result = "ERROR" });
-                                    }
-                                }
-                                else
-                                {
-                                    return Json(new { result = "ERROR" });
-                                }
-                            }
-                        }
-                            
+                        return Json(new { result = "ERROR", message = "Sila pilih akaun bank dahulu." });
                     }
 
-                    // check for baki peruntukan end
 
                     _cart.RemoveItem1(akPV1.AkCartaId);
 
@@ -947,7 +997,8 @@ namespace MSNK.Controllers
             AkPV2 akPV2,
             string tahun,
             int jKWId,
-            int jBahagianId)
+            int jBahagianId,
+            int AkBankId)
         {
 
             try
@@ -956,7 +1007,7 @@ namespace MSNK.Controllers
                 {
 
                     // check if Inbois has PO or not
-                    var po = _context.AkBelian.Include(x => x.AkBelian1).ThenInclude(x=> x.AkCarta).Where(b => b.Id == akPV2.AkBelianId).FirstOrDefault();
+                    var po = _context.AkBelian.Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta).Where(b => b.Id == akPV2.AkBelianId).FirstOrDefault();
 
                     if (po.AkPOId != null || po.AkIndenId != null)
                     {
@@ -966,26 +1017,41 @@ namespace MSNK.Controllers
                     // check for baki peruntukan
                     if (akPV2.HavePO == false)
                     {
-                        foreach (AkBelian1 item in po.AkBelian1)
+                        // check if akaun bank is in bajet or not
+                        var akBank = _context.AkBank.FirstOrDefault(b => b.Id == AkBankId);
+                        if (akBank != null)
                         {
-                            bool IsExistAbBukuVot = await _context.AbBukuVot
-                           .Where(x => x.Tahun == tahun && x.VotId == item.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
-                           .AnyAsync();
-
-                            if (IsExistAbBukuVot == true)
+                            // if is in bajet, check peruntukan
+                            if (akBank.IsBajet == true)
                             {
-                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, item.AkCartaId, jKWId, jBahagianId);
-
-                                if (sum < akPV2.Amaun)
+                                foreach (AkBelian1 item in po.AkBelian1)
                                 {
-                                    return Json(new { result = "ERROR" });
+                                    bool IsExistAbBukuVot = await _context.AbBukuVot
+                                   .Where(x => x.Tahun == tahun && x.VotId == item.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                                   .AnyAsync();
+
+                                    if (IsExistAbBukuVot == true)
+                                    {
+                                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, item.AkCartaId, jKWId, jBahagianId);
+
+                                        if (sum < akPV2.Amaun)
+                                        {
+                                            return Json(new { result = "ERROR" });
+                                        }
+                                    }
+                                    else
+                                    {
+                                        return Json(new { result = "ERROR" });
+                                    }
                                 }
                             }
-                            else
-                            {
-                                return Json(new { result = "ERROR" });
-                            }
+
                         }
+                        else
+                        {
+                            return Json(new { result = "ERROR", message = "Sila pilih akaun bank dahulu." });
+                        }
+
                     }
 
                     // check for baki peruntukan end
@@ -1081,7 +1147,7 @@ namespace MSNK.Controllers
                 {
                     _cart.RemoveItem2(akPV2.AkBelianId);
 
-                    if(akPV2.AkBelianId != 0)
+                    if (akPV2.AkBelianId != 0)
                         akPV2.HavePO = true;
 
                     _cart.AddItem2(akPV2.AkPVId,
@@ -1161,7 +1227,7 @@ namespace MSNK.Controllers
                 {
                     return Json(new { result = "OK", record = 0, ganda = false });
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -1523,7 +1589,7 @@ namespace MSNK.Controllers
             {
                 CartEmpty();
                 var result = await _spPPRepo.GetById(data);
-                
+
                 _cart.AddItem1(AkPVId,
                                result.JumLulus,
                                (int)result.AkCartaId);
@@ -1561,7 +1627,7 @@ namespace MSNK.Controllers
                 JCaraBayar jCaraBayar = new JCaraBayar();
                 decimal jumGanda = 0;
 
-                foreach ( var i in result.SuProfil1)
+                foreach (var i in result.SuProfil1)
                 {
                     // atlet
                     if (result.FlKategori == 0)
@@ -1649,7 +1715,7 @@ namespace MSNK.Controllers
                 {
                     return Json(new { result = "OK" });
                 }
-                var result = await _context.AkBelian.Include(b=> b.AkPembekal).Where(x => x.AkPembekalId == data).ToListAsync();
+                var result = await _context.AkBelian.Include(b => b.AkPembekal).Where(x => x.AkPembekalId == data).ToListAsync();
 
                 if (result.Count() == 0)
                 {
@@ -1840,12 +1906,12 @@ namespace MSNK.Controllers
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
-            var pembekal =await _context.AkPembekal.FirstOrDefaultAsync(x=> x.Id == AkPembekalId);
-            var pekerja = await _context.SuPekerja.FirstOrDefaultAsync(x=> x.Id == SuPekerjaId);
-            var tunaiRuncit =await _context.AkTunaiRuncit
-                .Include(x=> x.AkTunaiPemegang).ThenInclude(x=> x.SuPekerja)
+            var pembekal = await _context.AkPembekal.FirstOrDefaultAsync(x => x.Id == AkPembekalId);
+            var pekerja = await _context.SuPekerja.FirstOrDefaultAsync(x => x.Id == SuPekerjaId);
+            var tunaiRuncit = await _context.AkTunaiRuncit
+                .Include(x => x.AkTunaiPemegang).ThenInclude(x => x.SuPekerja)
                 .FirstOrDefaultAsync(x => x.Id == AkTunaiRuncitId);
-            var spPendahuluan = await _context.SpPendahuluanPelbagai.FirstOrDefaultAsync(x => x.Id == SpPendahuluanPelbagaiId );
+            var spPendahuluan = await _context.SpPendahuluanPelbagai.FirstOrDefaultAsync(x => x.Id == SpPendahuluanPelbagaiId);
 
             var suProfil = await _context.SuProfil.FirstOrDefaultAsync(x => x.Id == SuProfilId);
 
@@ -1884,7 +1950,7 @@ namespace MSNK.Controllers
 
                     //check if PV dengan tanggungan or tanpa tanggungan
                     List<AkPV2> akPV2CartList = _cart.Lines2.ToList();
-                    
+
                     foreach (AkPV2 item in akPV2CartList)
                     {
                         AkBelian akBelian = _context.AkBelian.FirstOrDefault(b => b.Id == item.AkBelianId);
@@ -1897,8 +1963,8 @@ namespace MSNK.Controllers
                     //check if PV dengan tanggungan or tanpa tanggungan end
                 }
             }
-            
-            if (pekerja != null )
+
+            if (pekerja != null)
             {
 
                 akPV.FlKategoriPenerima = KategoriPenerima.Pekerja;
@@ -1923,7 +1989,7 @@ namespace MSNK.Controllers
             var month = akPV.Tarikh.ToString("MM");
 
             var noRujukan = GetNoRujukan(akPV.JKWId, year, month);
-            
+
             // get latest no rujukan running number end
 
 
@@ -1962,7 +2028,7 @@ namespace MSNK.Controllers
                             }
                         }
                     }
-                    
+
 
                     m.SuPekerjaId = SuPekerjaId == 0 ? null : SuPekerjaId;
 
@@ -1995,11 +2061,11 @@ namespace MSNK.Controllers
                     m.IsAKB = IsAKB;
                     m.JBankId = JBankId;
 
-                    if (tunaiRuncit != null )
+                    if (tunaiRuncit != null)
                     {
                         m.AkTunaiRuncitId = AkTunaiRuncitId;
                     }
-                    if (spPendahuluan != null )
+                    if (spPendahuluan != null)
                     {
                         m.SpPendahuluanPelbagaiId = SpPendahuluanPelbagaiId;
                     }
@@ -2059,110 +2125,129 @@ namespace MSNK.Controllers
                     // FlKategoriPenerima = 5 ( atlet )
                     // ..
 
-                    if (IsAKB == true)
+                    // check if akaun bank is in bajet or not
+                    var akBank = _context.AkBank.FirstOrDefault(b => b.Id == AkBankId);
+
+                    if (akBank == null)
                     {
-                        var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year <= DateTime.Now.Year).FirstOrDefault();
-
-                        if (AppInfo == null)
+                        TempData[SD.Error] = "No Akaun Bank tidak diisi.";
+                        PopulateList();
+                        CartEmpty();
+                        return View(jenis, akPV);
+                    }
+                    else
+                    {
+                        //if akaun bank is in bajet, then check peruntukan
+                        if (akBank.IsBajet == true)
                         {
-                            if ((m.FlJenisBaucer == 0 && m.FlKategoriPenerima == 0)
-                                                    || (m.FlKategoriPenerima == KategoriPenerima.Pembekal && m.denganTanggungan == false)
-                                                    || (m.FlJenisBaucer == JenisBaucer.Gaji) || (m.FlJenisBaucer == JenisBaucer.ProfilAtletJurulatih))
+                            if (IsAKB == true)
                             {
-                                foreach (AkPV1 item in m.AkPV1)
+                                var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year <= DateTime.Now.Year).FirstOrDefault();
+
+                                if (AppInfo == null)
                                 {
-
-                                    // check 
-                                    var CartaDgnPeruntukan = await _context.AkCarta
-                                    .Where(d => d.Id == item.AkCartaId && d.IsBajet == true)
-                                    .FirstOrDefaultAsync();
-
-                                    if (CartaDgnPeruntukan != null)
+                                    if ((m.FlJenisBaucer == 0 && m.FlKategoriPenerima == 0)
+                                                            || (m.FlKategoriPenerima == KategoriPenerima.Pembekal && m.denganTanggungan == false)
+                                                            || (m.FlJenisBaucer == JenisBaucer.Gaji) || (m.FlJenisBaucer == JenisBaucer.ProfilAtletJurulatih))
                                     {
-                                        bool IsExistAbBukuVot = await _context.AbBukuVot
-                                        .Where(x => x.Tahun == m.Tahun && x.VotId == item.AkCartaId && x.JKWId == m.JKWId && x.JBahagianId == m.JBahagianId)
-                                        .AnyAsync();
-
-                                        var carta = _context.AkCarta.Find(item.AkCartaId);
-
-                                        if (IsExistAbBukuVot == true)
+                                        foreach (AkPV1 item in m.AkPV1)
                                         {
-                                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(m.Tahun, item.AkCartaId, m.JKWId, m.JBahagianId);
 
-                                            if (sum < item.Amaun)
+                                            // check 
+                                            var CartaDgnPeruntukan = await _context.AkCarta
+                                            .Where(d => d.Id == item.AkCartaId && d.IsBajet == true)
+                                            .FirstOrDefaultAsync();
+
+                                            if (CartaDgnPeruntukan != null)
                                             {
-                                                TempData[SD.Error] = "Bajet untuk kod akaun " + carta.Kod + " tidak mencukupi.";
+                                                bool IsExistAbBukuVot = await _context.AbBukuVot
+                                                .Where(x => x.Tahun == m.Tahun && x.VotId == item.AkCartaId && x.JKWId == m.JKWId && x.JBahagianId == m.JBahagianId)
+                                                .AnyAsync();
+
+                                                var carta = _context.AkCarta.Find(item.AkCartaId);
+
+                                                if (IsExistAbBukuVot == true)
+                                                {
+                                                    decimal sum = await _customRepo.GetBalanceFromAbBukuVot(m.Tahun, item.AkCartaId, m.JKWId, m.JBahagianId);
+
+                                                    if (sum < item.Amaun)
+                                                    {
+                                                        TempData[SD.Error] = "Bajet untuk kod akaun " + carta.Kod + " tidak mencukupi.";
+                                                        PopulateList();
+                                                        CartEmpty();
+
+                                                        return View(jenis, akPV);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + carta.Kod;
+                                                    PopulateList();
+                                                    CartEmpty();
+
+                                                    return View(jenis, akPV);
+                                                }
+                                            }
+
+                                        }
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+
+                                if ((m.FlJenisBaucer == 0 && m.FlKategoriPenerima == 0)
+                                                                                    || (m.FlKategoriPenerima == KategoriPenerima.Pembekal && m.denganTanggungan == false)
+                                                                                    || (m.FlJenisBaucer == JenisBaucer.Gaji) || (m.FlJenisBaucer == JenisBaucer.ProfilAtletJurulatih))
+                                {
+                                    foreach (AkPV1 item in m.AkPV1)
+                                    {
+
+                                        // check 
+                                        var CartaDgnPeruntukan = await _context.AkCarta
+                                        .Where(d => d.Id == item.AkCartaId && d.IsBajet == true)
+                                        .FirstOrDefaultAsync();
+
+                                        if (CartaDgnPeruntukan != null)
+                                        {
+                                            bool IsExistAbBukuVot = await _context.AbBukuVot
+                                            .Where(x => x.Tahun == m.Tahun && x.VotId == item.AkCartaId && x.JKWId == m.JKWId && x.JBahagianId == m.JBahagianId)
+                                            .AnyAsync();
+
+                                            var carta = _context.AkCarta.Find(item.AkCartaId);
+
+                                            if (IsExistAbBukuVot == true)
+                                            {
+                                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(m.Tahun, item.AkCartaId, m.JKWId, m.JBahagianId);
+
+                                                if (sum < item.Amaun)
+                                                {
+                                                    TempData[SD.Error] = "Bajet untuk kod akaun " + carta.Kod + " tidak mencukupi.";
+                                                    PopulateList();
+                                                    CartEmpty();
+
+                                                    return View(jenis, akPV);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + carta.Kod;
                                                 PopulateList();
                                                 CartEmpty();
 
                                                 return View(jenis, akPV);
                                             }
                                         }
-                                        else
-                                        {
-                                            TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + carta.Kod;
-                                            PopulateList();
-                                            CartEmpty();
 
-                                            return View(jenis, akPV);
-                                        }
                                     }
 
-                                }
-
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if ((m.FlJenisBaucer == 0 && m.FlKategoriPenerima == 0)
-                        || (m.FlKategoriPenerima == KategoriPenerima.Pembekal && m.denganTanggungan == false)
-                        || (m.FlJenisBaucer == JenisBaucer.Gaji) || (m.FlJenisBaucer == JenisBaucer.ProfilAtletJurulatih))
-                        {
-                            foreach (AkPV1 item in m.AkPV1)
-                            {
-
-                                // check 
-                                var CartaDgnPeruntukan = await _context.AkCarta
-                                .Where(d => d.Id == item.AkCartaId && d.IsBajet == true)
-                                .FirstOrDefaultAsync();
-
-                                if (CartaDgnPeruntukan != null)
-                                {
-                                    bool IsExistAbBukuVot = await _context.AbBukuVot
-                                    .Where(x => x.Tahun == m.Tahun && x.VotId == item.AkCartaId && x.JKWId == m.JKWId && x.JBahagianId == m.JBahagianId)
-                                    .AnyAsync();
-
-                                    var carta = _context.AkCarta.Find(item.AkCartaId);
-
-                                    if (IsExistAbBukuVot == true)
-                                    {
-                                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(m.Tahun, item.AkCartaId, m.JKWId, m.JBahagianId);
-
-                                        if (sum < item.Amaun)
-                                        {
-                                            TempData[SD.Error] = "Bajet untuk kod akaun " + carta.Kod + " tidak mencukupi.";
-                                            PopulateList();
-                                            CartEmpty();
-
-                                            return View(jenis, akPV);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + carta.Kod;
-                                        PopulateList();
-                                        CartEmpty();
-
-                                        return View(jenis, akPV);
-                                    }
                                 }
 
                             }
 
                         }
                     }
-                    
 
                     // check for baki peruntukan end
 
@@ -2299,208 +2384,7 @@ namespace MSNK.Controllers
             return View(akPVView);
         }
 
-        // update add akPV1
-        public async Task<JsonResult> InsertUpdateAkPV1(AkPV1 akPV1)
-        {
 
-            try
-            {
-                if (akPV1 != null || akPV1.Amaun != 0)
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akPV1.AkCartaId);
-                    akPV1.AkCarta = akCarta;
-
-                    await _akPV1Repo.Insert(akPV1);
-
-                    decimal total = 0;
-
-                    AkPV akPV = await _akPVRepo.GetById(akPV1.AkPVId);
-
-                    total = akPV.Jumlah + akPV1.Amaun;
-
-                    akPV.Jumlah = total;
-                    akPV.UserIdKemaskini = user.UserName;
-
-                    await _akPVRepo.Update(akPV);
-
-                    await _context.SaveChangesAsync();
-
-                }
-
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-        // update add akPV1 end
-
-        // update remove akPV1
-        public async Task<JsonResult> RemoveUpdateAkPV1(AkPV1 akPV1)
-        {
-
-            try
-            {
-                if (akPV1 != null)
-                {
-                    var user = await _userManager.GetUserAsync(User);
-                    var akB1 = await _context.AkPV1.FirstOrDefaultAsync(x => x.AkCartaId == akPV1.AkCartaId && x.AkPVId == akPV1.AkPVId);
-                    _context.AkPV1.Remove(akB1);
-
-                    decimal total = 0;
-
-                    AkPV akPV = await _akPVRepo.GetById(akPV1.AkPVId);
-
-                    total = akPV.Jumlah - akB1.Amaun;
-
-                    akPV.Jumlah = total;
-                    akPV.UserIdKemaskini = user.UserName;
-                    akPV.TarKemaskini = DateTime.Now;
-                    await _akPVRepo.Update(akPV);
-
-                    await _context.SaveChangesAsync();
-
-
-                }
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-        // update remove akPV1 end
-
-        // update update akPV1
-        public async Task<JsonResult> UpdateAkPV1(AkPV1 akPV1)
-        {
-
-            try
-            {
-                AkPV1 data = await _akPV1Repo.GetBy2Id(akPV1.AkPVId, akPV1.AkCartaId);
-
-                return Json(new { result = "OK", record = data });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-
-        public async Task<JsonResult> SaveUpdateAkPV1(AkPV1 akPV1)
-        {
-
-            try
-            {
-
-                AkPV1 akB1 = await _akPV1Repo.GetById(akPV1.Id);
-
-                decimal originalAmount = akB1.Amaun;
-                var user = await _userManager.GetUserAsync(User);
-
-                akB1.Amaun = akPV1.Amaun;
-                _context.AkPV1.Update(akB1);
-
-                // update total akBelian with date updated and userUpdated
-                var akPV = await _akPVRepo.GetById(akPV1.AkPVId);
-                decimal total = 0;
-
-                total = akPV.Jumlah - originalAmount + akB1.Amaun;
-                akPV.Jumlah = total;
-                akPV.UserIdKemaskini = user.UserName;
-                akPV.TarKemaskini = DateTime.Now;
-                await _akPVRepo.Update(akPV);
-                // update total akTerima with date updated and userUpdated end
-
-                await _context.SaveChangesAsync();
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-        // update update akBelian1 end
-
-        // get cart for updated akBelian1
-        public async Task<JsonResult> GetAkPV1(AkPV1 akPV1)
-        {
-            try
-            {
-                AkPV data = await _context.AkPV
-                    .Include(x => x.AkPV1).ThenInclude(x => x.AkCarta)
-                    .FirstOrDefaultAsync(x => x.Id == akPV1.AkPVId);
-
-                return Json(new { result = "OK", data = data });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-        // get cart for updated akBelian1 end
-
-        // update create akPV2
-        public async Task<JsonResult> InsertUpdateAkPV2(AkPV2 akPV2)
-        {
-
-            try
-            {
-                if (akPV2 != null || akPV2.Amaun != 0)
-                {
-                    var akBelian = _context.AkBelian.FirstOrDefault(x => x.Id == akPV2.AkBelianId);
-                    var user = await _userManager.GetUserAsync(User);
-
-                    akPV2.AkBelian = akBelian;
-                    await _akPV2Repo.Insert(akPV2);
-
-                    await _context.SaveChangesAsync();
-                }
-
-
-
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-        // update create akPV2 end
-
-        // update remove akPV2
-        public async Task<JsonResult> RemoveUpdateAkPV2(AkPV2 akPV2)
-        {
-
-            try
-            {
-                if (akPV2 != null)
-                {
-                    var akT2 = await _context.AkPV2.Include(b => b.AkBelian).ThenInclude(b => b.AkPO).FirstOrDefaultAsync(x => x.AkBelianId == akPV2.AkBelianId && x.AkPVId == akPV2.AkPVId);
-                    var user = await _userManager.GetUserAsync(User);
-
-                    _context.AkPV2.Remove(akT2);
-
-                    await _context.SaveChangesAsync();
-
-                }
-
-
-
-                return Json(new { result = "OK" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "ERROR", message = ex.Message });
-            }
-        }
-        // update remove akBelian2 end
 
         // POST: AkPV/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -2847,7 +2731,8 @@ namespace MSNK.Controllers
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
-            JBank bankPelbagai = new JBank(){
+            JBank bankPelbagai = new JBank()
+            {
                 Kod = "-",
                 Nama = "-"
             };
@@ -2881,14 +2766,14 @@ namespace MSNK.Controllers
             var namaBankPenerima = "";
 
             decimal jumlahInbois = 0;
-            decimal jumlahPO = 0;
+            decimal jumlahPOInden = 0;
 
             CompanyDetails company = await _userService.GetCompanyDetails();
             data.Username = namaUser.Nama;
             data.Penyemak = penyemak;
             data.Pelulus = pelulus;
             data.AkPV = akPV;
-            
+
             data.JumlahDalamPerkataan = jumlahDalamPerkataan;
             data.AkPV2 = akPV.AkPV2;
             data.IsAKB = akPV.IsAKB;
@@ -2906,11 +2791,16 @@ namespace MSNK.Controllers
                         jumlahInbois += item.Amaun;
                         if (item.AkBelian.AkPO != null)
                         {
-                            jumlahPO += item.AkBelian.AkPO.Jumlah;
+                            jumlahPOInden += item.AkBelian.AkPO.Jumlah;
+                        }
+
+                        if (item.AkBelian.AkInden != null)
+                        {
+                            jumlahPOInden += item.AkBelian.AkInden.Jumlah;
                         }
                     }
                     data.jumlahInbois = jumlahInbois;
-                    data.jumlahPO = jumlahPO;
+                    data.jumlahPOInden = jumlahPOInden;
                     break;
                 //pekerja
                 case KategoriPenerima.Pekerja:
@@ -3072,6 +2962,7 @@ namespace MSNK.Controllers
 
                     //duplicate id error
                     TempData[SD.Error] = "Data gagal diluluskan.";
+                    return RedirectToAction(nameof(Index));
 
                 }
                 else
@@ -3113,92 +3004,108 @@ namespace MSNK.Controllers
                         //insert into AbBukuVot
                         if (!item.AkCarta.Kod.Contains("L", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (akPV.IsAKB == true)
+                            // check if akaun bank bypass peruntukan or not
+                            var akBank = _context.AkBank.FirstOrDefault(b => b.Id == akPV.AkBankId);
+                            if (akBank != null)
                             {
-
-                                if (AppInfo == null)
+                                // if akaun bank is in bajet, check peruntukan
+                                if (akBank.IsBajet == true)
                                 {
-                                    // check 
-                                    var CartaDgnPeruntukan = await _context.AkCarta
-                                    .Where(d => d.Id == item.AkCartaId && d.IsBajet == true)
-                                    .FirstOrDefaultAsync();
-
-                                    if (CartaDgnPeruntukan != null)
+                                    if (akPV.IsAKB == true)
                                     {
-                                        // check for baki peruntukan
-                                        //if ((akPV.FlKategoriPenerima != 1) || (akPV.FlKategoriPenerima != 3) || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false))
-                                        if ((akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == 0)
-                                    || (akPV.FlKategoriPenerima == KategoriPenerima.Pembekal && akPV.denganTanggungan == false)
-                                    || (akPV.FlJenisBaucer == JenisBaucer.Gaji))
+
+                                        if (AppInfo == null)
                                         {
-                                            bool IsExistAbBukuVot = await _context.AbBukuVot
-                                                .Where(x => x.Tahun == akPV.Tahun && x.VotId == item.AkCartaId && x.JKWId == akPV.JKWId && x.JBahagianId == akPV.JBahagianId)
-                                                .AnyAsync();
 
-                                            if (IsExistAbBukuVot == true)
+                                            // check 
+                                            var CartaDgnPeruntukan = await _context.AkCarta
+                                            .Where(d => d.Id == item.AkCartaId && d.IsBajet == true)
+                                            .FirstOrDefaultAsync();
+
+                                            if (CartaDgnPeruntukan != null)
                                             {
-                                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akPV.Tahun, item.AkCartaId, akPV.JKWId, akPV.JBahagianId);
-
-                                                if (sum < item.Amaun)
+                                                // check for baki peruntukan
+                                                //if ((akPV.FlKategoriPenerima != 1) || (akPV.FlKategoriPenerima != 3) || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false))
+                                                if ((akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == 0)
+                                            || (akPV.FlKategoriPenerima == KategoriPenerima.Pembekal && akPV.denganTanggungan == false)
+                                            || (akPV.FlJenisBaucer == JenisBaucer.Gaji))
                                                 {
-                                                    TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
-                                                    return RedirectToAction(nameof(Index));
+                                                    bool IsExistAbBukuVot = await _context.AbBukuVot
+                                                        .Where(x => x.Tahun == akPV.Tahun && x.VotId == item.AkCartaId && x.JKWId == akPV.JKWId && x.JBahagianId == akPV.JBahagianId)
+                                                        .AnyAsync();
+
+                                                    if (IsExistAbBukuVot == true)
+                                                    {
+                                                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akPV.Tahun, item.AkCartaId, akPV.JKWId, akPV.JBahagianId);
+
+                                                        if (sum < item.Amaun)
+                                                        {
+                                                            TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
+                                                            return RedirectToAction(nameof(Index));
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
+                                                        return RedirectToAction(nameof(Index));
+                                                    }
+
                                                 }
-                                            }
-                                            else
-                                            {
-                                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
-                                                return RedirectToAction(nameof(Index));
+
+                                                // check for baki peruntukan end
                                             }
 
                                         }
-
-                                        // check for baki peruntukan end
                                     }
+                                    else
+                                    {
+                                        // check 
+                                        var CartaDgnPeruntukan = await _context.AkCarta
+                                        .Where(d => d.Id == item.AkCartaId && d.IsBajet == true)
+                                        .FirstOrDefaultAsync();
 
+                                        if (CartaDgnPeruntukan != null)
+                                        {
+                                            // check for baki peruntukan
+                                            //if ((akPV.FlKategoriPenerima != 1) || (akPV.FlKategoriPenerima != 3) || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false))
+                                            if ((akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == 0)
+                                        || (akPV.FlKategoriPenerima == KategoriPenerima.Pembekal && akPV.denganTanggungan == false)
+                                        || (akPV.FlJenisBaucer == JenisBaucer.Gaji))
+                                            {
+                                                bool IsExistAbBukuVot = await _context.AbBukuVot
+                                                    .Where(x => x.Tahun == akPV.Tahun && x.VotId == item.AkCartaId && x.JKWId == akPV.JKWId && x.JBahagianId == akPV.JBahagianId)
+                                                    .AnyAsync();
+
+                                                if (IsExistAbBukuVot == true)
+                                                {
+                                                    decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akPV.Tahun, item.AkCartaId, akPV.JKWId, akPV.JBahagianId);
+
+                                                    if (sum < item.Amaun)
+                                                    {
+                                                        TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
+                                                        return RedirectToAction(nameof(Index));
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
+                                                    return RedirectToAction(nameof(Index));
+                                                }
+
+                                            }
+
+                                            // check for baki peruntukan end
+                                        }
+
+                                    }
                                 }
                             }
                             else
                             {
-                                // check 
-                                var CartaDgnPeruntukan = await _context.AkCarta
-                                .Where(d => d.Id == item.AkCartaId && d.IsBajet == true)
-                                .FirstOrDefaultAsync();
-
-                                if (CartaDgnPeruntukan != null)
-                                {
-                                    // check for baki peruntukan
-                                    //if ((akPV.FlKategoriPenerima != 1) || (akPV.FlKategoriPenerima != 3) || (akPV.FlKategoriPenerima == 1 && akPV.denganTanggungan == false))
-                                    if ((akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == 0)
-                                || (akPV.FlKategoriPenerima == KategoriPenerima.Pembekal && akPV.denganTanggungan == false)
-                                || (akPV.FlJenisBaucer == JenisBaucer.Gaji))
-                                    {
-                                        bool IsExistAbBukuVot = await _context.AbBukuVot
-                                            .Where(x => x.Tahun == akPV.Tahun && x.VotId == item.AkCartaId && x.JKWId == akPV.JKWId && x.JBahagianId == akPV.JBahagianId)
-                                            .AnyAsync();
-
-                                        if (IsExistAbBukuVot == true)
-                                        {
-                                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akPV.Tahun, item.AkCartaId, akPV.JKWId, akPV.JBahagianId);
-
-                                            if (sum < item.Amaun)
-                                            {
-                                                TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
-                                                return RedirectToAction(nameof(Index));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
-                                            return RedirectToAction(nameof(Index));
-                                        }
-
-                                    }
-
-                                    // check for baki peruntukan end
-                                }
-
+                                TempData[SD.Error] = "akaun bank tidak diisi.";
+                                return RedirectToAction(nameof(Index));
                             }
+                            // check peruntukan end
 
                             if (akPV.IsAKB == false)
                             {
@@ -3314,7 +3221,7 @@ namespace MSNK.Controllers
 
 
                                 // insert into AbBukuVot end
-                            } 
+                            }
                         }
                         //insert into AbBukuVot end
 
@@ -3360,7 +3267,7 @@ namespace MSNK.Controllers
                                 await _akTunaiLejarRepo.Insert(akTunaiLejar);
                             }
 
-                            
+
                             if (akPV.FlJenisBaucer == JenisBaucer.Rekupan)
                             {
                                 //find latest baki with noRekup and AkTunaiRuncitId
@@ -3465,9 +3372,9 @@ namespace MSNK.Controllers
                                 };
 
                                 await _akAkaunRepo.Insert(akAObjek);
-                                
+
                             }
-                            
+
                         }
                         else
                         {
@@ -3503,7 +3410,7 @@ namespace MSNK.Controllers
                             await _akAkaunRepo.Insert(akAObjek);
                         }
                         // insert into akAkaun end
- 
+
                     }
 
                     akPV.FlStatusLulus = 1;
@@ -3664,7 +3571,7 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    
+
                     obj.FlBatal = 1;
                     obj.TarBatal = DateTime.Now;
 
@@ -3726,5 +3633,209 @@ namespace MSNK.Controllers
             TempData[SD.Success] = "Data berjaya dikembalikan..!";
             return RedirectToAction(nameof(Index));
         }
+
+        // -- unused --
+        // update add akPV1
+        public async Task<JsonResult> InsertUpdateAkPV1(AkPV1 akPV1)
+        {
+
+            try
+            {
+                if (akPV1 != null || akPV1.Amaun != 0)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akPV1.AkCartaId);
+                    akPV1.AkCarta = akCarta;
+
+                    await _akPV1Repo.Insert(akPV1);
+
+                    decimal total = 0;
+
+                    AkPV akPV = await _akPVRepo.GetById(akPV1.AkPVId);
+
+                    total = akPV.Jumlah + akPV1.Amaun;
+
+                    akPV.Jumlah = total;
+                    akPV.UserIdKemaskini = user.UserName;
+
+                    await _akPVRepo.Update(akPV);
+
+                    await _context.SaveChangesAsync();
+
+                }
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update add akPV1 end
+
+        // update remove akPV1
+        public async Task<JsonResult> RemoveUpdateAkPV1(AkPV1 akPV1)
+        {
+
+            try
+            {
+                if (akPV1 != null)
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    var akB1 = await _context.AkPV1.FirstOrDefaultAsync(x => x.AkCartaId == akPV1.AkCartaId && x.AkPVId == akPV1.AkPVId);
+                    _context.AkPV1.Remove(akB1);
+
+                    decimal total = 0;
+
+                    AkPV akPV = await _akPVRepo.GetById(akPV1.AkPVId);
+
+                    total = akPV.Jumlah - akB1.Amaun;
+
+                    akPV.Jumlah = total;
+                    akPV.UserIdKemaskini = user.UserName;
+                    akPV.TarKemaskini = DateTime.Now;
+                    await _akPVRepo.Update(akPV);
+
+                    await _context.SaveChangesAsync();
+
+
+                }
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update remove akPV1 end
+
+        // update update akPV1
+        public async Task<JsonResult> UpdateAkPV1(AkPV1 akPV1)
+        {
+
+            try
+            {
+                AkPV1 data = await _akPV1Repo.GetBy2Id(akPV1.AkPVId, akPV1.AkCartaId);
+
+                return Json(new { result = "OK", record = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public async Task<JsonResult> SaveUpdateAkPV1(AkPV1 akPV1)
+        {
+
+            try
+            {
+
+                AkPV1 akB1 = await _akPV1Repo.GetById(akPV1.Id);
+
+                decimal originalAmount = akB1.Amaun;
+                var user = await _userManager.GetUserAsync(User);
+
+                akB1.Amaun = akPV1.Amaun;
+                _context.AkPV1.Update(akB1);
+
+                // update total akBelian with date updated and userUpdated
+                var akPV = await _akPVRepo.GetById(akPV1.AkPVId);
+                decimal total = 0;
+
+                total = akPV.Jumlah - originalAmount + akB1.Amaun;
+                akPV.Jumlah = total;
+                akPV.UserIdKemaskini = user.UserName;
+                akPV.TarKemaskini = DateTime.Now;
+                await _akPVRepo.Update(akPV);
+                // update total akTerima with date updated and userUpdated end
+
+                await _context.SaveChangesAsync();
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update update akBelian1 end
+
+        // get cart for updated akBelian1
+        public async Task<JsonResult> GetAkPV1(AkPV1 akPV1)
+        {
+            try
+            {
+                AkPV data = await _context.AkPV
+                    .Include(x => x.AkPV1).ThenInclude(x => x.AkCarta)
+                    .FirstOrDefaultAsync(x => x.Id == akPV1.AkPVId);
+
+                return Json(new { result = "OK", data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // get cart for updated akBelian1 end
+
+        // update create akPV2
+        public async Task<JsonResult> InsertUpdateAkPV2(AkPV2 akPV2)
+        {
+
+            try
+            {
+                if (akPV2 != null || akPV2.Amaun != 0)
+                {
+                    var akBelian = _context.AkBelian.FirstOrDefault(x => x.Id == akPV2.AkBelianId);
+                    var user = await _userManager.GetUserAsync(User);
+
+                    akPV2.AkBelian = akBelian;
+                    await _akPV2Repo.Insert(akPV2);
+
+                    await _context.SaveChangesAsync();
+                }
+
+
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update create akPV2 end
+
+        // update remove akPV2
+        public async Task<JsonResult> RemoveUpdateAkPV2(AkPV2 akPV2)
+        {
+
+            try
+            {
+                if (akPV2 != null)
+                {
+                    var akT2 = await _context.AkPV2.Include(b => b.AkBelian).ThenInclude(b => b.AkPO).FirstOrDefaultAsync(x => x.AkBelianId == akPV2.AkBelianId && x.AkPVId == akPV2.AkPVId);
+                    var user = await _userManager.GetUserAsync(User);
+
+                    _context.AkPV2.Remove(akT2);
+
+                    await _context.SaveChangesAsync();
+
+                }
+
+
+
+                return Json(new { result = "OK" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+        // update remove akBelian2 end
     }
 }

@@ -56,6 +56,19 @@
             <dd class="col-sm-9">
                 @Html.DisplayFor(model => model.JBank.Nama)
             </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.IsBajet)
+            </dt>
+            <dd class="col-sm-9">
+                @if (Model.IsBajet == true)
+                {
+                    <text>YA</text>
+                }
+                else
+                {
+                    <text>TIDAK</text>
+                }
+            </dd>
         </dl>
         <hr />
         <div class="form-group">

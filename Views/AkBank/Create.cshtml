@@ -73,10 +73,25 @@
                 </select>
                 <span asp-validation-for="AkCartaId" class="text-danger"></span>
             </div>
+            <br />
+            <div class="form-group">
+                <div class="card mb-2">
+                    <div class="card-body pl-3 pr-3 pt-2">
+
+                        <label class="control-label">Maklumat Tambahan : </label>
+                        <div class="custom-control custom-radio">
+                            <input type="checkbox" data-val="true" id="Penyertaan" name="IsBajet" value="true" checked>
+                            <label class="control-label">Akaun bank ini terlibat dengan peruntukan</label>
+                            <input asp-for="IsBajet" hidden value="false">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             <hr />
             <div class="form-group">
                 <input type="submit" value="Simpan" class="btn ac-primary btn-sm" />
-                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
         </form>
     </div>

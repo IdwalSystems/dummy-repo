@@ -16,7 +16,7 @@ namespace MSNK.Models.Modules.PrintModel
         public string NamaBankPenerima { get; set; }
         //public string NoAkaunBank { get; set; }
         public string NoAkaunBankPenerima { get; set; }
-        public decimal jumlahPO { get; set; }
+        public decimal jumlahPOInden { get; set; }
         public decimal jumlahInbois { get; set; }
         public AkPV AkPV { get; set; }
         public new ICollection<AkPV2> AkPV2 { get; set; }

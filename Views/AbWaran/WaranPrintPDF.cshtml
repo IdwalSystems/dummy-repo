@@ -73,8 +73,8 @@
         }
 
         @*<h6 class="mb-0">NO PO:</h6>
-        <h6 class="mb-0 ">@Model.AkPO.NoPO</h6>
-        <h6 class="mb-0">TARIKH PESANAN TEMPATAN: @Html.DisplayFor(x => x.AkPO.Tarikh, "{0:dd/MM/yyyy}")</h6>*@
+            <h6 class="mb-0 ">@Model.AkPO.NoPO</h6>
+            <h6 class="mb-0">TARIKH PESANAN TEMPATAN: @Html.DisplayFor(x => x.AkPO.Tarikh, "{0:dd/MM/yyyy}")</h6>*@
     </div>
 </div>
 <br />
@@ -103,8 +103,22 @@
     </table>
 </div>
 
-<br />
-
+<table class="table table-bordered table-sm topic">
+    <tbody class="text-left">
+        <tr>
+            <td class="font-weight-bold">Catatan</td>
+            <td width="90%">@Model.AbWaran.Catatan</td>
+        </tr>
+    </tbody>
+</table>
+@*<div class="row flexrow mb-1 ">
+    <div class="col-1 text-uppercase">
+        <p class="mb-0">Catatan</p>
+    </div>
+    <div class="col-11 text-uppercase">
+        <p class="mb-0">: @Model.AbWaran.Catatan</p>
+    </div>
+</div>*@
 <table class="table table-bordered table-sm topic">
     <thead class="text-center">
         <tr>
@@ -148,6 +162,8 @@
     </tfoot>
 </table>
 
+
+
 <br />
 
 <div class="table-responsive-sm mb-0">
@@ -176,7 +192,7 @@
                 @if (string.IsNullOrEmpty(Model.TandatanganSedia))
                 {
                     <td class="text-center" height="50px"></td>
-                } 
+                }
                 else
                 {
                     <td class="text-center" height="50px">
@@ -185,7 +201,7 @@
                         </span>
                     </td>
                 }
-                
+
                 <td class="text-center" height="50px"></td>
                 <td class="text-center" height="50px"></td>
 

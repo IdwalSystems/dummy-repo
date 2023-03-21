@@ -3,6 +3,7 @@ using MSNK.Data;
 using MSNK.Infrastructure;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.ViewModel;
+using MSNK.Models.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -93,7 +94,9 @@ namespace MSNK.Models.Modules.EFRepository
         {
             var company = await _userService.GetCompanyDetails();
 
-            List<AkAkaun> akAkaun = await context.AkAkaun.Where(b => b.Tarikh > company.TarMula
+            var startingYear = company.TarMula.Year;
+
+            List<AkAkaun> akAkaun = await context.AkAkaun.Where(b => b.Tarikh.Year == startingYear
                 && b.Tarikh < TarMula).ToListAsync();
 
             if (JKWId != 0)
@@ -121,7 +124,7 @@ namespace MSNK.Models.Modules.EFRepository
             var bukuTunai = new List<AbBukuTunaiViewModel>();
 
             var company = await _userService.GetCompanyDetails();
-
+            var startingYear = company.TarMula.Year;
             //var previousBalance = await GetCarryPreviousBalanceBasedOnStartingDate(akBankId, JKWId, JBahagianId, TarMula);
 
             // search CartaId from AkBankId
@@ -131,7 +134,7 @@ namespace MSNK.Models.Modules.EFRepository
             List<AkAkaun> bukuTunaiPV = await context.AkAkaun
                 .Include(b => b.AkCarta2)
                 .Where(b => b.NoRujukan.Contains("PV")
-                && b.Tarikh >= company.TarMula
+                && b.Tarikh.Year >= startingYear
                 && b.Tarikh >= TarMula && b.Tarikh <= TarHingga
                 && b.AkCartaId1 == akBank.AkCartaId
                 && b.Kredit != 0).OrderBy(b => b.Tarikh).ToListAsync();
@@ -171,7 +174,7 @@ namespace MSNK.Models.Modules.EFRepository
             List<AkAkaun> bukuTunaiResit = await context.AkAkaun
                 .Include(b => b.AkCarta2)
                 .Where(b => b.NoRujukan.Contains("RR")
-                && b.Tarikh >= company.TarMula
+                && b.Tarikh.Year >= startingYear
                 && b.Tarikh >= TarMula && b.Tarikh <= TarHingga
                 && b.AkCartaId1 == akBank.AkCartaId
                 && b.Debit != 0).OrderBy(b => b.Tarikh).ToListAsync();
@@ -211,7 +214,7 @@ namespace MSNK.Models.Modules.EFRepository
             List<AkAkaun> bukuTunaiJurnal = await context.AkAkaun
                 .Include(b => b.AkCarta2)
                 .Where(b => b.NoRujukan.Contains("JU")
-                && b.Tarikh >= company.TarMula
+                && b.Tarikh.Year >= startingYear
                 && b.Tarikh >= TarMula && b.Tarikh <= TarHingga
                 && b.AkCartaId1 == akBank.AkCartaId).OrderBy(b => b.Tarikh).ToListAsync();
 
@@ -277,14 +280,11 @@ namespace MSNK.Models.Modules.EFRepository
         {
             List<AbAlirTunaiViewModel> bakiAwal = new List<AbAlirTunaiViewModel>();
 
-            var company = await _userService.GetCompanyDetails();
-
             var akBank = await context.AkBank.Where(b => b.Id == akBankId).FirstOrDefaultAsync();
 
             // Masuk
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                .Where(b => b.AkCartaId1 == akBank.AkCartaId
-                && b.Tarikh >= company.TarMula && b.Tarikh.Year <= int.Parse(Tahun))
+                .Where(b => b.AkCartaId1 == akBank.AkCartaId && b.Tarikh.Year <= int.Parse(Tahun))
                 .ToList();
 
             if (JKWId != 0)
@@ -408,8 +408,7 @@ namespace MSNK.Models.Modules.EFRepository
 
             // Keluar
             List<AkAkaun> akAkaunK = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                .Where(b => b.AkCartaId2 == akBank.AkCartaId
-                && b.Tarikh >= company.TarMula && b.Tarikh.Year <= int.Parse(Tahun)
+                .Where(b => b.AkCartaId2 == akBank.AkCartaId && b.Tarikh.Year <= int.Parse(Tahun)
                 && b.Kredit != 0).ToList();
 
             if (JKWId != 0)
@@ -558,12 +557,10 @@ namespace MSNK.Models.Modules.EFRepository
         {
             List<AbAlirTunaiViewModel> tunaiMasuk = new List<AbAlirTunaiViewModel>();
 
-            var company = await _userService.GetCompanyDetails();
             var akBank = await context.AkBank.Where(b => b.Id == akBankId).FirstOrDefaultAsync();
 
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
                 .Where(b => b.AkCartaId1 == akBank.AkCartaId
-                && b.Tarikh >= company.TarMula
                 && b.Tarikh.Year == int.Parse(Tahun)
                 && b.Debit != 0).ToList();
 
@@ -685,12 +682,10 @@ namespace MSNK.Models.Modules.EFRepository
         {
             List<AbAlirTunaiViewModel> tunaiKeluar = new List<AbAlirTunaiViewModel>();
 
-            var company = await _userService.GetCompanyDetails();
             var akBank = await context.AkBank.Where(b => b.Id == akBankId).FirstOrDefaultAsync();
 
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
                 .Where(b => b.AkCartaId1 == akBank.AkCartaId
-                && b.Tarikh >= company.TarMula
                 && b.Tarikh.Year == int.Parse(Tahun)
                 && b.Kredit != 0).ToList();
 
@@ -811,10 +806,8 @@ namespace MSNK.Models.Modules.EFRepository
         {
             List<AbTimbangDugaViewModel> timbangDuga = new List<AbTimbangDugaViewModel>();
 
-            var company = await _userService.GetCompanyDetails();
-
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                .Where(b => b.Tarikh >= company.TarMula && b.Tarikh <= TarHingga).ToList();
+                .Where(b => b.Tarikh <= TarHingga).ToList();
 
             if (JKWId != 0)
             {
@@ -835,47 +828,62 @@ namespace MSNK.Models.Modules.EFRepository
                 {
                     if (carta.DebitKredit == "D")
                     {
-                        if (a.AkCarta1.Kod == "B27299")
+                        //if (a.AkCarta1.Kod == "B27299")
+                        //{
+                        //    var test = a.AkCarta1.Kod;
+                        //}
+                        if (a.Debit != 0)
                         {
-                            var test = a.AkCarta1.Kod;
+                            timbangDuga.Add(new AbTimbangDugaViewModel()
+                            {
+                                NoAkaun = a.AkCarta1.Kod,
+                                NamaAkaun = a.AkCarta1.Perihal,
+                                DebitKredit = "D - DEBIT",
+                                Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
+                                Debit = a.Debit
+                            });
                         }
-                        timbangDuga.Add(new AbTimbangDugaViewModel()
+                        else
                         {
-                            NoAkaun = a.AkCarta1.Kod,
-                            NamaAkaun = a.AkCarta1.Perihal,
-                            DebitKredit = "D - DEBIT",
-                            Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
-                            Debit = a.Debit
-                        });
+                            timbangDuga.Add(new AbTimbangDugaViewModel()
+                            {
+                                NoAkaun = a.AkCarta1.Kod,
+                                NamaAkaun = a.AkCarta1.Perihal,
+                                DebitKredit = "D - DEBIT",
+                                Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
+                                Debit = a.Kredit
+                            });
+                        }
 
-                        timbangDuga.Add(new AbTimbangDugaViewModel()
-                        {
-                            NoAkaun = a.AkCarta1.Kod,
-                            NamaAkaun = a.AkCarta1.Perihal,
-                            DebitKredit = "D - DEBIT",
-                            Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
-                            Debit = -a.Kredit
-                        });
+                        
                     }
                     else
                     {
-                        timbangDuga.Add(new AbTimbangDugaViewModel()
+                        if (a.Kredit != 0)
                         {
-                            NoAkaun = a.AkCarta1.Kod,
-                            NamaAkaun = a.AkCarta1.Perihal,
-                            DebitKredit = "K - KREDIT",
-                            Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
-                            Kredit = a.Kredit
-                        });
+                            timbangDuga.Add(new AbTimbangDugaViewModel()
+                            {
+                                NoAkaun = a.AkCarta1.Kod,
+                                NamaAkaun = a.AkCarta1.Perihal,
+                                DebitKredit = "K - KREDIT",
+                                Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
+                                Kredit = a.Kredit
+                            });
+                        }
+                        else
+                        {
+                            timbangDuga.Add(new AbTimbangDugaViewModel()
+                            {
+                                NoAkaun = a.AkCarta1.Kod,
+                                NamaAkaun = a.AkCarta1.Perihal,
+                                DebitKredit = "K - KREDIT",
+                                Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
+                                Kredit = a.Debit
+                            });
+                        }
+                        
 
-                        timbangDuga.Add(new AbTimbangDugaViewModel()
-                        {
-                            NoAkaun = a.AkCarta1.Kod,
-                            NamaAkaun = a.AkCarta1.Perihal,
-                            DebitKredit = "K - KREDIT",
-                            Jenis = carta.JJenis.Kod + " - " + carta.JJenis.Nama,
-                            Kredit = -a.Debit
-                        });
+                        
                     }
                 }
             }
@@ -895,11 +903,8 @@ namespace MSNK.Models.Modules.EFRepository
         {
             List<AbUntungRugiViewModel> untungRugi = new List<AbUntungRugiViewModel>();
 
-            var company = await _userService.GetCompanyDetails();
-
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                .Where(b => b.Tarikh >= company.TarMula
-                && b.Tarikh >= TarDari && b.Tarikh <= TarHingga).ToList();
+                .Where(b => b.Tarikh >= TarDari && b.Tarikh <= TarHingga).ToList();
 
             if (JKWId != 0)
             {
@@ -955,10 +960,8 @@ namespace MSNK.Models.Modules.EFRepository
         {
             List<AbKunciKiraKiraViewModel> aset = new List<AbKunciKiraKiraViewModel>();
 
-            var company = await _userService.GetCompanyDetails();
-
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                .Where(b => b.Tarikh >= company.TarMula && b.Tarikh <= TarHingga).ToList();
+                .Where(b => b.Tarikh <= TarHingga).ToList();
 
             if (JKWId != 0)
             {
@@ -1048,6 +1051,7 @@ namespace MSNK.Models.Modules.EFRepository
                 }).OrderBy(b => b.Order).ThenBy(b => b.NoAkaun).ToList();
 
         }
+
     }
 }
 

@@ -11,7 +11,7 @@ namespace MSNK.Models.Modules
 {
     public class AkCarta : AppLogHelper, ISoftDelete
     {
-        
+
         //field
         public int Id { get; set; }
         [MaxLength(6)]
@@ -40,8 +40,7 @@ namespace MSNK.Models.Modules
         public decimal Baki { get; set; }
         // cek if kod akaun is in bajet or not
         [Display(Name = "Tidak Dikira Dalam Peruntukan")]
-        [DefaultValue(true)]
-        public bool IsBajet { get; set; }
+        public bool IsBajet { get; set; } = true;
         //field end
 
         //Relationship
@@ -89,5 +88,9 @@ namespace MSNK.Models.Modules
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
         //soft delete end
+        public AkCarta()
+        {
+            IsBajet = true;
+        }
     }
 }

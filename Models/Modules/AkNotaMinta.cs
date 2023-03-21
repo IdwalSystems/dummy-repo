@@ -15,6 +15,7 @@ namespace MSNK.Models.Modules
         [Required(ErrorMessage = "Tahun diperlukan")]
         [MaxLength(4)]
         [RegularExpression(@"^[\d+]*$", ErrorMessage = "Nombor sahaja dibenarkan")]
+        [DisplayName("Tahun Bel.")]
         public string Tahun { get; set; }
         [Required(ErrorMessage = "Tarikh diperlukan")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]

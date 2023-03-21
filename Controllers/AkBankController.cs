@@ -141,6 +141,7 @@ namespace MSNK.Controllers
                     akB.UserId = user.UserName;
                     akB.TarMasuk = DateTime.Now;
                     akB.SuPekerjaMasukId = pekerjaId;
+                    akB.IsBajet = akBank.IsBajet;
 
                     await _akBankRepo.Insert(akB);
 

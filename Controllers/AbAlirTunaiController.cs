@@ -41,14 +41,8 @@ namespace MSNK.Controllers
         {
             var alirTunai = new List<AbAlirTunaiViewModel>();
 
-            PopulateSelectList(form.AkBankId, form.JBahagianId, form.Tahun );
+            PopulateSelectList(form.JKWId, form.AkBankId, form.JBahagianId, form.Tahun );
 
-            if (form.JBahagianId != 0)
-            {
-                int jKWId = _context.JBahagian.FirstOrDefault(b => b.Id == form.JBahagianId).JKWId;
-
-                form.JKWId = jKWId;
-            }
             var date1 = DateTime.Now.Year.ToString() + "-01-01T00:00:01";
             var date2 = DateTime.Now.Year.ToString() + "-12-31T23:59:59";
             ViewData["Tahun"] = DateTime.Now.Year.ToString();
@@ -94,7 +88,7 @@ namespace MSNK.Controllers
             return View(alirTunai);
         }
 
-        public void PopulateSelectList(int AkBankId, int JBahagianId, string Tahun)
+        public void PopulateSelectList(int AkBankId, int JKWId, int JBahagianId, string Tahun)
         {
             ViewBag.Tahun = Tahun;
 
@@ -128,6 +122,33 @@ namespace MSNK.Controllers
             }
             // populate list bank end
 
+            // populate list JKW
+            List<JKW> jKWList = _context.JKW.ToList();
+
+            var jKWSelect = new List<SelectListItem>();
+
+            if (jKWList != null)
+            {
+                foreach (var item in jKWList)
+                {
+                    jKWSelect.Add(new SelectListItem()
+                    {
+                        Text = item.Kod + " - " + item.Perihal,
+                        Value = item.Id.ToString()
+                    });
+                }
+                ViewBag.jKW = new SelectList(jKWSelect, "Value", "Text", JKWId);
+            }
+            else
+            {
+                jKWSelect.Add(new SelectListItem()
+                {
+                    Text = "-- Tiada Kump. Wang Berdaftar --",
+                    Value = ""
+                });
+                ViewBag.jKW = new SelectList(jKWSelect, "Value", "Text", 0);
+            }
+
             // populate list bahagian 
             List<JBahagian> akBahagianList = _context.JBahagian.Include(b => b.JKW).ToList();
 
@@ -135,14 +156,19 @@ namespace MSNK.Controllers
 
             if (akBahagianList != null)
             {
-                foreach (var item in akBahagianList)
+                bahagianSelect.Add(new SelectListItem()
                 {
-                    bahagianSelect.Add(new SelectListItem()
-                    {
-                        Text = item.Kod + " - " + item.Perihal ,
-                        Value = item.Id.ToString()
-                    });
-                }
+                    Text = "Semua",
+                    Value = "0"
+                });
+                //foreach (var item in akBahagianList)
+                //{
+                //    bahagianSelect.Add(new SelectListItem()
+                //    {
+                //        Text = item.Kod + " - " + item.Perihal ,
+                //        Value = item.Id.ToString()
+                //    });
+                //}
                 ViewBag.bahagian = new SelectList(bahagianSelect, "Value", "Text", JBahagianId);
 
             }
@@ -164,14 +190,8 @@ namespace MSNK.Controllers
         {
             var alirTunai = new List<AbAlirTunaiViewModel>();
 
-            PopulateSelectList(form.AkBankId, form.JBahagianId, form.Tahun);
+            PopulateSelectList(form.JKWId, form.AkBankId, form.JBahagianId, form.Tahun);
 
-            if (form.JBahagianId != 0)
-            {
-                int jKWId = _context.JBahagian.FirstOrDefault(b => b.Id == form.JBahagianId).JKWId;
-
-                form.JKWId = jKWId;
-            }
             var date1 = DateTime.Now.Year.ToString() + "-01-01T00:00:01";
             var date2 = DateTime.Now.Year.ToString() + "-12-31T23:59:59";
             ViewData["Tahun"] = DateTime.Now.Year.ToString();
@@ -216,9 +236,7 @@ namespace MSNK.Controllers
                     .Include(b => b.AkCarta)
                     .FirstOrDefaultAsync(b => b.Id == form.AkBankId);
 
-                var bahagian = await _context.JBahagian
-                    .Include(b => b.JKW)
-                    .FirstOrDefaultAsync(b => b.Id == form.JBahagianId);
+                var jkw = await _context.JKW.FirstOrDefaultAsync(b => b.Id == form.JKWId);
 
                 var company = await _userService.GetCompanyDetails();
 
@@ -227,7 +245,7 @@ namespace MSNK.Controllers
                 return new ViewAsPdf("AlirTunaiPrintPDF", alirTunai,
                     new ViewDataDictionary(ViewData)
                     {
-                        { "NamaBahagian", bahagian.Kod + " - " + bahagian.Perihal },
+                        { "NamaKW", jkw.Kod + " - " + jkw.Perihal },
                         { "NamaBank", bank.NoAkaun + " (" + bank.AkCarta.Kod + " - " + bank.AkCarta.Perihal +") "},
                         { "NamaSyarikat", company.NamaSyarikat },
                         { "AlamatSyarikat1", company.AlamatSyarikat1 },
@@ -249,7 +267,7 @@ namespace MSNK.Controllers
                 date2 = DateTime.Now.Year.ToString() + "-12-31T23:59:59";
                 ViewData["Tahun"] = DateTime.Now.Year.ToString();
 
-                PopulateSelectList(form.AkBankId, form.JBahagianId, form.Tahun);
+                PopulateSelectList(form.JKWId, form.AkBankId, form.JBahagianId, form.Tahun);
 
                 TempData[SD.Error] = "Akaun Bank Tidak Wujud.";
 

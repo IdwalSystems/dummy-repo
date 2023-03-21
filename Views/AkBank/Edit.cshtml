@@ -68,6 +68,23 @@
                     }
                 </select>
             </div>
+            <br />
+            <div class="form-group">
+                <div class="card mb-2">
+                    <div class="card-body pl-3 pr-3 pt-2">
+
+                        <label class="control-label">Maklumat Tambahan : </label>
+                        <div class="custom-control custom-radio">
+                            <div class="custom-control custom-radio">
+                                <input type="checkbox" data-val="true" id="IsBajet" asp-for="IsBajet">
+                                <label class="control-label">Akaun bank ini terlibat dengan peruntukan</label>
+                                <input type="hidden" name="IsBajet" value="false" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
             <hr />
             <div class="form-group">
                 <input type="submit" value="Simpan" class="btn ac-primary btn-sm" />

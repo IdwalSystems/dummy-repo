@@ -42,6 +42,17 @@
                         <div class="form-actions no-color mb-3">
                             <div class="form-row">
                                 <div class="col-md-2">
+                                    <label class="form-control-label">Kump. Wang</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="input-group mb-2 input-group-sm ">
+                                        <select class="form-control form-control-sm select2" name="JKWId" asp-items="@ViewBag.jKW" id="ddlJKW" required></select>
+                                        <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-2">
                                     <label class="form-control-label">Bahagian</label>
                                 </div>
                                 <div class="col-md-8">
@@ -246,6 +257,17 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="modal-body">
 
+                    <div class="form-row">
+                        <div class="col-sm-2">
+                            <label class="form-control-label">JKW</label>
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="mb-2 input-group-sm ">
+                                <select class="form-control form-control-sm select2" name="JKWId" asp-items="@ViewBag.jKW" id="ddlJKWPrint"></select>
+                                <label class="invalid-feedback">Sila isi ruangan ini.</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-row">
                         <div class="col-sm-2">
                             <label class="form-control-label">Bahagian</label>

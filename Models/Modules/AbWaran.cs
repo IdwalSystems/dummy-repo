@@ -16,7 +16,7 @@ namespace MSNK.Models.Modules
         [DisplayName("No Rujukan")]
         public string NoRujukan { get; set; }
         [MaxLength(4)]
-        [DisplayName("Tahun")]
+        [DisplayName("Tahun Bel.")]
         [Required(ErrorMessage = "Tahun diperlukan")]
         public string Tahun { get; set; }
         [Required(ErrorMessage = "Tarikh diperlukan")]
@@ -35,6 +35,8 @@ namespace MSNK.Models.Modules
         // Dalam Bahagian = 0; Antara Bahagian = 1;
         [DisplayName("Jenis Pindahan")]
         public int FlJenisPindahan { get; set; }
+
+        public string Catatan { get; set; }
         [DisplayName("Hapus")]
         [DefaultValue("0")]
         public int FlHapus { get; set; }
