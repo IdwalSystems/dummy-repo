@@ -107,7 +107,7 @@ namespace MSNK.Controllers
             {
                 bahagianSelect.Add(new SelectListItem()
                 {
-                    Text = "Semua",
+                    Text = "SEMUA",
                     Value = "0"
                 });
 

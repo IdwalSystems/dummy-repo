@@ -275,30 +275,22 @@ namespace MSNK.Models.Modules.EFRepository
             return bukuTunai.OrderBy(b => b.KeluarMasuk).ThenBy(b => b.TarMasuk).ThenBy(b => b.TarKeluar).ToList();
         }
 
-
-        public async Task<AbAlirTunaiViewModel> GetCarryPreviousBalanceEachStartingMonth(int akBankId, int? JKWId, int? JBahagianId, string Tahun)
+        public async Task<List<AbAlirTunaiViewModel>> GetCarryPreviousBalanceEachStartingMonthDebug(int akBankId, int? JKWId, int? JBahagianId, string Tahun)
         {
             List<AbAlirTunaiViewModel> bakiAwal = new List<AbAlirTunaiViewModel>();
 
+            var company = await _userService.GetCompanyDetails();
+
             var akBank = await context.AkBank.Where(b => b.Id == akBankId).FirstOrDefaultAsync();
 
-            // Masuk
+            DateTime untilDate = new DateTime(int.Parse(Tahun), 12, 31, 23, 59, 59);
+
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                .Where(b => b.AkCartaId1 == akBank.AkCartaId && b.Tarikh.Year <= int.Parse(Tahun))
-                .ToList();
+                .Where(b => b.AkCartaId1 == akBank.AkCartaId
+                && b.Tarikh > company.TarMula.AddYears(-1)
+                && b.Tarikh < untilDate
+                && b.Debit != 0).ToList();
 
-            if (JKWId != 0)
-            {
-                akAkaun =akAkaun.Where(b => b.JKWId == JKWId).ToList();
-            }
-                
-            
-
-            if (JBahagianId != 0)
-            {
-                akAkaun =akAkaun.Where(b => b.JBahagianId == JBahagianId).ToList();
-            }
-               
             decimal amaunJan = 0;
             decimal amaunFeb = 0;
             decimal amaunMac = 0;
@@ -314,74 +306,710 @@ namespace MSNK.Models.Modules.EFRepository
             decimal amaunJan2 = 0;
             decimal amaunJum = 0;
 
+            // Masuk
+            if (Tahun == company.TarMula.AddYears(-1).ToString("yyyy"))
+            {
+                akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
+                .Where(b => b.AkCartaId1 == akBank.AkCartaId
+                && b.Tarikh >= company.TarMula.AddYears(-1) && b.Tarikh < untilDate)
+                .ToList();
+            }
+
+
+            if (JKWId != 0)
+            {
+                akAkaun =akAkaun.Where(b => b.JKWId == JKWId).ToList();
+            }
+
+
+
+            if (JBahagianId != 0)
+            {
+                akAkaun =akAkaun.Where(b => b.JBahagianId == JBahagianId).ToList();
+            }
+
+
             foreach (var a in akAkaun)
             {
-                amaunJum += a.Debit;
+                //if (a.Tarikh.Year <= int.Parse(Tahun))
+                //{
+                if (a.AkCarta2 != null)
+                {
+                    if (a.AkCarta2.Kod == "B52201")
+                    {
+
+                    }
+                }
+                
+                //}
+                amaunJan = 0;
+                amaunFeb = 0;
+                amaunMac = 0;
+                amaunApr = 0;
+                amaunMei = 0;
+                amaunJun = 0;
+                amaunJul = 0;
+                amaunOgo = 0;
+                amaunSep = 0;
+                amaunOkt = 0;
+                amaunNov = 0;
+                amaunDis = 0;
+                amaunJan2 = 0;
+                amaunJum = 0;
 
                 DateTime jan = new DateTime(int.Parse(Tahun), 1, 1, 0, 0, 0);
-                if (a.Tarikh < jan)
+
+                if (a.Tarikh.Year < int.Parse(Tahun))
                 {
-                    amaunJan += a.Debit;
+                    amaunJan = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunFeb = a.Debit;
+                    amaunMac = a.Debit;
+                    amaunApr = a.Debit;
+                    amaunMei = a.Debit;
+                    amaunJun = a.Debit;
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
                 }
                 DateTime feb = new DateTime(int.Parse(Tahun), 2, 1, 0, 0, 0);
-                if (a.Tarikh < feb)
+                if (a.Tarikh.Month < feb.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunFeb += a.Debit;
+                    amaunFeb = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunMac = a.Debit;
+                    amaunApr = a.Debit;
+                    amaunMei = a.Debit;
+                    amaunJun = a.Debit;
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
                 }
                 DateTime mac = new DateTime(int.Parse(Tahun), 3, 1, 0, 0, 0);
-                if (a.Tarikh < mac)
+                if (a.Tarikh.Month < mac.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunMac += a.Debit;
+                    amaunMac = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunApr = a.Debit;
+                    amaunMei = a.Debit;
+                    amaunJun = a.Debit;
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
                 }
                 DateTime apr = new DateTime(int.Parse(Tahun), 4, 1, 0, 0, 0);
-                if (a.Tarikh < apr)
+                if (a.Tarikh.Month < apr.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunApr += a.Debit;
+                    amaunApr = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunMei = a.Debit;
+                    amaunJun = a.Debit;
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
                 }
                 DateTime mei = new DateTime(int.Parse(Tahun), 5, 1, 0, 0, 0);
-                if (a.Tarikh < mei)
+                if (a.Tarikh.Month < mei.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunMei += a.Debit;
+                    amaunMei = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunJun = a.Debit;
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
                 }
                 DateTime jun = new DateTime(int.Parse(Tahun), 6, 1, 0, 0, 0);
-                if (a.Tarikh < jun)
+                if (a.Tarikh.Month < jun.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunJun += a.Debit;
+                    amaunJun = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
                 }
                 DateTime jul = new DateTime(int.Parse(Tahun), 7, 1, 0, 0, 0);
-                if (a.Tarikh < jul)
+                if (a.Tarikh.Month < jul.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunJul += a.Debit;
+                    amaunJul = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
                 }
                 DateTime ogo = new DateTime(int.Parse(Tahun), 8, 1, 0, 0, 0);
-                if (a.Tarikh < ogo)
+                if (a.Tarikh.Month < ogo.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunOgo += a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
                 }
                 DateTime sep = new DateTime(int.Parse(Tahun), 9, 1, 0, 0, 0);
-                if (a.Tarikh < sep)
+                if (a.Tarikh.Month < sep.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunSep += a.Debit;
+                    amaunSep = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
                 }
                 DateTime okt = new DateTime(int.Parse(Tahun), 10, 1, 0, 0, 0);
-                if (a.Tarikh < okt)
+                if (a.Tarikh.Month < okt.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunOkt += a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
                 }
                 DateTime nov = new DateTime(int.Parse(Tahun), 11, 1, 0, 0, 0);
-                if (a.Tarikh < nov)
+                if (a.Tarikh.Month < nov.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunNov += a.Debit;
+                    amaunNov = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunDis = a.Debit;
                 }
                 DateTime dis = new DateTime(int.Parse(Tahun), 12, 1, 0, 0, 0);
-                if (a.Tarikh < dis)
+                if (a.Tarikh.Month < dis.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunDis += a.Debit;
+                    amaunDis = a.Debit;
+                    amaunJum = a.Debit;
                 }
                 DateTime jan2 = new DateTime(int.Parse(Tahun) + 1, 1, 1, 0, 0, 0);
-                if (a.Tarikh < jan2)
+                if (a.Tarikh.Month < jan2.Month && a.Tarikh.Year == int.Parse(Tahun) + 1)
                 {
-                    amaunJan2 += a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                bakiAwal.Add(new AbAlirTunaiViewModel
+                {
+                    NoAkaun = a.AkCarta2?.Kod ?? "",
+                    NamaAkaun = a.AkCarta2?.Perihal ?? "BAKI AWAL",
+                    Jan = amaunJan,
+                    Feb = amaunFeb,
+                    Mac = amaunMac,
+                    Apr = amaunApr,
+                    Mei = amaunMei,
+                    Jun = amaunJun,
+                    Jul = amaunJul,
+                    Ogo = amaunOgo,
+                    Sep = amaunSep,
+                    Okt = amaunOkt,
+                    Nov = amaunNov,
+                    Dis = amaunDis,
+                    Jan2 = amaunJan2,
+                    JumAkaun = amaunJum,
+                    KeluarMasuk = 0
+                });
+            }
+            // Masuk END
+
+            // Keluar
+            //List<AkAkaun> akAkaunK = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
+            //    .Where(b => b.AkCartaId1 == akBank.AkCartaId
+            //    && b.Tarikh > company.TarMula.AddYears(-1)
+            //    && b.Tarikh < untilDate
+            //    && b.Kredit != 0).ToList();
+
+            //if (JKWId != 0)
+            //{
+            //    akAkaunK =akAkaunK.Where(b => b.JKWId == JKWId).ToList();
+            //}
+
+
+
+            //if (JBahagianId != 0)
+            //{
+            //    akAkaunK =akAkaunK.Where(b => b.JBahagianId == JBahagianId).ToList();
+            //}
+
+            //foreach (var a in akAkaunK)
+            //{
+            //    amaunJan = 0;
+            //    amaunFeb = 0;
+            //    amaunMac = 0;
+            //    amaunApr = 0;
+            //    amaunMei = 0;
+            //    amaunJun = 0;
+            //    amaunJul = 0;
+            //    amaunOgo = 0;
+            //    amaunSep = 0;
+            //    amaunOkt = 0;
+            //    amaunNov = 0;
+            //    amaunDis = 0;
+            //    amaunJan2 = 0;
+            //    amaunJum = 0;
+
+            //    DateTime jan = new DateTime(int.Parse(Tahun), 1, 1, 0, 0, 0);
+
+            //    if (a.Tarikh.Year < int.Parse(Tahun))
+            //    {
+            //        amaunJan = -a.Kredit;
+            //        amaunJum = -a.Kredit;
+
+            //        amaunFeb = -a.Kredit;
+            //        amaunMac = -a.Kredit;
+            //        amaunApr = -a.Kredit;
+            //        amaunMei = -a.Kredit;
+            //        amaunJun = -a.Kredit;
+            //        amaunJul = -a.Kredit;
+            //        amaunOgo = -a.Kredit;
+            //        amaunSep = -a.Kredit;
+            //        amaunOkt = -a.Kredit;
+            //        amaunNov = -a.Kredit;
+            //        amaunDis = -a.Kredit;
+            //    }
+            //    DateTime feb = new DateTime(int.Parse(Tahun), 2, 1, 0, 0, 0);
+            //    if (a.Tarikh.Month < feb.Month && a.Tarikh.Year == int.Parse(Tahun))
+            //    {
+            //        amaunFeb = -a.Kredit;
+            //        amaunJum = -a.Kredit;
+
+            //        amaunMac = -a.Kredit;
+            //        amaunApr = -a.Kredit;
+            //        amaunMei = -a.Kredit;
+            //        amaunJun = -a.Kredit;
+            //        amaunJul = -a.Kredit;
+            //        amaunOgo = -a.Kredit;
+            //        amaunSep = -a.Kredit;
+            //        amaunOkt = -a.Kredit;
+            //        amaunNov = -a.Kredit;
+            //        amaunDis = -a.Kredit;
+            //    }
+            //    DateTime mac = new DateTime(int.Parse(Tahun), 3, 1, 0, 0, 0);
+            //    if (a.Tarikh.Month < mac.Month && a.Tarikh.Year == int.Parse(Tahun))
+            //    {
+            //        amaunMac = -a.Kredit;
+            //        amaunJum = -a.Kredit;
+
+            //        amaunApr = -a.Kredit;
+            //        amaunMei = -a.Kredit;
+            //        amaunJun = -a.Kredit;
+            //        amaunJul = -a.Kredit;
+            //        amaunOgo = -a.Kredit;
+            //        amaunSep = -a.Kredit;
+            //        amaunOkt = -a.Kredit;
+            //        amaunNov = -a.Kredit;
+            //        amaunDis = -a.Kredit;
+            //    }
+            //    DateTime apr = new DateTime(int.Parse(Tahun), 4, 1, 0, 0, 0);
+            //    if (a.Tarikh.Month < apr.Month && a.Tarikh.Year == int.Parse(Tahun))
+            //    {
+            //        amaunApr = -a.Kredit;
+            //        amaunJum = -a.Kredit;
+
+            //        amaunMei = -a.Kredit;
+            //        amaunJun = -a.Kredit;
+            //        amaunJul = -a.Kredit;
+            //        amaunOgo = -a.Kredit;
+            //        amaunSep = -a.Kredit;
+            //        amaunOkt = -a.Kredit;
+            //        amaunNov = -a.Kredit;
+            //        amaunDis = -a.Kredit;
+            //    }
+            //    DateTime mei = new DateTime(int.Parse(Tahun), 5, 1, 0, 0, 0);
+            //    if (a.Tarikh.Month < mei.Month && a.Tarikh.Year == int.Parse(Tahun))
+            //    {
+            //        amaunMei = -a.Kredit;
+            //        amaunJum = -a.Kredit;
+
+            //        amaunJun = -a.Kredit;
+            //        amaunJul = -a.Kredit;
+            //        amaunOgo = -a.Kredit;
+            //        amaunSep = -a.Kredit;
+            //        amaunOkt = -a.Kredit;
+            //        amaunNov = -a.Kredit;
+            //        amaunDis = -a.Kredit;
+            //    }
+            //    DateTime jun = new DateTime(int.Parse(Tahun), 6, 1, 0, 0, 0);
+            //    if (a.Tarikh.Month < jun.Month && a.Tarikh.Year == int.Parse(Tahun))
+            //    {
+            //        amaunJun = -a.Kredit;
+            //        amaunJum = -a.Kredit;
+
+            //        amaunJul = -a.Kredit;
+            //        amaunOgo = -a.Kredit;
+            //        amaunSep = -a.Kredit;
+            //        amaunOkt = -a.Kredit;
+            //        amaunNov = -a.Kredit;
+            //        amaunDis = -a.Kredit;
+            //    }
+            //    DateTime jul = new DateTime(int.Parse(Tahun), 7, 1, 0, 0, 0);
+            //    if (a.Tarikh.Month < jul.Month && a.Tarikh.Year == int.Parse(Tahun))
+            //    {
+            //        amaunJul = -a.Kredit;
+            //        amaunJum = -a.Kredit;
+
+            //        amaunOgo = -a.Kredit;
+            //        amaunSep = -a.Kredit;
+            //        amaunOkt = -a.Kredit;
+            //        amaunNov = -a.Kredit;
+            //        amaunDis = -a.Kredit;
+            //    }
+            //    DateTime ogo = new DateTime(int.Parse(Tahun), 8, 1, 0, 0, 0);
+            //    if (a.Tarikh.Month < ogo.Month && a.Tarikh.Year == int.Parse(Tahun))
+            //    {
+            //        amaunOgo = -a.Kredit;
+            //        amaunJum = -a.Kredit;
+
+            //        amaunSep = -a.Kredit;
+            //        amaunOkt = -a.Kredit;
+            //        amaunNov = -a.Kredit;
+            //        amaunDis = -a.Kredit;
+            //    }
+            //    DateTime sep = new DateTime(int.Parse(Tahun), 9, 1, 0, 0, 0);
+            //    if (a.Tarikh.Month < sep.Month && a.Tarikh.Year == int.Parse(Tahun))
+            //    {
+            //        amaunSep = -a.Kredit;
+            //        amaunJum = -a.Kredit;
+
+            //        amaunOkt = -a.Kredit;
+            //        amaunNov = -a.Kredit;
+            //        amaunDis = -a.Kredit;
+            //    }
+            //    DateTime okt = new DateTime(int.Parse(Tahun), 10, 1, 0, 0, 0);
+            //    if (a.Tarikh.Month < okt.Month && a.Tarikh.Year == int.Parse(Tahun))
+            //    {
+            //        amaunOkt = -a.Kredit;
+            //        amaunJum = -a.Kredit;
+
+            //        amaunNov = -a.Kredit;
+            //        amaunDis = -a.Kredit;
+            //    }
+            //    DateTime nov = new DateTime(int.Parse(Tahun), 11, 1, 0, 0, 0);
+            //    if (a.Tarikh.Month < nov.Month && a.Tarikh.Year == int.Parse(Tahun))
+            //    {
+            //        amaunNov = -a.Kredit;
+            //        amaunJum = -a.Kredit;
+
+            //        amaunDis = -a.Kredit;
+            //    }
+            //    //DateTime dis = new DateTime(int.Parse(Tahun), 12, 1, 0, 0, 0);
+            //    //if (a.Tarikh.Month < dis.Month && a.Tarikh.Year == int.Parse(Tahun))
+            //    //{
+            //    //    amaunDis = -a.Kredit;
+            //    //    amaunJum = -a.Kredit;
+            //    //}
+            //    bakiAwal.Add(new AbAlirTunaiViewModel
+            //    {
+            //        NoAkaun = a.AkCarta1.Kod,
+            //        NamaAkaun = a.AkCarta1.Perihal,
+            //        Jan = amaunJan,
+            //        Feb = amaunFeb,
+            //        Mac = amaunMac,
+            //        Apr = amaunApr,
+            //        Mei = amaunMei,
+            //        Jun = amaunJun,
+            //        Jul = amaunJul,
+            //        Ogo = amaunOgo,
+            //        Sep = amaunSep,
+            //        Okt = amaunOkt,
+            //        Nov = amaunNov,
+            //        Dis = amaunDis,
+            //        Jan2 = amaunJan2,
+            //        JumAkaun = amaunJum,
+            //        KeluarMasuk = 0
+            //    });
+            //}
+            // Keluar END
+
+            //return bakiAwal;
+            return bakiAwal.GroupBy(b => new { b.NoAkaun, b.NamaAkaun, b.KeluarMasuk })
+                .Select(l => new AbAlirTunaiViewModel
+                {
+                    NoAkaun = l.First().NoAkaun,
+                    NamaAkaun = l.First().NamaAkaun,
+                    KeluarMasuk = l.First().KeluarMasuk,
+                    Jan = l.Sum(c => c.Jan),
+                    Feb = l.Sum(c => c.Feb),
+                    Mac = l.Sum(c => c.Mac),
+                    Apr = l.Sum(c => c.Apr),
+                    Mei = l.Sum(c => c.Mei),
+                    Jun = l.Sum(c => c.Jun),
+                    Jul = l.Sum(c => c.Jul),
+                    Ogo = l.Sum(c => c.Ogo),
+                    Sep = l.Sum(c => c.Sep),
+                    Okt = l.Sum(c => c.Okt),
+                    Nov = l.Sum(c => c.Nov),
+                    Dis = l.Sum(c => c.Dis),
+                    Jan2 = l.Sum(c => c.Jan2),
+                    JumAkaun = l.Sum(c => c.JumAkaun)
+                }).OrderBy(b => b.NoAkaun).ToList();
+        } 
+
+        public async Task<AbAlirTunaiViewModel> GetCarryPreviousBalanceEachStartingMonth(int akBankId, int? JKWId, int? JBahagianId, string Tahun)
+        {
+            List<AbAlirTunaiViewModel> bakiAwal = new List<AbAlirTunaiViewModel>();
+
+            var company = await _userService.GetCompanyDetails();
+
+            var akBank = await context.AkBank.Where(b => b.Id == akBankId).FirstOrDefaultAsync();
+
+            DateTime untilDate = new DateTime(int.Parse(Tahun), 12, 31, 23, 59, 59);
+
+            List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
+                .Where(b => b.AkCartaId1 == akBank.AkCartaId
+                && b.Tarikh > company.TarMula.AddYears(-1)
+                && b.Tarikh < untilDate
+                && b.Debit != 0).ToList();
+
+            decimal amaunJan = 0;
+            decimal amaunFeb = 0;
+            decimal amaunMac = 0;
+            decimal amaunApr = 0;
+            decimal amaunMei = 0;
+            decimal amaunJun = 0;
+            decimal amaunJul = 0;
+            decimal amaunOgo = 0;
+            decimal amaunSep = 0;
+            decimal amaunOkt = 0;
+            decimal amaunNov = 0;
+            decimal amaunDis = 0;
+            decimal amaunJan2 = 0;
+            decimal amaunJum = 0;
+
+            // Masuk
+            if (Tahun == company.TarMula.AddYears(-1).ToString("yyyy"))
+            {
+                akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
+                .Where(b => b.AkCartaId1 == akBank.AkCartaId
+                && b.Tarikh >= company.TarMula.AddYears(-1) && b.Tarikh <= untilDate)
+                .ToList();
+            }
+
+
+            if (JKWId != 0)
+            {
+                akAkaun =akAkaun.Where(b => b.JKWId == JKWId).ToList();
+            }
+
+
+
+            if (JBahagianId != 0)
+            {
+                akAkaun =akAkaun.Where(b => b.JBahagianId == JBahagianId).ToList();
+            }
+
+
+            foreach (var a in akAkaun)
+            {
+                //if (a.Tarikh.Year <= int.Parse(Tahun))
+                //{
+
+                //}
+                amaunJan = 0;
+                amaunFeb = 0;
+                amaunMac = 0;
+                amaunApr = 0;
+                amaunMei = 0;
+                amaunJun = 0;
+                amaunJul = 0;
+                amaunOgo = 0;
+                amaunSep = 0;
+                amaunOkt = 0;
+                amaunNov = 0;
+                amaunDis = 0;
+                amaunJan2 = 0;
+                amaunJum = 0;
+
+                DateTime jan = new DateTime(int.Parse(Tahun), 1, 1, 0, 0, 0);
+
+                if (a.Tarikh.Year < int.Parse(Tahun))
+                {
+                    amaunJan = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunFeb = a.Debit;
+                    amaunMac = a.Debit;
+                    amaunApr = a.Debit;
+                    amaunMei = a.Debit;
+                    amaunJun = a.Debit;
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime feb = new DateTime(int.Parse(Tahun), 2, 1, 0, 0, 0);
+                if (a.Tarikh.Month < feb.Month && a.Tarikh.Year == int.Parse(Tahun))
+                {
+                    amaunFeb = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunMac = a.Debit;
+                    amaunApr = a.Debit;
+                    amaunMei = a.Debit;
+                    amaunJun = a.Debit;
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime mac = new DateTime(int.Parse(Tahun), 3, 1, 0, 0, 0);
+                if (a.Tarikh.Month < mac.Month && a.Tarikh.Year == int.Parse(Tahun))
+                {
+                    amaunMac = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunApr = a.Debit;
+                    amaunMei = a.Debit;
+                    amaunJun = a.Debit;
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime apr = new DateTime(int.Parse(Tahun), 4, 1, 0, 0, 0);
+                if (a.Tarikh.Month < apr.Month && a.Tarikh.Year == int.Parse(Tahun))
+                {
+                    amaunApr = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunMei = a.Debit;
+                    amaunJun = a.Debit;
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime mei = new DateTime(int.Parse(Tahun), 5, 1, 0, 0, 0);
+                if (a.Tarikh.Month < mei.Month && a.Tarikh.Year == int.Parse(Tahun))
+                {
+                    amaunMei = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunJun = a.Debit;
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime jun = new DateTime(int.Parse(Tahun), 6, 1, 0, 0, 0);
+                if (a.Tarikh.Month < jun.Month && a.Tarikh.Year == int.Parse(Tahun))
+                {
+                    amaunJun = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunJul = a.Debit;
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime jul = new DateTime(int.Parse(Tahun), 7, 1, 0, 0, 0);
+                if (a.Tarikh.Month < jul.Month && a.Tarikh.Year == int.Parse(Tahun))
+                {
+                    amaunJul = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunOgo = a.Debit;
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime ogo = new DateTime(int.Parse(Tahun), 8, 1, 0, 0, 0);
+                if (a.Tarikh.Month < ogo.Month && a.Tarikh.Year == int.Parse(Tahun))
+                {
+                    amaunOgo = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunSep = a.Debit;
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime sep = new DateTime(int.Parse(Tahun), 9, 1, 0, 0, 0);
+                if (a.Tarikh.Month < sep.Month && a.Tarikh.Year == int.Parse(Tahun))
+                {
+                    amaunSep = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunOkt = a.Debit;
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime okt = new DateTime(int.Parse(Tahun), 10, 1, 0, 0, 0);
+                if (a.Tarikh.Month < okt.Month && a.Tarikh.Year == int.Parse(Tahun))
+                {
+                    amaunOkt = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunNov = a.Debit;
+                    amaunDis = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime nov = new DateTime(int.Parse(Tahun), 11, 1, 0, 0, 0);
+                if (a.Tarikh.Month < nov.Month && a.Tarikh.Year == int.Parse(Tahun))
+                {
+                    amaunNov = a.Debit;
+                    amaunJum = a.Debit;
+
+                    amaunDis = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime dis = new DateTime(int.Parse(Tahun), 12, 1, 0, 0, 0);
+                if (a.Tarikh.Month < dis.Month && a.Tarikh.Year == int.Parse(Tahun))
+                {
+                    amaunDis = a.Debit;
+                    amaunJum = a.Debit;
+                    amaunJan2 = a.Debit;
+                }
+                DateTime jan2 = new DateTime(int.Parse(Tahun) + 1, 1, 1, 0, 0, 0);
+                if (a.Tarikh.Year < int.Parse(Tahun) + 1)
+                {
+                    amaunJan2 = a.Debit;
+                    amaunJum = a.Debit;
                 }
                 bakiAwal.Add(new AbAlirTunaiViewModel
                 {
@@ -408,7 +1036,9 @@ namespace MSNK.Models.Modules.EFRepository
 
             // Keluar
             List<AkAkaun> akAkaunK = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                .Where(b => b.AkCartaId2 == akBank.AkCartaId && b.Tarikh.Year <= int.Parse(Tahun)
+                .Where(b => b.AkCartaId1 == akBank.AkCartaId
+                && b.Tarikh > company.TarMula.AddYears(-1)
+                && b.Tarikh < untilDate
                 && b.Kredit != 0).ToList();
 
             if (JKWId != 0)
@@ -423,94 +1053,195 @@ namespace MSNK.Models.Modules.EFRepository
                 akAkaunK =akAkaunK.Where(b => b.JBahagianId == JBahagianId).ToList();
             }
 
-            amaunJan = 0;
-            amaunFeb = 0;
-            amaunMac = 0;
-            amaunApr = 0;
-            amaunMei = 0;
-            amaunJun = 0;
-            amaunJul = 0;
-            amaunOgo = 0;
-            amaunSep = 0;
-            amaunOkt = 0;
-            amaunNov = 0;
-            amaunDis = 0;
-            amaunJan2 = 0;
-            amaunJum = 0;
-
             foreach (var a in akAkaunK)
             {
-                amaunJum -= a.Kredit;
+                amaunJan = 0;
+                amaunFeb = 0;
+                amaunMac = 0;
+                amaunApr = 0;
+                amaunMei = 0;
+                amaunJun = 0;
+                amaunJul = 0;
+                amaunOgo = 0;
+                amaunSep = 0;
+                amaunOkt = 0;
+                amaunNov = 0;
+                amaunDis = 0;
+                amaunJan2 = 0;
+                amaunJum = 0;
 
                 DateTime jan = new DateTime(int.Parse(Tahun), 1, 1, 0, 0, 0);
-                if (a.Tarikh < jan)
+
+                if (a.Tarikh.Year < int.Parse(Tahun))
                 {
-                    amaunJan -= a.Kredit;
+                    amaunJan = -a.Kredit;
+                    amaunJum = -a.Kredit;
+
+                    amaunFeb = -a.Kredit;
+                    amaunMac = -a.Kredit;
+                    amaunApr = -a.Kredit;
+                    amaunMei = -a.Kredit;
+                    amaunJun = -a.Kredit;
+                    amaunJul = -a.Kredit;
+                    amaunOgo = -a.Kredit;
+                    amaunSep = -a.Kredit;
+                    amaunOkt = -a.Kredit;
+                    amaunNov = -a.Kredit;
+                    amaunDis = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
                 DateTime feb = new DateTime(int.Parse(Tahun), 2, 1, 0, 0, 0);
-                if (a.Tarikh < feb)
+                if (a.Tarikh.Month < feb.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunFeb -= a.Kredit;
+                    amaunFeb = -a.Kredit;
+                    amaunJum = -a.Kredit;
+
+                    amaunMac = -a.Kredit;
+                    amaunApr = -a.Kredit;
+                    amaunMei = -a.Kredit;
+                    amaunJun = -a.Kredit;
+                    amaunJul = -a.Kredit;
+                    amaunOgo = -a.Kredit;
+                    amaunSep = -a.Kredit;
+                    amaunOkt = -a.Kredit;
+                    amaunNov = -a.Kredit;
+                    amaunDis = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
                 DateTime mac = new DateTime(int.Parse(Tahun), 3, 1, 0, 0, 0);
-                if (a.Tarikh < mac)
+                if (a.Tarikh.Month < mac.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunMac -= a.Kredit;
+                    amaunMac = -a.Kredit;
+                    amaunJum = -a.Kredit;
+
+                    amaunApr = -a.Kredit;
+                    amaunMei = -a.Kredit;
+                    amaunJun = -a.Kredit;
+                    amaunJul = -a.Kredit;
+                    amaunOgo = -a.Kredit;
+                    amaunSep = -a.Kredit;
+                    amaunOkt = -a.Kredit;
+                    amaunNov = -a.Kredit;
+                    amaunDis = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
                 DateTime apr = new DateTime(int.Parse(Tahun), 4, 1, 0, 0, 0);
-                if (a.Tarikh < apr)
+                if (a.Tarikh.Month < apr.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunApr -= a.Kredit;
+                    amaunApr = -a.Kredit;
+                    amaunJum = -a.Kredit;
+
+                    amaunMei = -a.Kredit;
+                    amaunJun = -a.Kredit;
+                    amaunJul = -a.Kredit;
+                    amaunOgo = -a.Kredit;
+                    amaunSep = -a.Kredit;
+                    amaunOkt = -a.Kredit;
+                    amaunNov = -a.Kredit;
+                    amaunDis = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
                 DateTime mei = new DateTime(int.Parse(Tahun), 5, 1, 0, 0, 0);
-                if (a.Tarikh < mei)
+                if (a.Tarikh.Month < mei.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunMei -= a.Kredit;
+                    amaunMei = -a.Kredit;
+                    amaunJum = -a.Kredit;
+
+                    amaunJun = -a.Kredit;
+                    amaunJul = -a.Kredit;
+                    amaunOgo = -a.Kredit;
+                    amaunSep = -a.Kredit;
+                    amaunOkt = -a.Kredit;
+                    amaunNov = -a.Kredit;
+                    amaunDis = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
                 DateTime jun = new DateTime(int.Parse(Tahun), 6, 1, 0, 0, 0);
-                if (a.Tarikh < jun)
+                if (a.Tarikh.Month < jun.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunJun -= a.Kredit;
+                    amaunJun = -a.Kredit;
+                    amaunJum = -a.Kredit;
+
+                    amaunJul = -a.Kredit;
+                    amaunOgo = -a.Kredit;
+                    amaunSep = -a.Kredit;
+                    amaunOkt = -a.Kredit;
+                    amaunNov = -a.Kredit;
+                    amaunDis = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
                 DateTime jul = new DateTime(int.Parse(Tahun), 7, 1, 0, 0, 0);
-                if (a.Tarikh < jul)
+                if (a.Tarikh.Month < jul.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunJul -= a.Kredit;
+                    amaunJul = -a.Kredit;
+                    amaunJum = -a.Kredit;
+
+                    amaunOgo = -a.Kredit;
+                    amaunSep = -a.Kredit;
+                    amaunOkt = -a.Kredit;
+                    amaunNov = -a.Kredit;
+                    amaunDis = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
                 DateTime ogo = new DateTime(int.Parse(Tahun), 8, 1, 0, 0, 0);
-                if (a.Tarikh < ogo)
+                if (a.Tarikh.Month < ogo.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunOgo -= a.Kredit;
+                    amaunOgo = -a.Kredit;
+                    amaunJum = -a.Kredit;
+
+                    amaunSep = -a.Kredit;
+                    amaunOkt = -a.Kredit;
+                    amaunNov = -a.Kredit;
+                    amaunDis = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
                 DateTime sep = new DateTime(int.Parse(Tahun), 9, 1, 0, 0, 0);
-                if (a.Tarikh < sep)
+                if (a.Tarikh.Month < sep.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunSep -= a.Kredit;
+                    amaunSep = -a.Kredit;
+                    amaunJum = -a.Kredit;
+
+                    amaunOkt = -a.Kredit;
+                    amaunNov = -a.Kredit;
+                    amaunDis = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
                 DateTime okt = new DateTime(int.Parse(Tahun), 10, 1, 0, 0, 0);
-                if (a.Tarikh < okt)
+                if (a.Tarikh.Month < okt.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunOkt -= a.Kredit;
+                    amaunOkt = -a.Kredit;
+                    amaunJum = -a.Kredit;
+
+                    amaunNov = -a.Kredit;
+                    amaunDis = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
                 DateTime nov = new DateTime(int.Parse(Tahun), 11, 1, 0, 0, 0);
-                if (a.Tarikh < nov)
+                if (a.Tarikh.Month < nov.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunNov -= a.Kredit;
+                    amaunNov = -a.Kredit;
+                    amaunJum = -a.Kredit;
+
+                    amaunDis = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
                 DateTime dis = new DateTime(int.Parse(Tahun), 12, 1, 0, 0, 0);
-                if (a.Tarikh < dis)
+                if (a.Tarikh.Month < dis.Month && a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    amaunDis -= a.Kredit;
+                    amaunDis = -a.Kredit;
+                    amaunJum = -a.Kredit;
+                    amaunJan2 = -a.Kredit;
                 }
-                DateTime jan2 = new DateTime(int.Parse(Tahun) + 1, 12, 1, 0, 0, 0);
-                if (a.Tarikh < jan2)
+                DateTime jan2 = new DateTime(int.Parse(Tahun) + 1, 1, 1, 0, 0, 0);
+                if (a.Tarikh.Year < int.Parse(Tahun) + 1)
                 {
-                    amaunJan2 -= a.Kredit;
+                    amaunJan2 = -a.Kredit;
+                    amaunJum = -a.Kredit;
                 }
                 bakiAwal.Add(new AbAlirTunaiViewModel
                 {
-                    NoAkaun = a.AkCarta2.Kod,
-                    NamaAkaun = a.AkCarta2.Perihal,
+                    NoAkaun = a.AkCarta1.Kod,
+                    NamaAkaun = a.AkCarta1.Perihal,
                     Jan = amaunJan,
                     Feb = amaunFeb,
                     Mac = amaunMac,
@@ -530,7 +1261,7 @@ namespace MSNK.Models.Modules.EFRepository
             }
             // Keluar END
 
-            return bakiAwal.GroupBy(b => new { b.NoAkaun })
+            return bakiAwal.GroupBy(b => new { b.NoAkaun, b.NamaAkaun, b.KeluarMasuk })
                 .Select(l => new AbAlirTunaiViewModel
                 {
                     NoAkaun = l.First().NoAkaun,
@@ -557,12 +1288,19 @@ namespace MSNK.Models.Modules.EFRepository
         {
             List<AbAlirTunaiViewModel> tunaiMasuk = new List<AbAlirTunaiViewModel>();
 
+            var company = await _userService.GetCompanyDetails();
             var akBank = await context.AkBank.Where(b => b.Id == akBankId).FirstOrDefaultAsync();
-
+            
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
                 .Where(b => b.AkCartaId1 == akBank.AkCartaId
+                && b.Tarikh > company.TarMula.AddYears(-1)
                 && b.Tarikh.Year == int.Parse(Tahun)
                 && b.Debit != 0).ToList();
+            //List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
+            //    .Where(b => b.AkCartaId1 == akBank.AkCartaId
+            //    && b.Tarikh > company.TarMula.AddYears(-1)
+            //    && b.Tarikh.Year == int.Parse(Tahun)
+            //    && b.Debit != 0).ToList();
 
             if (JKWId != 0)
             {
@@ -590,69 +1328,83 @@ namespace MSNK.Models.Modules.EFRepository
 
             foreach (var a in akAkaun)
             {
-                jum += a.Debit;
+                jan = 0;
+                feb = 0;
+                mac = 0;
+                apr = 0;
+                mei = 0;
+                jun = 0;
+                jul = 0;
+                ogo = 0;
+                sep = 0;
+                okt = 0;
+                nov = 0;
+                dis = 0;
+                jum = a.Debit;
 
-                switch (a.Tarikh.Month)
+                if (a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    case 1:
-                        jan += a.Debit;
-                        break;
-                    case 2:
-                        feb += a.Debit;
-                        break;
-                    case 3:
-                        mac += a.Debit;
-                        break;
-                    case 4:
-                        apr += a.Debit;
-                        break;
-                    case 5:
-                        mei += a.Debit;
-                        break;
-                    case 6:
-                        jun += a.Debit;
-                        break;
-                    case 7:
-                        jul += a.Debit;
-                        break;
-                    case 8:
-                        ogo += a.Debit;
-                        break;
-                    case 9:
-                        sep += a.Debit;
-                        break;
-                    case 10:
-                        okt += a.Debit;
-                        break;
-                    case 11:
-                        nov += a.Debit;
-                        break;
-                    case 12:
-                        dis += a.Debit;
-                        break;
-                }
-
-                tunaiMasuk.Add(
-                    new AbAlirTunaiViewModel
+                    switch (a.Tarikh.Month)
                     {
-                        NoAkaun = a.AkCarta2.Kod,
-                        NamaAkaun = a.AkCarta2.Perihal,
-                        KeluarMasuk = 1,
-                        Jan = jan,
-                        Feb = feb,
-                        Mac = mac,
-                        Apr = apr,
-                        Mei = mei,
-                        Jun = jun,
-                        Jul = jul,
-                        Ogo = ogo,
-                        Sep = sep,
-                        Okt = okt,
-                        Nov = nov,
-                        Dis = dis,
-                        JumAkaun = jum
-                    });
+                        case 1:
+                            jan = a.Debit;
+                            break;
+                        case 2:
+                            feb = a.Debit;
+                            break;
+                        case 3:
+                            mac = a.Debit;
+                            break;
+                        case 4:
+                            apr = a.Debit;
+                            break;
+                        case 5:
+                            mei = a.Debit;
+                            break;
+                        case 6:
+                            jun = a.Debit;
+                            break;
+                        case 7:
+                            jul = a.Debit;
+                            break;
+                        case 8:
+                            ogo = a.Debit;
+                            break;
+                        case 9:
+                            sep = a.Debit;
+                            break;
+                        case 10:
+                            okt = a.Debit;
+                            break;
+                        case 11:
+                            nov = a.Debit;
+                            break;
+                        case 12:
+                            dis = a.Debit;
+                            break;
+                    }
 
+                    tunaiMasuk.Add(
+                        new AbAlirTunaiViewModel
+                        {
+                            NoAkaun = a.AkCarta2?.Kod ?? "",
+                            NamaAkaun = a.AkCarta2?.Perihal ?? "BAKI AWAL",
+                            KeluarMasuk = 1,
+                            Jan = jan,
+                            Feb = feb,
+                            Mac = mac,
+                            Apr = apr,
+                            Mei = mei,
+                            Jun = jun,
+                            Jul = jul,
+                            Ogo = ogo,
+                            Sep = sep,
+                            Okt = okt,
+                            Nov = nov,
+                            Dis = dis,
+                            JumAkaun = jum
+                        });
+                }
             }
 
             return tunaiMasuk.GroupBy(b => new { b.NoAkaun })
@@ -682,12 +1434,19 @@ namespace MSNK.Models.Modules.EFRepository
         {
             List<AbAlirTunaiViewModel> tunaiKeluar = new List<AbAlirTunaiViewModel>();
 
+            var company = await _userService.GetCompanyDetails();
             var akBank = await context.AkBank.Where(b => b.Id == akBankId).FirstOrDefaultAsync();
 
             List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
                 .Where(b => b.AkCartaId1 == akBank.AkCartaId
                 && b.Tarikh.Year == int.Parse(Tahun)
                 && b.Kredit != 0).ToList();
+
+            //List<AkAkaun> akAkaun = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
+            //    .Where(b => b.AkCartaId1 == akBank.AkCartaId
+            //    && b.Tarikh > company.TarMula.AddYears(-1)
+            //    && b.Tarikh.Year == int.Parse(Tahun)
+            //    && b.Kredit != 0).ToList();
 
             if (JKWId != 0)
             {
@@ -715,69 +1474,84 @@ namespace MSNK.Models.Modules.EFRepository
 
             foreach (var a in akAkaun)
             {
-                jum += a.Kredit;
+                jan = 0;
+                feb = 0;
+                mac = 0;
+                apr = 0;
+                mei = 0;
+                jun = 0;
+                jul = 0;
+                ogo = 0;
+                sep = 0;
+                okt = 0;
+                nov = 0;
+                dis = 0;
 
-                switch (a.Tarikh.Month)
+                jum = a.Kredit;
+
+                if (a.Tarikh.Year == int.Parse(Tahun))
                 {
-                    case 1:
-                        jan += a.Kredit;
-                        break;
-                    case 2:
-                        feb += a.Kredit;
-                        break;
-                    case 3:
-                        mac += a.Kredit;
-                        break;
-                    case 4:
-                        apr += a.Kredit;
-                        break;
-                    case 5:
-                        mei += a.Kredit;
-                        break;
-                    case 6:
-                        jun += a.Kredit;
-                        break;
-                    case 7:
-                        jul += a.Kredit;
-                        break;
-                    case 8:
-                        ogo += a.Kredit;
-                        break;
-                    case 9:
-                        sep += a.Kredit;
-                        break;
-                    case 10:
-                        okt += a.Kredit;
-                        break;
-                    case 11:
-                        nov += a.Kredit;
-                        break;
-                    case 12:
-                        dis += a.Kredit;
-                        break;
-                }
-
-                tunaiKeluar.Add(
-                    new AbAlirTunaiViewModel
+                    switch (a.Tarikh.Month)
                     {
-                        NoAkaun = a.AkCarta1.Kod,
-                        NamaAkaun = a.AkCarta1.Perihal,
-                        KeluarMasuk = 2,
-                        Jan = jan,
-                        Feb = feb,
-                        Mac = mac,
-                        Apr = apr,
-                        Mei = mei,
-                        Jun = jun,
-                        Jul = jul,
-                        Ogo = ogo,
-                        Sep = sep,
-                        Okt = okt,
-                        Nov = nov,
-                        Dis = dis,
-                        JumAkaun = jum
-                    });
+                        case 1:
+                            jan = a.Kredit;
+                            break;
+                        case 2:
+                            feb = a.Kredit;
+                            break;
+                        case 3:
+                            mac = a.Kredit;
+                            break;
+                        case 4:
+                            apr = a.Kredit;
+                            break;
+                        case 5:
+                            mei = a.Kredit;
+                            break;
+                        case 6:
+                            jun = a.Kredit;
+                            break;
+                        case 7:
+                            jul = a.Kredit;
+                            break;
+                        case 8:
+                            ogo = a.Kredit;
+                            break;
+                        case 9:
+                            sep = a.Kredit;
+                            break;
+                        case 10:
+                            okt = a.Kredit;
+                            break;
+                        case 11:
+                            nov = a.Kredit;
+                            break;
+                        case 12:
+                            dis = a.Kredit;
+                            break;
+                    }
 
+                    tunaiKeluar.Add(
+                        new AbAlirTunaiViewModel
+                        {
+                            NoAkaun = a.AkCarta2.Kod,
+                            NamaAkaun = a.AkCarta2.Perihal,
+                            KeluarMasuk = 2,
+                            Jan = jan,
+                            Feb = feb,
+                            Mac = mac,
+                            Apr = apr,
+                            Mei = mei,
+                            Jun = jun,
+                            Jul = jul,
+                            Ogo = ogo,
+                            Sep = sep,
+                            Okt = okt,
+                            Nov = nov,
+                            Dis = dis,
+                            JumAkaun = jum
+                        });
+                }
             }
 
             return tunaiKeluar.GroupBy(b => new { b.NoAkaun })
@@ -1051,6 +1825,7 @@ namespace MSNK.Models.Modules.EFRepository
                 }).OrderBy(b => b.Order).ThenBy(b => b.NoAkaun).ToList();
 
         }
+
 
     }
 }

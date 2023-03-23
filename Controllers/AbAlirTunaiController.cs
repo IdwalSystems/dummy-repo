@@ -45,10 +45,11 @@ namespace MSNK.Controllers
 
             var date1 = DateTime.Now.Year.ToString() + "-01-01T00:00:01";
             var date2 = DateTime.Now.Year.ToString() + "-12-31T23:59:59";
-            ViewData["Tahun"] = DateTime.Now.Year.ToString();
+            //ViewData["Tahun"] = DateTime.Now.Year.ToString();
 
             if (form.AkBankId != 0)
             {
+                // find previous balance
                 
                 AbAlirTunaiViewModel bakiAwal = await _custom.GetCarryPreviousBalanceEachStartingMonth(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun);
 
@@ -64,25 +65,27 @@ namespace MSNK.Controllers
 
                 AbAlirTunaiViewModel bakiAkhir = new AbAlirTunaiViewModel();
 
-                bakiAkhir.NoAkaun = bakiAwal.NoAkaun;
-                bakiAkhir.NamaAkaun = bakiAwal.NamaAkaun;
-                bakiAkhir.KeluarMasuk = 3;
-                bakiAkhir.Jan = bakiAwal.Feb;
-                bakiAkhir.Feb = bakiAwal.Mac;
-                bakiAkhir.Mac = bakiAwal.Apr;
-                bakiAkhir.Apr = bakiAwal.Mei;
-                bakiAkhir.Mei = bakiAwal.Jun;
-                bakiAkhir.Jun = bakiAwal.Jul;
-                bakiAkhir.Jul = bakiAwal.Ogo;
-                bakiAkhir.Ogo = bakiAwal.Sep;
-                bakiAkhir.Sep = bakiAwal.Okt;
-                bakiAkhir.Okt = bakiAwal.Nov;
-                bakiAkhir.Nov = bakiAwal.Dis;
-                bakiAkhir.Dis = bakiAwal.Jan2;
-                bakiAkhir.JumAkaun = bakiAwal.Jan2;
+                if (bakiAwal != null)
+                {
+                    bakiAkhir.NoAkaun = bakiAwal.NoAkaun;
+                    bakiAkhir.NamaAkaun = bakiAwal.NamaAkaun;
+                    bakiAkhir.KeluarMasuk = 3;
+                    bakiAkhir.Jan = bakiAwal.Feb;
+                    bakiAkhir.Feb = bakiAwal.Mac;
+                    bakiAkhir.Mac = bakiAwal.Apr;
+                    bakiAkhir.Apr = bakiAwal.Mei;
+                    bakiAkhir.Mei = bakiAwal.Jun;
+                    bakiAkhir.Jun = bakiAwal.Jul;
+                    bakiAkhir.Jul = bakiAwal.Ogo;
+                    bakiAkhir.Ogo = bakiAwal.Sep;
+                    bakiAkhir.Sep = bakiAwal.Okt;
+                    bakiAkhir.Okt = bakiAwal.Nov;
+                    bakiAkhir.Nov = bakiAwal.Dis;
+                    bakiAkhir.Dis = bakiAwal.JumAkaun;
+                    bakiAkhir.JumAkaun = bakiAwal.JumAkaun;
 
-                alirTunai.Add(bakiAkhir);
-
+                    alirTunai.Add(bakiAkhir);
+                }
             }
 
             return View(alirTunai);
@@ -90,7 +93,10 @@ namespace MSNK.Controllers
 
         public void PopulateSelectList(int AkBankId, int JKWId, int JBahagianId, string Tahun)
         {
-            ViewBag.Tahun = Tahun;
+            if (String.IsNullOrWhiteSpace(Tahun))
+                ViewData["Tahun"] = DateTime.Now.Year.ToString();
+            else 
+                ViewData["Tahun"] = Tahun;
 
             // populate list bank 
             List<AkBank> akBankList = _context.AkBank.Include(b => b.AkCarta).ToList();
@@ -158,7 +164,7 @@ namespace MSNK.Controllers
             {
                 bahagianSelect.Add(new SelectListItem()
                 {
-                    Text = "Semua",
+                    Text = "SEMUA",
                     Value = "0"
                 });
                 //foreach (var item in akBahagianList)

@@ -18,6 +18,7 @@ namespace MSNK.Models.Modules.IRepository
 
         // Penyata Alir Tunai
         Task<AbAlirTunaiViewModel> GetCarryPreviousBalanceEachStartingMonth(T2 akBankId, int? JKWId, int? JBahagianId, string Tahun);
+        Task<List<AbAlirTunaiViewModel>> GetCarryPreviousBalanceEachStartingMonthDebug(T2 akBankId, int? JKWId, int? JBahagianId, string Tahun);
         Task<List<AbAlirTunaiViewModel>> GetListAlirTunaiMasukBasedOnYear(T2 akBankId, int? JKWId, int? JBahagianId, string Tahun);
         Task<List<AbAlirTunaiViewModel>> GetListAlirTunaiKeluarBasedOnYear(T2 akBankId, int? JKWId, int? JBahagianId, string Tahun);
         // Penyata Alir Tunai END
