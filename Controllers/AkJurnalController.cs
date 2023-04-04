@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +16,7 @@ using MSNK.Models.Modules;
 using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
+using MSNK.Models.Modules.PrintModel.Reporting;
 using MSNK.Models.Modules.ViewModel;
 using Rotativa.AspNetCore;
 
@@ -31,6 +33,7 @@ namespace MSNK.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRepository<AkJurnal, int, string> _akJurnalRepo;
         private readonly IRepository<JKW, int, string> _jKWRepo;
+        private readonly IRepository<JBahagian, int, string> _bahagianRepo;
         private readonly ListViewIRepository<AkJurnal1, int> _akJurnal1Repo;
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
@@ -46,6 +49,7 @@ namespace MSNK.Controllers
             UserManager<IdentityUser> userManager,
             IRepository<AkJurnal, int, string> akJurnalRepository,
             IRepository<JKW, int, string> jKWRepository,
+            IRepository<JBahagian, int, string> bahagianRepository,
             ListViewIRepository<AkJurnal1, int> akJurnal1Repository,
             IRepository<AkCarta, int, string> akCartaRepository,
             IRepository<AkAkaun, int, string> akAkaunRepository,
@@ -61,6 +65,7 @@ namespace MSNK.Controllers
             _userManager = userManager;
             _akJurnalRepo = akJurnalRepository;
             _jKWRepo = jKWRepository;
+            _bahagianRepo = bahagianRepository;
             _akJurnal1Repo = akJurnal1Repository;
             _akCartaRepo = akCartaRepository;
             _akAkaunRepo = akAkaunRepository;
@@ -165,7 +170,10 @@ namespace MSNK.Controllers
         private void PopulateTable(int? id)
         {
             List<AkJurnal1> akJurnal1Table = _context.AkJurnal1
-                .Include(b => b.AkCarta)
+                .Include(b => b.JBahagianDebit)
+                .Include(b => b.JBahagianKredit)
+                .Include(b => b.AkCartaDebit)
+                .Include(b => b.AkCartaKredit)
                 .Where(b => b.AkJurnalId == id)
                 .OrderBy(b => b.Id)
                 .ToList();
@@ -174,7 +182,10 @@ namespace MSNK.Controllers
         private void PopulateCart(AkJurnal akJurnal)
         {
             List<AkJurnal1> akJurnal1Table = _context.AkJurnal1
-                .Include(b => b.AkCarta)
+                .Include(b => b.JBahagianDebit)
+                .Include(b => b.JBahagianKredit)
+                .Include(b => b.AkCartaDebit)
+                .Include(b => b.AkCartaKredit)
                 .Where(b => b.AkJurnalId == akJurnal.Id)
                 .OrderBy(b => b.Id)
                 .ToList();
@@ -182,11 +193,12 @@ namespace MSNK.Controllers
             {
                 _cart.AddItem1(
                     akJurnal1.AkJurnalId, 
-                    akJurnal1.Indeks, 
-                    akJurnal1.JBahagianId,
-                    akJurnal1.AkCartaId, 
-                    akJurnal1.Debit, 
-                    akJurnal1.Kredit
+                    akJurnal1.Indeks,
+                    (int)akJurnal1.JBahagianDebitId,
+                    (int)akJurnal1.AkCartaDebitId,
+                    (int)akJurnal1.JBahagianKreditId,
+                    (int)akJurnal1.AkCartaKreditId,
+                    akJurnal1.Amaun
                     );
             }
         }
@@ -334,55 +346,47 @@ namespace MSNK.Controllers
                 m.FlKategoriPenerima = 3;
             }
 
-            decimal debit = 0;
-            decimal kredit = 0;
+            decimal amaun = 0;
             foreach (var q in _cart.Lines1.ToArray())
             {
-                debit += q.Debit;
-                kredit += q.Kredit;
+                amaun += q.Amaun;
             };
 
-            if(debit == kredit)
+
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                string noRujukan = GetNoRujukan(akJurnal);
+                if (akJurnal != null && JKWId != 0)
                 {
-                    string noRujukan = GetNoRujukan(akJurnal);
-                    if (akJurnal != null && JKWId != 0)
-                    {
-                        m.JKWId = akJurnal.JKWId;
-                        m.JBahagianId = akJurnal.JBahagianId;
-                        m.NoJurnal = noRujukan;
-                        m.Tarikh = akJurnal.Tarikh;
-                        m.JumDebit = debit;
-                        m.JumKredit = kredit;
-                        m.Catatan1 = akJurnal.Catatan1;
-                        m.Catatan2 = akJurnal.Catatan2;
-                        m.Catatan3 = akJurnal.Catatan3;
-                        m.Catatan4 = akJurnal.Catatan4;
-                        m.IsAKB = IsAKB;
-                        m.Posting = akJurnal.Posting;
-                        m.Cetak = akJurnal.Cetak;
-                        m.FlHapus = akJurnal.FlHapus;
-                        m.AkJurnal1 = _cart.Lines1.OrderBy(x=>x.Indeks).ToList();
-                        m.UserId = user.UserName;
-                        m.TarMasuk = DateTime.Now;
-                        m.SuPekerjaMasukId = pekerjaId;
+                    m.JKWId = akJurnal.JKWId;
+                    m.JBahagianId = akJurnal.JBahagianId;
+                    m.NoJurnal = noRujukan;
+                    m.Tarikh = akJurnal.Tarikh;
+                    m.JumDebit = amaun;
+                    m.JumKredit = amaun;
+                    m.Catatan1 = akJurnal.Catatan1;
+                    m.Catatan2 = akJurnal.Catatan2;
+                    m.Catatan3 = akJurnal.Catatan3;
+                    m.Catatan4 = akJurnal.Catatan4;
+                    m.IsAKB = IsAKB;
+                    m.Posting = akJurnal.Posting;
+                    m.Cetak = akJurnal.Cetak;
+                    m.FlHapus = akJurnal.FlHapus;
+                    m.AkJurnal1 = _cart.Lines1.OrderBy(x=>x.Indeks).ToList();
+                    m.UserId = user.UserName;
+                    m.TarMasuk = DateTime.Now;
+                    m.SuPekerjaMasukId = pekerjaId;
 
-                        await _akJurnalRepo.Insert(m);
-                        //insert applog
-                        await AddLogAsync("Tambah", noRujukan, noRujukan, 0, kredit, pekerjaId);
-                        //insert applog end
-                        await _context.SaveChangesAsync();
+                    await _akJurnalRepo.Insert(m);
+                    //insert applog
+                    await AddLogAsync("Tambah", noRujukan, noRujukan, 0, amaun, pekerjaId);
+                    //insert applog end
+                    await _context.SaveChangesAsync();
 
-                        CartEmpty();
-                        TempData[SD.Success] = "Maklumat berjaya ditambah. No jurnal adalah " + noRujukan;
-                        return RedirectToAction(nameof(Index));
-                    }
+                    CartEmpty();
+                    TempData[SD.Success] = "Maklumat berjaya ditambah. No jurnal adalah " + noRujukan;
+                    return RedirectToAction(nameof(Index));
                 }
-            }
-            else
-            {
-                TempData[SD.Error] = "Pastikan jumlah debit = jumlah kredit";
             }
 
             PopulateList();
@@ -433,99 +437,92 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            decimal debit = 0, kredit = 0;
+            decimal amaun = 0;
             var akj1 = _cart.Lines1;
             foreach (var q in akj1)
             {
-                debit += q.Debit;
-                kredit += q.Kredit;
+                amaun += q.Amaun;
             };
-            if (debit==kredit)
+
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                try
                 {
-                    try
+                    var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+                    AkJurnal akJurnalAsal = await _akJurnalRepo.GetById(id);
+
+                    akJurnalAsal.AkJurnal1 = _akJurnal1Repo.GetAll(id).Result.ToList();
+                    foreach(AkJurnal1 item in akJurnalAsal.AkJurnal1)
                     {
-                        var user = await _userManager.GetUserAsync(User);
-                        int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
-
-                        AkJurnal akJurnalAsal = await _akJurnalRepo.GetById(id);
-
-                        akJurnalAsal.AkJurnal1 = _akJurnal1Repo.GetAll(id).Result.ToList();
-                        foreach(AkJurnal1 item in akJurnalAsal.AkJurnal1)
+                        var model = _context.AkJurnal1.FirstOrDefault(q => q.Id == item.Id);
+                        if(model != null)
                         {
-                            var model = _context.AkJurnal1.FirstOrDefault(q => q.Id == item.Id);
-                            if(model != null)
-                            {
-                                _context.Remove(model);
-                            }
+                            _context.Remove(model);
                         }
-                        var kreditAsal = akJurnalAsal.JumKredit;
-                        var debitAsal = akJurnalAsal.JumDebit;
-                        var logKredit = "";
-                        var logDebit = "";
+                    }
+                    var kreditAsal = akJurnalAsal.JumKredit;
+                    var debitAsal = akJurnalAsal.JumDebit;
+                    var logKredit = "";
+                    var logDebit = "";
 
-                        _context.Entry(akJurnalAsal).State = EntityState.Detached;
+                    _context.Entry(akJurnalAsal).State = EntityState.Detached;
 
-                        akJurnal.AkJurnal1 = _cart.Lines1.OrderBy(q => q.Indeks).ToList();
-                        akJurnal.UserId = akJurnalAsal.UserId;
-                        akJurnal.TarMasuk = akJurnalAsal.TarMasuk;
-                        akJurnal.SuPekerjaMasukId = akJurnalAsal.SuPekerjaMasukId;  
-                        akJurnal.Cetak = 0;
+                    akJurnal.AkJurnal1 = _cart.Lines1.OrderBy(q => q.Indeks).ToList();
+                    akJurnal.UserId = akJurnalAsal.UserId;
+                    akJurnal.TarMasuk = akJurnalAsal.TarMasuk;
+                    akJurnal.SuPekerjaMasukId = akJurnalAsal.SuPekerjaMasukId;  
+                    akJurnal.Cetak = 0;
                         
-                        if (AkTunaiRuncitId != 0)
-                        {
-                            akJurnal.FlJenisJurnal = 4;
-                            akJurnal.FlKategoriPenerima = 3;
-                            akJurnal.AkTunaiRuncitId = AkTunaiRuncitId;
-                        }
-
-                        akJurnal.UserIdKemaskini = user.UserName;
-                        akJurnal.TarKemaskini = DateTime.Now;
-                        akJurnal.SuPekerjaKemaskiniId = pekerjaId;
-
-                        _context.Update(akJurnal);
-                        //insert applog
-                        if (kreditAsal != akJurnal.JumKredit)
-                        {
-                            logKredit = "Kredit : RM " + kreditAsal.ToString() + " -> RM " + akJurnal.JumKredit;
-                        }
-
-                        if (debitAsal != akJurnal.JumDebit)
-                        {
-                            logDebit = "Debit : RM " + debitAsal.ToString() + " -> RM " + akJurnal.JumDebit;
-                        }
-
-                        if (logKredit != "" || logDebit != "")
-                        {
-                            await AddLogAsync("Ubah", "Ubah Data : " + logKredit + "," +logDebit, akJurnal.NoJurnal, id, akJurnal.JumKredit, pekerjaId);
-                        }
-                        else
-                        {
-                            await AddLogAsync("Ubah", "Ubah Data", akJurnal.NoJurnal, id, akJurnal.JumKredit, pekerjaId);
-                        }
-                        //insert applog end
-
-                        await _context.SaveChangesAsync();
-                        TempData[SD.Success] = "Maklumat berjaya diubah.";
-                    }
-                    catch (DbUpdateConcurrencyException)
+                    if (AkTunaiRuncitId != 0)
                     {
-                        if (!AkJurnalExists(akJurnal.Id))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
+                        akJurnal.FlJenisJurnal = 4;
+                        akJurnal.FlKategoriPenerima = 3;
+                        akJurnal.AkTunaiRuncitId = AkTunaiRuncitId;
                     }
-                    return RedirectToAction(nameof(Index));
+
+                    akJurnal.UserIdKemaskini = user.UserName;
+                    akJurnal.TarKemaskini = DateTime.Now;
+                    akJurnal.SuPekerjaKemaskiniId = pekerjaId;
+
+                    _context.Update(akJurnal);
+                    //insert applog
+                    if (kreditAsal != akJurnal.JumKredit)
+                    {
+                        logKredit = "Kredit : RM " + kreditAsal.ToString() + " -> RM " + akJurnal.JumKredit;
+                    }
+
+                    if (debitAsal != akJurnal.JumDebit)
+                    {
+                        logDebit = "Debit : RM " + debitAsal.ToString() + " -> RM " + akJurnal.JumDebit;
+                    }
+
+                    if (logKredit != "" || logDebit != "")
+                    {
+                        await AddLogAsync("Ubah", "Ubah Data : " + logKredit + "," +logDebit, akJurnal.NoJurnal, id, akJurnal.JumKredit, pekerjaId);
+                    }
+                    else
+                    {
+                        await AddLogAsync("Ubah", "Ubah Data", akJurnal.NoJurnal, id, akJurnal.JumKredit, pekerjaId);
+                    }
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+                    TempData[SD.Success] = "Maklumat berjaya diubah.";
                 }
-            }
-            else
-            {
-                TempData[SD.Error] = "Pastikan jumlah debit = jumlah kredit";
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AkJurnalExists(akJurnal.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
             }
             PopulateList();
             PopulateTable(id);
@@ -597,15 +594,19 @@ namespace MSNK.Controllers
                 return Json(new { result = "ERROR", message = ex.Message });
             }
         }
-        public JsonResult GetCarta(int id, int id2)
+        public async Task<JsonResult> GetCarta(int JBahagianDebitId, int AkCartaDebitId, int JBahagianKreditId, int AkCartaKreditId)
         {
             try
             {
-                var result = _context.AkCarta.Where(b => b.Id == id).FirstOrDefault();
+                var cartaDebit = await _context.AkCarta.FirstOrDefaultAsync(b => b.Id == AkCartaDebitId);
 
-                var bahagian = _context.JBahagian.FirstOrDefault(b => b.Id == id2);
+                var bahagianDebit = await _context.JBahagian.FirstOrDefaultAsync(b => b.Id == JBahagianDebitId);
 
-                return Json(new { result = "OK", record = result, bahagian = bahagian });
+                var cartaKredit = await _context.AkCarta.FirstOrDefaultAsync(b => b.Id == AkCartaKreditId);
+
+                var bahagianKredit = await _context.JBahagian.FirstOrDefaultAsync(b => b.Id == JBahagianKreditId);
+
+                return Json(new { result = "OK", cartaDebit = cartaDebit, bahagianDebit = bahagianDebit, cartaKredit = cartaKredit, bahagianKredit = bahagianKredit });
             }
             catch (Exception ex)
             {
@@ -618,28 +619,35 @@ namespace MSNK.Controllers
         {
             try
             {
-                decimal debit = 0;
-                decimal kredit = 0;
+                decimal amaun = 0;
                 var data = Json(new { });
+                // if bahagian kredit, bahagian debit, kod akaun debit, kod akaun kredit is equal, return nothing
+                foreach( var item in _cart.Lines1)
+                {
+                    if (item.AkCartaDebitId == akJurnal1.AkCartaDebitId && item.JBahagianDebitId == akJurnal1.JBahagianDebitId
+                        && item.AkCartaKreditId == akJurnal1.AkCartaKreditId && item.JBahagianKreditId == akJurnal1.JBahagianKreditId)
+                            return Json(new { result = "ERROR", message = "Carta dan bahagian berikut telah wujud." });
+                }
+
                 if (akJurnal1 != null)
                 {
                     _cart.AddItem1(
                         akJurnal1.AkJurnalId,
                         akJurnal1.Indeks, 
-                        akJurnal1.JBahagianId,
-                        akJurnal1.AkCartaId, 
-                        akJurnal1.Debit, 
-                        akJurnal1.Kredit
+                        (int)akJurnal1.JBahagianDebitId,
+                        (int)akJurnal1.AkCartaDebitId,
+                        (int)akJurnal1.JBahagianKreditId,
+                        (int)akJurnal1.AkCartaKreditId,
+                        akJurnal1.Amaun
                         );
                 }
                 List<AkJurnal1> list = new();
                 list = _cart.Lines1.ToList();
                 foreach (AkJurnal1 l in list)
                 {
-                    debit += l.Debit;
-                    kredit += l.Kredit;
+                    amaun += l.Amaun;
                 }
-                data = Json(new { debit = debit, kredit = kredit });
+                data = Json(new { debit = amaun, kredit = amaun });
                 return Json(new { result = "OK", record = data});
             }
             catch (Exception ex)
@@ -652,21 +660,19 @@ namespace MSNK.Controllers
         {
             try
             {
-                decimal debit = 0;
-                decimal kredit = 0;
+                decimal amaun = 0;
                 var data = Json(new { });
                 if (akJurnal1 != null)
                 {
-                    _cart.RemoveItem1(akJurnal1.AkCartaId,akJurnal1.Indeks);
+                    _cart.RemoveItem1((int)akJurnal1.JBahagianDebitId,(int)akJurnal1.AkCartaDebitId, (int)akJurnal1.JBahagianKreditId, (int)akJurnal1.AkCartaKreditId,akJurnal1.Indeks);
                 }
                 List<AkJurnal1> list = new();
                 list = _cart.Lines1.ToList();
                 foreach (AkJurnal1 l in list)
                 {
-                    debit += l.Debit;
-                    kredit += l.Kredit;
+                    amaun += l.Amaun;
                 }
-                data = Json(new { debit = debit, kredit = kredit });
+                data = Json(new { debit = amaun, kredit = amaun });
                 return Json(new { result = "OK", record = data });
             }
             catch (Exception ex)
@@ -679,26 +685,24 @@ namespace MSNK.Controllers
         {
             try
             {
-                decimal debit = 0;
-                decimal kredit = 0;
+                decimal amaun = 0;
                 var data = Json(new { });
-                if (akJurnal1 != null || akJurnal1.Debit != 0 || akJurnal1.Kredit !=0)
+                if (akJurnal1 != null || akJurnal1.Amaun != 0)
                 {
-                    var akCarta = _context.AkCarta.FirstOrDefault(x => x.Id == akJurnal1.AkCartaId);
-                    akJurnal1.AkCarta = akCarta;
+                    
+                    akJurnal1.AkCartaDebit = await _context.AkCarta.FirstOrDefaultAsync(x => x.Id == akJurnal1.AkCartaDebitId);
+                    akJurnal1.AkCartaKredit = await _context.AkCarta.FirstOrDefaultAsync(x => x.Id == akJurnal1.AkCartaKreditId);
                     await _akJurnal1Repo.Insert(akJurnal1);
 
                     AkJurnal akJurnal = await _akJurnalRepo.GetById(akJurnal1.AkJurnalId);
 
-                    debit = akJurnal.JumDebit + akJurnal1.Debit;
-                    kredit = akJurnal.JumKredit + akJurnal1.Kredit;
-                    akJurnal.JumDebit = debit;
-                    akJurnal.JumKredit = kredit;
+                    akJurnal.JumDebit += amaun;
+                    akJurnal.JumKredit += amaun;
 
                     await _akJurnalRepo.Update(akJurnal);
                     await _context.SaveChangesAsync();
                 }
-                data = Json(new { debit = debit, kredit = kredit });
+                data = Json(new { debit = amaun, kredit = amaun });
                 return Json(new { result = "OK", record = data });
             }
             catch (Exception ex)
@@ -711,28 +715,25 @@ namespace MSNK.Controllers
         {
             try
             {
-                decimal debit = 0;
-                decimal kredit = 0;
+                decimal amaun = 0;
                 var data = Json(new { });
                 if (akJurnal1 != null)
                 {
                     var akJ1 = await _context.AkJurnal1.FirstOrDefaultAsync(
-                        x => x.AkCartaId == akJurnal1.AkCartaId 
+                        x => x.AkCartaDebitId == akJurnal1.AkCartaDebitId 
                         && x.AkJurnalId == akJurnal1.AkJurnalId
                         && x.Id == akJurnal1.Id);
                     _context.AkJurnal1.Remove(akJ1);
 
                     AkJurnal akJurnal = await _akJurnalRepo.GetById(akJurnal1.AkJurnalId);
 
-                    debit = akJurnal.JumDebit - akJ1.Debit;
-                    kredit = akJurnal.JumKredit - akJ1.Kredit;
-                    akJurnal.JumDebit = debit;
-                    akJurnal.JumKredit = kredit;
+                    akJurnal.JumDebit -= amaun;
+                    akJurnal.JumKredit -= amaun;
 
                     await _akJurnalRepo.Update(akJurnal);
                     await _context.SaveChangesAsync();
                 }
-                data = Json(new { debit = debit, kredit = kredit });
+                data = Json(new { debit = amaun, kredit = amaun });
                 return Json(new { result = "OK", record = data });
             }
             catch (Exception ex)
@@ -761,8 +762,7 @@ namespace MSNK.Controllers
                 _cart.Clear1();
 
                 AkJurnal1 akJ1 = await _akJurnal1Repo.GetById(akJurnal1.Id);
-                akJ1.Debit = akJurnal1.Debit;
-                akJ1.Kredit = akJurnal1.Kredit;
+                akJ1.Amaun = akJurnal1.Amaun;
                 _context.AkJurnal1.Update(akJ1);
                 await _context.SaveChangesAsync();
 
@@ -780,27 +780,31 @@ namespace MSNK.Controllers
             {
                 AkJurnal data = await _context.AkJurnal
                     .Include(x => x.AkJurnal1)
-                    .ThenInclude(x=> x.AkCarta)
+                        .ThenInclude(x=> x.AkCartaDebit)
+                    .Include(x=> x.AkJurnal1)
+                        .ThenInclude(x => x.AkCartaKredit)
+                    .Include(x => x.AkJurnal1)
+                        .ThenInclude(x => x.JBahagianDebit)
+                    .Include(x => x.AkJurnal1)
+                        .ThenInclude(x => x.JBahagianKredit)
                     .FirstOrDefaultAsync(x => x.Id == akJurnal1.AkJurnalId);
 
                 List<AkJurnal1> akJ1 = data.AkJurnal1.ToList();
 
                 foreach (AkJurnal1 item in akJ1)
                 {
-                    _cart.AddItem1(item.AkJurnalId, item.Indeks, item.JBahagianId, item.AkCartaId, item.Debit, item.Kredit);
+                    _cart.AddItem1(item.AkJurnalId, item.Indeks, (int)item.JBahagianDebitId, (int)item.AkCartaDebitId, (int)item.JBahagianKreditId, (int)item.AkCartaKreditId, item.Amaun);
                 }
 
-                decimal debit = 0;
-                decimal kredit = 0;
+                decimal amaun = 0;
                 foreach (var item in akJ1)
                 {
-                    debit += item.Debit;
-                    kredit += item.Kredit;
+                    amaun += item.Amaun;
                 }
                 AkJurnal akJurnal = await _akJurnalRepo.GetById(akJurnal1.AkJurnalId);
 
-                akJurnal.JumDebit = debit;
-                akJurnal.JumKredit = kredit;
+                akJurnal.JumDebit = amaun;
+                akJurnal.JumKredit = amaun;
 
                 await _akJurnalRepo.Update(akJurnal);
                 await _context.SaveChangesAsync();
@@ -817,7 +821,12 @@ namespace MSNK.Controllers
         {
             try
             {
-                AkJurnal1 data = _cart.Lines1.Where(x => x.AkCartaId == akJurnal1.AkCartaId&& x.Indeks == akJurnal1.Indeks).FirstOrDefault();
+                AkJurnal1 data = _cart.Lines1.Where(x => x.JBahagianDebitId == akJurnal1.JBahagianDebitId
+                                                            && x.AkCartaDebitId == akJurnal1.AkCartaDebitId
+                                                            && x.JBahagianKreditId == akJurnal1.JBahagianKreditId
+                                                            && x.AkCartaKreditId == akJurnal1.AkCartaKreditId
+                                                            && x.Indeks == akJurnal1.Indeks).FirstOrDefault();
+
                 return Json(new { result = "OK", record = data });
             }
             catch (Exception ex)
@@ -830,18 +839,22 @@ namespace MSNK.Controllers
         {
             try
             {
-                var akJ1 = _cart.Lines1.Where(x => x.AkCartaId == akJurnal1.AkCartaId).FirstOrDefault();
+                var akJ1 = _cart.Lines1.Where(x => x.JBahagianDebitId == akJurnal1.JBahagianDebitId
+                                                            && x.AkCartaDebitId == akJurnal1.AkCartaDebitId
+                                                            && x.JBahagianKreditId == akJurnal1.JBahagianKreditId
+                                                            && x.AkCartaKreditId == akJurnal1.AkCartaKreditId).FirstOrDefault();
 
                 if (akJ1 != null)
                 {
-                    _cart.RemoveItem1(akJurnal1.AkCartaId, akJurnal1.IndeksLama);
+                    _cart.RemoveItem1(akJurnal1.JBahagianDebitId,akJurnal1.AkCartaDebitId, akJurnal1.JBahagianKreditId, akJurnal1.AkCartaKreditId, akJurnal1.IndeksLama);
                     _cart.AddItem1(
                         akJurnal1.AkJurnalId,
                         akJurnal1.IndeksBaru,
-                        akJurnal1.JBahagianId,
-                        akJurnal1.AkCartaId,
-                        akJurnal1.Debit,
-                        akJurnal1.Kredit
+                        akJurnal1.JBahagianDebitId,
+                        akJurnal1.AkCartaDebitId,
+                        akJurnal1.JBahagianKreditId,
+                        akJurnal1.AkCartaKreditId,
+                        akJurnal1.Amaun
                         );
                 }
 
@@ -853,18 +866,18 @@ namespace MSNK.Controllers
             }
         }
 
-        public JsonResult GetAllItemCartAkJurnal1(AkJurnal1 akJurnal1)
+        public async Task<JsonResult> GetAllItemCartAkJurnal1(AkJurnal1 akJurnal1)
         {
             try
             {
                 List<AkJurnal1> data = _cart.Lines1.OrderBy(x=>x.Indeks).ToList();
                 foreach (AkJurnal1 item in data)
                 {
-                    var akCarta = _context.AkCarta.Find(item.AkCartaId);
-                    item.AkCarta = akCarta;
+                    item.AkCartaDebit = await _context.AkCarta.FirstOrDefaultAsync(x => x.Id == item.AkCartaDebitId);
+                    item.AkCartaKredit = await _context.AkCarta.FirstOrDefaultAsync(x => x.Id == item.AkCartaKreditId);
 
-                    var bahagian = _context.JBahagian.Find(item.JBahagianId);
-                    item.JBahagian = bahagian;
+                    item.JBahagianDebit =  await _context.JBahagian.FirstOrDefaultAsync(x => x.Id == item.JBahagianDebitId);
+                    item.JBahagianKredit = await _context.JBahagian.FirstOrDefaultAsync(x => x.Id == item.JBahagianKreditId);
                 }
                 return Json(new { result = "OK", record = data });
             }
@@ -894,7 +907,7 @@ namespace MSNK.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                List<AkJurnal1> akJ1 = akJurnal.AkJurnal1.OrderBy(x=>x.Indeks).ToList();
+                //List<AkJurnal1> akJ1 = akJurnal.AkJurnal1.OrderBy(x=>x.Indeks).ToList();
 
                 var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == "JR/"+akJurnal.NoJurnal).FirstOrDefaultAsync();
                 if (akAkaun != null)
@@ -906,75 +919,104 @@ namespace MSNK.Controllers
                 {
                     //posting operation start here
                     //insert into akAkaun
-                    int currentIdx = 0;
-                    decimal currentDebit = 0;
-                    decimal HadMaksimumDitolak = 0;
-                    foreach (AkJurnal1 debit1 in akJ1.Where(z => z.Debit > 0))
+                    foreach ( AkJurnal1 akJurnal1 in akJurnal.AkJurnal1.OrderBy(x => x.Indeks))
                     {
-                        currentDebit = debit1.Debit;
+                        AkAkaun akADebit = new AkAkaun();
+                        akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
+                        akADebit.JKWId = akJurnal.JKWId;
+                        akADebit.JBahagianId = akJurnal.JBahagianId;
+                        akADebit.Tarikh = akJurnal.Tarikh;
+                        akADebit.Tahun = akJurnal.Tarikh.ToString("yyyy");
+                        akADebit.AkCartaId1 = (int)akJurnal1.AkCartaDebitId;
+                        akADebit.Debit = akJurnal1.Amaun;
+                        akADebit.AkCartaId2 = akJurnal1.AkCartaKreditId;
+                        akADebit.Kredit = 0;
 
-                        HadMaksimumDitolak = HadMaksimumDitolak + debit1.Debit;
+                        await _akAkaunRepo.Insert(akADebit);
 
-                        foreach (AkJurnal1 kredit1 in akJ1.Where(z => z.Kredit > 0&&z.Indeks>currentIdx&&currentDebit>0))
-                        {
-                            AkAkaun akADebit = new AkAkaun();
-                            akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
-                            akADebit.JKWId = akJurnal.JKWId;
-                            akADebit.JBahagianId = kredit1.JBahagianId;
-                            akADebit.Tarikh = akJurnal.Tarikh;
-                            akADebit.AkCartaId1 = debit1.AkCartaId;
-                            akADebit.Debit = kredit1.Kredit;
-                            akADebit.AkCartaId2 = kredit1.AkCartaId;
-                            akADebit.Kredit = 0;
-                            try
-                            {
-                                await _akAkaunRepo.Insert(akADebit);
-                                currentDebit -= kredit1.Kredit;
-                            }
-                            catch
-                            {
-                                TempData[SD.Error] = "Data gagal diluluskan.";
-                            }
-                            finally
-                            {
-                                akADebit = new AkAkaun();
-                                akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
-                                akADebit.JKWId = akJurnal.JKWId;
-                                akADebit.JBahagianId = debit1.JBahagianId;
-                                akADebit.Tarikh = akJurnal.Tarikh;
-                                akADebit.AkCartaId1 = kredit1.AkCartaId;
-                                akADebit.Debit = 0;
-                                akADebit.AkCartaId2 = debit1.AkCartaId;
-                                akADebit.Kredit = kredit1.Kredit;
-                                await _akAkaunRepo.Insert(akADebit);
-                                currentIdx = kredit1.Indeks;
-                            }
-                        };
-                    };
+                        AkAkaun akAKredit = new AkAkaun();
+                        akAKredit.NoRujukan = "JR/" + akJurnal.NoJurnal;
+                        akAKredit.JKWId = akJurnal.JKWId;
+                        akAKredit.JBahagianId = akJurnal.JBahagianId;
+                        akAKredit.Tarikh = akJurnal.Tarikh;
+                        akAKredit.Tahun = akJurnal.Tarikh.ToString("yyyy");
+                        akAKredit.AkCartaId1 = (int)akJurnal1.AkCartaKreditId;
+                        akAKredit.Debit = 0;
+                        akAKredit.AkCartaId2 = akJurnal1.AkCartaDebitId;
+                        akAKredit.Kredit = akJurnal1.Amaun;
+
+                        await _akAkaunRepo.Insert(akAKredit);
+
+                    }
+                    //int currentIdx = 0;
+                    //decimal currentDebit = 0;
+                    //decimal HadMaksimumDitolak = 0;
+                    //foreach (AkJurnal1 debit1 in akJ1.Where(z => z.Debit > 0))
+                    //{
+                    //    currentDebit = debit1.Debit;
+
+                    //    HadMaksimumDitolak = HadMaksimumDitolak + debit1.Debit;
+
+                    //    foreach (AkJurnal1 kredit1 in akJ1.Where(z => z.Kredit > 0&&z.Indeks>currentIdx&&currentDebit>0))
+                    //    {
+                    //        AkAkaun akADebit = new AkAkaun();
+                    //        akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
+                    //        akADebit.JKWId = akJurnal.JKWId;
+                    //        akADebit.JBahagianId = kredit1.JBahagianId;
+                    //        akADebit.Tarikh = akJurnal.Tarikh;
+                    //        akADebit.AkCartaId1 = debit1.AkCartaId;
+                    //        akADebit.Debit = kredit1.Kredit;
+                    //        akADebit.AkCartaId2 = kredit1.AkCartaId;
+                    //        akADebit.Kredit = 0;
+                    //        try
+                    //        {
+                    //            await _akAkaunRepo.Insert(akADebit);
+                    //            currentDebit -= kredit1.Kredit;
+                    //        }
+                    //        catch
+                    //        {
+                    //            TempData[SD.Error] = "Data gagal diluluskan.";
+                    //        }
+                    //        finally
+                    //        {
+                    //            akADebit = new AkAkaun();
+                    //            akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
+                    //            akADebit.JKWId = akJurnal.JKWId;
+                    //            akADebit.JBahagianId = debit1.JBahagianId;
+                    //            akADebit.Tarikh = akJurnal.Tarikh;
+                    //            akADebit.AkCartaId1 = kredit1.AkCartaId;
+                    //            akADebit.Debit = 0;
+                    //            akADebit.AkCartaId2 = debit1.AkCartaId;
+                    //            akADebit.Kredit = kredit1.Kredit;
+                    //            await _akAkaunRepo.Insert(akADebit);
+                    //            currentIdx = kredit1.Indeks;
+                    //        }
+                    //    };
+                    //};
 
 
-                    foreach (AkJurnal1 keVot in akJ1)
+                    foreach (AkJurnal1 keVot in akJurnal.AkJurnal1.OrderBy(x => x.Indeks))
                     {
-                        if (GetJenisObjek(keVot.AkCartaId) == "B")
+                        if (GetJenisObjek((int)keVot.AkCartaKreditId) == "B")
                         {
-                            if (keVot.Kredit > 0)
+                            if (keVot.Amaun > 0)
                             {
                                 AbBukuVot vot = new()
                                 {
                                     Rujukan = "JR/" + akJurnal.NoJurnal,
                                     JKWId = akJurnal.JKWId,
-                                    JBahagianId = keVot.JBahagianId,
+                                    JBahagianId = keVot.JBahagianKreditId,
                                     Tarikh = akJurnal.Tarikh,
-                                    VotId = keVot.AkCartaId,
+                                    VotId = (int)keVot.AkCartaKreditId,
                                     Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length<200 ? akJurnal.Catatan1.Length : 200),
-                                    Debit = keVot.Debit,
-                                    Kredit = keVot.Kredit,
-                                    Tanggungan = 0 - keVot.Kredit,
+                                    Debit = keVot.Amaun,
+                                    Kredit = keVot.Amaun,
+                                    Tanggungan = 0 - keVot.Amaun,
                                     Tahun = akJurnal.Tarikh.Year.ToString()
                                 };
                                 await _abBukuVot.Insert(vot);
                             }
-                            
+
                         }
                     }
 
@@ -986,10 +1028,13 @@ namespace MSNK.Controllers
                     {
                         var akTunaiRuncit = await _akTunaiRuncitRepo.GetById((int)akJurnal.AkTunaiRuncitId);
 
-                        akTunaiRuncit.HadMaksimum = akTunaiRuncit.HadMaksimum - HadMaksimumDitolak;
+                        if (akTunaiRuncit != null)
+                        {
+                            akTunaiRuncit.HadMaksimum = akTunaiRuncit.HadMaksimum - akJurnal.JumDebit;
 
-                        await _akTunaiRuncitRepo.Update(akTunaiRuncit);
-
+                            await _akTunaiRuncitRepo.Update(akTunaiRuncit);
+                        }
+                        
                         //find latest baki
                         AkTunaiLejar akT = _context.AkTunaiLejar
                         .Where(x => x.AkTunaiRuncitId == akJurnal.AkTunaiRuncitId)
@@ -1004,7 +1049,7 @@ namespace MSNK.Controllers
                         {
                             bakiAkhir = akT.Baki;
 
-                            if (bakiAkhir < HadMaksimumDitolak)
+                            if (bakiAkhir < akJurnal.JumDebit)
                             {
                                 TempData[SD.Warning] = "Baki akhir lejar tunai bagi kod kaunter panjar " + akJurnal.AkTunaiRuncit.KaunterPanjar + " tidak mencukupi.";
                                 return RedirectToAction(nameof(Index));
@@ -1025,8 +1070,8 @@ namespace MSNK.Controllers
                             AkCartaId = akTunaiRuncit.AkCartaId,
                             NoRujukan = "JR/" +akJurnal.NoJurnal,
                             Debit = 0,
-                            Kredit = HadMaksimumDitolak,
-                            Baki = bakiAkhir - HadMaksimumDitolak
+                            Kredit = akJurnal.JumDebit,
+                            Baki = bakiAkhir - akJurnal.JumDebit
                         };
                         // insert into AkTunaiLejar end
 
@@ -1091,9 +1136,9 @@ namespace MSNK.Controllers
                     decimal HadMaksimumDitambah = 0;
                     foreach(var akJ1 in akJurnal.AkJurnal1)
                     {
-                        if (akJ1.Debit > 0)
+                        if (akJ1.Amaun > 0)
                         {
-                            HadMaksimumDitambah = HadMaksimumDitambah + akJ1.Debit;
+                            HadMaksimumDitambah = HadMaksimumDitambah + akJ1.Amaun;
                         }
                     }
 
@@ -1162,7 +1207,57 @@ namespace MSNK.Controllers
             {
                 user = akJurnal.UserIdKemaskini;
             }
-            
+
+            // populate table akJurnal1 based on user interface
+            var ringkasan = new List<RingkasanPrintModel>();
+
+            foreach (var item in akJurnal.AkJurnal1)
+            { 
+                var ringkasanDebit = new RingkasanPrintModel();
+                var bahagianDebit = _context.JBahagian.FirstOrDefault(x => x.Id == item.JBahagianDebitId);
+                var cartaDebit = _context.AkCarta.FirstOrDefault(x => x.Id == item.AkCartaDebitId);
+
+                ringkasanDebit = new RingkasanPrintModel
+                {
+                    Bahagian = bahagianDebit.Kod,
+                    KodAkaun = cartaDebit.Kod,
+                    Perihal = cartaDebit.Perihal,
+                    DebitDecimal = item.Amaun,
+                    KreditDecimal = 0
+                };
+
+                ringkasan.Add(ringkasanDebit);
+
+                var ringkasanKredit = new RingkasanPrintModel();
+                var bahagianKredit = _context.JBahagian.FirstOrDefault(x => x.Id == item.JBahagianKreditId);
+                var cartaKredit = _context.AkCarta.FirstOrDefault(x => x.Id == item.AkCartaKreditId);
+
+                ringkasanKredit = new RingkasanPrintModel
+                {
+                    Bahagian = bahagianKredit.Kod,
+                    KodAkaun = cartaKredit.Kod,
+                    Perihal = cartaKredit.Perihal,
+                    DebitDecimal = 0,
+                    KreditDecimal = item.Amaun
+                };
+
+                ringkasan.Add(ringkasanKredit);
+
+            }
+
+            ringkasan = ringkasan.GroupBy(x => (x.Bahagian, x.KodAkaun))
+                    .Select(s => new RingkasanPrintModel
+                    {
+                        Bahagian = s.First().Bahagian,
+                        KodAkaun = s.First().KodAkaun,
+                        Perihal = s.First().Perihal,
+                        DebitDecimal = s.Sum(d => d.DebitDecimal),
+                        KreditDecimal = s.Sum(k => k.KreditDecimal)
+                    }).OrderBy(r => r.Bahagian).ThenBy(r => r.KodAkaun).ToList();
+
+            data.Ringkasan = ringkasan; 
+            // populate table akJurnal1 based on user interface end
+
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email.ToUpper() == user.ToUpper());
             var jumDebitPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akJurnal.JumDebit)).ToUpper();
             var jumKreditPerkataan = ("Ringgit Malaysia " + Tools.JumlahDalamPerkataan(akJurnal.JumKredit)).ToUpper();

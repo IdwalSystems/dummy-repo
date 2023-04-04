@@ -24,8 +24,10 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<AkJurnal1>> GetAll(int id)
         {
             return await context.AkJurnal1
-                .Include(b => b.AkCarta)
-                .Include(b => b.JBahagian)
+                .Include(b => b.AkCartaDebit)
+                .Include(b => b.AkCartaKredit)
+                .Include(b => b.JBahagianDebit)
+                .Include(b => b.JBahagianKredit)
                 .Where(x => x.AkJurnalId == id)
                 .ToListAsync();
         }

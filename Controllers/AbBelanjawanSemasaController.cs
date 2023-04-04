@@ -250,27 +250,28 @@ namespace MSNK.Controllers
             // Terima End
 
             // Jurnal
-            List<AkJurnal> Jurnals = await _bsRepo.GetAkJurnalBasedOnYear(tahun, JKWId, JBahagianId, date2);
+            // KIV
+            //List<AkJurnal> Jurnals = await _bsRepo.GetAkJurnalBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
-            List<AbBelanjawanSemasaViewModel> jurnalList = new List<AbBelanjawanSemasaViewModel>();
+            //List<AbBelanjawanSemasaViewModel> jurnalList = new List<AbBelanjawanSemasaViewModel>();
 
-            foreach (var jurnal in Jurnals)
-            {
-                if (jurnal.JBahagianId == JBahagianId)
-                {
-                    foreach (var jurnal1 in jurnal.AkJurnal1)
-                    {
-                        if (jurnal1.AkCarta.JJenis.Kod == "B" || jurnal1.AkCarta.JJenis.Kod == "A")
-                        {
-                            jurnalList = _bsRepo.RunJurnalObjekOperation((int)jurnal.JBahagianId, jurnal1.Debit, jurnal1.Kredit, jurnal1.AkCarta.Kod, jurnal1.AkCarta.Perihal, "4");
+            //foreach (var jurnal in Jurnals)
+            //{
+            //    if (jurnal.JBahagianId == JBahagianId)
+            //    {
+            //        foreach (var jurnal1 in jurnal.AkJurnal1)
+            //        {
+            //            if (jurnal1.AkCarta.JJenis.Kod == "B" || jurnal1.AkCarta.JJenis.Kod == "A")
+            //            {
+            //                jurnalList = _bsRepo.RunJurnalObjekOperation((int)jurnal.JBahagianId, jurnal1.Debit, jurnal1.Kredit, jurnal1.AkCarta.Kod, jurnal1.AkCarta.Perihal, "4");
 
-                            vm.AddRange(jurnalList);
-                        }
+            //                vm.AddRange(jurnalList);
+            //            }
 
-                    }
-                }
+            //        }
+            //    }
 
-            }
+            //}
             // Jurnal End
 
             //vm = vm.Where(b => b.Objek == "B29301" && b.JBahagianId == 2).ToList();
@@ -537,27 +538,28 @@ namespace MSNK.Controllers
             // Terima End
 
             // Jurnal
-            List<AkJurnal> Jurnals = await _bsRepo.GetAkJurnalBasedOnYear(tahun, JKWId, JBahagianId, date2);
+            // KIV
+            //List<AkJurnal> Jurnals = await _bsRepo.GetAkJurnalBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
-            List<AbBelanjawanSemasaViewModel> jurnalList = new List<AbBelanjawanSemasaViewModel>();
+            //List<AbBelanjawanSemasaViewModel> jurnalList = new List<AbBelanjawanSemasaViewModel>();
 
-            foreach (var jurnal in Jurnals)
-            {
-                if (jurnal.JBahagianId == JBahagianId)
-                {
-                    foreach (var jurnal1 in jurnal.AkJurnal1)
-                    {
-                        if (jurnal1.AkCarta.JJenis.Kod == "B" || jurnal1.AkCarta.JJenis.Kod == "A")
-                        {
-                            jurnalList = _bsRepo.RunJurnalObjekOperation((int)jurnal.JBahagianId, jurnal1.Debit, jurnal1.Kredit, jurnal1.AkCarta.Kod, jurnal1.AkCarta.Perihal, "4");
+            //foreach (var jurnal in Jurnals)
+            //{
+            //    if (jurnal.JBahagianId == JBahagianId)
+            //    {
+            //        foreach (var jurnal1 in jurnal.AkJurnal1)
+            //        {
+            //            if (jurnal1.AkCarta.JJenis.Kod == "B" || jurnal1.AkCarta.JJenis.Kod == "A")
+            //            {
+            //                jurnalList = _bsRepo.RunJurnalObjekOperation((int)jurnal.JBahagianId, jurnal1.Debit, jurnal1.Kredit, jurnal1.AkCarta.Kod, jurnal1.AkCarta.Perihal, "4");
 
-                            vm.AddRange(jurnalList);
-                        }
+            //                vm.AddRange(jurnalList);
+            //            }
 
-                    }
-                }
+            //        }
+            //    }
 
-            }
+            //}
             // Jurnal End
 
             var paras = "4";

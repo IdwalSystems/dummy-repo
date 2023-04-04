@@ -416,7 +416,10 @@ namespace MSNK.Models.Modules.EFRepository
         {
             var sql = await context.AkJurnal
                 .Include(b => b.AkJurnal1)
-                    .ThenInclude(b => b.AkCarta)
+                    .ThenInclude(b => b.AkCartaDebit)
+                        .ThenInclude(b => b.JParas)
+                .Include(b => b.AkJurnal1)
+                    .ThenInclude(b => b.AkCartaKredit)
                         .ThenInclude(b => b.JParas)
                 .Where(
                 b => b.Tarikh.Year.ToString() == tahun

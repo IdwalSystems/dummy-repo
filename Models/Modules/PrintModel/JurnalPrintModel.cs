@@ -1,4 +1,5 @@
 ﻿using MSNK.Models.Administration;
+using MSNK.Models.Modules.PrintModel.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace MSNK.Models.Modules.PrintModel
         public string Username { get; set; }
         public SuPekerja SuPekerja { get; set; }
         public AkJurnal AkJurnal { get; set; }
+        public List<RingkasanPrintModel> Ringkasan { get; set; } = new List<RingkasanPrintModel>();
         public CompanyDetails CompanyDetail { get; set; }
         public string JumlahDebitDalamPerkataan { get; set; }
         public string JumlahKreditDalamPerkataan { get; set; }

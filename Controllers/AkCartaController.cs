@@ -470,7 +470,8 @@ namespace MSNK.Controllers
                 .Include(a=>a.AkAkaun2)
                 .Include(a=>a.AkBank)
                 .Include(a=>a.AkBelian1)
-                .Include(a => a.AkJurnal1)
+                .Include(a => a.AkJurnalDebit)
+                .Include(a => a.AkJurnalKredit)
                 .Include(a => a.AkPO1)
                 .Include(a => a.AkTerima1)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -489,7 +490,8 @@ namespace MSNK.Controllers
                 akCarta.AkAkaun2.Count > 0||
                 akCarta.AkBank.Count>0||
                 akCarta.AkBelian1.Count>0||
-                akCarta.AkJurnal1.Count>0||
+                akCarta.AkJurnalDebit.Count>0||
+                akCarta.AkJurnalKredit.Count>0||
                 akCarta.AkPO1.Count>0||
                 akCarta.AkTerima1.Count>0
                 )
