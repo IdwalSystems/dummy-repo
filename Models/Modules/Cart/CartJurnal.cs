@@ -11,14 +11,19 @@ namespace MSNK.Models.Modules.Cart
         public virtual void AddItem1(
             int AkJurnalId,
             int Indeks,
-            int JBahagianId,
-            int AkCartaId,
-            decimal Debit,
-            decimal Kredit
+            int JBahagianDebitId,
+            int AkCartaDebitId,
+            int JBahagianKreditId,
+            int AkCartaKreditId,
+            decimal Amaun
             )
         {
             AkJurnal1 line = collection1
-            .Where(p => p.AkCartaId == AkCartaId && p.Indeks == Indeks)
+            .Where(p => p.JBahagianDebitId == p.JBahagianDebitId 
+                    && p.AkCartaDebitId == AkCartaDebitId
+                    && p.JBahagianKreditId == JBahagianKreditId
+                    && p.AkCartaKreditId == AkCartaKreditId 
+                    && p.Indeks == Indeks)
             .FirstOrDefault();
 
             if (line == null)
@@ -27,16 +32,19 @@ namespace MSNK.Models.Modules.Cart
                 {
                     AkJurnalId = AkJurnalId,
                     Indeks = Indeks,
-                    JBahagianId = JBahagianId,
-                    AkCartaId = AkCartaId,
-                    Debit = Debit,
-                    Kredit = Kredit
+                    JBahagianDebitId = JBahagianDebitId,
+                    AkCartaDebitId = AkCartaDebitId,
+                    JBahagianKreditId = JBahagianKreditId,
+                    AkCartaKreditId = AkCartaKreditId,
+                    Amaun = Amaun
                 });
             }
         }
 
-        public virtual void RemoveItem1(int AkCartaId, int IndeksLama) =>
-            collection1.RemoveAll(l => l.AkCartaId == AkCartaId&& l.Indeks==IndeksLama);    
+        public virtual void RemoveItem1(int JBahagianDebitId, int AkCartaDebitId, int JBahagianKreditId, int AkCartaKreditId, int IndeksLama) =>
+            collection1.RemoveAll(l => l.JBahagianDebitId == JBahagianDebitId && l.AkCartaDebitId == AkCartaDebitId 
+                                    && l.JBahagianKreditId == JBahagianKreditId && l.AkCartaKreditId == AkCartaKreditId 
+                                    && l.Indeks==IndeksLama);    
         //public virtual void RemoveItem1(int id) =>
         //    collection1.RemoveAll(l => l.AkCartaId == id);
 

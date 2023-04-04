@@ -131,25 +131,29 @@
                     <table id="tblObjek" class="table table-sm" cellpadding="0" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Indeks</th>
-                                <th style="width:40%%">Bahagian</th>
-                                <th style="width:40%">Kod</th>
-                                <th class="text-right">Debit RM</th>
-                                <th class="text-right">Kredit RM</th>
+                                <th style="width:5%">Indeks</th>
+                                <th style="width:20%">Bhg. Debit</th>
+                                <th style="width:20%">Kod Debit</th>
+                                <th style="width:20%">Bhg. Kredit</th>
+                                <th style="width:20%">Kod Kredit</th>
+                                <th style="width:10%" class="text-right">Amaun RM</th>
+                                <th></th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody id="tbodyObjek">
-                            @foreach (var item in ViewBag.akJurnal1)
+                            @foreach (var item in Model.AkJurnal1)
                             {
-                                <tr id="@item.Id">
+                                <tr>
+                                    <td id="akCartaDebitId" hidden>@item.AkCartaDebitId</td>
                                     <td>@(item.Indeks.ToString().Length<2?"0"+ item.Indeks.ToString(): item.Indeks.ToString())</td>
-                                    <td id="bahagianId" hidden>@item.JBahagianId</td>
-                                    <td>@item.JBahagian?.Kod - @item.JBahagian?.Perihal</td>
-                                    <td id="akCartaId" hidden>@item.AkCartaId</td>
-                                    <td>@item.AkCarta.Kod - @item.AkCarta.Perihal</td>
-                                    <td class="editable-txt text-right" id="td1Amaun">@item.Debit</td>
-                                    <td class="editable-txt text-right" id="td1Amaun">@item.Kredit</td>
+                                    <td id="akCartaKreditId" hidden>@item.AkCartaKreditId</td>
+                                    <td id="bahagianDebitId" hidden>@item.JBahagianDebitId</td>
+                                    <td>@item.JBahagianDebit?.Kod - @item.JBahagianDebit?.Perihal</td>
+                                    <td>@item.AkCartaDebit.Kod - @item.AkCartaDebit.Perihal</td>
+                                    <td>@item.JBahagianKredit?.Kod - @item.JBahagianKredit?.Perihal</td>
+                                    <td>@item.AkCartaKredit.Kod - @item.AkCartaKredit.Perihal</td>
+                                    <td class="editable-txt text-right" id="td1Amaun">@item.Amaun</td>
                                 </tr>
 
                             }

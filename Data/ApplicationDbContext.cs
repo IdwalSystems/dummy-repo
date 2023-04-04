@@ -365,11 +365,35 @@ namespace MSNK.Data
                 .HasForeignKey(m => m.JKWId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
+
+            modelBuilder.Entity<AkJurnal1>()
+                    .HasOne(m => m.AkCartaDebit)
+                    .WithMany(t => t.AkJurnalDebit)
+                    .HasForeignKey(m => m.AkCartaDebitId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AkJurnal1>()
+                    .HasOne(m => m.AkCartaKredit!)
+                    .WithMany(t => t.AkJurnalKredit)
+                    .HasForeignKey(m => m.AkCartaKreditId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AkJurnal1>()
+                    .HasOne(m => m.JBahagianDebit)
+                    .WithMany(t => t.AkJurnalDebit)
+                    .HasForeignKey(m => m.JBahagianDebitId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AkJurnal1>()
+                    .HasOne(m => m.JBahagianKredit!)
+                    .WithMany(t => t.AkJurnalKredit)
+                    .HasForeignKey(m => m.JBahagianKreditId)
+                    .OnDelete(DeleteBehavior.Restrict);
             //AkJurnal end
             //AkBelian
 
-                // Temporal Table
-                modelBuilder.Entity<AkBelian>().Property(x => x.ValidFromUTC)
+            // Temporal Table
+            modelBuilder.Entity<AkBelian>().Property(x => x.ValidFromUTC)
                             .IsRequired()
                             .ValueGeneratedOnAddOrUpdate()
                             .HasDefaultValueSql("SYSUTCDATETIME()");

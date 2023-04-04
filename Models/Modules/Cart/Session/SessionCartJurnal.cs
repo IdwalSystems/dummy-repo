@@ -22,18 +22,19 @@ namespace MSNK.Models.Modules.Cart.Session
         public override void AddItem1(
             int AkJurnalId,
             int Indeks,
-            int JBahagianId,
-            int AkCartaId,
-            decimal Debit,
-            decimal Kredit
+            int JBahagianDebitId,
+            int AkCartaDebitId,
+            int JBahagianKreditId,
+            int AkCartaKreditId,
+            decimal Amaun
            )
         {
-            base.AddItem1(AkJurnalId, Indeks,JBahagianId, AkCartaId, Debit, Kredit);
+            base.AddItem1(AkJurnalId, Indeks,JBahagianDebitId, AkCartaDebitId, JBahagianKreditId, AkCartaKreditId,Amaun);
             Session.SetJson("CartJurnal", this);
         }
-        public override void RemoveItem1(int id, int id2)
+        public override void RemoveItem1(int jBahagianDebitId, int akCartaDebitId, int JBahagianKreditId, int akCartaKreditId, int indeksLama)
         {
-            base.RemoveItem1(id,id2);
+            base.RemoveItem1(jBahagianDebitId,akCartaDebitId, JBahagianKreditId, akCartaKreditId, indeksLama);
             Session.SetJson("CartJurnal", this);
         }
         public override void Clear1()
