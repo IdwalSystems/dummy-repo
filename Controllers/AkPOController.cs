@@ -1904,6 +1904,8 @@ namespace MSNK.Controllers
 
             POPrintModel data = new POPrintModel();
 
+            akPO.AkPO2 = akPO.AkPO2.OrderBy(p => p.Bil).ToList();
+
             data.CompanyDetail = await _userService.GetCompanyDetails();
             data.AkPO = akPO;
             //data.AkPO.JNegeri = negeri;

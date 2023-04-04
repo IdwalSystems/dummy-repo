@@ -61,6 +61,7 @@ namespace MSNK.Controllers
         }
         public IActionResult Index()
         {
+            ViewBag.AkBank = _context.AkBank.Include(b => b.AkCarta).ToList();
             return View();
         }
 
@@ -71,11 +72,13 @@ namespace MSNK.Controllers
             string tarikhDari,
             string tarikhHingga,
             int status,
+            int AkBankId,
             int susunan)
         {
             var pdfName = kodLaporan;
             var tajuk = "";
             JKW kW = _context.JKW.Where(x => x.Kod == "100").FirstOrDefault();
+            AkBank akBank = _context.AkBank.FirstOrDefault(b => b.Id == AkBankId);
 
             LPV001PrintModel reportModel = new LPV001PrintModel();
 
@@ -118,6 +121,10 @@ namespace MSNK.Controllers
                         break;
                 }
                 //status condition end
+
+                // akaun bank
+                akT = akT.Where(x => x.AkBankId == AkBankId).ToList();
+                // akaun bank end
 
                 //susunan condition
                 if (susunan == 1)
@@ -188,6 +195,10 @@ namespace MSNK.Controllers
                 }
                 //status condition end
 
+                // akaun bank
+                akT = akT.Where(x => x.AkBankId == AkBankId).ToList();
+                // akaun bank end
+
                 //susunan condition
                 if (susunan == 1)
                 {
@@ -227,6 +238,7 @@ namespace MSNK.Controllers
             reportModel.TarikhDari = tarikhDari;
             reportModel.TarikhHingga = tarikhHingga;
             reportModel.JKW = kW;
+            reportModel.AkBank = akBank;
             CompanyDetails company = new CompanyDetails();
             reportModel.CompanyDetail = company;
 
@@ -241,6 +253,8 @@ namespace MSNK.Controllers
                                        KodLaporan = kodLaporan,
                                        KodKw = kW.Kod,
                                        PerihalKw = kW.Perihal,
+                                       AkaunBank = akBank.NoAkaun,
+                                       PerihalAkaunBank = akBank.AkCarta.Perihal,
                                        TarikhDari = tarikhDari,
                                        TarikhHingga = tarikhHingga,
                                        Tajuk = tajuk

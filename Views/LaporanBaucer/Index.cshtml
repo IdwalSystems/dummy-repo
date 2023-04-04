@@ -65,6 +65,17 @@
                             </div>
                         </div>
                         <div class="form-group form-row">
+                            <label for="Status" class="col-sm-2 col-form-label">Akaun Bank</label>
+                            <div class="col-sm-5">
+                                <select class="form-control form-control-sm input-group-sm" name="AkBankId" required>
+                                    @foreach(var item in ViewBag.AkBank)
+            {
+                <option value="@item.Id">@item.NoAkaun - @item.AkCarta.Perihal</option>
+            }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-row">
                             <label for="Susunan" class="col-sm-2 col-form-label">Susunan</label>
                             <div class="col-sm-5">
                                 <select class="form-control form-control-sm input-group-sm" name="susunan" required>

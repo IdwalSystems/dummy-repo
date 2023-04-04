@@ -83,6 +83,18 @@ namespace MSNK.Controllers
             var tajuk = "";
             JKW kW = _context.JKW.Where(x => x.Kod == "100").FirstOrDefault();
 
+            AkBank akBank = new AkBank();
+            if (AkBankId != 0)
+            {
+                akBank = _context.AkBank.FirstOrDefault(b => b.Id == AkBankId);
+            }
+            else
+            {
+                akBank.NoAkaun = "SEMUA";
+                akBank.AkCarta.Perihal = "";
+            }
+                
+
             LPR001PrintModel reportModel = new LPR001PrintModel();
 
             if (kodLaporan == "LPR00102" || kodLaporan == "LPR00103")
@@ -120,7 +132,6 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    
                 }
                 //susunan condition end
 
@@ -285,6 +296,7 @@ namespace MSNK.Controllers
             reportModel.TarikhDari = tarikhDari;
             reportModel.TarikhHingga = tarikhHingga;
             reportModel.JKW = kW;
+            reportModel.AkBank = akBank;
             CompanyDetails company = new CompanyDetails();
             reportModel.CompanyDetail = company;
 
@@ -299,6 +311,8 @@ namespace MSNK.Controllers
                                        KodLaporan = kodLaporan,
                                        KodKw = kW.Kod,
                                        PerihalKw = kW.Perihal,
+                                       AkaunBank = akBank.NoAkaun,
+                                       PerihalAkaunBank = akBank.AkCarta.Perihal,
                                        TarikhDari = tarikhDari,
                                        TarikhHingga = tarikhHingga,
                                        Tajuk = tajuk
