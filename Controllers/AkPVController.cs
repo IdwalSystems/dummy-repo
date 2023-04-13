@@ -2450,6 +2450,7 @@ namespace MSNK.Controllers
 
                     // list of input that cannot be change
                     akPV.Tahun = dataAsal.Tahun;
+                    akPV.Tarikh = dataAsal.Tarikh;
                     akPV.JKWId = dataAsal.JKWId;
                     akPV.JBahagianId = dataAsal.JBahagianId;
                     akPV.NoPV = dataAsal.NoPV;
@@ -3340,7 +3341,7 @@ namespace MSNK.Controllers
                         // insert into tunai lejar end
 
                         // insert into akAkaun
-                        if (akPV.denganTanggungan == true)
+                        if (akPV.AkPV2 != null && akPV.AkPV2.Count > 0 )
                         {
                             foreach (var i in akPV.AkPV2)
                             {

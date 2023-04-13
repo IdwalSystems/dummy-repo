@@ -924,7 +924,7 @@ namespace MSNK.Controllers
                         AkAkaun akADebit = new AkAkaun();
                         akADebit.NoRujukan = "JR/" + akJurnal.NoJurnal;
                         akADebit.JKWId = akJurnal.JKWId;
-                        akADebit.JBahagianId = akJurnal.JBahagianId;
+                        akADebit.JBahagianId = akJurnal1.JBahagianDebitId;
                         akADebit.Tarikh = akJurnal.Tarikh;
                         akADebit.Tahun = akJurnal.Tarikh.ToString("yyyy");
                         akADebit.AkCartaId1 = (int)akJurnal1.AkCartaDebitId;
@@ -937,7 +937,7 @@ namespace MSNK.Controllers
                         AkAkaun akAKredit = new AkAkaun();
                         akAKredit.NoRujukan = "JR/" + akJurnal.NoJurnal;
                         akAKredit.JKWId = akJurnal.JKWId;
-                        akAKredit.JBahagianId = akJurnal.JBahagianId;
+                        akAKredit.JBahagianId = akJurnal1.JBahagianKreditId;
                         akAKredit.Tarikh = akJurnal.Tarikh;
                         akAKredit.Tahun = akJurnal.Tarikh.ToString("yyyy");
                         akAKredit.AkCartaId1 = (int)akJurnal1.AkCartaKreditId;
