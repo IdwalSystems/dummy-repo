@@ -59,9 +59,9 @@ namespace MSNK.Controllers
         {
             var kunciKiraKira = new List<AbKunciKiraKiraViewModel>();
 
-            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga);
+            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga1);
 
-            kunciKiraKira = await _custom.GetListKunciKirakiraBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga);
+            kunciKiraKira = await _custom.GetListKunciKirakiraBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga1);
 
             dynamic dyModel = new ExpandoObject();
             dyModel.KunciKirakira = kunciKiraKira;
@@ -147,11 +147,11 @@ namespace MSNK.Controllers
         {
             var kunciKiraKira = new List<AbKunciKiraKiraViewModel>();
 
-            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga);
+            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga1);
 
             if (form.JKWId != 0)
             {
-                kunciKiraKira = await _custom.GetListKunciKirakiraBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga);
+                kunciKiraKira = await _custom.GetListKunciKirakiraBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga1);
 
                 dynamic dyModel = new ExpandoObject();
                 dyModel.KunciKirakira = kunciKiraKira;
@@ -164,7 +164,7 @@ namespace MSNK.Controllers
                 return new ViewAsPdf("KunciKirakiraPrintPDF", dyModel,
                         new ViewDataDictionary(ViewData)
                         {
-                        { "TarHingga", form.TarHingga.ToString("dd/MM/yyyy hh:mm:ss tt") },
+                        { "TarHingga", form.TarHingga1.ToString("dd/MM/yyyy hh:mm:ss tt") },
                         { "NamaKW", jkw.Kod + " - " + jkw.Perihal },
                         { "NamaSyarikat", company.NamaSyarikat },
                         { "AlamatSyarikat1", company.AlamatSyarikat1 },
@@ -184,7 +184,7 @@ namespace MSNK.Controllers
                 var date2 = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss");
                 ViewData["DateTo"] = date2;
 
-                PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga);
+                PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga1);
 
                 TempData[SD.Error] = "Kump. Wang Tidak Wujud.";
 

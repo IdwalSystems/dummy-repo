@@ -47,13 +47,13 @@ namespace MSNK.Controllers
             ViewData["DateFrom"] = date1;
             ViewData["DateTo"] = date2;
 
-            PopulateSelectList(form.AkBankId, form.TarDari, form.TarHingga);
+            PopulateSelectList(form.AkBankId, form.TarDari1, form.TarHingga1);
 
             if (form.AkBankId != 0)
             {
 
                 // cari baki bawa ke hadapan
-                decimal previousBalance = await _custom.GetCarryPreviousBalanceBasedOnStartingDate(form.AkBankId, form.JKWId, form.JBahagianId, form.TarDari);
+                decimal previousBalance = await _custom.GetCarryPreviousBalanceBasedOnStartingDate(form.AkBankId, form.JKWId, form.JBahagianId, form.TarDari1);
 
                 bukuTunai.Add(new AbBukuTunaiViewModel()
                 {
@@ -70,7 +70,7 @@ namespace MSNK.Controllers
                     KeluarMasuk = 0
                 });
 
-                var bukuTunaiSemasa = await _custom.GetListBukuTunaiBasedOnRangeDate(form.AkBankId, form.JKWId, form.JBahagianId, form.TarDari, form.TarHingga);
+                var bukuTunaiSemasa = await _custom.GetListBukuTunaiBasedOnRangeDate(form.AkBankId, form.JKWId, form.JBahagianId, form.TarDari1, form.TarHingga1);
 
                 bukuTunai.AddRange(bukuTunaiSemasa);
             }
@@ -124,7 +124,7 @@ namespace MSNK.Controllers
             {
 
                 // cari baki bawa ke hadapan
-                decimal previousBalance = await _custom.GetCarryPreviousBalanceBasedOnStartingDate(form.AkBankId, form.JKWId, form.JBahagianId, form.TarDari);
+                decimal previousBalance = await _custom.GetCarryPreviousBalanceBasedOnStartingDate(form.AkBankId, form.JKWId, form.JBahagianId, form.TarDari1);
 
                 bukuTunai.Add(new AbBukuTunaiViewModel()
                 {
@@ -141,7 +141,7 @@ namespace MSNK.Controllers
                     KeluarMasuk = 0
                 });
 
-                var bukuTunaiSemasa = await _custom.GetListBukuTunaiBasedOnRangeDate(form.AkBankId, form.JKWId, form.JBahagianId, form.TarDari, form.TarHingga);
+                var bukuTunaiSemasa = await _custom.GetListBukuTunaiBasedOnRangeDate(form.AkBankId, form.JKWId, form.JBahagianId, form.TarDari1, form.TarHingga1);
 
                 bukuTunai.AddRange(bukuTunaiSemasa);
 
@@ -154,8 +154,8 @@ namespace MSNK.Controllers
                 return new ViewAsPdf("BukuTunaiPrintPDF", bukuTunai,
                     new ViewDataDictionary(ViewData)
                     {
-                        { "TarDari", form.TarDari.ToString("dd/MM/yyyy hh:mm:ss tt") },
-                        { "TarHingga", form.TarHingga.ToString("dd/MM/yyyy hh:mm:ss tt") },
+                        { "TarDari", form.TarDari1.ToString("dd/MM/yyyy hh:mm:ss tt") },
+                        { "TarHingga", form.TarHingga1.ToString("dd/MM/yyyy hh:mm:ss tt") },
                         { "NamaBank", bank.NoAkaun + " (" + bank.AkCarta.Kod + " - " + bank.AkCarta.Perihal +") "},
                         { "NamaSyarikat", company.NamaSyarikat },
                         { "AlamatSyarikat1", company.AlamatSyarikat1 },
@@ -179,7 +179,7 @@ namespace MSNK.Controllers
                 ViewData["DateFrom"] = date1;
                 ViewData["DateTo"] = date2;
 
-                PopulateSelectList(form.AkBankId, form.TarDari, form.TarHingga);
+                PopulateSelectList(form.AkBankId, form.TarDari1, form.TarHingga1);
 
                 TempData[SD.Error] = "Akaun Bank Tidak Wujud.";
 

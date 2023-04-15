@@ -18,7 +18,9 @@
         public decimal Nov { get; set; }
         public decimal Dis { get; set; }
         public decimal Jan2 { get; set; }
-        public decimal JumAkaun { get; set; }
+        public decimal JumAkaun1 { get; set; }
+        public decimal JumAkaun2 { get; set; }
+        public decimal JumAkaun3 { get; set; }
         // nota:
         // KeluarMasuk: 0 = Baki Awal
         // KeluarMasuk: 1 = Masuk
