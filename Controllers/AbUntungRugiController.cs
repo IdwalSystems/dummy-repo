@@ -41,9 +41,9 @@ namespace MSNK.Controllers
         {
             var untungRugi = new List<AbUntungRugiViewModel>();
 
-            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarDari, form.TarHingga);
+            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarDari1, form.TarHingga1);
 
-            untungRugi = await _custom.GetListUntungRugiBasedOnRangeDate(form.JBahagianId, form.JKWId, form.TarDari, form.TarHingga);
+            untungRugi = await _custom.GetListUntungRugiBasedOnRangeDate(form.JBahagianId, form.JKWId, form.TarDari1, form.TarHingga1);
 
             dynamic dyModel = new ExpandoObject();
             dyModel.UntungRugi = untungRugi;
@@ -141,11 +141,11 @@ namespace MSNK.Controllers
         {
             var untungRugi = new List<AbUntungRugiViewModel>();
 
-            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarDari, form.TarHingga);
+            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarDari1, form.TarHingga1);
 
             if (form.JKWId != 0)
             {
-                untungRugi = await _custom.GetListUntungRugiBasedOnRangeDate(form.JBahagianId, form.JKWId, form.TarDari, form.TarHingga);
+                untungRugi = await _custom.GetListUntungRugiBasedOnRangeDate(form.JBahagianId, form.JKWId, form.TarDari1, form.TarHingga1);
 
                 dynamic dyModel = new ExpandoObject();
                 dyModel.UntungRugi = untungRugi;
@@ -158,8 +158,8 @@ namespace MSNK.Controllers
                 return new ViewAsPdf("UntungRugiPrintPDF", dyModel,
                         new ViewDataDictionary(ViewData)
                         {
-                        { "TarDari", form.TarDari.ToString("dd/MM/yyyy hh:mm:ss tt") },
-                        { "TarHingga", form.TarHingga.ToString("dd/MM/yyyy hh:mm:ss tt") },
+                        { "TarDari", form.TarDari1.ToString("dd/MM/yyyy hh:mm:ss tt") },
+                        { "TarHingga", form.TarHingga1.ToString("dd/MM/yyyy hh:mm:ss tt") },
                         { "NamaKW", jkw.Kod + " - " + jkw.Perihal },
                         { "NamaSyarikat", company.NamaSyarikat },
                         { "AlamatSyarikat1", company.AlamatSyarikat1 },
@@ -181,7 +181,7 @@ namespace MSNK.Controllers
                 ViewData["DateFrom"] = date1;
                 ViewData["DateTo"] = date2;
 
-                PopulateSelectList(form.JKWId, form.JBahagianId, form.TarDari, form.TarHingga);
+                PopulateSelectList(form.JKWId, form.JBahagianId, form.TarDari1, form.TarHingga1);
 
                 TempData[SD.Error] = "Kump. Wang Tidak Wujud.";
 

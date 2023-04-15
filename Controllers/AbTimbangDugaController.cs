@@ -41,9 +41,9 @@ namespace MSNK.Controllers
         {
             var timbangDuga = new List<AbTimbangDugaViewModel>();
 
-            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga);
+            PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga1);
 
-            timbangDuga = await _custom.GetListTimbangDugaBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga);
+            timbangDuga = await _custom.GetListTimbangDugaBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga1);
 
             return View(timbangDuga);
         }
@@ -130,7 +130,7 @@ namespace MSNK.Controllers
             if (form.JKWId != 0)
             {
                 
-                timbangDuga = await _custom.GetListTimbangDugaBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga);
+                timbangDuga = await _custom.GetListTimbangDugaBasedOnLastDate(form.JBahagianId, form.JKWId, form.TarHingga1);
 
                 var jkw = await _context.JKW.FirstOrDefaultAsync(b => b.Id == form.JKWId);
 
@@ -140,7 +140,7 @@ namespace MSNK.Controllers
                     new ViewDataDictionary(ViewData)
                     {
                         { "NamaKW", jkw.Kod + " - " + jkw.Perihal },
-                        { "TarHingga", form.TarHingga.ToString("dd/MM/yyyy hh:mm:ss tt") },
+                        { "TarHingga", form.TarHingga1.ToString("dd/MM/yyyy hh:mm:ss tt") },
                         { "NamaSyarikat", company.NamaSyarikat },
                         { "AlamatSyarikat1", company.AlamatSyarikat1 },
                         { "AlamatSyarikat2", company.AlamatSyarikat2 },
@@ -158,7 +158,7 @@ namespace MSNK.Controllers
             {
                 TempData[SD.Error] = "Kump. Wang Tidak Wujud.";
 
-                PopulateSelectList(form.JKWId, form.JBahagianId,form.TarHingga);
+                PopulateSelectList(form.JKWId, form.JBahagianId,form.TarHingga1);
 
                 return View(timbangDuga);
             }

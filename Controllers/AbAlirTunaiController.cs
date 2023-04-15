@@ -41,7 +41,7 @@ namespace MSNK.Controllers
         {
             var alirTunai = new List<AbAlirTunaiViewModel>();
 
-            PopulateSelectList(form.JKWId, form.AkBankId, form.JBahagianId, form.Tahun );
+            PopulateSelectList( form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun1, null, null );
 
             var date1 = DateTime.Now.Year.ToString() + "-01-01T00:00:01";
             var date2 = DateTime.Now.Year.ToString() + "-12-31T23:59:59";
@@ -51,15 +51,15 @@ namespace MSNK.Controllers
             {
                 // find previous balance
                 
-                AbAlirTunaiViewModel bakiAwal = await _custom.GetCarryPreviousBalanceEachStartingMonth(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun);
+                AbAlirTunaiViewModel bakiAwal = await _custom.GetCarryPreviousBalanceEachStartingMonth(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun1);
 
                 alirTunai.Add(bakiAwal);
 
-                List<AbAlirTunaiViewModel> tunaiMasuk = await _custom.GetListAlirTunaiMasukBasedOnYear(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun);
+                List<AbAlirTunaiViewModel> tunaiMasuk = await _custom.GetListAlirTunaiMasukBasedOnYear(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun1);
 
                 alirTunai.AddRange(tunaiMasuk);
 
-                List<AbAlirTunaiViewModel> tunaiKeluar = await _custom.GetListAlirTunaiKeluarBasedOnYear(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun);
+                List<AbAlirTunaiViewModel> tunaiKeluar = await _custom.GetListAlirTunaiKeluarBasedOnYear(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun1);
 
                 alirTunai.AddRange(tunaiKeluar);
 
@@ -81,8 +81,8 @@ namespace MSNK.Controllers
                     bakiAkhir.Sep = bakiAwal.Okt;
                     bakiAkhir.Okt = bakiAwal.Nov;
                     bakiAkhir.Nov = bakiAwal.Dis;
-                    bakiAkhir.Dis = bakiAwal.JumAkaun;
-                    bakiAkhir.JumAkaun = bakiAwal.JumAkaun;
+                    bakiAkhir.Dis = bakiAwal.JumAkaun1;
+                    bakiAkhir.JumAkaun1 = bakiAwal.JumAkaun1;
 
                     alirTunai.Add(bakiAkhir);
                 }
@@ -91,12 +91,58 @@ namespace MSNK.Controllers
             return View(alirTunai);
         }
 
-        public void PopulateSelectList(int AkBankId, int JKWId, int JBahagianId, string Tahun)
+        public async Task<IActionResult> IndexTahun(PenyataFormModel form)
         {
-            if (String.IsNullOrWhiteSpace(Tahun))
-                ViewData["Tahun"] = DateTime.Now.Year.ToString();
+            // dummy
+            //form.AkBankId = 2;
+            //form.JKWId = 1;
+            //form.JBahagianId = 0;
+            //form.Tahun1 = "2021";
+            //form.Tahun2 = "2022";
+            //form.Tahun3 = "2023";
+
+            var bakiAkhir = new List<AbAlirTunaiViewModel>();
+
+            PopulateSelectList(0, form.JKWId, form.JBahagianId, form.Tahun1,form.Tahun2,form.Tahun3);
+
+            var date1 = DateTime.Now.Year.ToString() + "-01-01T00:00:01";
+            var date2 = DateTime.Now.Year.ToString() + "-12-31T23:59:59";
+            //ViewData["Tahun"] = DateTime.Now.Year.ToString();
+
+            if (form.Tahun1 != null)
+            {
+                bakiAkhir = await _custom.GetListAlirTunaiBasedOnComparedYear(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun1, form.Tahun2, form.Tahun3);
+
+            }
+            bakiAkhir = bakiAkhir.GroupBy(b => new { b.NoAkaun })
+                .Select(l => new AbAlirTunaiViewModel
+                {
+                    NoAkaun = l.First().NoAkaun,
+                    NamaAkaun = l.First().NamaAkaun,
+                    JumAkaun1 = l.Sum(j => j.JumAkaun1),
+                    JumAkaun2 = l.Sum(j => j.JumAkaun2),
+                    JumAkaun3 = l.Sum(j => j.JumAkaun3)
+
+                }).OrderBy(b => b.NoAkaun).ToList();
+            return View(bakiAkhir);
+        }
+
+        public void PopulateSelectList(int AkBankId, int JKWId, int JBahagianId, string Tahun1, string Tahun2, string Tahun3)
+        {
+            if (String.IsNullOrWhiteSpace(Tahun1))
+                ViewData["Tahun1"] = DateTime.Now.Year.ToString();
             else 
-                ViewData["Tahun"] = Tahun;
+                ViewData["Tahun1"] = Tahun1;
+
+            if (String.IsNullOrWhiteSpace(Tahun2))
+                ViewData["Tahun2"] = null;
+            else
+                ViewData["Tahun2"] = Tahun2;
+
+            if (String.IsNullOrWhiteSpace(Tahun3))
+                ViewData["Tahun3"] = null;
+            else
+                ViewData["Tahun3"] = Tahun3;
 
             // populate list bank 
             List<AkBank> akBankList = _context.AkBank.Include(b => b.AkCarta).ToList();
@@ -196,7 +242,7 @@ namespace MSNK.Controllers
         {
             var alirTunai = new List<AbAlirTunaiViewModel>();
 
-            PopulateSelectList(form.JKWId, form.AkBankId, form.JBahagianId, form.Tahun);
+            PopulateSelectList(form.JKWId, form.AkBankId, form.JBahagianId, form.Tahun1, null, null);
 
             var date1 = DateTime.Now.Year.ToString() + "-01-01T00:00:01";
             var date2 = DateTime.Now.Year.ToString() + "-12-31T23:59:59";
@@ -205,15 +251,15 @@ namespace MSNK.Controllers
             if (form.AkBankId != 0)
             {
 
-                AbAlirTunaiViewModel bakiAwal = await _custom.GetCarryPreviousBalanceEachStartingMonth(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun);
+                AbAlirTunaiViewModel bakiAwal = await _custom.GetCarryPreviousBalanceEachStartingMonth(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun1);
 
                 alirTunai.Add(bakiAwal);
 
-                List<AbAlirTunaiViewModel> tunaiMasuk = await _custom.GetListAlirTunaiMasukBasedOnYear(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun);
+                List<AbAlirTunaiViewModel> tunaiMasuk = await _custom.GetListAlirTunaiMasukBasedOnYear(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun1);
 
                 alirTunai.AddRange(tunaiMasuk);
 
-                List<AbAlirTunaiViewModel> tunaiKeluar = await _custom.GetListAlirTunaiKeluarBasedOnYear(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun);
+                List<AbAlirTunaiViewModel> tunaiKeluar = await _custom.GetListAlirTunaiKeluarBasedOnYear(form.AkBankId, form.JKWId, form.JBahagianId, form.Tahun1);
 
                 alirTunai.AddRange(tunaiKeluar);
 
@@ -234,7 +280,7 @@ namespace MSNK.Controllers
                 bakiAkhir.Okt = bakiAwal.Nov;
                 bakiAkhir.Nov = bakiAwal.Dis;
                 bakiAkhir.Dis = bakiAwal.Jan2;
-                bakiAkhir.JumAkaun = bakiAwal.Jan2;
+                bakiAkhir.JumAkaun1 = bakiAwal.Jan2;
 
                 alirTunai.Add(bakiAkhir);
 
@@ -246,7 +292,7 @@ namespace MSNK.Controllers
 
                 var company = await _userService.GetCompanyDetails();
 
-                ViewData["Tahun"] = form.Tahun;
+                ViewData["Tahun"] = form.Tahun1;
 
                 return new ViewAsPdf("AlirTunaiPrintPDF", alirTunai,
                     new ViewDataDictionary(ViewData)
@@ -273,7 +319,7 @@ namespace MSNK.Controllers
                 date2 = DateTime.Now.Year.ToString() + "-12-31T23:59:59";
                 ViewData["Tahun"] = DateTime.Now.Year.ToString();
 
-                PopulateSelectList(form.JKWId, form.AkBankId, form.JBahagianId, form.Tahun);
+                PopulateSelectList(form.JKWId, form.AkBankId, form.JBahagianId, form.Tahun1, null, null);
 
                 TempData[SD.Error] = "Akaun Bank Tidak Wujud.";
 

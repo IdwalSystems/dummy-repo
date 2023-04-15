@@ -3,12 +3,12 @@
     ViewData["Title"] = "Cetakan Kunci Kira-kira";
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
 
-    decimal aset = 0;
+    decimal asetTetap = 0;
+    decimal asetSemasa = 0;
+    decimal JumAset = 0;
     decimal liabiliti = 0;
     decimal asetBersih = 0;
     decimal ekuiti = 0;
-    decimal untungRugi = 0;
-    decimal ekuitiPlusUntungRugi = 0;
     string dateTo = "";
     string key = "";
 
@@ -109,10 +109,13 @@
                     switch (group.Key)
                     {
                         case 1:
-                            key = "ASET";
+                            key = "ASET SEMASA";
                             break;
                         case 2:
-                            key = "LIABILITI";
+                            key = "ASET TETAP";
+                            break;
+                        case 3:
+                            key = "LIABILITI SEMASA";
                             break;
                         case 4:
                             key = "EKUITI";
@@ -129,26 +132,22 @@
 
                         switch (item.Jenis)
                         {
-                            case "A":
-                                aset += item.Amaun;
+                            case "ASET TETAP":
+                                asetTetap += item.Amaun;
+                                JumAset += item.Amaun;
                                 asetBersih += item.Amaun;
                                 break;
-                            case "L":
+                            case "ASET SEMASA":
+                                asetSemasa += item.Amaun;
+                                JumAset += item.Amaun;
+                                asetBersih += item.Amaun;
+                                break;
+                            case "LIABILITI SEMASA":
                                 liabiliti += item.Amaun;
                                 asetBersih -= item.Amaun;
                                 break;
-                            case "E":
+                            case "EKUITI":
                                 ekuiti += item.Amaun;
-                                break;
-                            case "H":
-                                untungRugi += item.Amaun;
-                                ekuitiPlusUntungRugi += item.Amaun;
-                                //continue;
-                                break;
-                            case "B":
-                                untungRugi -= item.Amaun;
-                                ekuitiPlusUntungRugi -= item.Amaun;
-                                //continue;
                                 break;
                         }
                         <tr>
@@ -169,14 +168,24 @@
                     {
                         case 1:
                             <tr class=" font-weight-bold">
-                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Aset RM</td>
-                                <td>@Convert.ToDecimal(aset).ToString("#,##0.00")</td>
+                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Aset Semasa RM</td>
+                                <td>@Convert.ToDecimal(asetSemasa).ToString("#,##0.00")</td>
                             </tr>
 
                             break;
                         case 2:
                             <tr class=" font-weight-bold">
-                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Liabiliti RM</td>
+                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Aset Tetap RM</td>
+                                <td>@Convert.ToDecimal(asetTetap).ToString("#,##0.00")</td>
+                            </tr>
+                            <tr class=" font-weight-bold">
+                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Aset RM</td>
+                                <td>@Convert.ToDecimal(JumAset).ToString("#,##0.00")</td>
+                            </tr>
+                            break;
+                        case 3:
+                            <tr class=" font-weight-bold">
+                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Liabiliti Semasa RM</td>
                                 <td>@Convert.ToDecimal(liabiliti).ToString("#,##0.00")</td>
                             </tr>
                             <tr class=" font-weight-bold">
@@ -190,19 +199,11 @@
                                 <td>@Convert.ToDecimal(ekuiti).ToString("#,##0.00")</td>
                             </tr>
                             break;
-                        case 5:
-                            <tr class=" font-weight-bold">
-                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Untung/Rugi RM</td>
-                                <td>@Convert.ToDecimal(untungRugi).ToString("#,##0.00")</td>
-                            </tr>
-                            <tr class=" font-weight-bold">
-                                <td colspan="2" class="text-right text-uppercase table-warning">Jumlah Ekuiti + Untung/Rugi RM</td>
-                                <td>@Convert.ToDecimal(ekuitiPlusUntungRugi).ToString("#,##0.00")</td>
-                            </tr>
-                            break;
                     }
 
+
                 }
+
 
             </tbody>
 

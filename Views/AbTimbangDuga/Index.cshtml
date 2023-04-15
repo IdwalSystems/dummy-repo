@@ -64,7 +64,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">Hingga</span>
                                         </div>
-                                        <input class="form-control form-control-sm" type="datetime-local" name="TarHingga" value="@ViewData["DateTo"]" id="tarikh2" required />
+                                        <input class="form-control form-control-sm" type="datetime-local" name="TarHingga1" value="@ViewData["DateTo"]" id="tarikh2" required />
                                         <label class="invalid-feedback">Sila isi ruangan ini.</label>
                                     </div>
                                 </div>
@@ -140,8 +140,9 @@
                                 
                                 @foreach (var item in Model)
                                 {
-                                    jumDebit += item.Debit;
-                                    jumKredit += item.Kredit;
+                                    if (item.Debit > 0) jumDebit += item.Debit;
+                                    if (item.Kredit > 0) jumKredit += item.Kredit;
+
                                     <tr>
                                         <td>
                                             @item.NoAkaun
@@ -155,12 +156,25 @@
                                         <td>
                                             @item.Jenis
                                         </td>
-                                        <td>
-                                            @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
-                                        </td>
-                                        <td>
-                                            @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
-                                        </td>
+                                            @if (item.Debit > 0)
+                                            {
+                                                <td>
+                                                    @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
+                                                </td>
+                                                
+                                            }
+                                            else
+                                            {
+                                                <td>0.00</td>
+                                            }
+                                            @if (item.Kredit > 0)
+                                            {
+                                                <td>@Convert.ToDecimal(item.Kredit).ToString("#,##0.00")</td>
+                                            }
+                                            else
+                                            {
+                                                <td>0.00</td>
+                                            }           
                                     </tr>
 
                                 }
@@ -231,7 +245,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">Hingga</span>
                                 </div>
-                                <input class="form-control form-control-sm" type="datetime-local" name="TarHingga" value="@ViewData["DateTo"]" id="tarikh2" required />
+                                <input class="form-control form-control-sm" type="datetime-local" name="TarHingga1" value="@ViewData["DateTo"]" id="tarikh2" required />
                                 <label class="invalid-feedback">Sila isi ruangan ini.</label>
                             </div>
                         </div>
