@@ -96,25 +96,31 @@ namespace MSNK.Models.Modules.EFRepository
 
             var startingYear = company.TarMula.Year;
 
-            List<AkAkaun> akAkaun = await context.AkAkaun.Where(b => b.Tarikh.Year == startingYear
-                && b.Tarikh < TarMula).ToListAsync();
-
-            if (JKWId != 0)
-            {
-                akAkaun = akAkaun.Where(b => b.JKWId == JKWId).ToList();
-            }
-
-            if (JBahagianId != 0)
-            {
-                akAkaun = akAkaun.Where(b => b.JBahagianId == JBahagianId).ToList();
-            }
-
+            var akBank = await context.AkBank.Include(b => b.AkCarta).FirstOrDefaultAsync(b => b.Id == akBankId);
             decimal previousBalance = 0;
 
-            foreach (var item in akAkaun)
+            if (akBank != null)
             {
-                previousBalance = previousBalance + item.Debit - item.Kredit;
+                List<AkAkaun> akAkaun = await context.AkAkaun.Where(b => b.AkCartaId1 == akBank.AkCartaId && b.Tarikh < TarMula).ToListAsync();
+
+                if (JKWId != 0)
+                {
+                    akAkaun = akAkaun.Where(b => b.JKWId == JKWId).ToList();
+                }
+
+                if (JBahagianId != 0)
+                {
+                    akAkaun = akAkaun.Where(b => b.JBahagianId == JBahagianId).ToList();
+                }
+
+                
+
+                foreach (var item in akAkaun)
+                {
+                    previousBalance = previousBalance + item.Debit - item.Kredit;
+                }
             }
+            
 
             return previousBalance;
         }

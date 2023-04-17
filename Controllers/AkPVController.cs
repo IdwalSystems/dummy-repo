@@ -3343,8 +3343,6 @@ namespace MSNK.Controllers
                         // insert into akAkaun
                         if (akPV.AkPV2 != null && akPV.AkPV2.Count > 0 )
                         {
-                            foreach (var i in akPV.AkPV2)
-                            {
                                 //insert into akAkaun dengan tanggungan
                                 AkAkaun akAKodBank = new AkAkaun()
                                 {
@@ -3352,7 +3350,7 @@ namespace MSNK.Controllers
                                     JKWId = akPV.JKWId,
                                     JBahagianId = akPV.JBahagianId,
                                     AkCartaId1 = akPV.AkBank.AkCartaId,
-                                    AkCartaId2 = i.AkBelian.KodObjekAPId,
+                                    AkCartaId2 = item.AkCartaId,
                                     Tarikh = akPV.Tarikh,
                                     Kredit = item.Amaun,
                                     AkPembekalId = akPV.AkPembekalId
@@ -3365,7 +3363,7 @@ namespace MSNK.Controllers
                                     NoRujukan = akPV.NoPV,
                                     JKWId = akPV.JKWId,
                                     JBahagianId = akPV.JBahagianId,
-                                    AkCartaId1 = i.AkBelian.KodObjekAPId,
+                                    AkCartaId1 = item.AkCartaId,
                                     AkCartaId2 = akPV.AkBank.AkCartaId,
                                     Tarikh = akPV.Tarikh,
                                     Debit = item.Amaun,
@@ -3373,8 +3371,6 @@ namespace MSNK.Controllers
                                 };
 
                                 await _akAkaunRepo.Insert(akAObjek);
-
-                            }
 
                         }
                         else

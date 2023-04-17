@@ -94,18 +94,18 @@ namespace MSNK.Controllers
 
                 if (bakiawalDebit>0 || bakiawalKredit > 0)
                 {
-                    if (Carta.DebitKredit == "K")
-                    {
-                        akAkBakiAwal.Add(new AkAkaun()
-                        {
-                            Tarikh = date1,
-                            NoRujukan = "Baki Awal",
-                            Debit = bakiawalKredit,
-                            Kredit = bakiawalDebit
-                        });
-                    }
-                    else
-                    {
+                    //if (Carta.DebitKredit == "K")
+                    //{
+                    //    akAkBakiAwal.Add(new AkAkaun()
+                    //    {
+                    //        Tarikh = date1,
+                    //        NoRujukan = "Baki Awal",
+                    //        Debit = bakiawalKredit,
+                    //        Kredit = bakiawalDebit
+                    //    });
+                    //}
+                    //else
+                    //{
                         akAkBakiAwal.Add(new AkAkaun()
                         {
                             Tarikh = date1,
@@ -113,7 +113,7 @@ namespace MSNK.Controllers
                             Debit = bakiawalDebit,
                             Kredit = bakiawalKredit
                         });
-                    }
+                    //}
                     foreach(var i in akAkaun)
                     {
                         akAkBakiAwal.Add(new AkAkaun() {
