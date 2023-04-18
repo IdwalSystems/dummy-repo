@@ -3343,6 +3343,12 @@ namespace MSNK.Controllers
                         // insert into akAkaun
                         if (akPV.AkPV2 != null && akPV.AkPV2.Count > 0 )
                         {
+                            int kodAkaunPerdangangan = 0;
+                            
+                            foreach(var item2 in akPV.AkPV2)
+                            {
+                                kodAkaunPerdangangan = item2.AkBelian.KodObjekAPId;
+                            }
                                 //insert into akAkaun dengan tanggungan
                                 AkAkaun akAKodBank = new AkAkaun()
                                 {
@@ -3350,7 +3356,7 @@ namespace MSNK.Controllers
                                     JKWId = akPV.JKWId,
                                     JBahagianId = akPV.JBahagianId,
                                     AkCartaId1 = akPV.AkBank.AkCartaId,
-                                    AkCartaId2 = item.AkCartaId,
+                                    AkCartaId2 = kodAkaunPerdangangan,
                                     Tarikh = akPV.Tarikh,
                                     Kredit = item.Amaun,
                                     AkPembekalId = akPV.AkPembekalId
@@ -3363,7 +3369,7 @@ namespace MSNK.Controllers
                                     NoRujukan = akPV.NoPV,
                                     JKWId = akPV.JKWId,
                                     JBahagianId = akPV.JBahagianId,
-                                    AkCartaId1 = item.AkCartaId,
+                                    AkCartaId1 = kodAkaunPerdangangan,
                                     AkCartaId2 = akPV.AkBank.AkCartaId,
                                     Tarikh = akPV.Tarikh,
                                     Debit = item.Amaun,
