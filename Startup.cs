@@ -502,12 +502,12 @@ namespace MSNK
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
         {
             // debug shown if error (developer mode on)
-            //app.UseDeveloperExceptionPage();
+            app.UseDeveloperExceptionPage();
             // debug shown if error (developer mode on) end
             //
             // debug hide if error (developer mode off)
-            app.UseExceptionHandler("/Home/Error");
-            app.UseHsts();
+            //app.UseExceptionHandler("/Home/Error");
+            //app.UseHsts();
             // debug hide if error (developer mode off) end
 
             app.UseStatusCodePagesWithReExecute("/Home/HandleError/{0}");
