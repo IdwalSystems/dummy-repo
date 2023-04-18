@@ -33,6 +33,7 @@ namespace MSNK.Models.Modules
         [DisplayName("No Rujukan")]
         [Required(ErrorMessage = "No Rujukan diperlukan")]
         public string NoInbois { get; set; }
+        public string NoRujukan { get; set; }
         [BindProperty]
         [DisplayName("Jumlah RM")]
         [Column(TypeName = "decimal(18, 2)")]

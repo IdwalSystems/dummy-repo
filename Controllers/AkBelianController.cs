@@ -97,6 +97,24 @@ namespace MSNK.Controllers
             await _appLog.Insert(appLog, modul, operasi);
         }
 
+
+        // on change kod pembekal controller
+        [HttpPost]
+        public async Task<JsonResult> JsonGetKod(int data, string noInbois)
+        {
+            try
+            {
+                var result = await _context.AkBelian.FirstOrDefaultAsync(x => x.NoInbois == "IN/"+ data +"/"+noInbois);
+
+                return Json(new { result = "OK", record = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "Error", message = ex.Message });
+            }
+        }
+        //on change kod pembekal controller end
+
         // GET: AkBelian
         [Authorize(Policy = "TG002")]
         public async Task<IActionResult> Index(
@@ -213,6 +231,283 @@ namespace MSNK.Controllers
             return View(viewModel);
         }
 
+        // GET: AkBelian/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // admin access
+            var akBelian = await _akBelianRepo.GetByIdIncludeDeletedItems((int)id);
+
+            if (akBelian == null)
+            {
+                return NotFound();
+            }
+
+            var kodObjekAkaunPemiutang = await _akCartaRepo.GetByIdIncludeDeletedItems(akBelian.KodObjekAPId);
+
+            var akPO = new AkPO();
+            if (akBelian.AkPOId != null)
+            {
+                akPO = await _akPORepo.GetByIdIncludeDeletedItems((int)akBelian.AkPOId);
+            }
+            else
+            {
+                akPO = new AkPO()
+                {
+                    NoPO = "-"
+                };
+            }
+
+            var akInden = new AkInden();
+            if (akBelian.AkIndenId != null)
+            {
+                akInden = await _akIndenRepo.GetByIdIncludeDeletedItems((int)akBelian.AkIndenId);
+            }
+            else
+            {
+                akInden = new AkInden()
+                {
+                    NoInden = "-"
+                };
+            }
+
+            // check if linked with Nota Debit/ Kredit, show list of nota debit/kredit
+            var akNota = _context.AkNotaDebitKreditBelian.Where(b => b.AkBelianId == id).ToList();
+
+            // check if already paid, show list of PVs in AkBelian
+            var akPV2 = _context.AkPV2.Include(b => b.AkPV).Where(b => b.AkBelianId == id).ToList();
+
+            var pembekal = await _akPembekalRepo.GetByIdIncludeDeletedItems(akBelian.AkPembekalId);
+
+
+            // admin access end
+
+            // normal user access
+            if (User.IsInRole("User"))
+            {
+                kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
+
+                if (akBelian.AkPOId != null)
+                {
+                    akPO = await _akPORepo.GetById((int)akBelian.AkPOId);
+                }
+                else
+                {
+                    akPO = new AkPO()
+                    {
+                        NoPO = "-"
+                    };
+                }
+
+                if (akBelian.AkIndenId != null)
+                {
+                    akInden = await _akIndenRepo.GetById((int)akBelian.AkIndenId);
+                }
+                else
+                {
+                    akInden = new AkInden()
+                    {
+                        NoInden = "-"
+                    };
+                }
+
+                pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
+
+            }
+            //normal user access end
+
+            AkBelianViewModel akBelianView = new AkBelianViewModel();
+
+            //fill in view model AkPVViewModel from akPV
+            akBelianView.AkPembekalId = akBelian.AkPembekalId;
+            akBelianView.AkPO = akPO;
+            akBelianView.AkInden = akInden;
+            if (akPV2 != null)
+            {
+                foreach (var i in akPV2)
+                {
+                    akBelianView.JumlahPV += i.Amaun;
+                }
+
+                akBelianView.AkPV2 = akPV2;
+            }
+
+            if (akNota != null)
+            {
+                foreach (var i in akNota)
+                {
+                    if (i.FlJenis == 0)
+                    {
+                        akBelianView.JumlahNota += i.Jumlah;
+                    }
+                    else
+                    {
+                        akBelianView.JumlahNota -= i.Jumlah;
+                    }
+                }
+                akBelianView.AkNotaDebitKreditBelian = akNota;
+            }
+
+            akBelianView.AkPembekal = pembekal;
+            akBelianView.Id = akBelian.Id;
+            akBelianView.Tahun = akBelian.Tahun;
+            akBelianView.NoInbois = akBelian.NoInbois;
+            akBelianView.Tarikh = akBelian.Tarikh;
+            akBelianView.TarikhTerima = akBelian.TarikhTerima;
+            akBelianView.TarikhKewanganTerima = akBelian.TarikhKewanganTerima;
+            akBelianView.JKWId = akBelian.JKWId;
+            akBelianView.JKW = akBelian.JKW;
+            akBelianView.JBahagianId = akBelian.JBahagianId;
+            akBelianView.JBahagian = akBelian.JBahagian;
+            akBelianView.KodObjekAP = kodObjekAkaunPemiutang;
+            akBelianView.Jumlah = akBelian.Jumlah;
+            akBelianView.TarikhPosting = akBelian.TarikhPosting;
+            akBelianView.FlPosting = akBelian.FlPosting;
+            akBelianView.FlHapus = akBelian.FlHapus;
+
+            foreach (AkBelian2 item in akBelian.AkBelian2)
+            {
+                akBelianView.JumlahPerihal += item.Amaun;
+            }
+            akBelianView.AkBelian1 = akBelian.AkBelian1;
+            akBelianView.AkBelian2 = akBelian.AkBelian2;
+
+            PopulateTable(id);
+            return View(akBelianView);
+        }
+
+
+        // GET: AkBelian/Delete/5
+        [Authorize(Policy = "TG002D")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var akBelian = await _akBelianRepo.GetById((int)id);
+
+            var kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
+
+            var akPO = new AkPO();
+            if (akBelian.AkPOId != null)
+            {
+                akPO = await _akPORepo.GetById((int)akBelian.AkPOId);
+            }
+            else
+            {
+                akPO = new AkPO()
+                {
+                    NoPO = "-"
+                };
+            }
+
+            var pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
+
+            if (akBelian == null)
+            {
+                return NotFound();
+            }
+
+            AkBelianViewModel akBelianView = new AkBelianViewModel();
+
+            //fill in view model AkPVViewModel from akPV
+            akBelianView.AkPembekalId = akBelian.AkPembekalId;
+            akBelianView.AkPO = akPO;
+            akBelianView.AkPembekal = pembekal;
+            akBelianView.JBahagian = akBelian.JBahagian;
+            akBelianView.Id = akBelian.Id;
+            akBelianView.Tahun = akBelian.Tahun;
+            akBelianView.NoInbois = akBelian.NoInbois;
+            akBelianView.Tarikh = akBelian.Tarikh;
+            akBelianView.TarikhTerima = akBelian.TarikhTerima;
+            akBelianView.TarikhKewanganTerima = akBelian.TarikhKewanganTerima;
+            akBelianView.JKW = akBelian.JKW;
+            akBelianView.KodObjekAP = kodObjekAkaunPemiutang;
+            akBelianView.Jumlah = akBelian.Jumlah;
+            akBelianView.TarikhPosting = akBelian.TarikhPosting;
+            akBelianView.FlPosting = akBelian.FlPosting;
+            akBelianView.FlHapus = akBelian.FlHapus;
+
+            foreach (AkBelian2 item in akBelian.AkBelian2)
+            {
+                akBelianView.JumlahPerihal += item.Amaun;
+            }
+            akBelianView.AkBelian1 = akBelian.AkBelian1;
+            akBelianView.AkBelian2 = akBelian.AkBelian2;
+
+            PopulateTable(id);
+            return View(akBelianView);
+        }
+
+        // POST: AkBelian/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "TG002D")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var akBelian = await _context.AkBelian.FindAsync(id);
+            // check if already posting redirect back
+            if (akBelian.FlPosting == 1)
+            {
+                TempData[SD.Error] = "Akses tidak dibenarkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // check if already link with AkNotaDebitKreditBelian
+            var akNota = await _context.AkNotaDebitKreditBelian.FirstOrDefaultAsync(b => b.AkBelianId == id);
+
+            if (akNota != null)
+            {
+                //duplicate id error
+                TempData[SD.Error] = "Data terkait dengan nota debit/kredit " + akNota.NoRujukan + ".";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // check if already link with akPV, Batal akPV included
+            var akPV = await _akPVRepo.GetAll();
+            var akPV2 = _context.AkPV2.ToList();
+            var result = (from tbl2 in akPV2
+                          join tbl in akPV
+                          on tbl2.AkPVId equals tbl.Id into tbl2Tbl
+                          from tbl2_tbl in tbl2Tbl
+                          select new
+                          {
+                              Id = tbl2.Id,
+                              AkPVId = tbl2.AkPVId,
+                              AkBelianId = tbl2.AkBelianId
+
+                          }).Where(x => x.AkBelianId == id).FirstOrDefault();
+
+            if (result != null)
+            {
+                AkPV akPVItem = await _akPVRepo.GetById(result.AkPVId);
+                //duplicate id error
+                TempData[SD.Error] = "Data terkait dengan no baucer " + akPVItem.NoPV + ".";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+
+            akBelian.UserIdKemaskini = user.UserName;
+            akBelian.TarKemaskini = DateTime.Now;
+            akBelian.SuPekerjaKemaskiniId = pekerjaId;
+
+            _context.AkBelian.Remove(akBelian);
+            //insert applog
+            await AddLogAsync("Hapus", "Hapus Data", akBelian.NoInbois, id, akBelian.Jumlah, pekerjaId);
+            //insert applog end
+            await _context.SaveChangesAsync();
+            TempData[SD.Success] = "Data berjaya dihapuskan..!";
+            return RedirectToAction(nameof(Index));
+        }
+
         private void PopulateList()
         {
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
@@ -291,6 +586,17 @@ namespace MSNK.Controllers
             ViewBag.akBelian2 = lines2;
         }
 
+
+        // GET: AkBelian/Create
+        [Authorize(Policy = "TG002C")]
+        public IActionResult Create()
+        {
+
+            PopulateList();
+            CartEmpty();
+            return View();
+        }
+
         private void PopulateCartFromDb(AkBelian akBelian)
         {
             List<AkBelian1> akBelian1Table = _context.AkBelian1
@@ -323,163 +629,8 @@ namespace MSNK.Controllers
             }                  
         }
 
-        // GET: AkBelian/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            // admin access
-            var akBelian = await _akBelianRepo.GetByIdIncludeDeletedItems((int)id);
-
-            if (akBelian == null)
-            {
-                return NotFound();
-            }
-
-            var kodObjekAkaunPemiutang = await _akCartaRepo.GetByIdIncludeDeletedItems(akBelian.KodObjekAPId);
-
-            var akPO = new AkPO();
-            if (akBelian.AkPOId != null)
-            {
-                akPO = await _akPORepo.GetByIdIncludeDeletedItems((int)akBelian.AkPOId);
-            } else
-            {
-                akPO = new AkPO()
-                {
-                    NoPO = "-"
-                };     
-            }
-
-            var akInden = new AkInden();
-            if (akBelian.AkIndenId != null)
-            {
-                akInden = await _akIndenRepo.GetByIdIncludeDeletedItems((int)akBelian.AkIndenId);
-            }
-            else
-            {
-                akInden = new AkInden()
-                {
-                    NoInden = "-"
-                };
-            }
-
-            // check if linked with Nota Debit/ Kredit, show list of nota debit/kredit
-            var akNota = _context.AkNotaDebitKreditBelian.Where(b => b.AkBelianId == id).ToList();
-
-            // check if already paid, show list of PVs in AkBelian
-            var akPV2 = _context.AkPV2.Include(b=> b.AkPV).Where(b => b.AkBelianId == id).ToList();
-
-            var pembekal = await _akPembekalRepo.GetByIdIncludeDeletedItems(akBelian.AkPembekalId);
 
 
-            // admin access end
-
-            // normal user access
-            if (User.IsInRole("User"))
-            {
-                kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
-
-                if (akBelian.AkPOId != null)
-                {
-                    akPO = await _akPORepo.GetById((int)akBelian.AkPOId);
-                }
-                else
-                {
-                    akPO = new AkPO()
-                    {
-                        NoPO = "-"
-                    };
-                }
-
-                if (akBelian.AkIndenId != null)
-                {
-                    akInden = await _akIndenRepo.GetById((int)akBelian.AkIndenId);
-                }
-                else
-                {
-                    akInden = new AkInden()
-                    {
-                        NoInden = "-"
-                    };
-                }
-
-                pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
-
-            }
-            //normal user access end
-
-            AkBelianViewModel akBelianView = new AkBelianViewModel();
-
-            //fill in view model AkPVViewModel from akPV
-            akBelianView.AkPembekalId = akBelian.AkPembekalId;
-            akBelianView.AkPO = akPO;
-            akBelianView.AkInden = akInden;
-            if (akPV2 != null)
-            {
-                foreach( var i in akPV2)
-                {
-                    akBelianView.JumlahPV += i.Amaun;
-                }
-
-                akBelianView.AkPV2 = akPV2;
-            }
-            
-            if (akNota != null)
-            {
-                foreach( var i in akNota)
-                {
-                    if (i.FlJenis == 0)
-                    {
-                        akBelianView.JumlahNota += i.Jumlah;
-                    }
-                    else
-                    {
-                        akBelianView.JumlahNota -= i.Jumlah;
-                    }
-                }
-                akBelianView.AkNotaDebitKreditBelian = akNota;
-            }
-
-            akBelianView.AkPembekal = pembekal;
-            akBelianView.Id = akBelian.Id;
-            akBelianView.Tahun = akBelian.Tahun;
-            akBelianView.NoInbois = akBelian.NoInbois;
-            akBelianView.Tarikh = akBelian.Tarikh;
-            akBelianView.TarikhTerima = akBelian.TarikhTerima;
-            akBelianView.TarikhKewanganTerima = akBelian.TarikhKewanganTerima;
-            akBelianView.JKWId = akBelian.JKWId;
-            akBelianView.JKW = akBelian.JKW;
-            akBelianView.JBahagianId = akBelian.JBahagianId;
-            akBelianView.JBahagian = akBelian.JBahagian;
-            akBelianView.KodObjekAP = kodObjekAkaunPemiutang;
-            akBelianView.Jumlah = akBelian.Jumlah;
-            akBelianView.TarikhPosting = akBelian.TarikhPosting;
-            akBelianView.FlPosting = akBelian.FlPosting;
-            akBelianView.FlHapus = akBelian.FlHapus;
-
-            foreach (AkBelian2 item in akBelian.AkBelian2)
-            {
-                akBelianView.JumlahPerihal += item.Amaun;
-            }
-            akBelianView.AkBelian1 = akBelian.AkBelian1;
-            akBelianView.AkBelian2 = akBelian.AkBelian2;
-
-            PopulateTable(id);
-            return View(akBelianView);
-        }
-
-        // GET: AkBelian/Create
-        [Authorize(Policy = "TG002C")]
-        public IActionResult Create()
-        {
-            
-            PopulateList();
-            CartEmpty();
-            return View();
-        }
 
         public JsonResult CartEmpty()
         {
@@ -942,6 +1093,7 @@ namespace MSNK.Controllers
                     m.JBahagianId = JBahagianId;
                     m.Tahun = akBelian.Tahun;
                     m.NoInbois = noRujukan;
+                    m.NoRujukan = noRujukan;
                     m.Tarikh = akBelian.Tarikh;
                     m.TarikhTerima = akBelian.TarikhTerima;
                     m.TarikhKewanganTerima = akBelian.TarikhKewanganTerima;
@@ -1370,6 +1522,7 @@ namespace MSNK.Controllers
                         akBelian.JKWId = akBelianAsal.JKWId;
                         akBelian.JBahagianId = akBelianAsal.JBahagianId;
                         akBelian.NoInbois = akBelianAsal.NoInbois;
+                        akBelian.NoRujukan = akBelianAsal.NoRujukan;
                         akBelian.FlJenisTanggungan = akBelianAsal.FlJenisTanggungan;
                         akBelian.FlTanggungan = akBelianAsal.FlTanggungan;
 
@@ -1463,133 +1616,6 @@ namespace MSNK.Controllers
             PopulateList();
             PopulateTable(id);
             return View(akBelian);
-        }
-
-        // GET: AkBelian/Delete/5
-        [Authorize(Policy = "TG002D")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var akBelian = await _akBelianRepo.GetById((int)id);
-
-            var kodObjekAkaunPemiutang = await _akCartaRepo.GetById(akBelian.KodObjekAPId);
-
-            var akPO = new AkPO();
-            if (akBelian.AkPOId != null)
-            {
-                akPO = await _akPORepo.GetById((int)akBelian.AkPOId);
-            }
-            else
-            {
-                akPO = new AkPO()
-                {
-                    NoPO = "-"
-                };
-            }
-
-            var pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
-
-            if (akBelian == null)
-            {
-                return NotFound();
-            }
-
-            AkBelianViewModel akBelianView = new AkBelianViewModel();
-
-            //fill in view model AkPVViewModel from akPV
-            akBelianView.AkPembekalId = akBelian.AkPembekalId;
-            akBelianView.AkPO = akPO;
-            akBelianView.AkPembekal = pembekal;
-            akBelianView.JBahagian = akBelian.JBahagian;
-            akBelianView.Id = akBelian.Id;
-            akBelianView.Tahun = akBelian.Tahun;
-            akBelianView.NoInbois = akBelian.NoInbois;
-            akBelianView.Tarikh = akBelian.Tarikh;
-            akBelianView.TarikhTerima = akBelian.TarikhTerima;
-            akBelianView.TarikhKewanganTerima = akBelian.TarikhKewanganTerima;
-            akBelianView.JKW = akBelian.JKW;
-            akBelianView.KodObjekAP = kodObjekAkaunPemiutang;
-            akBelianView.Jumlah = akBelian.Jumlah;
-            akBelianView.TarikhPosting = akBelian.TarikhPosting;
-            akBelianView.FlPosting = akBelian.FlPosting;
-            akBelianView.FlHapus = akBelian.FlHapus;
-
-            foreach (AkBelian2 item in akBelian.AkBelian2)
-            {
-                akBelianView.JumlahPerihal += item.Amaun;
-            }
-            akBelianView.AkBelian1 = akBelian.AkBelian1;
-            akBelianView.AkBelian2 = akBelian.AkBelian2;
-
-            PopulateTable(id);
-            return View(akBelianView);
-        }
-
-        // POST: AkBelian/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Authorize(Policy = "TG002D")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var akBelian = await _context.AkBelian.FindAsync(id);
-            // check if already posting redirect back
-            if (akBelian.FlPosting == 1)
-            {
-                TempData[SD.Error] = "Akses tidak dibenarkan..!";
-                return RedirectToAction(nameof(Index));
-            }
-
-            // check if already link with AkNotaDebitKreditBelian
-            var akNota = await _context.AkNotaDebitKreditBelian.FirstOrDefaultAsync(b => b.AkBelianId == id);
-
-            if (akNota != null)
-            {
-                //duplicate id error
-                TempData[SD.Error] = "Data terkait dengan nota debit/kredit " + akNota.NoRujukan + ".";
-                return RedirectToAction(nameof(Index));
-            }
-
-            // check if already link with akPV, Batal akPV included
-            var akPV = await _akPVRepo.GetAll();
-            var akPV2 = _context.AkPV2.ToList();
-            var result = (from tbl2 in akPV2
-                          join tbl in akPV
-                          on tbl2.AkPVId equals tbl.Id into tbl2Tbl
-                          from tbl2_tbl in tbl2Tbl
-                          select new
-                          {
-                              Id = tbl2.Id,
-                              AkPVId = tbl2.AkPVId,
-                              AkBelianId = tbl2.AkBelianId
-
-                          }).Where(x => x.AkBelianId == id).FirstOrDefault();
-
-            if (result != null)
-            {
-                AkPV akPVItem = await _akPVRepo.GetById(result.AkPVId);
-                //duplicate id error
-                TempData[SD.Error] = "Data terkait dengan no baucer " + akPVItem.NoPV + ".";
-                return RedirectToAction(nameof(Index));
-            }
-
-            var user = await _userManager.GetUserAsync(User);
-            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
-
-            akBelian.UserIdKemaskini = user.UserName;
-            akBelian.TarKemaskini = DateTime.Now;
-            akBelian.SuPekerjaKemaskiniId = pekerjaId;
-
-            _context.AkBelian.Remove(akBelian);
-            //insert applog
-            await AddLogAsync("Hapus", "Hapus Data", akBelian.NoInbois, id, akBelian.Jumlah, pekerjaId);
-            //insert applog end
-            await _context.SaveChangesAsync();
-            TempData[SD.Success] = "Data berjaya dihapuskan..!";
-            return RedirectToAction(nameof(Index));
         }
 
         private bool AkBelianExists(int id)
@@ -2042,21 +2068,5 @@ namespace MSNK.Controllers
 
         }
 
-        // on change kod pembekal controller
-        [HttpPost]
-        public async Task<JsonResult> JsonGetKod(int data, string noInbois)
-        {
-            try
-            {
-                var result = await _context.AkBelian.FirstOrDefaultAsync(x=>x.NoInbois == "IN/"+ data +"/"+noInbois);
-
-                return Json(new { result = "OK", record = result });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { result = "Error", message = ex.Message });
-            }
-        }
-        //on change kod pembekal controller end
     }
 }
