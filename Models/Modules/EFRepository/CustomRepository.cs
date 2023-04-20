@@ -1302,7 +1302,7 @@ namespace MSNK.Models.Modules.EFRepository
             if (Tahun1 != null)
             {
                 List<AkAkaun> akAkaun1 = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                    .Where(b => b.Tarikh.Year == int.Parse(Tahun1)).ToList();
+                    .Where(b => b.Tarikh.Year <= int.Parse(Tahun1)).ToList();
 
                 if (JKWId != 0)
                 {
@@ -1343,7 +1343,7 @@ namespace MSNK.Models.Modules.EFRepository
             if (Tahun2 != null)
             {
                 List<AkAkaun> akAkaun2 = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                    .Where(b => b.Tarikh.Year == int.Parse(Tahun2)).ToList();
+                    .Where(b => b.Tarikh.Year <= int.Parse(Tahun2)).ToList();
 
                 if (JKWId != 0)
                 {
@@ -1385,7 +1385,7 @@ namespace MSNK.Models.Modules.EFRepository
             if (Tahun3 != null)
             {
                 List<AkAkaun> akAkaun3 = context.AkAkaun.Include(b => b.AkCarta1).Include(b => b.AkCarta2)
-                    .Where(b => b.Tarikh.Year == int.Parse(Tahun3)).ToList();
+                    .Where(b => b.Tarikh.Year <= int.Parse(Tahun3)).ToList();
 
                 if (JKWId != 0)
                 {
