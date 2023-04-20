@@ -439,7 +439,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label asp-for="SpPendahuluanPelbagaiId" class="control-label"></label>
-                            <input class="form-control form-control-sm" value="@Model.SpPendahuluanPelbagai.NoPermohonan" id="ddlPendahuluanPelbagai" readonly />
+                            <input class="form-control form-control-sm" value="@Model.SpPendahuluanPelbagai?.NoPermohonan" id="ddlPendahuluanPelbagai" readonly />
                             <span asp-validation-for="SpPendahuluanPelbagaiId" class="text-danger"></span>
                         </div>
                     </div>
