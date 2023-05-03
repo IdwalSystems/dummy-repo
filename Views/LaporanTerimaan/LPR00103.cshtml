@@ -109,7 +109,7 @@
                         <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
                         <td class="text-center" style="border-bottom:none;">@item.NoRujukan.Substring(3)</td>
                         <td class="text-left text-uppercase" style="border-bottom:none;">@item.Nama</td>
-                        <td class="text-left text-uppercase" style="border-bottom:none;">@item.AkBank.AkCarta.Kod - @item.AkBank.AkCarta.Perihal </td>
+                        <td class="text-left text-uppercase" style="border-bottom:none;">@item.AkBank?.AkCarta?.Kod - @item.AkBank?.AkCarta?.Perihal </td>
                     }
 
 

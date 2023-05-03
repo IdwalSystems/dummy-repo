@@ -91,7 +91,6 @@ namespace MSNK.Controllers
             else
             {
                 akBank.NoAkaun = "SEMUA";
-                akBank.AkCarta.Perihal = "";
             }
                 
 
@@ -311,8 +310,8 @@ namespace MSNK.Controllers
                                        KodLaporan = kodLaporan,
                                        KodKw = kW.Kod,
                                        PerihalKw = kW.Perihal,
-                                       AkaunBank = akBank.NoAkaun,
-                                       PerihalAkaunBank = akBank.AkCarta.Perihal,
+                                       AkaunBank = akBank.NoAkaun ?? "SEMUA",
+                                       PerihalAkaunBank = akBank.AkCarta?.Perihal ?? "",
                                        TarikhDari = tarikhDari,
                                        TarikhHingga = tarikhHingga,
                                        Tajuk = tajuk
