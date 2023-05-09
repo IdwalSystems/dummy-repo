@@ -6,7 +6,10 @@
 <partial name="_JSIndex" />
 
 <div class="card box-shadow">
-    <div class="card-body border">
+    <div class="loading">
+        <img class="loading-image" src="~/img/loading.gif" alt="Loading..." />
+    </div>
+    <div class="card card-body border main-page" hidden>
         <div class="row">
             <div class="col-8">
                 <h5 class="text-uppercase mb-0">Maklumat Pengguna</h5>
@@ -15,137 +18,137 @@
             <div class="col-4 text-right">
                 <a class="text-right btn ac-success" asp-action="Register">Daftar Baru</a>
             </div>
-    
-        </div>
-        <hr class="mt-2"/>
 
-<div class="card mb-2">
-    <div class="card-body pl-3 pb-2">
-        <label class="form-control-plaintext" for="columnSearch">Carian : </label>
-        <div class="form-actions no-color mb-2">
-            <div class="form-row">
-                <div class="col-sm-2 mb-2">
-                    <select class="custom-select form-control-sm" id="columnSearch">
-                        <option value="" selected>Semua</option>
-                        <option value=".emel">Emel</option>
-                        <option value=".nama">Nama</option>
-                    </select>
+        </div>
+        <hr class="mt-2" />
+
+        <div class="card mb-2">
+            <div class="card-body pl-3 pb-2">
+                <label class="form-control-plaintext" for="columnSearch">Carian : </label>
+                <div class="form-actions no-color mb-2">
+                    <div class="form-row">
+                        <div class="col-sm-2 mb-2">
+                            <select class="custom-select form-control-sm" id="columnSearch">
+                                <option value="" selected>Semua</option>
+                                <option value=".emel">Emel</option>
+                                <option value=".nama">Nama</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-8 mb-2">
+                            <input class="form-control form-control-sm" type="text" id="myInput" style="text-transform:uppercase" />
+                        </div>
+                        @*<div class="col-sm mb-2">
+                                <button class="btn btn-warning btn-sm" id="batalCari" value="Batal Carian"><i class="fas fa-backspace"></i></button>
+                            </div>*@
+                    </div>
                 </div>
-                <div class="col-sm-8 mb-2">
-                    <input class="form-control form-control-sm" type="text" id="myInput" style="text-transform:uppercase" />
-                </div>
-                @*<div class="col-sm mb-2">
-                        <button class="btn btn-warning btn-sm" id="batalCari" value="Batal Carian"><i class="fas fa-backspace"></i></button>
-                    </div>*@
             </div>
         </div>
-    </div>
-</div>
 
-@if (Model.Count() > 0)
-{
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover text-nowrap table-sm nowrap compact" width="100%">
-            <thead>
-                <tr class="table-secondary">
-                    <th width="5%">Bil</th>
-                    <th class="emel" width="20%">Emel</th>
-                    <th class="nama" width="50%">Nama</th>
-                    <th width="15%" >Tahap Pengguna</th>
-                    <th width="10%" class="action-button">Tindakan</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td></td>
-                        <td>
-                            @item.Email
-                        </td>
-                        <td>
-                            @item.Nama
-                        </td>
-                        <td>
-                            @String.Join(',',item.UserRoles)
-                        </td>
-                        <td class="action-button">
-                            <div>
-                                
-                                @if (!String.Join(',',item.UserRoles).Contains("SuperAdmin"))
-                                {
-                                    <form asp-action="Delete" asp-route-userId="@item.Id">
-                                        @if (User.IsInRole("SuperAdmin"))
+        @if (Model.Count() > 0)
+        {
+            <div class="table-responsive table-sm">
+                <table class="table table-bordered table-hover display nowrap compact" width="100%">
+                    <thead>
+                        <tr class="table-secondary">
+                            <th width="5%">Bil</th>
+                            <th class="emel" width="20%">Emel</th>
+                            <th class="nama" width="50%">Nama</th>
+                            <th width="15%">Tahap Pengguna</th>
+                            <th width="10%" class="action-button">Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td></td>
+                                <td>
+                                    @item.Email
+                                </td>
+                                <td>
+                                    @item.Nama
+                                </td>
+                                <td>
+                                    @String.Join(',', item.UserRoles)
+                                </td>
+                                <td class="action-button">
+                                    <div>
+
+                                        @if (!String.Join(',', item.UserRoles).Contains("SuperAdmin"))
                                         {
-                                            <a asp-action="ImpersonateUser" asp-route-userId="@item.Id" class="btn ac-dark btn-sm" style="cursor:pointer">
-                                                <i class="fa fa-user-secret"></i>
-                                            </a>
-                                        }
-                                        <a asp-action="Edit" asp-route-userId="@item.Id" class="btn ac-info btn-sm" style="cursor:pointer">
-                                            Ubah
-                                        </a>
-                                        <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn ac-primary btn-sm" type="button">Capaian</a>
-                                        @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now)
-                                        {
-                                            // we want to show them the option to lock
-                                            <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn ac-secondary btn-sm" style="cursor:pointer">
-                                                <span>&nbsp; Lock &nbsp;</span>
-                                            </button>
+                                            <form asp-action="Delete" asp-route-userId="@item.Id">
+                                                @if (User.IsInRole("SuperAdmin"))
+                                                {
+                                                    <a asp-action="ImpersonateUser" asp-route-userId="@item.Id" class="btn ac-dark btn-sm" style="cursor:pointer">
+                                                        <i class="fa fa-user-secret"></i>
+                                                    </a>
+                                                }
+                                                <a asp-action="Edit" asp-route-userId="@item.Id" class="btn ac-info btn-sm" style="cursor:pointer">
+                                                    Ubah
+                                                </a>
+                                                <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn ac-primary btn-sm" type="button">Capaian</a>
+                                                @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now)
+                                                {
+                                                    // we want to show them the option to lock
+                                                    <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn ac-secondary btn-sm" style="cursor:pointer">
+                                                        <span>&nbsp; Lock &nbsp;</span>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    // we want to show them the option to unlock
+                                                    <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn ac-warning btn-sm" style="cursor:pointer">
+                                                        <span>Unlock</span>
+                                                    </button>
+                                                }
+
+                                                <button type="submit" onclick="return confirm('Anda pasti?')" class="btn ac-danger btn-sm">Hapus</button>
+                                            </form>
                                         }
                                         else
                                         {
-                                            // we want to show them the option to unlock
-                                            <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn ac-warning btn-sm" style="cursor:pointer">
-                                                <span>Unlock</span>
-                                            </button>
+
+                                            <a href="#" class="btn ac-info btn-sm" style="cursor:pointer">
+                                                Ubah
+                                            </a>
+                                            <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn ac-primary btn-sm" type="button">Capaian</a>
+
                                         }
 
-                                        <button type="submit" onclick="return confirm('Anda pasti?')" class="btn ac-danger btn-sm">Hapus</button>
-                                    </form>
-                                }
-                                else
-                                {
-                                     
-                                    <a href="#" class="btn ac-info btn-sm" style="cursor:pointer">
-                                        Ubah
-                                    </a>
-                                    <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn ac-primary btn-sm" type="button" >Capaian</a>
-                                    
-                                }
 
+                                        @*<form asp-action="Delete" asp-route-userId="@item.Id">
 
-                                @*<form asp-action="Delete" asp-route-userId="@item.Id">
+                                                <a asp-action="Edit" asp-route-userId="@item.Id" class="btn btn-info text-white btn-sm" style="cursor:pointer">
+                                                    Ubah
+                                                </a>
+                                                <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn btn-primary text-white btn-sm" style="cursor:pointer">Capaian</a>
 
-            <a asp-action="Edit" asp-route-userId="@item.Id" class="btn btn-info text-white btn-sm" style="cursor:pointer">
-                Ubah
-            </a>
-            <a asp-action="ManageUserClaims" asp-route-userId="@item.Id" class="btn btn-primary text-white btn-sm" style="cursor:pointer">Capaian</a>
+                                                @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now)
+                                                {
+                                                    // we want to show them the option to lock
+                                                    <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-success text-white btn-sm" style="cursor:pointer">
+                                                        <span>&nbsp; Lock &nbsp;</span>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    // we want to show them the option to unlock
+                                                    <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-warning text-white" style="cursor:pointer">
+                                                        <span>Unlock</span>
+                                                    </button>
+                                                }
 
-            @if (item.LockoutEnd == null || item.LockoutEnd < DateTime.Now)
-            {
-                // we want to show them the option to lock
-                <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-success text-white btn-sm" style="cursor:pointer">
-                    <span>&nbsp; Lock &nbsp;</span>
-                </button>
-            }
-            else
-            {
-                // we want to show them the option to unlock
-                <button asp-action="LockUnlock" asp-route-userId="@item.Id" class="btn btn-warning text-white" style="cursor:pointer">
-                    <span>Unlock</span>
-                </button>
-            }
-
-            <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger btn-sm">Hapus</button>
-        </form>*@
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
+                                                <button type="submit" onclick="return confirm('Anda pasti?')" class="btn btn-danger btn-sm">Hapus</button>
+                                            </form>*@
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
 
     </div>
 

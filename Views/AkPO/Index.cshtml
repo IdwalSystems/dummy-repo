@@ -7,7 +7,10 @@
 <partial name="_JSIndex" />
 
 <div class="card box-shadow">
-    <div class="card card-body border">
+    <div class="loading">
+        <img class="loading-image" src="~/img/loading.gif" alt="Loading..." />
+    </div>
+    <div class="card card-body border main-page" hidden>
         <partial name="_TitleIndexPartial" />
 
         @*div carian*@
@@ -145,7 +148,7 @@
                                     }
                                     else
                                     {
-                                       <label class="mb-0 "><i class="fas fa-ban text-danger"></i> TELAH BATAL</label>
+                                        <label class="mb-0 "><i class="fas fa-ban text-danger"></i> TELAH BATAL</label>
                                     }
 
                                 </div>

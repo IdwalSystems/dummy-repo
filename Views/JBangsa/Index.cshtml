@@ -7,7 +7,10 @@
 <partial name="_JSIndex" />
 
 <div class="card box-shadow">
-    <div class="card-body">
+    <div class="loading">
+        <img class="loading-image" src="~/img/loading.gif" alt="Loading..." />
+    </div>
+    <div class="card card-body border main-page" hidden>
         <partial name="_TitleIndexPartial" />
 
         <partial name="_SearchJadualIndexPartial" />
@@ -36,13 +39,13 @@
                                     @if (item.FlHapus == 0)
                                     {
                                         <a asp-action="Details" asp-route-id="@item.Id"
-                                            class="btn text-primary btn-sm bg-white" type="button"
-                                            data-toggle="tooltip" data-placement="top"
-                                            title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                           class="btn text-primary btn-sm bg-white" type="button"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="Ubah/Papar"><i class="fas fa-edit"></i></a>
                                         <a asp-action="Delete" asp-route-id="@item.Id"
-                                            class="btn text-danger btn-sm" type="button"
-                                            data-toggle="tooltip" data-placement="top"
-                                            title="Hapus"><i class="fas fa-trash"></i></a>
+                                           class="btn text-danger btn-sm" type="button"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="Hapus"><i class="fas fa-trash"></i></a>
                                     }
                                     else
                                     {

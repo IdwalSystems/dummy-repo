@@ -8,7 +8,10 @@
 <partial name="_JSIndex" />
 
 <div class="card box-shadow">
-    <div class="card card-body border">
+    <div class="loading">
+        <img class="loading-image" src="~/img/loading.gif" alt="Loading..." />
+    </div>
+    <div class="card card-body border main-page" hidden>
         <div class="row">
             <div class="col-8">
                 <h5 class="text-uppercase mb-0">@ViewData["Title"]</h5>
@@ -18,11 +21,11 @@
                 <button class="text-right btn ac-success" data-toggle="modal" data-target="#modalTambah">Tambah Baru</button>
             </div>
             <div class="col-4 text-right show-mobile">
-                <a class="text-right btn text-success"  data-toggle="modal" data-target="#modalTambah"><i class="fa fa-plus fa-2x"></i></a>
+                <a class="text-right btn text-success" data-toggle="modal" data-target="#modalTambah"><i class="fa fa-plus fa-2x"></i></a>
             </div>
 
         </div>
-        <hr class="mt-2"/>
+        <hr class="mt-2" />
         @*div carian*@
         <div class="card mb-2">
             <div class="card-body pl-3 pb-2 ">

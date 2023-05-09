@@ -97,7 +97,7 @@ function display_c6() {
     var refresh = 1000; // Refresh rate in milli seconds
     mytime = setTimeout('display_ct6()', refresh)
 }
-display_c6()
+
 
 var timeInSecondsAfterSessionOut = 600; // change this to change session time out (in seconds).
 var secondTick = 0;
@@ -149,6 +149,10 @@ function showSQLFormatDate(d) {
 }
 
 $(document).ready(function () {
+    display_c6()
+    $('.loading').hide(); 
+    $('.main-page').prop('hidden', false);
+
     $(".select2").select2({
         theme: "bootstrap"
     });  

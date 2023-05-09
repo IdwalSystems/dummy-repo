@@ -28,7 +28,10 @@
 <partial name="_JSIndex" />
 
 <div class="card box-shadow">
-    <div class="card-body">
+    <div class="loading">
+        <img class="loading-image" src="~/img/loading.gif" alt="Loading..." />
+    </div>
+    <div class="card card-body border main-page" hidden>
         <div class="row">
             <div class="col-8">
                 <h5 class="text-uppercase text-info mb-0">@ViewData["Title"]</h5>
@@ -75,7 +78,7 @@
                                 </div>
                             </div>
                             @*<input type="submit" value="Papar" class="btn btn-outline-primary" /> |
-                        <a asp-action="Index" class="btn btn-link">Batal Papar</a>*@
+                                <a asp-action="Index" class="btn btn-link">Batal Papar</a>*@
                             @*<button type="submit" class="btn btn-sm btn-info"><i class="fa fa-search"></i></button>*@
                         </div>
 

@@ -7,7 +7,10 @@
 <partial name="_JSIndex" />
 
 <div class="card box-shadow">
-    <div class="card card-body border">
+    <div class="loading">
+        <img class="loading-image" src="~/img/loading.gif" alt="Loading..." />
+    </div>
+    <div class="card card-body border main-page" hidden>
         <partial name="_TitleIndexPartial" />
         @*div carian*@
         <div class="card mb-2">
@@ -49,7 +52,7 @@
                     </form>
                 </div>
             </div>
-    
+
         </div>
         @*div carian end*@
 
@@ -123,50 +126,50 @@
                             </td>
                             <td class="action-button text-center">
                                 <div class="btn-group" role="group" aria-label="action">
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
-                                <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
-                                @if (item.FlHapus == 0)
-                                {
-                                    @if (item.FlPosting == 0)
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                    <a asp-action="PrintPdf" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                                    @if (item.FlHapus == 0)
                                     {
-                                        @if (item.FlCetak != 0)
+                                        @if (item.FlPosting == 0)
                                         {
+                                            @if (item.FlCetak != 0)
+                                            {
 
-                                            @if (item.FlStatusSokong != 0)
-                                            {
-                                                <a data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
-                                                    <i class="fas fa-file-signature"></i>
-                                                </a>
+                                                @if (item.FlStatusSokong != 0)
+                                                {
+                                                    <a data-toggle="modal" data-target="#modalPosting" class="btn text-success btn-sm bg-white" type="button" data-placement="top" title="Lulus" onclick="ModalClick(this)">
+                                                        <i class="fas fa-file-signature"></i>
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a data-toggle="modal" data-target="#modalSokong" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Sokong" onclick="ModalClick(this)">
+                                                        <i class="fas fa-file-signature"></i>
+                                                    </a>
+                                                }
+
                                             }
-                                            else
-                                            {
-                                                <a data-toggle="modal" data-target="#modalSokong" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Sokong" onclick="ModalClick(this)">
-                                                    <i class="fas fa-file-signature"></i>
-                                                </a>
-                                            }
+
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
 
                                         }
-
-                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
-
+                                        else
+                                        {
+                                            <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn text-warning btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Batal Lulus">
+                                                <i class="fas fa-file"></i>
+                                            </a>
+                                        }
                                     }
                                     else
                                     {
-                                        <a asp-action="UnPosting" asp-route-id="@item.Id" class="btn text-warning btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Batal Lulus">
-                                            <i class="fas fa-file"></i>
-                                        </a>
-                                    }
-                                }
-                                else
-                                {
-                                    if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
-                                    {
-                                        <a asp-action="Rollback" asp-route-id="@item.Id" class="btn text-warning btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
-                                            <i class="fas fa-trash-restore"></i>
-                                        </a>
+                                        if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                                        {
+                                            <a asp-action="Rollback" asp-route-id="@item.Id" class="btn text-warning btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                                <i class="fas fa-trash-restore"></i>
+                                            </a>
 
+                                        }
                                     }
-                                }
                                 </div>
                             </td>
                         </tr>

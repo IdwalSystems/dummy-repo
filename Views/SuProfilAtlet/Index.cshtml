@@ -7,9 +7,12 @@
 <partial name="_JSIndex" />
 
 <div class="card box-shadow">
-    <div class="card card-body border">
+    <div class="loading">
+        <img class="loading-image" src="~/img/loading.gif" alt="Loading..." />
+    </div>
+    <div class="card card-body border main-page" hidden>
         <partial name="_TitleIndexPartial" />
-        
+
         <div class="card mb-2">
             <div class="card-body pl-3 pb-2">
                 <label class="form-control-plaintext" for="columnSearch">Carian : </label>
@@ -17,7 +20,7 @@
                     <div class="form-row">
                         <div class="col-sm-2 mb-2">
                             <select class="custom-select form-control-sm" id="columnSearch">
-                                <option value="" >Semua</option>
+                                <option value="">Semua</option>
                                 <option value="tahun" selected>Tahun</option>
                                 <option value="bulan">Bulan</option>
                             </select>
@@ -106,7 +109,7 @@
 
                                         }
                                     }
-                                    </div>
+                                </div>
                             </td>
                         </tr>
                     }
