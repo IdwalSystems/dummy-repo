@@ -1,0 +1,95 @@
+﻿@model MSNK.Models.Modules.FormModel.ReportFormModel
+
+@{
+    ViewData["Title"] = "LPL001 Laporan Lejar Am";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    int year = DateTime.Now.Year;
+    DateTime firstDay = new DateTime(year, 1, 1);
+    DateTime lastDay = new DateTime(year, 12, 31);
+}
+
+<div class="container">
+    <div class="card box-shadow">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-8">
+                    <h5 class="text-uppercase text-info mb-0">@ViewData["Title"]</h5>
+                    <span class="ac-ref">Indeks</span>
+                </div>
+                <div class="col-4 text-right">
+                </div>
+
+            </div>
+            <hr class="mt-2" />
+            <form asp-action="PRINT">
+
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="form-group col-sm">
+
+                            <div class="custom-control custom-radio pb-2">
+
+                                <input class="custom-control-input" type="radio" name="kodLaporan" id="LPL00101" value="LPL00101" checked>
+                                <label class="custom-control-label" for="LPL00101">
+                                    01 - Laporan Lejar Am Mengikut Julat Akaun
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group form-row">
+                            <label asp-for="JKWId" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-5">
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" id="ddlKW">
+                                    @foreach (var s in ViewBag.KW)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-row">
+                            <label asp-for="IdDari" class="col-sm-2 col-form-label">Kod Akaun</label>
+                            <div class="col-sm-5">
+                                <select class="form-control form-control-sm text-uppercase select2" asp-for="IdDari" id="ddlCarta1">
+                                    @foreach (var s in ViewBag.Carta1)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-sm-5">
+                                <select class="form-control form-control-sm text-uppercase select2" asp-for="IdHingga" id="ddlCarta2">
+                                    @foreach (var s in ViewBag.Carta2)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-row">
+                            <label for="Tarikh" class="col-sm-2 col-form-label">Tarikh</label>
+                            <div class="col-sm-5">
+                                <input type="date" class="form-control form-control-sm" id="tarikhDari" name="tarikhDari" value="@firstDay.ToString("yyyy-MM-dd")">
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="date" class="form-control form-control-sm" id="tarikhHingga" name="tarikhHingga" value="@lastDay.ToString("yyy-MM-dd")">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+                <div class="form-group text-right">
+                    <input type="submit" value="Cetak" formtarget="_blank" class="btn ac-primary" />
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+</div>
