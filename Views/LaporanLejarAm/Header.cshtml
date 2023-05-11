@@ -1,0 +1,39 @@
+﻿@model MSNK.Models.Modules.PrintModel.Reporting.LPL001PrintModel
+@{
+    ViewData["Title"] = "Cetakan LPL001";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    CompanyDetails company = new CompanyDetails();
+}
+<style>
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+

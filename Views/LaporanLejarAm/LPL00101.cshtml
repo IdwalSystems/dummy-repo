@@ -1,0 +1,190 @@
+﻿@model dynamic;
+
+@{
+    ViewData["Title"] = "Cetakan LPL00101";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    CompanyDetails company = new CompanyDetails();
+
+    int kodCount = 0;
+    int kodCountInPage = 0;
+}
+<style>
+
+    .image-container {
+        width: 80px;
+        height: 80px;
+        text-align: center;
+    }
+
+        .image-container img {
+            height: 100%;
+        }
+
+    .topic tr {
+        line-height: 1rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .max-lines {
+        display: block; /* or inline-block */
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 5.8em;
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+<table class="table table-borderless table-sm topic">
+    <thead>
+        <tr>
+            <th class="bg-white" style="width:8%;">
+                <img class="image-container mb-2" src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
+            </th>
+            <th colspan="9" class=" text-uppercase">
+                <strong>
+                    @company.NamaSyarikat
+                    <br />
+                    @company.AlamatSyarikat1,
+                    @company.AlamatSyarikat2,
+                    @company.AlamatSyarikat3
+                    <br />
+                    <br />
+                    SENARAI LEJAR AKAUN @Model.printModel.ParamCarta BAGI KW : @Model.printModel.ParamKW
+                    <br />
+                    DARI TARIKH : @Model.printModel.ParamTarikh
+                </strong>
+            </th>
+            <th class="text-right" style="width:10%;">
+                <small>
+                    Laporan : @Model.printModel.KodLaporan
+                    <br />
+                    @DateTime.Now
+                </small>
+                
+            </th>
+        </tr>
+    </thead>
+</table>
+@foreach (var group in Model.AkAkaunGrouped)
+{
+    kodCount++;
+}
+@foreach (var group in Model.AkAkaunGrouped)
+{
+    kodCountInPage++;
+    <table class="table table-bordered table-sm topic">
+        <thead>
+            <tr><th colspan="9" class="text-uppercase bg-dark text-white font-weight-bold"> @group.Key</th></tr>
+            <tr style="line-height:0.8rem;" class="bg-secondary text-white">
+
+                <th class="thbil">
+                    BIL
+                </th>
+                <th>
+                    TARIKH
+                </th>
+                <th>
+                    OBJEK
+                </th>
+                <th>
+                    NO RUJUKAN
+                </th>
+                <th class="thdebit">
+                    DEBIT RM
+                </th>
+                <th class="thkredit">
+                    KREDIT RM
+                </th>
+                <th class="thtotal">
+                    BAKI RM
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{
+                int rowNo = 0;
+                decimal baki = 0;
+                decimal jDebit = 0;
+                decimal jKredit = 0;
+            }
+
+
+            @foreach (var item in group)
+            {
+
+                if (item.Debit > 0)
+                {
+                    baki += item.Debit;
+                    jDebit += item.Debit;
+                }
+
+                if (item.Kredit > 0)
+                {
+                    baki -= item.Kredit;
+                    jKredit += item.Kredit;
+                }
+                <tr>
+                    <td class="bil">
+                        @(rowNo += 1)
+                    </td>
+                    <td>
+                        @item.Tarikh
+                    </td>
+                    <td>
+                        @item.Objek
+                    </td>
+                    <td>
+                        @item.NoRujukan
+                    </td>
+                    <td class="debit text-right">
+                        @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
+                    </td>
+                    <td class="kredit text-right">
+                        @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
+                    </td>
+                    <td class="total text-right">
+                        @Convert.ToDecimal(baki).ToString("#,##0.00")
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="table-warning">
+                <td colspan="4" class="text-right"><strong>JUMLAH KESELURUHAN RM</strong></td>
+                <td class="text-right"><strong>@Convert.ToDecimal(jDebit).ToString("#,##0.00")</strong></td>
+                <td class="text-right"><strong>@Convert.ToDecimal(jKredit).ToString("#,##0.00")</strong></td>
+                <td class="text-right"><strong>@Convert.ToDecimal(baki).ToString("#,##0.00")</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    if (kodCount != kodCountInPage)
+    {
+        <p class="breakhere"></p>
+    }
+
+}

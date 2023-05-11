@@ -19,6 +19,10 @@ namespace MSNK.Models.Modules.FormModel
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
         //
+        // parameter : input range (id)
+        public int IdDari { get; set; }
+        public int IdHingga { get; set; }
+        //
         // parameter : tarikh related 
         [Display(Name = "Julat")]
         public string tarikhDari { get; set; }

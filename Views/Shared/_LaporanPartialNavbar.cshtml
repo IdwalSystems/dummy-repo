@@ -33,6 +33,7 @@
 
 <li class="nav-item">
     <a class="nav-link collapsed text-truncate
+    @Html.ActiveClass("LaporanLejarAm")
     @Html.ActiveClass("LaporanNotaMinta")
     @Html.ActiveClass("LaporanBaucer")
     @Html.ActiveClass("LaporanTerimaan")" href="#submenuLaporan" data-toggle="collapse" data-target="#submenuLaporan"><object data="~/img/svg/laporan.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Laporan</span></a>
@@ -40,14 +41,27 @@
         <ul class="flex-column pl-2 nav">
 
             <li class="nav-item">
+                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanLejarAm")" href="#submenuLaporansub0" data-toggle="collapse" data-target="#submenuLaporansub0"><span>Laporan Lejar Am</span></a>
+                <div class="collapse" id="submenuLaporansub0" aria-expanded="false">
+                    <ul class="flex-column nav pl-4">
+                        <li class="nav-item">
+                            <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanLejarAm")" asp-area="" asp-controller="LaporanLejarAm" asp-action="Index">
+                                LPL001 Laporan Lejar Am
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
                 <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanNotaMinta")" href="#submenuLaporansub1" data-toggle="collapse" data-target="#submenuLaporansub1"><span>Laporan Nota Minta</span></a>
                 <div class="collapse" id="submenuLaporansub1" aria-expanded="false">
                     <ul class="flex-column nav pl-4">
                         <li class="nav-item">
                             @*<a class="nav-link p-1 text-truncate pl-4 @Html.ActiveSideBarClass("LaporanNotaMinta")" asp-area="" asp-controller="LaporanNotaMinta" asp-action="Index">
-                                    LPN001 Laporan Daftar Bil / Nota Minta
-                                </a>*@
-                            <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanBaucer")" asp-area="" asp-controller="LaporanNotaMinta" asp-action="Index">
+                            LPN001 Laporan Daftar Bil / Nota Minta
+                        </a>*@
+                            <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanNotaMinta")" asp-area="" asp-controller="LaporanNotaMinta" asp-action="Index">
                                 LPN001 Laporan Daftar Bil / Nota Minta
                             </a>
                         </li>
