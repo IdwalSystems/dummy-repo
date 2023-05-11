@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20211221024836_AddInitialTables.cs" />
-    <Compile Remove="Migrations\20211221024836_AddInitialTables.Designer.cs" />
-    <Compile Remove="Migrations\20220104014329_AddInitialTables.cs" />
-    <Compile Remove="Migrations\20220104014329_AddInitialTables.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="EntityFrameworkCore.Triggered" Version="2.3.2" />
     <PackageReference Include="Mailjet.Api" Version="2.1.0" />
