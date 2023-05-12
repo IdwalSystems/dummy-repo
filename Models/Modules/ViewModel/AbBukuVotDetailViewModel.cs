@@ -8,6 +8,9 @@ namespace MSNK.Models.Modules.ViewModel
     {
         public int Id { get; set; }
         public DateTime Tarikh { get; set; }
+        public string JKW { get; set; }
+        public string JBahagian { get; set; }
+        public string Vot { get; set; }
         [DisplayName("Kod")]
         public string Kod { get; set; }
         public string Nama { get; set; }
