@@ -1,7 +1,7 @@
 ﻿@model MSNK.Models.Modules.FormModel.ReportFormModel
 
 @{
-    ViewData["Title"] = "LPL001 Laporan Lejar Am";
+    ViewData["Title"] = "LPB001 Laporan Buku Vot";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     int year = DateTime.Now.Year;
@@ -30,9 +30,9 @@
 
                             <div class="custom-control custom-radio pb-2">
 
-                                <input class="custom-control-input" type="radio" name="kodLaporan" id="LPL00101" value="LPL00101" checked>
-                                <label class="custom-control-label" for="LPL00101">
-                                    01 - Laporan Lejar Am Mengikut Julat Akaun
+                                <input class="custom-control-input" type="radio" name="kodLaporan" id="LPB00101" value="LPB00101" checked>
+                                <label class="custom-control-label" for="LPB00101">
+                                    01 - Laporan Buku Vot Mengikut Julat Bahagian, Akaun
                                 </label>
                             </div>
                         </div>
@@ -49,6 +49,23 @@
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
                                     }
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-row">
+                            <label asp-for="JBahagianId" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-5">
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" id="ddlBahagian">
+                                    @foreach (var s in ViewBag.Bahagian)
+                                    {
+                                        <option value="@s.Id">@s.Kod - @s.Perihal </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-row">
+                            <label asp-for="Tahun" class="col-sm-2 col-form-label">Tahun</label>
+                            <div class="col-sm-5">
+                                <input type="text" asp-for="Tahun" class="form-control form-control-sm text-uppercase" name="searchTahun" maxlength="4" value="@year.ToString()"/>
                             </div>
                         </div>
                         <div class="form-group form-row">
@@ -76,7 +93,7 @@
                                 <input type="date" class="form-control form-control-sm" asp-for="tarikhDari" value="@firstDay.ToString("yyyy-MM-dd")">
                             </div>
                             <div class="col-sm-5">
-                                <input type="date" class="form-control form-control-sm" asp-for="tarikhHingga" value="@lastDay.ToString("yyyy-MM-dd")">
+                                <input type="date" class="form-control form-control-sm" asp-for="tarikhHingga" value="@lastDay.ToString("yyy-MM-dd")">
                             </div>
                         </div>
                     </div>

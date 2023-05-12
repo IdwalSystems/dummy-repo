@@ -19,14 +19,17 @@ namespace MSNK.Models.Modules.FormModel
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
         //
+        // parameter : input single
+        public string Tahun { get; set; } = DateTime.Now.ToString("yyyy");
+        //
         // parameter : input range (id)
         public int IdDari { get; set; }
-        public int IdHingga { get; set; }
+        public int IdHingga { get; set; } 
         //
         // parameter : tarikh related 
         [Display(Name = "Julat")]
-        public string tarikhDari { get; set; }
-        public string tarikhHingga { get; set; }
+        public string tarikhDari { get; set; } = DateTime.Parse("01/01/" + DateTime.Now.ToString("yyyy")).ToString("yyyy-MM-dd");
+        public string tarikhHingga { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
         [Display(Name = "Bulan / Tahun")]
         public DateTime bulanTahun { get; set; }
         //

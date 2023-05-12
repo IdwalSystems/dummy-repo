@@ -34,6 +34,7 @@
 <li class="nav-item">
     <a class="nav-link collapsed text-truncate
     @Html.ActiveClass("LaporanLejarAm")
+    @Html.ActiveClass("LaporanBukuVot")
     @Html.ActiveClass("LaporanNotaMinta")
     @Html.ActiveClass("LaporanBaucer")
     @Html.ActiveClass("LaporanTerimaan")" href="#submenuLaporan" data-toggle="collapse" data-target="#submenuLaporan"><object data="~/img/svg/laporan.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Laporan</span></a>
@@ -54,8 +55,21 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanNotaMinta")" href="#submenuLaporansub1" data-toggle="collapse" data-target="#submenuLaporansub1"><span>Laporan Nota Minta</span></a>
+                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanBukuVot")" href="#submenuLaporansub1" data-toggle="collapse" data-target="#submenuLaporansub1"><span>Laporan Buku Vot</span></a>
                 <div class="collapse" id="submenuLaporansub1" aria-expanded="false">
+                    <ul class="flex-column nav pl-4">
+                        <li class="nav-item">
+                            <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanBukuVot")" asp-area="" asp-controller="LaporanBukuVot" asp-action="Index">
+                                LPB001 Laporan Buku Vot
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanNotaMinta")" href="#submenuLaporansub2" data-toggle="collapse" data-target="#submenuLaporansub2"><span>Laporan Nota Minta</span></a>
+                <div class="collapse" id="submenuLaporansub2" aria-expanded="false">
                     <ul class="flex-column nav pl-4">
                         <li class="nav-item">
                             @*<a class="nav-link p-1 text-truncate pl-4 @Html.ActiveSideBarClass("LaporanNotaMinta")" asp-area="" asp-controller="LaporanNotaMinta" asp-action="Index">
@@ -70,8 +84,8 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanBaucer")" href="#submenuLaporansub2" data-toggle="collapse" data-target="#submenuLaporansub2"><span>Laporan Baucer</span></a>
-                <div class="collapse" id="submenuLaporansub2" aria-expanded="false">
+                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanBaucer")" href="#submenuLaporansub3" data-toggle="collapse" data-target="#submenuLaporansub3"><span>Laporan Baucer</span></a>
+                <div class="collapse" id="submenuLaporansub3" aria-expanded="false">
                     <ul class="flex-column nav pl-4">
                         <li class="nav-item">
                             <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanBaucer")" asp-area="" asp-controller="LaporanBaucer" asp-action="Index">
@@ -83,8 +97,8 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link  text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanTerimaan")" href="#submenuLaporansub3" data-toggle="collapse" data-target="#submenuLaporansub3"><span>Laporan Penerimaan</span></a>
-                <div class="collapse" id="submenuLaporansub3" aria-expanded="false">
+                <a class="nav-link  text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanTerimaan")" href="#submenuLaporansub4" data-toggle="collapse" data-target="#submenuLaporansub4"><span>Laporan Penerimaan</span></a>
+                <div class="collapse" id="submenuLaporansub4" aria-expanded="false">
                     <ul class="flex-column nav pl-4">
                         <li class="nav-item">
                             <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanTerimaan")" asp-area="" asp-controller="LaporanTerimaan" asp-action="Index">

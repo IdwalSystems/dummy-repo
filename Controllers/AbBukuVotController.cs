@@ -253,8 +253,7 @@ namespace MSNK.Controllers
             ViewData["Vot"] = abBukuVot.JKW.Kod + " / " + abBukuVot.JBahagian.Kod + " / " + abBukuVot.Vot.Kod + " - " + abBukuVot.Vot.Perihal;
 
             var sql = _context.AbBukuVot
-                .Include(x => x.Vot).Include(x => x.JKW)
-                .Include(x => x.Vot).Include(x => x.JBahagian)
+                .Include(x => x.Vot).Include(x => x.JKW).Include(x => x.JBahagian)
                 .Where(x => x.Tahun == tahun && x.VotId == id && x.JBahagianId == jBahagianId && x.JKWId == jKWId)
                 .OrderBy(x => x.Tarikh)
                 .ToList();
