@@ -55,7 +55,8 @@
     }
 
     tr {
-        page-break-inside: avoid
+        page-break-inside: avoid;
+        padding-right: 5px;
     }
 </style>
 <table class="table table-borderless table-sm topic">
@@ -109,25 +110,25 @@
                 <th width="5%">
                     TARIKH
                 </th>
-                <th width="20%">
+                <th width="25%">
                     NAMA
                 </th>
-                <th width="15%">
+                <th width="20%">
                     NO RUJUKAN
                 </th>
-                <th width="8%">
+                <th width="3%">
                     DEBIT RM
                 </th>
-                <th width="8%">
+                <th width="3%">
                     KREDIT RM
                 </th>
-                <th width="8%">
+                <th width="3%">
                     TANGG. RM
                 </th>
-                <th width="8%">
+                <th width="3%">
                     LIABILITI RM
                 </th>
-                <th width="8%">
+                <th width="5%">
                     BAKI RM
                 </th>
             </tr>
@@ -151,9 +152,9 @@
                         @item.Tarikh.ToString("dd/MM/yyyy")
                     </td>
                     <td>
-                        @if (item.Nama.Length > 35)
+                        @if (item.Nama.Length > 52)
                         {
-                            item.Nama = item.Nama.Substring(0, 35) + "..";
+                            item.Nama = item.Nama.Substring(0, 52) + "..";
                         }
                         @item.Nama
                     </td>
