@@ -42,7 +42,7 @@
                     <div class="card-body">
                         <div class="form-group form-row">
                             <label asp-for="JKWId" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" id="ddlKW">
                                     @foreach (var s in ViewBag.KW)
                                     {
@@ -53,8 +53,8 @@
                         </div>
                         <div class="form-group form-row">
                             <label asp-for="JBahagianId" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-5">
-                                <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" id="ddlBahagian">
+                            <div class="col-sm-4">
+                                <select class="form-control form-control-sm text-uppercase select2" asp-for="JBahagianId" id="ddlBahagian">
                                     @foreach (var s in ViewBag.Bahagian)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -64,13 +64,13 @@
                         </div>
                         <div class="form-group form-row">
                             <label asp-for="Tahun" class="col-sm-2 col-form-label">Tahun</label>
-                            <div class="col-sm-5">
-                                <input type="text" asp-for="Tahun" class="form-control form-control-sm text-uppercase" name="searchTahun" maxlength="4" value="@year.ToString()"/>
+                            <div class="col-sm-4">
+                                <input type="text" asp-for="Tahun" class="form-control form-control-sm text-uppercase" name="searchTahun" maxlength="4" value="@year.ToString()" />
                             </div>
                         </div>
                         <div class="form-group form-row">
                             <label asp-for="IdDari" class="col-sm-2 col-form-label">Kod Akaun</label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <select class="form-control form-control-sm text-uppercase select2" asp-for="IdDari" id="ddlCarta1">
                                     @foreach (var s in ViewBag.Carta1)
                                     {
@@ -78,6 +78,7 @@
                                     }
                                 </select>
                             </div>
+                            <label class="col-sm-1 col-form-label text-center"><i class="fas fa-angle-right"></i></label>
                             <div class="col-sm-5">
                                 <select class="form-control form-control-sm text-uppercase select2" asp-for="IdHingga" id="ddlCarta2">
                                     @foreach (var s in ViewBag.Carta2)
@@ -89,11 +90,33 @@
                         </div>
                         <div class="form-group form-row">
                             <label for="Tarikh" class="col-sm-2 col-form-label">Tarikh</label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <input type="date" class="form-control form-control-sm" asp-for="tarikhDari" value="@firstDay.ToString("yyyy-MM-dd")">
                             </div>
+                            <label class="col-sm-1 col-form-label text-center"><i class="fas fa-angle-right"></i></label>
                             <div class="col-sm-5">
                                 <input type="date" class="form-control form-control-sm" asp-for="tarikhHingga" value="@lastDay.ToString("yyy-MM-dd")">
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="form-group form-row">
+                            <label for="Penyemak" class="col-sm-2 col-form-label">Penyemak</label>
+                            <div class="col-sm-4">
+                                <select class="form-control form-control-sm text-uppercase select2" asp-for="JPenyemakId" id="ddlPenyemak">
+                                    @foreach (var s in ViewBag.Penyemak)
+                                    {
+                                        <option value="@s.Id">@s.Nama </option>
+                                    }
+                                </select>
+                            </div>
+                            <label for="Pelulus" class="col-sm-1 col-form-label">Pelulus</label>
+                            <div class="col-sm-5">
+                                <select class="form-control form-control-sm text-uppercase select2" asp-for="JPelulusId" id="ddlPelulus">
+                                    @foreach (var s in ViewBag.Pelulus)
+                                    {
+                                        <option value="@s.Id">@s.Nama </option>
+                                    }
+                                </select>
                             </div>
                         </div>
                     </div>

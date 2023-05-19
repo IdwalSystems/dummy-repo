@@ -38,15 +38,25 @@ namespace MSNK.Controllers
             string searchTahun,
             int searchCarta1,
             int searchCarta2,
+            int searchPenyemak,
+            int searchPelulus,
             string searchDateFrom,
             string searchDateTo)
         {
             
-            PopulateList(searchKW, searchBahagian, searchTahun, searchCarta1, searchCarta2, searchDateFrom, searchDateTo);
+            PopulateList(searchKW, searchBahagian, searchTahun, searchCarta1, searchCarta2,searchPenyemak, searchPelulus, searchDateFrom, searchDateTo);
             return View();
         }
 
-        private void PopulateList(int searchKW, int SearchBahagian, string searchTahun,  int searchCarta1, int searchCarta2, string searchDateFrom, string searchDateTo)
+        private void PopulateList(int searchKW,
+                                  int SearchBahagian,
+                                  string searchTahun,
+                                  int searchCarta1,
+                                  int searchCarta2,
+                                  int searchPenyemak,
+                                  int searchPelulus,
+                                  string searchDateFrom,
+                                  string searchDateTo)
         {
             if (String.IsNullOrEmpty(searchTahun))
                 searchTahun = DateTime.Now.ToString("yyyy");
@@ -77,6 +87,28 @@ namespace MSNK.Controllers
             }
 
             ViewBag.Bahagian = bahagianSelect;
+
+            List<JPenyemak> penyemakList = _context.JPenyemak.Include(b => b.SuPekerja).OrderBy(b => b.SuPekerja.Nama).Where(b => b.IsLaporanBukuVot == true).ToList();
+            List<SuPekerja> penyemakSelect = new List<SuPekerja>();
+
+            foreach (var q in penyemakList)
+            {
+
+                penyemakSelect.Add(new SuPekerja() { Id = q.Id, NoGaji = q.SuPekerja.NoGaji, Nama = q.SuPekerja.Nama });
+            }
+
+            ViewBag.Penyemak = penyemakSelect;
+
+            List<JPelulus> pelulusList = _context.JPelulus.Include(b => b.SuPekerja).OrderBy(b => b.SuPekerja.Nama).Where(b => b.IsLaporanBukuVot == true).ToList();
+            List<SuPekerja> pelulusSelect = new List<SuPekerja>();
+
+            foreach (var q in pelulusList)
+            {
+
+                pelulusSelect.Add(new SuPekerja() { Id = q.Id, NoGaji = q.SuPekerja.NoGaji, Nama = q.SuPekerja.Nama });
+            }
+
+            ViewBag.Pelulus = pelulusSelect;
 
             List<AkCarta> cartaList1 = _context.AkCarta.Include(b => b.JParas)
                 .Where(b => b.JParas.Kod == "4")
@@ -113,7 +145,15 @@ namespace MSNK.Controllers
             else
             {
                 TempData[SD.Error] = "Sila pilih Kump. Wang.";
-                PopulateList((int)model.JKWId, (int)model.JBahagianId, model.Tahun, model.IdDari, model.IdHingga, model.tarikhDari, model.tarikhHingga);
+                PopulateList((int)model.JKWId,
+                             (int)model.JBahagianId,
+                             model.Tahun,
+                             model.IdDari,
+                             model.IdHingga,
+                             (int)model.JPenyemakId,
+                             (int)model.JPelulusId,
+                             model.tarikhDari,
+                             model.tarikhHingga);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -125,7 +165,15 @@ namespace MSNK.Controllers
             else
             {
                 TempData[SD.Error] = "Sila pilih Bahagian";
-                PopulateList((int)model.JKWId, (int)model.JBahagianId, model.Tahun, model.IdDari, model.IdHingga, model.tarikhDari, model.tarikhHingga);
+                PopulateList((int)model.JKWId,
+                             (int)model.JBahagianId,
+                             model.Tahun,
+                             model.IdDari,
+                             model.IdHingga,
+                             (int)model.JPenyemakId,
+                             (int)model.JPelulusId,
+                             model.tarikhDari,
+                             model.tarikhHingga);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -151,10 +199,17 @@ namespace MSNK.Controllers
                 else
                 {
                     TempData[SD.Error] = "Sila isi julat tarikh.";
-                    PopulateList((int)model.JKWId, (int)model.JBahagianId, model.Tahun, model.IdDari, model.IdHingga, model.tarikhDari, model.tarikhHingga);
+                    PopulateList((int)model.JKWId,
+                                 (int)model.JBahagianId,
+                                 model.Tahun,
+                                 model.IdDari,
+                                 model.IdHingga,
+                                 (int)model.JPenyemakId,
+                                 (int)model.JPelulusId,
+                                 model.tarikhDari,
+                                 model.tarikhHingga);
                     return RedirectToAction(nameof(Index));
                 }
-
                 // filter kw
                 if (model.JKWId != 0)
                 {
@@ -197,28 +252,19 @@ namespace MSNK.Controllers
                         s.Vot.Kod.Substring(0, range.Item2.Length).CompareTo(range.Item2) <= 0)
                         .OrderBy(x => x.Vot.Kod).ToList();
 
-                    //abBukuVotList = abBukuVotList.GroupBy(x => new { x.JKW, x.JBahagian, x.Vot })
-                    //    .Select(i => new AbBukuVotDetailViewModel
-                    //    {
-                    //        Id = i.First().Id,
-                    //        JKW = i.First().JKW,
-                    //        JBahagian = i.First().JBahagian,
-                    //        Vot = i.First().Vot,
-                    //        Tarikh = i.First().Tarikh,
-                    //        Kod = i.First().Kod,
-                    //        Nama = i.First().Nama,
-                    //        NoRujukan = i.First().NoRujukan,
-                    //        Debit = i.First().Debit,
-                    //        Kredit = i.First().Kredit,
-                    //        Tanggungan = i.First().Tanggungan,
-                    //        Liabiliti = i.First().Liabiliti,
-                    //        Baki = i.First().Baki
-                    //    }).OrderBy(x => x.Vot).ToList();
                 }
                 else
                 {
                     TempData[SD.Error] = "Sila isi julat kod akaun";
-                    PopulateList((int)model.JKWId,(int)model.JBahagianId, model.Tahun, model.IdDari, model.IdHingga, model.tarikhDari, model.tarikhHingga);
+                    PopulateList((int)model.JKWId,
+                                 (int)model.JBahagianId,
+                                 model.Tahun,
+                                 model.IdDari,
+                                 model.IdHingga,
+                                 (int)model.JPenyemakId,
+                                 (int)model.JPelulusId,
+                                 model.tarikhDari,
+                                 model.tarikhHingga);
                     return RedirectToAction(nameof(Index));
                 }
                 //
@@ -253,6 +299,18 @@ namespace MSNK.Controllers
 
                 printModel.Username = namaUser.Nama;
 
+                //penyemak
+                var penyemak = await _context.JPenyemak.Include(b => b.SuPekerja).FirstOrDefaultAsync(b => b.Id == model.JPenyemakId);
+
+                    printModel.Penyemak = penyemak?.SuPekerja?.Nama ?? "";
+                    printModel.JawatanPenyemak = penyemak?.SuPekerja?.Jawatan ?? "";
+
+                //pelulus
+                var pelulus = await _context.JPelulus.Include(b => b.SuPekerja).FirstOrDefaultAsync(b => b.Id == model.JPelulusId);
+
+                    printModel.Pelulus = pelulus?.SuPekerja?.Nama ?? "";
+                    printModel.JawatanPelulus = pelulus?.SuPekerja?.Jawatan ?? "";
+
                 printModel.KodLaporan = model.kodLaporan;
 
                 CompanyDetails company = new CompanyDetails();
@@ -280,7 +338,15 @@ namespace MSNK.Controllers
             }
             else
             {
-                PopulateList((int)model.JKWId, (int)model.JBahagianId, model.Tahun, model.IdDari, model.IdHingga, model.tarikhDari, model.tarikhHingga);
+                PopulateList((int)model.JKWId,
+                             (int)model.JBahagianId,
+                             model.Tahun,
+                             model.IdDari,
+                             model.IdHingga,
+                             (int)model.JPenyemakId,
+                             (int)model.JPelulusId,
+                             model.tarikhDari,
+                             model.tarikhHingga);
                 return RedirectToAction(nameof(Index));
             };
 

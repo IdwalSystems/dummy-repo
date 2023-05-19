@@ -138,6 +138,7 @@ namespace MSNK.Controllers
                     m.IsPO = jPelulus.IsPO;
                     m.IsPV = jPelulus.IsPV;
                     m.IsInvois = jPelulus.IsInvois;
+                    m.IsLaporanBukuVot = jPelulus.IsLaporanBukuVot;
                     m.TarMasuk = DateTime.Now;
                     m.UserId = user.UserName;
                     m.SuPekerjaMasukId = pekerjaId;

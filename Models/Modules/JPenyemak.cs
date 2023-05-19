@@ -37,6 +37,10 @@ namespace MSNK.Models.Modules
 
         [DisplayName("Invois Dikeluarkan")]
         public bool IsInvois { get; set; }
+
+        // laporan
+        [DisplayName("Laporan Buku Vot")]
+        public bool IsLaporanBukuVot { get; set; }
         [DisplayName("Hapus")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }

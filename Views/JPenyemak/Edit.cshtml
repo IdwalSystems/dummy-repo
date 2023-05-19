@@ -36,7 +36,7 @@
             <div class="form-row mb-3">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label asp-for="MinAmaun" class="control-label"></label>
+                        <label asp-for="MinAmaun" class="control-label"></label><label> <i class="text-success ml-2"> (amaun diluluskan hanya melibatkan modul yang disemak)</i></label>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -52,42 +52,62 @@
                     <span asp-validation-for="MaksAmaun" class="text-danger"></span>
                 </div>
             </div>
-            <label>Modul yang disemak</label>
-            <div class="card">
-                <div class="card-body">
-                    
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="IsNotaMinta" /> @Html.DisplayNameFor(model => model.IsNotaMinta)
-                        </label>
+            <div class="form-row">
+                <div class="col-md-6 mb-2">
+                    <label>Modul yang disemak</label>
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsNotaMinta" /> @Html.DisplayNameFor(model => model.IsNotaMinta)
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsPO" /> @Html.DisplayNameFor(model => model.IsPO)
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsBelian" /> @Html.DisplayNameFor(model => model.IsBelian)
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsPV" /> @Html.DisplayNameFor(model => model.IsPV)
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsPendahuluan" /> @Html.DisplayNameFor(model => model.IsPendahuluan)
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsInvois" /> @Html.DisplayNameFor(model => model.IsInvois)
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="IsPO" /> @Html.DisplayNameFor(model => model.IsPO)
-                        </label>
-                    </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="IsBelian" /> @Html.DisplayNameFor(model => model.IsBelian)
-                        </label>
-                    </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="IsPV" /> @Html.DisplayNameFor(model => model.IsPV)
-                        </label>
-                    </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="IsPendahuluan" /> @Html.DisplayNameFor(model => model.IsPendahuluan)
-                        </label>
-                    </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="IsInvois" /> @Html.DisplayNameFor(model => model.IsInvois)
-                        </label>
+                </div>
+                <div class="col-md-6">
+                    <label>Laporan yang disemak</label>
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsLaporanBukuVot" /> @Html.DisplayNameFor(model => model.IsLaporanBukuVot)
+                                </label>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
+
             
             <hr />
             <div class="form-group">

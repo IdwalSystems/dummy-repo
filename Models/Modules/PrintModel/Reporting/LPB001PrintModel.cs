@@ -13,6 +13,10 @@ namespace MSNK.Models.Modules.PrintModel.Reporting
         public string ParamKW { get; set; }
         public string ParamBahagian { get; set; }
         public string ParamTarikh { get; set; }
+        public string Penyemak { get; set; }
+        public string JawatanPenyemak { get;set; }
+        public string Pelulus { get; set; }
+        public string JawatanPelulus { get; set; }
         public CompanyDetails CompanyDetails { get; set; }
     }
 }

@@ -42,7 +42,7 @@
                     <div class="card-body">
                         <div class="form-group form-row">
                             <label asp-for="JKWId" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" id="ddlKW">
                                     @foreach (var s in ViewBag.KW)
                                     {
@@ -53,7 +53,7 @@
                         </div>
                         <div class="form-group form-row">
                             <label asp-for="IdDari" class="col-sm-2 col-form-label">Kod Akaun</label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <select class="form-control form-control-sm text-uppercase select2" asp-for="IdDari" id="ddlCarta1">
                                     @foreach (var s in ViewBag.Carta1)
                                     {
@@ -61,6 +61,7 @@
                                     }
                                 </select>
                             </div>
+                            <label class="col-sm-1 col-form-label text-center"><i class="fas fa-angle-right"></i></label>
                             <div class="col-sm-5">
                                 <select class="form-control form-control-sm text-uppercase select2" asp-for="IdHingga" id="ddlCarta2">
                                     @foreach (var s in ViewBag.Carta2)
@@ -72,9 +73,10 @@
                         </div>
                         <div class="form-group form-row">
                             <label for="Tarikh" class="col-sm-2 col-form-label">Tarikh</label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <input type="date" class="form-control form-control-sm" asp-for="tarikhDari" value="@firstDay.ToString("yyyy-MM-dd")">
                             </div>
+                            <label class="col-sm-1 col-form-label text-center"><i class="fas fa-angle-right"></i></label>
                             <div class="col-sm-5">
                                 <input type="date" class="form-control form-control-sm" asp-for="tarikhHingga" value="@lastDay.ToString("yyyy-MM-dd")">
                             </div>

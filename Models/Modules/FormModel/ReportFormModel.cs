@@ -26,6 +26,11 @@ namespace MSNK.Models.Modules.FormModel
         public int IdDari { get; set; }
         public int IdHingga { get; set; } 
         //
+        public int? JPenyemakId { get;set; }
+        public JPenyemak JPenyemak { get; set; }
+
+        public int? JPelulusId { get; set; }
+        public JPelulus JPelulus { get; set; }
         // parameter : tarikh related 
         [Display(Name = "Julat")]
         public string tarikhDari { get; set; } = DateTime.Parse("01/01/" + DateTime.Now.ToString("yyyy")).ToString("yyyy-MM-dd");
