@@ -20,9 +20,7 @@ using MSNK.Models.Modules.ViewModel;
 using static MSNK.Models.Modules.ViewModel.UserClaimsViewModel;
 using Rotativa.AspNetCore;
 using MSNK.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
 
 namespace MSNK.Controllers
