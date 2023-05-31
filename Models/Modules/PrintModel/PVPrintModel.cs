@@ -13,6 +13,7 @@ namespace MSNK.Models.Modules.PrintModel
         public string Username { get; set; }
         public string KodPenerima { get; set; }
         public string Penerima { get; set; }
+        public string Poskod { get; set; }
         public string NamaBankPenerima { get; set; }
         //public string NoAkaunBank { get; set; }
         public string NoAkaunBankPenerima { get; set; }

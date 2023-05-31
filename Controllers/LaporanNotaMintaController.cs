@@ -82,6 +82,7 @@ namespace MSNK.Controllers
                     .Include(b => b.AkNotaMinta1)
                     .Include(b => b.AkNotaMinta2)
                     .Include(b=> b.AkPO).ThenInclude(b=> b.AkBelian).ThenInclude(b=> b.AkPV2).ThenInclude(b=> b.AkPV).ThenInclude(b=> b.JCaraBayar)
+                    .Include(b => b.AkInden).ThenInclude(b => b.AkBelian).ThenInclude(b => b.AkPV2).ThenInclude(b => b.AkPV).ThenInclude(b => b.JCaraBayar)
                     .ToList();
 
                 // bulan & tahun condition

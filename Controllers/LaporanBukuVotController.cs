@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Administration;
@@ -14,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
 
 namespace MSNK.Controllers
@@ -78,7 +80,9 @@ namespace MSNK.Controllers
             ViewBag.Kw = kwSelect;
 
             List<JBahagian> bahagianList = _context.JBahagian.OrderBy(b => b.Kod).ToList();
-            List<JBahagian> bahagianSelect = new List<JBahagian>();
+            List<JBahagian> bahagianSelect = new List<JBahagian>{
+                new JBahagian() { Id = 0, Kod = "SEMUA", Perihal = "" }
+            };
 
             foreach (var q in bahagianList)
             {
@@ -183,6 +187,7 @@ namespace MSNK.Controllers
             {
                 var abBukuVot = await _context.AbBukuVot
                 .Include(x => x.Vot).Include(x => x.JKW).Include(x => x.JBahagian)
+                .OrderBy(b => b.JBahagian.Kod).ThenBy(b => b.Vot.Kod).ThenBy(b => b.Tarikh)
                 .ToListAsync();
 
                 List<AbBukuVotDetailViewModel> abBukuVotList = new List<AbBukuVotDetailViewModel>();
@@ -249,8 +254,7 @@ namespace MSNK.Controllers
                     Tuple<string, string> range = Tuple.Create(carta1.Kod, carta2.Kod);
                     abBukuVot = abBukuVot.Where(s =>
                         range.Item1.CompareTo(s.Vot.Kod.Substring(0, range.Item1.Length)) <= 0 &&
-                        s.Vot.Kod.Substring(0, range.Item2.Length).CompareTo(range.Item2) <= 0)
-                        .OrderBy(x => x.Vot.Kod).ToList();
+                        s.Vot.Kod.Substring(0, range.Item2.Length).CompareTo(range.Item2) <= 0).ToList();
 
                 }
                 else
@@ -274,13 +278,13 @@ namespace MSNK.Controllers
                             && x.Tarikh <= date2).ToList();
                 //
 
-                foreach (var i in abBukuVot.OrderBy(b => b.Tarikh))
+                foreach (var i in abBukuVot)
                 {
                     abBukuVotList.Add(new AbBukuVotDetailViewModel()
                     {
                         Id = i.Id,
                         JKW = i.JKW.Kod + " - " + i.JKW.Perihal,
-                        JBahagian = i.JBahagian.Kod + " - " + i.JBahagian.Perihal,
+                        JBahagian = i.JBahagian.Kod,
                         Vot = i.Vot.Kod + " - " + i.Vot.Perihal,
                         Tarikh = i.Tarikh,
                         Kod = i.Kod,
@@ -316,8 +320,10 @@ namespace MSNK.Controllers
                 CompanyDetails company = new CompanyDetails();
                 printModel.CompanyDetails = company;
 
+                var GroupedData = abBukuVotList.GroupBy(b => new { JBahagian = b.JBahagian, Vot = b.Vot });
+
                 dynamic dyModel = new ExpandoObject();
-                dyModel.AbBukuVotGrouped = abBukuVotList.GroupBy(b => b.Vot);
+                dyModel.AbBukuVotGrouped = GroupedData;
                 dyModel.printModel = printModel;
 
                 return new ViewAsPdf(pdfName, dyModel,

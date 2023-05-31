@@ -462,19 +462,7 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var akCarta = await _context.AkCarta
-                .Include(a=>a.JKW)
-                .Include(a=>a.JJenis)
-                .Include(a=>a.JParas)
-                .Include(a=>a.AkAkaun1)
-                .Include(a=>a.AkAkaun2)
-                .Include(a=>a.AkBank)
-                .Include(a=>a.AkBelian1)
-                .Include(a => a.AkJurnalDebit)
-                .Include(a => a.AkJurnalKredit)
-                .Include(a => a.AkPO1)
-                .Include(a => a.AkTerima1)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var akCarta = await _akCartaRepo.GetById((int)id);
 
             string kodCarta = akCarta.Kod;
 

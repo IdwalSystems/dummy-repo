@@ -2786,6 +2786,7 @@ namespace MSNK.Controllers
                     data.KodPenerima = akPV.AkPembekal.KodSykt;
                     namaBankPenerima = akPV.AkPembekal.JBank.Nama;
                     noAkaunBank = akPV.AkPembekal.AkaunBank;
+                    data.Poskod = akPV.AkPembekal?.Poskod ?? "";
 
                     foreach (AkPV2 item in data.AkPV2)
                     {
@@ -2812,6 +2813,7 @@ namespace MSNK.Controllers
                     data.KodPenerima = noGaji + " - "+ noKP;
                     namaBankPenerima = akPV.SuPekerja == null ? "Testing Bank" : akPV.SuPekerja.JBank.Nama; ;
                     noAkaunBank = noAkaun;
+                    data.Poskod = akPV.SuPekerja?.Poskod ?? "";
 
                     break;
                 //am
@@ -2819,6 +2821,7 @@ namespace MSNK.Controllers
                     data.KodPenerima = akPV.NoKP;
                     noAkaunBank = akPV.NoAkaunBank;
                     namaBankPenerima = akPV.JBank?.Nama ?? "PELBAGAI";
+                    data.Poskod = "";
                     break;
             }
 

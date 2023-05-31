@@ -535,8 +535,6 @@ namespace MSNK.Controllers
             {
                 return NotFound();
             }
-            //ViewData["JBankId"] = new SelectList(_context.AkBank, "Id", "Id", akPembekal.JBankId);
-            //ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", akPembekal.JNegeriId);
             return View(akPembekal);
         }
 
@@ -620,11 +618,9 @@ namespace MSNK.Controllers
                         throw;
                     }
                 }
-                PopulateList();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["JBankId"] = new SelectList(_context.AkBank, "Id", "Id", akPembekal.JBankId);
-            //ViewData["JNegeriId"] = new SelectList(_context.JNegeri, "Id", "Kod", akPembekal.JNegeriId);
+            PopulateList();
             return View(akPembekal);
         }
 

@@ -248,10 +248,6 @@ namespace MSNK.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool JBahagianExists(int id)
-        {
-            return _context.JBahagian.Any(e => e.Id == id);
-        }
         private bool JAgamaExists(int id)
         {
             return _context.JAgama.Any(e => e.Id == id);

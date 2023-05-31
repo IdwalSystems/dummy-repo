@@ -65,7 +65,7 @@
             <th class="bg-white" style="width:8%;">
                 <img class="image-container mb-2" src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
             </th>
-            <th colspan="9" class=" text-uppercase">
+            <th colspan="10" class=" text-uppercase">
                 <strong>
                     @company.NamaSyarikat
                     <br />
@@ -95,12 +95,20 @@
 {
     kodCount++;
 }
+@{ 
+    //string JBahagian = Model.Key.JBahagian;
+}
 @foreach (var group in Model.AbBukuVotGrouped)
 {
     kodCountInPage++;
     <table class="table table-bordered table-sm topic">
         <thead>
-            <tr><th colspan="9" class="text-uppercase bg-dark text-white font-weight-bold"> @group.Key</th></tr>
+            @foreach (var item in group)
+            {
+                <tr><th colspan="9" class="text-uppercase bg-dark text-white font-weight-bold"> @item.JBahagian - @item.Vot</th></tr>
+                break;
+            }
+            @**@
             <tr style="line-height:0.8rem;" class="bg-secondary text-white">
 
 
@@ -148,6 +156,7 @@
                     <td class="bil">
                         @(rowNo += 1)
                     </td>
+
                     <td>
                         @item.Tarikh.ToString("dd/MM/yyyy")
                     </td>
@@ -207,7 +216,7 @@
 
                 </tr>
                 <tr>
-                    <td class="text-center text-uppercase">@Model.printModel.Username</td>
+                    <td class="text-center text-uppercase">@Model.Username</td>
                     <td class="text-center">@Model.printModel.Penyemak</td>
                     <td class="text-center">@Model.printModel.Pelulus</td>
 

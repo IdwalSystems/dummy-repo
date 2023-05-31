@@ -68,7 +68,7 @@
             <th class="text-center font-weight-bold text-white">NAMA PEMBEKAL</th>
             <th class="text-center font-weight-bold text-white" width="5%">NO SIRI</th>
             <th class="text-center font-weight-bold text-white" width="5%">AMAUN RM</th>
-            <th class="text-center font-weight-bold text-white">NO PO</th>
+            <th class="text-center font-weight-bold text-white">NO PO / INDEN</th>
             <th class="text-center font-weight-bold text-white">TARIKH BAUCER</th>
             <th class="text-center font-weight-bold text-white">NO BAUCER</th>
             <th class="text-center font-weight-bold text-white">TARIKH SAH BAUCER</th>
@@ -91,6 +91,17 @@
                 foreach (var itemPO in item.AkPO)
                 {
                     if (itemPO.IsInKewangan == false)
+                    {
+                        tabletype = "table-primary";
+                    }
+                }
+            }
+
+            if (item.AkInden.Count > 0)
+            {
+                foreach (var itemInden in item.AkInden)
+                {
+                    if (itemInden.IsInKewangan == false)
                     {
                         tabletype = "table-primary";
                     }
@@ -185,6 +196,66 @@
                     }
                 }
             }
+            else if (item.AkInden.Count > 0)
+            {
+                @foreach (var itemInden in item.AkInden)
+                {
+                    if (itemInden.FlHapus == 0)
+                    {
+                        <td class="text-center" style="border-bottom:none;">@itemInden.NoInden</td>
+
+                    }
+                    else
+                    {
+                        <td class="text-center" style="border-bottom:none;">-</td>
+
+                    }
+
+                    if (itemInden.AkBelian.Count > 0)
+                    {
+                        foreach (var itemBelian in itemInden.AkBelian)
+                        {
+                            if (itemBelian.AkPV2.Count > 0)
+                            {
+                                foreach (var itemPV2 in itemBelian.AkPV2)
+                                {
+
+                                    var tarikhPostingPV = Convert.ToDateTime(itemPV2.AkPV.TarikhPosting).ToString("dd/MM/yyyy");
+                                    tarikhPostingPV = (tarikhPostingPV != "01/01/0001") ? tarikhPostingPV : "-";
+                                    var tarikhCek = Convert.ToDateTime(itemPV2.AkPV.TarCekAtauEFT).ToString("dd/MM/yyyy");
+                                    tarikhCek = (tarikhCek != "01/01/0001") ? tarikhCek : "-";
+
+                                    if (itemPV2.AkPV.FlHapus == 0)
+                                    {
+                                        <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(itemPV2.AkPV.Tarikh).ToString("dd/MM/yyyy")</td>
+                                        <td class="text-center" style="border-bottom:none;">@itemPV2.AkPV.NoPV</td>
+                                        <td class="text-center" style="border-bottom:none;">@tarikhPostingPV</td>
+                                        <td class="text-center" style="border-bottom:none;">@tarikhCek</td>
+                                        <td class="text-center" style="border-bottom:none;">@itemPV2.AkPV.JCaraBayar.Perihal</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center" style="border-bottom:none;">-</td>
+                                        <td class="text-center" style="border-bottom:none;">-</td>
+                                        <td class="text-center" style="border-bottom:none;">-</td>
+                                        <td class="text-center" style="border-bottom:none;">-</td>
+                                        <td class="text-center" style="border-bottom:none;">-</td>
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <td class="text-center" style="border-bottom:none;">-</td>
+                        <td class="text-center" style="border-bottom:none;">-</td>
+                        <td class="text-center" style="border-bottom:none;">-</td>
+                        <td class="text-center" style="border-bottom:none;">-</td>
+                        <td class="text-center" style="border-bottom:none;">-</td>
+                    }
+                }
+            }
             else
             {
                 <td class="text-center" style="border-bottom:none;">-</td>
@@ -203,24 +274,24 @@
 </table>
 
 <div class="row flexrow mb-3 ml-0">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <h6 class="mb-5">
             Disediakan Oleh :
         </h6>
         <hr class="mt-2 mr-2" />
         <h6>@Model.Username</h6>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
         <h6 class="mb-5">
             Disemak Oleh :
         </h6>
         <hr class="mt-2 mr-2" />
     </div>
-    <div class="col-md-4">
+    @*<div class="col-md-4">
         <h6 class="mb-5">
             Disahkan Oleh :
         </h6>
         <hr class="mt-2 mr-2" />
-    </div>
+    </div>*@
 </div>
 
