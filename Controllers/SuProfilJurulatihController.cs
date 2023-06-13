@@ -90,7 +90,7 @@ namespace MSNK.Controllers
                 .Include(b => b.SuAtlet).ThenInclude(b => b.JBank)
                 .Include(b => b.JCaraBayar)
                 .Where(b => b.SuProfilId == id)
-                .OrderBy(b => b.JSukan.Perihal).ThenBy(b => b.SuAtlet.Nama)
+                .OrderBy(b => b.JSukan.Perihal).ThenBy(b => b.SuJurulatih.Nama)
                 .ToList();
             ViewBag.suProfil1 = table1;
         }

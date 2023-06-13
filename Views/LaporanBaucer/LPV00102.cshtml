@@ -1,4 +1,4 @@
-﻿@model MSNK.Models.Modules.PrintModel.Reporting.LPV001PrintModel
+﻿@model dynamic
 
 @{
     ViewData["Title"] = "Cetakan LPV00101";
@@ -40,17 +40,26 @@
     }
 </style>
 
+<div class="row flexrow mb-3 ml-0">
+    <div class="col-2 image-container">
+        <img src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@ViewData["NamaSyarikat"]</strong></h5>
+        <h6 class="mb-0 text-white"> -</h6>
+        <h6 class="mb-0 text-white"> -</h6>
+        <h6 class="mb-0">@ViewData["Tajuk"] @Model.reportModel.JKW.Kod - @Model.reportModel.JKW.Perihal </h6>
+        <h6 class="mb-0">Bagi Tarikh : @Convert.ToDateTime(Model.reportModel.TarikhDari).ToString("dd/MM/yyyy") -> @Convert.ToDateTime(Model.reportModel.TarikhHingga).ToString("dd/MM/yyyy")</h6>
+    </div>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0">Tarikh: @Convert.ToDateTime(DateTime.Today).ToString("dd/MM/yyyy")</h6>
+        <h6 class="mb-0">Laporan: @Model.reportModel.KodLaporan</h6>
+    </div>
+</div>
+
 <table class="table table-bordered table-sm topic">
     <thead>
-        <tr class="bg-light">
-            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
-        </tr>
-        <tr class="bg-light">
-            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
-        </tr>
-        <tr class="bg-light">
-            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
-        </tr>
         <tr class="bg-secondary">
             <th class="text-center font-weight-bold text-white">BIL  </th>
             <th class="text-center font-weight-bold text-white">TARIKH TERIMA</th>
@@ -71,7 +80,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.AkPV)
+        @foreach (var item in Model.reportModel.AkPV)
         {
             @foreach (var item1 in item.AkPV2)
             {
@@ -85,119 +94,62 @@
                 // end
 
                 bil++;
-        <tr class="@tabletype" style="line-height:0.8rem; page-break-before:avoid;">
+                <tr class="@tabletype" style="line-height:0.8rem; page-break-before:avoid;">
 
-            <td class="text-right" style="border-bottom:none;">@bil</td>
-            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item1.AkBelian.AkPO.AkNotaMinta.Tarikh).ToString("dd/MM/yyyy")</td>
-            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item1.AkBelian.AkPO.AkNotaMinta.Tarikh).ToString("dd/MM/yyyy")</td>
-            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item1.AkBelian.AkPO.AkNotaMinta.TarikhSeksyenKewangan).ToString("dd/MM/yyyy")</td>
-            <td class="text-left text-uppercase" style="border-bottom:none;">@item.Nama</td>
-            <td class="text-center" style="border-bottom:none;">@item1.AkBelian.AkPO.AkNotaMinta.NoSiri</td>
-            <td class="text-center" style="border-bottom:none;">@item1.AkBelian.NoInbois.Substring(3)</td>
-            <td class="text-right ">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
-            <td class="text-center" style="border-bottom:none;">@item1.AkBelian.AkPO.NoPO.Substring(3)</td>
-            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
-            <td class="text-center" style="border-bottom:none;">@item.NoPV.Substring(3)</td>
-            @if (item.TarikhPosting != null)
-            {
-                <td class="text-center text-uppercase">@Convert.ToDateTime(item.TarikhPosting).ToString("dd/MM/yyyy")</td>
-            }
-            else
-            {
-                <td class="text-center">-</td>
-            }
-            @if (item.TarCekAtauEFT != null)
-            {
-                <td class="text-center text-uppercase">@Convert.ToDateTime(item.TarCekAtauEFT).ToString("dd/MM/yyyy")</td>
-            }
-            else
-            {
-                <td class="text-center">-</td>
-            }
-            <td class="text-center text-uppercase">@item.JCaraBayar.Perihal</td>
-            @if (item.NoCekAtauEFT != null)
-            {
-                <td class="text-center text-uppercase">@item.NoCekAtauEFT</td>
-            }
-            else
-            {
-                <td class="text-center">-</td>
-            }
+                    <td class="text-right" style="border-bottom:none;">@bil</td>
+                    <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item1.AkBelian.AkPO.AkNotaMinta.Tarikh).ToString("dd/MM/yyyy")</td>
+                    <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item1.AkBelian.AkPO.AkNotaMinta.Tarikh).ToString("dd/MM/yyyy")</td>
+                    <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item1.AkBelian.AkPO.AkNotaMinta.TarikhSeksyenKewangan).ToString("dd/MM/yyyy")</td>
+                    <td class="text-left text-uppercase" style="border-bottom:none;">@item.Nama</td>
+                    <td class="text-center" style="border-bottom:none;">@item1.AkBelian.AkPO.AkNotaMinta.NoSiri</td>
+                    <td class="text-center" style="border-bottom:none;">@item1.AkBelian.NoInbois.Substring(3)</td>
+                    <td class="text-right ">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+                    <td class="text-center" style="border-bottom:none;">@item1.AkBelian.AkPO.NoPO.Substring(3)</td>
+                    <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
+                    <td class="text-center" style="border-bottom:none;">@item.NoPV.Substring(3)</td>
+                    @if (item.TarikhPosting != null)
+                    {
+                        <td class="text-center text-uppercase">@Convert.ToDateTime(item.TarikhPosting).ToString("dd/MM/yyyy")</td>
+                    }
+                    else
+                    {
+                        <td class="text-center">-</td>
+                    }
+                    @if (item.TarCekAtauEFT != null)
+                    {
+                        <td class="text-center text-uppercase">@Convert.ToDateTime(item.TarCekAtauEFT).ToString("dd/MM/yyyy")</td>
+                    }
+                    else
+                    {
+                        <td class="text-center">-</td>
+                    }
+                    <td class="text-center text-uppercase">@item.JCaraBayar.Perihal</td>
+                    @if (item.NoCekAtauEFT != null)
+                    {
+                        <td class="text-center text-uppercase">@item.NoCekAtauEFT</td>
+                    }
+                    else
+                    {
+                        <td class="text-center">-</td>
+                    }
 
-
-
-            <td class="text-right ">@Convert.ToDecimal(item1.Amaun).ToString("#,##0.00")</td>
-        </tr>
+                    <td class="text-right ">@Convert.ToDecimal(item1.Amaun).ToString("#,##0.00")</td>
+                </tr>
+            }
+            @if (item.FlHapus == 1 && !string.IsNullOrEmpty(item.SebabHapus))
+            {
+                <tr class="table-danger" style="line-height:0.8rem;">
+                    <td class="text-uppercase" colspan="10"><strong>Sebab Batal :</strong> @item.SebabHapus</td>
+                </tr>
             }
 
         }
         <tr class="font-weight-bold">
             <td colspan="9" class="table-borderless text-right">JUMLAH RM</td>
-            <td class="text-right">@Convert.ToDecimal(Model.JumlahDebit).ToString("#,##0.00")</td>
+            <td class="text-right">@Convert.ToDecimal(Model.reportModel.JumlahDebit).ToString("#,##0.00")</td>
         </tr>
     </tbody>
 </table>
-
-@*ringkasan*@
-@*<div>
-        <p class="breakhere"></p>
-    </div>
-
-    <div class="row flexrow mb-3 ml-0 text-white">
-        <div class="col-2 image-container" hidden>
-            <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" />
-        </div>
-        <div class="col-8 text-uppercase">
-            <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
-            <h6 class="mb-0 text-white"> -</h6>
-            <h6 class="mb-0 text-white"> -</h6>
-            <h6 class="mb-0">Laporan Daftar Resit Terperinci Kump Wang : @Model.JKW.Kod - @Model.JKW.Perihal </h6>
-            <h6 class="mb-0">Bagi Tarikh : @Convert.ToDateTime(Model.TarikhDari).ToString("dd/MM/yyyy") -> @Convert.ToDateTime(Model.TarikhHingga).ToString("dd/MM/yyyy")</h6>
-        </div>
-
-        <div class="col-2 text-right">
-            <h6 class="mb-0">Tarikh: @Convert.ToDateTime(DateTime.Today).ToString("dd/MM/yyyy")</h6>
-            <h6 class="mb-0">Laporan: @Model.KodLaporan</h6>
-        </div>
-    </div>
-
-
-    <div class="container">
-        <div class="row flexrow">
-            <div class="col-4">
-                <h6><strong>Ringkasan:</strong></h6>
-                <div class="table-responsive-sm mb-0">
-                    <table class="table table-bordered table-sm topic">
-
-                        <tbody>
-                            <tr class="bg-secondary">
-                                <td class="text-center font-weight-bold text-white">Jenis Cara Bayar</td>
-                                <td class="text-center font-weight-bold text-white">Bilangan</td>
-                            </tr>
-                            @foreach (var item in Model.LPR00102_1)
-                            {
-
-                                <tr>
-                                    <td class="text-left text-uppercase">@item.Perihal</td>
-                                    <td class="text-right ">@item.Kuantiti</td>
-                                </tr>
-
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="col-4">
-
-            </div>
-            <div class="col-4">
-            </div>
-
-        </div>
-    </div>*@
-
-@*ringkasan end*@
-
 
 <div class="row flexrow mb-3 ml-0">
     <div class="col-md-4">
@@ -205,7 +157,7 @@
             Disediakan Oleh :
         </h6>
         <hr class="mt-2 mr-2" />
-        <h6>@Model.Username</h6>
+        <h6>@Model.reportModel.Username</h6>
     </div>
     <div class="col-md-4">
         <h6 class="mb-5">

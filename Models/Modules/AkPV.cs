@@ -86,6 +86,7 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
+        public string SebabHapus { get; set; }
         [DisplayName("Jenis Baucer")]
         public JenisBaucer FlJenisBaucer { get; set; }
         [DisplayName("Kategori Penerima")]

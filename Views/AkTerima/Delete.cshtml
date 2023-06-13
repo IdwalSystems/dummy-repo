@@ -284,16 +284,20 @@
         @*table urusniaga end*@
         <hr />
         <div class="form-group">
-             <form asp-action="Delete">
+            <form asp-action="Delete">
                 <input type="hidden" asp-for="Id" />
-                 @if (Model.FlPosting == 1)
+                @if (Model.FlPosting == 1)
                 {
                 }
                 else
                 {
+                    <div class="form-group pb-2">
+                        <label class="control-label">Sebab Hapus </label><span class="text-primary"> (Jika Ada)</span>
+                        <textarea class="form-control form-control-sm text-uppercase" name="sebabHapus" rows="2"></textarea>
+                    </div>
                     <input type="submit" value="Hapus" class="btn btn-danger btn-sm" />
                 }
-                
+
                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </form>
             

@@ -41,6 +41,7 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
+        public string SebabHapus { get; set; }
         [DisplayName("Cetak")]
         [DefaultValue("0")]
         public int FlCetak { get; set; }

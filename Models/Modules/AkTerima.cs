@@ -82,6 +82,7 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
+        public string SebabHapus { get; set; }
         //flag end
 
         //Relationship
@@ -115,6 +116,7 @@ namespace MSNK.Models.Modules
         public ICollection<AkTerima1> AkTerima1 { get; set; }
         public ICollection<AkTerima2> AkTerima2 { get; set; }
         public ICollection<AkTerima3> AkTerima3 { get; set; }
+        
         //relationship end
 
     }

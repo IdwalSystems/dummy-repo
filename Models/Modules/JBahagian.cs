@@ -24,6 +24,7 @@ namespace MSNK.Models.Modules
         public int? JPTJId { get; set; }
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
+        public string SebabHapus { get; set; }
 
         public ICollection<AbWaran> AbWaran { get; set; }
         public ICollection<AbWaran1> AbWaran1 { get; set; }

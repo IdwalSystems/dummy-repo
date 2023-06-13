@@ -1223,7 +1223,7 @@ namespace MSNK.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "PR001D")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, string sebabHapus)
         {
             var akTerima = await _context.AkTerima.FindAsync(id);
 
@@ -1233,6 +1233,7 @@ namespace MSNK.Controllers
             akTerima.TarKemaskini = DateTime.Now;
             akTerima.SuPekerjaKemaskiniId = pekerjaId;
 
+            akTerima.SebabHapus = sebabHapus?.ToUpper() ?? "";
             // check if already posting redirect back
             if (akTerima.FlPosting == 1)
             {
@@ -1245,7 +1246,7 @@ namespace MSNK.Controllers
             _context.AkTerima.Remove(akTerima);
 
             //insert applog
-            await AddLogAsync("Hapus", "Hapus Data", akTerima.NoRujukan, id, akTerima.Jumlah, pekerjaId);
+            await AddLogAsync("Hapus", "Hapus Data : " + akTerima.SebabHapus, akTerima.NoRujukan, id, akTerima.Jumlah, pekerjaId);
             //insert applog end
 
             await _context.SaveChangesAsync();

@@ -42,6 +42,7 @@ namespace MSNK.Models.Modules
         public SuPekerja SuPekerja { get; set; }
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
+        public string SebabHapus { get; set; }
         public ICollection<AkPenyataPemungut1> AkPenyataPemungut1 { get; set; }
         public ICollection<AkPenyataPemungut2> AkPenyataPemungut2 { get; set; }
 

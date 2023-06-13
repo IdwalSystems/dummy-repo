@@ -108,7 +108,6 @@
                 <tr><th colspan="9" class="text-uppercase bg-dark text-white font-weight-bold"> @item.JBahagian - @item.Vot</th></tr>
                 break;
             }
-            @**@
             <tr style="line-height:0.8rem;" class="bg-secondary text-white">
 
 
@@ -146,11 +145,20 @@
             @{
                 int rowNo = 0;
                 decimal baki = 0;
+                decimal jumDebit = 0;
+                decimal jumKredit = 0;
+                decimal jumTanggung = 0;
+                decimal jumLiabiliti = 0;
             }
 
 
             @foreach (var item in group)
             {
+
+                jumDebit += item.Debit;
+                jumKredit += item.Kredit;
+                jumTanggung += item.Tanggungan;
+                jumLiabiliti += item.Liabiliti;
 
                 <tr>
                     <td class="bil">
@@ -192,6 +200,26 @@
             }
         </tbody>
         <tfoot>
+                <tr class="font-weight-bold table-warning">
+                    <td class="text-right" colspan="4">
+                        JUMLAH RM
+                    </td>
+                    <td class="text-right" >
+                        @Convert.ToDecimal(jumDebit).ToString("#,##0.00")
+                    </td>
+                    <td class="text-right">
+                        @Convert.ToDecimal(jumKredit).ToString("#,##0.00")
+                    </td>
+                    <td class="text-right">
+                        @Convert.ToDecimal(jumTanggung).ToString("#,##0.00")
+                    </td>
+                    <td class="text-right">
+                        @Convert.ToDecimal(jumLiabiliti).ToString("#,##0.00")
+                    </td>
+                    <td class="total text-right">
+                        @Convert.ToDecimal(baki).ToString("#,##0.00")
+                    </td>
+                </tr>
         </tfoot>
     </table>
     <br />

@@ -310,7 +310,7 @@
             </div>
         </div>
         @*@base form end*@
-        
+
         @if (Model.FlJenisBaucer == JenisBaucer.Inbois)
         {
             @*table Inbois*@
@@ -598,6 +598,16 @@
             </div>
             @*table Ganda end*@
         }
+
+        @if (Model.FlHapus == 1)
+        {
+            <br />
+            <div class="form-group pb-2">
+                <label class="control-label">Sebab Hapus </label>
+                <textarea class="form-control form-control-sm text-uppercase" readonly rows="2">@Model.SebabHapus</textarea>
+            </div>
+        }
+
         <hr />
         <div class="form-group">
 

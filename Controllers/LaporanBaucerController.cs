@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Administration;
@@ -10,6 +11,7 @@ using MSNK.Models.Modules.PrintModel.Reporting;
 using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -88,6 +90,7 @@ namespace MSNK.Controllers
                 tajuk = "Laporan Daftar Baucer Kump Wang :";
 
                 IEnumerable<AkPV> akT = _context.AkPV
+                    .IgnoreQueryFilters()
                     .Include(b => b.JKW)
                     .Include(b=> b.JCaraBayar)
                     .Include(b => b.AkBank).ThenInclude(b => b.AkCarta)
@@ -115,6 +118,9 @@ namespace MSNK.Controllers
                     // sudah posting
                     case 2:
                         akT = akT.Where(x => x.FlPosting == 1).ToList();
+                        break;
+                    case 3:
+                        akT = akT.Where(x => x.FlHapus == 1).ToList();
                         break;
                     // semua
                     default:
@@ -242,39 +248,26 @@ namespace MSNK.Controllers
             CompanyDetails company = new CompanyDetails();
             reportModel.CompanyDetail = company;
 
-            string customSwitches = string.Format(" --header-html  \"{0}\" " +
-                                   "--header-spacing \"-12\" " +
-                                   "--header-font-size \"10\" " +
-                                   "--footer-center \"[page]/[toPage]\" " +
-                                   "--footer-font-size \"7\" --footer-spacing 1",
-                                   Url.Action("Header", "LaporanTerimaan",
-                                   new
-                                   {
-                                       KodLaporan = kodLaporan,
-                                       KodKw = kW.Kod,
-                                       PerihalKw = kW.Perihal,
-                                       AkaunBank = akBank.NoAkaun,
-                                       PerihalAkaunBank = akBank.AkCarta.Perihal,
-                                       TarikhDari = tarikhDari,
-                                       TarikhHingga = tarikhHingga,
-                                       Tajuk = tajuk
-                                   },
-                                   "https"));
-            return new ViewAsPdf(pdfName, reportModel)
+            dynamic dyModel = new ExpandoObject();
+
+            dyModel.reportModel = reportModel;
+
+            return new ViewAsPdf(kodLaporan, dyModel,
+                new ViewDataDictionary(ViewData)
+                {
+                    { "Tajuk", tajuk },
+                    { "NamaSyarikat", company.NamaSyarikat },
+                    { "AlamatSyarikat1", company.AlamatSyarikat1 },
+                    { "AlamatSyarikat2", company.AlamatSyarikat2 },
+                    { "AlamatSyarikat3", company.AlamatSyarikat3 }
+                })
             {
-                PageMargins = { Left = 10, Bottom = 15, Right = 15, Top = 15 },
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
-                CustomSwitches = customSwitches,
-                //CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
-                //        " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
+                            " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
-        }
-
-        [AllowAnonymous]
-        public ActionResult Header(LPR001PrintModel reportModel)
-        {
-            return View(reportModel);
         }
     }
 }

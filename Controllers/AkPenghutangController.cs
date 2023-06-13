@@ -603,9 +603,10 @@ namespace MSNK.Controllers
                         throw;
                     }
                 }
-                PopulateList();
+                
                 return RedirectToAction(nameof(Index));
             }
+            PopulateList();
             return View(akPenghutang);
         }
 

@@ -15,9 +15,9 @@
             <div class="col-4 text-right">
                 <a asp-action="Index" class="text-secondary"><i class="fas fa-times fa-2x"></i></a>
             </div>
-    
+
         </div>
-        <hr class="mt-2"/>
+        <hr class="mt-2" />
 
         <div class="form-row">
             <div class="col-lg-10">
@@ -124,21 +124,21 @@
             </div>
             <div class="col-lg-2 pb-3">
                 @*<div class="accordion" id="accordionExample">
-                        <div class="card">
-                            <div class="card-header" id="headingTwo">
-                                <h2 class="mb-0">
-                                    <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        Collapsible Group Item #2
-                                    </button>
-                                </h2>
-                            </div>
-                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    Some placeholder content for the second accordion panel. This panel is hidden by default.
-                                </div>
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Collapsible Group Item #2
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                            <div class="card-body">
+                                Some placeholder content for the second accordion panel. This panel is hidden by default.
                             </div>
                         </div>
-                    </div>*@
+                    </div>
+                </div>*@
                 <div class="card mb-2">
                     <div class="card-body p-1">
 
@@ -401,6 +401,15 @@
                 break;
         }
 
+        @if (Model.FlHapus == 1)
+        {
+            <br />
+            <div class="form-group pb-2">
+                <label class="control-label">Sebab Hapus </label>
+                <textarea class="form-control form-control-sm text-uppercase" readonly rows="2">@Model.SebabHapus</textarea>
+            </div>
+        }
+
         <hr />
         <div class="form-group">
             @if (Model.FlPosting == 1)
@@ -408,7 +417,7 @@
             }
             else
             {
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a> 
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a>
             }
             <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
         </div>

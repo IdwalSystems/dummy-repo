@@ -52,6 +52,7 @@ namespace MSNK.Models.Modules
         [DefaultValue("0")]
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
+        public string SebabHapus { get; set; }
         // if have akPOId or akIndenId, Dengan Tanggungan
         // else Tanpa Tanggungan
         [DisplayName("Dengan Tanggungan/Tanpa Tanggungan")]

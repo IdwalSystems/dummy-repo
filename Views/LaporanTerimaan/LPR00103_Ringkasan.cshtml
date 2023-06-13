@@ -1,0 +1,48 @@
+﻿<div class="row flexrow mb-3 ml-0">
+    <div class="col-2 image-container">
+        <img src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@ViewData["NamaSyarikat"]</strong></h5>
+        <h6 class="mb-0 text-white"> -</h6>
+        <h6 class="mb-0 text-white"> -</h6>
+        <h6 class="mb-0">@ViewData["Tajuk"] @Model.reportModel.JKW.Kod - @Model.reportModel.JKW.Perihal </h6>
+        <h6 class="mb-0">Bagi Tarikh : @Convert.ToDateTime(Model.reportModel.TarikhDari).ToString("dd/MM/yyyy") -> @Convert.ToDateTime(Model.reportModel.TarikhHingga).ToString("dd/MM/yyyy")</h6>
+    </div>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0">Tarikh: @Convert.ToDateTime(DateTime.Today).ToString("dd/MM/yyyy")</h6>
+        <h6 class="mb-0">Laporan: @Model.reportModel.KodLaporan</h6>
+    </div>
+</div>
+
+<h6><strong>Ringkasan:</strong></h6>
+    <table class="table table-bordered table-sm topic">
+        <thead>
+            <tr class="bg-secondary">
+                <th class="text-center font-weight-bold text-white">Kod</th>
+                <th class="text-center font-weight-bold text-white">Nama Objek</th>
+                <th class="text-center font-weight-bold text-white">Debit RM</th>
+                <th class="text-center font-weight-bold text-white">Kredit RM</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.reportModel.LPR00103_1)
+            {
+
+                <tr>
+                    <td class="text-center text-uppercase">@item.KodAkaun</td>
+                    <td class="text-left text-uppercase">@item.Perihal</td>
+                    <td class="text-right ">@Convert.ToDecimal(item.Debit).ToString("#,##0.00")</td>
+                    <td class="text-right ">@Convert.ToDecimal(item.Kredit).ToString("#,##0.00")</td>
+                </tr>
+
+            }
+            <tr class="font-weight-bold">
+                <td colspan="2" class="table-borderless text-right">JUMLAH RM</td>
+                <td class="text-right">@Convert.ToDecimal(Model.reportModel.Debit).ToString("#,##0.00")</td>
+                <td class="text-right">@Convert.ToDecimal(Model.reportModel.Kredit).ToString("#,##0.00")</td>
+            </tr>
+        </tbody>
+    </table>

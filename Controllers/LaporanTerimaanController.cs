@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Administration;
@@ -10,6 +11,7 @@ using MSNK.Models.Modules.PrintModel.Reporting;
 using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -92,13 +94,13 @@ namespace MSNK.Controllers
             {
                 akBank.NoAkaun = "SEMUA";
             }
-                
+
 
             LPR001PrintModel reportModel = new LPR001PrintModel();
 
             if (kodLaporan == "LPR00102" || kodLaporan == "LPR00103")
             {
-                if(kodLaporan == "LPR00102")
+                if (kodLaporan == "LPR00102")
                 {
                     tajuk = "Laporan Daftar Resit Terperinci Mengikut Pecahan Cara Bayar Kump Wang :";
                 }
@@ -214,17 +216,17 @@ namespace MSNK.Controllers
 
                 //Ringkasan Cara bayar
                 var RingkasanCaraBayar = (from tbl1 in _context.AkTerima2.Include(x => x.JCaraBayar).ToList()
-                                                     join tbl in akT.ToList()
-                                                     on tbl1.AkTerimaId equals tbl.Id into tbl1Tbl
-                                                     from tbl1_tbl in tbl1Tbl.DefaultIfEmpty()
-                                                     select new
-                                                     {
-                                                         CaraBayar = tbl1.JCaraBayar.Perihal
-                                                     }).GroupBy(x => x.CaraBayar).Select(group => new
-                                                     {
-                                                         Metric = group.Key,
-                                                         Count = group.Count()
-                                                     }).OrderBy(x => x.Metric).ToList();
+                                          join tbl in akT.ToList()
+                                          on tbl1.AkTerimaId equals tbl.Id into tbl1Tbl
+                                          from tbl1_tbl in tbl1Tbl.DefaultIfEmpty()
+                                          select new
+                                          {
+                                              CaraBayar = tbl1.JCaraBayar.Perihal
+                                          }).GroupBy(x => x.CaraBayar).Select(group => new
+                                          {
+                                              Metric = group.Key,
+                                              Count = group.Count()
+                                          }).OrderBy(x => x.Metric).ToList();
 
                 IEnumerable<RingkasanPrintModel> ringkasanCaraBayarResult = RingkasanCaraBayar.Select(l => new RingkasanPrintModel
                 {
@@ -284,7 +286,7 @@ namespace MSNK.Controllers
             {
 
             }
-                    
+
 
             var user = await _userManager.GetUserAsync(User);
             var namaUser = await _context.applicationUsers.FirstOrDefaultAsync(x => x.Email == user.Email);
@@ -298,40 +300,54 @@ namespace MSNK.Controllers
             reportModel.AkBank = akBank;
             CompanyDetails company = new CompanyDetails();
             reportModel.CompanyDetail = company;
+            dynamic dyModel = new ExpandoObject();
 
-            string customSwitches = string.Format(" --header-html  \"{0}\" " +
-                                   "--header-spacing \"-12\" " +
-                                   "--header-font-size \"10\" " +
-                                   "--footer-center \"[page]/[toPage]\" " +
-                                   "--footer-font-size \"7\" --footer-spacing 1",
-                                   Url.Action("Header", "LaporanTerimaan",
-                                   new
-                                   {
-                                       KodLaporan = kodLaporan,
-                                       KodKw = kW.Kod,
-                                       PerihalKw = kW.Perihal,
-                                       AkaunBank = akBank.NoAkaun ?? "SEMUA",
-                                       PerihalAkaunBank = akBank.AkCarta?.Perihal ?? "",
-                                       TarikhDari = tarikhDari,
-                                       TarikhHingga = tarikhHingga,
-                                       Tajuk = tajuk
-                                   },
-                                   "https"));
-            return new ViewAsPdf(pdfName, reportModel)
+            dyModel.reportModel = reportModel;
+
+            return new ViewAsPdf(kodLaporan, dyModel,
+                new ViewDataDictionary(ViewData)
+                {
+                    { "Tajuk", tajuk },
+                    { "NamaSyarikat", company.NamaSyarikat },
+                    { "AlamatSyarikat1", company.AlamatSyarikat1 },
+                    { "AlamatSyarikat2", company.AlamatSyarikat2 },
+                    { "AlamatSyarikat3", company.AlamatSyarikat3 }
+                })
             {
-                PageMargins = { Left = 10, Bottom = 15, Right = 15, Top = 15 },
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
                 PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
-                CustomSwitches = customSwitches,
-                //CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
-                //        " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
+                            " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
         }
-
-        [AllowAnonymous]
-        public ActionResult Header(LPR001PrintModel reportModel)
-        {
-            return View(reportModel);
-        }
+        //string customSwitches = string.Format(" --header-html  \"{0}\" " +
+        //                       "--header-spacing \"-12\" " +
+        //                       "--header-font-size \"10\" " +
+        //                       "--footer-center \"[page]/[toPage]\" " +
+        //                       "--footer-font-size \"7\" --footer-spacing 1",
+        //                       Url.Action("Header", "LaporanTerimaan",
+        //                       new
+        //                       {
+        //                           KodLaporan = kodLaporan,
+        //                           KodKw = kW.Kod,
+        //                           PerihalKw = kW.Perihal,
+        //                           AkaunBank = akBank.NoAkaun ?? "SEMUA",
+        //                           PerihalAkaunBank = akBank.AkCarta?.Perihal ?? "",
+        //                           TarikhDari = tarikhDari,
+        //                           TarikhHingga = tarikhHingga,
+        //                           Tajuk = tajuk
+        //                       },
+        //                       "https"));
+        //return new ViewAsPdf(pdfName, reportModel)
+        //{
+        //    PageMargins = { Left = 10, Bottom = 15, Right = 15, Top = 15 },
+        //    PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+        //    CustomSwitches = customSwitches,
+        //    //CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
+        //    //        " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+        //    PageSize = Rotativa.AspNetCore.Options.Size.A4,
+        //};
     }
+
 }

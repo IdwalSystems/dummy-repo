@@ -27,6 +27,10 @@
     </div>
 
     <div class="col-2 text-right">
+        @if (Model.AkPV.FlHapus == 1)
+        {
+            <h1 class="mb-0 text-danger"><strong>BATAL</strong></h1>
+        }
         @if (Model.IsAKB == true)
         {
             <h1 class="mb-0 text-primary"><strong>ABB</strong></h1>

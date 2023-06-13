@@ -172,7 +172,7 @@ namespace MSNK.Controllers
             return View(suAtlet);
         }
 
-        [Authorize(Policy = "DF004C")]
+        [Authorize(Policy = "DF005C")]
         // GET: SuAtlet/Create
         public IActionResult Create()
         {
@@ -182,7 +182,7 @@ namespace MSNK.Controllers
             return View();
         }
 
-        [Authorize(Policy = "DF004C")]
+        [Authorize(Policy = "DF005C")]
         // POST: SuAtlet/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -271,7 +271,7 @@ namespace MSNK.Controllers
             return View(suAtlet);
         }
 
-        [Authorize(Policy = "DF004E")]
+        [Authorize(Policy = "DF005E")]
         // GET: SuAtlet/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -293,7 +293,7 @@ namespace MSNK.Controllers
             return View(suAtlet);
         }
 
-        [Authorize(Policy = "DF004E")]
+        [Authorize(Policy = "DF005E")]
         // POST: SuAtlet/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -366,7 +366,7 @@ namespace MSNK.Controllers
             return View(suAtlet);
         }
 
-        [Authorize(Policy = "DF004D")]
+        [Authorize(Policy = "DF005D")]
         // GET: SuAtlet/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -385,7 +385,7 @@ namespace MSNK.Controllers
             return View(suAtlet);
         }
 
-        [Authorize(Policy = "DF004D")]
+        [Authorize(Policy = "DF005D")]
         // POST: SuAtlet/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -412,7 +412,7 @@ namespace MSNK.Controllers
             return _context.SuAtlet.Any(e => e.Id == id);
         }
 
-        [Authorize(Policy = "DF004R")]
+        [Authorize(Policy = "DF005R")]
         public async Task<IActionResult> RollBack(int id)
         {
             var user = await _userManager.GetUserAsync(User);
