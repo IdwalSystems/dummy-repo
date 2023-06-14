@@ -478,6 +478,12 @@ namespace MSNK
                 options.AddPolicy("PB001P", policy => policy.RequireClaim("PB001P"));
                 options.AddPolicy("PB001R", policy => policy.RequireClaim("PB001R"));
                 //Penyesuaian Bank end
+                //Menu Lejar
+                //Prosidur Akhir Tahun
+                options.AddPolicy("AK004", policy => policy.RequireClaim("AK004"));
+                options.AddPolicy("AK004T", policy => policy.RequireClaim("AK004T"));
+                options.AddPolicy("AK004UT", policy => policy.RequireClaim("AK004UT"));
+                //Prosidur Akhir Tahun end
             });
 
             services.AddMvc(f =>

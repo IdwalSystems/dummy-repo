@@ -168,7 +168,13 @@ namespace MSNK.Data
             //Belanjawan Semasa
             new Claim("BJ002","BJ002 Belanjawan Semasa"),
             new Claim("BJ002P","BJ002 Belanjawan Semasa - Cetak"),
-            //Waran end
+            //Belanjawan Semasa end
+            //Menu Lejar (Akaun)
+            //Prosidur Akhir Tahun
+            new Claim("AK004","AK004 Prosidur Akhir Tahun"),
+            new Claim("AK004T","AK004 Prosidur Akhir Tahun - Posting"),
+            new Claim("AK004UT","AK004 Prosidur Akhir Tahun - UnPosting"),
+            //Prosidur Akhir Tahun end
             //Menu Profil
             //Profil Atlet
             new Claim("SU001","SU001 Profil Atlet"),
@@ -275,6 +281,7 @@ namespace MSNK.Data
             new Claim("PB001P","PB001 Penyesuaian Bank - Cetak"),
             new Claim("PB001R","PB001 Penyesuaian Bank - Rollback"),
             //Penyesuaian Bank end
+            // Menu
 
         };
     }

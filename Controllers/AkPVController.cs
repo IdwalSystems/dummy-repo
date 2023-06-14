@@ -3362,7 +3362,7 @@ namespace MSNK.Controllers
                                 kodAkaunPerdangangan = item2.AkBelian.KodObjekAPId;
                             }
                                 //insert into akAkaun dengan tanggungan
-                                AkAkaun akAKodBank = new AkAkaun()
+                                AkAkaun akAKodBank = new()
                                 {
                                     NoRujukan = akPV.NoPV,
                                     JKWId = akPV.JKWId,
@@ -3370,13 +3370,14 @@ namespace MSNK.Controllers
                                     AkCartaId1 = akPV.AkBank.AkCartaId,
                                     AkCartaId2 = kodAkaunPerdangangan,
                                     Tarikh = akPV.Tarikh,
+                                    Tahun = akPV.Tahun,
                                     Kredit = item.Amaun,
                                     AkPembekalId = akPV.AkPembekalId
                                 };
 
                                 await _akAkaunRepo.Insert(akAKodBank);
 
-                                AkAkaun akAObjek = new AkAkaun()
+                                AkAkaun akAObjek = new()
                                 {
                                     NoRujukan = akPV.NoPV,
                                     JKWId = akPV.JKWId,
@@ -3384,6 +3385,7 @@ namespace MSNK.Controllers
                                     AkCartaId1 = kodAkaunPerdangangan,
                                     AkCartaId2 = akPV.AkBank.AkCartaId,
                                     Tarikh = akPV.Tarikh,
+                                    Tahun = akPV.Tahun,
                                     Debit = item.Amaun,
                                     AkPembekalId = akPV.AkPembekalId
                                 };
@@ -3402,6 +3404,7 @@ namespace MSNK.Controllers
                                 AkCartaId1 = akPV.AkBank.AkCartaId,
                                 AkCartaId2 = item.AkCartaId,
                                 Tarikh = akPV.Tarikh,
+                                Tahun = akPV.Tahun,
                                 Kredit = item.Amaun,
                                 AkPembekalId = akPV.AkPembekalId,
                                 JSukanId = akPV.SpPendahuluanPelbagai?.JSukanId
@@ -3417,6 +3420,7 @@ namespace MSNK.Controllers
                                 AkCartaId1 = item.AkCartaId,
                                 AkCartaId2 = akPV.AkBank.AkCartaId,
                                 Tarikh = akPV.Tarikh,
+                                Tahun = akPV.Tahun,
                                 Debit = item.Amaun,
                                 AkPembekalId = akPV.AkPembekalId,
                                 JSukanId = akPV.SpPendahuluanPelbagai?.JSukanId
@@ -3433,7 +3437,7 @@ namespace MSNK.Controllers
                     akPV.JPelulusId = pelulusId;
 
                     akPV.FlPosting = 1;
-                    akPV.TarikhPosting = akPV.TarLulus;
+                    akPV.TarikhPosting = tarikhLulus ?? DateTime.Now;
                     akPV.TarKemaskini = DateTime.Now;
 
                     //insert applog
