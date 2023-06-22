@@ -118,16 +118,19 @@
     </div>
 </div>
 
-<div class="table-responsive-sm mb-0">
-    <table class="table table-bordered table-sm topic pb-2">
-        <tbody>
-            <tr class="text-left" style="line-height:0.8rem;">
-                <td width="20%" class="text-danger font-weight-bold">SEBAB BATAL</td>
-                <td>@Model.AkTerima.SebabHapus</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+@if (Model.AkTerima.FlHapus == 1 && Model.AkTerima.SebabHapus != null)
+{
+    <div class="table-responsive-sm mb-0">
+        <table class="table table-bordered table-sm topic pb-2">
+            <tbody>
+                <tr class="text-left" style="line-height:0.8rem;">
+                    <td width="20%" class="text-danger font-weight-bold">SEBAB BATAL</td>
+                    <td>@Model.AkTerima.SebabHapus</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
 
 <div class="table-responsive-sm">
     <table class="table table-bordered table-sm topic mb-0">

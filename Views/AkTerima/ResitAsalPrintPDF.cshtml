@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     var status = "";
 
     if (Model.AkTerima.FlHapus == 1) status = "BATAL";
@@ -121,16 +121,20 @@
     </div>
 </div>
 
-<div class="table-responsive-sm mb-0">
-    <table class="table table-bordered table-sm topic pb-2">
-        <tbody>
-            <tr class="text-left" style="line-height:0.8rem;">
-                <td width="20%" class="text-danger font-weight-bold">SEBAB BATAL</td>
-                <td>@Model.AkTerima.SebabHapus</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+@if (Model.AkTerima.FlHapus == 1 && Model.AkTerima.SebabHapus != null)
+{
+    <div class="table-responsive-sm mb-0">
+        <table class="table table-bordered table-sm topic pb-2">
+            <tbody>
+                <tr class="text-left" style="line-height:0.8rem;">
+                    <td width="20%" class="text-danger font-weight-bold">SEBAB BATAL</td>
+                    <td>@Model.AkTerima.SebabHapus</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
 
 <hr class="bg-dark mb-0" />
 <p class="mb-1 text-center">Resit ini adalah cetakan komputer, tandatangan tidak diperlukan</p>
