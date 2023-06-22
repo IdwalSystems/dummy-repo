@@ -114,9 +114,21 @@
     </div>
 
     <div class="col-6 text-left">
-        <h6 class="mb-0 text-uppercase max-lines">Sebab</h6>
+        <h6 class="mb-0 text-uppercase max-lines">@Model.AkTerima.Sebab</h6>
     </div>
 </div>
+
+<div class="table-responsive-sm mb-0">
+    <table class="table table-bordered table-sm topic pb-2">
+        <tbody>
+            <tr class="text-left" style="line-height:0.8rem;">
+                <td width="20%" class="text-danger font-weight-bold">SEBAB BATAL</td>
+                <td>@Model.AkTerima.SebabHapus</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 <div class="table-responsive-sm">
     <table class="table table-bordered table-sm topic mb-0">
         <thead>
@@ -149,6 +161,7 @@
         </tbody>
     </table>
 </div>
+
 <hr class="bg-dark mb-0" />
 <p class="mb-1 text-center">Resit ini adalah cetakan komputer, tandatangan tidak diperlukan</p>
 

@@ -986,6 +986,7 @@ namespace MSNK.Controllers
 
         // POST: AkPOLaras/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Policy = "PT001D")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
