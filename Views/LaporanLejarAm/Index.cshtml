@@ -8,7 +8,57 @@
     DateTime firstDay = new DateTime(year, 1, 1);
     DateTime lastDay = new DateTime(year, 12, 31);
 }
+<script>
+    //add tbl objek
+    $("body").on("click", "#btnExportExcel", function () {
+        //$(".loading").prop('hidden', false);
+        $(".loading").css("display", "");
+        $("#btnExportExcel").prop('disabled', true);
+        var kodLaporan = "";
+        if ($('#LPL00101').is(':checked')) {
+            kodLaporan = "LPL00101";
+        }
+        else {
+            kodLaporan = "";
+        }
+        var JKWId = $('#JKWId').val();
+        var IdDari = $('#ddlCarta1').val();
+        var IdHingga = $('#ddlCarta2').val();
+        var tarikhDari = $('#tarikhDari').val();
+        var tarikhHingga = $('#tarikhHingga').val();
 
+        var model = {
+            JKWId : JKWId,
+            IdDari: IdDari,
+            IdHingga: IdHingga,
+            tarikhDari: tarikhDari,
+            tarikhHingga: tarikhHingga
+        }
+        var myData = {};
+        myData.kodLaporan = kodLaporan;
+        myData.model = model;
+
+        if (kodLaporan != "") {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ExportExcel","LaporanLejarAm")',
+                data: myData,
+                dataType: "json",
+                success: function (r) {
+                    window.location = '/Profile/Download?fileGuid=' + r.fileGuid
+                        + '&filename=' + r.fileName;
+                    toastr.success("laporan berjaya dijana.", "Berjaya");
+                    toastr.options.timeOut = 2000; // 2s
+                    $("#btnExportExcel").prop('disabled', false);
+                    $(".loading").css("display", "none");
+                }
+            })
+        }
+
+        //$(".loading").prop('hidden', true);
+
+    });
+</script>
 <div class="container">
     <div class="card box-shadow">
         <div class="card-body">
@@ -43,7 +93,7 @@
                         <div class="form-group form-row">
                             <label asp-for="JKWId" class="col-sm-2 col-form-label"></label>
                             <div class="col-sm-4">
-                                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId" id="ddlKW">
+                                <select class="form-control form-control-sm text-uppercase" asp-for="JKWId">
                                     @foreach (var s in ViewBag.KW)
                                     {
                                         <option value="@s.Id">@s.Kod - @s.Perihal </option>
@@ -87,6 +137,10 @@
                 <hr />
                 <div class="form-group text-right">
                     <input type="submit" value="Cetak" formtarget="_blank" class="btn ac-primary" />
+                    <button type="button" formtarget="_blank" id="btnExportExcel" class="btn ac-info">Jana Excel</button>
+                    <span class="loading" style="padding-right:3px; padding-top: 3px; display:inline-block;">
+                        <img src="~/img/Spinner.gif" style="height:40px;">
+                    </span>
                 </div>
 
             </form>

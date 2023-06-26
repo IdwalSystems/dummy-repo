@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using MSNK.Data;
 using MSNK.Models.Login.ViewModel;
 using MSNK.Models.Modules;
@@ -24,17 +25,20 @@ namespace MSNK.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly IMemoryCache _cache;
 
         public ProfileController(
             ApplicationDbContext db,
             UserManager<IdentityUser> userManager,
             AppLogIRepository<AppLog, int> appLog,
-            IWebHostEnvironment hostEnvironment)
+            IWebHostEnvironment hostEnvironment,
+            IMemoryCache cache)
         {
             _db = db;
             _userManager = userManager;
             _appLog = appLog;
             webHostEnvironment = hostEnvironment;
+            _cache = cache;
         }
 
         [HttpGet]
@@ -146,6 +150,22 @@ namespace MSNK.Controllers
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
+            }
+        }
+
+        [HttpGet]
+        public virtual ActionResult Download(string fileGuid, string fileName)
+        {
+            if (_cache.Get<byte[]>(fileGuid) != null)
+            {
+                byte[] data = _cache.Get<byte[]>(fileGuid);
+                _cache.Remove(fileGuid); //cleanup here as we don't need it in cache anymore
+                return File(data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+            else
+            {
+                // Something has gone wrong...
+                return View("Error"); // or whatever/wherever you want to return the user
             }
         }
     }

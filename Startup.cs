@@ -39,6 +39,7 @@ namespace MSNK
             services.AddSession();
             services.AddMemoryCache();
             services.AddSignalR();
+            services.AddDistributedMemoryCache();
 
             // DI 
             services.AddTransient<NotificationHub>();

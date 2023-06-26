@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.ExtendedProperties;
+using DocumentFormat.OpenXml.Office2021.DocumentTasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using MSNK.Data;
 using MSNK.Models.Administration;
 using MSNK.Models.Modules;
@@ -11,8 +16,11 @@ using MSNK.Models.Modules.PrintModel.Reporting;
 using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace MSNK.Controllers
@@ -33,6 +41,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkCarta, int, string> _akCartaRepo;
         private readonly ListViewIRepository<AkTerima2, int> _akTerima2Repo;
         private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
+        private readonly IMemoryCache _cache;
 
         public LaporanTerimaanController(
             ApplicationDbContext context,
@@ -45,7 +54,8 @@ namespace MSNK.Controllers
             IRepository<JKW, int, string> kwRepository,
             IRepository<JNegeri, int, string> negeriRepository,
             IRepository<AkCarta, int, string> akCartaRepository,
-            IRepository<AkAkaun, int, string> akAkaunRepository
+            IRepository<AkAkaun, int, string> akAkaunRepository,
+            IMemoryCache cache
             )
         {
             _context = context;
@@ -59,6 +69,7 @@ namespace MSNK.Controllers
             _akTerima2Repo = akTerima2Repository;
             _akCartaRepo = akCartaRepository;
             _akAkaunRepo = akAkaunRepository;
+            _cache = cache;
         }
         public async Task<IActionResult> Index()
         {
@@ -81,8 +92,70 @@ namespace MSNK.Controllers
             int AkBankId,
             int susunan)
         {
+            LPR001PrintModel reportModel = await PrepareData(kodLaporan, tarikhDari, tarikhHingga, status, AkBankId, susunan);
+
+            dynamic dyModel = new ExpandoObject();
+
+            dyModel.reportModel = reportModel;
+
+            return new ViewAsPdf(kodLaporan, dyModel,
+                new ViewDataDictionary(ViewData)
+                {
+                    { "Tajuk", reportModel.Tajuk },
+                    { "NamaSyarikat", reportModel.CompanyDetail.NamaSyarikat },
+                    { "AlamatSyarikat1", reportModel.CompanyDetail.AlamatSyarikat1 },
+                    { "AlamatSyarikat2", reportModel.CompanyDetail.AlamatSyarikat2 },
+                    { "AlamatSyarikat3", reportModel.CompanyDetail.AlamatSyarikat3 }
+                })
+            {
+                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
+                            " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ExportExcel(
+            string kodLaporan,
+            string tarikhDari,
+            string tarikhHingga,
+            int status,
+            int AkBankId,
+            int susunan)
+        {
+            LPR001PrintModel reportModel = await PrepareData(kodLaporan, tarikhDari, tarikhHingga, status, AkBankId, susunan);
+
+            // Generate a new unique identifier against which the file can be stored
+            string handle = Guid.NewGuid().ToString();
+
+            if (kodLaporan == "LPR00102")
+            {
+                var excelData = GetExcelDataLPR00102(reportModel);
+                RunWorkBookLPR00102(reportModel, reportModel.CompanyDetail, excelData, handle);
+            }
+            else 
+            {
+                var excelData = GetExcelDataLPR00103(reportModel);
+                var excelDataRingkasan = GetExcelDataLPR00103Ringkasan(reportModel);
+                RunWorkBookLPR00103(reportModel, reportModel.CompanyDetail, excelData,excelDataRingkasan, handle);
+            }
+
+            // Note we are returning a filename as well as the handle
+            return Json(new { FileGuid = handle, FileName = kodLaporan + ".xlsx" });
+
+        }
+
+
+        private async Task<LPR001PrintModel> PrepareData(string kodLaporan,
+            string tarikhDari,
+            string tarikhHingga,
+            int status,
+            int AkBankId,
+            int susunan)
+        {
             var pdfName = kodLaporan;
-            var tajuk = "";
             JKW kW = _context.JKW.Where(x => x.Kod == "100").FirstOrDefault();
 
             AkBank akBank = new AkBank();
@@ -102,11 +175,11 @@ namespace MSNK.Controllers
             {
                 if (kodLaporan == "LPR00102")
                 {
-                    tajuk = "Laporan Daftar Resit Terperinci Mengikut Pecahan Cara Bayar Kump Wang :";
+                    reportModel.Tajuk = "Laporan Daftar Resit Terperinci Mengikut Pecahan Cara Bayar Kump Wang :";
                 }
                 else
                 {
-                    tajuk = "Laporan Daftar Resit Terperinci Mengikut Pecahan Kod Akaun Kump Wang :";
+                    reportModel.Tajuk = "Laporan Daftar Resit Terperinci Mengikut Pecahan Kod Akaun Kump Wang :";
                 }
                 IEnumerable<AkTerima> akT = _context.AkTerima
                     .IgnoreQueryFilters()
@@ -300,54 +373,260 @@ namespace MSNK.Controllers
             reportModel.AkBank = akBank;
             CompanyDetails company = new CompanyDetails();
             reportModel.CompanyDetail = company;
-            dynamic dyModel = new ExpandoObject();
-
-            dyModel.reportModel = reportModel;
-
-            return new ViewAsPdf(kodLaporan, dyModel,
-                new ViewDataDictionary(ViewData)
-                {
-                    { "Tajuk", tajuk },
-                    { "NamaSyarikat", company.NamaSyarikat },
-                    { "AlamatSyarikat1", company.AlamatSyarikat1 },
-                    { "AlamatSyarikat2", company.AlamatSyarikat2 },
-                    { "AlamatSyarikat3", company.AlamatSyarikat3 }
-                })
-            {
-                PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
-                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
-                CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
-                            " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
-                PageSize = Rotativa.AspNetCore.Options.Size.A4,
-            };
+            return reportModel;
         }
-        //string customSwitches = string.Format(" --header-html  \"{0}\" " +
-        //                       "--header-spacing \"-12\" " +
-        //                       "--header-font-size \"10\" " +
-        //                       "--footer-center \"[page]/[toPage]\" " +
-        //                       "--footer-font-size \"7\" --footer-spacing 1",
-        //                       Url.Action("Header", "LaporanTerimaan",
-        //                       new
-        //                       {
-        //                           KodLaporan = kodLaporan,
-        //                           KodKw = kW.Kod,
-        //                           PerihalKw = kW.Perihal,
-        //                           AkaunBank = akBank.NoAkaun ?? "SEMUA",
-        //                           PerihalAkaunBank = akBank.AkCarta?.Perihal ?? "",
-        //                           TarikhDari = tarikhDari,
-        //                           TarikhHingga = tarikhHingga,
-        //                           Tajuk = tajuk
-        //                       },
-        //                       "https"));
-        //return new ViewAsPdf(pdfName, reportModel)
-        //{
-        //    PageMargins = { Left = 10, Bottom = 15, Right = 15, Top = 15 },
-        //    PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
-        //    CustomSwitches = customSwitches,
-        //    //CustomSwitches = "--footer-center \"[page]/[toPage]\"" +
-        //    //        " --footer-line --footer-font-size \"7\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
-        //    PageSize = Rotativa.AspNetCore.Options.Size.A4,
-        //};
+        private void RunWorkBookLPR00102(LPR001PrintModel reportModel,CompanyDetails company, DataTable excelData, string handle)
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+
+                var ws = wb.AddWorksheet("Laporan Terimaan");
+
+                ws.Cell("A1").Value = company.NamaSyarikat;
+                ws.Cell("A1").Style.Font.Bold = true;
+                ws.Cell("A2").Value = reportModel.Tajuk +  reportModel.JKW.Kod + " - " + reportModel.JKW.Perihal;
+                ws.Cell("A3").Value = "Bagi Tarikh : " + @Convert.ToDateTime(reportModel.TarikhDari).ToString("dd/MM/yyyy") + "->" + @Convert.ToDateTime(reportModel.TarikhHingga).ToString("dd/MM/yyyy");
+
+                ws.ColumnWidth = 10;
+                ws.Cell("A5").InsertTable(excelData)
+                    .Theme = XLTableTheme.TableStyleMedium1;
+
+                var rowNum = 1;
+                foreach (DataRow row in excelData.Rows)
+                {
+
+                    if (!string.IsNullOrWhiteSpace(row[9].ToString()))
+                    {
+                        ws.Row(rowNum + 5).CellsUsed().Style.Fill.BackgroundColor = XLColor.PastelRed;
+                        ws.Row(rowNum + 5).CellsUsed().Style.Font.FontColor = XLColor.White;
+                    }
+                    rowNum++;
+                }
+                ws.Column(2)
+                    .Style.DateFormat.Format = "dd/MM/yyyy hh:mm:ss";
+                ws.Column(2).AdjustToContents();
+                ws.Column(3).AdjustToContents();
+                ws.Column(4).AdjustToContents();
+                ws.Column(5).AdjustToContents();
+                ws.Column(6).AdjustToContents();
+                ws.Column(7).AdjustToContents();
+                ws.Column(8).AdjustToContents();
+                ws.Column(9)
+                    .Style.NumberFormat.Format = " #,##0.00";
+                ws.Column(9).AdjustToContents();
+                ws.Column(10).AdjustToContents();
+
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms);
+                    //return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportModel.KodLaporan + ".xlsx");
+
+                    //This is an equivalent to tempdata, but requires manual cleanup
+                    _cache.Set(handle, ms.ToArray(),
+                                new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(10)));
+                    //(I'd recommend you revise the expiration specifics to suit your application)
+
+                }
+
+            }  
+        }
+
+        private string RunWorkBookLPR00103(LPR001PrintModel reportModel, CompanyDetails company, DataTable excelData, DataTable excelDataRingkasan, string handle)
+        {
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                
+                var ws = wb.AddWorksheet("Laporan Terimaan");
+
+                ws.Cell("A1").Value = company.NamaSyarikat;
+                ws.Cell("A1").Style.Font.Bold = true;
+                ws.Cell("A2").Value = reportModel.Tajuk +  reportModel.JKW.Kod + " - " + reportModel.JKW.Perihal;
+                ws.Cell("A3").Value = "Bagi Tarikh : " + @Convert.ToDateTime(reportModel.TarikhDari).ToString("dd/MM/yyyy") + "->" + @Convert.ToDateTime(reportModel.TarikhHingga).ToString("dd/MM/yyyy");
+
+                ws.ColumnWidth = 9;
+                ws.Cell("A5").InsertTable(excelData)
+                    .Theme = XLTableTheme.TableStyleMedium1;
+
+                var rowNum = 1;
+                foreach (DataRow row in excelData.Rows)
+                {
+                    
+                    if (!string.IsNullOrWhiteSpace(row[8].ToString()))
+                    {
+                                ws.Row(rowNum + 5).CellsUsed().Style.Fill.BackgroundColor = XLColor.PastelRed;
+                        ws.Row(rowNum + 5).CellsUsed().Style.Font.FontColor = XLColor.White;
+                    }
+                    rowNum++;
+                }
+                ws.Column(2)
+                    .Style.DateFormat.Format = "dd/MM/yyyy hh:mm:ss";
+                ws.Column(2).AdjustToContents();
+                ws.Column(3).AdjustToContents();
+                ws.Column(4).AdjustToContents();
+                ws.Column(5).AdjustToContents();
+                ws.Column(6).AdjustToContents();
+                ws.Column(7)
+                    .Style.NumberFormat.Format = " #,##0.00";
+                ws.Column(7).AdjustToContents();
+                ws.Column(8)
+                    .Style.NumberFormat.Format = " #,##0.00";
+                ws.Column(8).AdjustToContents();
+                ws.Column(9).AdjustToContents();
+
+                // worksheet ringkasan
+                var ws2 = wb.AddWorksheet("Ringkasan");
+
+                ws2.Cell("A1").Value = company.NamaSyarikat;
+                ws2.Cell("A1").Style.Font.Bold = true;
+                ws2.Cell("A2").Value = reportModel.Tajuk +  reportModel.JKW.Kod + " - " + reportModel.JKW.Perihal;
+                ws2.Cell("A3").Value = "Bagi Tarikh : " + @Convert.ToDateTime(reportModel.TarikhDari).ToString("dd/MM/yyyy") + "->" + @Convert.ToDateTime(reportModel.TarikhHingga).ToString("dd/MM/yyyy");
+                ws2.Cell("A4").Value = "Ringkasan : ";
+
+                ws2.ColumnWidth = 4;
+                ws2.Cell("A6").InsertTable(excelDataRingkasan)
+                    .Theme = XLTableTheme.TableStyleMedium1;
+
+                ws2.Column(2).AdjustToContents();
+                ws2.Column(3)
+                    .Style.NumberFormat.Format = " #,##0.00";
+                ws2.Column(3).AdjustToContents();
+                ws2.Column(4)
+                    .Style.NumberFormat.Format = " #,##0.00";
+                ws2.Column(4).AdjustToContents();
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    wb.SaveAs(ms);
+                    //return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reportModel.KodLaporan + ".xlsx");
+
+                    //This is an equivalent to tempdata, but requires manual cleanup
+                    _cache.Set(handle, ms.ToArray(),
+                                new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(10)));
+                    //(I'd recommend you revise the expiration specifics to suit your application)
+
+                }
+                return handle;
+            }
+        }
+        private DataTable GetExcelDataLPR00102(LPR001PrintModel reportModel)
+        {
+            DataTable dt = new DataTable();
+            dt.TableName =  "Laporan Terimaan";
+            dt.Columns.Add("Bil", typeof(int));
+            dt.Columns.Add("Tarikh", typeof(DateTime));
+            dt.Columns.Add("No Resit", typeof(string));
+            dt.Columns.Add("Pembayar", typeof(string));
+            dt.Columns.Add("Cara Bayar", typeof(string));
+            dt.Columns.Add("No Cek/Dok.", typeof(string));
+            dt.Columns.Add("No Slip", typeof(string));
+            dt.Columns.Add("Tar Slip", typeof(string));
+            dt.Columns.Add("Amaun RM", typeof(decimal));
+            dt.Columns.Add("Sebab Hapus", typeof(string));
+
+            if (reportModel.AkTerima != null)
+            {
+
+                var bil = 1;
+                foreach (var item in reportModel.AkTerima)
+                {
+                    
+                    if (item.AkTerima2 != null)
+                    {
+                        
+                        foreach (var item2 in item.AkTerima2)
+                        {
+                            dt.Rows.Add(bil,
+                                               item.Tarikh,
+                                               item.NoRujukan.Substring(3),
+                                               item.Nama?.ToUpper() ?? "",
+                                               item2.JCaraBayar.Perihal,
+                                               item2.NoCek,
+                                               item2.NoSlip,
+                                               item2.TarSlip?.ToString("dd/MM/yyyy") ?? "-",
+                                               item2.Amaun,
+                                               item.SebabHapus?.ToUpper() ?? "");
+
+                        }
+                    }
+                    bil++;
+                }
+            }
+
+            return dt;
+
+        }
+
+        private DataTable GetExcelDataLPR00103(LPR001PrintModel reportModel)
+        {
+            DataTable dt = new DataTable();
+            dt.TableName =  "Laporan Terimaan";
+            dt.Columns.Add("Bil", typeof(int));
+            dt.Columns.Add("Tarikh", typeof(DateTime));
+            dt.Columns.Add("No Resit", typeof(string));
+            dt.Columns.Add("Pembayar", typeof(string));
+            dt.Columns.Add("Kod Akaun Debit", typeof(string));
+            dt.Columns.Add("Kod Akaun Kredit", typeof(string));
+            dt.Columns.Add("Debit RM", typeof(decimal));
+            dt.Columns.Add("Kredit RM", typeof(decimal));
+            dt.Columns.Add("Sebab Hapus", typeof(string));
+
+            if (reportModel.AkTerima != null)
+            {
+
+                var bil = 1;
+                foreach (var item in reportModel.AkTerima)
+                {
+
+                    if (item.AkTerima1 != null)
+                    {
+
+                        foreach (var item1 in item.AkTerima1)
+                        {
+                            dt.Rows.Add(bil,
+                                               item.Tarikh,
+                                               item.NoRujukan.Substring(3),
+                                               item.Nama?.ToUpper() ?? "",
+                                               item.AkBank?.AkCarta?.Kod + " - " + item.AkBank?.AkCarta?.Perihal,
+                                               item1.AkCarta?.Kod + " - " +  item1.AkCarta?.Perihal,
+                                               item.Jumlah,
+                                               item1.Amaun,
+                                               item.SebabHapus?.ToUpper() ?? "");
+
+                        }
+                    }
+                    bil++;
+                }
+            }
+
+            return dt;
+
+        }
+
+        private DataTable GetExcelDataLPR00103Ringkasan(LPR001PrintModel reportModel)
+        {
+            DataTable dt = new DataTable();
+            dt.TableName =  "Ringkasan";
+            dt.Columns.Add("Kod", typeof(string));
+            dt.Columns.Add("Nama Objek", typeof(string));
+            dt.Columns.Add("Debit RM", typeof(decimal));
+            dt.Columns.Add("Kredit RM", typeof(decimal));
+
+            if (reportModel.LPR00103_1 != null)
+            {
+
+                foreach (var item in reportModel.LPR00103_1)
+                {
+                    dt.Rows.Add(item.KodAkaun,
+                                item.Perihal,
+                                item.Debit,
+                                item.Kredit);
+                }
+            }
+
+            return dt;
+
+        }
     }
 
 }
