@@ -53,8 +53,10 @@
                 data: myData,
                 dataType: "json",
                 success: function (r) {
-                    window.location = '/Profile/Download?fileGuid=' + r.fileGuid
-                        + '&filename=' + r.fileName;
+                    window.location = "@Url.Action("Download","Profile")?fileGuid=" + r.fileGuid
+                        + "&filename=" + r.fileName;
+                    //window.location = '/Profile/Download?fileGuid=' + r.fileGuid
+                    //    + '&filename=' + r.fileName;
                     toastr.success("laporan berjaya dijana.", "Berjaya");
                     toastr.options.timeOut = 2000; // 2s
                     $("#btnExportExcel").prop('disabled', false);

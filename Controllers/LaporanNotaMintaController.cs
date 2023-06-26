@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace MSNK.Controllers
@@ -97,7 +98,7 @@ namespace MSNK.Controllers
             LPN001PrintModel reportModel = await PrepareData(kodLaporan, param);
 
             // Generate a new unique identifier against which the file can be stored
-            string handle = Guid.NewGuid().ToString();
+            string handle = string.Format("attachment;" +kodLaporan+ ".xlsx;", string.IsNullOrEmpty(kodLaporan) ? Guid.NewGuid().ToString() : WebUtility.UrlEncode(kodLaporan));
 
             var excelData = GetExcelDataLPN00101(reportModel);
             RunWorkBookLPN00101(reportModel, reportModel.CompanyDetail, excelData, handle);

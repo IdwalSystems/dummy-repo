@@ -17,6 +17,7 @@ using System.Data;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace MSNK.Controllers
@@ -120,7 +121,7 @@ namespace MSNK.Controllers
             LPV001PrintModel reportModel = await PrepareData(kodLaporan, tarikhDari, tarikhHingga, status, AkBankId, susunan);
 
             // Generate a new unique identifier against which the file can be stored
-            string handle = Guid.NewGuid().ToString();
+            string handle = string.Format("attachment;" +kodLaporan+ ".xlsx;", string.IsNullOrEmpty(kodLaporan) ? Guid.NewGuid().ToString() : WebUtility.UrlEncode(kodLaporan));
 
             if (kodLaporan == "LPV00101")
             {
