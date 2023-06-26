@@ -6,7 +6,46 @@
     DateTime firstDay = new DateTime(year, 1, 1);
     DateTime lastDay = new DateTime(year, 12, 31);
 }
+<script>
+    //add tbl objek
+    $("body").on("click", "#btnExportExcel", function () {
+        //$(".loading").prop('hidden', false);
+        $(".loading").css("display", "");
+        $("#btnExportExcel").prop('disabled', true);
+        var kodLaporan = "";
+        if ($('#LPV00101').is(':checked')) {
+            kodLaporan = "LPV00101";
+        }
+        else {
+            kodLaporan = "LPV00102";
+        }
+        var tarikhDari = $('#tarikhDari').val();
+        var tarikhHingga = $('#tarikhHingga').val();
+        var status = $('#status').val();
+        var susunan = $('#susunan').val();
+        var AkBankId = $('#AkBankId').val();
 
+        if (kodLaporan != "") {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ExportExcel","LaporanBaucer")',
+                data: { kodLaporan: kodLaporan, tarikhDari: tarikhDari, tarikhHingga: tarikhHingga, status: status, susunan: susunan, AkBankId: AkBankId },
+                dataType: "json",
+                success: function (r) {
+                    window.location = '/Profile/Download?fileGuid=' + r.fileGuid
+                        + '&filename=' + r.fileName;
+                    toastr.success("laporan berjaya dijana.", "Berjaya");
+                    toastr.options.timeOut = 2000; // 2s
+                    $("#btnExportExcel").prop('disabled', false);
+                    $(".loading").css("display", "none");
+                }
+            })
+        }
+
+        //$(".loading").prop('hidden', true);
+
+    });
+</script>
 <div class="container">
     <div class="card box-shadow">
         <div class="card-body">
@@ -57,7 +96,7 @@
                         <div class="form-group form-row">
                             <label for="Status" class="col-sm-2 col-form-label">Status</label>
                             <div class="col-sm-5">
-                                <select class="form-control form-control-sm input-group-sm" name="status" required>
+                                <select class="form-control form-control-sm input-group-sm" id="status" name="status" required>
                                     <option value="0">SEMUA</option>
                                     <option value="1">BELUM POSTING</option>
                                     <option value="2">SUDAH POSTING</option>
@@ -68,7 +107,7 @@
                         <div class="form-group form-row">
                             <label for="Status" class="col-sm-2 col-form-label">Akaun Bank</label>
                             <div class="col-sm-5">
-                                <select class="form-control form-control-sm input-group-sm" name="AkBankId" required>
+                                <select class="form-control form-control-sm input-group-sm"  id ="AkBankId" name="AkBankId" required>
                                     @foreach(var item in ViewBag.AkBank)
             {
                 <option value="@item.Id">@item.NoAkaun - @item.AkCarta.Perihal</option>
@@ -79,7 +118,7 @@
                         <div class="form-group form-row">
                             <label for="Susunan" class="col-sm-2 col-form-label">Susunan</label>
                             <div class="col-sm-5">
-                                <select class="form-control form-control-sm input-group-sm" name="susunan" required>
+                                <select class="form-control form-control-sm input-group-sm" id="susunan" name="susunan" required>
                                     <option value="0">TARIKH</option>
                                     <option value="1" selected>NO BAUCER</option>
                                 </select>
@@ -90,6 +129,10 @@
                 <hr />
                 <div class="form-group text-right">
                     <input type="submit" value="Cetak" formtarget="_blank" class="btn ac-primary" />
+                    <button type="button" formtarget="_blank" id="btnExportExcel" class="btn ac-info">Jana Excel</button>
+                    <span class="loading" style="padding-right:3px; padding-top: 3px; display:inline-block;">
+                        <img src="~/img/Spinner.gif" style="height:40px;">
+                    </span>
                 </div>
 
             </form>

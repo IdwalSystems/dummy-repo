@@ -1,5 +1,7 @@
 ﻿using MSNK.Models.Administration;
+using MSNK.Models.Modules.ViewModel;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MSNK.Models.Modules.PrintModel.Reporting
 {
@@ -18,5 +20,7 @@ namespace MSNK.Models.Modules.PrintModel.Reporting
         public string Pelulus { get; set; }
         public string JawatanPelulus { get; set; }
         public CompanyDetails CompanyDetails { get; set; }
+        public List<AbBukuVotDetailViewModel> abBukuVotDetailList { get; set; }
+        public IEnumerable<IGrouping<object,AbBukuVotDetailViewModel>> GroupDataBukuVotList { get; set; }
     }
 }

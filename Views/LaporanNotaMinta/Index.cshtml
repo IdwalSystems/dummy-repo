@@ -6,7 +6,59 @@
 
     string monthYear = DateTime.Now.ToString("yyyy-MM");
 }
+<script>
+    //add tbl objek
+    $("body").on("click", "#btnExportExcel", function () {
+        //$(".loading").prop('hidden', false);
+        $(".loading").css("display", "");
+        $("#btnExportExcel").prop('disabled', true);
+        var kodLaporan = "";
+        if ($('#LPN00101').is(':checked')) {
+            kodLaporan = "LPN00101";
+        }
+        else {
+            kodLaporan = "LPN00102";
+        }
+        var JKWId = $('#JKWId').val();
+        var JBahagianId = $('#JBahagianId').val();
+        var bulanTahun = $('#bulanTahun').val();
+        var status = $('#status').val();
+        var susunan = $('#susunan').val();
+        var AkBankId = $('#AkBankId').val();
 
+        var param = {
+            JKWId : JKWId,
+            JBahagianId : JBahagianId,
+            bulanTahun : bulanTahun,
+            status : status,
+            susunan : susunan,
+            AkBankId : AkBankId
+        }
+        var myData = {};
+        myData.kodLaporan = kodLaporan;
+        myData.param = param;
+
+        if (kodLaporan != "") {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ExportExcel","LaporanNotaMinta")',
+                data: myData,
+                dataType: "json",
+                success: function (r) {
+                    window.location = '/Profile/Download?fileGuid=' + r.fileGuid
+                        + '&filename=' + r.fileName;
+                    toastr.success("laporan berjaya dijana.", "Berjaya");
+                    toastr.options.timeOut = 2000; // 2s
+                    $("#btnExportExcel").prop('disabled', false);
+                    $(".loading").css("display", "none");
+                }
+            })
+        }
+
+        //$(".loading").prop('hidden', true);
+
+    });
+</script>
 <div class="container">
     <div class="card box-shadow">
         <div class="card-body">
@@ -70,7 +122,7 @@
                                 <div class="form-group form-row">
                                     <label asp-for="bulanTahun" class="col-sm-2 col-form-label"></label>
                                     <div class="col-sm-5">
-                                        <input type="month" class="form-control form-control-sm" id="tarikhDari" asp-for="bulanTahun" value="@monthYear">
+                                        <input type="month" class="form-control form-control-sm"  asp-for="bulanTahun" value="@monthYear">
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
@@ -98,6 +150,10 @@
                         <hr />
                         <div class="form-group text-right">
                             <input type="submit" value="Cetak" formtarget="_blank" class="btn ac-primary" />
+                            <button type="button" formtarget="_blank" id="btnExportExcel" class="btn ac-info">Jana Excel</button>
+                            <span class="loading" style="padding-right:3px; padding-top: 3px; display:inline-block;">
+                                <img src="~/img/Spinner.gif" style="height:40px;">
+                            </span>
                         </div>
 
             </form>
