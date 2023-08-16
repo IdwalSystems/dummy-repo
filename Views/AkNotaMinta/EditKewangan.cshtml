@@ -24,7 +24,29 @@
             <input type="hidden" asp-for="JKWId" />
             <input type="hidden" asp-for="AkPembekalId" />
             <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="control-label">Kategori</label>
+                    </div>
+                    <div class="form-row col-sm ml-2">
+                        <div class="custom-control custom-radio col-md-4 ">
+                            <input class="custom-control-input" type="radio" id="FlJenis0" asp-for="FlJenis" value="0" checked>
+                            <label class="custom-control-label" for="FlJenis0">
+                                Pesanan Tempatan
+                            </label>
+                        </div>
+                        <div class="custom-control custom-radio col-md-4">
+                            <input class="custom-control-input" type="radio" asp-for="FlJenis" id="FlJenis1" value="1">
+                            <label class="custom-control-label" for="FlJenis1">
+                                Inden Kerja
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="form-row">
+
                 <div class="col-md-3">
                     <div class="form-group">
                         <label asp-for="Tarikh" class="control-label"></label>

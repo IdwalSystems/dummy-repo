@@ -235,13 +235,22 @@ namespace MSNK.Controllers
             string[] arr = user.JBahagianList.Split(',');
             List<JBahagian> bahagianList = new List<JBahagian>();
 
-            foreach (var item in arr)
+            if (User.IsInRole("SuperAdmin"))
             {
-                var bahagian = _context.JBahagian.FirstOrDefault(x => x.Id == int.Parse(item));
-
-                bahagianList.Add(bahagian);
+                bahagianList = _context.JBahagian.ToList();
 
             }
+            else
+            {
+                foreach (var item in arr)
+                {
+                    var bahagian = _context.JBahagian.FirstOrDefault(x => x.Id == int.Parse(item));
+
+                    bahagianList.Add(bahagian);
+
+                }
+            }
+            
 
             ViewBag.JBahagian = bahagianList;
 
@@ -250,14 +259,21 @@ namespace MSNK.Controllers
 
             List<JBahagian> bahagianUbahList = new List<JBahagian>();
 
-            foreach (var item in arr2)
+            if (User.IsInRole("SuperAdmin"))
             {
-                var bahagian = _context.JBahagian.FirstOrDefault(x => x.Id == int.Parse(item));
-
-                bahagianUbahList.Add(bahagian);
+                bahagianUbahList = _context.JBahagian.ToList();
 
             }
+            else
+            {
+                foreach (var item in arr2)
+                {
+                    var bahagian = _context.JBahagian.FirstOrDefault(x => x.Id == int.Parse(item));
 
+                    bahagianUbahList.Add(bahagian);
+
+                }
+            }
             ViewBag.JBahagianUbah = bahagianUbahList;
 
             List<AkPembekal> akPembekalList = _context.AkPembekal
@@ -391,7 +407,7 @@ namespace MSNK.Controllers
             }
 
             PopulateTable(id);
-            PopulateList(akNotaMinta.SuPekerjaMasukId);
+            PopulateList(akNotaMinta.SuPekerjaMasukId ?? 1);
             return View(viewModel);
         }
 
@@ -1033,6 +1049,7 @@ namespace MSNK.Controllers
             viewModel.FlPosting = akNotaMinta.FlPosting;
             viewModel.FlCetak = akNotaMinta.FlCetak;
             viewModel.FlHapus = akNotaMinta.FlHapus;
+            viewModel.FlJenis = akNotaMinta.FlJenis;
 
             viewModel.Jumlah = akNotaMinta.Jumlah;
             viewModel.AkNotaMinta1 = akNotaMinta.AkNotaMinta1;
@@ -1081,7 +1098,7 @@ namespace MSNK.Controllers
 
             CartEmpty();
             PopulateTable(id);
-            PopulateList(akNotaMinta.SuPekerjaMasukId);
+            PopulateList(akNotaMinta.SuPekerjaMasukId ?? 1);
             PopulateCartFromDb(akNotaMinta);
             return View(viewModel);
         }
@@ -1140,7 +1157,7 @@ namespace MSNK.Controllers
                     // get latest no rujukan running number end
 
                     // list of input that cannot be change
-                    akNotaMinta.FlJenis = dataAsal.FlJenis;
+                    //akNotaMinta.FlJenis = dataAsal.FlJenis;
                     akNotaMinta.Tahun = dataAsal.Tahun;
                     akNotaMinta.JKWId = dataAsal.JKWId;
                     akNotaMinta.NoRujukan = dataAsal.NoRujukan;
