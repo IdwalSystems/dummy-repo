@@ -1,0 +1,23 @@
+﻿@*<li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Sistem
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Index">Maklumat Pengguna</a>
+        <a class="dropdown-item" asp-area="" asp-controller="Roles" asp-action="Index">Maklumat Tahap Pengguna</a>
+        <a class="dropdown-item" asp-area="" asp-controller="AppLog" asp-action="Index">Log Transaksi Pengguna</a>
+    </div>
+</li>*@
+<li class="nav-item">
+    
+    <a class="nav-link collapsed text-truncate
+    @Html.ActiveClass("ExceptionLog")
+    @Html.ActiveClass("SiModul")"
+       href="#submenuRekod" data-toggle="collapse" data-target="#submenuRekod"><object data="~/img/svg/sistem.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Senarai Rekod</span></a>
+    <div class="collapse" id="submenuRekod" aria-expanded="false">
+        <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("ExceptionLog")" asp-controller="SuperAdmin" asp-action="ExceptionLog"><span>Exception Log</span></a></li>
+            <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("SiModul")" asp-area="" asp-controller="SiModul" asp-action="Index"><span>List Of Module</span></a></li>
+        </ul>
+    </div>
+</li>
