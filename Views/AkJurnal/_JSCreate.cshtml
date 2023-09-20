@@ -415,4 +415,30 @@
             return Math.ceil(x / 5) * 5;
         }
     };
+
+    $(document).ready(function () {
+        // radio button onclick
+        $('input[type=radio][name=FlJenisJurnal]').on('change', function () {
+            //EmptyCart();
+            $("#ddlPendahuluanPelbagai").val("0").change();
+            $("#ddlTunaiRuncit").val("0").change();
+            $("#divPanjar").prop("hidden", true);
+            $("#divPendahuluanPelbagai").prop("hidden", true);
+
+            switch ($(this).val()) {
+                case "0":
+                    $("#divPanjar").prop("hidden", true);
+                    $("#divPendahuluanPelbagai").prop("hidden", true);
+                    break;
+                case "3":
+                    $("#divPanjar").prop("hidden", true);
+                    $("#divPendahuluanPelbagai").prop("hidden", false);
+                    break;
+                case "4":
+                    $("#divPanjar").prop("hidden", false);
+                    $("#divPendahuluanPelbagai").prop("hidden", true);
+                    break;
+            }
+        })
+    });
 </script>

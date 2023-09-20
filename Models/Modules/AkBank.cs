@@ -12,7 +12,6 @@ namespace MSNK.Models.Modules
         
         public int Id { get; set; }
         [Required(ErrorMessage = "Kod Diperlukan")]
-        [MaxLength(6)]
         public string Kod { get; set; }
         [DisplayName("No Akaun")]
         [Required(ErrorMessage = "No Akaun Diperlukan")]

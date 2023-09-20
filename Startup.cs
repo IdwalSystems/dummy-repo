@@ -80,7 +80,7 @@ namespace MSNK
             services.ConfigureApplicationCookie(opt =>
             {
                 opt.AccessDeniedPath = new PathString("/Home/Accessdenied");
-                opt.ExpireTimeSpan = TimeSpan.FromSeconds(600);
+                opt.ExpireTimeSpan = TimeSpan.FromSeconds(1200);
                 opt.LoginPath = "/Account/Login";
                 opt.SlidingExpiration = true;
                 opt.LogoutPath = "/Account/LogOff";

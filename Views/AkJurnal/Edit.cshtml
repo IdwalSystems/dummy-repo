@@ -25,6 +25,7 @@
             <input type="hidden" asp-for="NoJurnal" />
             <input type="hidden" asp-for="Tarikh" />
             <input type="hidden" asp-for="JKWId" />
+            <input type="hidden" asp-for="FlJenisJurnal" />
             @*<input type="hidden" asp-for="JBahagianId" />*@
 
             <input type="hidden" asp-for="Catatan2" />
@@ -44,11 +45,11 @@
                            value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
                 </div>
                 @*<div class="form-group col-md">
-                    <label asp-for="JBahagianId" class="control-label"></label>
-                    <span class="text-danger control-label">*</span>
-                    <input class="form-control form-control-sm text-uppercase" id="jBahagiantxt"
-                           value="@Html.DisplayFor(model => model.JBahagian.Kod) - @Html.DisplayFor(model => model.JBahagian.Perihal)" readonly />
-                </div>*@
+                <label asp-for="JBahagianId" class="control-label"></label>
+                <span class="text-danger control-label">*</span>
+                <input class="form-control form-control-sm text-uppercase" id="jBahagiantxt"
+                       value="@Html.DisplayFor(model => model.JBahagian.Kod) - @Html.DisplayFor(model => model.JBahagian.Perihal)" readonly />
+            </div>*@
                 <div class="form-group col-md">
                     <label asp-for="Tarikh" class="control-label"></label>
                     <span class="text-danger control-label">*</span>
@@ -61,7 +62,22 @@
                 <textarea class="form-control form-control-sm text-uppercase" maxlength="400" rows="4" asp-for="Catatan1"></textarea>
                 <span asp-validation-for="Catatan1" class="text-danger"></span>
             </div>
-            @if (Model.FlJenisJurnal == 4)
+            @if (Model.FlJenisJurnal == 3)
+            {
+                <div class="form-row">
+                    <div class="form-group col-md">
+                        <label asp-for="SpPendahuluanPelbagaiId" class="control-label"></label>
+                        <select class="form-control form-control-sm select2" asp-for="SpPendahuluanPelbagaiId" required id="ddlPendahuluanPelbagai">
+                            @foreach (var s in ViewBag.SpPendahuluanPelbagai)
+                            {
+
+                                <option value="@s.Id">@s.NoPermohonan</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            }
+            else if (Model.FlJenisJurnal == 4)
             {
                 <div class="form-row">
                     <div class="form-group col-md">

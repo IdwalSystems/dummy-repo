@@ -76,7 +76,7 @@
                         <th>No Rujukan</th>
                         <th>Tarikh</th>
                         <th>Jumlah RM</th>
-                        <th>No KP</th>
+                        <th>Jenis Akaun</th>
                         <th>Nama</th>
                         <th>Cetak</th>
                         <th width="2%"></th>
@@ -100,7 +100,7 @@
                             </td>
                             <td align="right">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
                             <td>
-                                @item.NoKp
+                                @item.AkBank?.Kod
                             </td>
                             <td class="text-uppercase">
                                 @item.Nama

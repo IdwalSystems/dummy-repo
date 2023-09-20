@@ -1,0 +1,201 @@
+﻿@model MSNK.Models.Modules.PrintModel.Reporting.LPP001PrintModel
+
+@{
+    ViewData["Title"] = "Cetakan LPN00101";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    CompanyDetails company = new CompanyDetails();
+
+    var bil = 0;
+}
+<style>
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+
+<table class="table table-bordered table-sm topic">
+    <thead>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-secondary">
+            <th class="text-center font-weight-bold text-white" width="2%">BIL  </th>
+            @*tarikh NM*@
+            <th class="text-center font-weight-bold text-white" width="5%">TARIKH </th>
+            @*tarikh posting NM*@
+            <th class="text-center font-weight-bold text-white" width="5%">TARIKH SAH</th>
+            <th class="text-center font-weight-bold text-white">NAMA PEMOHON</th>
+            <th class="text-center font-weight-bold text-white" width="5%">NO PERMOHONAN</th>
+            <th class="text-center font-weight-bold text-white" width="5%">AMAUN RM</th>
+            <th class="text-center font-weight-bold text-white">TARIKH BAUCER</th>
+            <th class="text-center font-weight-bold text-white">NO BAUCER</th>
+            <th class="text-center font-weight-bold text-white">TARIKH SAH BAUCER</th>
+            <th class="text-center font-weight-bold text-white">TARIKH RESIT</th>
+            <th class="text-center font-weight-bold text-white">NO RESIT</th>
+            <th class="text-center font-weight-bold text-white">TARIKH SAH RESIT</th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.SpPendahuluanPelbagai)
+        {
+
+            // if data is posting or not, change row color to blue
+            var tabletype = "";
+
+            if (item.AkPV != null)
+            {
+                tabletype = "table-primary";
+            }
+            // cek end
+            // end
+
+            // if data is Batal, change row color to red
+            if (item.FlHapus == 1)
+            {
+                tabletype = "table-danger";
+            }
+            // end
+
+
+            bil++;
+
+            var tarikhPosting = Convert.ToDateTime(item.TarikhPosting).ToString("dd/MM/yyyy");
+            tarikhPosting = (tarikhPosting != "01/01/0001") ? tarikhPosting : "-";
+
+            <tr class="@tabletype" style="line-height:0.8rem; page-break-before:avoid;">
+
+                <td class="text-right" style="border-bottom:none;">@bil</td>
+                <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.TarMasuk).ToString("dd/MM/yyyy")</td>
+                <td class="text-center" style="border-bottom:none;">@tarikhPosting</td>
+                <td class="text-left text-uppercase" style="border-bottom:none;">@item.SuPekerja?.Nama</td>
+                <td class="text-center" style="border-bottom:none;">@item.NoPermohonan</td>
+                <td class="text-right ">@Convert.ToDecimal(item.JumKeseluruhan).ToString("#,##0.00")</td>
+                @if (item.AkPV != null && item.AkPV.Count > 0)
+                {
+                    @foreach (var itemPV in item.AkPV)
+                    {
+
+
+                        var tarikhPostingPV = Convert.ToDateTime(itemPV.TarikhPosting).ToString("dd/MM/yyyy");
+                        tarikhPostingPV = (tarikhPostingPV != "01/01/0001") ? tarikhPostingPV : "-";
+
+                        if (itemPV.FlHapus == 0)
+                        {
+                            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(itemPV.Tarikh).ToString("dd/MM/yyyy")</td>
+                            <td class="text-center" style="border-bottom:none;">@itemPV.NoPV</td>
+                            <td class="text-center" style="border-bottom:none;">@tarikhPostingPV</td>
+                        }
+                        else
+                        {
+                            <td class="text-center" style="border-bottom:none;">-</td>
+                            <td class="text-center" style="border-bottom:none;">-</td>
+                            <td class="text-center" style="border-bottom:none;">-</td>
+                        }
+
+                    }
+                }
+                else
+                {
+                    <td class="text-center" style="border-bottom:none;">-</td>
+                    <td class="text-center" style="border-bottom:none;">-</td>
+                    <td class="text-center" style="border-bottom:none;">-</td>
+                }
+                @if (item.AkTerima != null && item.AkTerima.Count > 0)
+                {
+                    @foreach (var itemResit in item.AkTerima)
+                    {
+
+
+                        var tarikhPostingResit = Convert.ToDateTime(itemResit.TarikhPosting).ToString("dd/MM/yyyy");
+                        tarikhPostingResit = (tarikhPostingResit != "01/01/0001") ? tarikhPostingResit : "-";
+
+                        if (itemResit.FlHapus == 0)
+                        {
+                            <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(itemResit.Tarikh).ToString("dd/MM/yyyy")</td>
+                            <td class="text-center" style="border-bottom:none;">@itemResit.NoRujukan</td>
+                            <td class="text-center" style="border-bottom:none;">@tarikhPostingResit</td>
+                        }
+                        else
+                        {
+                            <td class="text-center" style="border-bottom:none;">-</td>
+                            <td class="text-center" style="border-bottom:none;">-</td>
+                            <td class="text-center" style="border-bottom:none;">-</td>
+                        }
+
+                    }
+                }
+                else
+                {
+                    <td class="text-center" style="border-bottom:none;">-</td>
+                    <td class="text-center" style="border-bottom:none;">-</td>
+                    <td class="text-center" style="border-bottom:none;">-</td>
+                    }
+                }
+
+            </tr>
+
+        }
+
+    </tbody>
+</table>
+
+<div class="row flexrow mb-3 ml-0">
+    <div class="col-md-6">
+        <h6 class="mb-5">
+            Disediakan Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+        <h6>@Model.Username</h6>
+    </div>
+    <div class="col-md-6">
+        <h6 class="mb-5">
+            Disemak Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+    </div>
+    @*<div class="col-md-4">
+            <h6 class="mb-5">
+                Disahkan Oleh :
+            </h6>
+            <hr class="mt-2 mr-2" />
+        </div>*@
+</div>
+

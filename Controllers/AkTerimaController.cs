@@ -190,6 +190,7 @@ namespace MSNK.Controllers
                     Tarikh = item.Tarikh,
                     Jumlah = item.Jumlah,
                     Nama = item.Nama,
+                    AkBank = item.AkBank,
                     FlHapus = item.FlHapus,
                     FlPosting = item.FlPosting,
                     FlCetak = item.FlCetak,
@@ -242,7 +243,7 @@ namespace MSNK.Controllers
 
             foreach (var item in spList)
             {
-                var ExistAkTerimaWithSp = _context.AkTerima.Any(b => b.SpPendahuluanPelbagaiId == item.Id);
+                var ExistAkTerimaWithSp = _context.AkTerima.Any(b => b.SpPendahuluanPelbagaiId == item.Id && b.FlPosting == 0);
 
                 if (ExistAkTerimaWithSp == true)
                 {
@@ -251,7 +252,7 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    var ExistAkPVWithSp = _context.AkPV.Any(b => b.SpPendahuluanPelbagaiId == item.Id);
+                    var ExistAkPVWithSp = _context.AkPV.Any(b => b.SpPendahuluanPelbagaiId == item.Id && b.FlPosting == 1);
                     if (ExistAkPVWithSp == true)
                     {
                         spListUpdated.Add(item);

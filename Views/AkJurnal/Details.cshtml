@@ -21,6 +21,45 @@
 
         <div class="form-row">
             <div class="col-lg-10">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="control-label">Jenis</label>
+                        </div>
+                        <div class="form-row col-sm ml-2">
+                            <div class="custom-control custom-radio col-md-4 ">
+                                <input class="custom-control-input" type="radio" id="FlJenis0" asp-for="FlJenisJurnal" value="0" checked>
+                                <label class="custom-control-label" for="FlJenis0">
+                                    Am
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio col-md-4" hidden>
+                                <input class="custom-control-input" type="radio" asp-for="FlJenisJurnal" id="FlJenis1" value="1">
+                                <label class="custom-control-label" for="FlJenis1">
+                                    Invois
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio col-md-4" hidden>
+                                <input class="custom-control-input" type="radio" asp-for="FlJenisJurnal" id="FlJenis2" value="2">
+                                <label class="custom-control-label" for="FlJenis2">
+                                    Gaji
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio col-md-4">
+                                <input class="custom-control-input" type="radio" asp-for="FlJenisJurnal" id="FlJenis3" value="3">
+                                <label class="custom-control-label" for="FlJenis3">
+                                    Pendahuluan Pelbagai
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio col-md-4">
+                                <input class="custom-control-input" type="radio" asp-for="FlJenisJurnal" id="FlJenis4" value="4">
+                                <label class="custom-control-label" for="FlJenis4">
+                                    Panjar
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-row">
                     <div class="form-group col-md">
                         <label asp-for="NoJurnal" class="control-label"></label>
@@ -29,12 +68,12 @@
                     <div class="form-group col-md">
                         <label asp-for="JKWId" class="control-label"></label>
                         <input class="form-control form-control-sm text-uppercase"
-                                value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
+                               value="@Html.DisplayFor(model => model.JKW.Kod) - @Html.DisplayFor(model => model.JKW.Perihal)" readonly />
                     </div>
                     <div class="form-group col-md">
                         <label asp-for="JBahagianId" class="control-label"></label>
                         <input class="form-control form-control-sm text-uppercase"
-                                value="@Html.DisplayFor(model => model.JBahagian.Kod) - @Html.DisplayFor(model => model.JBahagian.Perihal)" readonly />
+                               value="@Html.DisplayFor(model => model.JBahagian.Kod) - @Html.DisplayFor(model => model.JBahagian.Perihal)" readonly />
                     </div>
                     <div class="form-group col-md">
                         <label asp-for="Tarikh" class="control-label"></label>
@@ -47,8 +86,17 @@
                         <textarea class="form-control form-control-sm text-uppercase" rows="4" readonly>@Html.DisplayFor(model => model.Catatan1)</textarea>
                     </div>
                 </div>
-                @if (Model.FlJenisJurnal == 4)
+                @if (Model.FlJenisJurnal == 3)
                 {
+                    <div class="form-row">
+                        <div class="form-group col-md">
+                            <label asp-for="SpPendahuluanPelbagaiId" class="control-label"></label>
+                            <input class="form-control form-control-sm" value="@Model.SpPendahuluanPelbagai.NoPermohonan" readonly />
+                        </div>
+                    </div>
+                }
+                else if (Model.FlJenisJurnal == 4)
+                    {
                     <div class="form-row">
                         <div class="form-group col-md">
                             <label asp-for="AkTunaiRuncitId" class="control-label"></label>
@@ -69,7 +117,7 @@
                             </div>
                         </div>
                     </div>
-                </div>        
+                </div>
 
             </div>
             <div class="col-lg-2">

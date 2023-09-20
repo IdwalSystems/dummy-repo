@@ -148,6 +148,35 @@ namespace MSNK.Controllers
             List<AkTunaiRuncit> tunaiRuncitList = _context.AkTunaiRuncit.Include(x=> x.AkTunaiPemegang).OrderBy(b => b.KaunterPanjar).ToList();
             ViewBag.AkTunaiRuncit = tunaiRuncitList;
 
+            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.Where(b => b.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
+
+            List<SpPendahuluanPelbagai> spListUpdated = new List<SpPendahuluanPelbagai>();
+
+            foreach (var item in spList)
+            {
+                var ExistAkJurnalWithSp = _context.AkJurnal.Any(b => b.SpPendahuluanPelbagaiId == item.Id && b.Posting == 0);
+
+                if (ExistAkJurnalWithSp)
+                {
+                    continue;
+                }
+                else
+                {
+                    var ExistAkPVWithSp = _context.AkPV.Any(b => b.SpPendahuluanPelbagaiId == item.Id && b.FlPosting == 1);
+                    if (ExistAkPVWithSp == true)
+                    {
+                        spListUpdated.Add(item);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                
+            }
+
+            ViewBag.SpPendahuluanPelbagai = spListUpdated;
+
             List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
             ViewBag.JKw = kwList;
 
@@ -339,13 +368,6 @@ namespace MSNK.Controllers
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
-            if (AkTunaiRuncitId != 0 )
-            {
-                m.AkTunaiRuncitId = AkTunaiRuncitId;
-                m.FlJenisJurnal = 4;
-                m.FlKategoriPenerima = 3;
-            }
-
             decimal amaun = 0;
             foreach (var q in _cart.Lines1.ToArray())
             {
@@ -355,11 +377,24 @@ namespace MSNK.Controllers
 
             if (ModelState.IsValid)
             {
+                if (AkTunaiRuncitId != 0)
+                {
+                    m.AkTunaiRuncitId = AkTunaiRuncitId;
+                    m.FlKategoriPenerima = 3;
+                }
+
+                if (akJurnal.FlJenisJurnal == 3)
+                {
+                    m.SpPendahuluanPelbagaiId = akJurnal.SpPendahuluanPelbagaiId;
+                    m.FlKategoriPenerima = 2;
+                }
+
                 string noRujukan = GetNoRujukan(akJurnal);
                 if (akJurnal != null && JKWId != 0)
                 {
                     m.JKWId = akJurnal.JKWId;
                     m.JBahagianId = akJurnal.JBahagianId;
+                    m.FlJenisJurnal = akJurnal.FlJenisJurnal;
                     m.NoJurnal = noRujukan;
                     m.Tarikh = akJurnal.Tarikh;
                     m.JumDebit = amaun;
@@ -475,11 +510,12 @@ namespace MSNK.Controllers
                     akJurnal.SuPekerjaMasukId = akJurnalAsal.SuPekerjaMasukId;  
                     akJurnal.Cetak = 0;
                         
-                    if (AkTunaiRuncitId != 0)
+                    if (akJurnal.FlJenisJurnal == 3)
                     {
-                        akJurnal.FlJenisJurnal = 4;
+                        akJurnal.FlKategoriPenerima = 2;
+                    } else if (akJurnal.FlJenisJurnal == 4)
+                    {
                         akJurnal.FlKategoriPenerima = 3;
-                        akJurnal.AkTunaiRuncitId = AkTunaiRuncitId;
                     }
 
                     akJurnal.UserIdKemaskini = user.UserName;

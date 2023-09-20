@@ -80,6 +80,9 @@ namespace MSNK.Models.Modules
         [DisplayName("Objek")]
         public ICollection<AkJurnal1> AkJurnal1 { get; set; }
         public ICollection<AkPadananPenyata> AkPadananPenyata { get; set; }
+        [DisplayName("No Permohonan")]
+        public int? SpPendahuluanPelbagaiId { get; set; }
+        public SpPendahuluanPelbagai SpPendahuluanPelbagai { get; set; }
         public int FlTunai { get; set; }
         public DateTime? TarTunai { get; set; }
         // jika melibatkan tanggungan pada Buku vot, true
