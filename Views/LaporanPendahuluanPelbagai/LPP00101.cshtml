@@ -1,7 +1,7 @@
 ﻿@model MSNK.Models.Modules.PrintModel.Reporting.LPP001PrintModel
 
 @{
-    ViewData["Title"] = "Cetakan LPN00101";
+    ViewData["Title"] = "Cetakan LPP00101";
     Layout = "~/Views/Shared/_PrintLayout.cshtml";
     CompanyDetails company = new CompanyDetails();
 
@@ -80,7 +80,7 @@
             // if data is posting or not, change row color to blue
             var tabletype = "";
 
-            if (item.AkPV != null)
+            if (item.AkPV != null && item.AkPV.Count > 0 )
             {
                 tabletype = "table-primary";
             }

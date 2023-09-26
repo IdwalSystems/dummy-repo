@@ -1,12 +1,14 @@
 ﻿<li class="nav-item">
     <a class="nav-link collapsed text-truncate 
     @Html.ActiveClass("AkPOLaras")
-    @Html.ActiveClass("AkNotaDebitKreditBelian")" href="#submenuPelarasan" data-toggle="collapse" data-target="#submenuPelarasan"><object data="~/img/svg/pelarasan.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Pelarasan</span></a>
+    @Html.ActiveClass("AkNotaDebitKreditBelian")
+       @Html.ActiveClass("AkJurnal")" href="#submenuPelarasan" data-toggle="collapse" data-target="#submenuPelarasan"><object data="~/img/svg/pelarasan.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Pelarasan</span></a>
     <div class="collapse" id="submenuPelarasan" aria-expanded="false">
         <ul class="flex-column pl-2 nav">
 
             <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("AkPOLaras")" asp-area="" asp-controller="AkPOLaras" asp-action="Index"><span>Pelarasan Pesanan Tempatan</span></a></li>
-            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkNotaDebitKreditBelian")" asp-controller="AkNotaDebitKreditBelian" asp-action="Index"><span>Nota Debit/Kredit Belian</span></a></li>
+            <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("AkNotaDebitKreditBelian")" asp-controller="AkNotaDebitKreditBelian" asp-action="Index"><span>Nota Debit/Kredit Belian</span></a></li>
+            <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkJurnal")" asp-area="" asp-controller="AkJurnal" asp-action="Index"><span>Baucer Jurnal</span></a></li>
         </ul>
     </div>
 </li>

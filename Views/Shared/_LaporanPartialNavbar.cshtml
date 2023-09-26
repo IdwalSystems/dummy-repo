@@ -1,37 +1,4 @@
-﻿@*<li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Laporan
-    </a>
-    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-        <div class="dropdown-item dropright">
-            <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Laporan Nota Minta
-            </a>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" asp-area="" asp-controller="LaporanNotaMinta" asp-action="Index">LPN001 Laporan Daftar Bil / Nota Minta</a>
-            </div>
-        </div>
-        <div class="dropdown-item dropright">
-            <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Laporan Baucer
-            </a>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" asp-area="" asp-controller="LaporanBaucer" asp-action="Index">LPV001 Laporan Daftar Baucer</a>
-            </div>
-        </div>
-        <div class="dropdown-item dropright">
-            <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Laporan Penerimaan
-            </a>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" asp-area="" asp-controller="LaporanTerimaan" asp-action="Index">LPR001 Laporan Daftar Resit</a>
-            </div>
-        </div>
-
-    </div>
-</li>*@
-
-<li class="nav-item">
+﻿<li class="nav-item">
     <a class="nav-link collapsed text-truncate
     @Html.ActiveClass("LaporanLejarAm")
     @Html.ActiveClass("LaporanBukuVot")
@@ -43,25 +10,18 @@
         <ul class="flex-column pl-2 nav">
 
             <li class="nav-item">
-                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanLejarAm")" href="#submenuLaporansub0" data-toggle="collapse" data-target="#submenuLaporansub0"><span>Laporan Lejar Am</span></a>
+                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanLejarAm")
+                   @Html.ActiveClass("LaporanBukuVot")" href="#submenuLaporansub0" data-toggle="collapse" data-target="#submenuLaporansub0"><span>Kewangan</span></a>
                 <div class="collapse" id="submenuLaporansub0" aria-expanded="false">
                     <ul class="flex-column nav pl-4">
                         <li class="nav-item">
-                            <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanLejarAm")" asp-area="" asp-controller="LaporanLejarAm" asp-action="Index">
-                                LPL001 Laporan Lejar Am
+                            <a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("LaporanLejarAm")" asp-area="" asp-controller="LaporanLejarAm" asp-action="Index">
+                                LPL001 Lejar Am
                             </a>
                         </li>
-                    </ul>
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanBukuVot")" href="#submenuLaporansub1" data-toggle="collapse" data-target="#submenuLaporansub1"><span>Laporan Buku Vot</span></a>
-                <div class="collapse" id="submenuLaporansub1" aria-expanded="false">
-                    <ul class="flex-column nav pl-4">
                         <li class="nav-item">
                             <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanBukuVot")" asp-area="" asp-controller="LaporanBukuVot" asp-action="Index">
-                                LPB001 Laporan Buku Vot
+                                LPB001 Buku Vot
                             </a>
                         </li>
                     </ul>
@@ -69,41 +29,24 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanNotaMinta")" href="#submenuLaporansub2" data-toggle="collapse" data-target="#submenuLaporansub2"><span>Laporan Nota Minta</span></a>
+                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanNotaMinta")
+                   @Html.ActiveClass("LaporanPendahuluanPelbagai")
+                   @Html.ActiveClass("LaporanBaucer")" href="#submenuLaporansub2" data-toggle="collapse" data-target="#submenuLaporansub2"><span>Tanggungan / Perbelanjaan</span></a>
                 <div class="collapse" id="submenuLaporansub2" aria-expanded="false">
                     <ul class="flex-column nav pl-4">
                         <li class="nav-item">
-                            @*<a class="nav-link p-1 text-truncate pl-4 @Html.ActiveSideBarClass("LaporanNotaMinta")" asp-area="" asp-controller="LaporanNotaMinta" asp-action="Index">
-                            LPN001 Laporan Daftar Bil / Nota Minta
-                        </a>*@
-                            <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanNotaMinta")" asp-area="" asp-controller="LaporanNotaMinta" asp-action="Index">
-                                LPN001 Laporan Daftar Bil / Nota Minta
+                            <a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("LaporanNotaMinta")" asp-area="" asp-controller="LaporanNotaMinta" asp-action="Index">
+                                LPN001 Daftar Bil / Nota Minta
                             </a>
                         </li>
-                    </ul>
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanPendahuluanPelbagai")" href="#submenuLaporansub3" data-toggle="collapse" data-target="#submenuLaporansub3"><span>Laporan Pendahuluan Pelbagai</span></a>
-                <div class="collapse" id="submenuLaporansub3" aria-expanded="false">
-                    <ul class="flex-column nav pl-4">
                         <li class="nav-item">
-                            <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanPendahuluanPelbagai")" asp-area="" asp-controller="LaporanPendahuluanPelbagai" asp-action="Index">
-                                LPP001 Laporan Daftar Pendahuluan Pelbagai
+                            <a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("LaporanPendahuluanPelbagai")" asp-area="" asp-controller="LaporanPendahuluanPelbagai" asp-action="Index">
+                                LPP001 Daftar Pendahuluan Pelbagai
                             </a>
                         </li>
-                    </ul>
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanBaucer")" href="#submenuLaporansub4" data-toggle="collapse" data-target="#submenuLaporansub4"><span>Laporan Baucer</span></a>
-                <div class="collapse" id="submenuLaporansub4" aria-expanded="false">
-                    <ul class="flex-column nav pl-4">
                         <li class="nav-item">
                             <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanBaucer")" asp-area="" asp-controller="LaporanBaucer" asp-action="Index">
-                                LPV001 Laporan Daftar Baucer
+                                LPV001 Daftar Baucer
                             </a>
                         </li>
                     </ul>
@@ -111,12 +54,12 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link  text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanTerimaan")" href="#submenuLaporansub5" data-toggle="collapse" data-target="#submenuLaporansub5"><span>Laporan Penerimaan</span></a>
+                <a class="nav-link  text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanTerimaan")" href="#submenuLaporansub5" data-toggle="collapse" data-target="#submenuLaporansub5"><span>Hasil / Terimaan</span></a>
                 <div class="collapse" id="submenuLaporansub5" aria-expanded="false">
                     <ul class="flex-column nav pl-4">
                         <li class="nav-item">
                             <a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("LaporanTerimaan")" asp-area="" asp-controller="LaporanTerimaan" asp-action="Index">
-                                LPR001 Laporan Daftar Resit
+                                LPR001 Daftar Resit
                             </a>
                         </li>
                     </ul>

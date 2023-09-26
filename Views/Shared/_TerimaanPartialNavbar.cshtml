@@ -11,11 +11,13 @@
 
 <li class="nav-item">
     <a class="nav-link collapsed text-truncate
+       @Html.ActiveClass("AkInvois")
     @Html.ActiveClass("AkTerima")
     @Html.ActiveClass("AkPenyataPemungut")
-    " href="#submenuTerimaan" data-toggle="collapse" data-target="#submenuTerimaan"><object data="~/img/svg/terimaan.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Terimaan</span></a>
+    " href="#submenuTerimaan" data-toggle="collapse" data-target="#submenuTerimaan"><object data="~/img/svg/terimaan.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Hasil / Terimaan</span></a>
     <div class="collapse" id="submenuTerimaan" aria-expanded="false">
         <ul class="flex-column pl-2 nav">
+            <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("AkInvois")" asp-controller="AkInvois" asp-action="Index"><span>Inbois Dikeluarkan</span></a></li>
             <li class="nav-item"><a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("AkTerima")" asp-controller="AkTerima" asp-action="Index"><span>Resit Rasmi</span></a></li>
             <li class="nav-item"><a class="nav-link py-1 ml-3 @Html.ActiveSideBarClass("AkPenyataPemungut")" asp-controller="AkPenyataPemungut" asp-action="Index"><span>Penyata Pemungut</span></a></li>
         </ul>
