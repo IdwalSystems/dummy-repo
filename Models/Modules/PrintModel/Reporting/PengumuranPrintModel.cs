@@ -1,13 +1,16 @@
-﻿using MSNK.Models.Operations;
+﻿using MSNK.Models.Administration;
+using MSNK.Models.Operations;
+using System.Collections.Generic;
 
 namespace MSNK.Models.Modules.PrintModel.Reporting
 {
     public class PengumuranPrintModel
     {
-        public string Kod { get; set; }
-        public string Nama { get; set; }
-        public decimal JumlahTunggakan { get; set; }
-        public decimal Tertunggak { get; set; }
-        public KelasTunggakan KelasTunggakan { get; set; }
+        public List<Pengumuran> Pengumuran { get; set; }
+        public string Tajuk1 { get; set; }
+        public string Tajuk2 { get; set; }
+        public string KodLaporan { get; set; }
+        public string Username { get; set; }
+        public CompanyDetails CompanyDetail { get; set; }
     }
 }

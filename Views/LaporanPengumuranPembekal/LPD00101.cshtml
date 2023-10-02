@@ -1,0 +1,150 @@
+﻿@model dynamic
+
+@{
+    ViewData["Title"] = "Cetakan LPD00101";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    CompanyDetails company = new CompanyDetails();
+
+    var bil = 0;
+    decimal jumKeseluruhanTunggakan = 0;
+    decimal jumTunggak30 = 0;
+    decimal jumTunggak60 = 0;
+    decimal jumTunggak90 = 0;
+    decimal jumTunggak180 = 0;
+    decimal jumTunggak365 = 0;
+    decimal jumTunggakLebih365 = 0;
+}
+<style>
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+<div class="row flexrow mb-3 ml-0">
+    <div class="col-2 image-container">
+        <img src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@ViewData["NamaSyarikat"]</strong></h5>
+        <h6 class="mb-0 text-white"> -</h6>
+        <h6 class="mb-0 ">@Model.reportModel.Tajuk1</h6>
+        <h6 class="mb-0">@Model.reportModel.Tajuk2</h6>
+    </div>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0">Tarikh: @Convert.ToDateTime(DateTime.Today).ToString("dd/MM/yyyy")</h6>
+        <h6 class="mb-0">Laporan: @Model.reportModel.KodLaporan</h6>
+    </div>
+</div>
+
+<table class="table table-bordered table-sm topic">
+    <thead>
+        <tr class="bg-secondary">
+            <th class="text-center font-weight-bold text-white" rowspan="2">BIL  </th>
+            <th class="text-center font-weight-bold text-white" rowspan="2">NO INVOIS </th>
+            <th class="text-center font-weight-bold text-white" rowspan="2">TAR TERIMA</th>
+            <th class="text-center font-weight-bold text-white" rowspan="2">BAKI TUNGGAKAN </th>
+
+            <th class="text-center font-weight-bold text-white" colspan="6">TERTUNGGAK</th>
+
+        </tr>
+        <tr class="bg-secondary">
+            <th class="text-center font-weight-bold text-white">30 Hari</th>
+            <th class="text-center font-weight-bold text-white">60 Hari </th>
+            <th class="text-center font-weight-bold text-white">90 Hari</th>
+            <th class="text-center font-weight-bold text-white">180 Hari</th>
+            <th class="text-center font-weight-bold text-white">365 Hari </th>
+            <th class="text-center font-weight-bold text-white">>365 Hari </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.reportModel.Pengumuran)
+        {
+
+            bil++;
+
+            jumKeseluruhanTunggakan += item.JumlahTunggakan;
+            jumTunggak30 += item.Tunggak30;
+            jumTunggak60 += item.Tunggak60;
+            jumTunggak90 += item.Tunggak90;
+            jumTunggak180 += item.Tunggak180;
+            jumTunggak365 += item.Tunggak365;
+            jumTunggakLebih365 += item.TunggakLebih365;
+
+            <tr style="line-height:0.8rem; page-break-before:avoid;">
+
+                <td class="text-right" style="border-bottom:none;">@bil</td>
+                <td class="text-center" style="border-bottom:none;">@item.NoInvois</td>
+                <td class="text-center text-uppercase" style="border-bottom:none;">@item.TarikhTerima?.ToString("dd/MM/yyyy")</td>
+                <td class="text-right ">@Convert.ToDecimal(item.JumlahTunggakan).ToString("#,##0.00")</td>
+                <td class="text-right ">@Convert.ToDecimal(item.Tunggak30).ToString("#,##0.00")</td>
+                <td class="text-right ">@Convert.ToDecimal(item.Tunggak60).ToString("#,##0.00")</td>
+                <td class="text-right ">@Convert.ToDecimal(item.Tunggak90).ToString("#,##0.00")</td>
+                <td class="text-right ">@Convert.ToDecimal(item.Tunggak180).ToString("#,##0.00")</td>
+                <td class="text-right ">@Convert.ToDecimal(item.Tunggak365).ToString("#,##0.00")</td>
+                <td class="text-right ">@Convert.ToDecimal(item.TunggakLebih365).ToString("#,##0.00")</td>
+            </tr>
+
+        }
+    <tr class="font-weight-bold">
+        <td colspan="3" class="table-borderless text-right">JUMLAH RM</td>
+        <td class="text-right">@Convert.ToDecimal(jumKeseluruhanTunggakan).ToString("#,##0.00")</td>
+        <td class="text-right">@Convert.ToDecimal(jumTunggak30).ToString("#,##0.00")</td>
+        <td class="text-right">@Convert.ToDecimal(jumTunggak60).ToString("#,##0.00")</td>
+        <td class="text-right">@Convert.ToDecimal(jumTunggak90).ToString("#,##0.00")</td>
+        <td class="text-right">@Convert.ToDecimal(jumTunggak180).ToString("#,##0.00")</td>
+        <td class="text-right">@Convert.ToDecimal(jumTunggak365).ToString("#,##0.00")</td>
+        <td class="text-right">@Convert.ToDecimal(jumTunggakLebih365).ToString("#,##0.00")</td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="row flexrow mb-3 ml-0">
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disediakan Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+        <h6>@Model.reportModel.Username</h6>
+    </div>
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disemak Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+    </div>
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disahkan Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+    </div>
+</div>
+
