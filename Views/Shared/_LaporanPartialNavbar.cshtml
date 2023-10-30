@@ -3,6 +3,7 @@
     @Html.ActiveClass("LaporanLejarAm")
     @Html.ActiveClass("LaporanBukuVot")
     @Html.ActiveClass("LaporanNotaMinta")
+    @Html.ActiveClass("LaporanBelian")
     @Html.ActiveClass("LaporanPendahuluanPelbagai")
     @Html.ActiveClass("LaporanBaucer")
     @Html.ActiveClass("LaporanPengumuranPembekal")
@@ -30,7 +31,9 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 @Html.ActiveClass("LaporanNotaMinta")
+                <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3 
+                   @Html.ActiveClass("LaporanNotaMinta")
+                   @Html.ActiveClass("LaporanBelian")
                    @Html.ActiveClass("LaporanPendahuluanPelbagai")
                    @Html.ActiveClass("LaporanBaucer")
                    @Html.ActiveClass("LaporanPengumuranPembekal")" href="#submenuLaporansub2" data-toggle="collapse" data-target="#submenuLaporansub2"><span>Tanggungan / Perbelanjaan</span></a>
@@ -42,8 +45,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("LaporanBelian")" asp-area="" asp-controller="LaporanBelian" asp-action="LPT002Index">
+                                LPT002 Daftar Belian
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link border-bottom py-1 ml-3 @Html.ActiveSideBarClass("LaporanPendahuluanPelbagai")" asp-area="" asp-controller="LaporanPendahuluanPelbagai" asp-action="Index">
-                                LPP001 Daftar Pendahuluan Pelbagai
+                                LPT003 Daftar Pendahuluan Pelbagai
                             </a>
                         </li>
                         <li class="nav-item">

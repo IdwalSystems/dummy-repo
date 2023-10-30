@@ -1,11 +1,10 @@
 ﻿using MSNK.Models.Administration;
-using MSNK.Models.Operations;
 using System.Collections.Generic;
 
 namespace MSNK.Models.Modules.PrintModel.Reporting
 {
-    public class PengumuranPrintModel: PrintModel
+    public class LPT002PrintModel : PrintModel
     {
-        public List<Pengumuran> Pengumuran { get; set; }
+        public IEnumerable<AkBelian> AkBelian { get; set; }
     }
 }

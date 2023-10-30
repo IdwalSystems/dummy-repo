@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.PrintModel.Reporting
 {
-    public class LPP001PrintModel : SpPendahuluanPelbagai
+    public class LPT003PrintModel : SpPendahuluanPelbagai
     {
         public string Username { get; set; }
         public IEnumerable<SpPendahuluanPelbagai> SpPendahuluanPelbagai { get; set; }

@@ -538,15 +538,15 @@ namespace MSNK.Controllers
                         foreach (var item2 in item.AkTerima2)
                         {
                             dt.Rows.Add(bil,
-                                               item.Tarikh,
-                                               item.NoRujukan.Substring(3),
-                                               item.Nama?.ToUpper() ?? "",
-                                               item2.JCaraBayar.Perihal,
-                                               item2.NoCek,
-                                               item2.NoSlip,
-                                               item2.TarSlip?.ToString("dd/MM/yyyy") ?? "-",
-                                               item2.Amaun,
-                                               item.SebabHapus?.ToUpper() ?? "");
+                                    item.Tarikh,
+                                    item.NoRujukan.Substring(3),
+                                    item.Nama?.ToUpper() ?? "",
+                                    item2.JCaraBayar.Perihal,
+                                    item2.NoCek,
+                                    item2.NoSlip,
+                                    item2.TarSlip?.ToString("dd/MM/yyyy") ?? "-",
+                                    item2.Amaun,
+                                    item.SebabHapus?.ToUpper() ?? "");
 
                         }
                     }

@@ -1,7 +1,7 @@
 ﻿@model MSNK.Models.Modules.FormModel.ReportFormModel
 
 @{
-    ViewData["Title"] = "LPP001 Laporan Daftar Pendahuluan Pelbagai";
+    ViewData["Title"] = "LPT003 Laporan Daftar Pendahuluan Pelbagai";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     string monthYear = DateTime.Now.ToString("yyyy-MM");
@@ -28,16 +28,9 @@
 
                             <div class="custom-control custom-radio pb-2">
 
-                                <input class="custom-control-input" type="radio" name="kodLaporan" id="LPP00101" value="LPP00101" checked>
-                                <label class="custom-control-label" for="LPP00101">
+                                <input class="custom-control-input" type="radio" name="kodLaporan" id="LPT00301" value="LPT00301" checked>
+                                <label class="custom-control-label" for="LPT00301">
                                     01 - Laporan Daftar Mengikut Bulan &amp; Tahun
-                                </label>
-                            </div>
-                            <div class="custom-control custom-radio" hidden>
-
-                                <input class="custom-control-input" type="radio" name="kodLaporan" id="LPP00102" value="LPP00102">
-                                <label class="custom-control-label" for="LPP00102">
-                                    02 - Laporan Daftar Bil Dengan Nota Minta
                                 </label>
                             </div>
                         </div>
