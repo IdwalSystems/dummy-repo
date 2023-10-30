@@ -400,13 +400,43 @@ namespace MSNK.Models.Modules
                     },
                     new SiModul
                     {
+                        FuncId = "LPL001",
+                        FuncName = "Laporan Lejar Am"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "LPB001",
+                        FuncName = "Laporan Buku Vot"
+                    },
+                    new SiModul
+                    {
                         FuncId = "LPN001",
                         FuncName = "Laporan Daftar Bil / Nota Minta"
                     },
                     new SiModul
                     {
+                        FuncId = "LPT001",
+                        FuncName = "Laporan Daftar Pesanan Tempatan"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "LPT002",
+                        FuncName = "Laporan Daftar Belian"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "LPT003",
+                        FuncName = "Laporan Daftar Pendahuluan Pelbagai"
+                    },
+                    new SiModul
+                    {
                         FuncId = "LPV001",
                         FuncName = "Laporan Daftar Baucer"
+                    },
+                    new SiModul
+                    {
+                        FuncId = "LPD001",
+                        FuncName = "Laporan Pengumuran Pembekal"
                     },
                     new SiModul
                     {

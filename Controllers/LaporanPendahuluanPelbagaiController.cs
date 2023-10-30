@@ -7,6 +7,7 @@ using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.FormModel;
 using MSNK.Models.Modules.PrintModel.Reporting;
+using MSNK.Models.Operations;
 using Rotativa.AspNetCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace MSNK.Controllers
     [Authorize(Policy = "LP001")]
     public class LaporanPendahuluanPelbagaiController : Controller
     {
-        public const string modul = "LPP001";
+        public const string modul = "LPT003";
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
@@ -49,7 +50,7 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Print(string kodLaporan, ReportFormModel param)
         {
-            LPP001PrintModel reportModel = await PrepareData(kodLaporan, param);
+            LPT003PrintModel reportModel = await PrepareData(kodLaporan, param);
 
             string customSwitches = string.Format(" --header-html  \"{0}\" " +
                                    "--header-spacing \"-12\" " +
@@ -77,11 +78,11 @@ namespace MSNK.Controllers
             };
         }
         [AllowAnonymous]
-        public ActionResult Header(LPP001PrintModel reportModel)
+        public ActionResult Header(LPT003PrintModel reportModel)
         {
             return View(reportModel);
         }
-        private async Task<LPP001PrintModel> PrepareData(
+        private async Task<LPT003PrintModel> PrepareData(
             string kodLaporan,
             ReportFormModel param)
         {
@@ -92,9 +93,9 @@ namespace MSNK.Controllers
                 param.JKW = kW;
             }
 
-            LPP001PrintModel reportModel = new LPP001PrintModel();
+            LPT003PrintModel reportModel = new LPT003PrintModel();
 
-            if (kodLaporan == "LPP00101")
+            if (kodLaporan == "LPT00301")
             {
                 reportModel.ParamTajuk = "Laporan Daftar Pendahuluan Pelbagai Kump Wang :";
 
@@ -123,11 +124,11 @@ namespace MSNK.Controllers
                 switch (param.status)
                 {
                     // belum posting
-                    case 1:
+                    case StatusData.BelumPosting:
                         spp = spp.Where(x => x.FlPosting == 0).ToList();
                         break;
                     // sudah posting
-                    case 2:
+                    case StatusData.SudahPosting:
                         spp = spp.Where(x => x.FlPosting == 1).ToList();
                         break;
                     // semua

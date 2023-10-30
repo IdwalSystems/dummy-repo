@@ -1,0 +1,93 @@
+﻿@model dynamic
+
+@{
+    ViewData["Title"] = "Cetakan LPT002";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+    CompanyDetails company = new CompanyDetails();
+
+    var bil = 0;
+    decimal jumlah = 0;
+}
+<style>
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+<div class="row flexrow mb-3 ml-0">
+    <div class="col-2 image-container">
+        <img src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@ViewData["NamaSyarikat"]</strong></h5>
+        <h6 class="mb-0 text-white"> -</h6>
+        <h6 class="mb-0 ">@Model.reportModel.Tajuk1</h6>
+        <h6 class="mb-0">@Model.reportModel.Tajuk2</h6>
+    </div>
+
+    <div class="col-2 text-right">
+        <h6 class="mb-0">Tarikh: @Convert.ToDateTime(DateTime.Today).ToString("dd/MM/yyyy")</h6>
+        <h6 class="mb-0">Laporan: @Model.reportModel.KodLaporan</h6>
+    </div>
+</div>
+
+<table class="table table-bordered table-sm topic">
+    <thead>
+        <tr class="bg-secondary">
+            <th class="text-center font-weight-bold text-white">BIL</th>
+            <th class="text-center font-weight-bold text-white">NO INVOIS</th>
+            <th class="text-center font-weight-bold text-white">PEMBEKAL</th>
+            <th class="text-center font-weight-bold text-white">TARIKH</th>
+            <th class="text-center font-weight-bold text-white">TARIKH TERIMA KEW.</th>
+            <th class="text-center font-weight-bold text-white">JUMLAH RM</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.reportModel.AkBelian)
+        {
+            bil++;
+            jumlah += item.Jumlah;
+            <tr style="line-height:0.8rem; page-break-before:avoid;">
+                <td class="text-right">@bil</td>
+                <td class="text-left">@item.NoRujukan</td>
+                <td class="text-left">@item.AkPembekal?.KodSykt - @item.AkPembekal?.NamaSykt</td>
+                <td class="text-center">@item.Tarikh.ToString("dd/MM/yyyy")</td>
+                <td class="text-center">@item.TarikhKewanganTerima?.ToString("dd/MM/yyyy")</td>
+                <td class="text-right">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr class="text-right font-weight-bold table-warning">
+            <td colspan="5">JUMLAH KESELURUHAN RM</td>
+            <td >@Convert.ToDecimal(jumlah).ToString("#,##0.00")</td>
+        </tr>
+    </tfoot>
+</table>

@@ -9,6 +9,7 @@ using MSNK.Models.Administration;
 using MSNK.Models.Modules;
 using MSNK.Models.Modules.FormModel;
 using MSNK.Models.Modules.PrintModel.Reporting;
+using MSNK.Models.Operations;
 using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
@@ -335,11 +336,11 @@ namespace MSNK.Controllers
                 switch (param.status)
                 {
                     // belum posting
-                    case 1:
+                    case StatusData.BelumPosting:
                         akT = akT.Where(x => x.FlPosting == 0).ToList();
                         break;
                     // sudah posting
-                    case 2:
+                    case StatusData.SudahPosting:
                         akT = akT.Where(x => x.FlPosting == 1).ToList();
                         break;
                     // semua

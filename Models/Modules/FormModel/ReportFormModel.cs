@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSNK.Models.Operations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace MSNK.Models.Modules.FormModel
         //
         // parameter : flag related
         [Display(Name = "Status")]
-        public int status { get; set; }
+        public StatusData status { get; set; }
         [Display(Name = "Susunan")]
         public int susunan { get; set; }
         //

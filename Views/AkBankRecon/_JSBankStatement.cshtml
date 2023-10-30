@@ -610,8 +610,9 @@
                 "</td><td class='text-left text-uppercase'>" + item.noRujukan +
                 "</td><td class='text-left text-uppercase'>" + item.perihal +
                 "</td><td class='text-left text-uppercase'>" + item.noSlip +
-                "</td><td class='text-right'>" + item.debit.format(2) +
+                
                 "</td><td class='text-right'>" + item.kredit.format(2) +
+                "</td><td class='text-right'>" + item.debit.format(2) +
                 "</td><td class='text-right' hidden>" + item.indek +
                 "</td><td class='text-right' hidden>" + item.isGanda +
                 "</td><td class='action-button'><input type='checkbox' class='system-statement-status' id='system-statement-status" + i + "' onclick='CheckedSystemStatement(this)'/>" +
@@ -629,8 +630,8 @@
         var sum = 0;
         var jumlah = $("#amaun-system-statement");
         var noDokumen = $("TD", row).eq(4).html();
-        var debit = $("TD", row).eq(5).html().replace(',', '');
-        var kredit = $("TD", row).eq(6).html().replace(',', '');
+        var debit = $("TD", row).eq(6).html().replace(',', '');
+        var kredit = $("TD", row).eq(5).html().replace(',', '');
 
         sum = parseFloat(jumlah.val());
 
@@ -692,8 +693,8 @@
                 "</td><td class='text-left text-uppercase'>" + item.noRujukan +
                 "</td><td class='text-left text-uppercase'>" + item.perihal +
                 "</td><td class='text-left text-uppercase'>" + item.noSlip +
-                "</td><td class='text-right'>" + item.debit.format(2) +
                 "</td><td class='text-right'>" + item.kredit.format(2) +
+                "</td><td class='text-right'>" + item.debit.format(2) +
                 "</td><td class='text-right' hidden>" + item.indek +
                 "</td><td class='text-right' hidden>" + item.isGanda +
                 "</td><td class='action-button'><input type='checkbox' class='system-matched-statement-status' id='system-matched-statement-status" + i + "' onclick='CheckedSystemMatchedStatement(this)'/>" +
@@ -768,8 +769,8 @@
         var sum = 0;
         var jumlah = $("#amaun-system-matched-statement");
         var noDokumen = $("TD", row).eq(4).html();
-        var debit = $("TD", row).eq(5).html().replace(',', '');
-        var kredit = $("TD", row).eq(6).html().replace(',', '');
+        var debit = $("TD", row).eq(6).html().replace(',', '');
+        var kredit = $("TD", row).eq(5).html().replace(',', '');
 
         sum = parseFloat(jumlah.val());
 
