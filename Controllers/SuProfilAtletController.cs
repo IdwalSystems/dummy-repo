@@ -80,7 +80,7 @@ namespace MSNK.Controllers
             {
                 applicationDbContext = applicationDbContext.IgnoreQueryFilters();
             }
-            return View(await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.OrderByDescending(b => b.Tahun).ThenByDescending(b => b.Bulan).ToListAsync());
         }
 
         private void PopulateTableDetails(int? id)

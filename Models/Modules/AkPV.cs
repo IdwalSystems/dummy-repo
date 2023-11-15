@@ -64,7 +64,6 @@ namespace MSNK.Models.Modules
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         [DisplayName("Tarikh Cek / EFT / JomPAY")]
         public DateTime? TarCekAtauEFT { get; set; }
-        [MaxLength(400)]
         [DefaultValue("")]
         public string Perihal { get; set; }
         [DisplayName("No Rekup")]

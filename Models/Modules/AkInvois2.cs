@@ -15,7 +15,6 @@ namespace MSNK.Models.Modules
         public string Bil { get; set; }
         [MaxLength(20)]
         public string NoStok { get; set; }
-        [MaxLength(100)]
         public string Perihal { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Kuantiti { get; set; }
