@@ -20,7 +20,7 @@
         </div>
         <hr class="mt-2"/>
 
-                <form asp-action="CreateByJenis" class="needs-validation">
+        <form asp-action="CreateByJenis" class="needs-validation">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             @*radio button jenis baucer*@
@@ -30,7 +30,7 @@
                         <label class="control-label">Jenis Resit</label>
                     </div>
                     <div class="form-row col-sm ml-2">
-                        <div class="custom-control custom-radio col-md-4 " >
+                        <div class="custom-control custom-radio col-md-4 ">
                             <input class="custom-control-input" type="radio" id="0" name="FlJenisTerima" value="0">
                             <label class="custom-control-label" for="0">
                                 Am
@@ -64,6 +64,29 @@
                 </div>
             </div>
             @*radio button jenis baucer end*@
+            @*radio button posting buku vot*@
+            <div class="card mb-2">
+                <div class="card-body pb-1 pt-1">
+                    <div class="form-group mb-0 mt-1">
+                        <label class="control-label">Posting Ke Buku Vot ?</label>
+                    </div>
+                    <div class="form-row col-sm ml-2">
+                        <div class="custom-control custom-radio col-md-4 ">
+                            <input class="custom-control-input" type="radio" id="IsPostingBukuVot0" asp-for="FlPostingBukuVot" value="1">
+                            <label class="custom-control-label" for="IsPostingBukuVot0">
+                                Ya
+                            </label>
+                        </div>
+                        <div class="custom-control custom-radio col-md-4 ">
+                            <input class="custom-control-input" type="radio" id="IsPostingBukuVot1" asp-for="FlPostingBukuVot" value="0" checked>
+                            <label class="custom-control-label" for="IsPostingBukuVot1">
+                                Tidak
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*radio button posting buku vot end*@
             @*pendahuluan pelbagai*@
             <div class="card box-shadow mb-3" id="cardPendahuluanPelbagai">
                 <div class="card-header">
@@ -85,6 +108,7 @@
             </div>
 
             @*pendahuluan pelbagai end*@
+
             <div class="form-row">
 
                 <div class="col-md-3">
@@ -340,7 +364,7 @@
             <hr />
             <div class="form-group">
                 <input type="submit" value="Simpan" id="btnSave" class="btn ac-primary btn-sm" />
-                 <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
             </div>
 
             @*hidden type input*@

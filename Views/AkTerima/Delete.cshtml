@@ -117,7 +117,29 @@
                 </div>
             </div>
             <div class="col-lg-2">
-
+                @*radio button posting buku vot*@
+                <div class="card mb-2">
+                    <div class="card-body pb-1 pt-1">
+                        <div class="form-group mb-0 mt-1">
+                            <label class="control-label">Posting Ke Buku Vot ?</label>
+                        </div>
+                        <div class="form-row col-sm ml-2">
+                            <div class="custom-control custom-radio col-md-4 ">
+                                <input class="custom-control-input" type="radio" id="0" asp-for="FlPostingBukuVot" value="1">
+                                <label class="custom-control-label" for="FlPostingBukuVot0">
+                                    Ya
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio col-md-4 ">
+                                <input class="custom-control-input" type="radio" id="1" asp-for="FlPostingBukuVot" value="0">
+                                <label class="custom-control-label" for="FlPostingBukuVot1">
+                                    Tidak
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*radio button posting buku vot end*@
                 <div class="card mb-2">
                     <div class="card-body p-1">
                         <div class="form-group col-sm">

@@ -363,10 +363,12 @@ namespace MSNK.Controllers
              string searchDate2,
              string searchColumn)
         {
-            List<SelectListItem> columnList = new();
-            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
-            columnList.Add(new SelectListItem() { Text = "No Permohonan", Value = "NoRujukan" });
-            columnList.Add(new SelectListItem() { Text = "Nama Pemohon", Value = "Nama" });
+            List<SelectListItem> columnList = new()
+            {
+                new SelectListItem() { Text = "Tarikh", Value = "Tarikh" },
+                new SelectListItem() { Text = "No Permohonan", Value = "NoRujukan" },
+                new SelectListItem() { Text = "Nama Pemohon", Value = "Nama" }
+            };
 
             if (!String.IsNullOrEmpty(searchColumn))
             {

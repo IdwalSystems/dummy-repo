@@ -42,6 +42,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkPenghutang, int, string> _akPenghutangRepo;
         private readonly IRepository<AkInvois, int, string> _akInvoisRepo;
         private readonly UserService _userService;
+        private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private CartTerima _cart;
 
         public AkTerimaController(
@@ -60,6 +61,7 @@ namespace MSNK.Controllers
             IRepository<AkPenghutang, int, string> akPenghutangRepo,
             IRepository<AkInvois, int, string> akInvoisRepo,
             UserService userService,
+            IRepository<AbBukuVot, int, string> abBukuVotRepo,
             CartTerima cart
             )
         {
@@ -78,6 +80,7 @@ namespace MSNK.Controllers
             _akPenghutangRepo = akPenghutangRepo;
             _akInvoisRepo = akInvoisRepo;
             _userService = userService;
+            _abBukuVotRepo = abBukuVotRepo;
             _cart = cart;
         }
 
@@ -885,6 +888,7 @@ namespace MSNK.Controllers
                     m.Tel = akTerima.Tel;
                     m.Emel = akTerima.Emel;
                     m.Sebab = akTerima.Sebab;
+                    m.FlPostingBukuVot = akTerima.FlPostingBukuVot;
 
                     m.FlKategoriPembayar = akTerima.FlKategoriPembayar;
                     
@@ -1190,7 +1194,7 @@ namespace MSNK.Controllers
                 }
             }
 
-            TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Urusniaga";
+            TempData[SD.Warning] = "Berlaku Ralat ketika operasi simpan!";
             PopulateList();
             PopulateTable(id);
             //PopulateCart();
@@ -1893,6 +1897,26 @@ namespace MSNK.Controllers
                         };
 
                         await _akAkaunRepo.Insert(akAObjek);
+
+                        if (akTerima.FlPostingBukuVot == 1)
+                        {
+                            //insert into AbBukuVot
+                            AbBukuVot abBukuVotPosting = new AbBukuVot()
+                            {
+                                Tahun = akTerima.Tahun,
+                                JKWId = akTerima.JKWId,
+                                JBahagianId = akTerima.JBahagianId,
+                                Tarikh = akTerima.Tarikh,
+                                //Kod = "",
+                                Penerima = akTerima.Nama,
+                                VotId = item.AkCartaId,
+                                Rujukan = akTerima.NoRujukan,
+                                Belanja = -item.Amaun,
+                                Debit = -item.Amaun
+                            };
+                            await _abBukuVotRepo.Insert(abBukuVotPosting);
+                        }
+                        
                     }
                     
                     //update posting status in akTerima
@@ -1963,6 +1987,28 @@ namespace MSNK.Controllers
                     foreach (AkAkaun item in akAkaun)
                     {
                         await _akAkaunRepo.Delete(item.Id);
+                    }
+
+                    if (akTerima.FlPostingBukuVot == 1)
+                    {
+                        List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(akTerima.NoRujukan)).ToList();
+                        if (abBukuVot == null)
+                        {
+
+                            //duplicate id error
+                            TempData[SD.Error] = "Data belum diluluskan.";
+
+                        }
+                        else
+                        {
+                            //delete data from abBukuVot
+                            foreach (AbBukuVot item in abBukuVot)
+                            {
+                                await _abBukuVotRepo.Delete(item.Id);
+                            }
+                            //delete data from abBukuVot end
+                        }
+
                     }
 
                     //update posting status in akTerima

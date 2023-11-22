@@ -21,6 +21,29 @@
         <hr class="mt-2"/>
         <form asp-action="Edit" class="needs-validation">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*radio button posting buku vot*@
+        <div class="card mb-2">
+            <div class="card-body pb-1 pt-1">
+                <div class="form-group mb-0 mt-1">
+                    <label class="control-label">Posting Ke Buku Vot ?</label>
+                </div>
+                <div class="form-row col-sm ml-2">
+                    <div class="custom-control custom-radio col-md-4 ">
+                        <input class="custom-control-input" type="radio" id="FlPostingBukuVot0" asp-for="FlPostingBukuVot" value="1">
+                        <label class="custom-control-label" for="FlPostingBukuVot0">
+                            Ya
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio col-md-4 ">
+                        <input class="custom-control-input" type="radio" id="FlPostingBukuVot1" asp-for="FlPostingBukuVot" value="0">
+                        <label class="custom-control-label" for="FlPostingBukuVot1">
+                            Tidak
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+            @*radio button posting buku vot end*@
             <div class="form-row">
                 <div class="col-md-3">
                     <div class="form-group">
@@ -88,7 +111,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label asp-for="NoKp" class="control-label"></label>
-                                <input asp-for="NoKp" class="form-control form-control-sm" readonly/>
+                                <input asp-for="NoKp" class="form-control form-control-sm" readonly />
                                 <span asp-validation-for="NoKp" class="text-danger"></span>
                             </div>
                         </div>
@@ -207,7 +230,7 @@
                                     <th style="width:70%">Kod</th>
                                     <th style="width:30%">Amaun RM</th>
                                     <th></th>
-                                    <th ></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="tbodyObjek">
@@ -279,8 +302,8 @@
                                     <th>Tempat Cek</th>
                                     <th>No Slip</th>
                                     <th>Tarikh Slip</th>
-                                    <th ></th>
-                                    <th ></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="tbodyUrusniaga">

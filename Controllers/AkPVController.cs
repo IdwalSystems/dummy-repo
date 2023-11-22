@@ -3172,6 +3172,7 @@ namespace MSNK.Controllers
                                         VotId = item.AkCartaId,
                                         Rujukan = akPV.NoPV,
                                         Debit = item.Amaun,
+                                        Belanja = item.Amaun,
                                         Tanggungan = tanggungan,
                                         Liabiliti = liabiliti
 
@@ -3194,6 +3195,7 @@ namespace MSNK.Controllers
                                             VotId = item.AkCartaId,
                                             Rujukan = akPV.NoPV,
                                             Debit = item.Amaun,
+                                            Belanja = item.Amaun,
                                             Tanggungan = 0 - item.Amaun
                                         };
 
@@ -3210,7 +3212,8 @@ namespace MSNK.Controllers
                                             Penerima = penerima,
                                             VotId = item.AkCartaId,
                                             Rujukan = akPV.NoPV,
-                                            Debit = item.Amaun
+                                            Debit = item.Amaun,
+                                            Belanja = item.Amaun
                                         };
 
                                     }
@@ -3230,7 +3233,8 @@ namespace MSNK.Controllers
                                         Penerima = penerima,
                                         VotId = item.AkCartaId,
                                         Rujukan = akPV.NoPV,
-                                        Debit = item.Amaun
+                                        Debit = item.Amaun,
+                                        Belanja = item.Amaun
                                     };
 
                                     await _abBukuVotRepo.Insert(abBukuVot);

@@ -113,6 +113,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Penghutang")]
         public int? AkPenghutangId { get; set; }
         public AkPenghutang AkPenghutang { get; set; }
+        public int FlPostingBukuVot { get; set; }
         public ICollection<AkTerima1> AkTerima1 { get; set; }
         public ICollection<AkTerima2> AkTerima2 { get; set; }
         public ICollection<AkTerima3> AkTerima3 { get; set; }
