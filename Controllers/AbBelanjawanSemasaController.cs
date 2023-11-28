@@ -236,7 +236,7 @@ namespace MSNK.Controllers
                 {
                     foreach (var terima1 in terima.AkTerima1)
                     {
-                        if (terima1.AkCarta.JJenis.Kod == "B" && terima.FlJenisTerima == JenisBaucer.Pendahuluan)
+                        if (terima1.AkCarta.JJenis.Kod == "B" && terima.FlPostingBukuVot == 1)
                         {
                             terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
 
@@ -524,7 +524,7 @@ namespace MSNK.Controllers
                 {
                     foreach (var terima1 in terima.AkTerima1)
                     {
-                        if (terima1.AkCarta.JJenis.Kod == "B" && terima.FlJenisTerima == JenisBaucer.Pendahuluan)
+                        if (terima1.AkCarta.JJenis.Kod == "B" && terima.FlPostingBukuVot == 1)
                         {
                             terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
 
