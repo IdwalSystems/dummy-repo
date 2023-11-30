@@ -116,7 +116,7 @@ namespace MSNK.Controllers
 
             ViewData["Tahun"] = DateTime.Now.ToString("yyyy");
             var date1 = new DateTime(DateTime.Now.Year, 1, 1).ToString("yyyy-MM-dd");
-            var date2 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 31).ToString("yyyy-MM-dd");
+            var date2 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day).ToString("yyyy-MM-dd");
             ViewBag.SearchData1 = date1;
             ViewBag.SearchData2 = date2;
 
