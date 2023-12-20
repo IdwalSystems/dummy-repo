@@ -347,7 +347,7 @@ namespace MSNK.Controllers
                         break;
                     // belian (invois pembekal)
                     case "IN":
-                        AkBelian belian = _context.AkBelian.Include(b => b.AkPembekal).Where(b => b.NoInbois == noRujukan).FirstOrDefault();
+                        AkBelian belian = _context.AkBelian.Include(b => b.AkPembekal).Where(b => b.NoRujukan == noRujukan).FirstOrDefault();
                         if (belian != null)
                         {
                             penerima.Add(new ListItemViewModel
