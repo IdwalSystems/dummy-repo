@@ -1520,7 +1520,7 @@
 
                                 //Add No inbois cell.
                                 var cell = $(row.insertCell(-1));
-                                cell.html(r.record.noInbois.substring(9));
+                                cell.html(r.record.noRujukan.substring(9));
 
                                 //Add TarInbois cell.
                                 var cell = $(row.insertCell(-1));
@@ -1741,7 +1741,7 @@
                                     }
                                 }
                                 var str = "<tr><td id='akBelianId' hidden>" + item1.akBelianId +
-                                    "</td><td>" + item1.akBelian.noInbois.substring(9) +
+                                    "</td><td>" + item1.akBelian.noRujukan.substring(9) +
                                     "</td><td>" + showDate(item1.akBelian.tarikh) +
                                     "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
                                     "</td><td>" + noPOInden +
