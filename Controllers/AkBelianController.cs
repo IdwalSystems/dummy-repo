@@ -217,6 +217,7 @@ namespace MSNK.Controllers
                         Id = item.Id,
                         Tahun = item.Tahun,
                         NoInbois = item.NoInbois,
+                        NoRujukan = item.NoRujukan,
                         Tarikh = item.Tarikh,
                         Jumlah = item.Jumlah,
                         NamaSykt = namaSykt,
