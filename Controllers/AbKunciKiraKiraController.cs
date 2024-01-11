@@ -135,11 +135,11 @@ namespace MSNK.Controllers
 
             if (TarHingga.ToString("yyyy/MM/dd") != "0001/01/01")
             {
-                ViewData["DateTo"] = TarHingga.ToString("yyyy-MM-ddThh:mm:ss");
+                ViewData["DateTo"] = TarHingga.ToString("yyyy-MM-ddTHH:mm:ss");
             }
             else
             {
-                ViewData["DateTo"] = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss");
+                ViewData["DateTo"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             }
         }
 
@@ -181,7 +181,7 @@ namespace MSNK.Controllers
             }
             else
             {
-                var date2 = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss");
+                var date2 = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
                 ViewData["DateTo"] = date2;
 
                 PopulateSelectList(form.JKWId, form.JBahagianId, form.TarHingga1);

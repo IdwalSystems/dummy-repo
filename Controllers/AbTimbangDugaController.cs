@@ -114,11 +114,11 @@ namespace MSNK.Controllers
 
             if (TarHingga.ToString("yyyy/MM/dd") != "0001/01/01")
             {
-                ViewData["DateTo"] = TarHingga.ToString("yyyy-MM-ddThh:mm:ss");
+                ViewData["DateTo"] = TarHingga.ToString("yyyy-MM-ddTHH:mm:ss");
             }
             else
             {
-                ViewData["DateTo"] = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss");
+                ViewData["DateTo"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             }
 
         }

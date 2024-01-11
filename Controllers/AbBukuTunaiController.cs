@@ -43,7 +43,7 @@ namespace MSNK.Controllers
             var bukuTunai = new List<AbBukuTunaiViewModel>();
 
             var date1 = DateTime.Now.Year.ToString() + "-01-01T00:00:01";
-            var date2 = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss");
+            var date2 = DateTime.Now.AddHours(23.99).ToString("yyyy-MM-ddTHH:mm:ss");
             ViewData["DateFrom"] = date1;
             ViewData["DateTo"] = date2;
 
@@ -98,8 +98,8 @@ namespace MSNK.Controllers
 
                 if (TarDari.ToString("yyyy/MM/dd") != "0001/01/01")
                 {
-                    ViewData["DateFrom"] = TarDari.ToString("yyyy-MM-ddThh:mm:ss");
-                    ViewData["DateTo"] = TarHingga.ToString("yyyy-MM-ddThh:mm:ss");
+                    ViewData["DateFrom"] = TarDari.ToString("yyyy-MM-ddTHH:mm:ss");
+                    ViewData["DateTo"] = TarHingga.ToString("yyyy-MM-ddTHH:mm:ss");
                 }
             }
             else
@@ -175,7 +175,7 @@ namespace MSNK.Controllers
             {
 
                 var date1 = DateTime.Now.Year.ToString() + "-01-01T00:00:01";
-                var date2 = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss");
+                var date2 = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
                 ViewData["DateFrom"] = date1;
                 ViewData["DateTo"] = date2;
 
