@@ -26,6 +26,7 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.AkAkaun
                 .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkCarta1)
                 .Include(b => b.AkCarta2)
                 .ToListAsync();

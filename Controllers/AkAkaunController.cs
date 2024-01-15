@@ -118,6 +118,7 @@ namespace MSNK.Controllers
                     {
                         akAkBakiAwal.Add(new AkAkaun() {
                             JKWId = i.JKWId,
+                            JBahagianId = i.JBahagianId,
                             AkCartaId1=i.AkCartaId1,
                             Tarikh = i.Tarikh,
                             AkCartaId2=i.AkCartaId2,
@@ -126,6 +127,7 @@ namespace MSNK.Controllers
                             Debit=i.Debit,
                             Kredit=i.Kredit,
                             JKW=i.JKW,
+                            JBahagian=i.JBahagian,
                             AkCarta1 = i.AkCarta1,
                             AkCarta2 = i.AkCarta2
                         });
@@ -198,11 +200,7 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var akAkaun = await _context.AkAkaun
-                .Include(b => b.JKW)
-                .Include(b => b.AkCarta1)
-                .Include(b => b.AkCarta2)
-                .ToListAsync();
+            var akAkaun = await _akAkaunRepo.GetAll();
 
             List<AkAkaun> akAkBakiAwal = new List<AkAkaun>();
             decimal bakiawalDebit = 0;
@@ -244,6 +242,7 @@ namespace MSNK.Controllers
                         akAkBakiAwal.Add(new AkAkaun()
                         {
                             JKWId = i.JKWId,
+                            JBahagianId = i.JBahagianId,
                             AkCartaId1=i.AkCartaId1,
                             Tarikh = i.Tarikh,
                             AkCartaId2=i.AkCartaId2,
@@ -252,6 +251,7 @@ namespace MSNK.Controllers
                             Debit=i.Debit,
                             Kredit=i.Kredit,
                             JKW=i.JKW,
+                            JBahagian=i.JBahagian,
                             AkCarta1 = i.AkCarta1,
                             AkCarta2 = i.AkCarta2
                         });

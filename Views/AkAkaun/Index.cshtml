@@ -115,73 +115,76 @@
 
     </div>
 </div>
-@if (Model != null)
+@if (Model != null && Model.Count() > 0)
 {
-    @if (Model.Count() > 0)
-    {
-        <div class="card box-shadow">
-            <div class="card-body">
-                <div class="table-responsive table-sm">
-                    <table class="table table-bordered table-hover display compact nowrap" width="100%">
-                        <thead>
+    <div class="card box-shadow">
+        <div class="card-body">
+            <div class="table-responsive table-sm">
+                <table class="table table-bordered table-hover display compact nowrap" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="details-name">
+                            </th>
+                            <th class="thbil">
+                                Bil
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Tarikh)
+                            </th>
+                            <th>
+                                Bahagian
+                            </th>
+                            <th>
+                                Objek
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.NoRujukan)
+                            </th>
+                            <th class="thdebit">
+                                @Html.DisplayNameFor(model => model.Debit)
+                            </th>
+                            <th class="thkredit">
+                                @Html.DisplayNameFor(model => model.Kredit)
+                            </th>
+                            <th class="thtotal">
+                                Baki RM
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int rowNo = 0; }
+                        @foreach (var item in Model)
+                        {
                             <tr>
-                                <th class="details-name">
-                                </th>
-                                <th class="thbil">
-                                    Bil
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Tarikh)
-                                </th>
-                                <th>
-                                    Objek
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.NoRujukan)
-                                </th>
-                                <th class="thdebit">
-                                    @Html.DisplayNameFor(model => model.Debit)
-                                </th>
-                                <th class="thkredit">
-                                    @Html.DisplayNameFor(model => model.Kredit)
-                                </th>
-                                <th class="thtotal">
-                                    Baki RM
-                                </th>
+                                <td class="details-name"></td>
+                                <td class="bil">
+                                    @(rowNo += 1)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Tarikh)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.JBahagian.Kod) - @Html.DisplayFor(modelItem => item.JBahagian.Perihal)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AkCarta2.Kod) - @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NoRujukan)
+                                </td>
+                                <td class="debit">
+                                    @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
+                                </td>
+                                <td class="kredit">
+                                    @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
+                                </td>
+                                <td class="total">
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @{ int rowNo = 0; }
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td class="details-name"></td>
-                                    <td class="bil">
-                                        @(rowNo += 1)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Tarikh)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.AkCarta2.Kod) - @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.NoRujukan)
-                                    </td>
-                                    <td class="debit">
-                                        @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
-                                    </td>
-                                    <td class="kredit">
-                                        @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
-                                    </td>
-                                    <td class="total">
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
-    }
+    </div>
 }
