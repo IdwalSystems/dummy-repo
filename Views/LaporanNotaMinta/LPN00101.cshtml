@@ -136,6 +136,19 @@
             <td class="text-left text-uppercase" style="border-bottom:none;">@item.AkPembekal.NamaSykt</td>
             <td class="text-center" style="border-bottom:none;">@item.NoSiri</td>
             <td class="text-right ">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+            <!--Default no PO no Inden-->
+            @if (item.AkPO.Count <= 0 && item.AkInden.Count <= 0)
+            {
+                <td class="text-center" style="border-bottom:none;">-</td>
+                <td class="text-center" style="border-bottom:none;">-</td>
+                <td class="text-center" style="border-bottom:none;">-</td>
+                <td class="text-center" style="border-bottom:none;">-</td>
+                <td class="text-center" style="border-bottom:none;">-</td>
+                <td class="text-center" style="border-bottom:none;">-</td>
+            }
+            <!--Default tiada PO tiada Inden end-->
+
+            <!--ada PO-->
             @if (item.AkPO.Count > 0)
             {
                 @foreach (var itemPO in item.AkPO)
@@ -196,7 +209,10 @@
                     }
                 }
             }
-            else if (item.AkInden.Count > 0)
+            <!--ada PO end-->
+
+            <!--ada Inden-->
+            @if (item.AkInden.Count > 0)
             {
                 @foreach (var itemInden in item.AkInden)
                 {
@@ -256,16 +272,7 @@
                     }
                 }
             }
-            else
-            {
-                <td class="text-center" style="border-bottom:none;">-</td>
-                <td class="text-center" style="border-bottom:none;">-</td>
-                <td class="text-center" style="border-bottom:none;">-</td>
-                <td class="text-center" style="border-bottom:none;">-</td>
-                <td class="text-center" style="border-bottom:none;">-</td>
-                <td class="text-center" style="border-bottom:none;">-</td>
-            }
-
+            <!--ada Inden end-->
         </tr>
 
         }

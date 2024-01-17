@@ -315,7 +315,7 @@ namespace MSNK.Controllers
             {
                 reportModel.ParamTajuk = "Laporan Daftar Bil / Nota Minta Kump Wang :";
 
-                IEnumerable<AkNotaMinta> akT = _context.AkNotaMinta
+                ICollection<AkNotaMinta> akT = _context.AkNotaMinta
                     .IgnoreQueryFilters()
                     .Include(b => b.JKW)
                     .Include(b => b.JBahagian)
@@ -331,6 +331,28 @@ namespace MSNK.Controllers
                     && x.Tarikh.Year == param.bulanTahun.Year)
                     .ToList();
                 //bulan & tahun condition end
+
+                // remove notaMinta if AkPO (FlHapus = 1) or AkInden (FlHapus = 1)
+                foreach (var akNotaMinta in akT)
+                {
+                    foreach (var akPO in akNotaMinta.AkPO)
+                    {
+                        if (akPO.FlHapus == 1)
+                        {
+                            akNotaMinta.AkPO.Remove(akPO);
+                        }
+                    }
+
+                    foreach (var AkInden in akNotaMinta.AkInden)
+                    {
+                        if (AkInden.FlHapus == 1)
+                        {
+                            akNotaMinta.AkInden.Remove(AkInden);
+                        }
+                    }
+
+                }
+                // remove end
 
                 //status condition
                 switch (param.status)
