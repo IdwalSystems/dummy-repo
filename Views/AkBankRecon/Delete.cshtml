@@ -60,7 +60,7 @@
         <div class="form-group">
             <form asp-action="Delete">
                 <input type="hidden" asp-for="Id" />
-                @if (!string.IsNullOrEmpty(Model.TarKunci?.ToString("yyyy/MM/dd")))
+                @if (!string.IsNullOrEmpty(Model.TarKunci?.ToString("yyyy/MM/dd")) || (Model.AkBankReconPenyataBank.Count > 0))
                 {
                 }
                 else

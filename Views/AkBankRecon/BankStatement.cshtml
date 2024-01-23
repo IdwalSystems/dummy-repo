@@ -26,6 +26,7 @@
         <form asp-action="Edit" class="needs-validation">
             <div asp-validation-summary="All" class="text-danger"></div>
             <input asp-for="Id" hidden />
+            <input asp-for="AkBankId" hidden />
             <div class="form-row mb-2">
                 <div class="col-md-3">
                     <div class="form-group">
@@ -54,20 +55,20 @@
             </div>
 
             @*<div class="form-row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label">Baki Buku Tunai RM</label>
-                        <input class="form-control form-control-sm" readonly id="bakiBukuTunai" value="@ViewBag.BakiBukuTunai" />
-                    </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">Baki Buku Tunai RM</label>
+                    <input class="form-control form-control-sm" readonly id="bakiBukuTunai" value="@ViewBag.BakiBukuTunai" />
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label">Baki Penyata Bank RM</label>
-                        <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly id="bakiPenyata" />
-                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">Baki Penyata Bank RM</label>
+                    <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly id="bakiPenyata" />
                 </div>
+            </div>
 
-            </div>*@
+        </div>*@
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">

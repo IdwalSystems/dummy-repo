@@ -159,6 +159,7 @@
         $("#searchButtonSistem").on("click", function () {
             var tarDari = $("#inputTarikh3").val();
             var tarHingga = $("#inputTarikh4").val();
+            var akBankId = $("#AkBankId").val();
             if (tarDari == "" || tarHingga == "") {
                 toastr.error("Tarikh Mula dan Akhir diperlukan");
                 return;
@@ -171,7 +172,7 @@
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("GetSystemStatementList", "AkBankRecon")',
-                data: { "tarDari": tarDari, "tarHingga": tarHingga },
+                data: { "tarDari": tarDari, "tarHingga": tarHingga , "akBankId": akBankId},
                 success: function (response) {
                     console.log("success");
                     if (response.record != null) {

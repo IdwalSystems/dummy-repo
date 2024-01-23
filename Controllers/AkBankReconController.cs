@@ -535,7 +535,7 @@ namespace MSNK.Controllers
         // get list of bank statement search result end
 
         // get list of system statement search result
-        public async Task<JsonResult> GetSystemStatementList(DateTime tarDari, DateTime tarHingga)
+        public async Task<JsonResult> GetSystemStatementList(DateTime tarDari, DateTime tarHingga, int akBankId)
         {
 
             try
@@ -545,7 +545,7 @@ namespace MSNK.Controllers
                 // PV --
                 // select single pv
                 var singlePV = await _context.AkPV.Include(b => b.AkPadananPenyata)
-                    .Where(b => b.IsGanda == false && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0)
+                    .Where(b => b.IsGanda == false && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0 && b.AkBankId == akBankId)
                     .ToListAsync();
 
                 foreach (var row in singlePV)
@@ -573,7 +573,7 @@ namespace MSNK.Controllers
                 // select multiple pv
                 List<AkPV> multiplePV = await _context.AkPV
                     .Include(b => b.AkPVGanda).ThenInclude(b => b.AkPadananPenyata)
-                    .Where(b => b.IsGanda == true && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0)
+                    .Where(b => b.IsGanda == true && b.FlPosting == 1 && b.FlBatal == 0 && b.FlHapus == 0 && b.AkBankId == akBankId)
                     .ToListAsync();
 
                 foreach (var akPV in multiplePV)
@@ -604,8 +604,8 @@ namespace MSNK.Controllers
                 // RESIT --
                 // select terima2
                 List<AkTerima> multipleReceipt = await _context.AkTerima
-                    .Include(b => b.AkTerima2).ThenInclude(b => b.AkPadananPenyata)
-                    .Where( b => b.FlPosting == 1 && b.FlHapus == 0)
+                    .Include(b => b.AkTerima2).ThenInclude(b => b.AkPadananPenyata )
+                    .Where( b => b.FlPosting == 1 && b.FlHapus == 0 && b.AkBankId == akBankId)
                     .ToListAsync();
 
                 foreach (var akTerima in multipleReceipt)
@@ -1181,13 +1181,21 @@ namespace MSNK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var akBankRecon = await _context.AkBankRecon.FindAsync(id);
+            var akBankRecon = await _context.AkBankRecon.Include(br => br.AkBankReconPenyataBank).FirstOrDefaultAsync(br => br.Id == id);
             // check if already posting redirect back
             if (!string.IsNullOrEmpty(akBankRecon.TarKunci?.ToString("yyyy/MM/dd")))
             {
                 TempData[SD.Error] = "Akses tidak dibenarkan..!";
                 return RedirectToAction(nameof(Index));
             }
+
+            // check if already ganding
+            if (akBankRecon.AkBankReconPenyataBank != null && akBankRecon.AkBankReconPenyataBank.Count > 0)
+            {
+                TempData[SD.Error] = "Data telah digandingkan..!";
+                return RedirectToAction(nameof(Index));
+            }
+            //
 
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;

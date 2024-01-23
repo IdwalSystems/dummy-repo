@@ -28,6 +28,7 @@ namespace MSNK.Controllers
     {
         public const string modul = "SP001";
         public const string namamodul = "Pendahuluan Pelbagai";
+        public const string kodPendahuluanPelbagai = "A16102";
 
         private readonly AppLogIRepository<AppLog, int> _appLog;
         private readonly IRepository<SpPendahuluanPelbagai, int, string> _spPendahuluanPelbagaiRepo;
@@ -173,24 +174,33 @@ namespace MSNK.Controllers
 
                 // check for baki peruntukan
                 var tahun = DateTime.Now.Year.ToString();
-                bool IsExistAbBukuVot = await _context.AbBukuVot
+                // check 
+                var CartaDgnPeruntukan = await _context.AkCarta
+                .Where(d => d.Id == spPendahuluanPelbagai.AkCartaId && d.IsBajet == true)
+                .FirstOrDefaultAsync();
+
+                // check peruntukan
+                if (CartaDgnPeruntukan != null)
+                {
+                    bool IsExistAbBukuVot = await _context.AbBukuVot
                         .Where(x => x.Tahun == tahun && x.VotId == spPendahuluanPelbagai.AkCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
                         .AnyAsync();
 
-                if (IsExistAbBukuVot == true)
-                {
-                    decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, spPendahuluanPelbagai.AkCartaId, jKWId, jBahagianId);
+                    if (IsExistAbBukuVot == true)
+                    {
+                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, spPendahuluanPelbagai.AkCartaId, jKWId, jBahagianId);
 
-                    if (sum < spPendahuluanPelbagai.JumKeseluruhan)
+                        if (sum < spPendahuluanPelbagai.JumKeseluruhan)
+                        {
+                            return Json(new { result = "ERROR" });
+                        }
+                    }
+                    else
                     {
                         return Json(new { result = "ERROR" });
                     }
+                    // check for baki peruntukan end
                 }
-                else
-                {
-                    return Json(new { result = "ERROR" });
-                }
-                // check for baki peruntukan end
 
                 return Json(new { result = "OK" });
             }
@@ -212,23 +222,33 @@ namespace MSNK.Controllers
 
                 // check for baki peruntukan
                 var tahun = DateTime.Now.Year.ToString();
-                bool IsExistAbBukuVot = await _context.AbBukuVot
-                        .Where(x => x.Tahun == tahun && x.VotId == akCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
-                        .AnyAsync();
+                // check 
+                var CartaDgnPeruntukan = await _context.AkCarta
+                .Where(d => d.Id == akCartaId && d.IsBajet == true)
+                .FirstOrDefaultAsync();
 
-                if (IsExistAbBukuVot == true)
+                // check peruntukan
+                if (CartaDgnPeruntukan != null)
                 {
-                    var sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akCartaId, jKWId, jBahagianId);
+                    bool IsExistAbBukuVot = await _context.AbBukuVot
+                       .Where(x => x.Tahun == tahun && x.VotId == akCartaId && x.JKWId == jKWId && x.JBahagianId == jBahagianId)
+                       .AnyAsync();
 
-                    return Json(new { result = "OK" , record = sum});
+                    if (IsExistAbBukuVot == true)
+                    {
+                        var sum = await _customRepo.GetBalanceFromAbBukuVot(tahun, akCartaId, jKWId, jBahagianId);
+
+                        return Json(new { result = "OK", record = sum });
+                    }
+                    else
+                    {
+                        return Json(new { result = "ERROR" });
+                    }
                 }
-                else
-                {
-                    return Json(new { result = "ERROR" });
-                }
+
                 // check for baki peruntukan end
+                return Json(new { result = "OK", record = "0" });
 
-                
             }
             catch (Exception ex)
             {
@@ -947,11 +967,17 @@ namespace MSNK.Controllers
                             return RedirectToAction(nameof(Index));
                         }
                         //check for print end
+                        // check 
+                        var CartaDgnPeruntukan = await _context.AkCarta
+                        .Where(d => d.Id == sp.AkCartaId && d.IsBajet == true)
+                        .FirstOrDefaultAsync();
 
                         // check peruntukan
+                        if (CartaDgnPeruntukan != null)
+                        {
                             bool IsExistAbBukuVot = await _context.AbBukuVot
-                                       .Where(x => x.Tahun == sp.TarMasuk.Year.ToString() && x.VotId == sp.AkCartaId && x.JKWId == sp.JKWId && x.JBahagianId == sp.JBahagianId)
-                                       .AnyAsync();
+                                           .Where(x => x.Tahun == sp.TarMasuk.Year.ToString() && x.VotId == sp.AkCartaId && x.JKWId == sp.JKWId && x.JBahagianId == sp.JBahagianId)
+                                           .AnyAsync();
 
                             if (IsExistAbBukuVot == true)
                             {
@@ -968,6 +994,7 @@ namespace MSNK.Controllers
                                 TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + sp.AkCarta.Kod;
                                 return RedirectToAction(nameof(Index));
                             }
+                        }
                         // check peruntukan end
 
                         var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith("SP/" + sp.NoPermohonan)).FirstOrDefaultAsync();
@@ -1183,7 +1210,7 @@ namespace MSNK.Controllers
             List<AkCarta> akCartaList = _context.AkCarta
                 .Include(b => b.JKW)
                 .Include(b => b.JParas)
-                .Where(b => b.JParas.Kod == "4")
+                .Where(b => b.JParas.Kod == "4" && b.Kod == kodPendahuluanPelbagai) // kod untuk pendahuluan pelbagai
                 .OrderBy(b => b.Kod)
                 .ToList();
 

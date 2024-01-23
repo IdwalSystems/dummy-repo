@@ -26,15 +26,8 @@ namespace MSNK.Models.Modules.EFRepository
         public async Task<IEnumerable<SpPendahuluanPelbagai>> GetAll()
         {
             return await context.SpPendahuluanPelbagai
-                .Include(b => b.JKW)
-                .Include(b => b.JBahagian)
-                .Include(b => b.JTahapAktiviti)
-                .Include(b => b.JSukan)
-                .Include(b => b.AkCarta)
-                .Include(b => b.JNegeri)
-                .Include(b => b.SuPekerja).ThenInclude(b => b.JCaraBayar)
-                .Include(b => b.SpPendahuluanPelbagai1).ThenInclude(b => b.JJantina)
-                .Include(b => b.SpPendahuluanPelbagai2)
+                .Include(b => b.SuPekerja)
+                .Take(300)
                 .ToListAsync();
         }
 
@@ -42,15 +35,8 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.SpPendahuluanPelbagai
                 .IgnoreQueryFilters()
-                .Include(b => b.JKW)
-                .Include(b => b.JBahagian)
-                .Include(b => b.JTahapAktiviti)
-                .Include(b => b.JSukan)
-                .Include(b => b.AkCarta)
-                .Include(b => b.JNegeri)
-                .Include(b => b.SuPekerja).ThenInclude(b => b.JCaraBayar)
-                .Include(b => b.SpPendahuluanPelbagai1).ThenInclude(b => b.JJantina)
-                .Include(b => b.SpPendahuluanPelbagai2)
+                .Include(b => b.SuPekerja)
+                .Take(300)
                 .ToListAsync();
         }
 
