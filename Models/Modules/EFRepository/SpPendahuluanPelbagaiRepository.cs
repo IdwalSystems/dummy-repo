@@ -27,7 +27,6 @@ namespace MSNK.Models.Modules.EFRepository
         {
             return await context.SpPendahuluanPelbagai
                 .Include(b => b.SuPekerja)
-                .Take(300)
                 .ToListAsync();
         }
 
@@ -36,7 +35,6 @@ namespace MSNK.Models.Modules.EFRepository
             return await context.SpPendahuluanPelbagai
                 .IgnoreQueryFilters()
                 .Include(b => b.SuPekerja)
-                .Take(300)
                 .ToListAsync();
         }
 
