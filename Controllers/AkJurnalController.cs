@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
 using MSNK.Models.Modules.PrintModel.Reporting;
 using MSNK.Models.Modules.ViewModel;
+using MSNK.Models.Operations;
 using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
@@ -1035,6 +1037,7 @@ namespace MSNK.Controllers
                     {
                         if (GetJenisObjek((int)keVot.AkCartaKreditId) == "B")
                         {
+                            
                             if (keVot.Amaun > 0)
                             {
                                 AbBukuVot vot = new()
@@ -1046,8 +1049,6 @@ namespace MSNK.Controllers
                                     VotId = (int)keVot.AkCartaKreditId,
                                     Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length<200 ? akJurnal.Catatan1.Length : 200),
                                     Debit = keVot.Amaun,
-                                    Kredit = keVot.Amaun,
-                                    Tanggungan = 0 - keVot.Amaun,
                                     Tahun = akJurnal.Tarikh.Year.ToString()
                                 };
                                 await _abBukuVot.Insert(vot);
