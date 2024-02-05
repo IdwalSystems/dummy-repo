@@ -270,7 +270,7 @@ namespace MSNK.Controllers
 
             foreach (var item in spList)
             {
-                var ExistAkPVWithSp = _context.AkPV.Any(b => b.SpPendahuluanPelbagaiId == item.Id);
+                var ExistAkPVWithSp = _context.AkPV.Any(b => b.SpPendahuluanPelbagaiId == item.Id && b.FlBatal == 0);
 
                 if (ExistAkPVWithSp == true)
                 {
