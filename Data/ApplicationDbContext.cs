@@ -98,6 +98,8 @@ namespace MSNK.Data
         public DbSet<AkNotaDebitKreditBelian> AkNotaDebitKreditBelian { get; set; }
         public DbSet<AkNotaDebitKreditBelian1> AkNotaDebitKreditBelian1 { get; set; }
         public DbSet<AkNotaDebitKreditBelian2> AkNotaDebitKreditBelian2 { get; set; }
+        public DbSet<JKonfigPerubahanEkuiti> JKonfigPerubahanEkuiti { get; set; }
+        public DbSet<JKonfigPerubahanEkuitiBaris> JKonfigPerubahanEkuitiBaris { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -125,6 +127,8 @@ namespace MSNK.Data
             modelBuilder.Entity<JPenyemak>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JProfilKategori>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkPenghutang>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JKonfigPerubahanEkuiti>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+
 
             //Terimaan
             modelBuilder.Entity<AkTerima>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
@@ -723,6 +727,12 @@ namespace MSNK.Data
             .HasForeignKey(m => m.JCaraBayarId)
             .OnDelete(DeleteBehavior.Restrict);
             // SUPROFIL END
+
+            modelBuilder.Entity<JKonfigPerubahanEkuitiBaris>()
+                .HasOne(m => m.JKonfigPerubahanEkuiti)
+                .WithMany(t => t.JKonfigPerubahanEkuitiBaris)
+                .HasForeignKey(m => m.JKonfigPerubahanEkuitiId)
+                .OnDelete(DeleteBehavior.Restrict).IsRequired(false);
 
             //set default value
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan1).HasDefaultValue("");

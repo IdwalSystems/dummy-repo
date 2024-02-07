@@ -66,6 +66,7 @@
     @Html.ActiveClass("JNegeri")
     @Html.ActiveClass("JPenyemak")
     @Html.ActiveClass("JPelulus")
+    @Html.ActiveClass("JKonfigPerubahanEkuiti")
     " href="#submenuJadual" data-toggle="collapse" data-target="#submenuJadual"><object data="~/img/svg/jadual.svg" class="fa fa-pull-left fa-0"></object><span>&nbsp; Jadual</span></a>
     <div class="collapse" id="submenuJadual" aria-expanded="false">
         <ul class="flex-column pl-2 nav">
@@ -137,9 +138,16 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3
-                @Html.ActiveClass("JKonfigAlirTunai")" href="#submenuJadualsub4" data-toggle="collapse" data-target="#submenuJadualsub4"><span>Konfigurasi Laporan</span></a>
+                @Html.ActiveClass("JKonfigPerubahanEkuiti")
+                @Html.ActiveClass("JKonfigAlirTunai")
+                   " href="#submenuJadualsub4" data-toggle="collapse" data-target="#submenuJadualsub4"><span>Konfigurasi Laporan</span></a>
                 <div class="collapse" id="submenuJadualsub4" aria-expanded="false">
                     <ul class="flex-column nav pl-4">
+                        <li class="nav-item">
+                            <a class="nav-link border-bottom p-1 text-truncate pl-4 @Html.ActiveSideBarClass("JKonfigPerubahanEkuiti")" asp-area="" asp-controller="JKonfigPerubahanEkuiti" asp-action="Index">
+                                Penyata Perubahan Ekuiti
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link border-bottom p-1 text-truncate pl-4 @Html.ActiveSideBarClass("JKonfigAlirTunai")" asp-area="" asp-controller="JKonfigAlirTunai" asp-action="Index">
                                 Penyata Alir Tunai

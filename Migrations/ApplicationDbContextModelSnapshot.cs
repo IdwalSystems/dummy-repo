@@ -3870,6 +3870,94 @@ namespace MSNK.Migrations
                     b.ToTable("JKW");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.JKonfigPerubahanEkuiti", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("DPekerjaKemaskiniId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DPekerjaMasukId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EnLajurJadual")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FlHapus")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("JKWId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SebabHapus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tahun")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("TarHapus")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TarKemaskini")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TarMasuk")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserIdKemaskini")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JKWId");
+
+                    b.ToTable("JKonfigPerubahanEkuiti");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.JKonfigPerubahanEkuitiBaris", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("EnBaris")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EnJenisCartaList")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EnJenisOperasi")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsKecuali")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPukal")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("JKonfigPerubahanEkuitiId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("KodList")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SetKodList")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JKonfigPerubahanEkuitiId");
+
+                    b.ToTable("JKonfigPerubahanEkuitiBaris");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.JNegeri", b =>
                 {
                     b.Property<int>("Id")
@@ -6749,6 +6837,25 @@ namespace MSNK.Migrations
                     b.Navigation("JPTJ");
                 });
 
+            modelBuilder.Entity("MSNK.Models.Modules.JKonfigPerubahanEkuiti", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.JKW", "JKW")
+                        .WithMany()
+                        .HasForeignKey("JKWId");
+
+                    b.Navigation("JKW");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.JKonfigPerubahanEkuitiBaris", b =>
+                {
+                    b.HasOne("MSNK.Models.Modules.JKonfigPerubahanEkuiti", "JKonfigPerubahanEkuiti")
+                        .WithMany("JKonfigPerubahanEkuitiBaris")
+                        .HasForeignKey("JKonfigPerubahanEkuitiId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("JKonfigPerubahanEkuiti");
+                });
+
             modelBuilder.Entity("MSNK.Models.Modules.JPTJ", b =>
                 {
                     b.HasOne("MSNK.Models.Modules.JKW", "JKW")
@@ -7489,6 +7596,11 @@ namespace MSNK.Migrations
                     b.Navigation("JPTJ");
 
                     b.Navigation("SuProfil");
+                });
+
+            modelBuilder.Entity("MSNK.Models.Modules.JKonfigPerubahanEkuiti", b =>
+                {
+                    b.Navigation("JKonfigPerubahanEkuitiBaris");
                 });
 
             modelBuilder.Entity("MSNK.Models.Modules.JNegeri", b =>

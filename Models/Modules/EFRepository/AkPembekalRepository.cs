@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Models.Modules.IRepository;
+using MSNK.Models.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +23,21 @@ namespace MSNK.Models.Modules.EFRepository
             }
         }
 
+        public string FormulaInSentence(EnJenisOperasi jenisOperasi, string jenisCarta, bool isKecuali, string kodList)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<AkPembekal>> GetAll()
         {
             return await context.AkPembekal
                 .Include(b => b.JNegeri).Include(b => b.JBank)
                 .ToListAsync();
+        }
+
+        public JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<AkPembekal>> GetAllIncludeDeletedItems()
@@ -53,6 +64,11 @@ namespace MSNK.Models.Modules.EFRepository
         }
 
         public Task<AkPembekal> GetByString(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetSetOfCartaList(EnBarisPerubahanEkuiti enBaris, EnJenisOperasi enOperasi, bool isPukal, string enJenisCartaList, bool isKecuali, string kodList)
         {
             throw new NotImplementedException();
         }

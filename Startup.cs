@@ -187,6 +187,9 @@ namespace MSNK
             services.AddTransient<ListViewIRepository<AkNotaDebitKreditBelian2, int>, AkNotaDebitKreditBelian2Repository>();
             //NOTA DEBIT KREDIT BELIAN END
 
+            services.AddTransient<IRepository<JKonfigPerubahanEkuiti, int, string>, JKonfigPerubahanEkuitiRepository>();
+
+
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
             services.AddScoped(ss => SessionCartPendahuluan.GetCart(ss));
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
@@ -207,6 +210,8 @@ namespace MSNK
             services.AddScoped(ss => SessionCartPenyataPemungut.GetCart(ss));
             services.AddScoped(ss => SessionCartBankRecon.GetCart(ss));
             services.AddScoped(ss => SessionCartNotaDebitKreditBelian.GetCart(ss));
+            services.AddScoped(ss => SessionCartJKonfigPerubahanEkuiti.GetCart(ss));
+
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

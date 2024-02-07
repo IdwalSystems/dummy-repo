@@ -34,6 +34,11 @@ namespace MSNK.Models.Modules.IRepository
         
         // Kunci Kira-kira
         Task<List<AbKunciKiraKiraViewModel>> GetListKunciKirakiraBasedOnLastDate(T2 JBahagianId, int? JKWId, DateTime TarHingga);
+
         // Kunci Kira-kira END
+
+        // Perubahan Ekuiti
+        Task<AbPerubahanEkuitiViewModel> GetAbPerubahanEkuiti(EnJenisLajurJadualPerubahanEkuiti enJenisEkuiti, int? JKWId, string Tahun);
+        // Perubahan Ekuiti END
     }
 }
