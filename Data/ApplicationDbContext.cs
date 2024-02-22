@@ -732,7 +732,7 @@ namespace MSNK.Data
                 .HasOne(m => m.JKonfigPerubahanEkuiti)
                 .WithMany(t => t.JKonfigPerubahanEkuitiBaris)
                 .HasForeignKey(m => m.JKonfigPerubahanEkuitiId)
-                .OnDelete(DeleteBehavior.Restrict).IsRequired(false);
+                .OnDelete(DeleteBehavior.Cascade).IsRequired(false);
 
             //set default value
             modelBuilder.Entity<AkJurnal>().Property(b => b.Catatan1).HasDefaultValue("");

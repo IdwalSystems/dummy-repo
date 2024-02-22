@@ -1047,7 +1047,7 @@ namespace MSNK.Controllers
                                     JBahagianId = keVot.JBahagianKreditId,
                                     Tarikh = akJurnal.Tarikh,
                                     VotId = (int)keVot.AkCartaKreditId,
-                                    Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length<200 ? akJurnal.Catatan1.Length : 200),
+                                    Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length<150 ? akJurnal.Catatan1.Length : 150),
                                     Kredit = keVot.Amaun,
                                     Tahun = akJurnal.Tarikh.Year.ToString()
                                 };
@@ -1065,10 +1065,10 @@ namespace MSNK.Controllers
                                 {
                                     Rujukan = "JR/" + akJurnal.NoJurnal,
                                     JKWId = akJurnal.JKWId,
-                                    JBahagianId = keVot.JBahagianKreditId,
+                                    JBahagianId = keVot.JBahagianDebitId,
                                     Tarikh = akJurnal.Tarikh,
-                                    VotId = (int)keVot.AkCartaKreditId,
-                                    Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length < 200 ? akJurnal.Catatan1.Length : 200),
+                                    VotId = (int)keVot.AkCartaDebitId,
+                                    Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length < 150 ? akJurnal.Catatan1.Length : 150),
                                     Debit = keVot.Amaun,
                                     Tahun = akJurnal.Tarikh.Year.ToString()
                                 };
