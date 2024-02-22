@@ -1035,7 +1035,7 @@ namespace MSNK.Controllers
 
                     foreach (AkJurnal1 keVot in akJurnal.AkJurnal1.OrderBy(x => x.Indeks))
                     {
-                        if (GetJenisObjek((int)keVot.AkCartaKreditId) == "B")
+                        if (GetJenisObjek((int)keVot.AkCartaKreditId) == "B" )
                         {
                             
                             if (keVot.Amaun > 0)
@@ -1048,6 +1048,27 @@ namespace MSNK.Controllers
                                     Tarikh = akJurnal.Tarikh,
                                     VotId = (int)keVot.AkCartaKreditId,
                                     Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length<200 ? akJurnal.Catatan1.Length : 200),
+                                    Kredit = keVot.Amaun,
+                                    Tahun = akJurnal.Tarikh.Year.ToString()
+                                };
+                                await _abBukuVot.Insert(vot);
+                            }
+
+                        }
+
+                        if (GetJenisObjek((int)keVot.AkCartaDebitId) == "B")
+                        {
+
+                            if (keVot.Amaun > 0)
+                            {
+                                AbBukuVot vot = new()
+                                {
+                                    Rujukan = "JR/" + akJurnal.NoJurnal,
+                                    JKWId = akJurnal.JKWId,
+                                    JBahagianId = keVot.JBahagianKreditId,
+                                    Tarikh = akJurnal.Tarikh,
+                                    VotId = (int)keVot.AkCartaKreditId,
+                                    Penerima = akJurnal.Catatan1.Substring(0, akJurnal.Catatan1.Length < 200 ? akJurnal.Catatan1.Length : 200),
                                     Debit = keVot.Amaun,
                                     Tahun = akJurnal.Tarikh.Year.ToString()
                                 };
