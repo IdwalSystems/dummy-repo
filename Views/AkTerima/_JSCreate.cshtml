@@ -22,21 +22,21 @@
     //empty cart end
 
     // onchange no Rujukan
-    $("body").on('change', "#ddlKW , #txtTahun", function () {
-        var kodkw = $("#ddlKW").val();
+    $("body").on('change', "#AkBankId , #txtTahun", function () {
+        var kodBank = $("#AkBankId").val();
         var year = $("#txtTahun").val();
-        if (kodkw != 0) {
-            JsonKod(kodkw, year);
+        if (kodBank != 0) {
+            JsonKod(kodBank, year);
         }
 
     });
 
-    function JsonKod(id, year) {
+    function JsonKod(kodBank, year) {
         $.ajax({
             type: "POST",
             //url: "/AkTerima/JsonGetKod", // asal
             url: '@Url.Action("JsonGetKod", "AkTerima")', //baru
-            data: { data: id, year: year },
+            data: { data: kodBank, year: year },
             dataType: "json",
             success: function (msg) {
                 $("#txtNoRujukan").val(msg.record);

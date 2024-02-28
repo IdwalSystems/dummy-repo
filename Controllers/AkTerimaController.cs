@@ -397,17 +397,15 @@ namespace MSNK.Controllers
 
         private string GetNoRujukan(int data, string year)
         {
-            var kw = _context.JKW.FirstOrDefault(x => x.Id == data);
+            var kodBank = _context.AkBank.FirstOrDefault(x => x.Id == data)?.Kod ?? "AK1";
 
-            var kumpulanWang = kw.Kod;
-            
-            string prefix = year + "/" + kumpulanWang + "/";
+            string prefix = year + "/" + kodBank + "/";
             int x = 1;
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkTerima
                        .IgnoreQueryFilters()
-                       .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
+                       .Where(x => x.Tahun == year && x.AkBank.Kod == kodBank)
                        .Max(x => x.NoRujukan);
 
             if (LatestNoRujukan == null)
@@ -447,7 +445,7 @@ namespace MSNK.Controllers
         {
             // get latest no rujukan running number  
             var year = DateTime.Now.Year.ToString();
-            var data = 1;
+            var data = 2;
 
             ViewBag.NoRujukan = GetNoRujukan(data, year);
             // get latest no rujukan running number end
@@ -836,17 +834,16 @@ namespace MSNK.Controllers
             }
 
             // get latest no rujukan running number  
-            var kw = _context.JKW.FirstOrDefault(x => x.Id == akTerima.JKWId);
+            var kodBank = _context.AkBank.FirstOrDefault(x => x.Id == akTerima.AkBankId)?.Kod ?? "AK1";
 
-            var kumpulanWang = kw.Kod;
             var year = akTerima.Tahun;
-            string prefix = "RR/" + kumpulanWang + year;
+            string prefix = "RR/" + kodBank + year;
             int x = 1;
             string noRujukan = prefix + "000000";
 
             var LatestNoRujukan = _context.AkTerima
                 .IgnoreQueryFilters()
-                        .Where(x => x.Tahun == year && x.JKW.Kod == kw.Kod)
+                        .Where(x => x.Tahun == year && x.AkBank.Kod == kodBank)
                         .Max(x => x.NoRujukan);
 
             if (LatestNoRujukan == null)

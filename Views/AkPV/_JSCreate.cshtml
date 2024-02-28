@@ -70,23 +70,22 @@
     //on change Kod Pembekal end
 
     // on change no Rujukan
-    $("body").on('change', "#ddlKW , #Tarikh", function () {
-        var kodkw = $("#ddlKW").val();
+    $("body").on('change', "#AkBankId , #Tarikh", function () {
+        var kodbank = $("#AkBankId").val();
         var date = $('#Tarikh').val().split("-");
         var year = date[0];
         var month = date[1];
-        if (kodkw != 0) {
-            JsonKod(kodkw, year,month);
+        if (kodbank != 0) {
+            JsonKod(kodbank, year,month);
         }
 
     });
 
-    function JsonKod(id, year, month) {
+    function JsonKod(kodbank, year, month) {
         $.ajax({
             type: "POST",
-            //url: "/AkPV/JsonGetKod",
             url: '@Url.Action("JsonGetKod", "AkPV")',
-            data: { data: id, year: year, month: month },
+            data: { data: kodbank, year: year, month: month },
             dataType: "json",
             success: function (msg) {
                 $("#txtNoRujukan").val(msg.record);
@@ -108,14 +107,12 @@
             if (kodKaunter != 0) {
                 $.ajax({
                     type: "POST",
-                    //url: "/AkPV/JsonGetKod",
                     url: '@Url.Action("JsonGetPanjar", "AkPV")',
                     data: { data: kodKaunter },
                     dataType: "json",
                     success: function (msg) {
                         $.ajax({
                             type: "POST",
-                            //url: "/AkPV/JsonGetKod",
                             url: '@Url.Action("JsonGetNoRekup", "AkPV")',
                             data: { data: kodKaunter },
                             dataType: "json",
@@ -176,7 +173,6 @@
 
                 $.ajax({
                     type: "POST",
-                    //url: "/AkPV/JsonGetKod",
                     url: '@Url.Action("JsonGetPanjar", "AkPV")',
                     data: { data: kodKaunter },
                     dataType: "json",
