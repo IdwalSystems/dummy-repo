@@ -399,7 +399,7 @@ namespace MSNK.Controllers
         {
             var kodBank = _context.AkBank.FirstOrDefault(x => x.Id == data)?.Kod ?? "AK1";
 
-            string prefix = year + "/" + kodBank + "/";
+            string prefix = kodBank + year ;
             int x = 1;
             string noRujukan = prefix + "000000";
 
