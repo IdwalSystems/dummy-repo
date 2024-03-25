@@ -1282,7 +1282,7 @@ namespace MSNK.Controllers
                     {
                         
                         //linkage id error
-                        TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoInbois.ToUpper() + ". Batal kelulusan tidak dibenarkan";
+                        TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoRujukan.ToUpper() + ". Batal kelulusan tidak dibenarkan";
                         //}
                     }
                     else
@@ -1367,7 +1367,7 @@ namespace MSNK.Controllers
                 {
 
                     //linkage id error
-                    TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoInbois.ToUpper() + ". Batal tidak dibenarkan";
+                    TempData[SD.Error] = "Data terkait pada No Inbois " + Belian.NoRujukan.ToUpper() + ". Batal tidak dibenarkan";
                     //}
                 }
                 else

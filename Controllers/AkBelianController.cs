@@ -153,7 +153,7 @@ namespace MSNK.Controllers
                 {
                     if (searchColumn == "NoRujukan")
                     {
-                        akBelian = akBelian.Where(s => s.NoInbois.ToUpper().Contains(searchString.ToUpper())).ToList();
+                        akBelian = akBelian.Where(s => s.NoRujukan.ToUpper().Contains(searchString.ToUpper())).ToList();
                     }
                     else if (searchColumn == "Nama")
                     {
@@ -1522,7 +1522,7 @@ namespace MSNK.Controllers
                         akBelian.Tahun = akBelianAsal.Tahun;
                         akBelian.JKWId = akBelianAsal.JKWId;
                         akBelian.JBahagianId = akBelianAsal.JBahagianId;
-                        akBelian.NoInbois = akBelianAsal.NoInbois;
+                        akBelian.NoInbois = akBelianAsal.NoRujukan;
                         akBelian.NoRujukan = akBelianAsal.NoRujukan;
                         akBelian.FlJenisTanggungan = akBelianAsal.FlJenisTanggungan;
                         akBelian.FlTanggungan = akBelianAsal.FlTanggungan;
@@ -1783,7 +1783,7 @@ namespace MSNK.Controllers
                 }
 
 
-                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akBelian.NoInbois).FirstOrDefaultAsync();
+                var akAkaun = await _context.AkAkaun.Where(x => x.NoRujukan == akBelian.NoRujukan).FirstOrDefaultAsync();
                 if (akAkaun != null)
                 {
 
@@ -1821,7 +1821,7 @@ namespace MSNK.Controllers
                                     Kod = kodPembekal,
                                     Penerima = penerima,
                                     VotId = item.AkCartaId,
-                                    Rujukan = akBelian.NoInbois,
+                                    Rujukan = akBelian.NoRujukan,
                                     //Tanggungan = 0 - item.Amaun,
                                     Liabiliti = item.Amaun
 
@@ -1839,7 +1839,7 @@ namespace MSNK.Controllers
                                     Kod = kodPembekal,
                                     Penerima = penerima,
                                     VotId = item.AkCartaId,
-                                    Rujukan = akBelian.NoInbois,
+                                    Rujukan = akBelian.NoRujukan,
                                     Liabiliti = item.Amaun
                                 };
 
@@ -1852,7 +1852,7 @@ namespace MSNK.Controllers
                             //insert into akAkaun
                             AkAkaun akALiabiliti = new AkAkaun()
                             {
-                                NoRujukan = akBelian.NoInbois,
+                                NoRujukan = akBelian.NoRujukan,
                                 JKWId = akBelian.JKWId,
                                 JBahagianId = akBelian.JBahagianId,
                                 AkCartaId1 = akBelian.KodObjekAPId,
@@ -1866,7 +1866,7 @@ namespace MSNK.Controllers
 
                             AkAkaun akAObjek = new AkAkaun()
                             {
-                                NoRujukan = akBelian.NoInbois,
+                                NoRujukan = akBelian.NoRujukan,
                                 JKWId = akBelian.JKWId,
                                 JBahagianId = akBelian.JBahagianId,
                                 AkCartaId1 = item.AkCartaId,
@@ -1885,7 +1885,7 @@ namespace MSNK.Controllers
                         await _akBelianRepo.Update(akBelian);
 
                         //insert applog
-                        await AddLogAsync("Posting", "Posting Data", akBelian.NoInbois, (int)id, akBelian.Jumlah,pekerjaId);
+                        await AddLogAsync("Posting", "Posting Data", akBelian.NoRujukan, (int)id, akBelian.Jumlah,pekerjaId);
 
                         //insert applog end
 
@@ -1925,7 +1925,7 @@ namespace MSNK.Controllers
 
                 AkBelian akBelian = await _akBelianRepo.GetById((int) id);
 
-                List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akBelian.NoInbois).ToList();
+                List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akBelian.NoRujukan).ToList();
 
                 // check if already link with AkNotaDebitKreditBelian
                 var akNota = await _context.AkNotaDebitKreditBelian.FirstOrDefaultAsync(b => b.AkBelianId == id);
@@ -1937,7 +1937,7 @@ namespace MSNK.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan == akBelian.NoInbois).ToList();
+                List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan == akBelian.NoRujukan).ToList();
                 if (akAkaun == null)
                 {
 
@@ -1989,7 +1989,7 @@ namespace MSNK.Controllers
                         await _akBelianRepo.Update(akBelian);
 
                         //insert applog
-                        await AddLogAsync("UnPosting", "Batal Posting Data", akBelian.NoInbois, (int)id, akBelian.Jumlah, pekerjaId);
+                        await AddLogAsync("UnPosting", "Batal Posting Data", akBelian.NoRujukan, (int)id, akBelian.Jumlah, pekerjaId);
 
                         //insert applog end
 
@@ -2040,7 +2040,7 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if(CurrentAkBelianExists(obj.AkPembekalId,obj.NoInbois) == false)
+            if(CurrentAkBelianExists(obj.AkPembekalId,obj.NoRujukan) == false)
             {
                 // Batal operation
 
@@ -2053,7 +2053,7 @@ namespace MSNK.Controllers
                 // Batal operation end
 
                 //insert applog
-                await AddLogAsync("Rollback", "Rollback Data", obj.NoInbois, id, obj.Jumlah, pekerjaId);
+                await AddLogAsync("Rollback", "Rollback Data", obj.NoRujukan, id, obj.Jumlah, pekerjaId);
                 //insert applog end
 
                 await _context.SaveChangesAsync();

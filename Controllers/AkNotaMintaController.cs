@@ -1073,7 +1073,7 @@ namespace MSNK.Controllers
                 int x = 1;
                 string noRujukan = "0000" + prefix;
 
-                var LatestNoRujukan = _context.AkNotaMinta.Where(x => x.NoSiri.EndsWith(prefix))
+                var LatestNoRujukan = _context.AkNotaMinta.IgnoreQueryFilters().Where(x => x.NoSiri.EndsWith(prefix))
                             .Max(x => x.NoSiri);
 
                 if (LatestNoRujukan == null)
