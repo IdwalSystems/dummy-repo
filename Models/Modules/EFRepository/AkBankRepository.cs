@@ -30,15 +30,32 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<AkBank>> GetAll()
+        public async Task<IEnumerable<AkBank>> GetAll(string filter)
         {
-            
-            return await context.AkBank
+            var result = new List<AkBank>();
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                result = await context.AkBank
                 .Include(b => b.JKW)
                 .Include(b => b.JBahagian)
                 .Include(b => b.JBank)
                 .Include(b => b.AkCarta)
                 .ToListAsync();
+            }
+            else
+            {
+                result = await context.AkBank
+                .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
+                .Include(b => b.JBank)
+                .Include(b => b.AkCarta)
+                .Where(b => b.Kod == filter)
+                .ToListAsync();
+            }
+
+            return result;
+
             
             
         }

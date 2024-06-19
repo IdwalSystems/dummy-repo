@@ -156,7 +156,7 @@ namespace MSNK.Controllers
         // GET: SuPekerja
         public async Task<IActionResult> Index()
         {
-            var suPekerja = await _suPekerjaRepo.GetAll();
+            var suPekerja = await _suPekerjaRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin"))
             {

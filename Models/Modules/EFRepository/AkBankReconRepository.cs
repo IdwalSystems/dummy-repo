@@ -3,6 +3,7 @@ using MSNK.Data;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Operations;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
@@ -29,9 +30,13 @@ namespace MSNK.Models.Modules.EFRepository
             throw new System.NotImplementedException();
         }
 
-        public async Task<IEnumerable<AkBankRecon>> GetAll()
+        public async Task<IEnumerable<AkBankRecon>> GetAll(string filter)
         {
-            return await context.AkBankRecon
+            var result = new List<AkBankRecon>();
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                result = await context.AkBankRecon
                 .Include(b => b.AkBank)
                     .ThenInclude(b => b.JBank)
                 .Include(b => b.AkBank)
@@ -44,6 +49,27 @@ namespace MSNK.Models.Modules.EFRepository
                         .ThenInclude(b => b.AkTerima2)
                             .ThenInclude(b => b.AkTerima)
                 .ToListAsync();
+            }
+            else
+            {
+                result = await context.AkBankRecon
+                .Include(b => b.AkBank)
+                    .ThenInclude(b => b.JBank)
+                .Include(b => b.AkBank)
+                    .ThenInclude(b => b.AkCarta)
+                .Include(b => b.AkBankReconPenyataBank)
+                    .ThenInclude(b => b.AkPadananPenyata)
+                        .ThenInclude(b => b.AkPV)
+                .Include(b => b.AkBankReconPenyataBank)
+                    .ThenInclude(b => b.AkPadananPenyata)
+                        .ThenInclude(b => b.AkTerima2)
+                            .ThenInclude(b => b.AkTerima)
+                .Where(b => b.Tahun == filter)
+                .ToListAsync();
+            }
+
+            return result;
+
 
 
 

@@ -210,7 +210,7 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akInden = await _akIndenRepo.GetAll();
+            var akInden = await _akIndenRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {

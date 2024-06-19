@@ -125,7 +125,7 @@ namespace MSNK.Controllers
                 RoleList = listItems
             };
 
-            ViewBag.SuPekerja = await _suPekerjaRepo.GetAll();
+            ViewBag.SuPekerja = await _suPekerjaRepo.GetAll(null);
 
             ViewBag.JBahagian = _db.JBahagian.ToList();
 
@@ -257,7 +257,7 @@ namespace MSNK.Controllers
 
             model.RoleList = listItems;
 
-            ViewBag.SuPekerja = await _suPekerjaRepo.GetAll();
+            ViewBag.SuPekerja = await _suPekerjaRepo.GetAll(null);
 
             return View(model);
         }

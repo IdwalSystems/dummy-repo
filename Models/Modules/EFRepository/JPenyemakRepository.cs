@@ -30,7 +30,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<JPenyemak>> GetAll()
+        public async Task<IEnumerable<JPenyemak>> GetAll(string filter)
         {
             return await context.JPenyemak.Include(b => b.SuPekerja).ToListAsync();
         }

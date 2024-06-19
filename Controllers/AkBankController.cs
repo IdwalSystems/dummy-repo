@@ -66,7 +66,7 @@ namespace MSNK.Controllers
         // GET: AkBank
         public async Task<IActionResult> Index()
         {
-            var akBank = await _akBankRepo.GetAll();
+            var akBank = await _akBankRepo.GetAll(null);
 
            return View(akBank);
             

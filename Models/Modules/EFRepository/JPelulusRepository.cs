@@ -29,7 +29,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<JPelulus>> GetAll()
+        public async Task<IEnumerable<JPelulus>> GetAll(string filter)
         {
             return await context.JPelulus.Include(b => b.SuPekerja).ToListAsync();
         }

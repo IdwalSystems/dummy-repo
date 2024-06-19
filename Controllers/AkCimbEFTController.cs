@@ -92,7 +92,7 @@ namespace MSNK.Controllers
             columnList.Add(new SelectListItem() { Text = "No PBI", Value = "NoPBI" });
             columnList.Add(new SelectListItem() { Text = "Penjana", Value = "Nama" });
 
-            var akCimbEFT = await _akCimbEFTRepo.GetAll();
+            var akCimbEFT = await _akCimbEFTRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {

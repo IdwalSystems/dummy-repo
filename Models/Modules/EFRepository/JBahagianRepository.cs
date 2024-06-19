@@ -27,7 +27,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<JBahagian>> GetAll()
+        public async Task<IEnumerable<JBahagian>> GetAll(string filter)
         {
             return await context.JBahagian
                 .Include(x=> x.JKW)

@@ -29,9 +29,13 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<AkBelian>> GetAll()
+        public async Task<IEnumerable<AkBelian>> GetAll(string filter)
         {
-            return await context.AkBelian
+            var result = new List<AkBelian>();
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                result = await context.AkBelian
                 .Include(b => b.JKW)
                 .Include(b => b.JBahagian)
                 .Include(b => b.AkPO)
@@ -43,6 +47,25 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkBelian1).ThenInclude(b => b.AkCarta)
                 .Include(b => b.AkBelian2)
                 .ToListAsync();
+            }
+            else
+            {
+                result = await context.AkBelian
+                .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
+                .Include(b => b.AkPO)
+                    .ThenInclude(b => b.AkPembekal)
+                .Include(b => b.AkInden)
+                    .ThenInclude(b => b.AkPembekal)
+                .Include(b => b.AkPembekal)
+                .Include(b => b.KodObjekAP)
+                .Include(b => b.AkBelian1).ThenInclude(b => b.AkCarta)
+                .Include(b => b.AkBelian2)
+                .Where(b => b.Tahun == filter)
+                .ToListAsync();
+            }
+
+            return result;
         }
 
         public JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti)

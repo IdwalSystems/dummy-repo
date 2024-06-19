@@ -116,7 +116,7 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akInvois = await _akInvoisRepo.GetAll();
+            var akInvois = await _akInvoisRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
@@ -914,7 +914,7 @@ namespace MSNK.Controllers
             }
 
             // check if already link with akPV, Batal akPV included
-            var akTerima = await _akTerimaRepo.GetAll();
+            var akTerima = await _akTerimaRepo.GetAll(null);
             var akTerima3 = _context.AkTerima3.ToList();
             var result = (from tbl3 in akTerima3
                           join tbl in akTerima
@@ -1252,7 +1252,7 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    var akTerima = await _akTerimaRepo.GetAll();
+                    var akTerima = await _akTerimaRepo.GetAll(null);
                     var akTerima3 = _context.AkTerima3.ToList();
                     var result = (from tbl3 in akTerima3
                                   join tbl in akTerima

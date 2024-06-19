@@ -27,7 +27,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<SuPekerja>> GetAll()
+        public async Task<IEnumerable<SuPekerja>> GetAll(string filter)
         {
             return await context.SuPekerja
                 .Include(b => b.JAgama)

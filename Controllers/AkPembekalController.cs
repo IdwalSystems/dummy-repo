@@ -79,7 +79,7 @@ namespace MSNK.Controllers
 
         private string GetKodSykt(string namasykt)
         {
-            var akpembekal = _akpembekalRepo.GetAll()
+            var akpembekal = _akpembekalRepo.GetAll(null)
                 .Result
                 .Where(s => s.KodSykt.Contains(namasykt.Substring(0, 1)))
                 .OrderByDescending(s => s.KodSykt).FirstOrDefault();

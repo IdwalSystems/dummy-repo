@@ -29,16 +29,35 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<AkTunaiCV>> GetAll()
+        public async Task<IEnumerable<AkTunaiCV>> GetAll(string filter)
         {
-            return await context.AkTunaiCV
+            var result = new List<AkTunaiCV>();
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                result = await context.AkTunaiCV
                 .Include(b => b.SuPekerja)
                 .Include(b => b.AkPembekal)
-                .Include(b=> b.AkTunaiRuncit).ThenInclude(b=> b.AkTunaiPemegang).ThenInclude(b=> b.SuPekerja)
-                .Include(b=> b.AkTunaiRuncit).ThenInclude(b=> b.JKW)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
-                .Include(b => b.AkTunaiCV1).ThenInclude(b=> b.AkCarta)
+                .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                 .ToListAsync();
+            }
+            else
+            {
+                result = await context.AkTunaiCV
+                .Include(b => b.SuPekerja)
+                .Include(b => b.AkPembekal)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
+                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
+                .Where(b => b.Tahun == filter)
+                .ToListAsync();
+            }
+
+            return result;
         }
 
         public JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti)

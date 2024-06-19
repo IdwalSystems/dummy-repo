@@ -106,7 +106,7 @@ namespace MSNK.Controllers
             }
 
 
-            var akNotaMinta = await _akNotaMintaRepo.GetAll();
+            var akNotaMinta = await _akNotaMintaRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {

@@ -183,7 +183,7 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akPO = await _akPORepo.GetAll();
+            var akPO = await _akPORepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {

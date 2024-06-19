@@ -28,7 +28,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<JTahapAktiviti>> GetAll()
+        public async Task<IEnumerable<JTahapAktiviti>> GetAll(string filter)
         {
             return await context.JTahapAktiviti.ToListAsync();
         }

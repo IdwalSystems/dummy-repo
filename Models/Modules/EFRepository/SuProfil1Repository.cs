@@ -28,7 +28,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<SuProfil1>> GetAll()
+        public async Task<IEnumerable<SuProfil1>> GetAll(string filter)
         {
             return await context.SuProfil1.ToListAsync();
         }

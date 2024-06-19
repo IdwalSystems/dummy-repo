@@ -76,7 +76,7 @@ namespace MSNK.Controllers
         // GET: AkCarta
         public async Task<IActionResult> Index()
         {
-            var akCarta = await _akCartaRepo.GetAll();
+            var akCarta = await _akCartaRepo.GetAll(null);
             return View(akCarta);
         }
 
@@ -494,7 +494,7 @@ namespace MSNK.Controllers
                 decimalMaxKodCarta = (decimalMaxKodCarta / 10000) + 1;
                 decimalMaxKodCarta = (Math.Floor(decimalMaxKodCarta) * 10000) - 1;
                 string maxKodCarta = kodCarta.Substring(0, 1) + decimalMaxKodCarta.ToString();
-                var allCarta = await _akCartaRepo.GetAll();
+                var allCarta = await _akCartaRepo.GetAll(null);
                 allCarta = allCarta
                     .Where(x => x.Kod.CompareTo(kodCarta) >= 0 && x.Kod.CompareTo(maxKodCarta) <= 0)
                     .OrderBy(x => x.Kod).ToList();
@@ -521,7 +521,7 @@ namespace MSNK.Controllers
                 decimalMaxKodCarta = (decimalMaxKodCarta / 1000) + 1;
                 decimalMaxKodCarta = (Math.Floor(decimalMaxKodCarta) * 1000) - 1;
                 string maxKodCarta = kodCarta.Substring(0, 1) + decimalMaxKodCarta.ToString();
-                var allCarta = await _akCartaRepo.GetAll();
+                var allCarta = await _akCartaRepo.GetAll(null);
                 allCarta = allCarta
                     .Where(x => x.Kod.CompareTo(kodCarta) >= 0 && x.Kod.CompareTo(maxKodCarta) <= 0)
                     .OrderBy(x => x.Kod).ToList();
@@ -548,7 +548,7 @@ namespace MSNK.Controllers
                 decimalMaxKodCarta = (decimalMaxKodCarta / 100) + 1;
                 decimalMaxKodCarta = (Math.Floor(decimalMaxKodCarta) * 100) - 1;
                 string maxKodCarta = kodCarta.Substring(0, 1) + decimalMaxKodCarta.ToString();
-                var allCarta = await _akCartaRepo.GetAll();
+                var allCarta = await _akCartaRepo.GetAll(null);
                 allCarta = allCarta
                     .Where(x => x.Kod.CompareTo(kodCarta) >= 0 && x.Kod.CompareTo(maxKodCarta) <= 0)
                     .OrderBy(x => x.Kod).ToList();
@@ -596,7 +596,7 @@ namespace MSNK.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> PrintCarta()
         {
-            IEnumerable<AkCarta> akCarta = await _akCartaRepo.GetAll();
+            IEnumerable<AkCarta> akCarta = await _akCartaRepo.GetAll(null);
 
             var company = await _userService.GetCompanyDetails();
             //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";

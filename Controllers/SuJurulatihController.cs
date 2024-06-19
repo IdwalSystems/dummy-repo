@@ -125,7 +125,7 @@ namespace MSNK.Controllers
         // GET: SuJurulatih
         public async Task<IActionResult> Index()
         {
-            var suJurulatih = await _suJurulatihRepo.GetAll();
+            var suJurulatih = await _suJurulatihRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin"))
             {

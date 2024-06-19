@@ -59,7 +59,7 @@ namespace MSNK.Controllers
         // GET: JBahagian
         public async Task<IActionResult> Index()
         {
-            var obj = await _jBahagianRepo.GetAll();
+            var obj = await _jBahagianRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin"))
             {

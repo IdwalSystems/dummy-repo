@@ -3,6 +3,7 @@ using MSNK.Data;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Operations;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MSNK.Models.Modules.EFRepository
@@ -25,9 +26,13 @@ namespace MSNK.Models.Modules.EFRepository
             throw new System.NotImplementedException();
         }
 
-        public async Task<IEnumerable<AkNotaDebitKreditBelian>> GetAll()
+        public async Task<IEnumerable<AkNotaDebitKreditBelian>> GetAll(string filter)
         {
-            return await context.AkNotaDebitKreditBelian
+            var result = new List<AkNotaDebitKreditBelian>();
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                result = await context.AkNotaDebitKreditBelian
                 .Include(b => b.JBahagian)
                     .ThenInclude(b => b.JKW)
                 .Include(b => b.AkBelian)
@@ -41,6 +46,27 @@ namespace MSNK.Models.Modules.EFRepository
                     .ThenInclude(b => b.AkCarta)
                 .Include(b => b.AkNotaDebitKreditBelian2)
                 .ToListAsync();
+            }
+            else
+            {
+                result = await context.AkNotaDebitKreditBelian
+                .Include(b => b.JBahagian)
+                    .ThenInclude(b => b.JKW)
+                .Include(b => b.AkBelian)
+                    .ThenInclude(b => b.AkPembekal)
+                .Include(b => b.AkBelian)
+                    .ThenInclude(b => b.KodObjekAP)
+                .Include(b => b.AkBelian)
+                    .ThenInclude(b => b.AkPO)
+                        .ThenInclude(b => b.AkPembekal)
+                .Include(b => b.AkNotaDebitKreditBelian1)
+                    .ThenInclude(b => b.AkCarta)
+                .Include(b => b.AkNotaDebitKreditBelian2)
+                .Where(b => b.Tahun == filter)
+                .ToListAsync();
+            }
+
+            return result;
         }
 
         public JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti)

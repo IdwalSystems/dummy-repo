@@ -27,7 +27,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<JCaraBayar>> GetAll()
+        public async Task<IEnumerable<JCaraBayar>> GetAll(string filter)
         {
             return await context.JCaraBayar.ToListAsync();
         }

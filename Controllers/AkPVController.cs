@@ -157,7 +157,7 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akPV = await _akPVRepo.GetAll();
+            var akPV = await _akPVRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
@@ -317,7 +317,7 @@ namespace MSNK.Controllers
                     }
                     else
                     {
-                        item.NoInbois = "xx/xxxxx/" + item.NoInbois;
+                        item.NoInbois = item.NoRujukan;
                     }
 
                     akBelianListUpdated.Add(item);

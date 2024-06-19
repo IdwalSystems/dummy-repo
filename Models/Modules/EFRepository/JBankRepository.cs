@@ -29,7 +29,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<JBank>> GetAll()
+        public async Task<IEnumerable<JBank>> GetAll(string filter)
         {
             return await context.JBank.ToListAsync();
         }

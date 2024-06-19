@@ -28,14 +28,31 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<AkCarta>> GetAll()
+        public async Task<IEnumerable<AkCarta>> GetAll(string filter)
         {
-            return await context.AkCarta
+            var result = new List<AkCarta>();
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                result = await context.AkCarta
                 .Include(b => b.JKW)
-                .Include(b =>b.JParas)
+                .Include(b => b.JParas)
                 .Include(b => b.JJenis)
-                .OrderBy(b=> b.Kod)
+                .OrderBy(b => b.Kod)
                 .ToListAsync();
+            }
+            else
+            {
+                result = await context.AkCarta
+                .Include(b => b.JKW)
+                .Include(b => b.JParas)
+                .Include(b => b.JJenis)
+                .OrderBy(b => b.Kod)
+                .Where(b => b.Kod == filter)
+                .ToListAsync();
+            }
+
+            return result;
         }
 
         public JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti)

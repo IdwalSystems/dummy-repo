@@ -112,7 +112,7 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var model = await _akNotaRepo.GetAll();
+            var model = await _akNotaRepo.GetAll(null);
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
                 model = await _akNotaRepo.GetAllIncludeDeletedItems();
@@ -1235,7 +1235,7 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    var akPV = await _akPVRepo.GetAll();
+                    var akPV = await _akPVRepo.GetAll(null);
                     var akPV2 = _context.AkPV2.ToList();
                     var result = (from tbl2 in akPV2
                                   join tbl in akPV
@@ -1358,7 +1358,7 @@ namespace MSNK.Controllers
             }
 
             // check if already link with akPV, Batal akPV included
-            var akPV = await _akPVRepo.GetAll();
+            var akPV = await _akPVRepo.GetAll(null);
             var akPV2 = _context.AkPV2.ToList();
             var result = (from tbl2 in akPV2
                           join tbl in akPV

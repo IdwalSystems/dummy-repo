@@ -63,7 +63,7 @@ namespace MSNK.Controllers
                 List<AkAkaun> aka = new();
                 return View(aka);
             }
-            var akAkaun = await _akAkaunRepo.GetAll();
+            var akAkaun = await _akAkaunRepo.GetAll(null);
             var Carta = await _context.AkCarta.FirstOrDefaultAsync(b => b.Kod == searchCarta);
 
             List<AkAkaun> akAkBakiAwal = new();
@@ -200,7 +200,7 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var akAkaun = await _akAkaunRepo.GetAll();
+            var akAkaun = await _akAkaunRepo.GetAll(null);
 
             List<AkAkaun> akAkBakiAwal = new List<AkAkaun>();
             decimal bakiawalDebit = 0;

@@ -95,7 +95,7 @@ namespace MSNK.Controllers
             columnList.Add(new SelectListItem() { Text = "No Dokumen", Value = "NoDokumen" });
             columnList.Add(new SelectListItem() { Text = "Tahun", Value = "Tahun" });
 
-            var akPungut = await _akPungutRepo.GetAll();
+            var akPungut = await _akPungutRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {

@@ -401,7 +401,7 @@ namespace MSNK.Controllers
 
             var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.UserName == User.Identity.Name);
 
-            var searchResult = await _spPendahuluanPelbagaiRepo.GetAll();
+            var searchResult = await _spPendahuluanPelbagaiRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {

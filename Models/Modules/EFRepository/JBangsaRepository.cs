@@ -29,7 +29,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<JBangsa>> GetAll()
+        public async Task<IEnumerable<JBangsa>> GetAll(string filter)
         {
             return await context.JBangsa.ToListAsync();
         }

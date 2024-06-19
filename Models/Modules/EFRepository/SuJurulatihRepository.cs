@@ -27,7 +27,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<SuJurulatih>> GetAll()
+        public async Task<IEnumerable<SuJurulatih>> GetAll(string filter)
         {
             return await context.SuJurulatih
                 .Include(b => b.JSukan)

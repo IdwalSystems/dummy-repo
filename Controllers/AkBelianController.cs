@@ -137,7 +137,7 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akBelian = await _akBelianRepo.GetAll();
+            var akBelian = await _akBelianRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
@@ -471,7 +471,7 @@ namespace MSNK.Controllers
             }
 
             // check if already link with akPV, Batal akPV included
-            var akPV = await _akPVRepo.GetAll();
+            var akPV = await _akPVRepo.GetAll(null);
             var akPV2 = _context.AkPV2.ToList();
             var result = (from tbl2 in akPV2
                           join tbl in akPV
@@ -502,7 +502,7 @@ namespace MSNK.Controllers
 
             _context.AkBelian.Remove(akBelian);
             //insert applog
-            await AddLogAsync("Hapus", "Hapus Data", akBelian.NoInbois, id, akBelian.Jumlah, pekerjaId);
+            await AddLogAsync("Hapus", "Hapus Data", akBelian.NoRujukan, id, akBelian.Jumlah, pekerjaId);
             //insert applog end
             await _context.SaveChangesAsync();
             TempData[SD.Success] = "Data berjaya dihapuskan..!";
@@ -1947,7 +1947,7 @@ namespace MSNK.Controllers
                 }
                 else
                 {
-                    var akPV = await _akPVRepo.GetAll();
+                    var akPV = await _akPVRepo.GetAll(null);
                     var akPV2 = _context.AkPV2.ToList();
                     var result = (from tbl2 in akPV2
                                    join tbl in akPV

@@ -60,7 +60,7 @@ namespace MSNK.Controllers
         // GET: JPelulus
         public async Task<IActionResult> Index()
         {
-            var obj = await _pelulusRepo.GetAll();
+            var obj = await _pelulusRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin"))
             {

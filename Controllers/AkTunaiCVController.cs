@@ -114,7 +114,7 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akTunaiCV = await _akTunaiCVRepo.GetAll();
+            var akTunaiCV = await _akTunaiCVRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {

@@ -29,9 +29,13 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<AkPOLaras>> GetAll()
+        public async Task<IEnumerable<AkPOLaras>> GetAll(string filter)
         {
-            return await context.AkPOLaras
+            var result = new List<AkPOLaras>();
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                result = await context.AkPOLaras
                 .Include(b => b.JKW)
                 .Include(b => b.JBahagian)
                 .Include(b => b.AkPO).ThenInclude(b => b.AkPembekal)
@@ -47,6 +51,29 @@ namespace MSNK.Models.Modules.EFRepository
                     .ThenInclude(d => d.AkPO1)
                         .ThenInclude(d => d.AkCarta)
                 .ToListAsync();
+            }
+            else
+            {
+                result = await context.AkPOLaras
+                .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
+                .Include(b => b.AkPO).ThenInclude(b => b.AkPembekal)
+                .Include(b => b.AkPOLaras1)
+                .Include(b => b.AkPOLaras2)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPembekal)
+                        .ThenInclude(d => d.JBank)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPembekal)
+                        .ThenInclude(d => d.JNegeri)
+                .Include(d => d.AkPO)
+                    .ThenInclude(d => d.AkPO1)
+                        .ThenInclude(d => d.AkCarta)
+                .Where(b => b.Tahun == filter)
+                .ToListAsync();
+            }
+
+            return result;
         }
 
         public JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti)

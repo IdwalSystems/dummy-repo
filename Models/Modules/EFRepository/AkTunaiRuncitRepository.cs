@@ -27,14 +27,31 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<AkTunaiRuncit>> GetAll()
+        public async Task<IEnumerable<AkTunaiRuncit>> GetAll(string filter)
         {
-            return await context.AkTunaiRuncit
+            var result = new List<AkTunaiRuncit>();
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                result = await context.AkTunaiRuncit
                 .Include(b => b.JKW)
                 .Include(b => b.JBahagian)
                 .Include(b => b.AkCarta)
                 .Include(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                 .ToListAsync();
+            }
+            else
+            {
+                result = await context.AkTunaiRuncit
+                .Include(b => b.JKW)
+                .Include(b => b.JBahagian)
+                .Include(b => b.AkCarta)
+                .Include(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
+                .Where(b => b.TarMasuk.ToString("yyyy") == filter)
+                .ToListAsync();
+            }
+
+            return result;
         }
 
         public JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti)

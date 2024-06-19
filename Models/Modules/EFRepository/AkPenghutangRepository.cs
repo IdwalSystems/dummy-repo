@@ -27,11 +27,25 @@ namespace MSNK.Models.Modules.EFRepository
             throw new System.NotImplementedException();
         }
 
-        public async Task<IEnumerable<AkPenghutang>> GetAll()
+        public async Task<IEnumerable<AkPenghutang>> GetAll(string filter)
         {
-            return await context.AkPenghutang
+            var result = new List<AkPenghutang>();
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                result = await context.AkPenghutang
                 .Include(b => b.JNegeri).Include(b => b.JBank)
                 .ToListAsync();
+            }
+            else
+            {
+                result = await context.AkPenghutang
+                .Include(b => b.JNegeri).Include(b => b.JBank)
+                .Where(b => b.NamaSykt == filter)
+                .ToListAsync();
+            }
+
+            return result;
         }
 
         public JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti)

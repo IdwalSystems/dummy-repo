@@ -57,7 +57,7 @@ namespace MSNK.Controllers
         // GET: JPenyemak
         public async Task<IActionResult> Index()
         {
-            var obj = await _penyemakRepo.GetAll();
+            var obj = await _penyemakRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin"))
             {

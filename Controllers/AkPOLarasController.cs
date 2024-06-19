@@ -123,7 +123,7 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akPOLaras = await _akPOLarasRepo.GetAll();
+            var akPOLaras = await _akPOLarasRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {

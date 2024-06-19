@@ -29,7 +29,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<JAgama>> GetAll()
+        public async Task<IEnumerable<JAgama>> GetAll(string filter)
         {
             return await context.JAgama.ToListAsync();
         }

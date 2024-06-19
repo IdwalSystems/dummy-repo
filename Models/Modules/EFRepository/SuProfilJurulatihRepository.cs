@@ -27,7 +27,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new System.NotImplementedException();
         }
 
-        public async Task<IEnumerable<SuProfil>> GetAll()
+        public async Task<IEnumerable<SuProfil>> GetAll(string filter)
         {
             return await context.SuProfil.Where(x => x.FlKategori == 1).ToListAsync();
         }

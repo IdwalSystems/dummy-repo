@@ -122,7 +122,7 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var abWaran = await _abWaranRepo.GetAll();
+            var abWaran = await _abWaranRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
@@ -1196,12 +1196,12 @@ namespace MSNK.Controllers
                 // dah ada po atau tidak
                 foreach (var waran in obj.AbWaran1)
                 {
-                    var akPO = await _akPORepo.GetAll();
+                    var akPO = await _akPORepo.GetAll(obj.Tahun);
 
-                    foreach (var i in akPO)
+                    foreach (var i in akPO.Where(po => po.Tahun == obj.Tahun).ToList())
                     {
                         var akPO1 = await _context.AkPO1
-                            .Where(x => x.AkPOId == i.Id && x.AkCartaId == waran.AkCartaId)
+                            .Where(x => x.AkPOId == i.Id && x.AkCartaId == waran.AkCartaId )
                             .FirstOrDefaultAsync();
 
                         if (akPO1 != null)
@@ -1216,7 +1216,7 @@ namespace MSNK.Controllers
                 // dah ada baucer atau tidak
                 foreach (var waran in obj.AbWaran1)
                 {
-                    var akPV = await _akPVRepo.GetAll();
+                    var akPV = await _akPVRepo.GetAll(obj.Tahun);
 
                     foreach (var i in akPV)
                     {
@@ -1236,7 +1236,7 @@ namespace MSNK.Controllers
                 // dah ada resit atau tidak
                 foreach (var waran in obj.AbWaran1)
                 {
-                    var akTerima = await _akTerimaRepo.GetAll();
+                    var akTerima = await _akTerimaRepo.GetAll(obj.Tahun);
 
                     foreach (var i in akTerima)
                     {
@@ -1256,7 +1256,7 @@ namespace MSNK.Controllers
                 // dah ada pendahuluan pelbagai atau tidak
                 foreach (var waran in obj.AbWaran1)
                 {
-                    var sp = await _spPPRepo.GetAll();
+                    var sp = await _spPPRepo.GetAll(obj.Tahun);
 
                     foreach (var i in sp)
                     {

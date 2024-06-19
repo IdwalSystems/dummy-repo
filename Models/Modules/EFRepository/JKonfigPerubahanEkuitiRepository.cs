@@ -24,7 +24,7 @@ namespace MSNK.Models.Modules.EFRepository
             }
         }
 
-        public async Task<IEnumerable<JKonfigPerubahanEkuiti>> GetAll()
+        public async Task<IEnumerable<JKonfigPerubahanEkuiti>> GetAll(string filter)
         {
             return await context.JKonfigPerubahanEkuiti.Include(pe => pe.JKW).ToListAsync();
         }

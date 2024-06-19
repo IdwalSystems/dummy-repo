@@ -144,7 +144,7 @@ namespace MSNK.Controllers
         // GET: SuAtlet
         public async Task<IActionResult> Index()
         {
-            var suAtlet = await _suAtletRepo.GetAll();
+            var suAtlet = await _suAtletRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin"))
             {

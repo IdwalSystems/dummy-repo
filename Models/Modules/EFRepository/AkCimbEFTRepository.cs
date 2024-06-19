@@ -26,9 +26,13 @@ namespace MSNK.Models.Modules.EFRepository
             throw new System.NotImplementedException();
         }
 
-        public async Task<IEnumerable<AkCimbEFT>> GetAll()
+        public async Task<IEnumerable<AkCimbEFT>> GetAll(string filter)
         {
-            return await context.AkCimbEFT
+            var result = new List<AkCimbEFT>();
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                result = await context.AkCimbEFT
                 .Include(b => b.AkCimbEFT1)
                     .ThenInclude(b => b.JBank)
                 .Include(b => b.AkCimbEFT1)
@@ -62,6 +66,48 @@ namespace MSNK.Models.Modules.EFRepository
                     .ThenInclude(b => b.JBank)
                 .Include(b => b.SuPekerja)
                 .ToListAsync();
+            }
+            else
+            {
+                result = await context.AkCimbEFT
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPV)
+                        .ThenInclude(b => b.SuProfil)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPV)
+                        .ThenInclude(b => b.SpPendahuluanPelbagai)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.AkPembekal)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuPekerja)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuPekerja)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuAtlet)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuAtlet)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuJurulatih)
+                        .ThenInclude(b => b.JCaraBayar)
+                .Include(b => b.AkCimbEFT1)
+                    .ThenInclude(b => b.SuJurulatih)
+                        .ThenInclude(b => b.JBank)
+                .Include(b => b.AkBank)
+                    .ThenInclude(b => b.JBank)
+                .Include(b => b.SuPekerja)
+                .Where(b => b.NamaFail == filter)
+                .ToListAsync();
+            }
+
+            return result;
+
         }
 
         public JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti)

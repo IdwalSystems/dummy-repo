@@ -79,7 +79,7 @@ namespace MSNK.Controllers
         [Authorize(Policy = "DF004")]
         public async Task<IActionResult> Index()
         {
-            var akTunaiRuncit = await _akTunaiRuncitRepo.GetAll();
+            var akTunaiRuncit = await _akTunaiRuncitRepo.GetAll(null);
 
             if (User.IsInRole("SuperAdmin"))
             {

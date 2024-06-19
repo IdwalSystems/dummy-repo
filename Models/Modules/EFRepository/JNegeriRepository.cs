@@ -28,7 +28,7 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<JNegeri>> GetAll()
+        public async Task<IEnumerable<JNegeri>> GetAll(string filter)
         {
             return await context.JNegeri.ToListAsync();
         }
