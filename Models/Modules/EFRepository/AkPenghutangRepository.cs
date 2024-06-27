@@ -53,12 +53,22 @@ namespace MSNK.Models.Modules.EFRepository
             throw new System.NotImplementedException();
         }
 
+        public Task<IEnumerable<AkPenghutang>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public async Task<IEnumerable<AkPenghutang>> GetAllIncludeDeletedItems()
         {
             return await context.AkPenghutang
                 .IgnoreQueryFilters()
                 .Include(b => b.JNegeri).Include(b => b.JBank)
                 .ToListAsync();
+        }
+
+        public Task<IEnumerable<AkPenghutang>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task<AkPenghutang> GetById(int id)

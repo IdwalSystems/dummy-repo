@@ -90,33 +90,29 @@ namespace MSNK.Controllers
             string searchDate2,
             string searchColumn)
         {
-            List<SelectListItem> columnList = new();
-            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
-            columnList.Add(new SelectListItem() { Text = "No Dokumen", Value = "NoDokumen" });
-            columnList.Add(new SelectListItem() { Text = "Tahun", Value = "Tahun" });
+            List<SelectListItem> columnList = new()
+            {
+                new SelectListItem() { Text = "Tarikh", Value = "Tarikh" },
+                new SelectListItem() { Text = "No Dokumen", Value = "NoDokumen" },
+                new SelectListItem() { Text = "Tahun", Value = "Tahun" }
+            };
 
-            var akPungut = await _akPungutRepo.GetAll(null);
+            var akPungut = new List<AkPenyataPemungut>().AsEnumerable();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
-                akPungut = await _akPungutRepo.GetAllIncludeDeletedItems();
+                akPungut = await _akPungutRepo.GetAllIncludeDeletedItemsFiltered(searchString,searchDate1,searchDate2,searchColumn);
+            }
+            else
+            {
+                akPungut = await _akPungutRepo.GetAllFiltered(searchString,searchDate1,searchDate2,searchColumn);
             }
 
-            if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            if (!string.IsNullOrEmpty(searchString) || (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
-                if (!String.IsNullOrEmpty(searchString))
+                if (!string.IsNullOrEmpty(searchString))
                 {
-                    if (searchColumn == "NoDokumen")
-                    {
-                        akPungut = akPungut.Where(s => s.NoDokumen.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-                    else if (searchColumn == "Tahun")
-                    {
-                        akPungut = akPungut.Where(s => s.Tahun.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-
-
                     ViewBag.SearchData1 = searchString;
 
                 }
@@ -124,15 +120,8 @@ namespace MSNK.Controllers
                 // searching with '%like%' condition end
 
                 // searching with date range condition
-                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+                if (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2))
                 {
-                    if (searchColumn == "Tarikh")
-                    {
-                        DateTime date1 = DateTime.Parse(searchDate1);
-                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                        akPungut = akPungut.Where(x => x.Tarikh >= date1
-                            && x.Tarikh <= date2).ToList();
-                    }
                     ViewBag.SearchData1 = searchDate1;
                     ViewBag.SearchData2 = searchDate2;
                 }

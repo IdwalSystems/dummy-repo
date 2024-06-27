@@ -169,12 +169,14 @@ namespace MSNK.Controllers
             string searchDate2,
             string searchColumn)
         {
-            List<SelectListItem> columnList = new();
-            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
-            columnList.Add(new SelectListItem() { Text = "No PO", Value = "NoRujukan" });
-            columnList.Add(new SelectListItem() { Text = "Nama", Value = "Nama" });
+            List<SelectListItem> columnList = new()
+            {
+                new SelectListItem() { Text = "Tarikh", Value = "Tarikh" },
+                new SelectListItem() { Text = "No PO", Value = "NoRujukan" },
+                new SelectListItem() { Text = "Nama", Value = "Nama" }
+            };
 
-            if (!String.IsNullOrEmpty(searchColumn))
+            if (!string.IsNullOrEmpty(searchColumn))
             {
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
@@ -183,27 +185,22 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akPO = await _akPORepo.GetAll(null);
+            var akPO = new List<AkPO>().AsEnumerable();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
-                akPO = await _akPORepo.GetAllIncludeDeletedItems();
+                akPO = await _akPORepo.GetAllIncludeDeletedItemsFiltered(searchString,searchDate1,searchDate2,searchColumn);
+            }
+            else
+            {
+                akPO = await _akPORepo.GetAllFiltered(searchString,searchDate1,searchDate2,searchColumn);
             }
 
-            if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            if (!string.IsNullOrEmpty(searchString) || (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
-                if (!String.IsNullOrEmpty(searchString))
+                if (!string.IsNullOrEmpty(searchString))
                 {
-                    if (searchColumn == "NoRujukan")
-                    {
-                        akPO = akPO.Where(s => s.NoPO.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-                    else if (searchColumn == "Pembekal")
-                    {
-                        akPO = akPO.Where(s => s.AkPembekal.NamaSykt.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-
                     ViewBag.SearchData1 = searchString;
 
                 }
@@ -211,15 +208,8 @@ namespace MSNK.Controllers
                 // searching with '%like%' condition end
 
                 // searching with date range condition
-                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+                if (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2))
                 {
-                    if (searchColumn == "Tarikh")
-                    {
-                        DateTime date1 = DateTime.Parse(searchDate1);
-                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                        akPO = akPO.Where(x => x.Tarikh >= date1
-                            && x.Tarikh <= date2).ToList();
-                    }
                     ViewBag.SearchData1 = searchDate1;
                     ViewBag.SearchData2 = searchDate2;
                 }

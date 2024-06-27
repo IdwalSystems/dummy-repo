@@ -9,7 +9,9 @@ namespace MSNK.Models.Modules.IRepository
     public interface IRepository<T1, T2, T3> where T1 :class
     {
         Task<IEnumerable<T1>> GetAll(string filter);
+        Task<IEnumerable<T1>> GetAllFiltered(string filter,string filterDate1, string filterDate2, string filterType);
         Task<IEnumerable<T1>> GetAllIncludeDeletedItems();
+        Task<IEnumerable<T1>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType);
         Task<T1> GetById(T2 id);
         Task<T1> GetByIdIncludeDeletedItems(T2 id);
         Task<T1> GetByString(T3 id);

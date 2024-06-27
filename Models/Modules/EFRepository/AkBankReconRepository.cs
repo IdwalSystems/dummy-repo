@@ -2,6 +2,7 @@
 using MSNK.Data;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Operations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -70,14 +71,15 @@ namespace MSNK.Models.Modules.EFRepository
 
             return result;
 
-
-
-
         }
-
         public JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti)
         {
             throw new System.NotImplementedException();
+        }
+
+        public Task<IEnumerable<AkBankRecon>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<AkBankRecon>> GetAllIncludeDeletedItems()
@@ -99,6 +101,11 @@ namespace MSNK.Models.Modules.EFRepository
                     .ThenInclude(b => b.AkPadananPenyata)
                         .ThenInclude(b => b.AkJurnal)
                 .ToListAsync();
+        }
+
+        public Task<IEnumerable<AkBankRecon>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<AkBankRecon> GetById(int id)

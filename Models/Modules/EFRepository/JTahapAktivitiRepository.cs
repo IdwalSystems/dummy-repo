@@ -38,11 +38,21 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<JTahapAktiviti>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<JTahapAktiviti>> GetAllIncludeDeletedItems()
         {
             return await context.JTahapAktiviti
                  .IgnoreQueryFilters()
                  .ToListAsync();
+        }
+
+        public Task<IEnumerable<JTahapAktiviti>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<JTahapAktiviti> GetById(int id)

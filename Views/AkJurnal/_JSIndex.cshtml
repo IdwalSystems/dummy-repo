@@ -5,50 +5,32 @@
         $("#myInput").hide();
         $("#myInputDate1").hide();
         $("#myInputDate2").hide();
-        $("#myInputKw").hide();
 
         if (scol === "Tarikh") {
             $("#myInput").hide();
             $("#myInputDate1").show();
             $("#myInputDate2").show();
-            $("#myInputKw").hide();
         }
-        if (scol === "NoJurnal") {
+        if (scol === "NoJurnal" || scol === "Catatan") {
             $("#myInput").show();
             $("#myInputDate1").hide();
             $("#myInputDate2").hide();
-            $("#myInputKw").hide();
-        }
-        if (scol === "KW") {
-            $("#myInput").hide();
-            $("#myInputDate1").hide();
-            $("#myInputDate2").hide();
-            $("#myInputKw").show();
         }
 
         $("#searchColumn").change(function () {
             $("#myInput").val("");
             $("#inputTarikh1").val("");
             $("#inputTarikh2").val("");
-            $("#searchKw").val("").trigger('change');
 
             if (this.value === "Tarikh") {
                 $("#myInput").hide();
                 $("#myInputDate1").show();
                 $("#myInputDate2").show();
-                $("#myInputKw").hide();
             }
-            if (this.value === "NoJurnal") {
+            if (this.value === "NoJurnal" || this.value === "Catatan") {
                 $("#myInput").show();
                 $("#myInputDate1").hide();
                 $("#myInputDate2").hide();
-                $("#myInputKw").hide();
-            }
-            if (this.value === "KW") {
-                $("#myInput").hide();
-                $("#myInputDate1").hide();
-                $("#myInputDate2").hide();
-                $("#myInputKw").show();
             }
         });
 

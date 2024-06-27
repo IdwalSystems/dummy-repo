@@ -56,10 +56,134 @@ namespace MSNK.Models.Modules.EFRepository
             return result;
         }
 
+        public async Task<IEnumerable<AbWaran>> GetAllFiltered(string filter,string filterDate1, string filterDate2, string filterType)
+        {
+            var result = new List<AbWaran>();
+
+            if (string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && string.IsNullOrEmpty(filterType)
+                || string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && !string.IsNullOrEmpty(filterType))
+            {
+                result = await context.AbWaran
+                            .Include(b => b.JKW)
+                            .Include(b => b.JBahagian)
+                            .Include(b => b.AbWaran1).ThenInclude(b => b.AkCarta)
+                            .Include(b => b.AbWaran1).ThenInclude(b => b.JBahagian)
+                            .Where(b => b.Tahun == DateTime.Now.Year.ToString())
+                            .ToListAsync();
+
+            }
+
+            if ((!string.IsNullOrWhiteSpace(filter) || !string.IsNullOrWhiteSpace(filterDate1)) && !string.IsNullOrEmpty(filterType))
+            {
+                switch (filterType)
+                {
+                    case "NoRujukan":
+                        result = await context.AbWaran
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.JBahagian)
+                                    .Where(s => s.NoRujukan.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Tahun":
+                        result = await context.AbWaran
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.JBahagian)
+                                    .Where(s => s.Tahun == filter)
+                                    .ToListAsync();
+                        break;
+
+                    case "Tarikh":
+                        DateTime date1 = DateTime.Parse(filterDate1);
+                        DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
+                        result = await context.AbWaran
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.JBahagian)
+                                    .Where(x => x.Tarikh >= date1
+                                                && x.Tarikh <= date2)
+                                    .ToListAsync();
+                        break;
+                }
+                
+            }
+
+            return result
+                    .ToList();
+        }
+
+        public async Task<IEnumerable<AbWaran>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            var result = new List<AbWaran>();
+
+            if (string.IsNullOrWhiteSpace(filter) && string.IsNullOrEmpty(filterType)
+                || string.IsNullOrWhiteSpace(filter) && !string.IsNullOrEmpty(filterType))
+            {
+                result = await context.AbWaran.IgnoreQueryFilters()
+                            .Include(b => b.JKW)
+                            .Include(b => b.JBahagian)
+                            .Include(b => b.AbWaran1).ThenInclude(b => b.AkCarta)
+                            .Include(b => b.AbWaran1).ThenInclude(b => b.JBahagian)
+                            .Where(b => b.Tahun == DateTime.Now.Year.ToString())
+                            .ToListAsync();
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(filter) && !string.IsNullOrEmpty(filterType))
+            {
+                switch (filterType)
+                {
+                    case "NoRujukan":
+                        result = await context.AbWaran
+                                    .IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.JBahagian)
+                                    .Where(s => s.NoRujukan.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Tahun":
+                        result = await context.AbWaran
+                            .IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.JBahagian)
+                                    .Where(s => s.Tahun == filter)
+                                    .ToListAsync();
+                        break;
+
+                    case "Tarikh":
+                        DateTime date1 = DateTime.Parse(filterDate1);
+                        DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
+                        result = await context.AbWaran
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AbWaran1).ThenInclude(b => b.JBahagian)
+                                    .Where(x => x.Tarikh >= date1
+                                                && x.Tarikh <= date2)
+                                    .ToListAsync();
+                        break;
+                }
+
+            }
+
+            return result
+                    .ToList();
+        }
+
         public JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti)
         {
             throw new NotImplementedException();
         }
+
+        
 
         public async Task<IEnumerable<AbWaran>> GetAllIncludeDeletedItems()
         {
@@ -71,6 +195,8 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AbWaran1).ThenInclude(b => b.JBahagian)
                 .ToListAsync();
         }
+
+
 
         public async Task<AbWaran> GetById(int id)
         {

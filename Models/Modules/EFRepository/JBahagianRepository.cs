@@ -40,6 +40,11 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<JBahagian>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<JBahagian>> GetAllIncludeDeletedItems()
         {
             return await context.JBahagian
@@ -47,6 +52,11 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(x => x.JKW)
                 .Include(x => x.JPTJ)
                 .ToListAsync();
+        }
+
+        public Task<IEnumerable<JBahagian>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<JBahagian> GetById(int id)

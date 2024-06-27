@@ -108,12 +108,14 @@ namespace MSNK.Controllers
             string searchDate2,
             string searchColumn)
         {
-            List<SelectListItem> columnList = new();
-            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
-            columnList.Add(new SelectListItem() { Text = "No Rujukan", Value = "NoRujukan" });
-            columnList.Add(new SelectListItem() { Text = "Tahun", Value = "Tahun" });
+            List<SelectListItem> columnList = new()
+            {
+                new SelectListItem() { Text = "Tarikh", Value = "Tarikh" },
+                new SelectListItem() { Text = "No Rujukan", Value = "NoRujukan" },
+                new SelectListItem() { Text = "Tahun", Value = "Tahun" }
+            };
 
-            if (!String.IsNullOrEmpty(searchColumn))
+            if (!string.IsNullOrEmpty(searchColumn))
             {
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
@@ -122,11 +124,15 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var abWaran = await _abWaranRepo.GetAll(null);
+            var abWaran = new List<AbWaran>().AsEnumerable();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
-                abWaran = await _abWaranRepo.GetAllIncludeDeletedItems();
+                abWaran = await _abWaranRepo.GetAllIncludeDeletedItemsFiltered(searchString,searchDate1,searchDate2,searchColumn);
+            }
+            else
+            {
+                abWaran = await _abWaranRepo.GetAllFiltered(searchString,searchDate1,searchDate2,searchColumn);
             }
 
             if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
@@ -134,32 +140,13 @@ namespace MSNK.Controllers
                 // searching with '%like%' condition
                 if (!String.IsNullOrEmpty(searchString))
                 {
-                    if (searchColumn == "NoRujukan")
-                    {
-                        abWaran = abWaran.Where(s => s.NoRujukan.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-                    else if (searchColumn == "Tahun")
-                    {
-                        abWaran = abWaran.Where(s => s.Tahun.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-
-
                     ViewBag.SearchData1 = searchString;
-
                 }
-
                 // searching with '%like%' condition end
 
                 // searching with date range condition
                 if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
                 {
-                    if (searchColumn == "Tarikh")
-                    {
-                        DateTime date1 = DateTime.Parse(searchDate1);
-                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                        abWaran = abWaran.Where(x => x.Tarikh >= date1
-                            && x.Tarikh <= date2).ToList();
-                    }
                     ViewBag.SearchData1 = searchDate1;
                     ViewBag.SearchData2 = searchDate2;
                 }

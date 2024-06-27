@@ -40,11 +40,21 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<JPenyemak>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<JPenyemak>> GetAllIncludeDeletedItems()
         {
             return await context.JPenyemak
                 .IgnoreQueryFilters()
                 .Include(b => b.SuPekerja).ToListAsync();
+        }
+
+        public Task<IEnumerable<JPenyemak>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<JPenyemak> GetById(int id)

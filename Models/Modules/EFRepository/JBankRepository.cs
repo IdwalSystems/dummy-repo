@@ -39,9 +39,19 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<JBank>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<JBank>> GetAllIncludeDeletedItems()
         {
             return await context.JBank.IgnoreQueryFilters().ToListAsync();
+        }
+
+        public Task<IEnumerable<JBank>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<JBank> GetById(int id)

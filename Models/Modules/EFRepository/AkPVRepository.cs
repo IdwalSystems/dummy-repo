@@ -99,6 +99,170 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
+        public async Task<IEnumerable<AkPV>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            var result = new List<AkPV>();
+
+            if (string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && string.IsNullOrEmpty(filterType)
+                || string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && !string.IsNullOrEmpty(filterType))
+            {
+                result = await context.AkPV
+                            .Include(b => b.JKW)
+                            .Include(b => b.JBank)
+                            .Include(b => b.JBahagian)
+                            .Include(b => b.AkPembekal)
+                            .Include(b => b.SuPekerja)
+                            .Include(b => b.SpPendahuluanPelbagai)
+                            .Include(b => b.SuProfil)
+                            .Include(b => b.AkBank)
+                            .Include(b => b.JCaraBayar)
+                            .Include(b => b.AkPV1)
+                            .Include(b => b.AkPV2)
+                            .ThenInclude(b => b.AkBelian)
+                            .Include(b => b.AkPVGanda)
+                                .ThenInclude(b => b.SuAtlet)
+                            .Include(b => b.AkPVGanda)
+                                .ThenInclude(b => b.SuPekerja)
+                            .Include(b => b.AkPVGanda)
+                                .ThenInclude(b => b.SuPekerja)
+                            .Include(b => b.AkPVGanda)
+                                .ThenInclude(b => b.JBank)
+                            .Include(b => b.AkPVGanda)
+                                .ThenInclude(b => b.JCaraBayar)
+                            .Include(b => b.AkPadananPenyata)
+                            .Where(b => b.Tahun == DateTime.Now.Year.ToString())
+                            .ToListAsync();
+
+            }
+
+            if ((!string.IsNullOrWhiteSpace(filter) || !string.IsNullOrWhiteSpace(filterDate1)) && !string.IsNullOrEmpty(filterType))
+            {
+                switch (filterType)
+                {
+                    case "NoRujukan":
+                        result = await context.AkPV
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBank)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AkPembekal)
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.SuProfil)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkPV1)
+                                    .Include(b => b.AkPV2)
+                                    .ThenInclude(b => b.AkBelian)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuAtlet)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkPadananPenyata)
+                                    .Where(s => s.NoPV.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Nama":
+                        result = await context.AkPV
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBank)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AkPembekal)
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.SuProfil)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkPV1)
+                                    .Include(b => b.AkPV2)
+                                    .ThenInclude(b => b.AkBelian)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuAtlet)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkPadananPenyata)
+                                    .Where(s => s.Nama.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Tahun":
+                        result = await context.AkPV
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBank)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AkPembekal)
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.SuProfil)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkPV1)
+                                    .Include(b => b.AkPV2)
+                                    .ThenInclude(b => b.AkBelian)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuAtlet)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkPadananPenyata)
+                                    .Where(s => s.Tahun == filter)
+                                    .ToListAsync();
+                        break;
+
+                    case "Tarikh":
+                        DateTime date1 = DateTime.Parse(filterDate1);
+                        DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
+                        result = await context.AkPV
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBank)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AkPembekal)
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.SuProfil)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkPV1)
+                                    .Include(b => b.AkPV2)
+                                    .ThenInclude(b => b.AkBelian)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuAtlet)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkPadananPenyata)
+                                    .Where(x => x.Tarikh >= date1
+                                                && x.Tarikh <= date2)
+                                    .ToListAsync();
+                        break;
+                }
+
+            }
+
+            return result
+                    .ToList();
+        }
+
         public async Task<IEnumerable<AkPV>> GetAllIncludeDeletedItems()
         {
             return await context.AkPV
@@ -132,6 +296,170 @@ namespace MSNK.Models.Modules.EFRepository
                     .ThenInclude(b => b.JCaraBayar)
                 .Include(b => b.AkPadananPenyata)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<AkPV>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            var result = new List<AkPV>();
+
+            if (string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && string.IsNullOrEmpty(filterType)
+                || string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && !string.IsNullOrEmpty(filterType))
+            {
+                result = await context.AkPV.IgnoreQueryFilters()
+                            .Include(b => b.JKW)
+                            .Include(b => b.JBank)
+                            .Include(b => b.JBahagian)
+                            .Include(b => b.AkPembekal)
+                            .Include(b => b.SuPekerja)
+                            .Include(b => b.SpPendahuluanPelbagai)
+                            .Include(b => b.SuProfil)
+                            .Include(b => b.AkBank)
+                            .Include(b => b.JCaraBayar)
+                            .Include(b => b.AkPV1)
+                            .Include(b => b.AkPV2)
+                            .ThenInclude(b => b.AkBelian)
+                            .Include(b => b.AkPVGanda)
+                                .ThenInclude(b => b.SuAtlet)
+                            .Include(b => b.AkPVGanda)
+                                .ThenInclude(b => b.SuPekerja)
+                            .Include(b => b.AkPVGanda)
+                                .ThenInclude(b => b.SuPekerja)
+                            .Include(b => b.AkPVGanda)
+                                .ThenInclude(b => b.JBank)
+                            .Include(b => b.AkPVGanda)
+                                .ThenInclude(b => b.JCaraBayar)
+                            .Include(b => b.AkPadananPenyata)
+                            .Where(b => b.Tahun == DateTime.Now.Year.ToString())
+                            .ToListAsync();
+
+            }
+
+            if ((!string.IsNullOrWhiteSpace(filter) || !string.IsNullOrWhiteSpace(filterDate1)) && !string.IsNullOrEmpty(filterType))
+            {
+                switch (filterType)
+                {
+                    case "NoRujukan":
+                        result = await context.AkPV.IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBank)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AkPembekal)
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.SuProfil)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkPV1)
+                                    .Include(b => b.AkPV2)
+                                    .ThenInclude(b => b.AkBelian)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuAtlet)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkPadananPenyata)
+                                    .Where(s => s.NoPV.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Nama":
+                        result = await context.AkPV.IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBank)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AkPembekal)
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.SuProfil)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkPV1)
+                                    .Include(b => b.AkPV2)
+                                    .ThenInclude(b => b.AkBelian)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuAtlet)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkPadananPenyata)
+                                    .Where(s => s.Nama.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Tahun":
+                        result = await context.AkPV.IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBank)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AkPembekal)
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.SuProfil)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkPV1)
+                                    .Include(b => b.AkPV2)
+                                    .ThenInclude(b => b.AkBelian)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuAtlet)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkPadananPenyata)
+                                    .Where(s => s.Tahun == filter)
+                                    .ToListAsync();
+                        break;
+
+                    case "Tarikh":
+                        DateTime date1 = DateTime.Parse(filterDate1);
+                        DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
+                        result = await context.AkPV.IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBank)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AkPembekal)
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.SuProfil)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkPV1)
+                                    .Include(b => b.AkPV2)
+                                    .ThenInclude(b => b.AkBelian)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuAtlet)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.SuPekerja)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkPVGanda)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkPadananPenyata)
+                                    .Where(x => x.Tarikh >= date1
+                                                && x.Tarikh <= date2)
+                                    .ToListAsync();
+                        break;
+                }
+
+            }
+
+            return result
+                    .ToList();
         }
 
         public async Task<AkPV> GetById(int id)

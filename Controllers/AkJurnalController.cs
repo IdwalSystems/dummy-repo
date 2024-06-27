@@ -238,32 +238,15 @@ namespace MSNK.Controllers
             string searchString,
             string searchDate1,
             string searchDate2,
-            string searchKw,
             string searchColumn)
         {
-            //populate search option
-
-            List<JKW> kwList = _context.JKW.OrderBy(b => b.Kod).ToList();
-            List<SelectListItem> kwSelect = new();
-            kwSelect.Add(new SelectListItem() { Text = "-- Pilih Kumpulan Wang --", Value = "" });
-            foreach (var q in kwList)
+            List<SelectListItem> columnList = new()
             {
-                kwSelect.Add(new SelectListItem() { Text = q.Kod + " - " + q.Perihal, Value = q.Kod });
-            }
-            if (!String.IsNullOrEmpty(searchKw))
-            {
-                ViewBag.SearchKw = new SelectList(kwSelect, "Value", "Text", searchKw);
-            }
-            else
-            {
-                ViewBag.SearchKw = new SelectList(kwSelect, "Value", "Text", "");
-            }
-
-            List<SelectListItem> columnList = new();
-            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
-            columnList.Add(new SelectListItem() { Text = "No Jurnal", Value = "NoJurnal" });
-            columnList.Add(new SelectListItem() { Text = "Kumpulan Wang", Value = "KW" });
-            if (!String.IsNullOrEmpty(searchColumn))
+                new SelectListItem() { Text = "Tarikh", Value = "Tarikh" },
+                new SelectListItem() { Text = "No Jurnal", Value = "NoJurnal" },
+                new SelectListItem() { Text = "Catatan", Value = "Catatan" }
+            };
+            if (!string.IsNullOrEmpty(searchColumn))
             {
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
@@ -272,50 +255,36 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akJurnal = await _akJurnalRepo.GetAll(null);
+            var akJurnal = new List<AkJurnal>().AsEnumerable();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
-                akJurnal = await _akJurnalRepo.GetAllIncludeDeletedItems();
+                akJurnal = await _akJurnalRepo.GetAllIncludeDeletedItemsFiltered(searchString, searchDate1, searchDate2, searchColumn);
 
             }
+            else
+            {
+                
+                akJurnal = await _akJurnalRepo.GetAllFiltered(searchString, searchDate1, searchDate2, searchColumn);
+            }
 
-            if (!String.IsNullOrEmpty(searchString) || !String.IsNullOrEmpty(searchKw)||
-                (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            if (!string.IsNullOrEmpty(searchString) || 
+                (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
-                if (!String.IsNullOrEmpty(searchString))
+                if (!string.IsNullOrEmpty(searchString))
                 {
-                    if (searchColumn == "NoJurnal")
-                    {
-                        akJurnal = akJurnal.Where(s => s.NoJurnal.ToUpper().Contains(searchString.ToUpper()));
-                    }
                     ViewBag.SearchData1 = searchString;
                 }
                 // searching with '%like%' condition end
 
                 // searching with date range condition
-                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+                if (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2))
                 {
-                    if (searchColumn == "Tarikh")
-                    {
-                        DateTime date1 = DateTime.Parse(searchDate1);
-                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                        akJurnal = akJurnal.Where(x => x.Tarikh >= date1
-                            && x.Tarikh <= date2).ToList();
-                    }
                     ViewBag.SearchData1 = searchDate1;
                     ViewBag.SearchData2 = searchDate2;
                 }
 
-                if (!String.IsNullOrEmpty(searchKw))
-                {
-                    if (searchColumn == "KW")
-                    {
-                        akJurnal = akJurnal.Where(s => s.JKW.Kod == searchKw);
-                    }
-                    ViewBag.SearchKw = new SelectList(kwSelect, "Value", "Text", searchKw);
-                }
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
             // searching with date range condition end

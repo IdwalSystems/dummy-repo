@@ -61,7 +61,17 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<AkAkaun>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<AkAkaun>> GetAllIncludeDeletedItems()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<AkAkaun>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
         {
             throw new NotImplementedException();
         }

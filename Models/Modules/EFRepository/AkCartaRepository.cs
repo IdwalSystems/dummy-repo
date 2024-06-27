@@ -60,6 +60,11 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<AkCarta>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<AkCarta>> GetAllIncludeDeletedItems()
         {
             return await context.AkCarta
@@ -69,6 +74,11 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.JJenis)
                 .OrderBy(b => b.Kod)
                 .ToListAsync();
+        }
+
+        public Task<IEnumerable<AkCarta>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<AkCarta> GetById(int id)

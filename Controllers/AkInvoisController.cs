@@ -102,12 +102,14 @@ namespace MSNK.Controllers
             string searchDate2,
             string searchColumn)
         {
-            List<SelectListItem> columnList = new();
-            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
-            columnList.Add(new SelectListItem() { Text = "No Inbois", Value = "NoRujukan" });
-            columnList.Add(new SelectListItem() { Text = "Nama", Value = "Nama" });
+            List<SelectListItem> columnList = new()
+            {
+                new SelectListItem() { Text = "Tarikh", Value = "Tarikh" },
+                new SelectListItem() { Text = "No Inbois", Value = "NoRujukan" },
+                new SelectListItem() { Text = "Nama", Value = "Nama" }
+            };
 
-            if (!String.IsNullOrEmpty(searchColumn))
+            if (!string.IsNullOrEmpty(searchColumn))
             {
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
@@ -116,30 +118,24 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akInvois = await _akInvoisRepo.GetAll(null);
+            var akInvois = new List<AkInvois>().AsEnumerable();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
-                akInvois = await _akInvoisRepo.GetAllIncludeDeletedItems();
+                akInvois = await _akInvoisRepo.GetAllIncludeDeletedItemsFiltered(searchString,searchDate1,searchDate2,searchColumn);
+            }
+            else
+            {
+                akInvois = await _akInvoisRepo.GetAllFiltered(searchString,searchDate1,searchDate2,searchColumn);
             }
 
             //var akBelian = await _context.AkBelian.ToListAsync();
 
-            if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            if (!string.IsNullOrEmpty(searchString) || (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
-                if (!String.IsNullOrEmpty(searchString))
+                if (!string.IsNullOrEmpty(searchString))
                 {
-                    if (searchColumn == "NoRujukan")
-                    {
-                        akInvois = akInvois.Where(s => s.NoInbois.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-                    else if (searchColumn == "Nama")
-                    {
-                        akInvois = akInvois.Where(s => s.AkPenghutang.NamaSykt.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-
-
                     ViewBag.SearchData1 = searchString;
 
                 }
@@ -147,15 +143,8 @@ namespace MSNK.Controllers
                 // searching with '%like%' condition end
 
                 // searching with date range condition
-                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+                if (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2))
                 {
-                    if (searchColumn == "Tarikh")
-                    {
-                        DateTime date1 = DateTime.Parse(searchDate1);
-                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                        akInvois = akInvois.Where(x => x.Tarikh >= date1
-                            && x.Tarikh <= date2).ToList();
-                    }
                     ViewBag.SearchData1 = searchDate1;
                     ViewBag.SearchData2 = searchDate2;
                 }
@@ -202,14 +191,14 @@ namespace MSNK.Controllers
                 );
             }
 
-            List<JPenyemak> penyemak = _context.JPenyemak
+            List<JPenyemak> penyemak = await _context.JPenyemak
                 .Include(x => x.SuPekerja)
-                .Where(x => x.IsInvois == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+                .Where(x => x.IsInvois == true).OrderBy(b => b.SuPekerja.Nama).ToListAsync();
             ViewBag.JPenyemak = penyemak;
 
-            List<JPelulus> pelulus = _context.JPelulus
+            List<JPelulus> pelulus = await _context.JPelulus
                 .Include(x => x.SuPekerja)
-                .Where(x => x.IsInvois == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+                .Where(x => x.IsInvois == true).OrderBy(b => b.SuPekerja.Nama).ToListAsync();
             ViewBag.JPelulus = pelulus;
 
             return View(viewModel);

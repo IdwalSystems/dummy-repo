@@ -39,16 +39,11 @@
                                             <div class="col-6" id="myInputDate2">
                                                 <input class="form-control form-control-sm" type="date" name="searchDate2" id="inputTarikh2" value="@ViewBag.SearchData2" />
                                             </div>
-                                            <div class="col-12" id="myInputKw">
-                                                <select class="custom-select form-control-sm"
-                                                        name="searchKw"
-                                                        asp-items="@ViewBag.SearchKw" id="searchKw"></select>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-2">
                                         <button type="submit" class="btn text-info btn-sm" data-toggle="tooltip" data-placement="top" title="Cari"><i class="fas fa-search"></i></button>
-                                        @*<a asp-action="Index" class="btn btn-sm btn-warning"><i class="fas fa-backspace"></i></a>*@
+                                        <a asp-action="Index" class="btn btn-sm text-secondary" data-toggle="tooltip" data-placement="top" title="Reset"><i class="fas fa-backspace"></i></a>
                                     </div>
                                 </div>
 
@@ -73,10 +68,10 @@
                             @Html.DisplayNameFor(model => model.NoJurnal)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.JKW)
+                            @Html.DisplayNameFor(model => model.Tarikh)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Tarikh)
+                            Catatan
                         </th>
                         <th>
                             Jum Debit RM
@@ -100,7 +95,11 @@
                                 @Html.DisplayFor(modelItem => item.NoJurnal)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.JKW.Kod)
+                                @{ 
+                                    int catatanLength = 70;
+                                    if (item.Catatan1.Length > catatanLength) item.Catatan1 = item.Catatan1.ToUpper().Substring(0, catatanLength) + "..."; else item.Catatan1.ToUpper();
+                                }
+                                @item.Catatan1
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Tarikh, "{0:dd/MM/yyyy}")

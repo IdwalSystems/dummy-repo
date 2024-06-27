@@ -2,6 +2,7 @@
 using MSNK.Data;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Operations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -79,6 +80,106 @@ namespace MSNK.Models.Modules.EFRepository
             throw new System.NotImplementedException();
         }
 
+        public async Task<IEnumerable<AkPenyataPemungut>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            var result = new List<AkPenyataPemungut>();
+
+            if (string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && string.IsNullOrEmpty(filterType)
+                || string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && !string.IsNullOrEmpty(filterType))
+            {
+                result = await context.AkPenyataPemungut
+                            .Include(b => b.SuPekerja)
+                            .Include(b => b.JCaraBayar)
+                            .Include(b => b.AkBank)
+                                .ThenInclude(b => b.JBank)
+                            .Include(b => b.AkBank)
+                                .ThenInclude(b => b.AkCarta)
+                            .Include(b => b.AkPenyataPemungut1)
+                                .ThenInclude(b => b.AkCarta)
+                            .Include(b => b.AkPenyataPemungut1)
+                                .ThenInclude(b => b.JBahagian)
+                                    .ThenInclude(b => b.JKW)
+                            .Include(b => b.AkPenyataPemungut2)
+                                .ThenInclude(b => b.AkTerima2)
+                                    .ThenInclude(b => b.AkTerima)
+                                        .Where(b => b.Tahun == DateTime.Now.Year.ToString())
+                            .ToListAsync();
+
+            }
+
+            if ((!string.IsNullOrWhiteSpace(filter) || !string.IsNullOrWhiteSpace(filterDate1)) && !string.IsNullOrEmpty(filterType))
+            {
+                switch (filterType)
+                {
+                    case "NoDokumen":
+                        result = await context.AkPenyataPemungut
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.JBahagian)
+                                            .ThenInclude(b => b.JKW)
+                                    .Include(b => b.AkPenyataPemungut2)
+                                        .ThenInclude(b => b.AkTerima2)
+                                            .ThenInclude(b => b.AkTerima)
+                                    .Where(s => s.NoDokumen.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Tahun":
+                        result = await context.AkPenyataPemungut
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.JBahagian)
+                                            .ThenInclude(b => b.JKW)
+                                    .Include(b => b.AkPenyataPemungut2)
+                                        .ThenInclude(b => b.AkTerima2)
+                                            .ThenInclude(b => b.AkTerima)
+                                    .Where(s => s.Tahun == filter)
+                                    .ToListAsync();
+                        break;
+
+                    case "Tarikh":
+                        DateTime date1 = DateTime.Parse(filterDate1);
+                        DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
+                        result = await context.AkPenyataPemungut
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.JBahagian)
+                                            .ThenInclude(b => b.JKW)
+                                    .Include(b => b.AkPenyataPemungut2)
+                                        .ThenInclude(b => b.AkTerima2)
+                                            .ThenInclude(b => b.AkTerima)
+                                    .Where(x => x.Tarikh >= date1
+                                                && x.Tarikh <= date2)
+                                    .ToListAsync();
+                        break;
+                }
+
+            }
+
+            return result
+                    .ToList();
+        }
+
         public async Task<IEnumerable<AkPenyataPemungut>> GetAllIncludeDeletedItems()
         {
             return await context.AkPenyataPemungut
@@ -98,6 +199,106 @@ namespace MSNK.Models.Modules.EFRepository
                     .ThenInclude(b => b.AkTerima2)
                         .ThenInclude(b => b.AkTerima)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<AkPenyataPemungut>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            var result = new List<AkPenyataPemungut>();
+
+            if (string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && string.IsNullOrEmpty(filterType)
+                || string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && !string.IsNullOrEmpty(filterType))
+            {
+                result = await context.AkPenyataPemungut.IgnoreQueryFilters()
+                            .Include(b => b.SuPekerja)
+                            .Include(b => b.JCaraBayar)
+                            .Include(b => b.AkBank)
+                                .ThenInclude(b => b.JBank)
+                            .Include(b => b.AkBank)
+                                .ThenInclude(b => b.AkCarta)
+                            .Include(b => b.AkPenyataPemungut1)
+                                .ThenInclude(b => b.AkCarta)
+                            .Include(b => b.AkPenyataPemungut1)
+                                .ThenInclude(b => b.JBahagian)
+                                    .ThenInclude(b => b.JKW)
+                            .Include(b => b.AkPenyataPemungut2)
+                                .ThenInclude(b => b.AkTerima2)
+                                    .ThenInclude(b => b.AkTerima)
+                                        .Where(b => b.Tahun == DateTime.Now.Year.ToString())
+                            .ToListAsync();
+
+            }
+
+            if ((!string.IsNullOrWhiteSpace(filter) || !string.IsNullOrWhiteSpace(filterDate1)) && !string.IsNullOrEmpty(filterType))
+            {
+                switch (filterType)
+                {
+                    case "NoDokumen":
+                        result = await context.AkPenyataPemungut.IgnoreQueryFilters()
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.JBahagian)
+                                            .ThenInclude(b => b.JKW)
+                                    .Include(b => b.AkPenyataPemungut2)
+                                        .ThenInclude(b => b.AkTerima2)
+                                            .ThenInclude(b => b.AkTerima)
+                                    .Where(s => s.NoDokumen.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Tahun":
+                        result = await context.AkPenyataPemungut.IgnoreQueryFilters()
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.JBahagian)
+                                            .ThenInclude(b => b.JKW)
+                                    .Include(b => b.AkPenyataPemungut2)
+                                        .ThenInclude(b => b.AkTerima2)
+                                            .ThenInclude(b => b.AkTerima)
+                                    .Where(s => s.Tahun == filter)
+                                    .ToListAsync();
+                        break;
+
+                    case "Tarikh":
+                        DateTime date1 = DateTime.Parse(filterDate1);
+                        DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
+                        result = await context.AkPenyataPemungut.IgnoreQueryFilters()
+                                    .Include(b => b.SuPekerja)
+                                    .Include(b => b.JCaraBayar)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.JBank)
+                                    .Include(b => b.AkBank)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkPenyataPemungut1)
+                                        .ThenInclude(b => b.JBahagian)
+                                            .ThenInclude(b => b.JKW)
+                                    .Include(b => b.AkPenyataPemungut2)
+                                        .ThenInclude(b => b.AkTerima2)
+                                            .ThenInclude(b => b.AkTerima)
+                                    .Where(x => x.Tarikh >= date1
+                                                && x.Tarikh <= date2)
+                                    .ToListAsync();
+                        break;
+                }
+
+            }
+
+            return result
+                    .ToList();
         }
 
         public async Task<AkPenyataPemungut> GetById(int id)

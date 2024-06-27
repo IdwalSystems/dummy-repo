@@ -123,12 +123,14 @@ namespace MSNK.Controllers
             string searchDate2,
             string searchColumn)
         {
-            List<SelectListItem> columnList = new();
-            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
-            columnList.Add(new SelectListItem() { Text = "No Invois", Value = "NoRujukan" });
-            columnList.Add(new SelectListItem() { Text = "Nama", Value = "Nama" });
+            List<SelectListItem> columnList = new()
+            {
+                new SelectListItem() { Text = "Tarikh", Value = "Tarikh" },
+                new SelectListItem() { Text = "No Invois", Value = "NoRujukan" },
+                new SelectListItem() { Text = "Nama", Value = "Nama" }
+            };
 
-            if (!String.IsNullOrEmpty(searchColumn))
+            if (!string.IsNullOrEmpty(searchColumn))
             {
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
@@ -137,30 +139,24 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akBelian = await _akBelianRepo.GetAll(null);
+            var akBelian = new List<AkBelian>().AsEnumerable();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
-                akBelian = await _akBelianRepo.GetAllIncludeDeletedItems();
+                akBelian = await _akBelianRepo.GetAllIncludeDeletedItemsFiltered(searchString,searchDate1,searchDate2,searchColumn);
+            }
+            else
+            {
+                akBelian = await _akBelianRepo.GetAllFiltered(searchString,searchDate1,searchDate2,searchColumn);
             }
             
             //var akBelian = await _context.AkBelian.ToListAsync();
 
-            if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            if (!string.IsNullOrEmpty(searchString) || (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
-                if (!String.IsNullOrEmpty(searchString))
+                if (!string.IsNullOrEmpty(searchString))
                 {
-                    if (searchColumn == "NoRujukan")
-                    {
-                        akBelian = akBelian.Where(s => s.NoRujukan.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-                    else if (searchColumn == "Nama")
-                    {
-                        akBelian = akBelian.Where(s => s.AkPembekal.NamaSykt.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-
-
                     ViewBag.SearchData1 = searchString;
 
                 }
@@ -168,15 +164,8 @@ namespace MSNK.Controllers
                 // searching with '%like%' condition end
 
                 // searching with date range condition
-                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+                if (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2))
                 {
-                    if (searchColumn == "Tarikh")
-                    {
-                        DateTime date1 = DateTime.Parse(searchDate1);
-                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                        akBelian = akBelian.Where(x => x.Tarikh >= date1
-                            && x.Tarikh <= date2).ToList();
-                    }
                     ViewBag.SearchData1 = searchDate1;
                     ViewBag.SearchData2 = searchDate2;
                 }

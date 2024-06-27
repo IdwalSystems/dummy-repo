@@ -100,12 +100,14 @@ namespace MSNK.Controllers
             string searchDate2,
             string searchColumn)
         {
-            List<SelectListItem> columnList = new();
-            columnList.Add(new SelectListItem() { Text = "Tarikh", Value = "Tarikh" });
-            columnList.Add(new SelectListItem() { Text = "No CV", Value = "NoRujukan" });
-            columnList.Add(new SelectListItem() { Text = "Penerima", Value = "Nama" });
+            List<SelectListItem> columnList = new()
+            {
+                new SelectListItem() { Text = "Tarikh", Value = "Tarikh" },
+                new SelectListItem() { Text = "No CV", Value = "NoRujukan" },
+                new SelectListItem() { Text = "Penerima", Value = "Nama" }
+            };
 
-            if (!String.IsNullOrEmpty(searchColumn))
+            if (!string.IsNullOrEmpty(searchColumn))
             {
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
@@ -114,26 +116,22 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "");
             }
 
-            var akTunaiCV = await _akTunaiCVRepo.GetAll(null);
+            var akTunaiCV = new List<AkTunaiCV>().AsEnumerable();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
-                akTunaiCV = await _akTunaiCVRepo.GetAllIncludeDeletedItems();
+                akTunaiCV = await _akTunaiCVRepo.GetAllIncludeDeletedItemsFiltered(searchString,searchDate1,searchDate2,searchColumn);
+            }
+            else
+            {
+                akTunaiCV = await _akTunaiCVRepo.GetAllFiltered(searchString, searchDate1,searchDate2,searchColumn);
             }
 
-            if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            if (!string.IsNullOrEmpty(searchString) || (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
-                if (!String.IsNullOrEmpty(searchString))
+                if (!string.IsNullOrEmpty(searchString))
                 {
-                    if (searchColumn == "NoRujukan")
-                    {
-                        akTunaiCV = akTunaiCV.Where(s => s.NoCV.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-                    else if (searchColumn == "Nama")
-                    {
-                        akTunaiCV = akTunaiCV.Where(s => s.Penerima.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
 
                     ViewBag.SearchData1 = searchString;
 
@@ -142,15 +140,8 @@ namespace MSNK.Controllers
                 // searching with '%like%' condition end
 
                 // searching with date range condition
-                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+                if (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2))
                 {
-                    if (searchColumn == "Tarikh")
-                    {
-                        DateTime date1 = DateTime.Parse(searchDate1);
-                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                        akTunaiCV = akTunaiCV.Where(x => x.Tarikh >= date1
-                            && x.Tarikh <= date2).ToList();
-                    }
                     ViewBag.SearchData1 = searchDate1;
                     ViewBag.SearchData2 = searchDate2;
                 }

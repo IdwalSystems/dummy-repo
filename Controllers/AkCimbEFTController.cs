@@ -87,33 +87,29 @@ namespace MSNK.Controllers
             string searchDate2,
             string searchColumn)
         {
-            List<SelectListItem> columnList = new();
-            columnList.Add(new SelectListItem() { Text = "Tar Jana", Value = "TarJana" });
-            columnList.Add(new SelectListItem() { Text = "No PBI", Value = "NoPBI" });
-            columnList.Add(new SelectListItem() { Text = "Penjana", Value = "Nama" });
+            List<SelectListItem> columnList = new()
+            {
+                new SelectListItem() { Text = "Tar Jana", Value = "TarJana" },
+                new SelectListItem() { Text = "No PBI", Value = "NoPBI" },
+                new SelectListItem() { Text = "Penjana", Value = "Penjana" }
+            };
 
-            var akCimbEFT = await _akCimbEFTRepo.GetAll(null);
+            var akCimbEFT = new List<AkCimbEFT>().AsEnumerable();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
-                akCimbEFT = await _akCimbEFTRepo.GetAllIncludeDeletedItems();
+                akCimbEFT = await _akCimbEFTRepo.GetAllIncludeDeletedItemsFiltered(searchString,searchDate1,searchDate2,searchColumn);
+            }
+            else
+            {
+                akCimbEFT = await _akCimbEFTRepo.GetAllFiltered(searchString,searchDate1,searchDate2,searchColumn);
             }
 
-            if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            if (!string.IsNullOrEmpty(searchString) || (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
-                if (!String.IsNullOrEmpty(searchString))
+                if (!string.IsNullOrEmpty(searchString))
                 {
-                    if (searchColumn == "NoPBI")
-                    {
-                        akCimbEFT = akCimbEFT.Where(s => s.NoPBI.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-                    else if (searchColumn == "Nama")
-                    {
-                        akCimbEFT = akCimbEFT.Where(s => s.SuPekerja.Nama.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-
-
                     ViewBag.SearchData1 = searchString;
 
                 }
@@ -121,15 +117,8 @@ namespace MSNK.Controllers
                 // searching with '%like%' condition end
 
                 // searching with date range condition
-                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+                if (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2))
                 {
-                    if (searchColumn == "TarJana")
-                    {
-                        DateTime date1 = DateTime.Parse(searchDate1);
-                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                        akCimbEFT = akCimbEFT.Where(x => x.TarJana >= date1
-                            && x.TarJana <= date2).ToList();
-                    }
                     ViewBag.SearchData1 = searchDate1;
                     ViewBag.SearchData2 = searchDate2;
                 }
@@ -464,7 +453,7 @@ namespace MSNK.Controllers
                                 }
 
                                 // check if already succeed jana txt in previous data
-                                if (!String.IsNullOrEmpty(itemGanda.NoCekAtauEFT) || !String.IsNullOrEmpty(itemGanda.TarCekAtauEFT?.ToString("dd/MM/yyyy")))
+                                if (!string.IsNullOrEmpty(itemGanda.NoCekAtauEFT) || !string.IsNullOrEmpty(itemGanda.TarCekAtauEFT?.ToString("dd/MM/yyyy")))
                                 {
                                     continue;
                                 } ;
@@ -569,7 +558,7 @@ namespace MSNK.Controllers
                         foreach (var itemGanda in pvGanda)
                         {
                             // check if already succeed jana txt in previous data
-                            if (!String.IsNullOrEmpty(itemGanda.NoCekAtauEFT) || !String.IsNullOrEmpty(itemGanda.TarCekAtauEFT?.ToString("dd/MM/yyyy")))
+                            if (!string.IsNullOrEmpty(itemGanda.NoCekAtauEFT) || !string.IsNullOrEmpty(itemGanda.TarCekAtauEFT?.ToString("dd/MM/yyyy")))
                             {
                                 continue;
                             };

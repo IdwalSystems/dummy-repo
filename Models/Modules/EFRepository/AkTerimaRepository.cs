@@ -74,6 +74,110 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
+        public async Task<IEnumerable<AkTerima>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            var result = new List<AkTerima>();
+
+            if (string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && string.IsNullOrEmpty(filterType)
+                || string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && !string.IsNullOrEmpty(filterType))
+            {
+                result = await context.AkTerima
+                            .Include(b => b.JKW)
+                            .Include(b => b.JBahagian)
+                            .Include(b => b.SpPendahuluanPelbagai)
+                            .Include(b => b.AkBank)
+                            .Include(b => b.JNegeri)
+                            .Include(b => b.AkTerima1)
+                                .ThenInclude(b => b.AkCarta)
+                            .Include(b => b.AkTerima2)
+                                .ThenInclude(b => b.JCaraBayar)
+                            .Include(b => b.AkTerima3)
+                                .ThenInclude(b => b.AkInvois)
+                            .Where(b => b.Tahun == DateTime.Now.Year.ToString())
+                            .ToListAsync();
+
+            }
+
+            if ((!string.IsNullOrWhiteSpace(filter) || !string.IsNullOrWhiteSpace(filterDate1)) && !string.IsNullOrEmpty(filterType))
+            {
+                switch (filterType)
+                {
+                    case "NoRujukan":
+                        result = await context.AkTerima
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JNegeri)
+                                    .Include(b => b.AkTerima1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkTerima2)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkTerima3)
+                                        .ThenInclude(b => b.AkInvois)
+                                    .Where(s => s.NoRujukan.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Nama":
+                        result = await context.AkTerima
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JNegeri)
+                                    .Include(b => b.AkTerima1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkTerima2)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkTerima3)
+                                        .ThenInclude(b => b.AkInvois)
+                                    .Where(s => s.Nama.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Tahun":
+                        result = await context.AkTerima
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JNegeri)
+                                    .Include(b => b.AkTerima1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkTerima2)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkTerima3)
+                                        .ThenInclude(b => b.AkInvois)
+                                    .Where(s => s.Tahun == filter)
+                                    .ToListAsync();
+                        break;
+
+                    case "Tarikh":
+                        DateTime date1 = DateTime.Parse(filterDate1);
+                        DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
+                        result = await context.AkTerima
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JNegeri)
+                                    .Include(b => b.AkTerima1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkTerima2)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkTerima3)
+                                        .ThenInclude(b => b.AkInvois)
+                                    .Where(x => x.Tarikh >= date1
+                                                && x.Tarikh <= date2)
+                                    .ToListAsync();
+                        break;
+                }
+
+            }
+
+            return result
+                    .ToList();
+        }
+
         public async Task<IEnumerable<AkTerima>> GetAllIncludeDeletedItems()
         {
             return await context.AkTerima
@@ -90,6 +194,110 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkTerima3)
                     .ThenInclude(b => b.AkInvois)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<AkTerima>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            var result = new List<AkTerima>();
+
+            if (string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && string.IsNullOrEmpty(filterType)
+                || string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && !string.IsNullOrEmpty(filterType))
+            {
+                result = await context.AkTerima.IgnoreQueryFilters()
+                            .Include(b => b.JKW)
+                            .Include(b => b.JBahagian)
+                            .Include(b => b.SpPendahuluanPelbagai)
+                            .Include(b => b.AkBank)
+                            .Include(b => b.JNegeri)
+                            .Include(b => b.AkTerima1)
+                                .ThenInclude(b => b.AkCarta)
+                            .Include(b => b.AkTerima2)
+                                .ThenInclude(b => b.JCaraBayar)
+                            .Include(b => b.AkTerima3)
+                                .ThenInclude(b => b.AkInvois)
+                            .Where(b => b.Tahun == DateTime.Now.Year.ToString())
+                            .ToListAsync();
+
+            }
+
+            if ((!string.IsNullOrWhiteSpace(filter) || !string.IsNullOrWhiteSpace(filterDate1)) && !string.IsNullOrEmpty(filterType))
+            {
+                switch (filterType)
+                {
+                    case "NoRujukan":
+                        result = await context.AkTerima.IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JNegeri)
+                                    .Include(b => b.AkTerima1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkTerima2)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkTerima3)
+                                        .ThenInclude(b => b.AkInvois)
+                                    .Where(s => s.NoRujukan.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Nama":
+                        result = await context.AkTerima.IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JNegeri)
+                                    .Include(b => b.AkTerima1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkTerima2)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkTerima3)
+                                        .ThenInclude(b => b.AkInvois)
+                                    .Where(s => s.Nama.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Tahun":
+                        result = await context.AkTerima.IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JNegeri)
+                                    .Include(b => b.AkTerima1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkTerima2)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkTerima3)
+                                        .ThenInclude(b => b.AkInvois)
+                                    .Where(s => s.Tahun == filter)
+                                    .ToListAsync();
+                        break;
+
+                    case "Tarikh":
+                        DateTime date1 = DateTime.Parse(filterDate1);
+                        DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
+                        result = await context.AkTerima.IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.SpPendahuluanPelbagai)
+                                    .Include(b => b.AkBank)
+                                    .Include(b => b.JNegeri)
+                                    .Include(b => b.AkTerima1)
+                                        .ThenInclude(b => b.AkCarta)
+                                    .Include(b => b.AkTerima2)
+                                        .ThenInclude(b => b.JCaraBayar)
+                                    .Include(b => b.AkTerima3)
+                                        .ThenInclude(b => b.AkInvois)
+                                    .Where(x => x.Tarikh >= date1
+                                                && x.Tarikh <= date2)
+                                    .ToListAsync();
+                        break;
+                }
+
+            }
+
+            return result
+                    .ToList();
         }
 
         public async Task<AkTerima> GetById(int id)

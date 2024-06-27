@@ -39,9 +39,19 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<JAgama>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<JAgama>> GetAllIncludeDeletedItems()
         {
             return await context.JAgama.IgnoreQueryFilters().ToListAsync();
+        }
+
+        public Task<IEnumerable<JAgama>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<JAgama> GetById(int id)

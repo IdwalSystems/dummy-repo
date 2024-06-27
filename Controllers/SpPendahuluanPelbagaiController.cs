@@ -390,7 +390,7 @@ namespace MSNK.Controllers
                 new SelectListItem() { Text = "Nama Pemohon", Value = "Nama" }
             };
 
-            if (!String.IsNullOrEmpty(searchColumn))
+            if (!string.IsNullOrEmpty(searchColumn))
             {
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
@@ -401,30 +401,22 @@ namespace MSNK.Controllers
 
             var user = _context.applicationUsers.Include(x => x.SuPekerja).FirstOrDefault(x => x.UserName == User.Identity.Name);
 
-            var searchResult = await _spPendahuluanPelbagaiRepo.GetAll(null);
+            var searchResult = new List<SpPendahuluanPelbagai>().AsEnumerable();
 
             if (User.IsInRole("SuperAdmin") || User.IsInRole("Supervisor"))
             {
-                searchResult = await _spPendahuluanPelbagaiRepo.GetAllIncludeDeletedItems();
+                searchResult = await _spPendahuluanPelbagaiRepo.GetAllIncludeDeletedItemsFiltered(searchString,searchDate1,searchDate2,searchColumn);
             } else
             {
+                searchResult = await _spPendahuluanPelbagaiRepo.GetAllFiltered(searchString, searchDate1,searchDate2,searchColumn);
                 searchResult = searchResult.Where(b => b.SuPekerjaId == user.SuPekerjaId).ToList();
             }
 
-            if (!String.IsNullOrEmpty(searchString) || (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2)))
+            if (!string.IsNullOrEmpty(searchString) || (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2)))
             {
                 // searching with '%like%' condition
-                if (!String.IsNullOrEmpty(searchString))
+                if (!string.IsNullOrEmpty(searchString))
                 {
-                    if (searchColumn == "NoRujukan")
-                    {
-                        searchResult = searchResult.Where(s => s.NoPermohonan.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-                    else if (searchColumn == "Nama")
-                    {
-                        searchResult = searchResult.Where(s => s.SuPekerja.Nama.ToUpper().Contains(searchString.ToUpper())).ToList();
-                    }
-
                     ViewBag.SearchData1 = searchString;
 
                 }
@@ -432,15 +424,8 @@ namespace MSNK.Controllers
                 // searching with '%like%' condition end
 
                 // searching with date range condition
-                if (!String.IsNullOrEmpty(searchDate1) && !String.IsNullOrEmpty(searchDate2))
+                if (!string.IsNullOrEmpty(searchDate1) && !string.IsNullOrEmpty(searchDate2))
                 {
-                    if (searchColumn == "Tarikh")
-                    {
-                        DateTime date1 = DateTime.Parse(searchDate1);
-                        DateTime date2 = DateTime.Parse(searchDate2).AddHours(23.99);
-                        searchResult = searchResult.Where(x => x.TarSedia >= date1
-                            && x.TarSedia <= date2).ToList();
-                    }
                     ViewBag.SearchData1 = searchDate1;
                     ViewBag.SearchData2 = searchDate2;
                 }
@@ -453,14 +438,14 @@ namespace MSNK.Controllers
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", "Tarikh");
             }
 
-            List<JPenyemak> penyemak = _context.JPenyemak
+            List<JPenyemak> penyemak = await _context.JPenyemak
                 .Include(x=> x.SuPekerja)
-                .Where(x=> x.IsPendahuluan == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+                .Where(x=> x.IsPendahuluan == true).OrderBy(b => b.SuPekerja.Nama).ToListAsync();
             ViewBag.JPenyemak = penyemak;
 
-            List<JPelulus> pelulus = _context.JPelulus
+            List<JPelulus> pelulus = await _context.JPelulus
                 .Include(x => x.SuPekerja)
-                .Where(x => x.IsPendahuluan == true).OrderBy(b => b.SuPekerja.Nama).ToList();
+                .Where(x => x.IsPendahuluan == true).OrderBy(b => b.SuPekerja.Nama).ToListAsync();
             ViewBag.JPelulus = pelulus;
 
             return View(searchResult);

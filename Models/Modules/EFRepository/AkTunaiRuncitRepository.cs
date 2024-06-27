@@ -59,6 +59,11 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<AkTunaiRuncit>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<AkTunaiRuncit>> GetAllIncludeDeletedItems()
         {
             return await context.AkTunaiRuncit
@@ -68,6 +73,11 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkCarta)
                 .Include(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                 .ToListAsync();
+        }
+
+        public Task<IEnumerable<AkTunaiRuncit>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<AkTunaiRuncit> GetById(int id)

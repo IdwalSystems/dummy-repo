@@ -55,12 +55,120 @@ namespace MSNK.Models.Modules.EFRepository
             throw new NotImplementedException();
         }
 
+        public async Task<IEnumerable<SpPendahuluanPelbagai>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            var result = new List<SpPendahuluanPelbagai>();
+
+            if (string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && string.IsNullOrEmpty(filterType)
+                || string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && !string.IsNullOrEmpty(filterType))
+            {
+                result = await context.SpPendahuluanPelbagai
+                            .Include(b => b.SuPekerja)
+                            .Where(b => b.TarMasuk.Year == DateTime.Now.Year)
+                            .ToListAsync();
+
+            }
+
+            if ((!string.IsNullOrWhiteSpace(filter) || !string.IsNullOrWhiteSpace(filterDate1)) && !string.IsNullOrEmpty(filterType))
+            {
+                switch (filterType)
+                {
+                    case "NoRujukan":
+                        result = await context.SpPendahuluanPelbagai
+                                    .Include(b => b.SuPekerja)
+                                    .Where(s => s.NoPermohonan.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Nama":
+                        result = await context.SpPendahuluanPelbagai
+                                    .Include(b => b.SuPekerja)
+                                    .Where(s => s.SuPekerja.Nama.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Tahun":
+                        result = await context.SpPendahuluanPelbagai
+                                    .Include(b => b.SuPekerja)
+                                    .Where(s => s.TarMasuk.Year.ToString() == filter)
+                                    .ToListAsync();
+                        break;
+
+                    case "Tarikh":
+                        DateTime date1 = DateTime.Parse(filterDate1);
+                        DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
+                        result = await context.SpPendahuluanPelbagai
+                                    .Include(b => b.SuPekerja)
+                                    .Where(x => x.TarMasuk >= date1
+                                                && x.TarMasuk <= date2)
+                                    .ToListAsync();
+                        break;
+                }
+
+            }
+
+            return result
+                    .ToList();
+        }
+
         public async Task<IEnumerable<SpPendahuluanPelbagai>> GetAllIncludeDeletedItems()
         {
             return await context.SpPendahuluanPelbagai
                 .IgnoreQueryFilters()
                 .Include(b => b.SuPekerja)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<SpPendahuluanPelbagai>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            var result = new List<SpPendahuluanPelbagai>();
+
+            if (string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && string.IsNullOrEmpty(filterType)
+                || string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && !string.IsNullOrEmpty(filterType))
+            {
+                result = await context.SpPendahuluanPelbagai.IgnoreQueryFilters()
+                            .Include(b => b.SuPekerja)
+                            .Where(b => b.TarMasuk.Year == DateTime.Now.Year)
+                            .ToListAsync();
+
+            }
+
+            if ((!string.IsNullOrWhiteSpace(filter) || !string.IsNullOrWhiteSpace(filterDate1)) && !string.IsNullOrEmpty(filterType))
+            {
+                switch (filterType)
+                {
+                    case "NoRujukan":
+                        result = await context.SpPendahuluanPelbagai.IgnoreQueryFilters()
+                                    .Include(b => b.SuPekerja)
+                                    .Where(s => s.NoPermohonan.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Nama":
+                        result = await context.SpPendahuluanPelbagai.IgnoreQueryFilters()
+                                    .Include(b => b.SuPekerja)
+                                    .Where(s => s.SuPekerja.Nama.ToUpper().Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Tahun":
+                        result = await context.SpPendahuluanPelbagai.IgnoreQueryFilters()
+                                    .Include(b => b.SuPekerja)
+                                    .Where(s => s.TarMasuk.Year.ToString() == filter)
+                                    .ToListAsync();
+                        break;
+
+                    case "Tarikh":
+                        DateTime date1 = DateTime.Parse(filterDate1);
+                        DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
+                        result = await context.SpPendahuluanPelbagai.IgnoreQueryFilters()
+                                    .Include(b => b.SuPekerja)
+                                    .Where(x => x.TarMasuk >= date1
+                                                && x.TarMasuk <= date2)
+                                    .ToListAsync();
+                        break;
+                }
+
+            }
+
+            return result
+                    .ToList();
         }
 
         public async Task<SpPendahuluanPelbagai> GetById(int id)

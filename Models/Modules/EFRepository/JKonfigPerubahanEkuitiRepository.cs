@@ -278,5 +278,15 @@ namespace MSNK.Models.Modules.EFRepository
             context.Update(entity);
             await context.SaveChangesAsync();
         }
+
+        public Task<IEnumerable<JKonfigPerubahanEkuiti>> GetAllFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<JKonfigPerubahanEkuiti>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
