@@ -1,0 +1,271 @@
+﻿
+<script type="text/javascript">
+    var bilKewNM = 0;
+    var bilLulusNM = 0;
+    $(document).ready(function () {
+        var tableNM = $("#widgetNotaMinta").DataTable({
+            ajax: {
+                type: "GET",
+                url: '@Url.Action("JsonGetStatusNotaMinta","AkNotaMinta")',
+                dataSrc: "record"
+            },
+            columns: [
+                { data: "id" },
+                { data: "tarikh" },
+                { data: "noRujukan" },
+                { data: "pembekal" },
+                { data: "jumlah", className: "text-right" },
+                {
+                    data: "tindakan",
+                    className: "text-center",
+                    render: function (data, type, notaMinta) {
+                        return "<span class='badge " + notaMinta.badgeType + " rounded-pill text-white p-1 px-2'>" +
+                            notaMinta.tindakan + "</span>"
+                    }
+                },
+                {
+                    data: "action",
+                    className: "action-button text-center",
+                    render: function (data, type, notaMinta) {
+                        var detailsButton = "<a class='btn text-primary btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Ubah/Papar' href='/AkNotaMinta/Details/" + notaMinta.id + "'><i class='fas fa-edit'></i></a>";
+                        var deleteButton = "<a href='/AkNotaMinta/Delete/" + notaMinta.id + "' class='btn text-danger btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fas fa-trash'></i></a>";
+                        var UnpostingButton = "<a href='/AkNotaMinta/UnPosting/" + notaMinta.id + "' class='btn text-warning btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Batal Lulus'><i class='fas fa-file'></i></a>";
+                        var rollbackButton = "<a href='/AkNotaMinta/RollBack/" + notaMinta.id + "' class='btn text-info btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Rollback'><i class='fas fa-trash-restore'></i></a>";
+                        var semakButton = "<a data-toggle='modal' data-target='#modalSemakAkNotaMinta' class='btn btn-sm bg-white text-purple' type='button' data-placement='top' title='Semak' onclick='ModalClick(this)'><i class='fas fa-file-signature' ></i></a>";
+                        var lulusButton = "<a data-toggle='modal' data-target='#modalPostingAkNotaMinta' class='btn btn-sm bg-white text-success' type='button' data-placement='top' title='Lulus' onclick='ModalClick(this)'><i class='fas fa-file-signature' ></i></a>";
+
+                        switch (notaMinta.status) {
+                            case "1":
+                                return "<div class='btn-group' role='group' aria-label='action'>" +
+                                            detailsButton + UnpostingButton +
+                                        "</div>";
+                                break;
+                            case "2":
+                                return "<div class='btn-group' role='group' aria-label='action'>" +
+                                            detailsButton + deleteButton +
+                                        "</div>";
+                                break;
+                            case "3":
+                                return "<div class='btn-group' role='group' aria-label='action'>" +
+                                            detailsButton + semakButton +
+                                        "</div>";
+                                break;
+                            case "4":
+                                return "<div class='btn-group' role='group' aria-label='action'>" +
+                                            detailsButton + lulusButton +
+                                        "</div>";
+                                break;
+                            default:
+                                return "<div class='btn-group' role='group' aria-label='action'>" +
+                                            detailsButton + rollbackButton +
+                                        "</div>";
+                                break;
+                        }
+                    }
+                }
+            ],
+            rowReorder: false,
+            columnDefs: [
+                {
+                    orderable: false, targets: '_all'
+                }
+            ],
+            scrollY: "40vh",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+            dom: 'lrtip',
+            language: {
+                "info": "_TOTAL_ entri yang dipamerkan",
+                "infoEmpty": "Tiada data untuk dipamerkan",
+                "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
+            },
+            initComplete: function (settings, json) {
+                $('#widgetNotaMinta > tbody  > tr').each(function (index, tr) {
+                    var tindakanRow = $("TD", tr).eq(5).html();
+                    if (tindakanRow.indexOf("KEWANGAN") >= 0) {
+                        bilKewNM++
+                    } else {
+                        bilLulusNM++
+                    };
+                });
+
+                $('#tabNM').prepend("<span class='badge ac-success'>" + bilLulusNM + "</span>");
+                $('#tabNM').prepend("<span class='badge ac-warning text-white'>" + bilKewNM + "</span>");
+                $('#tabNM').prepend("NotaMinta ");
+            }
+        });
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            tableNM.columns.adjust();
+        });
+    })
+
+
+    //modal click
+    function ModalClick(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var id = $("TD", row).eq(0).html();
+        var noRujukan = $("TD", row).eq(2).html();
+        var jumlah = $("TD", row).eq(4).html();
+        //var jumSokong = Number(jumKeseluruhan.replace(/[^0-9.-]+/g, ""));
+        //alert(noPermohonan);
+        $(".moId").val(id);
+        $(".moNoRujukan").val(noRujukan.trim());
+        $(".moJumlah").val(jumlah.trim());
+    };
+
+</script>
+
+<div class="card box-shadow">
+    <div class="card-header bg-transparent container-fluid">
+
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class=" mb-0 text-info">Status Nota Minta</h5>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive table-sm">
+            <table class="table tableNM table-bordered table-hover display compact nowrap" width="100%" id="widgetNotaMinta">
+                <thead>
+                    <tr>
+                        <th width="1%">Id</th>
+                        <th width="5%">Tarikh</th>
+                        <th>No Rujukan</th>
+                        <th>Pembekal</th>
+                        <th>Jumlah RM</th>
+                        <th width="5%">Tindakan</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+<!-- Modal Semak -->
+<div class="modal fade bd-example-modal-lg" id="modalSemakAkNotaMinta" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#a54ea8;">
+                <h5 class="modal-title">Semak Nota Minta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
+                </button>
+            </div>
+            <form asp-action="Semak" asp-controller="AkNotaMinta" class="needs-validation">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="modal-body">
+
+                    <input name="id" class="moId" />
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">No Nota Minta</label>
+                                <input type="text" class="form-control form-control-sm moNoRujukan" name="noRujukan" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah RM</label>
+                                <input type="text" class="form-control form-control-sm moJumlah" name="jumlah" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label name="penyemakId" class="col-form-label">Penyemak</label>
+                                <select class="form-control form-control-sm text-uppercase" name="penyemakId" id="ddlPenyemak">
+                                    @foreach (var s in ViewBag.JPenyemakNM)
+                                    {
+                                        <option value="@s.Id">@s.SuPekerja.Nama </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Tarikh Disemak</label>
+                                <input type="datetime-local" class="form-control form-control-sm moTarikhSemak" name="tarikhSemak">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn ac-danger btn-sm" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn ac-success btn-sm">Semak</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Semak End -->
+<!-- Modal Posting -->
+<div class="modal fade bd-example-modal-lg" id="modalPostingAkNotaMinta" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="color:#a54ea8;">
+                <h5 class="modal-title">Kelulusan Nota Minta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
+                </button>
+            </div>
+            <form asp-action="Posting" asp-controller="AkNotaMinta" class="needs-validation">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="modal-body">
+
+                    <input hidden name="id" class="moId" />
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">No Nota Minta</label>
+                                <input type="text" class="form-control form-control-sm moNoRujukan" name="noRujukan" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label">Jumlah RM</label>
+                                <input type="text" class="form-control form-control-sm moJumlah" name="jumlah" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label name="pelulusId" class="col-form-label">Pelulus</label>
+                                <select class="form-control form-control-sm text-uppercase" name="pelulusId" id="ddlPelulus">
+                                    @foreach (var s in ViewBag.JPelulusNM)
+                                    {
+                                        <option value="@s.Id">@s.SuPekerja.Nama </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label">Tarikh Diluluskan</label>
+                                <input type="datetime-local" class="form-control form-control-sm moTarikhLulus" name="tarikhLulus">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn ac-danger btn-sm" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn ac-success btn-sm">Lulus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Posting End -->

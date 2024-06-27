@@ -94,30 +94,6 @@ namespace MSNK.Controllers
                 // badge count end
                 // Widget Status PO end
 
-                // Widget Status Nota Minta
-                var akNotaMinta = await _context.AkNotaMinta
-                    .Include(b => b.AkPembekal)
-                    .Where(b => b.FlPosting == 0 )
-                    .OrderByDescending(b => b.Tarikh)
-                    .ToListAsync();
-
-                // badge count
-                int bilKewNM = 0;
-                int bilLulusNM = 0;
-                foreach (var item in akNotaMinta)
-                {
-                    if (item.NoSiri == null)
-                    {
-                        bilKewNM++;
-                    } 
-                    else
-                    {
-                        bilLulusNM++;
-                    }
-                }
-                //badge count end
-                // Widget Status PO end
-
                 // Widget Status Pendahuluan Pelbagai
                 var spPendahuluanPelbagai = await _context.SpPendahuluanPelbagai
                     .Include(b => b.SuPekerja)
@@ -167,9 +143,6 @@ namespace MSNK.Controllers
                 dyModel.AkPO = akPO;
                 dyModel.bilMore5Days = bilMore5Days;
                 dyModel.bilLess5Days = bilLess5Days;
-                dyModel.AkNotaMinta = akNotaMinta;
-                dyModel.bilKewNM = bilKewNM;
-                dyModel.bilLulusNM = bilLulusNM;
                 dyModel.SpPendahuluanPelbagai = spPendahuluanPelbagai;
                 dyModel.bilKewPP = bilKewPP;
                 dyModel.SuProfil = suProfil;

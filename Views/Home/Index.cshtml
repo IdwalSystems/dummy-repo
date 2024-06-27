@@ -105,15 +105,14 @@
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#statusNotaMinta" id="tabNM">
-                        Nota Minta
-                        @if (Model.bilKewNM != 0)
+                        @*@if (Model.bilKewNM != 0)
                         {
                             <span class="badge ac-warning text-white">@Model.bilKewNM</span>
                         }
                         @if (Model.bilLulusNM != 0)
                         {
                             <span class="badge ac-success">@Model.bilLulusNM</span>
-                        }
+                        }*@
                     </a>
                 </li>
                 <li class="nav-item">
@@ -154,7 +153,7 @@
                     <br>
                     <div class="form-row mb-3">
                         <div class="col-md-12">
-                            <partial name="_StatusNotaMintaWidget" />
+                            <partial name="_AjaxStatusNotaMintaWidget" />
                         </div>
                     </div>
                 </div>
