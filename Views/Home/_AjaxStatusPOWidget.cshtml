@@ -1,0 +1,215 @@
+﻿
+<script type="text/javascript">
+    var columnSearchVar;
+    $(document).ready(function () {
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            tablePO.columns.adjust();
+        });
+
+        // onchange no KP
+        $("body").on('click', "#tabPO", function () {
+            // refresh table
+            tablePO.destroy();
+
+            tablePO = $('.tablePO').DataTable({
+                "paging": false,
+                rowReorder: false,
+                columnDefs: [
+                    { orderable: false, targets: '_all' }
+                ],
+                "scrollY": "40vh",
+                "scrollX": true,
+                "scrollCollapse": true,
+                "paging": false,
+                dom: 'lrtip',
+                "language": {
+                    "info": "_TOTAL_ entri yang dipamerkan",
+                    "infoEmpty": "Tiada data untuk dipamerkan",
+                    "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
+                }
+            });
+            // refresh table end
+        });
+        var tablePO = $('.tablePO').DataTable({
+            "paging": false,
+            rowReorder: false,
+            columnDefs: [
+                { orderable: false, targets: '_all' }
+            ],
+            "scrollY": "40vh",
+            "scrollX": true,
+            "scrollCollapse": true,
+            "paging": false,
+            dom: 'lrtip',
+            "language": {
+                "info": "_TOTAL_ entri yang dipamerkan",
+                "infoEmpty": "Tiada data untuk dipamerkan",
+                "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
+            }
+        });
+
+        $('#columnSearch').change(function () {
+            columnSearchVar = $(this).val();
+            // refresh table
+            tablePO.destroy();
+
+            tablePO = $('.tablePO').DataTable({
+                "paging": false,
+                rowReorder: false,
+                columnDefs: [
+                    { orderable: false, targets: '_all' }
+                ],
+                "scrollY": "40vh",
+                "scrollX": true,
+                "scrollCollapse": true,
+                "paging": false,
+                dom: 'lrtip',
+                "language": {
+                    "info": "_TOTAL_ entri yang dipamerkan",
+                    "infoEmpty": "Tiada data untuk dipamerkan",
+                    "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
+                }
+            });
+            // refresh table end
+        });
+
+        $('#lebih5hari').on('click', function () {
+            tablePO.columns(4).search('Lebih 5 hari').draw();
+        });
+
+        $('#lebih14hari').on('click', function () {
+            tablePO.columns(4).search('Tamat Tempoh').draw();
+        });
+
+        $('#reset').on('click', function () {
+            // refresh table
+            tablePO.destroy();
+
+            tablePO = $('.tablePO').DataTable({
+                "paging": false,
+                rowReorder: false,
+                columnDefs: [
+                    { orderable: false, targets: '_all' }
+                ],
+                "scrollY": "40vh",
+                "scrollX": true,
+                "scrollCollapse": true,
+                "paging": false,
+                dom: 'lrtip',
+                "language": {
+                    "info": "_TOTAL_ entri yang dipamerkan",
+                    "infoEmpty": "Tiada data untuk dipamerkan",
+                    "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
+                }
+            });
+            // refresh table end
+        });
+    });
+
+
+
+</script>
+
+@if (Model.AkPO.Count > 0)
+{
+<div class="card box-shadow">
+    <div class="card-header bg-transparent container-fluid">
+
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class=" mb-0 text-info">Status Pesanan Tempatan</h5>
+            </div>
+            <div class="col-md-6 float-right text-right">
+                <button class='btn text-warning' id="lebih5hari">Lebih 5 Hari</button>
+                <button class='btn text-danger' id="lebih14hari">Tamat Tempoh</button>
+                <button class='btn text-primary' id="reset">Reset Jadual</button>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive table-sm">
+            <table class="table tablePO table-bordered table-hover display compact nowrap" width="100%">
+                <thead >
+                    <tr>
+                        <th hidden>Id</th>
+                        <th width="5%">Tarikh</th>
+                        <th width="10%">No PO</th>
+                        <th width="65%">
+                            Pembekal
+                        </th>
+                        <th width="10%">
+                            Amaun RM
+                        </th>
+                        <th width="5%">
+                            Status
+                        </th>
+                        <th width="5%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.AkPO)
+                    {
+
+                        var bakiTarikh = (DateTime.Now - item.Tarikh).Days;
+
+                        var tabletype = bakiTarikh > 14 ? "table-danger" : null;
+                        var badgeType = bakiTarikh > 14 ? "bg-danger" : "bg-warning";
+                        var statusPo = bakiTarikh > 14 ? "Tamat Tempoh" : "Lebih 5 hari";
+                        <tr class="@tabletype text-uppercase ">
+                            <td hidden>@item.Id</td>
+                            <td width="5%" data-sort='YYYYMMDD'>
+                                @item.Tarikh.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @item.NoPO
+                            </td>
+                            <td class="text-uppercase">
+                                @item.AkPembekal.KodSykt - @item.AkPembekal.NamaSykt
+                            </td>
+                            <td class="text-right">
+                                @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
+                            </td>
+                            <td>
+                                <div class="mt-sm-1 d-block">
+                                    <span class="badge @badgeType rounded-pill text-white p-1 px-2">
+                                        @statusPo
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="action-button">
+                                <div class="btn-group" role="group" aria-label="action">
+                                    <a asp-action="Details" asp-controller="AkPO" asp-route-id="@item.Id" class="btn text-primary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                    <a asp-action="PrintPdf" asp-controller="AkPO" asp-route-id="@item.Id" class="btn text-secondary btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Cetak" target="_blank"><i class="fas fa-print"></i></a>
+                                    @if (item.FlPosting == 0)
+                                    {
+                                        @if (item.FlCetak != 0)
+                                        {
+                                            <a asp-action="Posting" asp-controller="AkPO" asp-route-id="@item.Id" class="btn text-success btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Lulus">
+                                                <i class="fas fa-file-signature"></i>
+                                            </a>
+                                        }
+
+                                        <a asp-action="Delete" asp-controller="AkPO" asp-route-id="@item.Id" class="btn text-danger btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fas fa-trash"></i></a>
+
+                                    }
+                                </div>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+}
+else
+{
+
+}
+

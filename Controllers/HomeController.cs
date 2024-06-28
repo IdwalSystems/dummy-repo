@@ -94,38 +94,6 @@ namespace MSNK.Controllers
                 // badge count end
                 // Widget Status PO end
 
-                // Widget Status Pendahuluan Pelbagai
-                var spPendahuluanPelbagai = await _context.SpPendahuluanPelbagai
-                    .Include(b => b.SuPekerja)
-                    .Where(b => b.FlPosting == 0)
-                    .OrderByDescending(b => b.Tarikh)
-                    .ToListAsync();
-
-                // badge count
-                int bilKewPP = 0;
-                foreach (var item in spPendahuluanPelbagai)
-                {
-                    bilKewPP++;
-                }
-                //badge count end
-                // Widget Status Pendahuluan Pelbagai end
-
-                // Widget Status Pendahuluan Pelbagai
-                var suProfil = await _context.SuProfil
-                    .Include(b => b.JKW)
-                    .Include(b => b.JBahagian)
-                    .Where(b => b.FlPosting == 0)
-                    .OrderByDescending(b => b.NoRujukan)
-                    .ToListAsync();
-
-                // badge count
-                int bilKewP = 0;
-                foreach (var item in suProfil)
-                {
-                    bilKewP++;
-                }
-                //badge count end
-                // Widget Status Pendahuluan Pelbagai end
 
                 List<JPenyemak> penyemak = _context.JPenyemak
                 .Include(x => x.SuPekerja)
@@ -143,10 +111,6 @@ namespace MSNK.Controllers
                 dyModel.AkPO = akPO;
                 dyModel.bilMore5Days = bilMore5Days;
                 dyModel.bilLess5Days = bilLess5Days;
-                dyModel.SpPendahuluanPelbagai = spPendahuluanPelbagai;
-                dyModel.bilKewPP = bilKewPP;
-                dyModel.SuProfil = suProfil;
-                dyModel.bilKewP = bilKewP;
                 dyModel.MarkList = markList;
                 return View(dyModel);
             }

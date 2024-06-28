@@ -752,104 +752,7 @@ namespace MSNK.Controllers
         }
         // function  json Create end
 
-        [HttpGet]
-        public async Task<JsonResult> JsonGetStatusNotaMinta()
-        {
-            try
-            {
-                var akNotaMinta = await _context.AkNotaMinta
-                    .Include(b => b.AkPembekal)
-                    .Where(b => b.FlPosting == 0)
-                    .OrderByDescending(b => b.Tarikh)
-                    .ToListAsync();
 
-                var record = new List<WidgetAkNotaMinta>();
-
-                if (akNotaMinta != null && akNotaMinta.Count > 0)
-                {
-                    foreach (var item in akNotaMinta)
-                    {
-                        var tindakan = "";
-                        var badgeType = "";
-                        if (item.NoSiri == null) {
-                            tindakan = "KEWANGAN";
-                            badgeType = "ac-warning";
-                        }
-                        else
-                        {
-                            tindakan = "SEMAK / LULUS";
-                            badgeType = "ac-success";
-                        }
-
-
-                        record.Add(new WidgetAkNotaMinta
-                        {
-                            Id = item.Id,
-                            Tarikh = item.Tarikh.ToString("dd/MM/yyyy"),
-                            NoRujukan = item.NoRujukan ?? "",
-                            Pembekal = item.AkPembekal.NamaSykt?.ToUpper() ?? "",
-                            Jumlah = Convert.ToDecimal(item.Jumlah).ToString("#,##0.00"),
-                            tindakan = tindakan,
-                            badgeType = badgeType,
-                            status = WidgetAkNotaMinta.GetStatus(item)
-                        });
-                    }
-                }
-
-                return Json(new { result = "OK", record });
-            }
-            catch (Exception ex)
-            {
-                return Json(new {result = "ERROR", message = ex.Message});
-            }
-        }
-
-        public class WidgetAkNotaMinta
-        {
-            public int Id { get; set; }
-            public string Tarikh { get; set; }
-            public string NoRujukan { get; set; }
-            public string Pembekal { get; set; }
-            public string Jumlah { get; set; }
-            public string tindakan { get; set; }
-            public string badgeType { get; set; }
-            public string status { get; set; }
-
-            public static string GetStatus(AkNotaMinta item)
-            {
-                var result = "";
-                if (item.FlHapus == 0)
-                {
-                    if (item.FlPosting == 0)
-                    {
-                        if (item.Jumlah != 0)
-                        {
-                            if (item.FlStatusSemak != 0)
-                            {
-                                result = "4"; // belumLulus
-                            }
-                            else
-                            {
-                                result = "3"; // belumSemak
-                            }
-                        }
-                        else
-                        {
-                            result = "2"; // belumHapusBelumPostingJumlahKosong boleh delete
-                        }
-                    }
-                    else
-                    {
-                        result = "1"; // belumHapusSudahPosting boleh unposting
-                    }
-                }
-                else
-                {
-                    result = "0"; // sudahHapus boleh rollback
-                }
-                return result;
-            }
-        }
         // POST: AkNotaMinta/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -1732,5 +1635,104 @@ namespace MSNK.Controllers
         // printing Nota Minta end
 
 
+        [HttpGet]
+        public async Task<JsonResult> JsonGetStatusNotaMinta()
+        {
+            try
+            {
+                var akNotaMinta = await _context.AkNotaMinta
+                    .Include(b => b.AkPembekal)
+                    .Where(b => b.FlPosting == 0)
+                    .OrderByDescending(b => b.Tarikh)
+                    .ToListAsync();
+
+                var record = new List<WidgetAkNotaMinta>();
+
+                if (akNotaMinta != null && akNotaMinta.Count > 0)
+                {
+                    foreach (var item in akNotaMinta)
+                    {
+                        var tindakan = "";
+                        var badgeType = "";
+                        if (item.NoSiri == null)
+                        {
+                            tindakan = "KEWANGAN";
+                            badgeType = "ac-warning";
+                        }
+                        else
+                        {
+                            tindakan = "SEMAK / LULUS";
+                            badgeType = "ac-success";
+                        }
+
+
+                        record.Add(new WidgetAkNotaMinta
+                        {
+                            Id = item.Id,
+                            Tarikh = item.Tarikh.ToString("dd/MM/yyyy"),
+                            NoRujukan = item.NoRujukan ?? "",
+                            Pembekal = item.AkPembekal.NamaSykt?.ToUpper() ?? "",
+                            Jumlah = Convert.ToDecimal(item.Jumlah).ToString("#,##0.00"),
+                            tindakan = tindakan,
+                            badgeType = badgeType,
+                            status = WidgetAkNotaMinta.GetStatus(item)
+                        });
+                    }
+                }
+
+                return Json(new { result = "OK", record });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public class WidgetAkNotaMinta
+        {
+            public int Id { get; set; }
+            public string Tarikh { get; set; }
+            public string NoRujukan { get; set; }
+            public string Pembekal { get; set; }
+            public string Jumlah { get; set; }
+            public string tindakan { get; set; }
+            public string badgeType { get; set; }
+            public string status { get; set; }
+
+            public static string GetStatus(AkNotaMinta item)
+            {
+                var result = "";
+                if (item.FlHapus == 0)
+                {
+                    if (item.FlPosting == 0)
+                    {
+                        if (item.Jumlah != 0)
+                        {
+                            if (item.FlStatusSemak != 0)
+                            {
+                                result = "4"; // belumLulus
+                            }
+                            else
+                            {
+                                result = "3"; // belumSemak
+                            }
+                        }
+                        else
+                        {
+                            result = "2"; // belumHapusBelumPostingJumlahKosong boleh delete
+                        }
+                    }
+                    else
+                    {
+                        result = "1"; // belumHapusSudahPosting boleh unposting
+                    }
+                }
+                else
+                {
+                    result = "0"; // sudahHapus boleh rollback
+                }
+                return result;
+            }
+        }
     }
 }

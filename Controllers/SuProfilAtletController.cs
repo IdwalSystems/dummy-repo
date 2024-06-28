@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
 using MSNK.Infrastructure;
@@ -1175,6 +1176,89 @@ namespace MSNK.Controllers
         private bool SuProfilExists(int id)
         {
             return _context.SuProfil.Any(e => e.Id == id);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> JsonGetStatusProfil()
+        {
+            try
+            {
+                var suProfil = await _context.SuProfil
+                    .Include(b => b.JKW)
+                    .Include(b => b.JBahagian)
+                    .Where(b => b.FlPosting == 0)
+                    .OrderByDescending(b => b.NoRujukan)
+                    .ToListAsync();
+
+                var record = new List<WidgetSuProfil>();
+
+                if (suProfil != null && suProfil.Count > 0)
+                {
+                    foreach (var item in suProfil)
+                    {
+                        var tindakan = "KEWANGAN";
+                        var badgeType = "ac-warning";
+                        var kategori = "SKIM ATLET";
+
+                        if (item.FlKategori == 1) kategori = "ELAUN JSM";
+                        record.Add(new WidgetSuProfil
+                        {
+                            Id = item.Id,
+                            Tahun = item.Tahun,
+                            Bulan = item.Bulan,
+                            Bahagian = item.JBahagian?.Kod + " - " + item.JBahagian?.Perihal?.ToUpper() ?? "",
+                            NoRujukan = item.NoRujukan ?? "",
+                            Kategori = kategori,
+                            tindakan = tindakan,
+                            badgeType = badgeType,
+                            status = WidgetSuProfil.GetStatus(item)
+                        });
+                    }
+                }
+
+                return Json(new { result = "OK", record });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public class WidgetSuProfil
+        {
+            public int Id { get; set; }
+            public string Tahun { get; set; }
+            public string Bulan { get; set; }
+            public string Bahagian { get; set; }
+            public string NoRujukan { get; set; }
+            public string Kategori { get; set; }
+            public string tindakan { get; set; }
+            public string badgeType { get; set; }
+            public string status { get; set; }
+
+            public static string GetStatus(SuProfil item)
+            {
+                var result = "";
+
+                if (item.FlPosting == 0)
+                {
+                    if (item.FlCetak != 0)
+                    {
+                        result = "2"; // sudahCetakBelumPosting boleh posting
+                    }
+                    else
+                    {
+                        result = "1"; // belumCetakBelumPosting boleh cetak
+                    }
+                }
+                else
+                {
+                    result = "0"; // belumHapusSudahPosting boleh unposting
+                }
+                
+
+                return result;
+            }
         }
     }
 }

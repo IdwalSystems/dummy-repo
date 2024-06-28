@@ -31,28 +31,29 @@
                         var deleteButton = "<a href='/AkNotaMinta/Delete/" + notaMinta.id + "' class='btn text-danger btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fas fa-trash'></i></a>";
                         var UnpostingButton = "<a href='/AkNotaMinta/UnPosting/" + notaMinta.id + "' class='btn text-warning btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Batal Lulus'><i class='fas fa-file'></i></a>";
                         var rollbackButton = "<a href='/AkNotaMinta/RollBack/" + notaMinta.id + "' class='btn text-info btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Rollback'><i class='fas fa-trash-restore'></i></a>";
+                        var printButton = "<a class='btn text-secondary btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Cetak' target='_blank' href='/AkNotaMinta/PrintPdf/" + notaMinta.id + "'><i class='fas fa-print'></i></a>";
                         var semakButton = "<a data-toggle='modal' data-target='#modalSemakAkNotaMinta' class='btn btn-sm bg-white text-purple' type='button' data-placement='top' title='Semak' onclick='ModalClick(this)'><i class='fas fa-file-signature' ></i></a>";
                         var lulusButton = "<a data-toggle='modal' data-target='#modalPostingAkNotaMinta' class='btn btn-sm bg-white text-success' type='button' data-placement='top' title='Lulus' onclick='ModalClick(this)'><i class='fas fa-file-signature' ></i></a>";
 
                         switch (notaMinta.status) {
                             case "1":
                                 return "<div class='btn-group' role='group' aria-label='action'>" +
-                                            detailsButton + UnpostingButton +
+                                            detailsButton + printButton + UnpostingButton +
                                         "</div>";
                                 break;
                             case "2":
                                 return "<div class='btn-group' role='group' aria-label='action'>" +
-                                            detailsButton + deleteButton +
+                                            detailsButton + printButton + deleteButton +
                                         "</div>";
                                 break;
                             case "3":
                                 return "<div class='btn-group' role='group' aria-label='action'>" +
-                                            detailsButton + semakButton +
+                                            detailsButton + printButton + semakButton +
                                         "</div>";
                                 break;
                             case "4":
                                 return "<div class='btn-group' role='group' aria-label='action'>" +
-                                            detailsButton + lulusButton +
+                                            detailsButton + printButton + lulusButton +
                                         "</div>";
                                 break;
                             default:

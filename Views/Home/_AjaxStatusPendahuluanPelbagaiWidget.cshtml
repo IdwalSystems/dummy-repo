@@ -1,0 +1,96 @@
+﻿
+<script type="text/javascript">
+    var columnSearchVar;
+    $(document).ready(function () {
+        var tablePP = $("#widgetPendahuluanPelbagai").DataTable({
+            ajax: {
+                type: "GET",
+                url: '@Url.Action("JsonGetStatusPendahuluanPelbagai","SpPendahuluanPelbagai")',
+                dataSrc: "record"
+            },
+            columns: [
+                { data: "tarikh" },
+                { data: "noRujukan" },
+                { data: "nama" },
+                { data: "tajuk" },
+                { data: "jumlah", className: "text-right" },
+                {
+                    data: "tindakan",
+                    className: "text-center",
+                    render: function (data, type, pendahuluanPelbagai) {
+                        return "<span class='badge ac-warning rounded-pill text-white p-1 px-2'>KEWANGAN</span>"
+                    }
+                }
+            ],
+            rowReorder: false,
+            columnDefs: [
+                {
+                    orderable: false, targets: '_all'
+                }
+            ],
+            scrollY: "40vh",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+            dom: 'lrtip',
+            language: {
+                "info": "_TOTAL_ entri yang dipamerkan",
+                "infoEmpty": "Tiada data untuk dipamerkan",
+                "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
+            },
+            initComplete: function (settings, json) {
+                var total = 0;
+                $('#widgetPendahuluanPelbagai > tbody  > tr').each(function (index, tr) {
+                    total++;
+                });
+
+                $('#tabPendahuluanPelbagai').prepend("<span class='badge ac-warning text-white'>" + total + "</span>");
+                $('#tabPendahuluanPelbagai').prepend("Pend. Pelbagai ");
+            }
+        });
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            tablePP.columns.adjust();
+        });
+    });
+</script>
+
+<div class="card box-shadow">
+    <div class="card-header bg-transparent container-fluid">
+
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class=" mb-0 text-info">Status Pendahuluan Pelbagai</h5>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive table-sm">
+            <table class="table tablePP table-bordered table-hover display compact nowrap" id="widgetPendahuluanPelbagai" width="100%">
+                <thead>
+                    <tr>
+                        <th width="5%">Tarikh</th>
+                        <th width="10">No Permohonan</th>
+                        <th>
+                            Pemohon
+                        </th>
+                        <th>
+                            Tajuk
+                        </th>
+                        <th>
+                            Jumlah RM
+                        </th>
+                        <th width="5%">
+                            Tindakan
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -105,14 +105,7 @@
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#statusNotaMinta" id="tabNM">
-                        @*@if (Model.bilKewNM != 0)
-                        {
-                            <span class="badge ac-warning text-white">@Model.bilKewNM</span>
-                        }
-                        @if (Model.bilLulusNM != 0)
-                        {
-                            <span class="badge ac-success">@Model.bilLulusNM</span>
-                        }*@
+
                     </a>
                 </li>
                 <li class="nav-item">
@@ -130,20 +123,10 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#StatusPendahuluanPelbagai" id="tabPendahuluanPelbagai">
-                        Pendahuluan Pelbagai
-                        @if (Model.bilKewPP != 0)
-                        {
-                            <span class="badge ac-warning text-white">@Model.bilKewPP</span>
-                        }
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#StatusProfilJuruAtlet" id="tabProfilJuruAtlet">
-                        Elaun / Skim
-                        @if (Model.bilKewP != 0)
-                        {
-                            <span class="badge ac-warning text-white">@Model.bilKewP</span>
-                        }
                     </a>
                 </li>
             </ul>
@@ -169,7 +152,7 @@
                     <br>
                     <div class="form-row mb-3">
                         <div class="col-md-12">
-                            <partial name="_StatusPendahuluanPelbagaiWidget" />
+                            <partial name="_AjaxStatusPendahuluanPelbagaiWidget" />
                         </div>
                     </div>
                 </div>
@@ -177,7 +160,7 @@
                     <br>
                     <div class="form-row mb-3">
                         <div class="col-md-12">
-                            <partial name="_StatusProfilWidget" />
+                            <partial name="_AjaxStatusProfilWidget" />
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,124 @@
+﻿
+<script type="text/javascript">
+    $(document).ready(function () {
+        var tableProfil = $("#widgetProfil").DataTable({
+            ajax: {
+                type: "GET",
+                url: '@Url.Action("JsonGetStatusProfil", "SuProfilAtlet")',
+                dataSrc: "record"
+            },
+            columns: [
+                { data: "id" },
+                { data: "tahun" },
+                { data: "bulan" },
+                { data: "bahagian" },
+                { data: "noRujukan" },
+                { data: "kategori" },
+                {
+                    data: "tindakan",
+                    className: "text-center",
+                    render: function (data, type, profil) {
+                        return "<span class='badge " + profil.badgeType + " rounded-pill text-white p-1 px-2'>" +
+                            profil.tindakan + "</span>"
+                    }
+                },
+                {
+                    data: "action",
+                    className: "action-button text-center",
+                    render: function (data, type, profil) {
+                        var controller = "SuProfilAtlet";
+                        if (profil.kategori == "ELAUN JSM") controller = "SuProfilJurulatih";
+                        var detailsButton = "<a class='btn text-primary btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Ubah/Papar' href='/" + controller + "/Details/" + profil.id + "'><i class='fas fa-edit'></i></a>";
+                        var deleteButton = "<a href='/" + controller + "/Delete/" + profil.id + "' class='btn text-danger btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Hapus'><i class='fas fa-trash'></i></a>";
+                        var printButton = "<a class='btn text-secondary btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Cetak' target='_blank' href='/" + controller + "/PrintPdf/" + profil.id + "'><i class='fas fa-print'></i></a>";
+                        var lulusButton = "<a class='btn text-success btn-sm bg-white' type='button' data-toggle='tooltip' data-placement='top' title='Lulus' href='/" + controller + "/Posting/" + profil.id + "'><i class='fas fa-file-signature'></i></a>";
+
+                        switch (profil.status) {
+
+                            case "1":
+                                return "<div class='btn-group' role='group' aria-label='action'>" +
+                                    detailsButton + printButton + deleteButton +
+                                    "</div>";
+                                break;
+                            case "2":
+                                return "<div class='btn-group' role='group' aria-label='action'>" +
+                                    detailsButton + printButton + lulusButton + deleteButton +
+                                    "</div>";
+                                break;
+                            default:
+                                return "";
+                                break;
+                        }
+                    }
+                }
+            ],
+            rowReorder: false,
+            columnDefs: [
+                {
+                    orderable: false, targets: '_all'
+                }
+            ],
+            scrollY: "40vh",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+            dom: 'lrtip',
+            language: {
+                "info": "_TOTAL_ entri yang dipamerkan",
+                "infoEmpty": "Tiada data untuk dipamerkan",
+                "infoFiltered": " - ditapis daripada _MAX_ jumlah keseluruhan rekod"
+            },
+            initComplete: function (settings, json) {
+                var total = 0;
+                $('#widgetProfil > tbody  > tr').each(function (index, tr) {
+                    total++;
+                });
+
+                $('#tabProfilJuruAtlet').prepend("<span class='badge ac-warning text-white'>" + total + "</span>");
+                $('#tabProfilJuruAtlet').prepend("Elaun / Skim ");
+            }
+        });
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            tableProfil.columns.adjust();
+        });
+    });
+</script>
+
+<div class="card box-shadow">
+    <div class="card-header bg-transparent container-fluid">
+
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class=" mb-0 text-info">Status Elaun / Skim</h5>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive table-sm">
+            <table class="table tableProfil table-bordered table-hover display compact nowrap" id="widgetProfil" width="100%">
+                <thead>
+                    <tr>
+                        <th width="5%">Id</th>
+                        <th width="5%">Tahun</th>
+                        <th width="5%">Bulan</th>
+                        <th width="10%">Bahagian</th>
+                        <th width="10%">No Rujukan</th>
+                        <th width="5%">
+                            Kategori
+                        </th>
+                        <th width="5%">
+                            Tindakan
+                        </th>
+                        <th width="5%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>

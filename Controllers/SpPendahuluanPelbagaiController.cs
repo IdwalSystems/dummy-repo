@@ -1565,6 +1565,67 @@ namespace MSNK.Controllers
                 PageSize = Rotativa.AspNetCore.Options.Size.A4,
             };
         }
+
+        [HttpGet]
+        public async Task<JsonResult> JsonGetStatusPendahuluanPelbagai()
+        {
+            try
+            {
+                var spPendahuluanPelbagai = await _context.SpPendahuluanPelbagai
+                   .Include(b => b.SuPekerja)
+                   .Where(b => b.FlPosting == 0)
+                   .OrderByDescending(b => b.Tarikh)
+                   .ToListAsync();
+
+                var record = new List<WidgetSpPendahuluanPelbagai>();
+
+                if (spPendahuluanPelbagai != null && spPendahuluanPelbagai.Count > 0)
+                {
+                    foreach (var item in spPendahuluanPelbagai)
+                    {
+
+                        record.Add(new WidgetSpPendahuluanPelbagai
+                        {
+                            Id = item.Id,
+                            Tarikh = item.TarMasuk.ToString("dd/MM/yyyy"),
+                            NoRujukan = item.NoPermohonan ?? "",
+                            Nama = item.SuPekerja.Nama?.ToUpper() ?? "",
+                            Tajuk = item.Aktiviti?.ToUpper() ?? "",
+                            Jumlah = Convert.ToDecimal(item.JumKeseluruhan).ToString("#,##0.00"),
+                            tindakan = "KEWANGAN",
+                            badgeType = "ac-warning",
+                            status = WidgetSpPendahuluanPelbagai.GetStatus(item)
+                        });
+                    }
+                }
+
+                return Json(new { result = "OK", record });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { result = "ERROR", message = ex.Message });
+            }
+        }
+
+        public class WidgetSpPendahuluanPelbagai
+        {
+            public int Id { get; set; }
+            public string Tarikh { get; set; }
+            public string NoRujukan { get; set; }
+            public string Nama { get; set; }
+            public string Tajuk { get; set; }
+            public string Jumlah { get; set; }
+            public string tindakan { get; set; }
+            public string badgeType { get; set; }
+            public string status { get; set; }
+
+            public static string GetStatus(SpPendahuluanPelbagai item)
+            {
+                var result = item.FlStatusSokong.ToString();
+                
+                return result;
+            }
+        }
     }
 }
 
