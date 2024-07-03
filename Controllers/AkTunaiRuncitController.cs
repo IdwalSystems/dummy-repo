@@ -79,11 +79,16 @@ namespace MSNK.Controllers
         [Authorize(Policy = "DF004")]
         public async Task<IActionResult> Index()
         {
-            var akTunaiRuncit = await _akTunaiRuncitRepo.GetAll(null);
+
+            var akTunaiRuncit = new List<AkTunaiRuncit>().AsEnumerable();
 
             if (User.IsInRole("SuperAdmin"))
             {
                 akTunaiRuncit = await _akTunaiRuncitRepo.GetAllIncludeDeletedItems();
+            }
+            else
+            {
+                akTunaiRuncit = await _akTunaiRuncitRepo.GetAll(null);
             }
 
             List<AkTunaiRuncitViewModel> viewModel = new List<AkTunaiRuncitViewModel>();
@@ -184,7 +189,7 @@ namespace MSNK.Controllers
 
             tunaiLejar.AddRange(tunaiLejarBelumRekup);
 
-            ViewBag.akTunaiLejar = tunaiLejar;
+            ViewBag.akTunaiLejar = tunaiLejar.OrderBy(b => b.Tarikh);
 
         }
 
