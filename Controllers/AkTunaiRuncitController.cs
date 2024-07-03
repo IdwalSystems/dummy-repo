@@ -699,7 +699,7 @@ namespace MSNK.Controllers
         }
 
         // rekup function
-        [Authorize(Policy = "DF001T")]
+        [Authorize(Policy = "DF004E")]
         public async Task<IActionResult> Rekup(int? id, string tarikhDari, string tarikhHingga)
         {
             if (id == null)
@@ -744,7 +744,7 @@ namespace MSNK.Controllers
                 string noRekup = prefix + "0000";
 
                 // kalau tiada
-                if (LatestTunaiLejarRekup == null)
+                if (LatestTunaiLejarRekup == null || LatestTunaiLejarRekup.NoRujukan == "BAKI AWAL")
                 {
                     // cari baki awal (sebab tak pernah buat rekupan lagi)
                     //LatestTunaiLejarRekup = await _context.AkTunaiLejar
@@ -817,7 +817,7 @@ namespace MSNK.Controllers
         // rekup function end
 
         // printing Rekupan Tunai Runcit
-        [Authorize(Policy = "DF001P")]
+        [Authorize(Policy = "DF004D")]
         public async Task<IActionResult> PrintPdf(int id, string kodKaunter, string rekup)
         {
             if (rekup == null)

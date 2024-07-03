@@ -3300,8 +3300,8 @@ namespace MSNK.Controllers
                                     JumlahKredit = JumlahKredit + i.Kredit;
                                 }
 
-                                if (JumlahDebit == akPV.AkTunaiRuncit.HadMaksimum)
-                                {
+                                //if (JumlahDebit == akPV.AkTunaiRuncit.HadMaksimum)
+                                //{
                                     decimal JumlahRekupan = JumlahKredit;
 
                                     var objRekup = rekupanList.Select(l => new
@@ -3340,7 +3340,7 @@ namespace MSNK.Controllers
 
                                         await _akTunaiLejarRepo.Update(list);
                                     }
-                                }
+                                //}
 
                             }
                         }
