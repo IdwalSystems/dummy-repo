@@ -738,7 +738,7 @@ namespace MSNK.Controllers
 
                 // 2
                 // define running number 
-                var year = DateTime.Now.ToString("yyyy");
+                var year = date1.Year.ToString();
                 string prefix = year + "/";
                 int x = 1;
                 string noRekup = prefix + "0000";

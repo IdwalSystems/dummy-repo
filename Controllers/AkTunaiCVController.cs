@@ -591,7 +591,7 @@ namespace MSNK.Controllers
                 return RedirectToAction(nameof(Index));
             }
             var kaunter = kodKaunter.KaunterPanjar;
-            var year = DateTime.Now.Year.ToString();
+            var year = akTunaiCV.Tahun;
             string prefix = "CV/" + year + kaunter;
             int x = 1;
             string noRujukan = prefix + "000000";
