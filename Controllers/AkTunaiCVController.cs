@@ -947,6 +947,7 @@ namespace MSNK.Controllers
                     //posting operation start here
                     foreach (AkTunaiCV1 item in akTunaiCV1)
                     {
+                        bakiAkhir -= item.Amaun;
 
                         //insert into AkTunaiLejar
                         AkTunaiLejar akTunaiLejar = new AkTunaiLejar()
@@ -959,7 +960,7 @@ namespace MSNK.Controllers
                             NoRujukan = akTunaiCV.NoCV,
                             Debit = 0,
                             Kredit = item.Amaun,
-                            Baki = bakiAkhir - item.Amaun
+                            Baki = bakiAkhir
                         }; 
                         // insert into AkTunaiLejar end
 
