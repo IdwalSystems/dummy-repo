@@ -1,0 +1,151 @@
+﻿@model MSNK.Models.Modules.PrintModel.RekupTunaiRuncitPrintModel
+
+@{
+    ViewData["Title"] = "Cetakan Rekupan Tunai Runcit";
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+
+    decimal jumlahDebit = 0;
+    decimal jumlahKredit = 0;
+
+}
+<style>
+
+    .topic tr {
+        line-height: 0.5rem;
+    }
+
+    .center {
+        padding: 70px 0;
+        border: 3px solid green;
+        text-align: center;
+    }
+
+    .notbold {
+        font-weight: normal
+    }
+
+    .breakhere {
+        page-break-after: always
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+
+    .vl {
+        border-left: 2px solid gray;
+        height: 700px;
+    }
+</style>
+
+<table class="table table-bordered table-sm topic">
+    <thead>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<table class="table table-bordered table-sm topic">
+    <thead>
+        <tr class="bg-light">
+            <th class="text-center font-weight-bold" width="5%">Tarikh  </th>
+            <th class="text-center font-weight-bold" width="10%">Rujukan  </th>
+            <th class="text-center font-weight-bold" width="10%">Jumlah RM </th>
+            <th class="text-center font-weight-bold" width="5%">Tarikh  </th>
+            <th class="text-center font-weight-bold" width="10%">Rujukan  </th>
+            <th class="text-center font-weight-bold" width="50%">Butiran  </th>
+            <th class="text-center font-weight-bold" width="10%">Amaun RM</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.RekupanList)
+        {
+            <tr>
+                @if (item.Debit != 0)
+                {
+                    <td class="text-center" >@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
+                    <td class="text-center" >@item.NoRujukan</td>
+                    <td class="text-right" >@Convert.ToDecimal(item.Debit).ToString("#,##0.00")</td>
+                    if (item.Kredit == 0)
+                    {
+                        <td class="text-center">-</td>
+                        <td class="text-center">-</td>
+                        <td class="text-left">-</td>
+                        <td class="text-right">-</td>
+                    }
+                }
+                @if (item.Kredit != 0)
+                {
+                    if (item.Debit == 0)
+                    {
+                        <td class="text-center">-</td>
+                        <td class="text-center">-</td>
+                        <td class="text-right">-</td>
+                    }
+                    <td class="text-center">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
+                    <td class="text-center">@item.NoRujukan</td>
+                    <td class="text-left">@item.Butiran</td>
+                    <td class="text-right">@Convert.ToDecimal(item.Kredit).ToString("#,##0.00")</td>
+                }
+            </tr>
+            jumlahDebit = jumlahDebit + item.Debit;
+            jumlahKredit = jumlahKredit + item.Kredit;
+
+        }
+        <tr>
+            <td colspan="2" rowspan="3" class="font-weight-bold text-right">Jumlah Terimaan RM</td>
+            <td class="text-right" rowspan="3">@Convert.ToDecimal(jumlahDebit).ToString("#,#0.00")</td>
+            <td colspan="3" class="font-weight-bold text-right">Jumlah Belanja RM</td>
+            <td class="text-right">@Convert.ToDecimal(jumlahKredit).ToString("#,#0.00")</td>
+        </tr>
+        <tr>
+            <td colspan="3" class="font-weight-bold text-right">Jumlah Bawa Ke Hadapan RM</td>
+            <td class="text-right font-weight-bold">@Convert.ToDecimal(jumlahDebit - jumlahKredit).ToString("#,#0.00")</td>
+        </tr>
+        <tr>
+            <td colspan="3" class="font-weight-bold text-right">Jumlah Rekupan RM</td>
+            <td class="text-right font-weight-bold">@Convert.ToDecimal(jumlahKredit).ToString("#,#0.00")</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="row flexrow mb-3 ml-0">
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disediakan Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+        <h6>@Model.Penyedia</h6>
+    </div>
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disemak Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+    </div>
+    <div class="col-md-4">
+        <h6 class="mb-5">
+            Disahkan Oleh :
+        </h6>
+        <hr class="mt-2 mr-2" />
+    </div>
+</div>

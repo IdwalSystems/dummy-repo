@@ -83,13 +83,6 @@
                                    title="Ubah/Papar"><i class="fas fa-edit"></i></a>
                                 @if (item.FlHapus == 0)
                                 {
-                                    <button data-toggle="modal" data-target="#modalRekup" class="btn btn-sm bg-white text-purple" type="button" data-placement="top" title="Rekup" onclick="ModalRekupClick(this)">
-                                        <i class="fas fa-money-bill-wave"></i>
-                                    </button>
-
-                                    <button data-toggle="modal" data-target="#modalCetak" class="btn btn-sm bg-white text-secondary" type="button" data-placement="top" title="Cetak" onclick="ModalCetakClick(this)">
-                                        <i class="fas fa-print"></i>
-                                    </button>
 
                                     <a asp-action="Delete" asp-route-id="@item.Id"
                                        class="btn text-danger btn-sm bg-white" type="button"
@@ -118,95 +111,3 @@
     </div>
 
 </div>
-
-<!-- Modal Rekup -->
-<div class="modal fade bd-example-modal-lg" id="modalRekup" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="color:#a54ea8;">
-                <h5 class="modal-title">Rekupan Tunai Runcit</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
-                </button>
-            </div>
-            <form asp-action="Rekup" asp-controller="AkTunaiRuncit" class="needs-validation">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="modal-body">
-
-                    <input name="id" type="hidden" class="moId" />
-                    <div class="form-row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="col-form-label">Kod Kaunter Panjar</label>
-                                <input type="text" class="form-control form-control-sm moKodKaunter" name="kodKaunter" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12">
-                            <label for="Tarikh" class="col-form-label">Tarikh</label>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-6 pb-2">
-                            <input type="date" class="form-control form-control-sm" id="tarikhDari" name="tarikhDari" readonly>
-
-                        </div>
-                        <div class="col-md-6">
-                            <input type="date" class="form-control form-control-sm" id="tarikhHingga" name="tarikhHingga">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-success" id="btnRekup">Mula Rekup</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- Modal Rekup End -->
-
-<!-- Modal Cetak -->
-<div class="modal fade bd-example-modal-lg" id="modalCetak" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="color:#a54ea8;">
-                <h5 class="modal-title">Cetakan Rekupan Tunai Runcit</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><i class="fas fa-times fa-2x"></i></span>
-                </button>
-            </div>
-            <form asp-action="PrintPDF" asp-controller="AkTunaiRuncit" class="needs-validation">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="modal-body">
-
-                    <input name="id" type="hidden" class="moId" />
-                    <div class="form-row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="col-form-label">Kod Kaunter Panjar</label>
-                                <input type="text" class="form-control form-control-sm moKodKaunter" name="kodKaunter" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="col-form-label">No Rekup</label>
-                                <select class="form-control select2" name="rekup" id="ddlRekup">
-                                    @*<option value="0">-- Sila Pilih No Rekup --</option>*@
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-success" id="btnCetak" formtarget="_blank">Cetak</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- Modal Rekup End -->
