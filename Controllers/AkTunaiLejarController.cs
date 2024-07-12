@@ -316,7 +316,7 @@ namespace MSNK.Controllers
 
                 var rekupanKreditList = (from tblTunaiLejar in _context.AkTunaiLejar
                                        .Include(x => x.AkTunaiRuncit)
-                                       .Where(x => x.AkTunaiRuncitId == id && x.Rekup == rekup).ToList()
+                                       .Where(x => x.AkTunaiRuncitId == id && x.Rekup == rekup && x.Kredit > 0).ToList()
                                    join tblTunaiCV in _context.AkTunaiCV
                                        .Include(x => x.AkTunaiCV1).ThenInclude(x => x.AkCarta).ToList()
                                    on tblTunaiLejar.NoRujukan equals tblTunaiCV.NoCV into tblTunaiLejarTblTunaiCV
@@ -333,7 +333,7 @@ namespace MSNK.Controllers
 
                 var rekupanDebitList = (from tblTunaiLejar in _context.AkTunaiLejar
                                        .Include(x => x.AkTunaiRuncit)
-                                       .Where(x => x.AkTunaiRuncitId == id && (x.Rekup == rekup || x.Rekup == "BAKI AWAL")).ToList()
+                                       .Where(x => x.AkTunaiRuncitId == id && (x.Rekup == rekup || x.Rekup == "BAKI AWAL") && x.Debit > 0).ToList()
                                          join tblAkPV in _context.AkPV
                                              .ToList()
                                          on tblTunaiLejar.NoRujukan equals tblAkPV.NoPV into tblTunaiLejarTblAkPV

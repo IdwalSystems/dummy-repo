@@ -123,7 +123,7 @@
         </tr>
         <tr>
             <td colspan="3" class="font-weight-bold text-right">Jumlah Rekupan RM</td>
-            <td class="text-right font-weight-bold">@Convert.ToDecimal(jumlahKredit).ToString("#,#0.00")</td>
+            <td class="text-right font-weight-bold">@Convert.ToDecimal(jumlahDebit - jumlahKredit).ToString("#,#0.00")</td>
         </tr>
     </tbody>
 </table>
