@@ -629,7 +629,15 @@
                     }
                     else
                     {
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a>
+                        if (User.IsInRole("SuperAdmin"))
+                        {
+                            <a asp-action="EditSuperAdmin" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a>
+                        }
+                        else
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn ac-primary btn-sm">Ubah</a>
+                        }
+
                     }
                 }
             }

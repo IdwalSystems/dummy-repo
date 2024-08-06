@@ -2371,11 +2371,119 @@ namespace MSNK.Controllers
             return View(akPVView);
         }
 
+        // GET: AkPV/Edit/5
+        [Authorize(Policy = "PV001E")]
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<IActionResult> EditSuperAdmin(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var akPV = await _akPVRepo.GetById((int)id);
 
-        // POST: AkPV/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+            if (akPV == null)
+            {
+                return NotFound();
+            }
+            AkPVViewModel akPVView = new AkPVViewModel();
+
+            //fill in view model AkPVViewModel from akPV
+            akPVView.AkPembekalId = akPV.AkPembekalId;
+            akPVView.SuPekerjaId = akPV.SuPekerjaId;
+            akPVView.Id = akPV.Id;
+            akPVView.Tahun = akPV.Tahun;
+            akPVView.NoPV = akPV.NoPV;
+            akPVView.Tarikh = akPV.Tarikh;
+            akPVView.JKWId = akPV.JKWId;
+            akPVView.JKW = akPV.JKW;
+            akPVView.JBahagianId = akPV.JBahagianId;
+            akPVView.JBahagian = akPV.JBahagian;
+            akPVView.AkBankId = akPV.AkBankId;
+            akPVView.AkBank = akPV.AkBank;
+            akPVView.Jumlah = akPV.Jumlah;
+            akPVView.TarikhPosting = akPV.TarikhPosting;
+            akPVView.JCaraBayarId = akPV.JCaraBayarId;
+            akPVView.AkTunaiRuncitId = akPV.AkTunaiRuncitId;
+            akPVView.NoRekup = akPV.NoRekup;
+            akPVView.IsAKB = akPV.IsAKB;
+            akPVView.JBankId = akPV.JBankId;
+            akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
+
+            switch (akPV.FlKategoriPenerima)
+            {
+                //pembekal
+                case KategoriPenerima.Pembekal:
+                    akPVView.KodPenerima = akPV.AkPembekal.KodSykt;
+                    akPVView.NoKP = "-";
+                    akPVView.Nama = akPV.AkPembekal.NamaSykt;
+                    akPVView.Alamat1 = akPV.AkPembekal.Alamat1;
+                    akPVView.Alamat2 = akPV.AkPembekal.Alamat2;
+                    akPVView.Alamat3 = akPV.AkPembekal.Alamat3;
+                    akPVView.NoAkaunBank = akPV.AkPembekal.AkaunBank;
+                    akPVView.Telefon = akPV.AkPembekal.Telefon1;
+                    akPVView.Emel = akPV.AkPembekal.Emel;
+                    break;
+                //pekerja
+                case KategoriPenerima.Pekerja:
+                    akPVView.KodPenerima = akPV.SuPekerja.NoGaji;
+                    akPVView.NoKP = akPV.SuPekerja.NoKp;
+                    akPVView.Nama = akPV.SuPekerja.Nama;
+                    akPVView.Alamat1 = akPV.SuPekerja.Alamat1;
+                    akPVView.Alamat2 = akPV.SuPekerja.Alamat2;
+                    akPVView.Alamat3 = akPV.SuPekerja.Alamat3;
+                    akPVView.NoAkaunBank = akPV.SuPekerja.NoAkaunBank;
+                    akPVView.Telefon = akPV.SuPekerja.TelefonBimbit;
+                    akPVView.Emel = akPV.SuPekerja.Emel;
+                    break;
+                //Am
+                default:
+                    akPVView.denganTanggungan = akPV.denganTanggungan;
+                    akPVView.KodPenerima = "-";
+                    akPVView.NoKP = akPV.NoKP;
+                    akPVView.Nama = akPV.Nama;
+                    akPVView.Alamat1 = akPV.Alamat1;
+                    akPVView.Alamat2 = akPV.Alamat2;
+                    akPVView.Alamat3 = akPV.Alamat3;
+                    akPVView.NoAkaunBank = akPV.NoAkaunBank;
+                    akPVView.Telefon = akPV.Telefon;
+                    akPVView.Emel = akPV.Emel;
+                    break;
+            }
+
+            akPVView.NoCekAtauEFT = akPV.NoCekAtauEFT;
+            akPVView.TarCekAtauEFT = akPV.TarCekAtauEFT;
+            akPVView.Perihal = akPV.Perihal;
+            akPVView.CaraBayar = akPV.JCaraBayar?.Perihal ?? "PELBAGAI";
+            akPVView.FlPosting = akPV.FlPosting;
+            akPVView.FlCetak = akPV.FlCetak;
+            akPVView.FlHapus = akPV.FlHapus;
+            akPVView.FlKategoriPenerima = akPV.FlKategoriPenerima;
+            akPVView.FlJenisBaucer = akPV.FlJenisBaucer;
+            akPVView.IsGanda = akPV.IsGanda;
+
+            akPVView.AkPV1 = akPV.AkPV1;
+            foreach (AkPV2 item in akPV.AkPV2)
+            {
+                akPVView.JumlahInbois += item.Amaun;
+            }
+            akPVView.AkPV2 = akPV.AkPV2;
+
+            foreach (AkPVGanda item in akPV.AkPVGanda)
+            {
+                akPVView.JumlahGanda += item.Amaun;
+            }
+
+            akPVView.AkPVGanda = akPV.AkPVGanda.OrderBy(b => b.Nama).ToList();
+
+            CartEmpty();
+            PopulateTable(id);
+            PopulateList();
+            PopulateCartFromDb(akPV);
+            return View(akPVView);
+        }
+
         [HttpPost]
         [Authorize(Policy = "PV001E")]
         [ValidateAntiForgeryToken]
@@ -2440,6 +2548,194 @@ namespace MSNK.Controllers
                     akPV.Tarikh = dataAsal.Tarikh;
                     akPV.JKWId = dataAsal.JKWId;
                     akPV.JBahagianId = dataAsal.JBahagianId;
+                    akPV.NoPV = dataAsal.NoPV;
+                    akPV.SuPekerjaId = dataAsal.SuPekerjaId;
+                    akPV.AkPembekalId = dataAsal.AkPembekalId;
+                    akPV.FlJenisBaucer = dataAsal.FlJenisBaucer;
+                    akPV.FlKategoriPenerima = dataAsal.FlKategoriPenerima;
+                    akPV.AkTunaiRuncitId = dataAsal.AkTunaiRuncitId;
+                    akPV.SpPendahuluanPelbagaiId = dataAsal.SpPendahuluanPelbagaiId;
+                    akPV.SuProfilId = dataAsal.SuProfilId;
+                    akPV.NoRekup = dataAsal.NoRekup;
+                    akPV.TarMasuk = dataAsal.TarMasuk;
+                    akPV.UserId = dataAsal.UserId;
+                    akPV.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
+                    akPV.FlCetak = 0;
+                    akPV.IsAKB = dataAsal.IsAKB;
+                    akPV.IsGanda = dataAsal.IsGanda;
+                    // list of input that cannot be change end
+
+                    foreach (AkPV1 item in dataAsal.AkPV1)
+                    {
+                        var model = _context.AkPV1.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+
+                    foreach (AkPV2 item in dataAsal.AkPV2)
+                    {
+                        var model = _context.AkPV2.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+
+                    foreach (AkPVGanda item in dataAsal.AkPVGanda)
+                    {
+                        var model = _context.AkPVGanda.FirstOrDefault(b => b.Id == item.Id);
+                        if (model != null)
+                        {
+                            _context.Remove(model);
+                        }
+                    }
+
+                    var jumlahAsal = dataAsal.Jumlah;
+                    _context.Entry(dataAsal).State = EntityState.Detached;
+
+                    akPV.AkPV1 = _cart.Lines1.ToList();
+                    akPV.AkPV2 = _cart.Lines2.ToList();
+                    akPV.AkPVGanda = _cart.LinesGanda.ToList();
+
+                    akPV.TarSemak = null;
+                    akPV.JPenyemakId = null;
+                    akPV.FlStatusSemak = 0;
+
+                    akPV.TarLulus = null;
+                    akPV.JPelulusId = null;
+                    akPV.FlStatusLulus = 0;
+
+                    akPV.UserIdKemaskini = user.UserName;
+                    akPV.TarKemaskini = DateTime.Now;
+                    akPV.SuPekerjaKemaskiniId = pekerjaId;
+                    akPV.Perihal = akPV.Perihal?.ToUpper() ?? null;
+                    _context.Update(akPV);
+
+                    //insert applog
+                    if (jumlahAsal != akPV.Jumlah)
+                    {
+                        await AddLogAsync("Ubah", "RM" + Convert.ToDecimal(jumlahAsal).ToString("#,##0.00") + " -> RM" +
+                            Convert.ToDecimal(akPV.Jumlah).ToString("#,##0.00"), akPV.NoPV, id, akPV.Jumlah, pekerjaId);
+
+                    }
+                    else
+                    {
+                        await AddLogAsync("Ubah", "Ubah Data", akPV.NoPV, id, akPV.Jumlah, pekerjaId);
+                    }
+                    //insert applog end
+
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AkPVExists(akPV.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                CartEmpty();
+                // checking for jumlah objek & jumlah inbois (untuk pembekal)
+                if (akPV.FlJenisBaucer == JenisBaucer.Inbois)
+                {
+                    if (akPV.Jumlah != JumlahInbois)
+                    {
+                        TempData[SD.Warning] = "Jumlah Objek tidak sama dengan Jumlah Inbois";
+                        PopulateList();
+                        PopulateTable(id);
+                        PopulateCartFromDb(akPV);
+                        return View(akPV);
+                    }
+                    else
+                    {
+                        TempData[SD.Success] = "Data berjaya diubah..!";
+                    }
+
+                    return RedirectToAction(nameof(Index));
+                }
+
+                TempData[SD.Success] = "Data berjaya diubah..!";
+
+                return RedirectToAction(nameof(Index));
+            }
+            PopulateList();
+            PopulateTable(id);
+            PopulateCartFromDb(akPV);
+            return View(akPV);
+        }
+
+        // POST: AkPV/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [Authorize(Policy = "PV001E")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditSuperAdmin(
+            int id,
+            AkPVViewModel akPV,
+            int JKWId,
+            string Penerima,
+            int AkBankId,
+            int JCaraBayarId,
+            decimal JumlahInbois,
+            int JBahagianId,
+            bool IsAKB)
+        {
+            if (id != akPV.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
+                    var dataAsal = await _akPVRepo.GetById(id);
+                    var jumlah = dataAsal.Jumlah;
+
+                    switch (akPV.FlKategoriPenerima)
+                    {
+                        case KategoriPenerima.Pembekal:
+                            var pembekal = dataAsal.AkPembekal;
+                            akPV.SuPekerjaId = null;
+                            akPV.Nama = pembekal.NamaSykt;
+                            akPV.Alamat1 = pembekal.Alamat1;
+                            akPV.Alamat2 = pembekal.Alamat2;
+                            akPV.Alamat3 = pembekal.Alamat3;
+                            akPV.Emel = pembekal.Emel;
+                            akPV.Telefon = pembekal.Telefon1;
+                            akPV.NoAkaunBank = pembekal.AkaunBank;
+                            break;
+                        case KategoriPenerima.Pekerja:
+                            var pekerja = dataAsal.SuPekerja;
+                            akPV.AkPembekalId = null;
+                            akPV.Nama = pekerja.Nama;
+                            akPV.Alamat1 = pekerja.Alamat1;
+                            akPV.Alamat2 = pekerja.Alamat2;
+                            akPV.Alamat3 = pekerja.Alamat3;
+                            akPV.Emel = pekerja.Emel;
+                            akPV.Telefon = pekerja.TelefonBimbit;
+                            akPV.NoAkaunBank = pekerja.NoAkaunBank;
+                            break;
+                        default:
+                            akPV.Nama = dataAsal.Nama;
+                            akPV.AkPembekalId = null;
+                            akPV.SuPekerjaId = null;
+                            break;
+                    }
+
+                    // list of input that cannot be change
+                    //akPV.Tahun = dataAsal.Tahun;
+                    //akPV.Tarikh = dataAsal.Tarikh;
+                    //akPV.JKWId = dataAsal.JKWId;
+                    //akPV.JBahagianId = dataAsal.JBahagianId;
                     akPV.NoPV = dataAsal.NoPV;
                     akPV.SuPekerjaId = dataAsal.SuPekerjaId;
                     akPV.AkPembekalId = dataAsal.AkPembekalId;
