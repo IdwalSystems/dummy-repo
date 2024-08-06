@@ -41,6 +41,13 @@
     <Folder Include="wwwroot\js\Akaun\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\AkPV\EditSuperAdmin.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>
