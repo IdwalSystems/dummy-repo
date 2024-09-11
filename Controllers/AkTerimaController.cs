@@ -1092,6 +1092,7 @@ namespace MSNK.Controllers
                         akTerima.FlJenisTerima = dataAsal.FlJenisTerima;
                         akTerima.FlKategoriPembayar = dataAsal.FlKategoriPembayar;
                         akTerima.AkPenghutangId = dataAsal.AkPenghutangId;
+                        akTerima.SpPendahuluanPelbagaiId = dataAsal.SpPendahuluanPelbagaiId;
                         //akTerima.JBahagianId = dataAsal.JBahagianId;
                         akTerima.NoRujukan = dataAsal.NoRujukan;
                         akTerima.Nama = dataAsal.Nama;
