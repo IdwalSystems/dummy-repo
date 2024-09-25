@@ -156,7 +156,7 @@ namespace MSNK.Controllers
 
             foreach (var item in spList)
             {
-                var ExistAkJurnalWithSp = _context.AkJurnal.Any(b => b.SpPendahuluanPelbagaiId == item.Id && b.Posting == 0);
+                var ExistAkJurnalWithSp = _context.AkJurnal.Any(b => b.SpPendahuluanPelbagaiId == item.Id && b.Posting == 1);
 
                 if (ExistAkJurnalWithSp)
                 {
