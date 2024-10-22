@@ -89,12 +89,12 @@
             $("#Penerima").prop('required', false);
         } else {
             //enable field
-            $("#NoKP").prop('disabled', false);
-            $("#Penerima").prop('disabled', false);
-            $("#txtAlamat1").prop('disabled', false);
-            $("#txtAlamat2").prop('disabled', false);
-            $("#txtAlamat3").prop('disabled', false);
-            $("#ddlKodPekerja").prop('disabled', false);
+            $("#NoKP").prop('readonly', false);
+            $("#Penerima").prop('readonly', false);
+            $("#txtAlamat1").prop('readonly', false);
+            $("#txtAlamat2").prop('readonly', false);
+            $("#txtAlamat3").prop('readonly', false);
+            $("#ddlKodPekerja").prop('readonly', false);
 
             //empty field
             $("#NoKP").val('');
@@ -122,12 +122,12 @@
                     $("#txtAlamat2").val(msg.record.alamat2);
                     $("#txtAlamat3").val(msg.record.alamat3);
                     // disable fields
-                    $("#NoKP").prop('disabled', true);
-                    $("#Penerima").prop('disabled', true);
-                    $("#txtAlamat1").prop('disabled', true);
-                    $("#txtAlamat2").prop('disabled', true);
-                    $("#txtAlamat3").prop('disabled', true);
-                    $("#ddlKodPekerja").prop('disabled', true);
+                    $("#NoKP").prop('readonly', true);
+                    $("#Penerima").prop('readonly', true);
+                    $("#txtAlamat1").prop('readonly', true);
+                    $("#txtAlamat2").prop('readonly', true);
+                    $("#txtAlamat3").prop('readonly', true);
+                    $("#ddlKodPekerja").prop('readonly', true);
                     $("#ddlKodPekerja").val(0);
                 },
                 error: function (req, status, error) {
@@ -146,12 +146,12 @@
             $("#Penerima").prop('required', false);
         } else {
             //enable field
-            $("#NoKP").prop('disabled', false);
-            $("#Penerima").prop('disabled', false);
-            $("#txtAlamat1").prop('disabled', false);
-            $("#txtAlamat2").prop('disabled', false);
-            $("#txtAlamat3").prop('disabled', false);
-            $("#ddlKodPembekal").prop('disabled', false);
+            $("#NoKP").prop('readonly', false);
+            $("#Penerima").prop('readonly', false);
+            $("#txtAlamat1").prop('readonly', false);
+            $("#txtAlamat2").prop('readonly', false);
+            $("#txtAlamat3").prop('readonly', false);
+            $("#ddlKodPembekal").prop('readonly', false);
 
             //empty field
             $("#NoKP").val('');
@@ -178,12 +178,12 @@
                     $("#txtAlamat2").val(msg.record.alamat2);
                     $("#txtAlamat3").val(msg.record.alamat3);
                     // disable fields
-                    $("#NoKP").prop('disabled', true);
-                    $("#Penerima").prop('disabled', true);
-                    $("#txtAlamat1").prop('disabled', true);
-                    $("#txtAlamat2").prop('disabled', true);
-                    $("#txtAlamat3").prop('disabled', true);
-                    $("#ddlKodPembekal").prop('disabled', true);
+                    $("#NoKP").prop('readonly', true);
+                    $("#Penerima").prop('readonly', true);
+                    $("#txtAlamat1").prop('readonly', true);
+                    $("#txtAlamat2").prop('readonly', true);
+                    $("#txtAlamat3").prop('readonly', true);
+                    $("#ddlKodPembekal").prop('readonly', true);
                     $("#ddlKodPembekal").val(0);
                 },
                 error: function (req, status, error) {
