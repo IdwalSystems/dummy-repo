@@ -3542,15 +3542,22 @@ namespace MSNK.Controllers
 
                                 await _akTunaiRuncitRepo.Update(akTunaiRuncit);
 
-                                var tunaiLejar = await _context.AkTunaiLejar.Include(x => x.AkTunaiRuncit)
-                                    .Where(x => x.AkTunaiRuncitId == akPV.AkTunaiRuncitId && x.Rekup == null)
-                                    .OrderByDescending(x => x.Tarikh).FirstOrDefaultAsync();
+                                List<AkTunaiLejar> akTList = _context.AkTunaiLejar
+                                    .Where(x => x.AkTunaiRuncitId == akPV.AkTunaiRuncitId)
+                                    .OrderBy(x => x.NoRujukan)
+                                    .ThenBy(x => x.Tarikh)
+                                    .ThenBy(x => x.Id)
+                                    .Where(x => x.IsPaid == false)
+                                    .ToList();
 
                                 decimal bakiAkhir = 0;
 
-                                if (tunaiLejar != null)
+                                if (akTList != null && akTList.Any())
                                 {
-                                    bakiAkhir = tunaiLejar.Baki;
+                                    foreach (var akT in akTList)
+                                    {
+                                        bakiAkhir = akT.Debit - akT.Kredit;
+                                    }
                                 }
                                 //insert into AkTunaiLejar
                                 AkTunaiLejar akTunaiLejar = new AkTunaiLejar()

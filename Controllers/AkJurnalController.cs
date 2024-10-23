@@ -1055,31 +1055,29 @@ namespace MSNK.Controllers
                     {
                         var akTunaiRuncit = await _akTunaiRuncitRepo.GetById((int)akJurnal.AkTunaiRuncitId);
 
-                        if (akTunaiRuncit != null)
-                        {
-                            akTunaiRuncit.HadMaksimum = akTunaiRuncit.HadMaksimum - akJurnal.JumDebit;
+                        //if (akTunaiRuncit != null)
+                        //{
+                        //    akTunaiRuncit.HadMaksimum = akTunaiRuncit.HadMaksimum - akJurnal.JumDebit;
 
-                            await _akTunaiRuncitRepo.Update(akTunaiRuncit);
-                        }
+                        //    await _akTunaiRuncitRepo.Update(akTunaiRuncit);
+                        //}
                         
                         //find latest baki
-                        AkTunaiLejar akT = _context.AkTunaiLejar
+                        List<AkTunaiLejar> akTList = _context.AkTunaiLejar
                         .Where(x => x.AkTunaiRuncitId == akJurnal.AkTunaiRuncitId)
-                        .OrderByDescending(x => x.NoRujukan)
-                        .ThenByDescending(x => x.Tarikh)
-                        .ThenByDescending(x => x.Id)
-                        .FirstOrDefault();
+                        .OrderBy(x => x.NoRujukan)
+                        .ThenBy(x => x.Tarikh)
+                        .ThenBy(x => x.Id)
+                        .Where(x => x.IsPaid == false)
+                        .ToList();
 
                         decimal bakiAkhir = 0;
 
-                        if (akT != null)
+                        if (akTList != null && akTList.Any())
                         {
-                            bakiAkhir = akT.Baki;
-
-                            if (bakiAkhir < akJurnal.JumDebit)
+                            foreach (var akT in akTList)
                             {
-                                TempData[SD.Warning] = "Baki akhir lejar tunai bagi kod kaunter panjar " + akJurnal.AkTunaiRuncit.KaunterPanjar + " tidak mencukupi.";
-                                return RedirectToAction(nameof(Index));
+                                bakiAkhir = akT.Debit - akT.Kredit;
                             }
                         }
                         else
@@ -1087,22 +1085,51 @@ namespace MSNK.Controllers
                             TempData[SD.Error] = "Baki awal belum dimasukkan ke dalam lejar tunai bagi kod kaunter panjar " + akJurnal.AkTunaiRuncit.KaunterPanjar + ". Anda perlu membuat baucer pembayaran terlebih dahulu.";
                             return RedirectToAction(nameof(Index));
                         }
-
-                        //insert into AkTunaiLejar
-                        AkTunaiLejar akTunaiLejar = new AkTunaiLejar()
+                        if (akJurnal.AkJurnal1 != null && akJurnal.AkJurnal1.Any())
                         {
-                            JKWId = akJurnal.JKWId,
-                            AkTunaiRuncitId = (int)akJurnal.AkTunaiRuncitId,
-                            Tarikh = akJurnal.Tarikh,
-                            AkCartaId = akTunaiRuncit.AkCartaId,
-                            NoRujukan = "JR/" +akJurnal.NoJurnal,
-                            Debit = 0,
-                            Kredit = akJurnal.JumDebit,
-                            Baki = bakiAkhir - akJurnal.JumDebit
-                        };
-                        // insert into AkTunaiLejar end
+                            foreach (var item in akJurnal.AkJurnal1)
+                            {
+                                if (item.AkCartaDebitId == akTunaiRuncit.AkCartaId)
+                                {
+                                    //insert into AkTunaiLejar
+                                    AkTunaiLejar akTunaiLejar = new AkTunaiLejar()
+                                    {
+                                        JKWId = akJurnal.JKWId,
+                                        AkTunaiRuncitId = (int)akJurnal.AkTunaiRuncitId,
+                                        Tarikh = akJurnal.Tarikh,
+                                        AkCartaId = (int)item.AkCartaKreditId,
+                                        NoRujukan = "JR/" + akJurnal.NoJurnal,
+                                        Debit = item.Amaun,
+                                        Kredit = 0,
+                                        Baki = bakiAkhir - item.Amaun
+                                    };
+                                    // insert into AkTunaiLejar end
 
-                        await _akTunaiLejarRepo.Insert(akTunaiLejar);
+                                    await _akTunaiLejarRepo.Insert(akTunaiLejar);
+
+                                }
+                                else
+                                {
+                                    //insert into AkTunaiLejar
+                                    AkTunaiLejar akTunaiLejar = new AkTunaiLejar()
+                                    {
+                                        JKWId = akJurnal.JKWId,
+                                        AkTunaiRuncitId = (int)akJurnal.AkTunaiRuncitId,
+                                        Tarikh = akJurnal.Tarikh,
+                                        AkCartaId = (int)item.AkCartaDebitId,
+                                        NoRujukan = "JR/" + akJurnal.NoJurnal,
+                                        Debit = 0,
+                                        Kredit = item.Amaun,
+                                        Baki = bakiAkhir + item.Amaun
+                                    };
+                                    // insert into AkTunaiLejar end
+
+                                    await _akTunaiLejarRepo.Insert(akTunaiLejar);
+
+                                }
+                            }
+                        }
+                        
 
                         
                     }
