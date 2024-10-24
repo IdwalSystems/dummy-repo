@@ -397,18 +397,10 @@ namespace MSNK.Controllers
                 }
                 data.NoRekup = rekup;
 
-                string customSwitches = string.Format(" --header-html  \"{0}\" " +
-                                       "--header-spacing \"-12\" " +
-                                       "--header-font-size \"10\" " +
-                                       "--footer-center \"[page]/[toPage]\" " +
-                                       "--footer-font-size \"7\" --footer-spacing 1",
-                                       Url.Action("Header", "AkTunaiRuncit",
-                                       new
-                                       {
-                                           NoRekup = rekup,
-                                           KodKaunter = kodKaunter
-                                       },
-                                       "https"));
+                //string customSwitches = string.Format("--header-spacing \"-12\" " +
+                                       //"--header-font-size \"10\" " +
+                                       //"--footer-center \"[page]/[toPage]\" " +
+                                       //"--footer-font-size \"7\" --footer-spacing 1");
 
                 //insert applog
                 await AddLogAsync("Cetak", "Cetak Rekupan", "Kod Kaunter Panjar : " + kodKaunter + ", No Rekup : " + rekup, id, 0, pekerjaId);
@@ -421,22 +413,16 @@ namespace MSNK.Controllers
                 {
                     PageMargins = { Left = 15, Bottom = 15, Right = 15, Top = 15 },
                     PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
-                    CustomSwitches = customSwitches,
-                    //CustomSwitches = "--footer-center \"  Tarikh: " +
-                    //    DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
-                    //    " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
+                    //CustomSwitches = customSwitches,
+                    CustomSwitches = "--footer-center \"  Tarikh: " +
+                        DateTime.Now.Date.ToString("dd/MM/yyyy") + "            Mukasurat: [page]/[toPage]\"" +
+                        " --footer-line --footer-font-size \"10\" --footer-spacing 1 --footer-font-name \"Segoe UI\"",
                     PageSize = Rotativa.AspNetCore.Options.Size.A4,
                 };
             }
 
         }
         // printing Rekupan Tunai Runcit end
-
-        [AllowAnonymous]
-        public ActionResult Header(RekupTunaiRuncitPrintModel reportModel)
-        {
-            return View(reportModel);
-        }
 
         //function get latest date rekup (noPV) in tunai lejar
         public async Task<JsonResult> GetLastDateRekupInTunaiLejar(int id)

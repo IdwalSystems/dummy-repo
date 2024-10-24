@@ -24,6 +24,14 @@
         font-weight: normal
     }
 
+    .max-lines {
+        display: block; /* or inline-block */
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        overflow: hidden;
+        max-height: 5.8em;
+    }
+
     .breakhere {
         page-break-after: always
     }
@@ -39,31 +47,25 @@
     tr {
         page-break-inside: avoid
     }
-
-    .vl {
-        border-left: 2px solid gray;
-        height: 700px;
-    }
 </style>
+<div class="row flexrow mb-3 ml-0 ">
+    <div class="col-2 image-container">
+        <img src="~/img/@ViewData["CompanyLogoPrintPDF"]" alt="Logo syarikat" />
+    </div>
+    <div class="col-8 text-uppercase">
+        <h5 class="mb-1"><strong>@Model.CompanyDetail.NamaSyarikat</strong></h5>
+        <h6 class="mb-0">@Model.CompanyDetail.AlamatSyarikat1</h6>
+        <h6 class="mb-0">@Model.CompanyDetail.AlamatSyarikat2</h6>
+        <h6 class="mb-0">@Model.CompanyDetail.AlamatSyarikat3</h6>
+        <h6 class="mb-0">Telefon : @Model.CompanyDetail.TelSyarikat Faks : @Model.CompanyDetail.FaksSyarikat</h6>
+    </div>
 
-<table class="table table-bordered table-sm topic">
-    <thead>
-        <tr class="bg-light">
-            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
-        </tr>
-        <tr class="bg-light">
-            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
-        </tr>
-        <tr class="bg-light">
-            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
-        </tr>
-        <tr class="bg-light">
-            <th class="text-center font-weight-bold" colspan="11">Bil  </th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+    <div class="col-2 text-right">
+        <h6 class="mb-0">Tarikh Cetakan: @DateTime.Now.Date.ToString("dd/MM/yyyy") @DateTime.Now.ToString("t", CultureInfo.CreateSpecificCulture("en-us"))</h6>
+        <h6 class="mb-0">Kod Kaunter: @Model.KodKaunter</h6>
+        <h6 class="mb-0">No Rekup: @Model.NoRekup</h6>
+    </div>
+</div>
 <table class="table table-bordered table-sm topic">
     <thead>
         <tr class="bg-light">
@@ -79,7 +81,7 @@
     <tbody>
         @foreach (var item in Model.RekupanList)
         {
-            <tr>
+            <tr style="page-break-before:avoid;">
                 @if (item.Debit != 0)
                 {
                     <td class="text-center" >@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
@@ -127,24 +129,19 @@
         </tr>
     </tbody>
 </table>
-
+<br />
+<br />
 <div class="row flexrow mb-3 ml-0">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <h6 class="mb-5">
             Disediakan Oleh :
         </h6>
         <hr class="mt-2 mr-2" />
         <h6>@Model.Penyedia</h6>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
         <h6 class="mb-5">
-            Disemak Oleh :
-        </h6>
-        <hr class="mt-2 mr-2" />
-    </div>
-    <div class="col-md-4">
-        <h6 class="mb-5">
-            Disahkan Oleh :
+            Diterima Oleh :
         </h6>
         <hr class="mt-2 mr-2" />
     </div>
