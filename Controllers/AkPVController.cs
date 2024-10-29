@@ -3570,7 +3570,7 @@ namespace MSNK.Controllers
                                     NoRujukan = akPV.NoPV,
                                     Debit = item.Amaun,
                                     Kredit = 0,
-                                    Baki = bakiAkhir + item.Amaun
+                                    Baki = akTunaiRuncit.HadMaksimum
                                 };
                                 // insert into AkTunaiLejar end
 
@@ -3627,7 +3627,7 @@ namespace MSNK.Controllers
                                         NoRujukan = akPV.NoPV,
                                         Debit = item.Amaun,
                                         Kredit = 0,
-                                        Baki = bakiAkhir + item.Amaun
+                                        Baki = akPV.AkTunaiRuncit.HadMaksimum
                                     };
                                     // insert into AkTunaiLejar end
 
@@ -4057,7 +4057,7 @@ namespace MSNK.Controllers
                                 await _akTunaiRuncitRepo.Update(akTunaiRuncit);
 
                                 var tunaiLejar = await _context.AkTunaiLejar.Include(x => x.AkTunaiRuncit)
-                                    .Where(x => x.AkTunaiRuncitId == obj.AkTunaiRuncitId && x.Rekup == null)
+                                    .Where(x => x.AkTunaiRuncitId == obj.AkTunaiRuncitId && string.IsNullOrEmpty(x.Rekup))
                                     .OrderByDescending(x => x.Tarikh).FirstOrDefaultAsync();
 
                                 decimal bakiAkhir = 0;

@@ -353,20 +353,49 @@ namespace MSNK.Controllers
 
                 List<Rekupan> rekupans = new List<Rekupan>();
 
-                foreach (var item in rekupanDebitList)
+                decimal maksRekup = 0;
+                if (rekupanDebitList.Count > 1)
                 {
-                    rekupans.Add(
-                        new Rekupan
+                    foreach (var item in rekupanDebitList)
+                    {
+                        if (item.NoRujukan.Contains("BAKI AWAL"))
                         {
-                            Tarikh = item.Tarikh,
-                            Butiran = item.Butiran,
-                            NoRujukan = item.NoRujukan,
-                            Debit = item.Debit,
-                            Kredit = item.Kredit,
-                            Baki = item.Baki
+                            maksRekup = item.Debit;
+                            continue;
                         }
-                        );
+
+                        rekupans.Add(
+                            new Rekupan
+                            {
+                                Tarikh = item.Tarikh,
+                                Butiran = item.Butiran,
+                                NoRujukan = item.NoRujukan,
+                                Debit = item.Debit,
+                                Kredit = item.Kredit,
+                                Baki = maksRekup
+                            }
+                            );
+                    }
                 }
+                else
+                {
+                    foreach (var item in rekupanDebitList)
+                    {
+                        maksRekup = item.Debit;
+                        rekupans.Add(
+                            new Rekupan
+                            {
+                                Tarikh = item.Tarikh,
+                                Butiran = item.Butiran,
+                                NoRujukan = item.NoRujukan,
+                                Debit = item.Debit,
+                                Kredit = item.Kredit,
+                                Baki = item.Baki
+                            }
+                            );
+                    }
+                }
+                
 
                 foreach (var item in rekupanKreditList)
                 {
@@ -396,7 +425,7 @@ namespace MSNK.Controllers
                     data.Penyedia = user.SuPekerja.Nama;
                 }
                 data.NoRekup = rekup;
-
+                data.MaksRekupan = maksRekup;
                 //string customSwitches = string.Format("--header-spacing \"-12\" " +
                                        //"--header-font-size \"10\" " +
                                        //"--footer-center \"[page]/[toPage]\" " +
@@ -479,7 +508,7 @@ namespace MSNK.Controllers
             {
                 // cari baucer yang tak direkup lagi paling latest
                 var result = (from tbl1 in _context.AkTunaiLejar
-                            .Where(x => x.AkTunaiRuncitId == id && x.Rekup != "BAKI AWAL" && string.IsNullOrEmpty(x.Rekup)).ToList()
+                            .Where(x => x.AkTunaiRuncitId == id && x.Rekup != "BAKI AWAL" && !string.IsNullOrEmpty(x.Rekup)).ToList()
                               select new
                               {
                                   tbl1.Rekup

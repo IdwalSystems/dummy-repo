@@ -13,8 +13,9 @@ namespace MSNK.Models.Modules.PrintModel
         public List<Rekupan> RekupanList { get; set; }
         public CompanyDetails CompanyDetail { get; set; }
         public string Penyedia { get; set; }
+        public decimal MaksRekupan { get; set; }
 
-        
+
     }
     public class Rekupan
     {
