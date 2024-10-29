@@ -162,7 +162,7 @@ namespace MSNK.Controllers
             // rekupan
             List<AkTunaiLejar> tunaiLejarRekup = _context.AkTunaiLejar
                 .Include(b => b.AkTunaiRuncit)
-                .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup != "BAKI AWAL" && b.Rekup != null)
+                .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup != "BAKI AWAL" && !string.IsNullOrEmpty(b.Rekup))
                 .OrderBy(b => b.Rekup).ThenBy(b => b.Tarikh)
                 .ToList();
 
@@ -170,7 +170,7 @@ namespace MSNK.Controllers
             // belum rekup
             List<AkTunaiLejar> tunaiLejarBelumRekup = _context.AkTunaiLejar
                 .Include(b => b.AkTunaiRuncit)
-                .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup == null)
+                .Where(b => b.AkTunaiRuncit.Id == id && string.IsNullOrEmpty(b.Rekup))
                 .OrderBy(b => b.Tarikh)
                 .ToList();
 
@@ -213,7 +213,7 @@ namespace MSNK.Controllers
                 // cari latest no rekup
                 var LatestTunaiLejarRekup = _context.AkTunaiLejar
                     .Include(b => b.AkTunaiRuncit)
-                    .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup != null)
+                    .Where(b => b.AkTunaiRuncit.Id == id && !string.IsNullOrEmpty(b.Rekup) && !b.NoRujukan.Contains("BAKI AWAL"))
                     .OrderByDescending(b => b.Rekup).ThenByDescending(b => b.Tarikh)
                     .FirstOrDefault();
 
@@ -247,7 +247,7 @@ namespace MSNK.Controllers
 
                 List<AkTunaiLejar> tunaiLejarBelumRekup = await _context.AkTunaiLejar
                     .Include(b => b.AkTunaiRuncit)
-                    .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup == null &&
+                    .Where(b => b.AkTunaiRuncit.Id == id && string.IsNullOrEmpty(b.Rekup) &&
                     b.Tarikh >= date1 && b.Tarikh <= date2)
                     .OrderBy(b => b.Tarikh)
                     .ToListAsync();
@@ -432,9 +432,11 @@ namespace MSNK.Controllers
                 // cari baucer yang tak direkup lagi paling latest
                 var result = await _context.AkTunaiLejar
                 .Include(b => b.AkTunaiRuncit)
-                .Where(b => b.AkTunaiRuncit.Id == id && b.Rekup == null && b.NoRujukan.Contains("PV"))
-                .OrderBy(b => b.Tarikh)
+                .Where(b => b.AkTunaiRuncitId == id && string.IsNullOrEmpty(b.Rekup) && b.NoRujukan.Contains("PV"))
+                .OrderByDescending(b => b.Tarikh)
                 .FirstOrDefaultAsync();
+
+                var tarikh = DateTime.Now.ToString("yyyy-MM-dd");
 
                 if (result == null)
                 {
@@ -448,9 +450,17 @@ namespace MSNK.Controllers
                     {
                         return Json(new { result = "ERROR" });
                     }
+                    tarikh = result.Tarikh.ToString("yyyy-MM-dd");
+                }
+                else
+                {
+                    if (result.NoRujukan.Contains("PV", StringComparison.OrdinalIgnoreCase))
+                    {
+                        tarikh = result.Tarikh.ToString("yyyy-MM-dd");
+                    }
                 }
 
-                var tarikh = result.Tarikh.ToString("yyyy-MM-dd");
+               
 
                 return Json(new { result = "OK", tarikh = tarikh, record = result });
             }
@@ -469,7 +479,7 @@ namespace MSNK.Controllers
             {
                 // cari baucer yang tak direkup lagi paling latest
                 var result = (from tbl1 in _context.AkTunaiLejar
-                            .Where(x => x.AkTunaiRuncitId == id && x.Rekup != "BAKI AWAL" && x.Rekup != null).ToList()
+                            .Where(x => x.AkTunaiRuncitId == id && x.Rekup != "BAKI AWAL" && string.IsNullOrEmpty(x.Rekup)).ToList()
                               select new
                               {
                                   tbl1.Rekup
