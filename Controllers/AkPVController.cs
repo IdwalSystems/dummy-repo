@@ -1061,7 +1061,7 @@ namespace MSNK.Controllers
                         {
                             amount += akBelian1.Amaun;
 
-                            _cart.RemoveItem1(akBelian1.Id);
+                            _cart.RemoveItem1(akBelian1.AkCartaId);
 
                         }
 
@@ -1092,6 +1092,32 @@ namespace MSNK.Controllers
                 {
 
                     _cart.RemoveItem2(akPV2.AkBelianId);
+                    
+                    var po = _context.AkBelian.Include(x => x.AkBelian1).ThenInclude(x => x.AkCarta).Where(b => b.Id == akPV2.AkBelianId).FirstOrDefault();
+
+                    // get kod akaun from akBelian1
+                    foreach (var item in po.AkBelian1)
+                    {
+                        var akBelian1 = _cart.Lines1.Where(b => b.AkCartaId == item.AkCartaId).FirstOrDefault();
+
+                        var amount = akBelian1.Amaun;
+                        if (akBelian1 != null)
+                        {
+                            amount -= item.Amaun;
+
+                            _cart.RemoveItem1(akBelian1.AkCartaId);
+
+                        }
+
+                        if (amount > 0)
+                        {
+                            _cart.AddItem1(akPV2.AkPVId,
+                                        amount,
+                                        item.AkCartaId);
+                        }
+                        
+                    }
+
                 }
 
                 return Json(new { result = "OK" });

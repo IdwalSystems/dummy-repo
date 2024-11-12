@@ -772,6 +772,38 @@
                                 txtTarPO.val("");
                                 txtAmaunPO.val("0.00");
                                 checkJumlah();
+                                $.ajax({
+                                    type: "POST",
+                                    //url: "/AkPV/GetAllItemCartAkPV1",
+                                    url: '@Url.Action("GetAllItemCartAkPV1", "AkPV")',
+                                    dataType: "json",
+                                    success: function (r) {
+
+                                        //refresh updated table objek
+                                        $("table tbody#tbodyObjek").empty();
+                                        var sum = 0;
+                                        if (r.record.length > 0) {
+                                            for (var i = 0; i < r.record.length; i++) {
+                                                var item1 = r.record[i];
+                                                var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
+                                                    "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
+                                                    "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                                                    "</td><td>" +
+                                                    "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                                    "</td><td>" +
+                                                    "<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                                    "</td><tr>";
+                                                $("table tbody#tbodyObjek").append(str);
+                                                sum += item1.amaun;
+                                            }
+                                        }
+
+                                        jumlah.val(sum.toFixed(2));
+                                        if ($('#ddlKodPembekal').val() != 0) {
+                                            checkJumlah();
+                                        }
+                                    }
+                                });
 
                             } else {
                                 toastr.error("Bajet untuk kod akaun ini tidak mencukupi.", "Ralat");
@@ -819,6 +851,38 @@
                         //Delete the Table row using it's Index.
                         table.deleteRow(row[0].rowIndex);
                         checkJumlah();
+                        $.ajax({
+                            type: "POST",
+                            //url: "/AkPV/GetAllItemCartAkPV1",
+                            url: '@Url.Action("GetAllItemCartAkPV1", "AkPV")',
+                            dataType: "json",
+                            success: function (r) {
+
+                                //refresh updated table objek
+                                $("table tbody#tbodyObjek").empty();
+                                var sum = 0;
+                                if (r.record.length > 0) {
+                                    for (var i = 0; i < r.record.length; i++) {
+                                        var item1 = r.record[i];
+                                        var str = "<tr><td id='akCartaId' hidden>" + item1.akCartaId +
+                                            "</td><td>" + item1.akCarta.kod + " - " + item1.akCarta.perihal +
+                                            "</td><td class='text-right'>" + (item1.amaun).toFixed(2) +
+                                            "</td><td>" +
+                                            "<button class='btn ac-primary btn-sm' type='button' id='btnUpdate1' data-toggle='modal' data-target='#modalObjek' onclick='Update1(this)'><i class='fa fa-edit' ></i></button>" +
+                                            "</td><td>" +
+                                            "<button class='btn ac-danger btn-sm' type='button' id='btnRemove1' onclick='Remove1(this)'><i class='fas fa-trash' ></i></button>" +
+                                            "</td><tr>";
+                                        $("table tbody#tbodyObjek").append(str);
+                                        sum += item1.amaun;
+                                    }
+                                }
+
+                                jumlah.val(sum.toFixed(2));
+                                if ($('#ddlKodPembekal').val() != 0) {
+                                    checkJumlah();
+                                }
+                            }
+                        });
                     }
                 });
                 $("#txtAkBelian option[value=" + name + "]").prop('disabled', false);
@@ -881,7 +945,7 @@
                     dataType: "json",
                     success: function (r) {
 
-                        //refresh updated table Urusniaga
+                        //refresh updated table Invois
                         $("table tbody#tbodyInbois").empty();
                         var sum = 0;
                         if (r.record.length > 0) {
@@ -924,6 +988,7 @@
                         checkJumlah();
                     }
                 });
+
             }
         });
     };

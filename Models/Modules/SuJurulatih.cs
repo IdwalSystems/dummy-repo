@@ -37,7 +37,7 @@ namespace MSNK.Models.Modules
         [EmailAddress(ErrorMessage = "Emel tidak sah"), MaxLength(100)]
         public string Emel { get; set; }
         [DisplayName("Status Aktif")]
-        public int FlStatus { get; set; }
+        public int FlStatus { get; set; } // 0 = tak aktif; 1 = aktif
         [DisplayName("Tarikh Aktif")]
         [Required(ErrorMessage = "Tarikh Aktif diperlukan")]
         public DateTime TarikhAktif { get; set; }
