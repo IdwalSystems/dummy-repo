@@ -75,7 +75,7 @@ namespace MSNK.Models.Modules
         public JSukan JSukan { get; set; }
         [DisplayName("Sukan")]
         [Required(ErrorMessage = "Sukan diperlukan")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Sukan")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Sukan")]
         public int JSukanId { get; set; }
         [DisplayName("Negeri")]
         public JNegeri JNegeri { get; set; }
