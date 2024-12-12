@@ -115,6 +115,7 @@
 
         }
         <tr>
+
             <td colspan="2" rowspan="3" class="font-weight-bold text-right">Jumlah Maks Rekupan RM</td>
             <td class="text-right" rowspan="3">@Convert.ToDecimal(maksRekupan).ToString("#,#0.00")</td>
             <td colspan="3" class="font-weight-bold text-right">Jumlah Belanja RM</td>
@@ -122,7 +123,7 @@
         </tr>
         <tr>
             <td colspan="3" class="font-weight-bold text-right">Jumlah Bawa Ke Hadapan RM</td>
-            <td class="text-right font-weight-bold">@Convert.ToDecimal(jumlahDebit - jumlahKredit).ToString("#,#0.00")</td>
+            <td class="text-right font-weight-bold">@Convert.ToDecimal(maksRekupan - jumlahKredit).ToString("#,#0.00")</td>
         </tr>
         <tr>
             <td colspan="3" class="font-weight-bold text-right">Jumlah Rekupan RM</td>
