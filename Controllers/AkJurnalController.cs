@@ -248,6 +248,7 @@ namespace MSNK.Controllers
             };
             if (!string.IsNullOrEmpty(searchColumn))
             {
+
                 ViewBag.SearchColumn = new SelectList(columnList, "Value", "Text", searchColumn);
             }
             else
@@ -1004,7 +1005,7 @@ namespace MSNK.Controllers
 
                     foreach (AkJurnal1 keVot in akJurnal.AkJurnal1.OrderBy(x => x.Indeks))
                     {
-                        if (GetJenisObjek((int)keVot.AkCartaKreditId) == "B" )
+                        if (GetJenisObjek((int)keVot.AkCartaKreditId) == "B" || IsPeruntukan((int)keVot.AkCartaKreditId))
                         {
                             
                             if (keVot.Amaun > 0)
@@ -1025,7 +1026,7 @@ namespace MSNK.Controllers
 
                         }
 
-                        if (GetJenisObjek((int)keVot.AkCartaDebitId) == "B")
+                        if (GetJenisObjek((int)keVot.AkCartaDebitId) == "B" || IsPeruntukan((int)keVot.AkCartaDebitId))
                         {
 
                             if (keVot.Amaun > 0)
@@ -1381,6 +1382,11 @@ namespace MSNK.Controllers
         private string GetJenisObjek(int id)
         {
             return _context.AkCarta.Include(x => x.JJenis).FirstOrDefault(x => x.Id == id).JJenis.Kod;
+        }
+
+        private bool IsPeruntukan(int id)
+        {
+            return _context.AkCarta.Any(c => c.IsBajet == true);
         }
     }
 }

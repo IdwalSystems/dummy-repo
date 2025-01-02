@@ -17,22 +17,22 @@ namespace MSNK.Models.Modules.EFRepository
         public readonly ApplicationDbContext context;
         public BelanjawanSemasaRepository(ApplicationDbContext context) => this.context = context;
 
-        //public async Task<List<AbWaran>> GetAbWaranBasedOnYear(string tahun, int jKWId, int jBahagianId, DateTime tarHingga)
-        //{
-        //    var sql = await context.AbWaran
-        //        .Include(b => b.AbWaran1)
-        //            .ThenInclude(b => b.AkCarta)
-        //                .ThenInclude(b => b.JParas)
-        //        .Where(
-        //        b => b.Tahun == tahun
-        //        && b.JKWId == jKWId
-        //        && b.JBahagianId == jBahagianId
-        //        && b.Tarikh <= tarHingga
-        //        && b.FlPosting == 1).OrderBy(b => b.Tarikh)
-        //        .ToListAsync();
+        public async Task<List<AbBukuVot>> GetAbBukuVotByTahun(string tahun, int jKWId, int jBahagianId, DateTime tarHingga, string initialRujukan)
+        {
+            List<AbBukuVot> results = await context.AbBukuVot
+                .Include(bv => bv.Vot)
+                    .ThenInclude(bv => bv.JParas)
+                .Where(bv => 
+                bv.Rujukan != null && bv.Rujukan.StartsWith(initialRujukan)
+                && bv.Tahun == tahun
+                && bv.JKWId == jKWId
+                && bv.JBahagianId == jBahagianId
+                && bv.Tarikh <= tarHingga
+                )
+                .ToListAsync();
 
-        //    return sql;
-        //}
+            return results;
+        }
 
         public async Task<List<AbWaran>> GetAbWaranBasedOnYear(string tahun, int jKWId, int jBahagianId, DateTime tarHingga)
         {
@@ -288,6 +288,7 @@ namespace MSNK.Models.Modules.EFRepository
             decimal Pindah = 0;
             decimal Jumlah = 0;
             decimal Belanja = 0;
+            decimal Liabiliti = 0;
             decimal TBS = 0;
             decimal TelahGuna = 0;
             decimal Baki = 0;
@@ -297,20 +298,22 @@ namespace MSNK.Models.Modules.EFRepository
             if (Tanggungan == true)
             {
                 TBS = 0 - Amaun;
+                Liabiliti = 0 - Amaun;
             }
             else
             {
-                Baki = 0 - Amaun;
+                if (Pendahuluan == true)
+                {
+                    TBS = 0 - Amaun;
+                }
+                else
+                {
+                    Baki = 0 - Amaun;
+                }
+
             }
 
-            if (Pendahuluan == true)
-            {
-                TBS = 0 - Amaun;
-            }
-            else
-            {
-                Baki = 0 - Amaun;
-            }
+            
 
             Belanja = Amaun;
             TelahGuna = TBS + Belanja;
@@ -327,6 +330,7 @@ namespace MSNK.Models.Modules.EFRepository
                             Pindah = Pindah,
                             Jumlah = Jumlah,
                             Belanja = Belanja,
+                            Liabiliti = Liabiliti,
                             TBS = TBS,
                             TelahGuna = TelahGuna,
                             Baki = Baki
@@ -424,15 +428,36 @@ namespace MSNK.Models.Modules.EFRepository
                 .Where(
                 b => b.Tarikh.Year.ToString() == tahun
                 && b.JKWId == jKWId
-                && b.JBahagianId == jBahagianId
-                && b.Tarikh <= tarHingga
+                && b.Tarikh <= tarHingga 
+                //&& b.Tarikh <= tarHingga
                 && b.Posting == 1).OrderBy(b => b.Tarikh)
                 .ToListAsync();
+            
+            var sqlList = new List<AkJurnal>();
+            if (sql.Count > 0)
+            {
+                foreach (var item in sql)
+                {
+                    bool isBahagianKredit = item.AkJurnal1.Any(j1 => j1.JBahagianKreditId == jBahagianId);
 
-            return sql;
+                    if (isBahagianKredit)
+                    {
+                        sqlList.Add(item);
+                    }
+
+                    bool isBahagianDebit = item.AkJurnal1.Any(j1 => j1.JBahagianDebitId == jBahagianId);
+
+                    if (isBahagianDebit)
+                    {
+                        sqlList.Add(item);
+                    }
+                }
+            }
+
+            return sqlList;
         }
 
-        public List<AbBelanjawanSemasaViewModel> RunJurnalObjekOperation(int Bahagian, decimal Debit, decimal Kredit, string KodCarta, string Perihal, string Paras)
+        public List<AbBelanjawanSemasaViewModel> RunJurnalObjekOperation(int Bahagian, decimal Debit, decimal Kredit, string KodCarta, string Perihal, string Paras, string NoRujukan)
         {
             decimal Asal = 0;
             decimal Tambah = 0;
@@ -445,8 +470,7 @@ namespace MSNK.Models.Modules.EFRepository
 
             var list = new List<AbBelanjawanSemasaViewModel>();
 
-            Belanja = Debit - Kredit;
-            TelahGuna = Debit - Kredit;
+            Pindah = Kredit - Debit;
             Baki = Kredit - Debit;
 
             list.Add(
@@ -463,7 +487,8 @@ namespace MSNK.Models.Modules.EFRepository
                             Belanja = Belanja,
                             TBS = TBS,
                             TelahGuna = TelahGuna,
-                            Baki = Baki
+                            Baki = Baki,
+                            NoRujukan = NoRujukan
                         }
                     );
 

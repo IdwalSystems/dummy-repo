@@ -31,6 +31,9 @@ namespace MSNK.Models.Modules.ViewModel
         [Display(Name = "Pindah RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Pindah { get; set; }
+        [Display(Name = "Pelarasan RM")]
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal Pelarasan { get; set; }
         [Display(Name = "Jumlah RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Jumlah { get; set; }
@@ -41,11 +44,17 @@ namespace MSNK.Models.Modules.ViewModel
         [Display(Name = "TBS RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TBS { get; set; }
+        [Display(Name = "Liabiliti RM")]
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal Liabiliti { get; set; }
         [Display(Name = "Telah Guna RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TelahGuna { get; set; }
         [Display(Name = "Baki RM")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Baki { get; set; }
+
+        [NotMapped]
+        public string NoRujukan { get; set; }
     }
 }

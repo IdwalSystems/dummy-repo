@@ -135,16 +135,18 @@
             <div class="card-body">
                 <div class="table-responsive table-sm">
                     <table class="table tableSub table-bordered table-hover display compact nowrap" width="100%">
-                        <thead>
+                        <thead class="table-dark">
                             <tr>
                                 <th width="2%">Bil</th>
                                 <th width="5%">Objek</th>
-                                <th width="30%">Perihalan</th>
+                                <th width="20%">Perihalan</th>
                                 <th width="5%">Asal RM</th>
                                 <th width="5%">Tambah RM</th>
                                 <th width="5%">Pindah RM</th>
+                                <th width="5%">Pel. RM</th>
                                 <th width="5%">Jumlah RM</th>
                                 <th width="5%">TBS RM</th>
+                                <th width="5%">Liabiliti RM</th>
                                 <th width="5%">Belanja RM</th>
                                 <th width="5%">Telah Guna RM</th>
                                 <th width="5%">Baki RM</th>
@@ -172,18 +174,24 @@
                                         @Convert.ToDecimal(item.Pindah).ToString("#,##0.00")
                                     </td>
                                     <td class="text-right">
+                                        @Convert.ToDecimal(item.Pelarasan).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right table-secondary">
                                         @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
                                     </td>
                                     <td class="text-right">
                                         @Convert.ToDecimal(item.TBS).ToString("#,##0.00")
                                     </td>
                                     <td class="text-right">
+                                        @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
+                                    </td>
+                                    <td class="text-right">
                                         @Convert.ToDecimal(item.Belanja).ToString("#,##0.00")
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-right table-secondary">
                                         @Convert.ToDecimal(item.TelahGuna).ToString("#,##0.00")
                                     </td>
-                                    <td class="text-right">
+                                    <td class="text-right table-warning font-weight-bold">
                                         @Convert.ToDecimal(item.Baki).ToString("#,##0.00")
                                     </td>
                                 </tr>

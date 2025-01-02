@@ -1585,7 +1585,7 @@ namespace MSNK.Controllers
                     // check if already linked with AkBelian
                     AkBelian Belian = _context.AkBelian.Where(x => x.AkPOId == id).FirstOrDefault();
 
-                    if (Belian != null)
+                    if (Belian != null && !User.IsInRole("SuperAdmin"))
                     {
                         //var akBelian = (from tblBelian in _context.AkBelian.ToList()
                         //                join tblPO in _context.AkPO.ToList()

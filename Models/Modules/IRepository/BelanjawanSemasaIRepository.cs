@@ -63,6 +63,8 @@ namespace MSNK.Models.Modules.IRepository
            decimal Kredit,
            string KodCarta,
            string Perihal,
-           string Paras);
+           string Paras,
+           string NoRujukan);
+        Task<List<AbBukuVot>> GetAbBukuVotByTahun(string tahun, int jKWId, int jBahagianId, DateTime tarHingga, string initialRujukan);
     }
 }

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MSNK.Infrastructure;
 using MSNK.Models.Operations;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace MSNK.Controllers
 {
@@ -77,9 +78,8 @@ namespace MSNK.Controllers
 
             List<AbBelanjawanSemasaViewModel> vm = new List<AbBelanjawanSemasaViewModel>();
 
-            // Waran
+            // waran
             List<AbWaran> warans = await _bsRepo.GetAbWaranBasedOnYear(tahun, JKWId, JBahagianId, date2);
-
             List<AbBelanjawanSemasaViewModel> waranList = new List<AbBelanjawanSemasaViewModel>();
 
             foreach (var waran in warans)
@@ -94,16 +94,45 @@ namespace MSNK.Controllers
                         waran1.TK,
                         waran1.Amaun,
                         waran1.AkCarta.Kod,
-                        waran1.AkCarta.Perihal,
+                        waran.NoRujukan + "/" + waran1.AkCarta.Perihal,
                         waran1.AkCarta.JParas.Kod);
 
                         vm.AddRange(waranList);
                     }
                 }
             }
-            // Waran End
+            //// Waran End
 
-            // PO
+            //// PO
+            //List<AbBelanjawanSemasaViewModel> poList = new List<AbBelanjawanSemasaViewModel>();
+
+            //List<AbBukuVot> bukuVotTypePO = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2,"PO");
+
+            //if (bukuVotTypePO != null && bukuVotTypePO.Any())
+            //{
+            //    foreach (var bukuVot in bukuVotTypePO)
+            //    {
+            //        vm.Add(new AbBelanjawanSemasaViewModel
+            //        {
+            //            NoRujukan = bukuVot.Rujukan,
+            //            Objek = bukuVot.Vot?.Kod,
+            //            Perihalan = bukuVot.Vot?.Perihal,
+            //            Paras = bukuVot.Vot.JParas.Kod,
+            //            Asal = 0,
+            //            Tambah = 0,
+            //            Pindah = 0,
+            //            Jumlah = 0,
+            //            TBS = bukuVot.Tanggungan,
+            //            Belanja = 0,
+            //            TelahGuna = 0,
+            //            Baki = 0 - bukuVot.Tanggungan
+            //        });
+            //    }
+            //}
+            //// PO End
+
+
+            //// PO
             List<AkPO> POs = await _bsRepo.GetAkPOBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> poList = new List<AbBelanjawanSemasaViewModel>();
@@ -114,16 +143,44 @@ namespace MSNK.Controllers
                 {
                     foreach (var po1 in po.AkPO1)
                     {
-                        poList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)po.JBahagianId, po1.Amaun, po1.AkCarta.Kod, po1.AkCarta.Perihal, "4");
+                        poList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)po.JBahagianId, po1.Amaun, po1.AkCarta.Kod,po.NoPO + "/" + po1.AkCarta.Perihal, "4");
 
                         vm.AddRange(poList);
                     }
                 }
 
             }
-            // PO End
+            //// PO End
 
-            // Pendahuluan Pelbagai
+            //// Pendahuluan Pelbagai
+            //List<AbBelanjawanSemasaViewModel> spList = new List<AbBelanjawanSemasaViewModel>();
+
+            //List<AbBukuVot> bukuVotTypeSP = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "SP");
+
+            //if (bukuVotTypeSP != null && bukuVotTypeSP.Any())
+            //{
+            //    foreach (var bukuVot in bukuVotTypeSP)
+            //    {
+            //        vm.Add(new AbBelanjawanSemasaViewModel
+            //        {
+            //            NoRujukan = bukuVot.Rujukan,
+            //            Objek = bukuVot.Vot?.Kod,
+            //            Perihalan = bukuVot.Vot?.Perihal,
+            //            Paras = bukuVot.Vot.JParas.Kod,
+            //            Asal = 0,
+            //            Tambah = 0,
+            //            Pindah = 0,
+            //            Jumlah = 0,
+            //            TBS = bukuVot.Tanggungan,
+            //            Belanja = 0,
+            //            TelahGuna = 0,
+            //            Baki = 0 - bukuVot.Tanggungan
+            //        });
+            //    }
+            //}
+            //// Pendahuluan Pelbagai End
+
+            //// Pendahuluan Pelbagai
             List<SpPendahuluanPelbagai> Sps = await _bsRepo.GetSpPendahuluanPelbagaiBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> spList = new List<AbBelanjawanSemasaViewModel>();
@@ -132,16 +189,44 @@ namespace MSNK.Controllers
             {
                 if (sp.JBahagianId == JBahagianId)
                 {
-                    spList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)sp.JBahagianId, sp.JumLulus, sp.AkCarta.Kod, sp.AkCarta.Perihal, "4");
+                    spList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)sp.JBahagianId, sp.JumLulus, sp.AkCarta.Kod, sp.NoPermohonan + "/" + sp.AkCarta.Perihal, "4");
 
                     vm.AddRange(spList);
                 }
 
 
             }
-            // Pendahuluan Pelbagai End
+            //// Pendahuluan Pelbagai End
 
-            // POLaras
+            //// POLaras
+            //List<AbBelanjawanSemasaViewModel> poLarasList = new List<AbBelanjawanSemasaViewModel>();
+
+            //List<AbBukuVot> bukuVotTypePOLaras = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "PT");
+
+            //if (bukuVotTypePOLaras != null && bukuVotTypePOLaras.Any())
+            //{
+            //    foreach (var bukuVot in bukuVotTypePOLaras)
+            //    {
+            //        vm.Add(new AbBelanjawanSemasaViewModel
+            //        {
+            //            NoRujukan = bukuVot.Rujukan,
+            //            Objek = bukuVot.Vot?.Kod,
+            //            Perihalan = bukuVot.Vot?.Perihal,
+            //            Paras = bukuVot.Vot.JParas.Kod,
+            //            Asal = 0,
+            //            Tambah = 0,
+            //            Pindah = 0,
+            //            Jumlah = 0,
+            //            TBS = bukuVot.Tanggungan,
+            //            Belanja = 0,
+            //            TelahGuna = 0,
+            //            Baki = 0 - bukuVot.Tanggungan
+            //        });
+            //    }
+            //}
+            //// POLaras End
+
+            //// POLaras
             List<AkPOLaras> POLarass = await _bsRepo.GetAkPOLarasBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> poLarasList = new List<AbBelanjawanSemasaViewModel>();
@@ -152,16 +237,44 @@ namespace MSNK.Controllers
                 {
                     foreach (var poLaras1 in poLaras.AkPOLaras1)
                     {
-                        poLarasList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)poLaras.JBahagianId, poLaras1.Amaun, poLaras1.AkCarta.Kod, poLaras1.AkCarta.Perihal, "4");
+                        poLarasList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)poLaras.JBahagianId, poLaras1.Amaun, poLaras1.AkCarta.Kod,poLaras.NoRujukan + "/" + poLaras1.AkCarta.Perihal, "4");
 
                         vm.AddRange(poLarasList);
                     }
                 }
 
             }
-            // POLaras End
+            //// POLaras End
 
-            // Inden
+            //// Inden
+            //List<AbBelanjawanSemasaViewModel> indenList = new List<AbBelanjawanSemasaViewModel>();
+
+            //List<AbBukuVot> bukuVotTypeInden = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "IK");
+
+            //if (bukuVotTypeInden != null && bukuVotTypeInden.Any())
+            //{
+            //    foreach (var bukuVot in bukuVotTypeInden)
+            //    {
+            //        vm.Add(new AbBelanjawanSemasaViewModel
+            //        {
+            //            NoRujukan = bukuVot.Rujukan,
+            //            Objek = bukuVot.Vot?.Kod,
+            //            Perihalan = bukuVot.Vot?.Perihal,
+            //            Paras = bukuVot.Vot.JParas.Kod,
+            //            Asal = 0,
+            //            Tambah = 0,
+            //            Pindah = 0,
+            //            Jumlah = 0,
+            //            TBS = bukuVot.Tanggungan,
+            //            Belanja = 0,
+            //            TelahGuna = 0,
+            //            Baki = 0 - bukuVot.Tanggungan
+            //        });
+            //    }
+            //}
+            //// Inden End
+
+            //// Inden
             List<AkInden> Indens = await _bsRepo.GetAkIndenBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> indenList = new List<AbBelanjawanSemasaViewModel>();
@@ -172,16 +285,16 @@ namespace MSNK.Controllers
                 {
                     foreach (var inden1 in inden.AkInden1)
                     {
-                        indenList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)inden.JBahagianId, inden1.Amaun, inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
+                        indenList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)inden.JBahagianId, inden1.Amaun, inden.NoInden + "/" +  inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
 
                         vm.AddRange(indenList);
                     }
                 }
 
             }
-            // Inden End
+            //// Inden End
 
-            // PV
+            //// PV
             List<AkPV> PVs = await _bsRepo.GetAkPVBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> pvList = new List<AbBelanjawanSemasaViewModel>();
@@ -195,7 +308,7 @@ namespace MSNK.Controllers
                     if (pv.FlJenisBaucer == JenisBaucer.Pendahuluan)
                         isPendahuluan = true;
 
-                    pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal, "4");
+                    pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod,pv.NoPV + "/" + pv1.AkCarta.Perihal, "4");
 
                     //pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal + " " + pv.NoPV, "4");
 
@@ -203,9 +316,37 @@ namespace MSNK.Controllers
                 }
 
             }
-            // Pv End
+            //// Pv End
 
             // Tunai CV
+            //List<AbBelanjawanSemasaViewModel> cvList = new List<AbBelanjawanSemasaViewModel>();
+
+            //List<AbBukuVot> bukuVotTypeCV = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "CV");
+
+            //if (bukuVotTypeCV != null && bukuVotTypeCV.Any())
+            //{
+            //    foreach (var bukuVot in bukuVotTypeCV)
+            //    {
+            //        vm.Add(new AbBelanjawanSemasaViewModel
+            //        {
+            //            NoRujukan = bukuVot.Rujukan,
+            //            Objek = bukuVot.Vot?.Kod,
+            //            Perihalan = bukuVot.Vot?.Perihal,
+            //            Paras = bukuVot.Vot.JParas.Kod,
+            //            Asal = 0,
+            //            Tambah = 0,
+            //            Pindah = 0,
+            //            Jumlah = 0,
+            //            TBS = 0,
+            //            Belanja = bukuVot.Belanja,
+            //            TelahGuna = bukuVot.Belanja,
+            //            Baki = 0 - bukuVot.Belanja
+            //        });
+            //    }
+            //}
+            // TunaiCV End
+
+            //// Tunai CV
             List<AkTunaiCV> CVs = await _bsRepo.GetAkTunaiCVBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> cvList = new List<AbBelanjawanSemasaViewModel>();
@@ -216,16 +357,16 @@ namespace MSNK.Controllers
                 {
                     foreach (var cv1 in cv.AkTunaiCV1)
                     {
-                        cvList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)cv.AkTunaiRuncit.JBahagianId, cv1.Amaun, cv1.AkCarta.Kod, cv1.AkCarta.Perihal, "4");
+                        cvList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)cv.AkTunaiRuncit.JBahagianId, cv1.Amaun, cv1.AkCarta.Kod, cv.NoCV + "/" + cv1.AkCarta.Perihal, "4");
 
                         vm.AddRange(cvList);
                     }
                 }
 
             }
-            // TunaiCV End
+            //// TunaiCV End
 
-            // Terima
+            //// Terima
             List<AkTerima> Terimas = await _bsRepo.GetAkTerimaBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> terimaList = new List<AbBelanjawanSemasaViewModel>();
@@ -238,7 +379,7 @@ namespace MSNK.Controllers
                     {
                         if (terima1.AkCarta.JJenis.Kod == "B" && terima.FlPostingBukuVot == 1)
                         {
-                            terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
+                            terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima.NoRujukan + "/" + terima1.AkCarta.Perihal, "4");
 
                             vm.AddRange(terimaList);
                         }
@@ -247,34 +388,74 @@ namespace MSNK.Controllers
                 }
 
             }
-            // Terima End
+            //// Terima End
 
-            // Jurnal
-            // KIV
-            //List<AkJurnal> Jurnals = await _bsRepo.GetAkJurnalBasedOnYear(tahun, JKWId, JBahagianId, date2);
+            //// Jurnal
+            //// KIV
+            List<AbBelanjawanSemasaViewModel> jurnalList = new List<AbBelanjawanSemasaViewModel>();
 
-            //List<AbBelanjawanSemasaViewModel> jurnalList = new List<AbBelanjawanSemasaViewModel>();
+            List<AbBukuVot> bukuVotTypeJurnal = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "JR");
 
-            //foreach (var jurnal in Jurnals)
-            //{
-            //    if (jurnal.JBahagianId == JBahagianId)
-            //    {
-            //        foreach (var jurnal1 in jurnal.AkJurnal1)
-            //        {
-            //            if (jurnal1.AkCarta.JJenis.Kod == "B" || jurnal1.AkCarta.JJenis.Kod == "A")
-            //            {
-            //                jurnalList = _bsRepo.RunJurnalObjekOperation((int)jurnal.JBahagianId, jurnal1.Debit, jurnal1.Kredit, jurnal1.AkCarta.Kod, jurnal1.AkCarta.Perihal, "4");
+            if (bukuVotTypeJurnal != null && bukuVotTypeJurnal.Any())
+            {
+                foreach (var bukuVot in bukuVotTypeJurnal)
+                {
+                    vm.Add(new AbBelanjawanSemasaViewModel
+                    {
+                        JKWId = bukuVot.JKWId,
+                        JBahagianId = (int)bukuVot.JBahagianId,
+                        Objek = bukuVot.Vot?.Kod,
+                        Perihalan = bukuVot.Vot?.Perihal,
+                        Paras = bukuVot.Vot.JParas.Kod,
+                        Asal = 0,
+                        Tambah = 0,
+                        Pindah = 0,
+                        Pelarasan = bukuVot.Kredit - bukuVot.Debit,
+                        Jumlah = bukuVot.Kredit - bukuVot.Debit,
+                        TBS = 0,
+                        Belanja = 0,
+                        TelahGuna = 0,
+                        Baki = bukuVot.Kredit - bukuVot.Debit
+                    });
 
-            //                vm.AddRange(jurnalList);
-            //            }
 
-            //        }
-            //    }
-
-            //}
+                }
+                
+            }
             // Jurnal End
 
-            //vm = vm.Where(b => b.Objek == "B29301" && b.JBahagianId == 2).ToList();
+            // Belian
+            List<AbBelanjawanSemasaViewModel> belianList = new List<AbBelanjawanSemasaViewModel>();
+
+            List<AbBukuVot> bukuVotTypeBelian = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "IN");
+
+            if (bukuVotTypeBelian != null && bukuVotTypeBelian.Any())
+            {
+                foreach (var bukuVot in bukuVotTypeBelian)
+                {
+                    vm.Add(new AbBelanjawanSemasaViewModel
+                    {
+                        JKWId = bukuVot.JKWId,
+                        JBahagianId = (int)bukuVot.JBahagianId,
+                        Objek = bukuVot.Vot?.Kod,
+                        Perihalan = bukuVot.Vot?.Perihal,
+                        Paras = bukuVot.Vot.JParas.Kod,
+                        Asal = 0,
+                        Tambah = 0,
+                        Pindah = 0,
+                        Jumlah = 0,
+                        TBS = 0,
+                        Liabiliti = bukuVot.Liabiliti,
+                        Belanja = 0,
+                        TelahGuna = 0,
+                        Baki = 0
+                    });
+                }
+            }
+            // Belian End
+
+            // untuk testing satu-satu kod akaun
+            //vm = vm.Where(b => (b.Objek == "B52202" ) && b.JBahagianId == 3).ToList();
             //
             switch (ParasId)
             {
@@ -289,11 +470,13 @@ namespace MSNK.Controllers
                             Asal = l.Sum(c => c.Asal),
                             Tambah = l.Sum(c => c.Tambah),
                             Pindah = l.Sum(c => c.Pindah),
-                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Pelarasan = l.Sum(c => c.Pelarasan),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan),
                             Belanja = l.Sum(c => c.Belanja),
+                            Liabiliti = l.Sum(c => c.Liabiliti),
                             TBS = l.Sum(c => c.TBS),
                             TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan - c.TBS - c.Liabiliti - c.Belanja),
                         }).OrderBy(b => b.Objek).ToList();
                     break;
                 // paras 2
@@ -307,11 +490,13 @@ namespace MSNK.Controllers
                             Asal = l.Sum(c => c.Asal),
                             Tambah = l.Sum(c => c.Tambah),
                             Pindah = l.Sum(c => c.Pindah),
-                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Pelarasan = l.Sum(c => c.Pelarasan),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan),
                             Belanja = l.Sum(c => c.Belanja),
+                            Liabiliti = l.Sum(c => c.Liabiliti),
                             TBS = l.Sum(c => c.TBS),
                             TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan - c.TBS - c.Liabiliti - c.Belanja),
                         }).OrderBy(b => b.Objek).ToList();
                     break;
                 // paras 3
@@ -325,11 +510,13 @@ namespace MSNK.Controllers
                             Asal = l.Sum(c => c.Asal),
                             Tambah = l.Sum(c => c.Tambah),
                             Pindah = l.Sum(c => c.Pindah),
-                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Pelarasan = l.Sum(c => c.Pelarasan),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan),
                             Belanja = l.Sum(c => c.Belanja),
+                            Liabiliti = l.Sum(c => c.Liabiliti),
                             TBS = l.Sum(c => c.TBS),
                             TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan - c.TBS - c.Liabiliti - c.Belanja),
                         }).OrderBy(b => b.Objek).ToList();
                     break;
                 // paras 4
@@ -343,17 +530,29 @@ namespace MSNK.Controllers
                             Asal = l.Sum(c => c.Asal),
                             Tambah = l.Sum(c => c.Tambah),
                             Pindah = l.Sum(c => c.Pindah),
-                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Pelarasan = l.Sum(c => c.Pelarasan),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan),
                             Belanja = l.Sum(c => c.Belanja),
+                            Liabiliti = l.Sum(c => c.Liabiliti),
                             TBS = l.Sum(c => c.TBS),
                             TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan - c.TBS - c.Liabiliti - c.Belanja),
                         }).OrderBy(b => b.Objek).ToList();
                     break;
             }
 
-            PopulateList(JKWId,JBahagianId, tahun, tarHingga,ParasId);
+            PopulateList(JKWId, JBahagianId, tahun, tarHingga, ParasId);
             return View(vm);
+        }
+
+        private string GetJenisObjek(int id)
+        {
+            return _context.AkCarta.Include(x => x.JJenis).FirstOrDefault(x => x.Id == id).JJenis.Kod;
+        }
+
+        private bool IsPeruntukan(int id)
+        {
+            return _context.AkCarta.Any(c => c.IsBajet == true);
         }
         // printing List of Carta
         [AllowAnonymous]
@@ -367,9 +566,8 @@ namespace MSNK.Controllers
 
             List<AbBelanjawanSemasaViewModel> vm = new List<AbBelanjawanSemasaViewModel>();
 
-            // Waran
+            // waran
             List<AbWaran> warans = await _bsRepo.GetAbWaranBasedOnYear(tahun, JKWId, JBahagianId, date2);
-
             List<AbBelanjawanSemasaViewModel> waranList = new List<AbBelanjawanSemasaViewModel>();
 
             foreach (var waran in warans)
@@ -384,16 +582,45 @@ namespace MSNK.Controllers
                         waran1.TK,
                         waran1.Amaun,
                         waran1.AkCarta.Kod,
-                        waran1.AkCarta.Perihal,
+                        waran.NoRujukan + "/" + waran1.AkCarta.Perihal,
                         waran1.AkCarta.JParas.Kod);
 
                         vm.AddRange(waranList);
                     }
                 }
             }
-            // Waran End
+            //// Waran End
 
-            // PO
+            //// PO
+            //List<AbBelanjawanSemasaViewModel> poList = new List<AbBelanjawanSemasaViewModel>();
+
+            //List<AbBukuVot> bukuVotTypePO = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2,"PO");
+
+            //if (bukuVotTypePO != null && bukuVotTypePO.Any())
+            //{
+            //    foreach (var bukuVot in bukuVotTypePO)
+            //    {
+            //        vm.Add(new AbBelanjawanSemasaViewModel
+            //        {
+            //            NoRujukan = bukuVot.Rujukan,
+            //            Objek = bukuVot.Vot?.Kod,
+            //            Perihalan = bukuVot.Vot?.Perihal,
+            //            Paras = bukuVot.Vot.JParas.Kod,
+            //            Asal = 0,
+            //            Tambah = 0,
+            //            Pindah = 0,
+            //            Jumlah = 0,
+            //            TBS = bukuVot.Tanggungan,
+            //            Belanja = 0,
+            //            TelahGuna = 0,
+            //            Baki = 0 - bukuVot.Tanggungan
+            //        });
+            //    }
+            //}
+            //// PO End
+
+
+            //// PO
             List<AkPO> POs = await _bsRepo.GetAkPOBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> poList = new List<AbBelanjawanSemasaViewModel>();
@@ -404,16 +631,44 @@ namespace MSNK.Controllers
                 {
                     foreach (var po1 in po.AkPO1)
                     {
-                        poList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)po.JBahagianId, po1.Amaun, po1.AkCarta.Kod, po1.AkCarta.Perihal, "4");
+                        poList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)po.JBahagianId, po1.Amaun, po1.AkCarta.Kod, po.NoPO + "/" + po1.AkCarta.Perihal, "4");
 
                         vm.AddRange(poList);
                     }
                 }
 
             }
-            // PO End
+            //// PO End
 
-            // Pendahuluan Pelbagai
+            //// Pendahuluan Pelbagai
+            //List<AbBelanjawanSemasaViewModel> spList = new List<AbBelanjawanSemasaViewModel>();
+
+            //List<AbBukuVot> bukuVotTypeSP = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "SP");
+
+            //if (bukuVotTypeSP != null && bukuVotTypeSP.Any())
+            //{
+            //    foreach (var bukuVot in bukuVotTypeSP)
+            //    {
+            //        vm.Add(new AbBelanjawanSemasaViewModel
+            //        {
+            //            NoRujukan = bukuVot.Rujukan,
+            //            Objek = bukuVot.Vot?.Kod,
+            //            Perihalan = bukuVot.Vot?.Perihal,
+            //            Paras = bukuVot.Vot.JParas.Kod,
+            //            Asal = 0,
+            //            Tambah = 0,
+            //            Pindah = 0,
+            //            Jumlah = 0,
+            //            TBS = bukuVot.Tanggungan,
+            //            Belanja = 0,
+            //            TelahGuna = 0,
+            //            Baki = 0 - bukuVot.Tanggungan
+            //        });
+            //    }
+            //}
+            //// Pendahuluan Pelbagai End
+
+            //// Pendahuluan Pelbagai
             List<SpPendahuluanPelbagai> Sps = await _bsRepo.GetSpPendahuluanPelbagaiBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> spList = new List<AbBelanjawanSemasaViewModel>();
@@ -422,16 +677,44 @@ namespace MSNK.Controllers
             {
                 if (sp.JBahagianId == JBahagianId)
                 {
-                    spList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)sp.JBahagianId, sp.JumLulus, sp.AkCarta.Kod, sp.AkCarta.Perihal, "4");
+                    spList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)sp.JBahagianId, sp.JumLulus, sp.AkCarta.Kod, sp.NoPermohonan + "/" + sp.AkCarta.Perihal, "4");
 
                     vm.AddRange(spList);
                 }
 
 
             }
-            // Pendahuluan Pelbagai End
+            //// Pendahuluan Pelbagai End
 
-            // POLaras
+            //// POLaras
+            //List<AbBelanjawanSemasaViewModel> poLarasList = new List<AbBelanjawanSemasaViewModel>();
+
+            //List<AbBukuVot> bukuVotTypePOLaras = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "PT");
+
+            //if (bukuVotTypePOLaras != null && bukuVotTypePOLaras.Any())
+            //{
+            //    foreach (var bukuVot in bukuVotTypePOLaras)
+            //    {
+            //        vm.Add(new AbBelanjawanSemasaViewModel
+            //        {
+            //            NoRujukan = bukuVot.Rujukan,
+            //            Objek = bukuVot.Vot?.Kod,
+            //            Perihalan = bukuVot.Vot?.Perihal,
+            //            Paras = bukuVot.Vot.JParas.Kod,
+            //            Asal = 0,
+            //            Tambah = 0,
+            //            Pindah = 0,
+            //            Jumlah = 0,
+            //            TBS = bukuVot.Tanggungan,
+            //            Belanja = 0,
+            //            TelahGuna = 0,
+            //            Baki = 0 - bukuVot.Tanggungan
+            //        });
+            //    }
+            //}
+            //// POLaras End
+
+            //// POLaras
             List<AkPOLaras> POLarass = await _bsRepo.GetAkPOLarasBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> poLarasList = new List<AbBelanjawanSemasaViewModel>();
@@ -442,16 +725,44 @@ namespace MSNK.Controllers
                 {
                     foreach (var poLaras1 in poLaras.AkPOLaras1)
                     {
-                        poLarasList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)poLaras.JBahagianId, poLaras1.Amaun, poLaras1.AkCarta.Kod, poLaras1.AkCarta.Perihal, "4");
+                        poLarasList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)poLaras.JBahagianId, poLaras1.Amaun, poLaras1.AkCarta.Kod, poLaras.NoRujukan + "/" + poLaras1.AkCarta.Perihal, "4");
 
                         vm.AddRange(poLarasList);
                     }
                 }
 
             }
-            // POLaras End
+            //// POLaras End
 
-            // Inden
+            //// Inden
+            //List<AbBelanjawanSemasaViewModel> indenList = new List<AbBelanjawanSemasaViewModel>();
+
+            //List<AbBukuVot> bukuVotTypeInden = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "IK");
+
+            //if (bukuVotTypeInden != null && bukuVotTypeInden.Any())
+            //{
+            //    foreach (var bukuVot in bukuVotTypeInden)
+            //    {
+            //        vm.Add(new AbBelanjawanSemasaViewModel
+            //        {
+            //            NoRujukan = bukuVot.Rujukan,
+            //            Objek = bukuVot.Vot?.Kod,
+            //            Perihalan = bukuVot.Vot?.Perihal,
+            //            Paras = bukuVot.Vot.JParas.Kod,
+            //            Asal = 0,
+            //            Tambah = 0,
+            //            Pindah = 0,
+            //            Jumlah = 0,
+            //            TBS = bukuVot.Tanggungan,
+            //            Belanja = 0,
+            //            TelahGuna = 0,
+            //            Baki = 0 - bukuVot.Tanggungan
+            //        });
+            //    }
+            //}
+            //// Inden End
+
+            //// Inden
             List<AkInden> Indens = await _bsRepo.GetAkIndenBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> indenList = new List<AbBelanjawanSemasaViewModel>();
@@ -462,16 +773,16 @@ namespace MSNK.Controllers
                 {
                     foreach (var inden1 in inden.AkInden1)
                     {
-                        indenList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)inden.JBahagianId, inden1.Amaun, inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
+                        indenList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)inden.JBahagianId, inden1.Amaun, inden.NoInden + "/" + inden1.AkCarta.Kod, inden1.AkCarta.Perihal, "4");
 
                         vm.AddRange(indenList);
                     }
                 }
 
             }
-            // Inden End
+            //// Inden End
 
-            // PV
+            //// PV
             List<AkPV> PVs = await _bsRepo.GetAkPVBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> pvList = new List<AbBelanjawanSemasaViewModel>();
@@ -485,15 +796,45 @@ namespace MSNK.Controllers
                     if (pv.FlJenisBaucer == JenisBaucer.Pendahuluan)
                         isPendahuluan = true;
 
-                    pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal, "4");
+                    pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv.NoPV + "/" + pv1.AkCarta.Perihal, "4");
+
+                    //pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal + " " + pv.NoPV, "4");
 
                     vm.AddRange(pvList);
                 }
 
             }
-            // Pv End
+            //// Pv End
 
             // Tunai CV
+            //List<AbBelanjawanSemasaViewModel> cvList = new List<AbBelanjawanSemasaViewModel>();
+
+            //List<AbBukuVot> bukuVotTypeCV = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "CV");
+
+            //if (bukuVotTypeCV != null && bukuVotTypeCV.Any())
+            //{
+            //    foreach (var bukuVot in bukuVotTypeCV)
+            //    {
+            //        vm.Add(new AbBelanjawanSemasaViewModel
+            //        {
+            //            NoRujukan = bukuVot.Rujukan,
+            //            Objek = bukuVot.Vot?.Kod,
+            //            Perihalan = bukuVot.Vot?.Perihal,
+            //            Paras = bukuVot.Vot.JParas.Kod,
+            //            Asal = 0,
+            //            Tambah = 0,
+            //            Pindah = 0,
+            //            Jumlah = 0,
+            //            TBS = 0,
+            //            Belanja = bukuVot.Belanja,
+            //            TelahGuna = bukuVot.Belanja,
+            //            Baki = 0 - bukuVot.Belanja
+            //        });
+            //    }
+            //}
+            // TunaiCV End
+
+            //// Tunai CV
             List<AkTunaiCV> CVs = await _bsRepo.GetAkTunaiCVBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> cvList = new List<AbBelanjawanSemasaViewModel>();
@@ -504,16 +845,16 @@ namespace MSNK.Controllers
                 {
                     foreach (var cv1 in cv.AkTunaiCV1)
                     {
-                        cvList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)cv.AkTunaiRuncit.JBahagianId, cv1.Amaun, cv1.AkCarta.Kod, cv1.AkCarta.Perihal, "4");
+                        cvList = _bsRepo.RunSpPOPOLarasIndenCVObjekOperation((int)cv.AkTunaiRuncit.JBahagianId, cv1.Amaun, cv1.AkCarta.Kod, cv.NoCV + "/" + cv1.AkCarta.Perihal, "4");
 
                         vm.AddRange(cvList);
                     }
                 }
 
             }
-            // TunaiCV End
+            //// TunaiCV End
 
-            // Terima
+            //// Terima
             List<AkTerima> Terimas = await _bsRepo.GetAkTerimaBasedOnYear(tahun, JKWId, JBahagianId, date2);
 
             List<AbBelanjawanSemasaViewModel> terimaList = new List<AbBelanjawanSemasaViewModel>();
@@ -526,7 +867,7 @@ namespace MSNK.Controllers
                     {
                         if (terima1.AkCarta.JJenis.Kod == "B" && terima.FlPostingBukuVot == 1)
                         {
-                            terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima1.AkCarta.Perihal, "4");
+                            terimaList = _bsRepo.RunResitObjekOperation((int)terima.JBahagianId, terima1.Amaun, terima1.AkCarta.Kod, terima.NoRujukan + "/" + terima1.AkCarta.Perihal, "4");
 
                             vm.AddRange(terimaList);
                         }
@@ -535,35 +876,74 @@ namespace MSNK.Controllers
                 }
 
             }
-            // Terima End
+            //// Terima End
 
-            // Jurnal
-            // KIV
-            //List<AkJurnal> Jurnals = await _bsRepo.GetAkJurnalBasedOnYear(tahun, JKWId, JBahagianId, date2);
+            //// Jurnal
+            //// KIV
+            List<AbBelanjawanSemasaViewModel> jurnalList = new List<AbBelanjawanSemasaViewModel>();
 
-            //List<AbBelanjawanSemasaViewModel> jurnalList = new List<AbBelanjawanSemasaViewModel>();
+            List<AbBukuVot> bukuVotTypeJurnal = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "JR");
 
-            //foreach (var jurnal in Jurnals)
-            //{
-            //    if (jurnal.JBahagianId == JBahagianId)
-            //    {
-            //        foreach (var jurnal1 in jurnal.AkJurnal1)
-            //        {
-            //            if (jurnal1.AkCarta.JJenis.Kod == "B" || jurnal1.AkCarta.JJenis.Kod == "A")
-            //            {
-            //                jurnalList = _bsRepo.RunJurnalObjekOperation((int)jurnal.JBahagianId, jurnal1.Debit, jurnal1.Kredit, jurnal1.AkCarta.Kod, jurnal1.AkCarta.Perihal, "4");
+            if (bukuVotTypeJurnal != null && bukuVotTypeJurnal.Any())
+            {
+                foreach (var bukuVot in bukuVotTypeJurnal)
+                {
+                    vm.Add(new AbBelanjawanSemasaViewModel
+                    {
+                        JKWId = bukuVot.JKWId,
+                        JBahagianId = (int)bukuVot.JBahagianId,
+                        Objek = bukuVot.Vot?.Kod,
+                        Perihalan = bukuVot.Vot?.Perihal,
+                        Paras = bukuVot.Vot.JParas.Kod,
+                        Asal = 0,
+                        Tambah = 0,
+                        Pindah = 0,
+                        Pelarasan = bukuVot.Kredit - bukuVot.Debit,
+                        Jumlah = bukuVot.Kredit - bukuVot.Debit,
+                        TBS = 0,
+                        Belanja = 0,
+                        TelahGuna = 0,
+                        Baki = bukuVot.Kredit - bukuVot.Debit
+                    });
 
-            //                vm.AddRange(jurnalList);
-            //            }
 
-            //        }
-            //    }
+                }
 
-            //}
+            }
             // Jurnal End
 
-            var paras = "4";
-            //vm = vm.Where(b => b.Objek == "B52203" && b.JBahagianId == 3).ToList();
+            // Belian
+            List<AbBelanjawanSemasaViewModel> belianList = new List<AbBelanjawanSemasaViewModel>();
+
+            List<AbBukuVot> bukuVotTypeBelian = await _bsRepo.GetAbBukuVotByTahun(tahun, JKWId, JBahagianId, date2, "IN");
+
+            if (bukuVotTypeBelian != null && bukuVotTypeBelian.Any())
+            {
+                foreach (var bukuVot in bukuVotTypeBelian)
+                {
+                    vm.Add(new AbBelanjawanSemasaViewModel
+                    {
+                        JKWId = bukuVot.JKWId,
+                        JBahagianId = (int)bukuVot.JBahagianId,
+                        Objek = bukuVot.Vot?.Kod,
+                        Perihalan = bukuVot.Vot?.Perihal,
+                        Paras = bukuVot.Vot.JParas.Kod,
+                        Asal = 0,
+                        Tambah = 0,
+                        Pindah = 0,
+                        Jumlah = 0,
+                        TBS = 0,
+                        Liabiliti = bukuVot.Liabiliti,
+                        Belanja = 0,
+                        TelahGuna = 0,
+                        Baki = 0
+                    });
+                }
+            }
+            // Belian End
+
+            // untuk testing satu-satu kod akaun
+            //vm = vm.Where(b => (b.Objek == "B52202" ) && b.JBahagianId == 3).ToList();
             //
             switch (ParasId)
             {
@@ -578,15 +958,14 @@ namespace MSNK.Controllers
                             Asal = l.Sum(c => c.Asal),
                             Tambah = l.Sum(c => c.Tambah),
                             Pindah = l.Sum(c => c.Pindah),
-                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Pelarasan = l.Sum(c => c.Pelarasan),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan),
                             Belanja = l.Sum(c => c.Belanja),
+                            Liabiliti = l.Sum(c => c.Liabiliti),
                             TBS = l.Sum(c => c.TBS),
                             TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan - c.TBS - c.Liabiliti - c.Belanja),
                         }).OrderBy(b => b.Objek).ToList();
-
-                    paras = "1";
-
                     break;
                 // paras 2
                 case 2:
@@ -599,14 +978,14 @@ namespace MSNK.Controllers
                             Asal = l.Sum(c => c.Asal),
                             Tambah = l.Sum(c => c.Tambah),
                             Pindah = l.Sum(c => c.Pindah),
-                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Pelarasan = l.Sum(c => c.Pelarasan),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan),
                             Belanja = l.Sum(c => c.Belanja),
+                            Liabiliti = l.Sum(c => c.Liabiliti),
                             TBS = l.Sum(c => c.TBS),
                             TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan - c.TBS - c.Liabiliti - c.Belanja),
                         }).OrderBy(b => b.Objek).ToList();
-
-                    paras = "2";
                     break;
                 // paras 3
                 case 3:
@@ -619,14 +998,14 @@ namespace MSNK.Controllers
                             Asal = l.Sum(c => c.Asal),
                             Tambah = l.Sum(c => c.Tambah),
                             Pindah = l.Sum(c => c.Pindah),
-                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Pelarasan = l.Sum(c => c.Pelarasan),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan),
                             Belanja = l.Sum(c => c.Belanja),
+                            Liabiliti = l.Sum(c => c.Liabiliti),
                             TBS = l.Sum(c => c.TBS),
                             TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan - c.TBS - c.Liabiliti - c.Belanja),
                         }).OrderBy(b => b.Objek).ToList();
-
-                    paras = "3";
                     break;
                 // paras 4
                 default:
@@ -639,17 +1018,16 @@ namespace MSNK.Controllers
                             Asal = l.Sum(c => c.Asal),
                             Tambah = l.Sum(c => c.Tambah),
                             Pindah = l.Sum(c => c.Pindah),
-                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah),
+                            Pelarasan = l.Sum(c => c.Pelarasan),
+                            Jumlah = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan),
                             Belanja = l.Sum(c => c.Belanja),
+                            Liabiliti = l.Sum(c => c.Liabiliti),
                             TBS = l.Sum(c => c.TBS),
                             TelahGuna = l.Sum(c => c.TBS + c.Belanja),
-                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah - c.TBS - c.Belanja),
+                            Baki = l.Sum(c => c.Asal + c.Tambah + c.Pindah + c.Pelarasan - c.TBS - c.Liabiliti - c.Belanja),
                         }).OrderBy(b => b.Objek).ToList();
-
-                    paras = "4";
                     break;
             }
-
             //string customSwitches = "--page-offset 0 --footer-center [page] / [toPage] --footer-font-size 6";
 
             vm = vm.OrderBy(b => b.Objek).ToList();
@@ -659,6 +1037,7 @@ namespace MSNK.Controllers
 
             var KW = kw.Kod + " - " + kw.Perihal;
             var Bahagian = bahagian.Kod + " - " + bahagian.Perihal;
+            var paras = _context.JParas.Find(ParasId);
             var lastDate = date2;
 
             var company = await _userService.GetCompanyDetails();

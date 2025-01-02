@@ -9,9 +9,11 @@
     decimal JumAsal = 0;
     decimal JumTambah = 0;
     decimal JumPindah = 0;
+    decimal JumPelarasan = 0;
     decimal JumJumlah = 0;
     decimal JumBelanja = 0;
     decimal JumTBS = 0;
+    decimal JumLiabiliti = 0;
     decimal JumTelahGuna = 0;
     decimal JumBaki = 0;
 
@@ -96,12 +98,14 @@
 
             <th width="2%">Bil</th>
             <th width="5%">Objek</th>
-            <th width="30%">Perihalan</th>
+            <th width="20%">Perihalan</th>
             <th width="5%">Asal RM</th>
             <th width="5%">Tambah RM</th>
             <th width="5%">Pindah RM</th>
+            <th width="5%">Pel. RM</th>
             <th width="5%">Jumlah RM</th>
             <th width="5%">TBS RM</th>
+            <th width="5%">Liabiliti RM</th>
             <th width="5%">Belanja RM</th>
             <th width="5%">Telah Guna RM</th>
             <th width="5%">Baki RM</th>
@@ -114,8 +118,10 @@
             JumAsal = JumAsal + item.Asal;
             JumTambah = JumTambah + item.Tambah;
             JumPindah = JumPindah + item.Pindah;
+            JumPelarasan = JumPelarasan + item.Pelarasan;
             JumJumlah = JumJumlah + item.Jumlah;
             JumBelanja = JumBelanja + item.Belanja;
+            JumLiabiliti = JumLiabiliti + item.Liabiliti;
             JumTBS = JumTBS + item.TBS;
             JumTelahGuna = JumTelahGuna + item.TelahGuna;
             JumBaki = JumBaki + item.Baki;
@@ -139,18 +145,24 @@
                     @Convert.ToDecimal(item.Pindah).ToString("#,##0.00")
                 </td>
                 <td class="text-right">
+                    @Convert.ToDecimal(item.Pelarasan).ToString("#,##0.00")
+                </td>
+                <td class="text-right table-secondary">
                     @Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")
                 </td>
                 <td class="text-right">
                     @Convert.ToDecimal(item.TBS).ToString("#,##0.00")
                 </td>
                 <td class="text-right">
+                    @Convert.ToDecimal(item.Liabiliti).ToString("#,##0.00")
+                </td>
+                <td class="text-right">
                     @Convert.ToDecimal(item.Belanja).ToString("#,##0.00")
                 </td>
-                <td class="text-right">
+                <td class="text-right table-secondary">
                     @Convert.ToDecimal(item.TelahGuna).ToString("#,##0.00")
                 </td>
-                <td class="text-right">
+                <td class="text-right table-warning font-weight-bold">
                     @Convert.ToDecimal(item.Baki).ToString("#,##0.00")
                 </td>
             </tr>
@@ -167,10 +179,16 @@
             @Convert.ToDecimal(JumPindah).ToString("#,##0.00")
         </td>
         <td class="font-weight-bold text-right">
+            @Convert.ToDecimal(JumPelarasan).ToString("#,##0.00")
+        </td>
+        <td class="font-weight-bold text-right">
             @Convert.ToDecimal(JumJumlah).ToString("#,##0.00")
         </td>
         <td class="font-weight-bold text-right">
             @Convert.ToDecimal(JumTBS).ToString("#,##0.00")
+        </td>
+        <td class="font-weight-bold text-right">
+            @Convert.ToDecimal(JumLiabiliti).ToString("#,##0.00")
         </td>
         <td class="font-weight-bold text-right">
             @Convert.ToDecimal(JumBelanja).ToString("#,##0.00")
