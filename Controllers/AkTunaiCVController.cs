@@ -37,6 +37,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkPembekal, int, string> _akPembekalRepo;
         private readonly IRepository<AkBank, int, string> _akBankRepo;
         private readonly CustomIRepository<string, int> _customRepo;
+        private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
         private readonly UserService _userService;
         private CartTunaiCV _cart;
 
@@ -52,6 +53,7 @@ namespace MSNK.Controllers
             IRepository<AkPembekal, int, string> akPembekalRepository,
             IRepository<AkBank, int, string> akBankRepository,
             CustomIRepository<string, int> customRepo,
+            IRepository<AbBukuVot, int, string> abBukuVotRepository,
             UserService userService,
              CartTunaiCV cart
             )
@@ -67,6 +69,7 @@ namespace MSNK.Controllers
             _akPembekalRepo = akPembekalRepository;
             _akBankRepo = akBankRepository;
             _customRepo = customRepo;
+            _abBukuVotRepo = abBukuVotRepository;
             _userService = userService;
             _cart = cart;
         }
@@ -918,6 +921,7 @@ namespace MSNK.Controllers
                 }
                 else
                 {
+
                     //find latest baki
                     AkTunaiLejar akT = _context.AkTunaiLejar
                     .Where(x => x.AkTunaiRuncitId == akTunaiCV.AkTunaiRuncitId)
@@ -965,6 +969,66 @@ namespace MSNK.Controllers
                         // insert into AkTunaiLejar end
 
                         await _akTunaiLejarRepo.Insert(akTunaiLejar);
+                    }
+
+                    // check for baki peruntukan
+                    foreach (AkTunaiCV1 item in akTunaiCV1)
+                    {
+                        bool IsExistAbBukuVot = await _context.AbBukuVot
+                                .Where(x => x.Tahun == akTunaiCV.Tahun && x.VotId == item.AkCartaId && x.JKWId == akTunaiCV.AkTunaiRuncit.JKWId && x.JBahagianId == akTunaiCV.AkTunaiRuncit.JBahagianId)
+                                .AnyAsync();
+
+                        if (IsExistAbBukuVot == true)
+                        {
+                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akTunaiCV.Tahun, item.AkCartaId, akTunaiCV.AkTunaiRuncit.JKWId, akTunaiCV.AkTunaiRuncit.JBahagianId);
+
+                            if (sum < item.Amaun)
+                            {
+                                TempData[SD.Error] = "Bajet untuk kod akaun " + item.AkCarta.Kod + " tidak mencukupi.";
+                                return RedirectToAction(nameof(Index));
+                            }
+                        }
+                        else
+                        {
+                            TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + item.AkCarta.Kod;
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                    // check for baki peruntukan end
+
+                    var abBukuVot = await _context.AbBukuVot.Where(x => x.Rujukan.EndsWith(akTunaiCV.NoCV)).FirstOrDefaultAsync();
+                    if (abBukuVot != null)
+                    {
+
+                        //duplicate id error
+                        TempData[SD.Error] = "Data gagal diluluskan.";
+
+                    }
+                    else
+                    {
+                        //posting operation start here
+
+                        foreach (AkTunaiCV1 item in akTunaiCV1)
+                        {
+                            //insert into AbBukuVot
+                            AbBukuVot abBukuVotPosting = new AbBukuVot()
+                            {
+                                Tahun = akTunaiCV.Tahun,
+                                JKWId = akTunaiCV.AkTunaiRuncit.JKWId,
+                                JBahagianId = akTunaiCV.AkTunaiRuncit.JBahagianId,
+                                Tarikh = akTunaiCV.Tarikh,
+                                Kod = akTunaiCV.AkPembekal.KodSykt,
+                                Penerima = akTunaiCV.AkPembekal.NamaSykt,
+                                VotId = item.AkCartaId,
+                                Rujukan = akTunaiCV.NoCV,
+                                Tanggungan = item.Amaun
+                            };
+
+                            await _abBukuVotRepo.Insert(abBukuVotPosting);
+                            // insert into AbBukuVot end
+
+                        }
+
                     }
 
                     //update posting status in akTerima
@@ -1022,20 +1086,37 @@ namespace MSNK.Controllers
                     {
                         await _akTunaiLejarRepo.Delete(item.Id);
                     }
+                    List<AbBukuVot> abBukuVot = _context.AbBukuVot.Where(x => x.Rujukan == akTunaiCV.NoCV).ToList();
+                    if (abBukuVot == null)
+                    {
 
-                    //update posting status in akTunaiCV
-                    akTunaiCV.FlPosting = 0;
-                    akTunaiCV.TarikhPosting = null;
-                    await _akTunaiCVRepo.Update(akTunaiCV);
+                        //duplicate id error
+                        TempData[SD.Error] = "Data belum diluluskan.";
 
-                    //insert applog
-                    await AddLogAsync("UnPosting", "UnPosting Data", akTunaiCV.NoCV,(int) id, akTunaiCV.Jumlah, pekerjaId);
-                    //insert applog end
+                    }
+                    else
+                    {
+                        //delete data from akAkaun
+                        foreach (AbBukuVot item in abBukuVot)
+                        {
+                            await _abBukuVotRepo.Delete(item.Id);
+                        }
 
-                    await _context.SaveChangesAsync();
+                        //update posting status in akTunaiCV
+                        akTunaiCV.FlPosting = 0;
+                        akTunaiCV.TarikhPosting = null;
+                        await _akTunaiCVRepo.Update(akTunaiCV);
 
-                    TempData[SD.Success] = "Data berjaya batal kelulusan.";
-                    //unposting operation end
+                        //insert applog
+                        await AddLogAsync("UnPosting", "UnPosting Data", akTunaiCV.NoCV, (int)id, akTunaiCV.Jumlah, pekerjaId);
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
+
+                        TempData[SD.Success] = "Data berjaya batal kelulusan.";
+                        //unposting operation end
+                    }
+
                 }
 
 
