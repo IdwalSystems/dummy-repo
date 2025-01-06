@@ -15,6 +15,7 @@ using MSNK.Models.Modules.Cart;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Modules.PrintModel;
 using MSNK.Models.Modules.ViewModel;
+using MSNK.Models.Operations;
 using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
@@ -1013,7 +1014,23 @@ namespace MSNK.Controllers
                     else
                     {
                         //posting operation start here
-
+                        var kod = "";
+                        var penerima = "";
+                        switch (akTunaiCV.KategoriPenerima)
+                        {
+                            case (int)KategoriPenerima.Pekerja:
+                                kod = akTunaiCV.SuPekerja.NoGaji;
+                                penerima = akTunaiCV.SuPekerja.Nama;
+                                break;
+                            case (int)KategoriPenerima.Pembekal:
+                                kod = akTunaiCV.AkPembekal.KodSykt;
+                                penerima = akTunaiCV.AkPembekal.NamaSykt;
+                                break;
+                            default:
+                                kod = akTunaiCV.NoKP;
+                                penerima = akTunaiCV.Penerima;
+                                break;
+                        }
                         foreach (AkTunaiCV1 item in akTunaiCV1)
                         {
                             //insert into AbBukuVot
@@ -1023,11 +1040,12 @@ namespace MSNK.Controllers
                                 JKWId = akTunaiCV.AkTunaiRuncit.JKWId,
                                 JBahagianId = akTunaiCV.JBahagianId,
                                 Tarikh = akTunaiCV.Tarikh,
-                                Kod = akTunaiCV.AkPembekal.KodSykt,
-                                Penerima = akTunaiCV.AkPembekal.NamaSykt,
+                                Kod = kod,
+                                Penerima = penerima,
                                 VotId = item.AkCartaId,
                                 Rujukan = akTunaiCV.NoCV,
-                                Tanggungan = item.Amaun
+                                Debit = item.Amaun,
+                                Belanja = item.Amaun
                             };
 
                             await _abBukuVotRepo.Insert(abBukuVotPosting);

@@ -110,6 +110,7 @@
                             <table id="tblTunaiLejar" class="table table-bordered table-hover display compact nowrap" width="100%">
                                 <thead class="table-secondary">
                                     <tr>
+                                        <th>Bil</th>
                                         <th hidden></th>
                                         <th>Tarikh</th>
                                         <th>KW</th>
@@ -127,6 +128,7 @@
                                     {
                                             baki = baki + item.Debit - item.Kredit;
                                         <tr id="@item.Id">
+                                            <td></td>
                                             <td hidden>@item.Id</td>
                                             <td width="5%" data-sort='YYYYMMDD'>@item.Tarikh.ToString("dd/MM/yyyy")</td>
                                             <td>@item.JKW.Kod</td>
