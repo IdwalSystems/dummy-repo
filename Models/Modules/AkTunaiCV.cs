@@ -52,6 +52,9 @@ namespace MSNK.Models.Modules
         public int FlHapus { get; set; }
         public DateTime? TarHapus { get; set; }
         public string SebabHapus { get; set; }
+        [DisplayName("Bahagian")]
+        public int? JBahagianId { get; set; }
+        public JBahagian JBahagian { get; set; }
 
     }
 }

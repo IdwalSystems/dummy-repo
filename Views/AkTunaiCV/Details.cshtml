@@ -52,12 +52,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label asp-for="JBahagianId" class="control-label"></label>
+                    <input class="form-control form-control-sm" value="@Model.JBahagian?.Kod - @Model.JBahagian?.Perihal " readonly />
+                </div>
                 @switch (Model.KategoriPenerima)
                 {
                     case 1:
                         <div class="form-group">
                             <label asp-for="AkPembekalId" class="control-label"></label>
-                            <input value="@Model.AkPembekal.KodSykt - @Model.AkPembekal.NamaSykt"  class="form-control form-control-sm" readonly />
+                            <input value="@Model.AkPembekal.KodSykt - @Model.AkPembekal.NamaSykt" class="form-control form-control-sm" readonly />
                         </div>
                         break;
                     case 2:
@@ -81,7 +85,7 @@
                                 </div>
                             </div>
                         </div>
-                                
+
                         break;
                 }
                 <div class="form-group">

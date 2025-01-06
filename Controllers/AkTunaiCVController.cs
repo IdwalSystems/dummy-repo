@@ -282,6 +282,8 @@ namespace MSNK.Controllers
 
             ViewBag.AkCarta = akCartaList;
 
+            ViewBag.JBahagian = _context.JBahagian.OrderBy(b => b.Kod).ToList();
+
         }
 
         public JsonResult CartEmpty()
@@ -769,6 +771,10 @@ namespace MSNK.Controllers
                     }
 
                     // list of input that cannot be change
+                    if (!User.IsInRole("SuperAdmin"))
+                    {
+                        akTunaiCV.JBahagianId = dataAsal.JBahagianId;
+                    }
                     akTunaiCV.Tahun = dataAsal.Tahun;
                     akTunaiCV.AkTunaiRuncitId = dataAsal.AkTunaiRuncitId;
                     akTunaiCV.NoCV = dataAsal.NoCV;
@@ -975,12 +981,12 @@ namespace MSNK.Controllers
                     foreach (AkTunaiCV1 item in akTunaiCV1)
                     {
                         bool IsExistAbBukuVot = await _context.AbBukuVot
-                                .Where(x => x.Tahun == akTunaiCV.Tahun && x.VotId == item.AkCartaId && x.JKWId == akTunaiCV.AkTunaiRuncit.JKWId && x.JBahagianId == akTunaiCV.AkTunaiRuncit.JBahagianId)
+                                .Where(x => x.Tahun == akTunaiCV.Tahun && x.VotId == item.AkCartaId && x.JKWId == akTunaiCV.AkTunaiRuncit.JKWId && x.JBahagianId == akTunaiCV.JBahagianId)
                                 .AnyAsync();
 
                         if (IsExistAbBukuVot == true)
                         {
-                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akTunaiCV.Tahun, item.AkCartaId, akTunaiCV.AkTunaiRuncit.JKWId, akTunaiCV.AkTunaiRuncit.JBahagianId);
+                            decimal sum = await _customRepo.GetBalanceFromAbBukuVot(akTunaiCV.Tahun, item.AkCartaId, akTunaiCV.AkTunaiRuncit.JKWId, akTunaiCV.JBahagianId);
 
                             if (sum < item.Amaun)
                             {
@@ -1015,7 +1021,7 @@ namespace MSNK.Controllers
                             {
                                 Tahun = akTunaiCV.Tahun,
                                 JKWId = akTunaiCV.AkTunaiRuncit.JKWId,
-                                JBahagianId = akTunaiCV.AkTunaiRuncit.JBahagianId,
+                                JBahagianId = akTunaiCV.JBahagianId,
                                 Tarikh = akTunaiCV.Tarikh,
                                 Kod = akTunaiCV.AkPembekal.KodSykt,
                                 Penerima = akTunaiCV.AkPembekal.NamaSykt,

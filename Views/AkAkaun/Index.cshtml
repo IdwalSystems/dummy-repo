@@ -4,6 +4,7 @@
     ViewData["Title"] = "Lejar Am";
     Layout = "~/Views/Shared/_Layout.cshtml";
     string baseUrl = _http.HttpContext.Request.PathBase;
+    decimal baki = 0;
 }
 
 <style>
@@ -155,6 +156,7 @@
                         @{ int rowNo = 0; }
                         @foreach (var item in Model)
                         {
+                            baki += item.Debit - item.Kredit;
                             <tr>
                                 <td class="details-name"></td>
                                 <td class="bil">
@@ -179,6 +181,7 @@
                                     @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
                                 </td>
                                 <td class="total">
+                                    @Convert.ToDecimal(baki).ToString("#,##0.00")
                                 </td>
                             </tr>
                         }

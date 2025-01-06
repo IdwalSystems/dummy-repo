@@ -53,6 +53,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label asp-for="JBahagianId" class="control-label"></label>
+                    <input class="form-control form-control-sm" value="@Model.JBahagian?.Kod - @Model.JBahagian?.Perihal " readonly />
+                </div>
                 @switch (Model.KategoriPenerima)
                 {
                     case 1:

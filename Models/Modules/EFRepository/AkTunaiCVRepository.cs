@@ -40,7 +40,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPembekal)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                 .ToListAsync();
             }
@@ -51,7 +51,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPembekal)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                 .Where(b => b.Tahun == filter)
                 .ToListAsync();
@@ -77,7 +77,7 @@ namespace MSNK.Models.Modules.EFRepository
                             .Include(b => b.AkPembekal)
                             .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                             .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                            .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                            .Include(b => b.JBahagian)
                             .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                             .Where(b => b.Tahun == DateTime.Now.Year.ToString())
                             .ToListAsync();
@@ -94,7 +94,7 @@ namespace MSNK.Models.Modules.EFRepository
                                     .Include(b => b.AkPembekal)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                                    .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                                    .Include(b => b.JBahagian)
                                     .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                                     .Where(s => s.NoCV.ToUpper().Contains(filter.ToUpper()))
                                     .ToListAsync();
@@ -105,7 +105,7 @@ namespace MSNK.Models.Modules.EFRepository
                                     .Include(b => b.AkPembekal)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                                    .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                                    .Include(b => b.JBahagian)
                                     .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                                     .Where(s => s.Penerima.ToUpper().Contains(filter.ToUpper()))
                                     .ToListAsync();
@@ -116,7 +116,7 @@ namespace MSNK.Models.Modules.EFRepository
                                     .Include(b => b.AkPembekal)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                                    .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                                    .Include(b => b.JBahagian)
                                     .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                                     .Where(s => s.Tahun == filter)
                                     .ToListAsync();
@@ -130,7 +130,7 @@ namespace MSNK.Models.Modules.EFRepository
                                     .Include(b => b.AkPembekal)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                                    .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                                    .Include(b => b.JBahagian)
                                     .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                                     .Where(x => x.Tarikh >= date1
                                                 && x.Tarikh <= date2)
@@ -152,7 +152,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPembekal)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                 .ToListAsync();
         }
@@ -169,7 +169,7 @@ namespace MSNK.Models.Modules.EFRepository
                             .Include(b => b.AkPembekal)
                             .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                             .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                            .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                            .Include(b => b.JBahagian)
                             .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                             .Where(b => b.Tahun == DateTime.Now.Year.ToString())
                             .ToListAsync();
@@ -186,7 +186,7 @@ namespace MSNK.Models.Modules.EFRepository
                                     .Include(b => b.AkPembekal)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                                    .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                                    .Include(b => b.JBahagian)
                                     .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                                     .Where(s => s.NoCV.ToUpper().Contains(filter.ToUpper()))
                                     .ToListAsync();
@@ -197,7 +197,7 @@ namespace MSNK.Models.Modules.EFRepository
                                     .Include(b => b.AkPembekal)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                                    .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                                    .Include(b => b.JBahagian)
                                     .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                                     .Where(s => s.Penerima.ToUpper().Contains(filter.ToUpper()))
                                     .ToListAsync();
@@ -208,7 +208,7 @@ namespace MSNK.Models.Modules.EFRepository
                                     .Include(b => b.AkPembekal)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                                    .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                                    .Include(b => b.JBahagian)
                                     .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                                     .Where(s => s.Tahun == filter)
                                     .ToListAsync();
@@ -222,7 +222,7 @@ namespace MSNK.Models.Modules.EFRepository
                                     .Include(b => b.AkPembekal)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                                     .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                                    .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                                    .Include(b => b.JBahagian)
                                     .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                                     .Where(x => x.Tarikh >= date1
                                                 && x.Tarikh <= date2)
@@ -243,7 +243,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPembekal).ThenInclude(b => b.JBank)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();
@@ -257,7 +257,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkPembekal).ThenInclude(b => b.JBank)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.AkTunaiPemegang).ThenInclude(b => b.SuPekerja)
                 .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JKW)
-                .Include(b => b.AkTunaiRuncit).ThenInclude(b => b.JBahagian)
+                .Include(b => b.JBahagian)
                 .Include(b => b.AkTunaiCV1).ThenInclude(b => b.AkCarta)
                 .Where(b => b.Id == id)
                 .FirstOrDefaultAsync();

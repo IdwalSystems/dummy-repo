@@ -67,25 +67,6 @@
             theme: "bootstrap"
         });
 
-        var sum = 0
-        $('tr').each(function () {
-            $(this).find('.debit').each(function () {
-                var debit = $(this).text().replace(/[^\d.]/g, '');
-
-                if (!isNaN(debit) && debit.length !== 0) {
-                    sum += parseFloat(debit);
-                }
-            });
-            $(this).find('.kredit').each(function () {
-                var kredit = $(this).text().replace(/[^\d.]/g, '');
-
-                if (!isNaN(kredit) && kredit.length !== 0) {
-                    sum -= parseFloat(kredit);
-                }
-            });
-            $('.total', this).html(CommaSeparator(sum.toFixed(2)));
-        });
-
         var now = new Date();
         var date = new Date($('#tarDari').val());
         if (!Date.parse(date)) {
