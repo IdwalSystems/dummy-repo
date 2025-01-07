@@ -675,10 +675,8 @@ namespace MSNK.Controllers
 
         // match bank and system statement
         public async Task<JsonResult> MatchStatementList(
-            int idBank,
-            int indekBank, 
-            decimal amaunBank,
-            List<ListItemViewModel> arrayOfValues)
+            List<ListItemViewModel> arrayOfValuesBank,
+            List<ListItemViewModel> arrayOfValuesSystem)
         {
             // insert 
             try
@@ -690,22 +688,30 @@ namespace MSNK.Controllers
                 AkTerima2 terima2 = new AkTerima2();
                 AkJurnal jurnal = new AkJurnal();
 
-                foreach (var item in arrayOfValues)
+                foreach (var itemSystem in arrayOfValuesSystem)
                 {
-                    type = item.perihal.Substring(0, 2);
+                    type = itemSystem.perihal.Substring(0, 2);
                     switch (type)
                     {
                         case "PV":
-                            if (item.isGanda == false)
+                            if (itemSystem.isGanda == false)
                             {
-                                pv = await _akPVRepo.GetByIdIncludeDeletedItems(item.id);
+                                pv = await _akPVRepo.GetByIdIncludeDeletedItems(itemSystem.id);
 
-                                pv.AkPadananPenyata.Add(new AkPadananPenyata
+                                foreach (var itemBank in arrayOfValuesBank)
                                 {
-                                    AkBankReconPenyataBankId = idBank,
-                                    FlJenis = 1,
-                                    AkPVId = item.id
-                                });
+                                    if (itemBank.isMatched == true) continue;
+
+                                    pv.AkPadananPenyata.Add(new AkPadananPenyata
+                                    {
+                                        AkBankReconPenyataBankId = itemBank.id,
+                                        FlJenis = 1,
+                                        AkPVId = itemSystem.id
+                                    });
+                                    itemBank.isMatched = true;
+                                   
+                                }
+                                
 
                                 pv.FlTunai = 1;
                                 pv.TarTunai = DateTime.Now;
@@ -714,15 +720,22 @@ namespace MSNK.Controllers
                             }
                             else
                             {
-                                pvGanda = await _akPVGandaRepo.GetById(item.indek);
+                                pvGanda = await _akPVGandaRepo.GetById(itemSystem.indek);
 
-                                pvGanda.AkPadananPenyata.Add(new AkPadananPenyata
+                                foreach (var itemBank in arrayOfValuesBank)
                                 {
-                                    AkBankReconPenyataBankId = idBank,
-                                    FlJenis = 1,
-                                    AkPVId = item.id,
-                                    AkPVGandaId = item.indek
-                                });
+                                    if (itemBank.isMatched == true) continue;
+
+                                    pvGanda.AkPadananPenyata.Add(new AkPadananPenyata
+                                    {
+                                        AkBankReconPenyataBankId = itemBank.id,
+                                        FlJenis = 1,
+                                        AkPVId = itemSystem.id,
+                                        AkPVGandaId = itemSystem.indek
+                                    });
+                                    itemBank.isMatched = true;
+                                }
+                               
 
                                 pvGanda.FlTunai = 1;
                                 pvGanda.TarTunai = DateTime.Now;
@@ -733,14 +746,20 @@ namespace MSNK.Controllers
 
                             break;
                         case "RR":
-                            terima2 = await _akTerima2Repo.GetById(item.indek);
+                            terima2 = await _akTerima2Repo.GetById(itemSystem.indek);
 
-                            terima2.AkPadananPenyata.Add(new AkPadananPenyata
+                            foreach (var itemBank in arrayOfValuesBank)
                             {
-                                AkBankReconPenyataBankId = idBank,
-                                FlJenis = 1,
-                                AkTerima2Id = item.indek
-                            });
+                                if (itemBank.isMatched == true) continue;
+
+                                terima2.AkPadananPenyata.Add(new AkPadananPenyata
+                                {
+                                    AkBankReconPenyataBankId = itemBank.id,
+                                    FlJenis = 1,
+                                    AkTerima2Id = itemSystem.indek
+                                });
+                                itemBank.isMatched = true;
+                            }
 
                             terima2.FlTunai = 1;
                             terima2.TarTunai = DateTime.Now;
@@ -748,14 +767,20 @@ namespace MSNK.Controllers
                             await _akTerima2Repo.Update(terima2);
                             break;
                         case "JU":
-                            jurnal = await _akJurnalRepo.GetById(item.indek);
+                            jurnal = await _akJurnalRepo.GetById(itemSystem.indek);
 
-                            jurnal.AkPadananPenyata.Add(new AkPadananPenyata
+                            foreach (var itemBank in arrayOfValuesBank)
                             {
-                                AkBankReconPenyataBankId = idBank,
-                                FlJenis = 1,
-                                AkJurnalId = item.indek
-                            });
+                                if (itemBank.isMatched == true) continue;
+
+                                jurnal.AkPadananPenyata.Add(new AkPadananPenyata
+                                {
+                                    AkBankReconPenyataBankId = itemBank.indek,
+                                    FlJenis = 1,
+                                    AkJurnalId = itemSystem.indek
+                                });
+                                itemBank.isMatched = true;
+                            }
 
                             jurnal.FlTunai = 1;
                             jurnal.TarTunai = DateTime.Now;
@@ -764,36 +789,38 @@ namespace MSNK.Controllers
                             break;
                     }
 
-
-
                 }
 
-                AkBankReconPenyataBank penyataBank = await _context.AkBankReconPenyataBank.FirstOrDefaultAsync(b => b.Id == idBank);
-                if (penyataBank != null)
+                foreach (var itemBank in arrayOfValuesBank)
                 {
-                    penyataBank.IsPadan = true;
-                }
+                    AkBankReconPenyataBank penyataBank = await _context.AkBankReconPenyataBank.FirstOrDefaultAsync(b => b.Id == itemBank.id);
+                    if (penyataBank != null)
+                    {
+                        penyataBank.IsPadan = true;
+                    }
 
-                _context.AkBankReconPenyataBank.Update(penyataBank);
+                    _context.AkBankReconPenyataBank.Update(penyataBank);
+
+                    // update cart
+                    _cart.RemoveItem1(itemBank.indek);
+
+                    _cart.AddItem1(penyataBank.Id,
+                                penyataBank.Indek,
+                                penyataBank.AkBankReconId,
+                                penyataBank.NoAkaunBank,
+                                penyataBank.Tarikh,
+                                penyataBank.KodTransaksi,
+                                penyataBank.PerihalTransaksi,
+                                penyataBank.NoDokumen,
+                                penyataBank.Debit,
+                                penyataBank.Kredit,
+                                penyataBank.Baki,
+                                true);
+                }
 
                 await _context.SaveChangesAsync();
 
-                // update cart
-                _cart.RemoveItem1(indekBank);
-
-                _cart.AddItem1(penyataBank.Id,
-                            penyataBank.Indek,
-                            penyataBank.AkBankReconId,
-                            penyataBank.NoAkaunBank,
-                            penyataBank.Tarikh,
-                            penyataBank.KodTransaksi,
-                            penyataBank.PerihalTransaksi,
-                            penyataBank.NoDokumen,
-                            penyataBank.Debit,
-                            penyataBank.Kredit,
-                            penyataBank.Baki,
-                            true);
-
+               
                 return Json(new { result = "OK", dataBank = "OK", dataSistem = "OK"});
             }
             catch (Exception ex)
@@ -822,7 +849,9 @@ namespace MSNK.Controllers
                 AkTerima2 terima2 = new AkTerima2();
                 AkJurnal jurnal = new AkJurnal();
 
-                AkPadananPenyata padanan = new AkPadananPenyata();
+                List<AkPadananPenyata> padanan = new List<AkPadananPenyata>();
+                List<int> idBankList = new List<int>();
+                List<int> indekBankList = new List<int>();
 
                 foreach (var item in arrayOfValues)
                 {
@@ -841,6 +870,8 @@ namespace MSNK.Controllers
                                 amaun += pv.Jumlah;
 
                                 await _akPVRepo.Update(pv);
+                                padanan = await _context.AkPadananPenyata.Where(b => b.AkPVId == item.indek).ToListAsync();
+                                
                             }
                             else
                             {
@@ -852,6 +883,7 @@ namespace MSNK.Controllers
                                 amaun += pvGanda.Amaun;
 
                                 await _akPVGandaRepo.Update(pvGanda);
+                                padanan = await _context.AkPadananPenyata.Where(b => b.AkPVGandaId == item.indek).ToListAsync();
                             }
 
                             break;
@@ -864,6 +896,7 @@ namespace MSNK.Controllers
                             amaun += terima2.Amaun;
 
                             await _akTerima2Repo.Update(terima2);
+                            padanan = await _context.AkPadananPenyata.Where(b => b.AkTerima2Id == item.indek).ToListAsync();
                             break;
                         case "JU":
                             jurnal = await _akJurnalRepo.GetById(item.indek);
@@ -874,41 +907,53 @@ namespace MSNK.Controllers
                             amaun += jurnal.JumDebit;
 
                             await _akJurnalRepo.Update(jurnal);
+                            padanan = await _context.AkPadananPenyata.Where(b => b.AkJurnalId == item.indek).ToListAsync();
                             break;
                     }
 
-                    padanan = await _context.AkPadananPenyata.FirstOrDefaultAsync(b => b.Id == item.id);
-
-                    _context.AkPadananPenyata.Remove(padanan);
-
-
+                    
+                    if (padanan != null && padanan.Any())
+                    {
+                        foreach (var padanItem in padanan)
+                        {
+                            idBankList.Add(padanItem.AkBankReconPenyataBankId);
+                        }
+                        _context.AkPadananPenyata.RemoveRange(padanan);
+                    }
                 }
 
                 if (rowSystemCount == 1)
                 {
-                    AkBankReconPenyataBank penyataBank = await _context.AkBankReconPenyataBank.FirstOrDefaultAsync(b => b.Id == idBank);
-                    if (penyataBank != null)
+                    if (idBankList.Any())
                     {
-                        penyataBank.IsPadan = false;
+                        foreach (var bank in idBankList)
+                        {
+                            AkBankReconPenyataBank penyataBank = await _context.AkBankReconPenyataBank.FirstOrDefaultAsync(b => b.Id == bank);
+                            if (penyataBank != null)
+                            {
+                                penyataBank.IsPadan = false;
+
+                                _context.AkBankReconPenyataBank.Update(penyataBank);
+
+                                // update cart
+                                _cart.RemoveItem1(penyataBank.Indek);
+
+                                _cart.AddItem1(penyataBank.Id,
+                                            penyataBank.Indek,
+                                            penyataBank.AkBankReconId,
+                                            penyataBank.NoAkaunBank,
+                                            penyataBank.Tarikh,
+                                            penyataBank.KodTransaksi,
+                                            penyataBank.PerihalTransaksi,
+                                            penyataBank.NoDokumen,
+                                            penyataBank.Debit,
+                                            penyataBank.Kredit,
+                                            penyataBank.Baki,
+                                            false);
+                            }
+                        }
                     }
-
-                    _context.AkBankReconPenyataBank.Update(penyataBank);
-
-                    // update cart
-                    _cart.RemoveItem1(indekBank);
-
-                    _cart.AddItem1(penyataBank.Id,
-                                penyataBank.Indek,
-                                penyataBank.AkBankReconId,
-                                penyataBank.NoAkaunBank,
-                                penyataBank.Tarikh,
-                                penyataBank.KodTransaksi,
-                                penyataBank.PerihalTransaksi,
-                                penyataBank.NoDokumen,
-                                penyataBank.Debit,
-                                penyataBank.Kredit,
-                                penyataBank.Baki,
-                                false);
+                    
                 }
                 
 

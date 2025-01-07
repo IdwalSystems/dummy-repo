@@ -5,12 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <partial name="_JSBankStatement" />
+<partial name="_JSUnmatchBankStatement" />
+
 <style>
     input[name='send-quality'] {
         display: none;
     }
 </style>
-<div class="card box-shadow mb-2" >
+<div class="card box-shadow mb-2">
     <div class="card-body">
         <div class="row">
             <div class="col-8">
@@ -55,20 +57,20 @@
             </div>
 
             @*<div class="form-row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="control-label">Baki Buku Tunai RM</label>
-                    <input class="form-control form-control-sm" readonly id="bakiBukuTunai" value="@ViewBag.BakiBukuTunai" />
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="control-label">Baki Penyata Bank RM</label>
-                    <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly id="bakiPenyata" />
-                </div>
-            </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Baki Buku Tunai RM</label>
+                            <input class="form-control form-control-sm" readonly id="bakiBukuTunai" value="@ViewBag.BakiBukuTunai" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Baki Penyata Bank RM</label>
+                            <input asp-for="BakiPenyata" class="form-control form-control-sm" readonly id="bakiPenyata" />
+                        </div>
+                    </div>
 
-        </div>*@
+                </div>*@
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
