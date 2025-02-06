@@ -217,7 +217,14 @@ namespace MSNK.Controllers
                             m.JSukanId = suAtlet.JSukanId;
                             m.Telefon = suAtlet.Telefon;
                             m.Emel = suAtlet.Emel;
-                            m.FlStatus = 1;
+                            if (m.TarikhBerhenti == null || (m.TarikhBerhenti > DateTime.Now && m.TarikhAktif < DateTime.Now))
+                            {
+                                m.FlStatus = 1;
+                            }
+                            else
+                            {
+                                m.FlStatus = 0;
+                            }
                             m.TarikhAktif = suAtlet.TarikhAktif;
                             m.TarikhBerhenti = suAtlet.TarikhBerhenti;
                             //m.FlStatus = suAtlet.FlStatus;
@@ -319,7 +326,16 @@ namespace MSNK.Controllers
                     suAtlet.UserId = dataAsal.UserId;
                     suAtlet.NoKp = dataAsal.NoKp;
                     suAtlet.KodAtlet = dataAsal.KodAtlet;
-                    suAtlet.FlStatus = dataAsal.FlStatus;
+
+                    if (suAtlet.TarikhBerhenti == null || (suAtlet.TarikhBerhenti > DateTime.Now && suAtlet.TarikhAktif < DateTime.Now))
+                    {
+                        suAtlet.FlStatus = 1;
+                    }
+                    else
+                    {
+                        suAtlet.FlStatus = 0;
+                    }
+
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
                     suAtlet.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;

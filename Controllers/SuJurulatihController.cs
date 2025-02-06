@@ -203,7 +203,16 @@ namespace MSNK.Controllers
                             m.Emel = suJurulatih.Emel;
                             m.TarikhAktif = suJurulatih.TarikhAktif;
                             m.TarikhBerhenti = suJurulatih.TarikhBerhenti;
-                            m.FlStatus = 1;
+
+                            if (suJurulatih.TarikhBerhenti == null || (suJurulatih.TarikhBerhenti > DateTime.Now && suJurulatih.TarikhAktif < DateTime.Now))
+                            {
+                                suJurulatih.FlStatus = 1;
+                            }
+                            else
+                            {
+                                suJurulatih.FlStatus = 0;
+                            }
+                            
                             //m.FlStatus = suJurulatih.FlStatus;
                             m.JAgamaId = suJurulatih.JAgamaId;
                             m.JBangsaId = suJurulatih.JBangsaId;
@@ -303,7 +312,15 @@ namespace MSNK.Controllers
                     suJurulatih.UserId = dataAsal.UserId;
                     suJurulatih.NoKp = dataAsal.NoKp;
                     suJurulatih.KodJurulatih = dataAsal.KodJurulatih;
-                    suJurulatih.FlStatus = dataAsal.FlStatus;
+                    if (suJurulatih.TarikhBerhenti == null || (suJurulatih.TarikhBerhenti > DateTime.Now && suJurulatih.TarikhAktif < DateTime.Now))
+                    {
+                        suJurulatih.FlStatus = 1;
+                    }
+                    else
+                    {
+                        suJurulatih.FlStatus = 0;
+                    }
+
                     var noAkaunAsal = dataAsal.NoAkaunBank;
                     var namaAsal = dataAsal.Nama;
                     suJurulatih.SuPekerjaMasukId = dataAsal.SuPekerjaMasukId;
