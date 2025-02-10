@@ -3432,43 +3432,64 @@ namespace MSNK.Controllers
                             }
                             // check peruntukan end
 
-                            if (akPV.IsAKB == false)
+                            AbBukuVot abBukuVot = new AbBukuVot();
+
+                            decimal liabiliti = 0;
+                            decimal tanggungan = 0;
+                            bool havePO = false;
+
+                            if (akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == KategoriPenerima.Pembekal)
                             {
-                                AbBukuVot abBukuVot = new AbBukuVot();
+                                liabiliti = 0;
+                            }
+                            else
+                            {
+                                liabiliti = 0 - item.Amaun;
+                            }
 
-                                decimal liabiliti = 0;
-                                decimal tanggungan = 0;
-                                bool havePO = false;
-
-                                if (akPV.FlJenisBaucer == 0 && akPV.FlKategoriPenerima == KategoriPenerima.Pembekal)
+                            if (akPV.FlKategoriPenerima == KategoriPenerima.Pembekal)
+                            {
+                                foreach (var akPV2 in akPV.AkPV2)
                                 {
-                                    liabiliti = 0;
+                                    if (akPV2.HavePO == true)
+                                    {
+                                        havePO = true;
+                                    }
+                                }
+
+                                if (havePO == true)
+                                {
+                                    tanggungan = 0 - item.Amaun;
                                 }
                                 else
                                 {
-                                    liabiliti = 0 - item.Amaun;
+                                    tanggungan = 0;
                                 }
 
-                                if (akPV.FlKategoriPenerima == KategoriPenerima.Pembekal)
+                                //dengan tanggungan
+                                abBukuVot = new AbBukuVot()
                                 {
-                                    foreach (var akPV2 in akPV.AkPV2)
-                                    {
-                                        if (akPV2.HavePO == true)
-                                        {
-                                            havePO = true;
-                                        }
-                                    }
+                                    Tahun = akPV.Tahun,
+                                    JKWId = akPV.JKWId,
+                                    JBahagianId = akPV.JBahagianId,
+                                    Tarikh = akPV.Tarikh,
+                                    Kod = kod,
+                                    Penerima = penerima,
+                                    VotId = item.AkCartaId,
+                                    Rujukan = akPV.NoPV,
+                                    Debit = item.Amaun,
+                                    Belanja = item.Amaun,
+                                    Tanggungan = tanggungan,
+                                    Liabiliti = liabiliti
 
-                                    if (havePO == true)
-                                    {
-                                        tanggungan = 0 - item.Amaun;
-                                    }
-                                    else
-                                    {
-                                        tanggungan = 0;
-                                    }
+                                };
 
-                                    //dengan tanggungan
+                                await _abBukuVotRepo.Insert(abBukuVot);
+                            }
+                            else if (akPV.FlKategoriPenerima == KategoriPenerima.Pekerja)
+                            {
+                                if (akPV.FlJenisBaucer == JenisBaucer.Pendahuluan)
+                                {
                                     abBukuVot = new AbBukuVot()
                                     {
                                         Tahun = akPV.Tahun,
@@ -3481,56 +3502,12 @@ namespace MSNK.Controllers
                                         Rujukan = akPV.NoPV,
                                         Debit = item.Amaun,
                                         Belanja = item.Amaun,
-                                        Tanggungan = tanggungan,
-                                        Liabiliti = liabiliti
-
+                                        Tanggungan = 0 - item.Amaun
                                     };
 
-                                    await _abBukuVotRepo.Insert(abBukuVot);
-                                }
-                                else if (akPV.FlKategoriPenerima == KategoriPenerima.Pekerja)
-                                {
-                                    if (akPV.FlJenisBaucer == JenisBaucer.Pendahuluan)
-                                    {
-                                        abBukuVot = new AbBukuVot()
-                                        {
-                                            Tahun = akPV.Tahun,
-                                            JKWId = akPV.JKWId,
-                                            JBahagianId = akPV.JBahagianId,
-                                            Tarikh = akPV.Tarikh,
-                                            Kod = kod,
-                                            Penerima = penerima,
-                                            VotId = item.AkCartaId,
-                                            Rujukan = akPV.NoPV,
-                                            Debit = item.Amaun,
-                                            Belanja = item.Amaun,
-                                            Tanggungan = 0 - item.Amaun
-                                        };
-
-                                    }
-                                    else
-                                    {
-                                        abBukuVot = new AbBukuVot()
-                                        {
-                                            Tahun = akPV.Tahun,
-                                            JKWId = akPV.JKWId,
-                                            JBahagianId = akPV.JBahagianId,
-                                            Tarikh = akPV.Tarikh,
-                                            Kod = kod,
-                                            Penerima = penerima,
-                                            VotId = item.AkCartaId,
-                                            Rujukan = akPV.NoPV,
-                                            Debit = item.Amaun,
-                                            Belanja = item.Amaun
-                                        };
-
-                                    }
-
-                                    await _abBukuVotRepo.Insert(abBukuVot);
                                 }
                                 else
                                 {
-                                    //tanpa tanggungan
                                     abBukuVot = new AbBukuVot()
                                     {
                                         Tahun = akPV.Tahun,
@@ -3545,12 +3522,32 @@ namespace MSNK.Controllers
                                         Belanja = item.Amaun
                                     };
 
-                                    await _abBukuVotRepo.Insert(abBukuVot);
                                 }
 
-
-                                // insert into AbBukuVot end
+                                await _abBukuVotRepo.Insert(abBukuVot);
                             }
+                            else
+                            {
+                                //tanpa tanggungan
+                                abBukuVot = new AbBukuVot()
+                                {
+                                    Tahun = akPV.Tahun,
+                                    JKWId = akPV.JKWId,
+                                    JBahagianId = akPV.JBahagianId,
+                                    Tarikh = akPV.Tarikh,
+                                    Kod = kod,
+                                    Penerima = penerima,
+                                    VotId = item.AkCartaId,
+                                    Rujukan = akPV.NoPV,
+                                    Debit = item.Amaun,
+                                    Belanja = item.Amaun
+                                };
+
+                                await _abBukuVotRepo.Insert(abBukuVot);
+                            }
+
+
+                            // insert into AbBukuVot end
                         }
                         //insert into AbBukuVot end
 
