@@ -767,6 +767,7 @@ namespace MSNK.Controllers
                             await _akTerima2Repo.Update(terima2);
                             break;
                         case "JU":
+                        case "JR":
                             jurnal = await _akJurnalRepo.GetById(itemSystem.indek);
 
                             foreach (var itemBank in arrayOfValuesBank)
@@ -899,6 +900,7 @@ namespace MSNK.Controllers
                             padanan = await _context.AkPadananPenyata.Where(b => b.AkTerima2Id == item.indek).ToListAsync();
                             break;
                         case "JU":
+                        case "JR":
                             jurnal = await _akJurnalRepo.GetById(item.indek);
 
                             jurnal.FlTunai = 0;

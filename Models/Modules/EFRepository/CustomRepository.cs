@@ -220,7 +220,7 @@ namespace MSNK.Models.Modules.EFRepository
             // refer AkBank, if debit = masuk, if kredit = keluar
             List<AkAkaun> bukuTunaiJurnal = await context.AkAkaun
                 .Include(b => b.AkCarta2)
-                .Where(b => b.NoRujukan.Contains("JU")
+                .Where(b => b.NoRujukan.Contains("JR")
                 && b.Tarikh.Year >= startingYear
                 && b.Tarikh >= TarMula && b.Tarikh <= TarHingga
                 && b.AkCartaId1 == akBank.AkCartaId).OrderBy(b => b.Tarikh).ToListAsync();
