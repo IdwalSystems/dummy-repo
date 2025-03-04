@@ -101,12 +101,12 @@
                     <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item1.AkBelian.AkPO.AkNotaMinta.Tarikh).ToString("dd/MM/yyyy")</td>
                     <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item1.AkBelian.AkPO.AkNotaMinta.TarikhSeksyenKewangan).ToString("dd/MM/yyyy")</td>
                     <td class="text-left text-uppercase" style="border-bottom:none;">@item.Nama</td>
-                    <td class="text-center" style="border-bottom:none;">@item1.AkBelian.AkPO.AkNotaMinta.NoSiri</td>
-                    <td class="text-center" style="border-bottom:none;">@item1.AkBelian.NoInbois.Substring(3)</td>
+                    <td class="text-center" style="border-bottom:none;">@item1.AkBelian?.AkPO?.AkNotaMinta?.NoSiri</td>
+                    <td class="text-center" style="border-bottom:none;">@item1.AkBelian?.NoInbois?.Substring(3)</td>
                     <td class="text-right ">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
-                    <td class="text-center" style="border-bottom:none;">@item1.AkBelian.AkPO.NoPO.Substring(3)</td>
+                    <td class="text-center" style="border-bottom:none;">@item1.AkBelian?.AkPO?.NoPO?.Substring(3)</td>
                     <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
-                    <td class="text-center" style="border-bottom:none;">@item.NoPV.Substring(3)</td>
+                    <td class="text-center" style="border-bottom:none;">@item.NoPV?.Substring(3)</td>
                     @if (item.TarikhPosting != null)
                     {
                         <td class="text-center text-uppercase">@Convert.ToDateTime(item.TarikhPosting).ToString("dd/MM/yyyy")</td>
@@ -123,7 +123,7 @@
                     {
                         <td class="text-center">-</td>
                     }
-                    <td class="text-center text-uppercase">@item.JCaraBayar.Perihal</td>
+                    <td class="text-center text-uppercase">@item.JCaraBayar?.Perihal</td>
                     @if (item.NoCekAtauEFT != null)
                     {
                         <td class="text-center text-uppercase">@item.NoCekAtauEFT</td>

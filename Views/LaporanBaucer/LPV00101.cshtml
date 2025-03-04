@@ -93,12 +93,12 @@
 
                     <td class="text-right" style="border-bottom:none;">@bil</td>
                     <td class="text-center" style="border-bottom:none;">@Convert.ToDateTime(item.Tarikh).ToString("dd/MM/yyyy")</td>
-                    <td class="text-center" style="border-bottom:none;">@item.NoPV.Substring(3)</td>
+                    <td class="text-center" style="border-bottom:none;">@item.NoPV?.Substring(3)</td>
                     <td class="text-left text-uppercase" style="border-bottom:none;">@item.Nama</td>
 
-                    <td class="text-center text-uppercase">@item1.AkCarta.Kod</td>
-                    <td class="text-left text-uppercase">@item1.AkCarta.Perihal</td>
-                    <td class="text-center text-uppercase">@item.JCaraBayar.Perihal</td>
+                    <td class="text-center text-uppercase">@item1.AkCarta?.Kod</td>
+                    <td class="text-left text-uppercase">@item1.AkCarta?.Perihal</td>
+                    <td class="text-center text-uppercase">@item.JCaraBayar?.Perihal</td>
                     @if (item.NoCekAtauEFT != null)
                     {
                         <td class="text-center text-uppercase">@item.NoCekAtauEFT</td>
