@@ -41,6 +41,7 @@ namespace MSNK.Models.Modules.IRepository
             int Bahagian,
            bool Tanggungan,
            bool Pendahuluan,
+           bool Invois,
            decimal Amaun,
            string KodCarta,
            string Perihal,

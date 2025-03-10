@@ -171,7 +171,7 @@ namespace MSNK.Controllers
 
             if (searchTo.ToString("dd/MM/yyyy") != "01/01/0001")
             {
-                lastDate = searchTo;
+                lastDate = searchTo.AddHours(23.99);
             }
 
             ViewData["searchFrom"] = firstDate.ToString("yyyy-MM-dd");
@@ -181,7 +181,7 @@ namespace MSNK.Controllers
             // get all akBelian and AkPV order by tarikh where posting = 1 where tarikh less than 01/01/[this-year]
             List<AkBelian> bakiAwalBelianList = _context.AkBelian.Where(b => b.AkPembekalId == (int)id
                 && b.FlPosting == 1
-                && b.TarikhKewanganTerima < firstDate.AddHours(23.99)).ToList();
+                && b.TarikhKewanganTerima < firstDate).ToList();
 
             decimal bakiAwal = 0;
             decimal bayaranAwal = 0;
@@ -205,7 +205,7 @@ namespace MSNK.Controllers
 
             List<AkPV> bakiAwalPVList = _context.AkPV.Where(b => b.AkPembekalId == (int)id
                 && b.FlPosting == 1
-                && b.Tarikh < firstDate.AddHours(23.99)).ToList();
+                && b.Tarikh < firstDate).ToList();
 
             foreach(var item in bakiAwalPVList)
             {
@@ -358,7 +358,7 @@ namespace MSNK.Controllers
 
             List<AkPV> bakiAwalPVList = _context.AkPV.Where(b => b.AkPembekalId == (int)id
                 && b.FlPosting == 1
-                && b.Tarikh < firstDate.AddHours(23.99)).ToList();
+                && b.Tarikh < firstDate).ToList();
 
             foreach (var item in bakiAwalPVList)
             {

@@ -302,13 +302,16 @@ namespace MSNK.Controllers
             foreach (var pv in PVs)
             {
                 var isPendahuluan = false;
-
+                var isInvois = false;
                 foreach (var pv1 in pv.AkPV1)
                 {
                     if (pv.FlJenisBaucer == JenisBaucer.Pendahuluan)
                         isPendahuluan = true;
 
-                    pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod,pv.NoPV + "/" + pv1.AkCarta.Perihal, "4");
+                    if (pv.FlJenisBaucer == JenisBaucer.Inbois)
+                        isInvois = true;
+
+                    pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, isInvois, pv1.Amaun, pv1.AkCarta.Kod,pv.NoPV + "/" + pv1.AkCarta.Perihal, "4");
 
                     //pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal + " " + pv.NoPV, "4");
 
@@ -455,7 +458,7 @@ namespace MSNK.Controllers
             // Belian End
 
             // untuk testing satu-satu kod akaun
-            //vm = vm.Where(b => (b.Objek == "B52202" ) && b.JBahagianId == 3).ToList();
+            //vm = vm.Where(b => (b.Objek == "B23102") && b.JBahagianId == 1).ToList();
             //
             switch (ParasId)
             {
@@ -790,13 +793,17 @@ namespace MSNK.Controllers
             foreach (var pv in PVs)
             {
                 var isPendahuluan = false;
+                var isInvois = false;
 
                 foreach (var pv1 in pv.AkPV1)
                 {
                     if (pv.FlJenisBaucer == JenisBaucer.Pendahuluan)
                         isPendahuluan = true;
 
-                    pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv.NoPV + "/" + pv1.AkCarta.Perihal, "4");
+                    if (pv.FlJenisBaucer == JenisBaucer.Inbois)
+                        isInvois = true;
+
+                    pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, isInvois, pv1.Amaun, pv1.AkCarta.Kod, pv.NoPV + "/" + pv1.AkCarta.Perihal, "4");
 
                     //pvList = _bsRepo.RunBaucerObjekOperation((int)pv.JBahagianId, pv.denganTanggungan, isPendahuluan, pv1.Amaun, pv1.AkCarta.Kod, pv1.AkCarta.Perihal + " " + pv.NoPV, "4");
 

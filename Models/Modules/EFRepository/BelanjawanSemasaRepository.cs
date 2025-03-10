@@ -281,7 +281,7 @@ namespace MSNK.Models.Modules.EFRepository
             return sql;
         }
 
-        public List<AbBelanjawanSemasaViewModel> RunBaucerObjekOperation(int Bahagian, bool Tanggungan,bool Pendahuluan, decimal Amaun, string KodCarta, string Perihal, string Paras)
+        public List<AbBelanjawanSemasaViewModel> RunBaucerObjekOperation(int Bahagian, bool Tanggungan,bool Pendahuluan, bool Invois, decimal Amaun, string KodCarta, string Perihal, string Paras)
         {
             decimal Asal = 0;
             decimal Tambah = 0;
@@ -308,6 +308,11 @@ namespace MSNK.Models.Modules.EFRepository
                 }
                 else
                 {
+                    if (Invois == true)
+                    {
+                        Liabiliti = 0 - Amaun;
+
+                    }
                     Baki = 0 - Amaun;
                 }
 
