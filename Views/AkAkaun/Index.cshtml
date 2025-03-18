@@ -166,10 +166,10 @@
                                     @Html.DisplayFor(modelItem => item.Tarikh)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.JBahagian.Kod) - @Html.DisplayFor(modelItem => item.JBahagian.Perihal)
+                                    @item.JBahagian?.Kod - @item.JBahagian?.Perihal
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.AkCarta2.Kod) - @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
+                                    @item.AkCarta2?.Kod - @item.AkCarta2?.Perihal
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.NoRujukan)

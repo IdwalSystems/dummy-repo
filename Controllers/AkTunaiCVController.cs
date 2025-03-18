@@ -39,6 +39,7 @@ namespace MSNK.Controllers
         private readonly IRepository<AkBank, int, string> _akBankRepo;
         private readonly CustomIRepository<string, int> _customRepo;
         private readonly IRepository<AbBukuVot, int, string> _abBukuVotRepo;
+        private readonly IRepository<AkAkaun, int, string> _akAkaunRepo;
         private readonly UserService _userService;
         private CartTunaiCV _cart;
 
@@ -55,6 +56,7 @@ namespace MSNK.Controllers
             IRepository<AkBank, int, string> akBankRepository,
             CustomIRepository<string, int> customRepo,
             IRepository<AbBukuVot, int, string> abBukuVotRepository,
+            IRepository<AkAkaun, int, string> akAkaunRepo,
             UserService userService,
              CartTunaiCV cart
             )
@@ -71,6 +73,7 @@ namespace MSNK.Controllers
             _akBankRepo = akBankRepository;
             _customRepo = customRepo;
             _abBukuVotRepo = abBukuVotRepository;
+            _akAkaunRepo = akAkaunRepo;
             _userService = userService;
             _cart = cart;
         }
@@ -1051,6 +1054,37 @@ namespace MSNK.Controllers
                             await _abBukuVotRepo.Insert(abBukuVotPosting);
                             // insert into AbBukuVot end
 
+                            //insert into akAkaun
+                            AkAkaun akAKodBank = new AkAkaun()
+                            {
+                                NoRujukan = akTunaiCV.NoCV,
+                                JKWId = akTunaiCV.AkTunaiRuncit.JKWId,
+                                JBahagianId = akTunaiCV.JBahagianId,
+                                AkCartaId1 = akTunaiCV.AkTunaiRuncit.AkCartaId,
+                                AkCartaId2 = item.AkCartaId,
+                                Tarikh = akTunaiCV.Tarikh,
+                                Tahun = akTunaiCV.Tahun,
+                                Kredit = item.Amaun,
+                                AkPembekalId = akTunaiCV.AkPembekalId
+                            };
+
+                            await _akAkaunRepo.Insert(akAKodBank);
+
+                            AkAkaun akAObjek = new AkAkaun()
+                            {
+                                NoRujukan = akTunaiCV.NoCV,
+                                JKWId = akTunaiCV.AkTunaiRuncit.JKWId,
+                                JBahagianId = akTunaiCV.JBahagianId,
+                                AkCartaId1 = item.AkCartaId,
+                                AkCartaId2 = akTunaiCV.AkTunaiRuncit.AkCartaId,
+                                Tarikh = akTunaiCV.Tarikh,
+                                Tahun = akTunaiCV.Tahun,
+                                Debit = item.Amaun,
+                                AkPembekalId = akTunaiCV.AkPembekalId
+                            };
+
+                            await _akAkaunRepo.Insert(akAObjek);
+                            // insert into akAkaun end
                         }
 
                     }
@@ -1120,12 +1154,22 @@ namespace MSNK.Controllers
                     }
                     else
                     {
-                        //delete data from akAkaun
+                        //delete data from abBukuVot
                         foreach (AbBukuVot item in abBukuVot)
                         {
                             await _abBukuVotRepo.Delete(item.Id);
                         }
 
+                        List<AkAkaun> akAkaun = _context.AkAkaun.Where(x => x.NoRujukan == akTunaiCV.NoCV).ToList();
+                        //delete data from akAkaun
+                        if (akAkaun != null && akAkaun.Any())
+                        {
+                            foreach (AkAkaun item in akAkaun)
+                            {
+                                await _akAkaunRepo.Delete(item.Id);
+                            }
+                        }
+                        
                         //update posting status in akTunaiCV
                         akTunaiCV.FlPosting = 0;
                         akTunaiCV.TarikhPosting = null;
