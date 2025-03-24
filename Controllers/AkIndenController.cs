@@ -378,9 +378,11 @@ namespace MSNK.Controllers
             ViewBag.AkBank = akBankList;
 
             List<AkNotaMinta> akNotaMintaList = _context.AkNotaMinta
+                .Include(nm => nm.AkInden)
                 .Where(x => x.FlPosting == 1 &&
-                x.FlJenis == 1)
+                x.FlJenis == 1 && (x.AkInden == null || (x.AkInden != null && x.AkInden.Sum(i => i.Jumlah) < x.Jumlah)))
                 .ToList();
+
             ViewBag.AkNotaMinta = akNotaMintaList;
 
             List<AkCarta> akCartaList = _context.AkCarta
