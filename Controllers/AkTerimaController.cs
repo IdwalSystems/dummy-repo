@@ -1087,6 +1087,7 @@ namespace MSNK.Controllers
                         AkTerima dataAsal = await _akTerimaRepo.GetById(id);
 
                         // list of input that cannot be change
+                        akTerima.AkBankId = dataAsal.AkBankId;
                         akTerima.Tahun = dataAsal.Tahun;
                         akTerima.JKWId = dataAsal.JKWId;
                         akTerima.FlJenisTerima = dataAsal.FlJenisTerima;
