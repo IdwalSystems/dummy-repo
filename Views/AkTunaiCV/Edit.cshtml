@@ -60,8 +60,6 @@
                     </div>
                 </div>
             </div>
-            @if (User.IsInRole("SuperAdmin"))
-            {
                 <div class="form-group">
                     <label asp-for="JBahagianId" class="control-label"></label><span class="text-danger control-label">*</span>
                     <select class="form-control form-control-sm text-uppercase" asp-for="JBahagianId" required>
@@ -72,11 +70,6 @@
                     </select>
                     <span asp-validation-for="JBahagianId" class="text-danger"></span>
                 </div>
-            }
-            else
-            {
-                <input asp-for="JBahagianId" hidden />
-            }
             @switch (Model.KategoriPenerima)
             {
                 case 1:

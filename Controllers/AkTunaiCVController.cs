@@ -647,6 +647,7 @@ namespace MSNK.Controllers
                     m.Alamat1 = akTunaiCV.Alamat1;
                     m.Alamat2 = akTunaiCV.Alamat2;
                     m.Alamat3 = akTunaiCV.Alamat3;
+                    m.JBahagianId = akTunaiCV.JBahagianId;
                     if (akTunaiCV.Catatan == null)
                     {
                         m.Catatan = "";
@@ -775,10 +776,10 @@ namespace MSNK.Controllers
                     }
 
                     // list of input that cannot be change
-                    if (!User.IsInRole("SuperAdmin"))
-                    {
-                        akTunaiCV.JBahagianId = dataAsal.JBahagianId;
-                    }
+                    //if (!User.IsInRole("SuperAdmin"))
+                    //{
+                    //    akTunaiCV.JBahagianId = dataAsal.JBahagianId;
+                    //}
                     akTunaiCV.Tahun = dataAsal.Tahun;
                     akTunaiCV.AkTunaiRuncitId = dataAsal.AkTunaiRuncitId;
                     akTunaiCV.NoCV = dataAsal.NoCV;
