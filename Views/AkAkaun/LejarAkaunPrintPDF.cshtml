@@ -6,17 +6,17 @@
 
     CompanyDetails company = new CompanyDetails();
 
-    int rowNo = 0; 
+    int rowNo = 0;
     decimal baki = 0;
     decimal jDebit = 0;
     decimal jKredit = 0;
 
     DateTime tarDari = Convert.ToDateTime(ViewData["tarDari"]);
-    
+
     DateTime tarHingga = Convert.ToDateTime(ViewData["tarHingga"]);
 }
 <style>
-    
+
     .image-container {
         width: 80px;
         height: 80px;
@@ -64,8 +64,6 @@
     tr {
         page-break-inside: avoid
     }
-
-    
 </style>
 
 <div class="row flexrow mb-1 text-center">
@@ -82,101 +80,95 @@
     <!--</div>-->
 </div>
 @*<div class="form-row flexrow mb-1 text-center">
-    <div class="col-12 image-container text-uppercase text-center">
-        <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" class="mb-3" />
-        <h5 class="mb-1"><strong>@company.NamaSyarikat</strong></h5>
-        <p class="mb-2"> @company.AlamatSyarikat1 , @company.AlamatSyarikat2, @company.AlamatSyarikat3</p>
-        <h5 class="mb-0 bg-dark text-white"> <strong>SENARAI CARTA AKAUN</strong></h5>
-    </div>
-</div>*@
+        <div class="col-12 image-container text-uppercase text-center">
+            <img src="~/img/MainLogo_Syarikat.png" alt="Logo syarikat" class="mb-3" />
+            <h5 class="mb-1"><strong>@company.NamaSyarikat</strong></h5>
+            <p class="mb-2"> @company.AlamatSyarikat1 , @company.AlamatSyarikat2, @company.AlamatSyarikat3</p>
+            <h5 class="mb-0 bg-dark text-white"> <strong>SENARAI CARTA AKAUN</strong></h5>
+        </div>
+    </div>*@
 <br />
-    <table class="table table-bordered table-sm topic">
-        <thead>
-            <tr class="bg-dark text-white">
-                <th colspan="11" class="text-center bg-dark text-white">
-                <strong>SENARAI LEJAR AKAUN @ViewData["searchCarta"] BAGI KW @ViewData["searchKW"] 
-                    <br/> 
-                    DARI TARIKH : @tarDari.ToString("dd/MM/yyyy") -> @tarHingga.ToString("dd/MM/yyyy")</strong>
-                </th>
-            </tr>
-            <tr style="line-height:0.8rem;" class="bg-secondary text-white">
+<table class="table table-bordered table-sm topic">
+    <thead>
+        <tr class="bg-dark text-white">
+            <th colspan="11" class="text-center bg-dark text-white">
+                <strong>
+                    SENARAI LEJAR AKAUN @ViewData["searchCarta"] BAGI KW @ViewData["searchKW"]
+                    <br />
+                    DARI TARIKH : @tarDari.ToString("dd/MM/yyyy") -> @tarHingga.ToString("dd/MM/yyyy")
+                </strong>
+            </th>
+        </tr>
+        <tr style="line-height:0.8rem;" class="bg-secondary text-white">
 
-                <th class="thbil">
-                    BIL
-                </th>
-                <th>
-                    TARIKH
-                </th>
-                <th>
-                    BAHAGIAN
-                </th>
-                <th>
-                    OBJEK
-                </th>
-                <th>
-                    NO RUJUKAN
-                </th>
-                <th class="thdebit">
-                    DEBIT RM
-                </th>
-                <th class="thkredit">
-                    KREDIT RM
-                </th>
-                <th class="thtotal">
-                    BAKI RM
-                </th>
-            </tr>
-        </thead>
-        <tbody>
+            <th class="thbil">
+                BIL
+            </th>
+            <th>
+                TARIKH
+            </th>
+            <th>
+                BAHAGIAN
+            </th>
+            <th>
+                OBJEK
+            </th>
+            <th>
+                NO RUJUKAN
+            </th>
+            <th class="thdebit">
+                DEBIT RM
+            </th>
+            <th class="thkredit">
+                KREDIT RM
+            </th>
+            <th class="thtotal">
+                BAKI RM
+            </th>
+        </tr>
+    </thead>
+    <tbody>
 
-            @foreach (var item in Model)
-            {
-                
-                if (item.Debit > 0)
-                {
-                    baki += item.Debit;
-                    jDebit += item.Debit;
-                }
+        @foreach (var item in Model)
+        {
 
-                if (item.Kredit > 0)
-                {
-                    baki -= item.Kredit;
-                    jKredit += item.Kredit;
-                }
-                <tr>
-                    <td class="bil">
-                        @(rowNo += 1)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Tarikh)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.JBahagian.Kod) - @Html.DisplayFor(modelItem => item.JBahagian.Perihal)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AkCarta2.Kod) - @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NoRujukan)
-                    </td>
-                    <td class="debit text-right">
-                        @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
-                    </td>
-                    <td class="kredit text-right">
-                        @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
-                    </td>
-                    <td class="total text-right">
-                        @Convert.ToDecimal(baki).ToString("#,##0.00")
-                    </td>
-                </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr class="table-warning">
-                <td colspan="5" class="text-right"><strong>JUMLAH KESELURUHAN RM</strong></td>
-                <td class="text-right"><strong>@Convert.ToDecimal(jDebit).ToString("#,##0.00")</strong></td>
-                <td class="text-right"><strong>@Convert.ToDecimal(jKredit).ToString("#,##0.00")</strong></td>
-                <td class="text-right"><strong>@Convert.ToDecimal(baki).ToString("#,##0.00")</strong></td>
+            baki += item.Debit - item.Kredit;
+            jDebit += item.Debit;
+            jKredit += item.Kredit;
+            <tr>
+                <td class="bil">
+                    @(rowNo += 1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tarikh)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JBahagian.Kod) - @Html.DisplayFor(modelItem => item.JBahagian.Perihal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AkCarta2.Kod) - @Html.DisplayFor(modelItem => item.AkCarta2.Perihal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoRujukan)
+                </td>
+                <td class="debit text-right">
+                    @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
+                </td>
+                <td class="kredit text-right">
+                    @Convert.ToDecimal(item.Kredit).ToString("#,##0.00")
+                </td>
+                <td class="total text-right">
+                    @Convert.ToDecimal(baki).ToString("#,##0.00")
+                </td>
             </tr>
-        </tfoot>
-    </table>
+        }
+    </tbody>
+    <tfoot>
+        <tr class="table-warning">
+            <td colspan="5" class="text-right"><strong>JUMLAH KESELURUHAN RM</strong></td>
+            <td class="text-right"><strong>@Convert.ToDecimal(jDebit).ToString("#,##0.00")</strong></td>
+            <td class="text-right"><strong>@Convert.ToDecimal(jKredit).ToString("#,##0.00")</strong></td>
+            <td class="text-right"><strong>@Convert.ToDecimal(baki).ToString("#,##0.00")</strong></td>
+        </tr>
+    </tfoot>
+</table>
