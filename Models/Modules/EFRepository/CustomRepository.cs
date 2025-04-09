@@ -1811,7 +1811,7 @@ namespace MSNK.Models.Modules.EFRepository
                 .Include(b => b.AkCarta1)
                     .ThenInclude(b => b.JJenis)
                 .Include(b => b.AkCarta2)
-                .Where(b => b.Tarikh.Year >= TarDari.Year && b.Tarikh.Year <= TarHingga.Year).ToListAsync();
+                .Where(b => b.Tarikh >= TarDari && b.Tarikh <= TarHingga).ToListAsync();
 
             if (JKWId != 0)
             {
