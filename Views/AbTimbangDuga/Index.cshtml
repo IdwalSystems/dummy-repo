@@ -158,22 +158,22 @@
                                         </td>
                                             @if (item.Debit > 0)
                                             {
-                                                <td>
+                                                <td class="text-right">
                                                     @Convert.ToDecimal(item.Debit).ToString("#,##0.00")
                                                 </td>
                                                 
                                             }
                                             else
                                             {
-                                                <td>0.00</td>
+                                                <td class="text-right">0.00</td>
                                             }
                                             @if (item.Kredit > 0)
                                             {
-                                                <td>@Convert.ToDecimal(item.Kredit).ToString("#,##0.00")</td>
+                                                <td class="text-right">@Convert.ToDecimal(item.Kredit).ToString("#,##0.00")</td>
                                             }
                                             else
                                             {
-                                                <td>0.00</td>
+                                                <td class="text-right">0.00</td>
                                             }           
                                     </tr>
 
@@ -183,8 +183,8 @@
                             <tfoot>
                                 <tr class=" font-weight-bold">
                                     <td colspan="4" class="text-right text-uppercase table-warning">Jumlah RM</td>
-                                    <td>@Convert.ToDecimal(jumDebit).ToString("#,##0.00")</td>
-                                    <td>@Convert.ToDecimal(jumKredit).ToString("#,##0.00")</td>
+                                    <td class="text-right">@Convert.ToDecimal(jumDebit).ToString("#,##0.00")</td>
+                                    <td class="text-right">@Convert.ToDecimal(jumKredit).ToString("#,##0.00")</td>
                                 </tr>
                             </tfoot>
                         </table>

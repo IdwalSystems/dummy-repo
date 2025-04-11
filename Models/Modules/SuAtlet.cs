@@ -47,7 +47,7 @@ namespace MSNK.Models.Modules
         [DisplayName("Tarikh Berhenti")]
         public DateTime? TarikhBerhenti { get; set; }
         [DisplayName("Nama Bank")]
-        [RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bank")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Bank")]
         [Required(ErrorMessage = "Bank diperlukan")]
         public int JBankId { get; set; }
         [DisplayName("Agama")]
