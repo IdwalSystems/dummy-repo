@@ -188,6 +188,7 @@ namespace MSNK
             //NOTA DEBIT KREDIT BELIAN END
 
             services.AddTransient<IRepository<JKonfigPerubahanEkuiti, int, string>, JKonfigPerubahanEkuitiRepository>();
+            services.AddTransient<IRepository<JKonfigPenyata, int, string>, JKonfigPenyataRepository>();
 
 
             services.AddScoped(ss => SessionCartTerima.GetCart(ss));
@@ -211,6 +212,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartBankRecon.GetCart(ss));
             services.AddScoped(ss => SessionCartNotaDebitKreditBelian.GetCart(ss));
             services.AddScoped(ss => SessionCartJKonfigPerubahanEkuiti.GetCart(ss));
+            services.AddScoped(ss => SessionCartJKonfigPenyata.GetCart(ss));
 
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

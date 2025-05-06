@@ -40,5 +40,13 @@ namespace MSNK.Models.Modules.IRepository
         // Perubahan Ekuiti
         Task<AbPerubahanEkuitiViewModel> GetAbPerubahanEkuiti(EnJenisLajurJadualPerubahanEkuiti enJenisEkuiti, int? JKWId, string Tahun);
         // Perubahan Ekuiti END
+
+        // Penyata 22/04/2025
+        Task<JKonfigPenyata> GetJKonfigPenyataDetails(int id);
+        Task<JKonfigPenyata> GetAllDetailsByTahunOrKod(string tahun, string kod);
+
+        Task<List<_AbPenyataAlirTunai>> GetAbPenyataAlirTunaiComparedByYears(string modul, string Tahun1, string Tahun2);
+        Task<List<_AbPenyataAlirTunai>> GetAbPenyataAlirTunaiComparedByJKonfigPenyataBarisId(List<JKonfigPenyataBaris> barisList, string Tahun1, string Tahun2);
+        // Penyata END
     }
 }

@@ -144,6 +144,13 @@ function showDate(d) {
     return (day < 10 ? '0' + day : day) + "/" + (month < 10 ? '0' + month : month) + "/" + year;
 }
 
+function toRM(t) {
+    return Number(t).toLocaleString("en", (undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }));
+};
+
 function showSQLFormatDate(d) {
     return d.trim().split('/').reverse().join('-');
 }

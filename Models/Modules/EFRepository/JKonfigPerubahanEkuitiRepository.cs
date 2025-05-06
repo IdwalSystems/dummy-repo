@@ -51,7 +51,7 @@ namespace MSNK.Models.Modules.EFRepository
                     {
                         barisSentences = "";
                     }
-                    string sentence = FormulaInSentence(baris.EnJenisOperasi, baris.EnJenisCartaList, baris.IsKecuali, baris.KodList);
+                    string sentence = FormulaInSentence(baris.EnJenisOperasi, baris.EnJenisCartaList, baris.IsKecuali, baris.KodList, 0, false);
 
                     baris.BarisDescription = barisSentences;
                     baris.FormulaDescription = sentence;
@@ -67,7 +67,7 @@ namespace MSNK.Models.Modules.EFRepository
 
         }
 
-        public string FormulaInSentence(EnJenisOperasi jenisOperasi, string jenisCarta, bool isKecuali, string kodList)
+        public string FormulaInSentence(EnJenisOperasi jenisOperasi, string jenisCarta, bool isKecuali, string kodList, decimal amaunTetap, bool IsLastYear)
         {
             string txtexcept = "";
             string txtcode = "";
@@ -134,9 +134,13 @@ namespace MSNK.Models.Modules.EFRepository
                 {
                     sentences = $"Jumlah bagi kod - kod ({txtcode}){txtexcept}";
                 }
-                else
+                else if (jenisOperasi == EnJenisOperasi.Tolak)
                 {
                     sentences = $"ditolak dengan jumlah bagi kod - kod ({txtcode}){txtexcept}";
+                }
+                else
+                {
+                    sentences = $"Jumlah Tetap RM {Convert.ToDecimal(amaunTetap).ToString("#,##0.00")}";
                 }
             }
             else
@@ -145,9 +149,13 @@ namespace MSNK.Models.Modules.EFRepository
                 {
                     sentences = "Tiada formula operasi tambah";
                 }
-                else
+                else if (jenisOperasi == EnJenisOperasi.Tolak)
                 {
                     sentences = "Tiada formula operasi tolak";
+                }
+                else
+                {
+                    sentences = $"Jumlah Tetap RM {Convert.ToDecimal(amaunTetap).ToString("#,##0.00")}";
                 }
             }
 
@@ -171,7 +179,7 @@ namespace MSNK.Models.Modules.EFRepository
                     {
                         barisSentences = "";
                     }
-                    string sentence = FormulaInSentence(baris.EnJenisOperasi, baris.EnJenisCartaList, baris.IsKecuali, baris.KodList);
+                    string sentence = FormulaInSentence(baris.EnJenisOperasi, baris.EnJenisCartaList, baris.IsKecuali, baris.KodList, 0, false);
 
                     baris.BarisDescription = barisSentences;
                     baris.FormulaDescription = sentence;
@@ -207,7 +215,7 @@ namespace MSNK.Models.Modules.EFRepository
                     {
                         barisSentences = "";
                     }
-                    string sentence = FormulaInSentence(baris.EnJenisOperasi, baris.EnJenisCartaList, baris.IsKecuali, baris.KodList);
+                    string sentence = FormulaInSentence(baris.EnJenisOperasi, baris.EnJenisCartaList, baris.IsKecuali, baris.KodList, 0, false);
 
                     baris.BarisDescription = barisSentences;
                     baris.FormulaDescription = sentence;
@@ -285,6 +293,11 @@ namespace MSNK.Models.Modules.EFRepository
         }
 
         public Task<IEnumerable<JKonfigPerubahanEkuiti>> GetAllIncludeDeletedItemsFiltered(string filter, string filterDate1, string filterDate2, string filterType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetSetOfCartaStringList(bool isPukal, string enJenisCartaList, bool isKecuali, string kodList)
         {
             throw new NotImplementedException();
         }

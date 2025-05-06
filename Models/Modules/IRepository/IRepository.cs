@@ -19,8 +19,10 @@ namespace MSNK.Models.Modules.IRepository
         Task Delete(T2 id);
         Task Save();
         Task Update(T1 entity);
-        string FormulaInSentence(EnJenisOperasi jenisOperasi, string jenisCarta, bool isKecuali, string kodList);
+        string FormulaInSentence(EnJenisOperasi jenisOperasi, string jenisCarta, bool isKecuali, string kodList, decimal amaunTetap, bool IsLastYear);
         string GetSetOfCartaList(EnBarisPerubahanEkuiti enBaris, EnJenisOperasi enOperasi, bool isPukal, string enJenisCartaList, bool isKecuali, string kodList);
+        string GetSetOfCartaStringList(bool isPukal, string enJenisCartaList, bool isKecuali, string kodList);
+
         JKonfigPerubahanEkuiti GetAllDetailsByTahunOrJenisEkuiti(string tahun, EnJenisLajurJadualPerubahanEkuiti? enJenisEkuiti);
     }
 }

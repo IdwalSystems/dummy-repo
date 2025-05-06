@@ -13,5 +13,7 @@ namespace MSNK.Models.Operations
         Tambah = 0,
         [Display(Name = "-")]
         Tolak = 1,
+        [Display(Name = "Amaun Tetap")]
+        AmaunTetap = 2,
     }
 }

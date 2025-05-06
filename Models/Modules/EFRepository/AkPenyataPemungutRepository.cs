@@ -23,7 +23,7 @@ namespace MSNK.Models.Modules.EFRepository
             }
         }
 
-        public string FormulaInSentence(EnJenisOperasi jenisOperasi, string jenisCarta, bool isKecuali, string kodList)
+        public string FormulaInSentence(EnJenisOperasi jenisOperasi, string jenisCarta, bool isKecuali, string kodList, decimal amaunTetap, bool IsLastYear)
         {
             throw new System.NotImplementedException();
         }
@@ -352,6 +352,11 @@ namespace MSNK.Models.Modules.EFRepository
         public string GetSetOfCartaList(EnBarisPerubahanEkuiti enBaris, EnJenisOperasi enOperasi, bool isPukal, string enJenisCartaList, bool isKecuali, string kodList)
         {
             throw new System.NotImplementedException();
+        }
+
+        public string GetSetOfCartaStringList(bool isPukal, string enJenisCartaList, bool isKecuali, string kodList)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<AkPenyataPemungut> Insert(AkPenyataPemungut entity)

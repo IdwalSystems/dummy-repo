@@ -54,7 +54,14 @@
         <h4 class="mb-1"><strong>Penyata Pembayaran Elaun Jurulatih Separuh Masa (JSM) Bagi Bulan @Model.BulanSingkatan Tahun @Model.SuProfil.Tahun</strong></h4>
     </div>
 </div>
-
+<hr />
+<div class="row flexrow mb-3">
+    <div class="col-8 text-uppercase">
+        <h6 class="mb-1">No Rujukan : @Model.SuProfil.NoRujukan</h6>
+        <h6 class="mb-1">Bahagian : @Model.SuProfil.JBahagian.Kod - @Model.SuProfil.JBahagian.Perihal</h6>
+        <h6 class="mb-1">Tarikh Dijana : @Model.SuProfil.TarikhPosting.ToString("dd/MM/yyyy")</h6>
+    </div>
+</div>
 <table class="table table-bordered table-sm topic">
     <thead class="text-center">
         <tr class="table-primary">

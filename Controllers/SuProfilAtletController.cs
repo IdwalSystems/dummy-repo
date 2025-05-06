@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -900,7 +901,16 @@ namespace MSNK.Controllers
                 return NotFound();
             }
 
-            var suProfil = await _suProfilRepo.GetByIdIncludeDeletedItems((int)id);
+            var suProfil = await _context.SuProfil
+                .Include(b => b.JKW)
+                .Include(b => b.AkCarta)
+                .Include(b => b.JBahagian)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.JSukan)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.JCaraBayar)
+                .Where(x => x.FlKategori == 0)
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (suProfil == null)
             {
@@ -949,7 +959,7 @@ namespace MSNK.Controllers
         [Authorize(Policy = "SU001R")]
         public async Task<IActionResult> RollBack(int id)
         {
-            var obj = await _suProfilRepo.GetByIdIncludeDeletedItems(id);
+            var obj = await _suProfilRepo.GetById(id);
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
@@ -994,14 +1004,24 @@ namespace MSNK.Controllers
         [Authorize(Policy = "SU001P")]
         public async Task<IActionResult> PrintPdf(int id)
         {
-            SuProfil obj = await _suProfilRepo.GetByIdIncludeDeletedItems(id);
+            SuProfil obj = await _context.SuProfil
+                .Include(b => b.JKW)
+                .Include(b => b.AkCarta)
+                .Include(b => b.JBahagian)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.SuAtlet).ThenInclude(b => b.JBank)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.JSukan)
+                .Include(b => b.SuProfil1).ThenInclude(b => b.JCaraBayar)
+                .Where(x => x.FlKategori == 0)
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             var user = await _userManager.GetUserAsync(User);
             int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
             obj.SuProfil1 = obj.SuProfil1
                 .OrderBy(b => b.JSukan.Perihal)
                 .ThenBy(b => b.SuAtlet.Nama)
-                .ToList();
+                .ToList() ?? new List<SuProfil1>();
 
             string jumlahDalamPerkataan;
 

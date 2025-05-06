@@ -1584,18 +1584,18 @@ namespace MSNK.Controllers
                     foreach (var item in spPendahuluanPelbagai)
                     {
 
-                        record.Add(new WidgetSpPendahuluanPelbagai
-                        {
-                            Id = item.Id,
-                            Tarikh = item.TarMasuk.ToString("dd/MM/yyyy"),
-                            NoRujukan = item.NoPermohonan ?? "",
-                            Nama = item.SuPekerja.Nama?.ToUpper() ?? "",
-                            Tajuk = item.Aktiviti?.ToUpper() ?? "",
-                            Jumlah = Convert.ToDecimal(item.JumKeseluruhan).ToString("#,##0.00"),
-                            tindakan = "KEWANGAN",
-                            badgeType = "ac-warning",
-                            status = WidgetSpPendahuluanPelbagai.GetStatus(item)
-                        });
+                        //record.Add(new WidgetSpPendahuluanPelbagai
+                        //{
+                        //    Id = item.Id,
+                        //    Tarikh = item.TarMasuk.ToString("dd/MM/yyyy"),
+                        //    NoRujukan = item.NoPermohonan ?? "",
+                        //    Nama = item.SuPekerja.Nama?.ToUpper() ?? "",
+                        //    Tajuk = item.Aktiviti?.ToUpper() ?? "",
+                        //    Jumlah = Convert.ToDecimal(item.JumKeseluruhan).ToString("#,##0.00"),
+                        //    tindakan = "KEWANGAN",
+                        //    badgeType = "ac-warning",
+                        //    status = WidgetSpPendahuluanPelbagai.GetStatus(item)
+                        //});
                     }
                 }
 

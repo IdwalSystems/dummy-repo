@@ -1,0 +1,137 @@
+﻿<script>
+    var arr = [];
+    var row = [];
+    var tahun1 = "@ViewData["Tahun1"]";
+    var tahun2 = "@ViewData["Tahun2"]";
+
+    $(document).ready(function () {
+        $('#moJKWId').select2({
+            dropdownParent: $('#modalCetak'),
+            theme: "bootstrap"
+        });
+
+        $(".loading").show();
+        $(".result-data").hide();
+
+        PopulateTableFromDb(tahun1, tahun2).then(function () {
+            GetPenyataAmount(arr).then(function () {
+                // Sort by 'susunan' before rendering
+                row.sort(function (a, b) {
+                    return a.susunan - b.susunan;
+                });
+
+                for (var g = 0; g < row.length; g++) {
+                    $('#tblPenyataNota tr').eq(g + 1).html(row[g].html);
+                }
+            });
+        });
+    });
+
+    function PopulateTableFromDb(tahun1, tahun2) {
+        return $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetPenyata","AbPenyataAlirTunai")',
+            data: { tahun1, tahun2 },
+            datatype: "json",
+            success: function (r) {
+                if (r.result === "OK" && r.record.length > 0) {
+                    $(".result-data").show();
+                    $(".loading").hide();
+                    $('table tbody#tbodyPenyata').empty();
+
+                    for (var i = 0; i < r.record.length; i++) {
+                        var item1 = r.record[i];
+                        arr.push({ jKonfigPenyataBarisId1: item1.jKonfigPenyataBarisId1, jKonfigPenyataBarisId2: item1.jKonfigPenyataBarisId2 });
+
+                        var str = "<tr><td id='row" + i + "'>" + item1.perihal +
+                            "</td><td></td><td>Sedang mengira..</td></tr>";
+
+                        $('table tbody#tbodyPenyata').append(str);
+                    }
+                } else {
+                    toastr.error(r.message);
+                }
+            }
+        });
+    }
+
+    function GetPenyataAmount(arr) {
+        var promises = [];
+
+        if (arr) {
+            for (let i = 0; i < arr.length; i++) {
+                let item1 = arr[i];
+
+                var p = $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetPenyataAmount","AbPenyataAlirTunai")',
+                    data: { Id1: item1.jKonfigPenyataBarisId1, Id2: item1.jKonfigPenyataBarisId2, Tahun1: tahun1, Tahun2: tahun2 },
+                    dataType: "json",
+                    success: function (r) {
+                        if (r.result === "OK" && r.record.length > 0) {
+                            for (var f = 0; f < r.record.length; f++) {
+                                var itemf = r.record[f];
+                                var bold = "", uppercase = "", border = "", perihalan = "";
+
+                                switch (itemf.enKategoriJumlah) {
+                                    case @EnKategoriJumlah.JumlahKecil.GetDisplayCode():
+                                        border = "border-top";
+                                        break;
+                                    case @EnKategoriJumlah.JumlahBesar.GetDisplayCode():
+                                        border = "border-top border-bottom";
+                                        break;
+                                    case @EnKategoriJumlah.JumlahKeseluruhan.GetDisplayCode():
+                                        border = "border-top border-bottom";
+                                        bold = "font-weight-bold";
+                                        uppercase = "text-uppercase";
+                                        break;
+                                }
+                                var amaun1 = itemf.amaun1;
+                                var amaun2 = itemf.amaun2;
+                                if (amaun1 < 0) {
+                                    amaun1 = "(" + toRM(0 - amaun1) + ")"
+                                } else {
+                                    amaun1 = toRM(amaun1);
+                                };
+                                if (amaun2 < 0) {
+                                    amaun2 = "(" + toRM(0 - amaun2) + ")"
+                                } else {
+                                    amaun2 = toRM(amaun2);
+                                };
+                                var perihal = itemf.perihal;
+
+                                if (!perihal) perihal = ""; 
+                                switch (itemf.enKategoriTajuk) {
+                                    case @EnKategoriTajuk.TajukUtama.GetDisplayCode():
+                                        bold = "font-weight-bold";
+                                        uppercase = "text-uppercase";
+                                        perihalan = "<td></td><td>";
+                                        break;
+                                    case @EnKategoriTajuk.TajukKecil.GetDisplayCode():
+                                        perihalan = "<td></td><td>";
+                                        break;
+                                    case @EnKategoriTajuk.Perihalan.GetDisplayCode():
+                                        perihalan = "<td class='" + bold + " " + uppercase + " " + border + " text-right '>" + amaun1 +
+                                            "</td><td class='" + bold + " " + uppercase + " " + border + " text-right '>" + amaun2 + "</td>";
+                                        break;
+                                }
+
+                                var htmlRow = "<td class='" + bold + " " + uppercase + "'>" + perihal +
+                                    "</td><td></td>" + perihalan;
+
+                                row.push({ susunan: itemf.susunan, html: htmlRow });
+                            }
+                        } else {
+                            toastr.error(r.message);
+                        }
+                    }
+                });
+
+                promises.push(p);
+            }
+        }
+
+        return Promise.all(promises);
+    }
+
+</script>

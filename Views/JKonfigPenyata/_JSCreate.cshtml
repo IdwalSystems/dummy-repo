@@ -1,0 +1,684 @@
+﻿<script type="text/javascript">
+    toastr.options.timeOut = 2000; // 2s
+    $(document).ready(function () {
+        $('#moBarisFormulaEnJenisCartaList').select2({
+            dropdownParent: $('#moBarisFormula'),
+            theme: "bootstrap"
+        });
+
+        $('#moBarisFormulaKodList').select2({
+            dropdownParent: $('#moBarisFormula'),
+            theme: "bootstrap"
+        });
+
+        $('#moBarisEnKategoriTajuk').select2({
+            dropdownParent: $('#moBaris'),
+            theme: "bootstrap"
+        });
+
+        $('#moBarisEnKategoriJumlah').select2({
+            dropdownParent: $('#moBaris'),
+            theme: "bootstrap"
+        });
+
+        $('#moBarisJumlahSusunanList').select2({
+            dropdownParent: $('#moBaris'),
+            theme: "bootstrap"
+        });
+        var id = $("#Id").val();
+
+        if (!id) id = 0;
+
+        PopulateTablesFromCart(id);
+    })
+
+    //empty cart
+    function EmptyBarisCart() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("EmptyBarisCart", "JKonfigPenyata")',
+            dataType: "json",
+            success: function (msg) {
+                $("table tbody#tbodyBarisFormula").empty();
+                $('#divBarisFormulaTable').prop('hidden', true);
+            },
+            error: function (req, status, error) {
+                alert(error);
+            }
+        });
+    };
+    //empty cart end
+
+    // add tbl baris
+    function AddBaris() {
+        EmptyBarisCart();
+        ResetBarisFields();
+        var JKonfigPenyataId = $("#Id").val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetBilJKonfigPenyataBaris","JKonfigPenyata")',
+            data: { JKonfigPenyataId: JKonfigPenyataId },
+            dataType: "json",
+            success: function (msg) {
+                if (msg.result == "OK") {
+                    PopulateTablesFromCart(JKonfigPenyataId);
+                }
+                else {
+                    toastr.error(msg.message);
+                }
+            }
+        })
+    }
+    // add tbl baris end
+
+    //remove tbl baris
+    function RemoveBaris(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var id = $("TD", row).eq(0).html();
+        var bil = $("TD", row).eq(1).html();
+        var susunan = $("TD", row).eq(2).html();
+        var perihal = $("TD", row).eq(3).html();
+        var JKonfigPenyataId = $("#Id").val();
+        if (confirm("Hapus baris " + perihal + " ?")) {
+            //Get the reference of the Table.
+            var table = $("#tblBaris")[0];
+
+            var JKonfigPenyata = {
+                Id: id,
+                Bil: bil
+            }
+            if (JKonfigPenyata != null) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("RemoveCartJKonfigPerubahanEkuitiBaris", "JKonfigPenyata")',
+                    data: JKonfigPenyata,
+                    dataType: "json",
+                    success: function (r) {
+                        $("#moBarisSusunan option[value='" + susunan + "']").prop('disabled', false);
+                        PopulateTablesFromCart(JKonfigPenyataId);
+                    }
+                });
+            }
+
+        }
+    };
+    //remove tbl baris end
+
+    // update tbl baris
+    function UpdateBaris(button) {
+        EmptyBarisCart();
+        var row = $(button).closest("TR");
+        var id = $("TD", row).eq(0).html();
+        var bil = $("TD", row).eq(1).html();
+        var JKonfigPenyataId = $("#Id").val();
+
+        var JKonfigPenyataBaris = {
+            Id: id,
+            Bil : bil
+        }
+
+        if (bil != null) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetAnItemFromCartJKonfigPenyataBaris","JKonfigPenyata")',
+                data: JKonfigPenyataBaris,
+                dataType: "json",
+                success: function (r) {
+                    $('#moBarisId').val(r.record.id);
+                    $('#moBarisBil').val(r.record.bil);
+                    $('#moBarisPerihal').val(r.record.perihal);
+                    $('#moBarisIsFormula').val(r.record.isFormula);
+                    $('#moBarisEnKategoriTajuk').val(r.record.enKategoriTajuk).change();
+                    $('#moBarisSusunan').val(r.record.susunan).change();
+                    $("#moBarisSusunan option[value='" + r.record.susunan + "']").prop('disabled', false);
+
+                    if (r.record.isFormula == true) {
+                        $('#divBarisFormulaTable').removeAttr('hidden');
+                        $('#moBarisEnKategoriJumlah').val(r.record.enKategoriJumlah).change();
+                        if (r.record.jumlahSusunanList != null) {
+                            arr = r.record.jumlahSusunanList.split(",");
+                            $('#moBarisJumlahSusunanList').val(arr).trigger('change');
+                        }
+                        PopulateTablesFromCartBaris(id);
+                    }
+                    else {
+                        $('#divBarisFormulaTable').prop('hidden', true);
+                    }
+                }
+            })
+        }
+    }
+
+    function UpdateModalBaris() {
+        var barisId = $('#moBarisId').val();
+        var barisBil = $('#moBarisBil').val();
+        var jKonfigPenyataId = $('#Id').val();
+        var enKategoriTajuk = $('#moBarisEnKategoriTajuk').val();
+        var perihal = $('#moBarisPerihal').val();
+        var susunan = $('#moBarisSusunan').val();
+        var isFormula = $('#moBarisIsFormula').val();
+        var jumlahSusunanList = $('#moBarisJumlahSusunanList').val().join(",");
+        var enKategoriJumlah = $('#moBarisEnKategoriJumlah').val();
+
+
+        var JKonfigPenyataBaris = {
+            Id: barisId,
+            Bil: barisBil,
+            JKonfigPenyataId: jKonfigPenyataId,
+            EnKategoriTajuk: enKategoriTajuk,
+            Perihal: perihal,
+            susunan: susunan,
+            IsFormula: isFormula,
+            JumlahSusunanList: jumlahSusunanList,
+            EnKategoriJumlah: enKategoriJumlah
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveAnItemFromCartJKonfigPenyataBaris", "JKonfigPenyata")',
+            data: JKonfigPenyataBaris,
+            dataType: "json",
+            success: function (r) {
+                $("#moBarisSusunan option[value='" + r.susunan + "']").prop('disabled', false);
+                $("#moBarisSusunan option:selected").prop('disabled', true);
+                PopulateTablesFromCart(jKonfigPenyataId);
+            }
+        })
+        // get formula from cartFormula ***
+    }
+
+    function BarisBack() {
+        var susunan = $('#moBarisSusunan').val();
+        $("#moBarisSusunan option[value='" + susunan + "']").prop('disabled', true);
+    }
+    // update tbl baris end
+
+
+    //// add tbl formula
+    function AddBarisFormula() {
+        $("#moBarisFormulaIsPukalFalse").prop('checked', true);
+        ResetBarisFormulaFields();
+        var jKonfigPenyataBarisId = $('#moBarisId').val();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetBilJKonfigPenyataBarisFormula","JKonfigPenyata")',
+            dataType: "json",
+            data: {JKonfigPenyataBarisId: jKonfigPenyataBarisId},
+            success: function (msg) {
+                if (msg.result == "OK") {
+                    PopulateTablesFromCartBaris(jKonfigPenyataBarisId);
+                }
+                else {
+                    toastr.error(msg.message);
+                }
+            }
+        })
+    }
+    //// add tbl formula end
+
+    //// remove tbl formula
+    function RemoveBarisFormula(button) {
+        var jKonfigPenyataBarisId = $('#moBarisId').val();
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var barisId = $("TD", row).eq(0).html();
+        var barisBil = $("TD", row).eq(1).html();
+        var enJenisOperasi = $("TD", row).eq(2).html();
+        var perihal = $("TD", row).eq(3).html();
+        if (confirm("Hapus baris " + perihal + " ?")) {
+            //Get the reference of the Table.
+            var JKonfigPenyataBarisFormula = {
+                Id: barisId,
+                JKonfigPenyataBarisId: jKonfigPenyataBarisId,
+                BarisBil: barisBil,
+                EnJenisOperasi: enJenisOperasi
+            }
+
+            if (JKonfigPenyataBarisFormula) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("RemoveCartJKonfigPerubahanEkuitiBarisFormula", "JKonfigPenyata")',
+                    data: JKonfigPenyataBarisFormula,
+                    dataType: "json",
+                    success: function (r) {
+                        PopulateTablesFromCartBaris(jKonfigPenyataBarisId);
+                    }
+                });
+            }
+
+        }
+    };
+    //// remove tbl formula end
+
+    //// update tbl formula
+    function UpdateBarisFormula(button) {
+        $("#moBarisFormulaIsPukalFalse").prop('checked', true);
+        ResetBarisFormulaFields();
+        //$("input[name='moBarisFormulaEnJenisOperasi']").prop("disabled", true);
+        var jKonfigPenyataBarisId = $('#moBarisId').val();
+        var row = $(button).closest("TR");
+        var id = $("TD", row).eq(0).html().trim();
+        var barisBil = $("TD", row).eq(1).html().trim();
+        var enJenisOperasi = $("TD", row).eq(2).html().trim();
+
+        var JKonfigPenyataBarisFormula = {
+            Id: id,
+            BarisBil: barisBil,
+            JKonfigPenyataBarisId: jKonfigPenyataBarisId,
+            EnJenisOperasi: enJenisOperasi
+        }
+
+        if (enJenisOperasi != null) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetAnItemFromCartJKonfigPenyataBarisFormula","JKonfigPenyata")',
+                data: JKonfigPenyataBarisFormula,
+                dataType: "json",
+                success: function (r) {
+                    if (r.result == "OK") {
+                        $('#moBarisFormulaId').val(r.record.id);
+                        $('#moBarisFormulaBarisBil').val(r.record.barisBil);
+                        $('#moFormulaEnJenisOperasi').val(r.record.enJenisOperasi);
+                        $('#moBarisFormulaAmaunTetap').val(r.record.amaunTetap);
+                        if (r.record.isLastYear == true) {
+                            $("#moBarisFormulaIsLastYearTrue").prop('checked', true);
+                        } else {
+                            $("#moBarisFormulaIsLastYearFalse").prop('checked', true);
+                        }
+                        if (r.record.isUntilYear == true) {
+                            $("#moBarisFormulaIsUntilYearTrue").prop('checked', true);
+                        } else {
+                            $("#moBarisFormulaIsUntilYearFalse").prop('checked', true);
+                        }
+                        if (r.record.enJenisOperasi == '@EnJenisOperasi.Tambah.GetDisplayCode()') {
+                            $("#moBarisFormulaEnJenisOperasiTambah").prop('checked', true);
+                            $('#divBarisFormulaSelainAmaunTetap').removeAttr('hidden');
+                        } else if (r.record.enJenisOperasi == '@EnJenisOperasi.Tolak.GetDisplayCode()') {
+                            $("#moBarisFormulaEnJenisOperasiTolak").prop('checked', true);
+                            $('#divBarisFormulaSelainAmaunTetap').removeAttr('hidden');
+                            if (r.record.kodList != null) {
+                                arr = r.record.kodList.split(",");
+                                $('#moBarisFormulaKodList').val(arr).trigger('change');
+                            }
+                        } else {
+                            $("#moBarisFormulaEnJenisOperasiAmaunTetap").prop('checked', true);
+                            $('#divBarisFormulaAmaunTetap').removeAttr('hidden');
+                             if (r.record.kodList != null) {
+                                 arr = r.record.kodList.split(",");
+                                 $('#moBarisFormulaKodList').val(arr).trigger('change');
+                             }
+                        }
+                        if (r.record.kodList) {
+                            var arr = r.record.kodList.split(",");
+                            $('#moBarisFormulaEnJenisCartaList').val(arr).trigger('change');
+                            if (r.record.isKecuali == true) {
+                                $("#moBarisFormulaIsKecualiTrue").prop('checked', true);
+                            }
+                            else {
+                                $("#moBarisFormulaIsKecualiFalse").prop('checked', true);
+
+                            }
+                            if (r.record.kodList != null) {
+                                arr = r.record.kodList.split(",");
+                                $('#moBarisFormulaKodList').val(arr).trigger('change');
+                            }
+
+                        }
+                    } else {
+                        toastr.error(r.message);
+                    }
+                }
+            });
+        }
+    }
+    function UpdateModalBarisFormula() {
+        var jKonfigPenyataBarisId = $('#moBarisId').val();
+        var id = $("#moBarisFormulaId").val();
+        var barisBil = $('#moBarisFormulaBarisBil').val();
+        var enJenisOperasi = $('#moFormulaEnJenisOperasi').val();
+        var isPukal = $('input[name="moBarisFormulaIsPukal"]:checked').val();
+        var enJenisCartaList = $('#moBarisFormulaEnJenisCartaList').val().join(",");
+        var kodList = $('#moBarisFormulaKodList').val().join(",");
+        var isKecuali = $('input[name="moBarisFormulaIsKecuali"]:checked').val();
+        var isLastYear = $('input[name="moBarisFormulaIsLastYear"]:checked').val();
+        var isUntilYear = $('input[name="moBarisFormulaIsUntilYear"]:checked').val();
+        var amaunTetap = $('#moBarisFormulaAmaunTetap').val();
+
+        var JKonfigPenyataBaris = {
+            Id: id,
+            JKonfigPenyataBarisId: jKonfigPenyataBarisId,
+            BarisBil: barisBil,
+            EnJenisOperasi: enJenisOperasi,
+            IsPukal: isPukal,
+            EnJenisCartaList: enJenisCartaList,
+            IsKecuali: isKecuali,
+            KodList: kodList,
+            AmaunTetap: amaunTetap,
+            IsLastYear: isLastYear,
+            IsUntilYear: isUntilYear
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveAnItemFromCartJKonfigPenyataBarisFormula", "JKonfigPenyata")',
+            data: JKonfigPenyataBaris,
+            dataType: "json",
+            success: function (r) {
+                //insert notification here
+
+                PopulateTablesFromCartBaris(jKonfigPenyataBarisId);
+            }
+        });
+    }
+    //// update tbl formula end
+
+    // populate tables formula in pages
+    function PopulateTablesFromCartBaris(jKonfigPenyataBarisId) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAllItemCartJKonfigPenyataBaris", "JKonfigPenyata")',
+            data: { JKonfigPenyataBarisId: jKonfigPenyataBarisId },
+            dataType: "json",
+            success: function (r) {
+
+                //refresh updated table baris
+                $("table tbody#tbodyBarisFormula").empty();
+                if (r.formula.length > 0) {
+                    for (var i = 0; i < r.formula.length; i++) {
+                        var item1 = r.formula[i];
+
+                        var str = "<tr><td hidden>" + item1.id +
+                            "</td><td hidden>" + item1.barisBil +
+                            "</td><td hidden>" + item1.enJenisOperasi +
+                            "</td><td width='70%'><label>" + item1.formulaDescription +
+                            "</label></td><td width='5%'>" +
+                            "<button class='btn ac-primary btn-sm' type='button' data-toggle='modal' data-target='#moBarisFormula' onclick='UpdateBarisFormula(this)'><i class='fa fa-edit' ></i></button>" +
+                            "</td><td width='5%'>" +
+                            "<button class='btn ac-danger btn-sm' type='button' onclick='RemoveBarisFormula(this)'><i class='fas fa-trash' ></i></button>" +
+                            "</td><tr>";
+                        $("table tbody#tbodyBarisFormula").append(str);
+                    }
+                }
+                // refresh updated table baris end
+
+
+            }
+        });
+
+    }
+    // populate tables formula in pages end
+
+    // populate tables in pages
+    function PopulateTablesFromCart(jKonfigPenyataId) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAllItemCartJKonfigPenyata", "JKonfigPenyata")',
+            data: {JKonfigPenyataId: jKonfigPenyataId},
+            dataType: "json",
+            success: function (r) {
+
+                //refresh updated table baris
+                $("table tbody#tbodyBaris").empty();
+                if (r.baris.length > 0) {
+                    for (var i = 0; i < r.baris.length; i++) {
+                        var item1 = r.baris[i];
+                        var textBold = '';
+                        var textUppercase = '';
+                        var border = '';
+                        var formula = "</td><td class='text-end'>";
+
+                        switch (item1.enKategoriTajuk) {
+                            case @EnKategoriTajuk.TajukUtama.GetDisplayCode():
+                                textBold = 'fw-bold';
+                                textUppercase = 'text-uppercase';
+                                break;
+                            case @EnKategoriTajuk.TajukKecil.GetDisplayCode():
+                                break;
+                            case @EnKategoriTajuk.Perihalan.GetDisplayCode():
+                                break;
+                        }
+
+                        switch (item1.enKategoriJumlah) {
+                            case @EnKategoriJumlah.Amaun.GetDisplayCode():
+                                break;
+                            case @EnKategoriJumlah.JumlahKecil.GetDisplayCode():
+                                border = 'border-top';
+                                break;
+                            case @EnKategoriJumlah.JumlahBesar.GetDisplayCode():
+                                border = 'border-top border-bottom';
+                                break;
+                            case @EnKategoriJumlah.JumlahKeseluruhan.GetDisplayCode():
+                                textBold = 'fw-bold';
+                                textUppercase = 'text-uppercase';
+                                border = 'border-top border-bottom';
+                                break;
+                        }
+
+                        if (item1.isFormula) {
+                            formula = "</td><td class='text-end " + textBold + " " + textUppercase + " " + border + " '>[formula]";
+                        }
+
+                        var str = "<tr><td hidden>" + item1.id +
+                            "</td><td hidden> " + item1.bil +
+                            "</td><td >" + item1.susunan +
+                            "</td><td width='80%' class=' " + textBold + " " +textUppercase+ "'><label>" + item1.perihal +
+                            "</label>" + formula +
+                            "</td><td>" +
+                            "<button class='btn ac-primary btn-sm' type='button' data-toggle='modal' data-target='#moBaris' onclick='UpdateBaris(this)'><i class='fa fa-edit' ></i></button>" +
+                            "</td><td width='5%'>" +
+                            "<button class='btn ac-danger btn-sm' type='button' onclick='RemoveBaris(this)'><i class='fas fa-trash' ></i></button>" +
+                            "</td><tr>";
+                        $("table tbody#tbodyBaris").append(str);
+                        $("#moBarisSusunan option[value='" + item1.susunan + "']").prop('disabled', true);
+
+                    }
+                }
+                // refresh updated table baris end
+
+
+            }
+        });
+
+    }
+    // populate tables in pages end
+
+    function ResetBarisFields() {
+
+        $('#moBarisEnKategoriTajuk').val(null).trigger('change');
+        $('#moBarisJumlahSusunanList').val(null).trigger('change');
+        $('#moBarisEnKategoriJumlah').val(null).trigger('change');
+        $('#moBarisSusunan').val(null).trigger('change');
+        $('#moBarisPerihal').val('');
+        $('#moBarisIsFormula').val('');
+        EmptyBarisCart();
+    }
+
+
+    function ResetBarisFormulaFields() {
+        $("#moBarisFormulaEnJenisOperasiTambah").prop('disabled', false);
+        $("#moBarisFormulaEnJenisOperasiTolak").prop('disabled', false);
+        $("#moBarisFormulaEnJenisOperasiAmaunTetap").prop('disabled', false);
+
+        $("#moBarisFormulaEnJenisOperasiTambah").prop('checked', false);
+        $("#moBarisFormulaEnJenisOperasiTolak").prop('checked', false);
+        $("#moBarisFormulaEnJenisOperasiAmaunTetap").prop('checked', false);
+
+        $('#moBarisFormulaEnJenisCartaList').val(null).trigger('change');
+        $('#moBarisFormulaKodList').val(null).trigger('change');
+        $("#moBarisFormulaIsKecualiFalse").prop('checked', true);
+        $("#moBarisFormulaIsKecualiTrue").prop('checked', false);
+        $('#divBarisFormulaAmaunTetap').prop('hidden', true);
+        $('#divBarisFormulaSelainAmaunTetap').prop('hidden', true);
+        $('#moBarisFormulaAmaunTetap').val(0);
+
+        $("#moBarisFormulaIsLastYearTrue").prop('checked', false);
+        $("#moBarisFormulaIsLastYearFalse").prop('checked', false);
+
+        $("#moBarisFormulaIsUntilYearTrue").prop('checked', false);
+        $("#moBarisFormulaIsUntilYearFalse").prop('checked', false);
+    }
+
+    // on click radio button barisIsPukal
+    $("body").on('change', "#moBarisFormulaIsPukal", function () {
+        $("#moBarisFormulaIsKecualiFalse").prop('checked', true);
+        $("#moBarisFormulaIsKecualiTrue").prop('checked', false);
+    });
+    //
+
+    // on click radio button enJenisOperasi
+    $("body").on('change', "input[name='moBarisFormulaEnJenisOperasi']", function () {
+        $('#moBarisFormulaEnJenisCartaList').val(null).trigger('change');
+        $('#moBarisFormulaKodList').val(null).trigger('change');
+        $("#moBarisFormulaIsKecualiFalse").prop('checked', true);
+        $("#moBarisFormulaIsKecualiTrue").prop('checked', false);
+        $('#divBarisFormulaAmaunTetap').prop('hidden', true);
+        $('#divBarisFormulaSelainAmaunTetap').prop('hidden', true);
+        $('#moBarisFormulaAmaunTetap').val(0);
+        switch ($(this).val()) {
+            case "@EnJenisOperasi.Tambah":
+                $('#moFormulaEnJenisOperasi').val("@EnJenisOperasi.Tambah");
+                $('#divBarisFormulaSelainAmaunTetap').removeAttr('hidden');
+                break;
+            case "@EnJenisOperasi.Tolak":
+                $('#moFormulaEnJenisOperasi').val("@EnJenisOperasi.Tolak");
+                $('#divBarisFormulaSelainAmaunTetap').removeAttr('hidden');
+                break;
+            case "@EnJenisOperasi.AmaunTetap":
+                $('#moFormulaEnJenisOperasi').val("@EnJenisOperasi.AmaunTetap");
+                $('#divBarisFormulaAmaunTetap').removeAttr('hidden');
+                break;
+        }
+    });
+//
+
+    $("body").on('change', '#Tahun', function () {
+        var tahun = $('#Tahun').val();
+        var kod = $('#Kod').val();
+        $('#thTahun').text(tahun + " RM");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetItemsBasedOnYear","JKonfigPenyata")',
+            data: { tahun: tahun, kod: kod },
+            dataType: "json",
+            success: function (r) {
+                if (r.result == "OK") {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("GetAllItemCartJKonfigPenyata", "JKonfigPenyata")',
+                        data: { JKonfigPenyataId: 0 },
+                        dataType: "json",
+                        success: function (r) {
+
+                            //refresh updated table baris
+                            $("table tbody#tbodyBaris").empty();
+                            if (r.baris.length > 0) {
+                                for (var i = 0; i < r.baris.length; i++) {
+                                    var item1 = r.baris[i];
+                                    var textBold = '';
+                                    var textUppercase = '';
+                                    var border = '';
+                                    var formula = "</td><td class='text-end'>";
+
+                                    switch (item1.enKategoriTajuk) {
+                                        case @EnKategoriTajuk.TajukUtama.GetDisplayCode():
+                                            textBold = 'fw-bold';
+                                            textUppercase = 'text-uppercase';
+                                            break;
+                                        case @EnKategoriTajuk.TajukKecil.GetDisplayCode():
+                                            break;
+                                        case @EnKategoriTajuk.Perihalan.GetDisplayCode():
+                                            break;
+                                    }
+
+                                    switch (item1.enKategoriJumlah) {
+                                        case @EnKategoriJumlah.Amaun.GetDisplayCode():
+                                            break;
+                                        case @EnKategoriJumlah.JumlahKecil.GetDisplayCode():
+                                            border = 'border-top';
+                                            break;
+                                        case @EnKategoriJumlah.JumlahBesar.GetDisplayCode():
+                                            border = 'border-top border-bottom';
+                                            break;
+                                        case @EnKategoriJumlah.JumlahKeseluruhan.GetDisplayCode():
+                                            textBold = 'fw-bold';
+                                            textUppercase = 'text-uppercase';
+                                            border = 'border-top border-bottom';
+                                            break;
+                                    }
+
+                                    if (item1.isFormula) {
+                                        formula = "</td><td class='text-end " + textBold + " " + textUppercase + " " + border + " '>[formula]";
+                                    }
+
+                                    var str = "<tr><td hidden>" + item1.id +
+                                        "</td><td hidden> " + item1.bil +
+                                        "</td><td >" + item1.susunan +
+                                        "</td><td width='80%' class=' " + textBold + " " + textUppercase + "'><label>" + item1.perihal +
+                                        "</label>" + formula +
+                                        "</td><tr>";
+                                    $("table tbody#tbodyBaris").append(str);
+                                    $("#moBarisSusunan option[value='" + item1.susunan + "']").prop('disabled', true);
+
+                                }
+                            }
+                            // refresh updated table baris end
+
+
+                        }
+                    });
+                }
+                else {
+                    toastr.error(r.message);
+                }
+            }
+        });
+
+    });
+
+    $("body").on('change', '#moBarisEnKategoriTajuk', function () {
+        var enKategoriTajuk = $('#moBarisEnKategoriTajuk').val();
+        $('#moBarisEnKategoriJumlah').val(null).trigger('change');
+        $('#moBarisJumlahSusunanList').val(null).trigger('change');
+        $('#divBarisSusunanList').prop('hidden', true);
+        $("table tbody#tbodyBarisFormula").empty();
+        $('#moBarisIsFormula').val('');
+
+        switch (enKategoriTajuk) {
+            case '@EnKategoriTajuk.TajukUtama.GetDisplayCode()':
+                $('#divBarisFormula').prop('hidden', true);
+                $('#divBarisFormulaTable').prop('hidden', true);
+                break;
+            case '@EnKategoriTajuk.TajukKecil.GetDisplayCode()':
+                $('#divBarisFormula').prop('hidden', true);
+                $('#divBarisFormulaTable').prop('hidden', true);
+                break;
+            case '@EnKategoriTajuk.Perihalan.GetDisplayCode()':
+                $('#divBarisFormula').removeAttr('hidden');
+                $('#divBarisFormulaTable').removeAttr('hidden');
+                $('#moBarisIsFormula').val('true');
+                break;
+        }
+    });
+
+     $("body").on('change', '#moBarisEnKategoriJumlah', function () {
+         var enKategoriJumlah = $('#moBarisEnKategoriJumlah').val();
+         $('#moBarisJumlahSusunanList').val(null).trigger('change');
+
+         switch (enKategoriJumlah) {
+            case '@EnKategoriJumlah.JumlahKecil.GetDisplayCode()':
+            case '@EnKategoriJumlah.JumlahBesar.GetDisplayCode()':
+            case '@EnKategoriJumlah.JumlahKeseluruhan.GetDisplayCode()':
+                 $('#divBarisSusunanList').removeAttr('hidden');
+                 $('#divBarisFormulaTable').prop('hidden', true);
+                 $("table tbody#tbodyBarisFormula").empty();
+                 EmptyBarisCart();
+                break;
+            default:
+                 $('#divBarisSusunanList').prop('hidden', true);
+                 $('#divBarisFormulaTable').removeAttr('hidden');
+                break;
+         }
+     });
+
+
+</script>

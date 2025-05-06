@@ -100,6 +100,9 @@ namespace MSNK.Data
         public DbSet<AkNotaDebitKreditBelian2> AkNotaDebitKreditBelian2 { get; set; }
         public DbSet<JKonfigPerubahanEkuiti> JKonfigPerubahanEkuiti { get; set; }
         public DbSet<JKonfigPerubahanEkuitiBaris> JKonfigPerubahanEkuitiBaris { get; set; }
+        public DbSet<JKonfigPenyata> JKonfigPenyata { get; set; }
+        public DbSet<JKonfigPenyataBaris> JKonfigPenyataBaris { get; set; }
+        public DbSet<JKonfigPenyataBarisFormula> JKonfigPenyataBarisFormula { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -128,6 +131,7 @@ namespace MSNK.Data
             modelBuilder.Entity<JProfilKategori>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkPenghutang>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<JKonfigPerubahanEkuiti>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<JKonfigPenyata>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
 
 
             //Terimaan

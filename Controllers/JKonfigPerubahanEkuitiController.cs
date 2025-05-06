@@ -208,7 +208,7 @@ namespace MSNK.Controllers
                 {
                     barisSentences = "";
                 }
-                string sentence = _peRepo.FormulaInSentence(item.EnJenisOperasi, item.EnJenisCartaList, item.IsKecuali, item.KodList);
+                string sentence = _peRepo.FormulaInSentence(item.EnJenisOperasi, item.EnJenisCartaList, item.IsKecuali, item.KodList,0,false);
 
                 item.BarisDescription = barisSentences;
                 item.FormulaDescription = sentence;
@@ -443,7 +443,7 @@ namespace MSNK.Controllers
                     {
                         barisSentences = "";
                     }
-                    string sentence = _peRepo.FormulaInSentence(item.EnJenisOperasi, item.EnJenisCartaList, item.IsKecuali, item.KodList);
+                    string sentence = _peRepo.FormulaInSentence(item.EnJenisOperasi, item.EnJenisCartaList, item.IsKecuali, item.KodList,0, false);
 
                     item.BarisDescription = barisSentences;
                     item.FormulaDescription = sentence;

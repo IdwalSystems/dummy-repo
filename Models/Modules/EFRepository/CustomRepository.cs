@@ -2107,7 +2107,1304 @@ namespace MSNK.Models.Modules.EFRepository
 
             return localBalance;
         }
-        // Perubahan Ekuiti end
+
+        public async Task<JKonfigPenyata> GetJKonfigPenyataDetails(int id)
+        {
+            var result = await context.JKonfigPenyata.Include(kp => kp.JKonfigPenyataBaris)!.ThenInclude(b => b.JKonfigPenyataBarisFormula)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            return result ?? new JKonfigPenyata();
+        }
+
+        public async Task<JKonfigPenyata> GetAllDetailsByTahunOrKod(string tahun, string kod)
+        {
+            var result = new JKonfigPenyata();
+            result = await context.JKonfigPenyata.Include(pe => pe.JKonfigPenyataBaris)!.ThenInclude(b => b.JKonfigPenyataBarisFormula).FirstOrDefaultAsync(pe => pe.Tahun == tahun);
+
+            if (!string.IsNullOrEmpty(kod))
+            {
+                result = await context.JKonfigPenyata.Include(pe => pe.JKonfigPenyataBaris)!.ThenInclude(b => b.JKonfigPenyataBarisFormula).FirstOrDefaultAsync(pe => pe.Tahun == tahun && pe.Kod == kod);
+            }
+
+            if (result != null && result.JKonfigPenyataBaris != null && result.JKonfigPenyataBaris.Count > 0)
+            {
+                result.JKonfigPenyataBaris = result.JKonfigPenyataBaris.OrderBy(b => b.EnKategoriTajuk).ThenBy(b => b.Susunan).ToList();
+            }
+
+            return result ?? new JKonfigPenyata();
+        }
+
+        public async Task<List<_AbPenyataAlirTunai>> GetAbPenyataAlirTunaiComparedByYears(string modul, string Tahun1, string Tahun2)
+        {
+            List<_AbPenyataAlirTunai> penyataList = new List<_AbPenyataAlirTunai>();
+
+            if (!string.IsNullOrEmpty(modul) && !string.IsNullOrEmpty(Tahun1) && !string.IsNullOrEmpty(Tahun2))
+            {
+                List<JKonfigPenyata> konfigPenyata = await context.JKonfigPenyata
+                    .Include(p => p.JKonfigPenyataBaris)!
+                        .ThenInclude(b => b.JKonfigPenyataBarisFormula)
+                    .Where(p => p.Kod == modul && (p.Tahun == Tahun1 || p.Tahun == Tahun2)).ToListAsync();
+
+                if (konfigPenyata != null && konfigPenyata.Any())
+                {
+                    foreach (var item in konfigPenyata)
+                    {
+                        if (item.Tahun == Tahun1 && item.JKonfigPenyataBaris != null && item.JKonfigPenyataBaris.Any())
+                        {
+                            foreach (var baris in item.JKonfigPenyataBaris.OrderBy(pb => pb.Susunan))
+                            {
+                                decimal amount1 = 0;
+                                decimal amount2 = 0;
+
+                                // baris perihalan
+                                if (baris.JKonfigPenyataBarisFormula != null && baris.JKonfigPenyataBarisFormula.Any())
+                                {
+                                    foreach (var formula in baris.JKonfigPenyataBarisFormula)
+                                    {
+                                        // selain amaun tetap
+                                        if (!string.IsNullOrEmpty(formula.SetKodList))
+                                        {
+                                            List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                            foreach (var i in arrKodList)
+                                            {
+                                                if (!string.IsNullOrEmpty(i))
+                                                {
+                                                    if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                    {
+                                                        if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+
+                                                        var akAkaunList = new List<AkAkaun>();
+                                                        if (formula.IsUntilYear)
+                                                        {
+                                                            akAkaunList = await context.AkAkaun
+                                            .Include(a => a.AkCarta1)
+                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                            .ToListAsync();
+                                                        }
+                                                        else
+                                                        {
+                                                            akAkaunList = await context.AkAkaun
+                                            .Include(a => a.AkCarta1)
+                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                            .ToListAsync();
+                                                        }
+
+                                                        Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                        if (akAkaunList.Count > 0)
+                                                        {
+                                                            amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+
+                                                        var akAkaunList = new List<AkAkaun>();
+                                                        if (formula.IsUntilYear)
+                                                        {
+                                                            akAkaunList = await context.AkAkaun
+                                            .Include(a => a.AkCarta1)
+                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                            .ToListAsync();
+                                                        }
+                                                        else
+                                                        {
+                                                            akAkaunList = await context.AkAkaun
+                                            .Include(a => a.AkCarta1)
+                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun2!))
+                                            .ToListAsync();
+                                                        }
+                                                        Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                        if (akAkaunList.Count > 0)
+                                                        {
+                                                            amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                        // amaun tetap (fixed amount)
+                                        else
+                                        {
+                                            if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                            {
+                                                amount1 += formula.AmaunTetap;
+                                            }
+                                            else
+                                            {
+                                                amount2 += formula.AmaunTetap;
+                                            }
+                                        }
+                                    }
+
+                                }
+                                // baris selain perihalan (jumlah keseluruhan / jumlah besar / jumlah kecil)
+                                else
+                                {
+
+                                    //get jumlah keseluruhan / jumlah besar / jumlah kecil
+                                    if (!string.IsNullOrEmpty(baris.JumlahSusunanList))
+                                    {
+
+                                        List<string> arrSusunanList = baris.JumlahSusunanList?.Split(',').ToList() ?? new List<string>();
+
+                                        foreach (var s in arrSusunanList)
+                                        {
+                                            if (!string.IsNullOrEmpty(s))
+                                            {
+                                                var rowList = await context.JKonfigPenyataBaris.Include(b => b.JKonfigPenyataBarisFormula).FirstOrDefaultAsync(b => b.Susunan == int.Parse(s) && b.JKonfigPenyataId == baris.JKonfigPenyataId);
+                                                if (rowList != null)
+                                                {
+                                                    // baris perihalan
+                                                    if (rowList.JKonfigPenyataBarisFormula != null && rowList.JKonfigPenyataBarisFormula.Any())
+                                                    {
+                                                        foreach (var formula in rowList.JKonfigPenyataBarisFormula)
+                                                        {
+                                                            if (!string.IsNullOrEmpty(formula.SetKodList))
+                                                            {
+                                                                List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                                                foreach (var i in arrKodList)
+                                                                {
+                                                                    if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                    {
+                                                                        if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+                                                                        if (!string.IsNullOrEmpty(i))
+                                                                        {
+                                                                            var akAkaunList = new List<AkAkaun>();
+                                                                            if (formula.IsUntilYear)
+                                                                            {
+                                                                                akAkaunList = await context.AkAkaun
+                                                                .Include(a => a.AkCarta1)
+                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                                                .ToListAsync();
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                akAkaunList = await context.AkAkaun
+                                                                .Include(a => a.AkCarta1)
+                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                .ToListAsync();
+                                                                            }
+                                                                            Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                                            if (akAkaunList.Count > 0)
+                                                                            {
+                                                                                amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+                                                                        if (!string.IsNullOrEmpty(i))
+                                                                        {
+                                                                            var akAkaunList = new List<AkAkaun>();
+                                                                            if (formula.IsUntilYear)
+                                                                            {
+                                                                                akAkaunList = await context.AkAkaun
+                                                                .Include(a => a.AkCarta1)
+                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                                                .ToListAsync();
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                akAkaunList = await context.AkAkaun
+                                                                .Include(a => a.AkCarta1)
+                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun2!))
+                                                                .ToListAsync();
+                                                                            }
+                                                                            Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                                            if (akAkaunList.Count > 0)
+                                                                            {
+                                                                                amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                {
+                                                                    amount1 += formula.AmaunTetap;
+                                                                }
+                                                                else
+                                                                {
+                                                                    amount2 += formula.AmaunTetap;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    // baris selain perihalan (jumlah besar / jumlah kecil)
+                                                    else
+                                                    {
+                                                        //jumlah besar / jumlah kecil
+                                                        if (!string.IsNullOrEmpty(rowList.JumlahSusunanList))
+                                                        {
+
+                                                            List<string> arrSusunanList2 = rowList.JumlahSusunanList?.Split(',').ToList() ?? new List<string>();
+                                                            foreach (var s2 in arrSusunanList2)
+                                                            {
+                                                                if (!string.IsNullOrEmpty(s2))
+                                                                {
+                                                                    var rowList2 = await context.JKonfigPenyataBaris.Include(b => b.JKonfigPenyataBarisFormula).FirstOrDefaultAsync(b => b.Susunan == int.Parse(s2) && b.JKonfigPenyataId == baris.JKonfigPenyataId);
+                                                                    if (rowList2 != null)
+                                                                    {
+                                                                        // baris perihalan
+                                                                        if (rowList2.JKonfigPenyataBarisFormula != null && rowList2.JKonfigPenyataBarisFormula.Any())
+                                                                        {
+                                                                            foreach (var formula in rowList2.JKonfigPenyataBarisFormula)
+                                                                            {
+                                                                                if (!string.IsNullOrEmpty(formula.SetKodList))
+                                                                                {
+                                                                                    List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                                                                    foreach (var i in arrKodList)
+                                                                                    {
+                                                                                        if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                        {
+                                                                                            if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+                                                                                            if (!string.IsNullOrEmpty(i))
+                                                                                            {
+                                                                                                var akAkaunList = new List<AkAkaun>();
+                                                                                                if (formula.IsUntilYear)
+                                                                                                {
+                                                                                                    akAkaunList = await context.AkAkaun
+                                                                                    .Include(a => a.AkCarta1)
+                                                                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                                                                    .ToListAsync();
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    akAkaunList = await context.AkAkaun
+                                                                                    .Include(a => a.AkCarta1)
+                                                                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                                    .ToListAsync();
+                                                                                                }
+                                                                                                Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                if (akAkaunList.Count > 0)
+                                                                                                {
+                                                                                                    amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+                                                                                            if (!string.IsNullOrEmpty(i))
+                                                                                            {
+                                                                                                var akAkaunList = new List<AkAkaun>();
+                                                                                                if (formula.IsUntilYear)
+                                                                                                {
+                                                                                                    akAkaunList = await context.AkAkaun
+                                                                                    .Include(a => a.AkCarta1)
+                                                                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                                                                    .ToListAsync();
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    akAkaunList = await context.AkAkaun
+                                                                                    .Include(a => a.AkCarta1)
+                                                                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                                    .ToListAsync();
+                                                                                                }
+                                                                                                Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                if (akAkaunList.Count > 0)
+                                                                                                {
+                                                                                                    amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                }
+                                                                                            }
+                                                                                        }
+
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                    {
+                                                                                        amount1 += formula.AmaunTetap;
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        amount2 += formula.AmaunTetap;
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        // baris selain perihalan (jumlah kecil)
+                                                                        else
+                                                                        {
+                                                                            // get jumlah kecil
+                                                                            if (!string.IsNullOrEmpty(rowList2.JumlahSusunanList))
+                                                                            {
+                                                                                List<string> arrSusunanList3 = rowList2.JumlahSusunanList?.Split(',').ToList() ?? new List<string>();
+                                                                                foreach (var s3 in arrSusunanList3)
+                                                                                {
+                                                                                    if (!string.IsNullOrEmpty(s3))
+                                                                                    {
+                                                                                        var rowList3 = await context.JKonfigPenyataBaris.Include(b => b.JKonfigPenyataBarisFormula).FirstOrDefaultAsync(b => b.Susunan == int.Parse(s3) && b.JKonfigPenyataId == baris.JKonfigPenyataId);
+                                                                                        if (rowList3 != null)
+                                                                                        {
+                                                                                            // baris perihalan
+                                                                                            if (rowList3.JKonfigPenyataBarisFormula != null && rowList3.JKonfigPenyataBarisFormula.Any())
+                                                                                            {
+                                                                                                foreach (var formula in rowList3.JKonfigPenyataBarisFormula)
+                                                                                                {
+                                                                                                    if (!string.IsNullOrEmpty(formula.SetKodList))
+                                                                                                    {
+                                                                                                        List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                                                                                        foreach (var i in arrKodList)
+                                                                                                        {
+                                                                                                            if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                            {
+                                                                                                                if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+                                                                                                                if (!string.IsNullOrEmpty(i))
+                                                                                                                {
+                                                                                                                    var akAkaunList = new List<AkAkaun>();
+                                                                                                                    if (formula.IsUntilYear)
+                                                                                                                    {
+                                                                                                                        akAkaunList = await context.AkAkaun
+                                                                                                        .Include(a => a.AkCarta1)
+                                                                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                                                                                        .ToListAsync();
+                                                                                                                    }
+                                                                                                                    else
+                                                                                                                    {
+                                                                                                                        akAkaunList = await context.AkAkaun
+                                                                                                        .Include(a => a.AkCarta1)
+                                                                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                                                        .ToListAsync();
+                                                                                                                    }
+                                                                                                                    Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                                    if (akAkaunList.Count > 0)
+                                                                                                                    {
+                                                                                                                        amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+                                                                                                                if (!string.IsNullOrEmpty(i))
+                                                                                                                {
+                                                                                                                    var akAkaunList = new List<AkAkaun>();
+                                                                                                                    if (formula.IsUntilYear)
+                                                                                                                    {
+                                                                                                                        akAkaunList = await context.AkAkaun
+                                                                                                        .Include(a => a.AkCarta1)
+                                                                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                                                                                        .ToListAsync();
+                                                                                                                    }
+                                                                                                                    else
+                                                                                                                    {
+                                                                                                                        akAkaunList = await context.AkAkaun
+                                                                                                        .Include(a => a.AkCarta1)
+                                                                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun2!))
+                                                                                                        .ToListAsync();
+                                                                                                                    }
+                                                                                                                    Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                                    if (akAkaunList.Count > 0)
+                                                                                                                    {
+                                                                                                                        amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+
+                                                                                                        }
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                        {
+                                                                                                            amount1 += formula.AmaunTetap;
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            amount2 += formula.AmaunTetap;
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                // baris perihalan
+                                                                                                if (rowList2.JKonfigPenyataBarisFormula != null && rowList2.JKonfigPenyataBarisFormula.Any())
+                                                                                                {
+                                                                                                    foreach (var formula in rowList2.JKonfigPenyataBarisFormula)
+                                                                                                    {
+                                                                                                        if (!string.IsNullOrEmpty(formula.SetKodList))
+                                                                                                        {
+                                                                                                            List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                                                                                            foreach (var i in arrKodList)
+                                                                                                            {
+                                                                                                                if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                                {
+                                                                                                                    if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+                                                                                                                    if (!string.IsNullOrEmpty(i))
+                                                                                                                    {
+                                                                                                                        var akAkaunList = new List<AkAkaun>();
+                                                                                                                        if (formula.IsUntilYear)
+                                                                                                                        {
+                                                                                                                            akAkaunList = await context.AkAkaun
+                                                                                                            .Include(a => a.AkCarta1)
+                                                                                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                                                                                            .ToListAsync();
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                            akAkaunList = await context.AkAkaun
+                                                                                                            .Include(a => a.AkCarta1)
+                                                                                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                                                            .ToListAsync();
+                                                                                                                        }
+                                                                                                                        Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                                        if (akAkaunList.Count > 0)
+                                                                                                                        {
+                                                                                                                            amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+                                                                                                                    if (!string.IsNullOrEmpty(i))
+                                                                                                                    {
+                                                                                                                        var akAkaunList = new List<AkAkaun>();
+                                                                                                                        if (formula.IsUntilYear)
+                                                                                                                        {
+                                                                                                                            akAkaunList = await context.AkAkaun
+                                                                                                            .Include(a => a.AkCarta1)
+                                                                                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                                                                                            .ToListAsync();
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                            akAkaunList = await context.AkAkaun
+                                                                                                            .Include(a => a.AkCarta1)
+                                                                                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                                                            .ToListAsync();
+                                                                                                                        }
+                                                                                                                        Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                                        if (akAkaunList.Count > 0)
+                                                                                                                        {
+                                                                                                                            amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+
+                                                                                                            }
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                            {
+                                                                                                                amount1 += formula.AmaunTetap;
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                amount2 += formula.AmaunTetap;
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                                // baris selain perihalan (jumlah kecil)
+                                                                                                else
+                                                                                                {
+                                                                                                    // get perihalan
+                                                                                                    if (!string.IsNullOrEmpty(rowList3.JumlahSusunanList))
+                                                                                                    {
+                                                                                                        List<string> arrSusunanList4 = rowList3.JumlahSusunanList?.Split(',').ToList() ?? new List<string>();
+                                                                                                        foreach (var s4 in arrSusunanList4)
+                                                                                                        {
+                                                                                                            if (!string.IsNullOrEmpty(s4))
+                                                                                                            {
+                                                                                                                var rowList4 = await context.JKonfigPenyataBaris.Include(b => b.JKonfigPenyataBarisFormula).FirstOrDefaultAsync(b => b.Susunan == int.Parse(s4) && b.JKonfigPenyataId == baris.JKonfigPenyataId);
+                                                                                                                if (rowList4 != null)
+                                                                                                                {
+                                                                                                                    // baris perihalan
+                                                                                                                    if (rowList4.JKonfigPenyataBarisFormula != null && rowList4.JKonfigPenyataBarisFormula.Any())
+                                                                                                                    {
+                                                                                                                        foreach (var formula in rowList4.JKonfigPenyataBarisFormula)
+                                                                                                                        {
+                                                                                                                            if (!string.IsNullOrEmpty(formula.SetKodList))
+                                                                                                                            {
+                                                                                                                                List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                                                                                                                foreach (var i in arrKodList)
+                                                                                                                                {
+                                                                                                                                    if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                                                    {
+                                                                                                                                        if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+                                                                                                                                        if (!string.IsNullOrEmpty(i))
+                                                                                                                                        {
+                                                                                                                                            var akAkaunList = new List<AkAkaun>();
+                                                                                                                                            if (formula.IsUntilYear)
+                                                                                                                                            {
+                                                                                                                                                akAkaunList = await context.AkAkaun
+                                                                                                                                .Include(a => a.AkCarta1)
+                                                                                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                                                                                                                .ToListAsync();
+                                                                                                                                            }
+                                                                                                                                            else
+                                                                                                                                            {
+                                                                                                                                                akAkaunList = await context.AkAkaun
+                                                                                                                                .Include(a => a.AkCarta1)
+                                                                                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                                                                                .ToListAsync();
+                                                                                                                                            }
+                                                                                                                                            Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                                                            if (akAkaunList.Count > 0)
+                                                                                                                                            {
+                                                                                                                                                amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                                                            }
+                                                                                                                                        }
+                                                                                                                                    }
+                                                                                                                                    else
+                                                                                                                                    {
+                                                                                                                                        if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+                                                                                                                                        if (!string.IsNullOrEmpty(i))
+                                                                                                                                        {
+                                                                                                                                            var akAkaunList = new List<AkAkaun>();
+                                                                                                                                            if (formula.IsUntilYear)
+                                                                                                                                            {
+                                                                                                                                                akAkaunList = await context.AkAkaun
+                                                                                                                                .Include(a => a.AkCarta1)
+                                                                                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                                                                                                                .ToListAsync();
+                                                                                                                                            }
+                                                                                                                                            else
+                                                                                                                                            {
+                                                                                                                                                akAkaunList = await context.AkAkaun
+                                                                                                                                .Include(a => a.AkCarta1)
+                                                                                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun2!))
+                                                                                                                                .ToListAsync();
+                                                                                                                                            }
+                                                                                                                                            Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                                                            if (akAkaunList.Count > 0)
+                                                                                                                                            {
+                                                                                                                                                amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                                                            }
+                                                                                                                                        }
+                                                                                                                                    }
+
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                            else
+                                                                                                                            {
+                                                                                                                                if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                                                {
+                                                                                                                                    amount1 += formula.AmaunTetap;
+                                                                                                                                }
+                                                                                                                                else
+                                                                                                                                {
+                                                                                                                                    amount2 += formula.AmaunTetap;
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                _AbPenyataAlirTunai penyata = new _AbPenyataAlirTunai
+                                {
+                                    Susunan = baris.Susunan,
+                                    Perihal = baris.Perihal,
+                                    Amaun1 = amount1,
+                                    Amaun2 = amount2,
+                                    Tahun = Tahun1,
+                                    EnKategoriTajuk = baris.EnKategoriTajuk,
+                                    EnKategoriJumlah = baris.EnKategoriJumlah
+                                };
+
+                                penyataList.Add(penyata);
+                            }
+
+
+                        }
+
+                    }
+
+                    penyataList = penyataList.GroupBy(p => new { p.Perihal }).Select(l => new _AbPenyataAlirTunai
+                    {
+                        Susunan = l.First().Susunan,
+                        Perihal = l.First().Perihal,
+                        Amaun1 = l.Sum(p => p.Amaun1),
+                        Amaun2 = l.Sum(p => p.Amaun2),
+                        EnKategoriTajuk = l.First().EnKategoriTajuk,
+                        EnKategoriJumlah = l.First().EnKategoriJumlah
+                    }).OrderBy(p => p.Susunan).ToList();
+                }
+            }
+
+            return penyataList;
+        }
+
+        public async Task<List<_AbPenyataAlirTunai>> GetAbPenyataAlirTunaiComparedByJKonfigPenyataBarisId(List<JKonfigPenyataBaris> barisList, string Tahun1, string Tahun2)
+        {
+            List<_AbPenyataAlirTunai> penyataAlirTunai = new List<_AbPenyataAlirTunai>();
+            if (barisList != null && barisList.Any())
+            {
+                foreach (var baris in barisList)
+                {
+                    decimal amount1 = 0;
+                    decimal amount2 = 0;
+                    if (baris != null)
+                    {
+                        if (baris.Susunan == 9)
+                        {
+                            var data = baris.Susunan;
+                        }
+                        // baris perihalan
+                        if (baris.JKonfigPenyataBarisFormula != null && baris.JKonfigPenyataBarisFormula.Any())
+                        {
+                            foreach (var formula in baris.JKonfigPenyataBarisFormula)
+                            {
+                                // selain amaun tetap
+                                if (!string.IsNullOrEmpty(formula.SetKodList))
+                                {
+                                    List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                    foreach (var i in arrKodList)
+                                    {
+                                        if (!string.IsNullOrEmpty(i))
+                                        {
+                                            if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                            {
+                                                if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+
+                                                var akAkaunList = new List<AkAkaun>();
+                                                if (formula.IsUntilYear)
+                                                {
+                                                    akAkaunList = await context.AkAkaun
+                                    .Include(a => a.AkCarta1)
+                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                    .ToListAsync();
+                                                }
+                                                else
+                                                {
+                                                    akAkaunList = await context.AkAkaun
+                                    .Include(a => a.AkCarta1)
+                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                    .ToListAsync();
+                                                }
+
+                                                Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                if (akAkaunList.Count > 0)
+                                                {
+                                                    amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+
+                                                var akAkaunList = new List<AkAkaun>();
+                                                if (formula.IsUntilYear)
+                                                {
+                                                    akAkaunList = await context.AkAkaun
+                                    .Include(a => a.AkCarta1)
+                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                    .ToListAsync();
+                                                }
+                                                else
+                                                {
+                                                    akAkaunList = await context.AkAkaun
+                                    .Include(a => a.AkCarta1)
+                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun2!))
+                                    .ToListAsync();
+                                                }
+                                                Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                if (akAkaunList.Count > 0)
+                                                {
+                                                    amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                }
+                                // amaun tetap (fixed amount)
+                                else
+                                {
+                                    if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                    {
+                                        amount1 += formula.AmaunTetap;
+                                    }
+                                    else
+                                    {
+                                        amount2 += formula.AmaunTetap;
+                                    }
+                                }
+                            }
+
+                        }
+                        // baris selain perihalan (jumlah keseluruhan / jumlah besar / jumlah kecil)
+                        else
+                        {
+
+                            //get jumlah keseluruhan / jumlah besar / jumlah kecil
+                            if (!string.IsNullOrEmpty(baris.JumlahSusunanList))
+                            {
+
+                                List<string> arrSusunanList = baris.JumlahSusunanList?.Split(',').ToList() ?? new List<string>();
+
+                                foreach (var s in arrSusunanList)
+                                {
+                                    if (!string.IsNullOrEmpty(s))
+                                    {
+                                        var rowList = await context.JKonfigPenyataBaris.Include(b => b.JKonfigPenyataBarisFormula).FirstOrDefaultAsync(b => b.Susunan == int.Parse(s) && b.JKonfigPenyataId == baris.JKonfigPenyataId);
+                                        if (rowList != null)
+                                        {
+                                            // baris perihalan
+                                            if (rowList.JKonfigPenyataBarisFormula != null && rowList.JKonfigPenyataBarisFormula.Any())
+                                            {
+                                                foreach (var formula in rowList.JKonfigPenyataBarisFormula)
+                                                {
+                                                    if (!string.IsNullOrEmpty(formula.SetKodList))
+                                                    {
+                                                        List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                                        foreach (var i in arrKodList)
+                                                        {
+                                                            if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                            {
+                                                                if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+                                                                if (!string.IsNullOrEmpty(i))
+                                                                {
+                                                                    var akAkaunList = new List<AkAkaun>();
+                                                                    if (formula.IsUntilYear)
+                                                                    {
+                                                                        akAkaunList = await context.AkAkaun
+                                                        .Include(a => a.AkCarta1)
+                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                                        .ToListAsync();
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        akAkaunList = await context.AkAkaun
+                                                        .Include(a => a.AkCarta1)
+                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                        .ToListAsync();
+                                                                    }
+                                                                    Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                                    if (akAkaunList.Count > 0)
+                                                                    {
+                                                                        amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+                                                                if (!string.IsNullOrEmpty(i))
+                                                                {
+                                                                    var akAkaunList = new List<AkAkaun>();
+                                                                    if (formula.IsUntilYear)
+                                                                    {
+                                                                        akAkaunList = await context.AkAkaun
+                                                        .Include(a => a.AkCarta1)
+                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                                        .ToListAsync();
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        akAkaunList = await context.AkAkaun
+                                                        .Include(a => a.AkCarta1)
+                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun2!))
+                                                        .ToListAsync();
+                                                                    }
+                                                                    Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                                    if (akAkaunList.Count > 0)
+                                                                    {
+                                                                        amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                        {
+                                                            amount1 += formula.AmaunTetap;
+                                                        }
+                                                        else
+                                                        {
+                                                            amount2 += formula.AmaunTetap;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            // baris selain perihalan (jumlah besar / jumlah kecil)
+                                            else
+                                            {
+                                                //jumlah besar / jumlah kecil
+                                                if (!string.IsNullOrEmpty(rowList.JumlahSusunanList))
+                                                {
+
+                                                    List<string> arrSusunanList2 = rowList.JumlahSusunanList?.Split(',').ToList() ?? new List<string>();
+                                                    foreach (var s2 in arrSusunanList2)
+                                                    {
+                                                        if (!string.IsNullOrEmpty(s2))
+                                                        {
+                                                            var rowList2 = await context.JKonfigPenyataBaris.Include(b => b.JKonfigPenyataBarisFormula).FirstOrDefaultAsync(b => b.Susunan == int.Parse(s2) && b.JKonfigPenyataId == baris.JKonfigPenyataId);
+                                                            if (rowList2 != null)
+                                                            {
+                                                                // baris perihalan
+                                                                if (rowList2.JKonfigPenyataBarisFormula != null && rowList2.JKonfigPenyataBarisFormula.Any())
+                                                                {
+                                                                    foreach (var formula in rowList2.JKonfigPenyataBarisFormula)
+                                                                    {
+                                                                        if (!string.IsNullOrEmpty(formula.SetKodList))
+                                                                        {
+                                                                            List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                                                            foreach (var i in arrKodList)
+                                                                            {
+                                                                                if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                {
+                                                                                    if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+                                                                                    if (!string.IsNullOrEmpty(i))
+                                                                                    {
+                                                                                        var akAkaunList = new List<AkAkaun>();
+                                                                                        if (formula.IsUntilYear)
+                                                                                        {
+                                                                                            akAkaunList = await context.AkAkaun
+                                                                            .Include(a => a.AkCarta1)
+                                                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                                                            .ToListAsync();
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            akAkaunList = await context.AkAkaun
+                                                                            .Include(a => a.AkCarta1)
+                                                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                            .ToListAsync();
+                                                                                        }
+                                                                                        Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                                                        if (akAkaunList.Count > 0)
+                                                                                        {
+                                                                                            amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+                                                                                    if (!string.IsNullOrEmpty(i))
+                                                                                    {
+                                                                                        var akAkaunList = new List<AkAkaun>();
+                                                                                        if (formula.IsUntilYear)
+                                                                                        {
+                                                                                            akAkaunList = await context.AkAkaun
+                                                                            .Include(a => a.AkCarta1)
+                                                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                                                            .ToListAsync();
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            akAkaunList = await context.AkAkaun
+                                                                            .Include(a => a.AkCarta1)
+                                                                            .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                            .ToListAsync();
+                                                                                        }
+                                                                                        Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                                                        if (akAkaunList.Count > 0)
+                                                                                        {
+                                                                                            amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                        }
+                                                                                    }
+                                                                                }
+
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                            {
+                                                                                amount1 += formula.AmaunTetap;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                amount2 += formula.AmaunTetap;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                // baris selain perihalan (jumlah kecil)
+                                                                else
+                                                                {
+                                                                    // get jumlah kecil
+                                                                    if (!string.IsNullOrEmpty(rowList2.JumlahSusunanList))
+                                                                    {
+                                                                        List<string> arrSusunanList3 = rowList2.JumlahSusunanList?.Split(',').ToList() ?? new List<string>();
+                                                                        foreach (var s3 in arrSusunanList3)
+                                                                        {
+                                                                            if (!string.IsNullOrEmpty(s3))
+                                                                            {
+                                                                                var rowList3 = await context.JKonfigPenyataBaris.Include(b => b.JKonfigPenyataBarisFormula).FirstOrDefaultAsync(b => b.Susunan == int.Parse(s3) && b.JKonfigPenyataId == baris.JKonfigPenyataId);
+                                                                                if (rowList3 != null)
+                                                                                {
+                                                                                    // baris perihalan
+                                                                                    if (rowList3.JKonfigPenyataBarisFormula != null && rowList3.JKonfigPenyataBarisFormula.Any())
+                                                                                    {
+                                                                                        foreach (var formula in rowList3.JKonfigPenyataBarisFormula)
+                                                                                        {
+                                                                                            if (!string.IsNullOrEmpty(formula.SetKodList))
+                                                                                            {
+                                                                                                List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                                                                                foreach (var i in arrKodList)
+                                                                                                {
+                                                                                                    if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                    {
+                                                                                                        if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+                                                                                                        if (!string.IsNullOrEmpty(i))
+                                                                                                        {
+                                                                                                            var akAkaunList = new List<AkAkaun>();
+                                                                                                            if (formula.IsUntilYear)
+                                                                                                            {
+                                                                                                                akAkaunList = await context.AkAkaun
+                                                                                                .Include(a => a.AkCarta1)
+                                                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                                                                                .ToListAsync();
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                akAkaunList = await context.AkAkaun
+                                                                                                .Include(a => a.AkCarta1)
+                                                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                                                .ToListAsync();
+                                                                                                            }
+                                                                                                            Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                            if (akAkaunList.Count > 0)
+                                                                                                            {
+                                                                                                                amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+                                                                                                        if (!string.IsNullOrEmpty(i))
+                                                                                                        {
+                                                                                                            var akAkaunList = new List<AkAkaun>();
+                                                                                                            if (formula.IsUntilYear)
+                                                                                                            {
+                                                                                                                akAkaunList = await context.AkAkaun
+                                                                                                .Include(a => a.AkCarta1)
+                                                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                                                                                .ToListAsync();
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                akAkaunList = await context.AkAkaun
+                                                                                                .Include(a => a.AkCarta1)
+                                                                                                .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun2!))
+                                                                                                .ToListAsync();
+                                                                                                            }
+                                                                                                            Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                            if (akAkaunList.Count > 0)
+                                                                                                            {
+                                                                                                                amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+
+                                                                                                }
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                {
+                                                                                                    amount1 += formula.AmaunTetap;
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    amount2 += formula.AmaunTetap;
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        // baris perihalan
+                                                                                        if (rowList2.JKonfigPenyataBarisFormula != null && rowList2.JKonfigPenyataBarisFormula.Any())
+                                                                                        {
+                                                                                            foreach (var formula in rowList2.JKonfigPenyataBarisFormula)
+                                                                                            {
+                                                                                                if (!string.IsNullOrEmpty(formula.SetKodList))
+                                                                                                {
+                                                                                                    List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                                                                                    foreach (var i in arrKodList)
+                                                                                                    {
+                                                                                                        if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                        {
+                                                                                                            if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+                                                                                                            if (!string.IsNullOrEmpty(i))
+                                                                                                            {
+                                                                                                                var akAkaunList = new List<AkAkaun>();
+                                                                                                                if (formula.IsUntilYear)
+                                                                                                                {
+                                                                                                                    akAkaunList = await context.AkAkaun
+                                                                                                    .Include(a => a.AkCarta1)
+                                                                                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                                                                                    .ToListAsync();
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    akAkaunList = await context.AkAkaun
+                                                                                                    .Include(a => a.AkCarta1)
+                                                                                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                                                    .ToListAsync();
+                                                                                                                }
+                                                                                                                Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                                if (akAkaunList.Count > 0)
+                                                                                                                {
+                                                                                                                    amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+                                                                                                            if (!string.IsNullOrEmpty(i))
+                                                                                                            {
+                                                                                                                var akAkaunList = new List<AkAkaun>();
+                                                                                                                if (formula.IsUntilYear)
+                                                                                                                {
+                                                                                                                    akAkaunList = await context.AkAkaun
+                                                                                                    .Include(a => a.AkCarta1)
+                                                                                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                                                                                    .ToListAsync();
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    akAkaunList = await context.AkAkaun
+                                                                                                    .Include(a => a.AkCarta1)
+                                                                                                    .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                                                    .ToListAsync();
+                                                                                                                }
+                                                                                                                Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                                if (akAkaunList.Count > 0)
+                                                                                                                {
+                                                                                                                    amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+
+                                                                                                    }
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                    {
+                                                                                                        amount1 += formula.AmaunTetap;
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        amount2 += formula.AmaunTetap;
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                        // baris selain perihalan (jumlah kecil)
+                                                                                        else
+                                                                                        {
+                                                                                            // get perihalan
+                                                                                            if (!string.IsNullOrEmpty(rowList3.JumlahSusunanList))
+                                                                                            {
+                                                                                                List<string> arrSusunanList4 = rowList3.JumlahSusunanList?.Split(',').ToList() ?? new List<string>();
+                                                                                                foreach (var s4 in arrSusunanList4)
+                                                                                                {
+                                                                                                    if (!string.IsNullOrEmpty(s4))
+                                                                                                    {
+                                                                                                        var rowList4 = await context.JKonfigPenyataBaris.Include(b => b.JKonfigPenyataBarisFormula).FirstOrDefaultAsync(b => b.Susunan == int.Parse(s4) && b.JKonfigPenyataId == baris.JKonfigPenyataId);
+                                                                                                        if (rowList4 != null)
+                                                                                                        {
+                                                                                                            // baris perihalan
+                                                                                                            if (rowList4.JKonfigPenyataBarisFormula != null && rowList4.JKonfigPenyataBarisFormula.Any())
+                                                                                                            {
+                                                                                                                foreach (var formula in rowList4.JKonfigPenyataBarisFormula)
+                                                                                                                {
+                                                                                                                    if (!string.IsNullOrEmpty(formula.SetKodList))
+                                                                                                                    {
+                                                                                                                        List<string> arrKodList = formula.SetKodList?.Split(',').ToList() ?? new List<string>();
+
+                                                                                                                        foreach (var i in arrKodList)
+                                                                                                                        {
+                                                                                                                            if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                                            {
+                                                                                                                                if (formula.IsLastYear) Tahun1 = (int.Parse(Tahun1) - 1).ToString();
+                                                                                                                                if (!string.IsNullOrEmpty(i))
+                                                                                                                                {
+                                                                                                                                    var akAkaunList = new List<AkAkaun>();
+                                                                                                                                    if (formula.IsUntilYear)
+                                                                                                                                    {
+                                                                                                                                        akAkaunList = await context.AkAkaun
+                                                                                                                        .Include(a => a.AkCarta1)
+                                                                                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun1!))
+                                                                                                                        .ToListAsync();
+                                                                                                                                    }
+                                                                                                                                    else
+                                                                                                                                    {
+                                                                                                                                        akAkaunList = await context.AkAkaun
+                                                                                                                        .Include(a => a.AkCarta1)
+                                                                                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun1!))
+                                                                                                                        .ToListAsync();
+                                                                                                                                    }
+                                                                                                                                    Tahun1 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                                                    if (akAkaunList.Count > 0)
+                                                                                                                                    {
+                                                                                                                                        amount1 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                                                    }
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                            else
+                                                                                                                            {
+                                                                                                                                if (formula.IsLastYear) Tahun2 = (int.Parse(Tahun2) - 1).ToString();
+                                                                                                                                if (!string.IsNullOrEmpty(i))
+                                                                                                                                {
+                                                                                                                                    var akAkaunList = new List<AkAkaun>();
+                                                                                                                                    if (formula.IsUntilYear)
+                                                                                                                                    {
+                                                                                                                                        akAkaunList = await context.AkAkaun
+                                                                                                                        .Include(a => a.AkCarta1)
+                                                                                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year <= int.Parse(Tahun2!))
+                                                                                                                        .ToListAsync();
+                                                                                                                                    }
+                                                                                                                                    else
+                                                                                                                                    {
+                                                                                                                                        akAkaunList = await context.AkAkaun
+                                                                                                                        .Include(a => a.AkCarta1)
+                                                                                                                        .Where(a => (a.AkCartaId1 == int.Parse(i)) && a.Tarikh.Year == int.Parse(Tahun2!))
+                                                                                                                        .ToListAsync();
+                                                                                                                                    }
+                                                                                                                                    Tahun2 = baris.JKonfigPenyata.Tahun;
+
+                                                                                                                                    if (akAkaunList.Count > 0)
+                                                                                                                                    {
+                                                                                                                                        amount2 += CalculateBalance(akAkaunList, formula.EnJenisOperasi);
+                                                                                                                                    }
+                                                                                                                                }
+                                                                                                                            }
+
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                    else
+                                                                                                                    {
+                                                                                                                        if (baris.JKonfigPenyata.Tahun == Tahun1)
+                                                                                                                        {
+                                                                                                                            amount1 += formula.AmaunTetap;
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                            amount2 += formula.AmaunTetap;
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        penyataAlirTunai.Add(new _AbPenyataAlirTunai
+                        {
+                            Susunan = baris.Susunan,
+                            Perihal = baris.Perihal,
+                            Amaun1 = amount1,
+                            Amaun2 = amount2,
+                            EnKategoriTajuk = baris.EnKategoriTajuk,
+                            EnKategoriJumlah = baris.EnKategoriJumlah
+                        });
+                    }
+
+                }
+            }
+
+            penyataAlirTunai = penyataAlirTunai.GroupBy(p => new { p.Perihal }).Select(l => new _AbPenyataAlirTunai
+            {
+                Susunan = l.First().Susunan,
+                Perihal = l.First().Perihal,
+                Amaun1 = l.Sum(p => p.Amaun1),
+                Amaun2 = l.Sum(p => p.Amaun2),
+                EnKategoriTajuk = l.First().EnKategoriTajuk,
+                EnKategoriJumlah = l.First().EnKategoriJumlah
+            }).OrderBy(p => p.Susunan).ToList();
+
+            return penyataAlirTunai;
+        }
+        
     }
 }
 

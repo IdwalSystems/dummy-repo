@@ -1,0 +1,118 @@
+﻿@model IEnumerable<JKonfigPenyata>
+
+@{
+    ViewData["Title"] = "Jadual Konfigurasi Penyata";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<partial name="_JSIndex" />
+
+<div class="card box-shadow">
+    <div class="loading">
+        <img class="loading-image" src="~/img/loading.gif" alt="Loading..." />
+    </div>
+    <div class="card card-body border main-page" hidden>
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase mb-0">Senarai @ViewData["Title"]</h5>
+                <span class="ac-ref">Indeks</span>
+            </div>
+            <div class="col-4 hidden-mobile">
+                <a class="float-right btn ac-success" asp-action="Create">Tambah Baru</a>
+            </div>
+            <div class="col-4 show-mobile">
+                <a class="float-right text-success " asp-action="Create"><i class="fa fa-plus fa-2x"></i></a>
+            </div>
+
+        </div>
+        <hr class="mt-2" />
+        <div class="card mb-3">
+            <div class="card-body ps-3 pb-2">
+                <div class="form-actions no-color mb-2">
+                    <div class="form-row">
+                        <div class="col-sm-2 mb-2" hidden>
+                            <select class="custom-select form-control-sm" id="columnSearch">
+                                <option value="" selected>Semua</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 mb-2 ">
+                            <div class="input-group text-center">
+                                <span class="input-group-text" id="carian-addon"><i class="fa fa-search"></i></span>
+                                <input type="text" class="form-control form-control-sm" placeholder="Carian.." aria-label="Carian" aria-describedby="carian-addon" id="myInput">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (Model != null && Model.Count() > 0)
+        {
+            <div class="table-responsive">
+                <table class="table table-hover compact" width="100%">
+                    <caption>Rekod dipamerkan : @Model.Count()</caption>
+                    <thead class="table-secondary">
+                        <tr>
+                            <th width="5%">Bil</th>
+                            <th class="kod">
+                                @Html.DisplayNameFor(model => model.Kod)
+                            </th>
+                            <th class="perihal">
+                                @Html.DisplayNameFor(model => model.Perihal)
+                            </th>
+                            <th class="tahun">
+                                @Html.DisplayNameFor(model => model.Tahun)
+                            </th>
+                            <th width="5%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+
+                            var tabletype = item.FlHapus == 1 ? "table-danger" : null;
+                            <tr class="@tabletype text-uppercase">
+                                <td></td>
+                                <td>
+                                    @item.Kod
+                                </td>
+                                <td>
+                                    @item.Perihal
+                                </td>
+                                <td>
+                                    @item.Tahun
+                                </td>
+
+                                <td width="5%" class="text-center">
+                                    <div class="btn-group" role="group" aria-label="action">
+                                        @if (item.FlHapus == 0)
+                                        {
+                                            <a asp-action="Details" asp-route-id="@item.Id"
+                                               class="btn text-primary btn-sm bg-white" type="button"
+                                               data-toggle="tooltip" data-placement="top"
+                                               title="Ubah/Papar"><i class="fas fa-edit"></i></a>
+                                            <a asp-action="Delete" asp-route-id="@item.Id"
+                                               class="btn text-danger btn-sm bg-white" type="button"
+                                               data-toggle="tooltip" data-placement="top"
+                                               title="Hapus"><i class="fas fa-trash"></i></a>
+                                        }
+                                        else
+                                        {
+                                            if (User.IsInRole("Supervisor") || User.IsInRole("SuperAdmin"))
+                                            {
+                                                <a asp-action="Rollback" asp-route-id="@item.Id" asp-route-syscode="SPPB" class="btn text-info btn-sm bg-white" type="button" data-toggle="tooltip" data-placement="top" title="Rollback">
+                                                    <i class="fas fa-trash-restore"></i>
+                                                </a>
+
+                                            }
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+    </div>
+</div>

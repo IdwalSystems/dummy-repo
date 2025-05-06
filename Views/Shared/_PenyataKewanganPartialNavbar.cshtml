@@ -13,18 +13,12 @@
         <ul class="flex-column pl-2 nav">
             <li class="nav-item">
                 <a class="nav-link border-bottom text-truncate collapsed py-1 ml-3
-                @Html.ActiveClass("AlirTunaiPecahanBulanan")
-                @Html.ActiveClass("AlirTunaiBandinganTahun")" href="#submenuPenyatasub1" data-toggle="collapse" data-target="#submenuPenyatasub1"><span>Penyata Alir Tunai</span></a>
+                @Html.ActiveClass("PenyataAlirTunai")" href="#submenuPenyatasub1" data-toggle="collapse" data-target="#submenuPenyatasub1"><span>Penyata Alir Tunai</span></a>
                 <div class="collapse" id="submenuPenyatasub1" aria-expanded="false">
                     <ul class="flex-column nav pl-4">
                         <li class="nav-item">
-                            <a class="nav-link border-bottom p-1 text-truncate pl-4 @Html.ActiveSideBarClass("AlirTunaiPecahanBulanan")" asp-area="" asp-controller="AbAlirTunai" asp-action="Index">
-                                Pecahan Bulanan
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link p-1 text-truncate pl-4 @Html.ActiveSideBarClass("AlirTunaiBandinganTahun")" asp-area="" asp-controller="AbAlirTunai" asp-action="IndexTahun">
-                                Bandingan Tahun
+                            <a class="nav-link border-bottom p-1 text-truncate pl-4 @Html.ActiveSideBarClass("PenyataAlirTunai")" asp-area="" asp-controller="AbPenyataAlirTunai" asp-action="Index">
+                                Penyata Alir Tunai
                             </a>
                         </li>
                     </ul>

@@ -1,0 +1,65 @@
+﻿@model JKonfigPenyata
+
+@{
+    ViewData["Title"] = "Konfigurasi Penyata - Tambah";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<partial name="_JSCreate" />
+
+<div class="card box-shadow">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-8">
+                <h5 class="text-uppercase text-success mb-0">@ViewData["Title"]</h5>
+                <span class="ac-ref"><a asp-action="Index" class="text-secondary">Indeks</a> / Tambah</span>
+            </div>
+            <div class="col-4 ">
+                <a asp-action="Index" class="text-secondary float-right"><i class="fas fa-times fa-2x"></i></a>
+            </div>
+
+        </div>
+        <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger">
+
+            </div>
+            <input name="syscode" value="SPPB" hidden />
+            <input asp-for="Kod" value="JD0015" hidden />
+            <input asp-for="Perihal" value="Jadual Konfigurasi Penyata Aliran Tunai" hidden />
+            <div class="row mb-2">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label asp-for="Tahun" class="control-label"></label>
+                        <input asp-for="Tahun" class="form-control form-control-sm" maxlength="4" required />
+                        <span asp-validation-for="Tahun" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            @*table Baris*@
+            <div class="card box-shadow mb-3">
+                <div class="card-body">
+                    <table id="tblBaris" class="table table-sm nowrap table-borderless" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th style="width:5%">Susunan</th>
+                                <th style="width:80%">Tajuk</th>
+                                <th style="width:20%" id="thTahun"></th>
+                                <th class="text-center"></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyBaris">
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+            @*table Baris end*@
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Simpan" class="btn ac-primary btn-sm" />
+                <a asp-action="Index" class="btn ac-secondary btn-sm" style="width:auto">Batal</a>
+            </div>
+        </form>
+    </div>
+</div>

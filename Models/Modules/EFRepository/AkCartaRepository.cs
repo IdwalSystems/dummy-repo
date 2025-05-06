@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MSNK.Data;
+using MSNK.Models.Helper;
 using MSNK.Models.Modules.IRepository;
 using MSNK.Models.Operations;
 using System;
@@ -23,9 +24,104 @@ namespace MSNK.Models.Modules.EFRepository
             }
         }
 
-        public string FormulaInSentence(EnJenisOperasi jenisOperasi, string jenisCarta, bool isKecuali, string kodList)
+        public string FormulaInSentence(EnJenisOperasi jenisOperasi, string jenisCarta, bool isKecuali, string kodList, decimal amaunTetap, bool IsLastYear)
         {
-            throw new NotImplementedException();
+            string txtexcept = "";
+            string txtcode = "";
+            if (!string.IsNullOrEmpty(jenisCarta))
+            {
+                string[] jenisCartaArray = jenisCarta.Split(",");
+                List<string> txtcodeList = new List<string>();
+                foreach (var arr in jenisCartaArray)
+                {
+                    switch (arr[0])
+                    {
+                        case '1':
+                            txtcodeList.Add(EnJenisCarta.LIABILITI.GetDisplayName());
+                            break;
+                        case '2':
+                            txtcodeList.Add(EnJenisCarta.EKUITI.GetDisplayName());
+                            break;
+                        case '3':
+                            txtcodeList.Add(EnJenisCarta.BELANJA.GetDisplayName());
+                            break;
+                        case '4':
+                            txtcodeList.Add(EnJenisCarta.ASET.GetDisplayName());
+                            break;
+                        case '5':
+                            txtcodeList.Add(EnJenisCarta.HASIL.GetDisplayName());
+                            break;
+                    }
+                }
+                txtcode = string.Join(",", txtcodeList);
+                if (isKecuali && !string.IsNullOrEmpty(kodList))
+                {
+
+                    string[] kodListArray = kodList.Split(",");
+                    List<string> txtexceptcodeList = new List<string>();
+                    foreach (var arr in kodListArray)
+                    {
+                        var kodAkaun = context.AkCarta.Find(int.Parse(arr))?.Kod ?? "";
+                        txtexceptcodeList.Add(kodAkaun);
+                    }
+                    txtexcept = $" kecuali kod - kod({string.Join(",", txtexceptcodeList)})";
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(kodList))
+                {
+                    string[] kodListArray = kodList.Split(",");
+                    List<string> txtcodeList = new List<string>();
+                    foreach (var arr in kodListArray)
+                    {
+                        var kodAkaun = context.AkCarta.Find(int.Parse(arr))?.Kod ?? "";
+                        txtcodeList.Add(kodAkaun);
+                    }
+                    txtcode = string.Join(",", txtcodeList);
+                }
+
+            }
+
+            string sentences = "";
+
+            if (kodList != null || jenisCarta != null)
+            {
+                if (jenisOperasi == EnJenisOperasi.Tambah)
+                {
+                    sentences = $"Jumlah bagi kod - kod ({txtcode}){txtexcept}";
+                }
+                else if(jenisOperasi == EnJenisOperasi.Tolak) 
+                {
+                    sentences = $"ditolak dengan jumlah bagi kod - kod ({txtcode}){txtexcept}";
+                }
+                else
+                {
+                    sentences = $"Jumlah Tetap RM {Convert.ToDecimal(amaunTetap).ToString("#,##0.00")}";
+                }
+            }
+            else
+            {
+                if (jenisOperasi == EnJenisOperasi.Tambah)
+                {
+                    sentences = "Tiada formula operasi tambah";
+                }
+                else if (jenisOperasi == EnJenisOperasi.Tolak)
+                {
+                    sentences = "Tiada formula operasi tolak";
+                }
+                else
+                {
+                    sentences = $"Jumlah Tetap RM {Convert.ToDecimal(amaunTetap).ToString("#,##0.00")}";
+                }
+            }
+
+            if (IsLastYear)
+            {
+                sentences += " (kiraan tahun sebelum)";
+            }
+
+            return sentences;
         }
 
         public async Task<IEnumerable<AkCarta>> GetAll(string filter)
@@ -110,6 +206,41 @@ namespace MSNK.Models.Modules.EFRepository
         public string GetSetOfCartaList(EnBarisPerubahanEkuiti enBaris, EnJenisOperasi enOperasi, bool isPukal, string enJenisCartaList, bool isKecuali, string kodList)
         {
             throw new NotImplementedException();
+        }
+
+        public string GetSetOfCartaStringList(bool isPukal, string enJenisCartaList, bool isKecuali, string kodList)
+        {
+            List<string> setKodList = new List<string>();
+
+            List<string> arrKodList = kodList?.Split(',').ToList() ?? new List<string>();
+
+            if (isPukal)
+            {
+                List<string> arrJenisCartaList = enJenisCartaList?.Split(',').ToList() ?? new List<string>();
+                foreach (var jenisCarta in arrJenisCartaList)
+                {
+
+                    var akCartaList = GetCartaListByJenisCarta((EnJenisCarta)int.Parse(jenisCarta), isKecuali, arrKodList);
+                    setKodList = akCartaList;
+                }
+            }
+            else
+            {
+                setKodList = arrKodList;
+            }
+
+            return string.Join(',', setKodList);
+        }
+
+        private List<string> GetCartaListByJenisCarta(EnJenisCarta jenisCartaId, bool isKecuali, List<string> arrKodList)
+        {
+            var cartaList = context.AkCarta
+                .Include(c => c.JParas)
+                .Where(a => a.JJenis != null && a.JJenis.Equals(jenisCartaId) && (!isKecuali || !arrKodList!.Contains(a.Id.ToString())))
+                .Select(c => c.Id.ToString())
+                .ToList();
+
+            return cartaList ?? new List<string>();
         }
 
         public async Task<AkCarta> Insert(AkCarta entity)

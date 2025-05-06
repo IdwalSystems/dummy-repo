@@ -1,0 +1,102 @@
+﻿using MSNK.Models.Operations;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace MSNK.Models.Modules.Cart
+{
+    public class CartJKonfigPenyata
+    {
+        // baris
+        private List<JKonfigPenyataBaris> collectionBaris = new List<JKonfigPenyataBaris>();
+
+        public virtual void AddItemBaris(
+            int id,
+            int bil,
+            int jKonfigPenyataId,
+            EnKategoriTajuk enKategoriTajuk,
+            string perihal,
+            int susunan,
+            bool isFormula,
+            EnKategoriJumlah enKategoriJumlah,
+            string jumlahSusunanList,
+            List<JKonfigPenyataBarisFormula> jKonfigPenyataBarisFormulas)
+        {
+            JKonfigPenyataBaris line = collectionBaris.FirstOrDefault(b => b.Bil == bil && b.Id == id)!;
+
+            if (line == null)
+            {
+                collectionBaris.Add(new JKonfigPenyataBaris
+                {
+                    Id = id,
+                    Bil = bil,
+                    JKonfigPenyataId = jKonfigPenyataId,
+                    EnKategoriTajuk = enKategoriTajuk,
+                    Perihal = perihal,
+                    Susunan = susunan,
+                    IsFormula = isFormula,
+                    EnKategoriJumlah = enKategoriJumlah,
+                    JumlahSusunanList = jumlahSusunanList,
+                    JKonfigPenyataBarisFormula = jKonfigPenyataBarisFormulas
+                });
+            }
+        }
+
+        public virtual void RemoveItemBaris(int bil) => collectionBaris.RemoveAll(b => b.Bil == bil);
+
+        public virtual void ClearBaris() => collectionBaris.Clear();
+
+        public virtual IEnumerable<JKonfigPenyataBaris> JKonfigPenyataBaris => collectionBaris;
+        // baris end
+
+        // baris formula
+        private List<JKonfigPenyataBarisFormula> collectionBarisFormula = new List<JKonfigPenyataBarisFormula>();
+
+        public virtual void AddItemBarisFormula(
+            int id,
+            int barisBil,
+            int jKonfigPenyataBarisId,
+            EnJenisOperasi enJenisOperasi,
+            bool isPukal,
+            string enJenisCartaList,
+            bool isKecuali,
+            string kodList,
+            string setKodList,
+            decimal amaunTetap,
+            bool isLastYear,
+            bool isUntilYear
+            )
+        {
+            JKonfigPenyataBarisFormula line = collectionBarisFormula.FirstOrDefault(b => b.EnJenisOperasi == enJenisOperasi && b.BarisBil == barisBil && b.Id == id)!;
+
+            if (line == null)
+            {
+                collectionBarisFormula.Add(new JKonfigPenyataBarisFormula
+                {
+                    Id = id,
+                    BarisBil = barisBil,
+                    JKonfigPenyataBarisId = jKonfigPenyataBarisId,
+                    EnJenisOperasi = enJenisOperasi,
+                    IsPukal = isPukal,
+                    EnJenisCartaList = enJenisCartaList,
+                    IsKecuali = isKecuali,
+                    KodList = kodList,
+                    SetKodList = setKodList,
+                    AmaunTetap = amaunTetap,
+                    IsLastYear = isLastYear,
+                    IsUntilYear = isUntilYear
+                });
+            }
+        }
+
+        public virtual void RemoveItemBarisFormula(int id, int barisBil) => collectionBarisFormula.RemoveAll(b => b.Id == id && b.BarisBil == b.BarisBil);
+
+        public virtual void ClearBarisFormulaByBarisBil() => collectionBarisFormula.Clear();
+
+        public virtual void ClearBarisFormula() => collectionBarisFormula.Clear();
+
+        public virtual IEnumerable<JKonfigPenyataBarisFormula> JKonfigPenyataBarisFormula => collectionBarisFormula;
+
+
+        // baris formula end
+    }
+}

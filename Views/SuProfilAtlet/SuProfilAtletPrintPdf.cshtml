@@ -13,7 +13,7 @@
     var bil = 0;
 
 }
-<style >
+<style>
 
     .topic tr {
         line-height: 0.5rem;
@@ -52,7 +52,6 @@
     tr {
         page-break-inside: avoid
     }
-    
 </style>
 
 <div class="row flexrow mb-1">
@@ -65,8 +64,15 @@
         <h4 class="mb-1"><strong>Skim Kecemerlangan Atlet Bagi Bulan @Model.BulanSingkatan Tahun @Model.SuProfil.Tahun</strong></h4>
     </div>
 </div>
+<hr />
+<div class="row flexrow mb-3">
+    <div class="col-8 text-uppercase">
+        <h6 class="mb-1">No Rujukan : @Model.SuProfil.NoRujukan</h6>
+        <h6 class="mb-1">Bahagian : @Model.SuProfil.JBahagian.Kod - @Model.SuProfil.JBahagian.Perihal</h6>
+        <h6 class="mb-1">Tarikh Dijana : @Model.SuProfil.TarikhPosting?.ToString("dd/MM/yyyy")</h6>
+    </div>
+</div>
 
-  
 <table class="table table-bordered table-sm topic">
     <thead class="text-center">
         <tr class="table-warning">
@@ -79,60 +85,63 @@
             <th>CATATAN</th>
             <th>AMAUN RM</th>
             <th>JUMLAH RM</th>
-                
+
         </tr>
     </thead>
-    <tbody >
-    @foreach (var group in Model.SuProfil1Grouped)
-    {
-             
-        var sum = 0;
-        bilSukan++;
-            
-        <tr ><td colspan="9" class="text-uppercase bg-secondary text-white">@bilSukan) @group.Key</td></tr>
-        foreach (var item in group)
+    <tbody>
+        @foreach (var group in Model.SuProfil1Grouped)
         {
-            bil++;
-            <tr >
-                <td>@bil</td>
-                <td class="text-uppercase">@item.SuAtlet.Nama</td>
-                <td class="text-uppercase">@item.SuAtlet.NoKp</td>
-                <td class="text-uppercase">@item.SuAtlet.NoAkaunBank</td>
-                <td class="text-uppercase">@item.SuAtlet.JBank.Kod</td>
-                <td align="right" width="5%">@Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")</td>
-                <td class="text-uppercase">@item.Catatan</td>
-                <td align="right" width="5%">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
-                <td align="right" width="5%" class="table-primary">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
-                    
 
-            </tr>
-            sum += item.Amaun;
+            var sum = 0;
+            bilSukan++;
 
-            //count for 100, 300, 500
-            if (item.Amaun == 100)
+            <tr><td colspan="9" class="text-uppercase bg-secondary text-white">@bilSukan) @group.Key</td></tr>
+            foreach (var item in group)
             {
-                jum100++;
-            } else if (item.Amaun == 300)
-            {
-                jum300++;
-            } else if (item.Amaun == 500)
-            {
-                jum500++;
-            } else
-            {
+                bil++;
+                <tr>
+                    <td>@bil</td>
+                    <td class="text-uppercase">@item.SuAtlet.Nama</td>
+                    <td class="text-uppercase">@item.SuAtlet.NoKp</td>
+                    <td class="text-uppercase">@item.SuAtlet.NoAkaunBank</td>
+                    <td class="text-uppercase">@item.SuAtlet.JBank.Kod</td>
+                    <td align="right" width="5%">@Convert.ToDecimal(item.Tunggakan).ToString("#,##0.00")</td>
+                    <td class="text-uppercase">@item.Catatan</td>
+                    <td align="right" width="5%">@Convert.ToDecimal(item.Amaun).ToString("#,##0.00")</td>
+                    <td align="right" width="5%" class="table-primary">@Convert.ToDecimal(item.Jumlah).ToString("#,##0.00")</td>
+
+
+                </tr>
+                sum += item.Amaun;
+
+                //count for 100, 300, 500
+                if (item.Amaun == 100)
+                {
+                    jum100++;
+                }
+                else if (item.Amaun == 300)
+                {
+                    jum300++;
+                }
+                else if (item.Amaun == 500)
+                {
+                    jum500++;
+                }
+                else
+                {
+                }
+                //count end
+
             }
-            //count end
-                
+            <tr class="font-weight-bold text-uppercase">
+                <td class="text-right bg-light" colspan="8">@group.Key RM</td>
+                <td class="text-right table-primary">@Convert.ToDecimal(sum).ToString("#,##0.00")</td>
+            </tr>
+            <tr>
+                <td class="text-right border-white" colspan="9">
+                </td>
+            </tr>
         }
-            <tr class="font-weight-bold text-uppercase" >
-            <td class="text-right bg-light" colspan="8">@group.Key RM</td>
-            <td class="text-right table-primary">@Convert.ToDecimal(sum).ToString("#,##0.00")</td>
-        </tr>
-        <tr>
-            <td class="text-right border-white" colspan="9">
-            </td>
-        </tr>
-    }
         <tr class="font-weight-bold table-warning">
             <td class="text-right text-uppercase" colspan="8">Jumlah Keseluruhan RM</td>
             <td class="text-right table-primary">@Convert.ToDecimal(Model.SuProfil.Jumlah).ToString("#,##0.00")</td>
@@ -144,26 +153,26 @@
     <div class="col-8 text-center text-uppercase">
     </div>
     <div class="col-3 text-center text-uppercase">
-       <div class="table-responsive-sm ">
-    <table class="table table-sm topic table-info table-borderless">
-        <thead class="table-dark">
+        <div class="table-responsive-sm ">
+            <table class="table table-sm topic table-info table-borderless">
+                <thead class="table-dark">
 
-        </thead>
-        <tbody>
-            <tr>
-                <td class="text-right">** Bil. Atlet Skim RM 100 - @jum100 Orang </td>
-            </tr>
-            <tr>
-                <td class="text-right">Bil. Atlet Skim RM 300 - @jum300 Orang </td>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-right">** Bil. Atlet Skim RM 100 - @jum100 Orang </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Bil. Atlet Skim RM 300 - @jum300 Orang </td>
 
-            </tr>
-            <tr>
-                <td class="text-right">Bil. Atlet Skim RM 500 - @jum500 Orang </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Bil. Atlet Skim RM 500 - @jum500 Orang </td>
 
-            </tr>
-        </tbody>
-    </table>
-</div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
