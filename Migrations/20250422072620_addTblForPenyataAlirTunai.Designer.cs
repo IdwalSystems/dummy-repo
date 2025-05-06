@@ -4,14 +4,16 @@ using MSNK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSNK.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250422072620_addTblForPenyataAlirTunai")]
+    partial class addTblForPenyataAlirTunai
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3968,9 +3970,6 @@ namespace MSNK.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("AmaunTetap")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("BarisBil")
                         .HasColumnType("int");
 
@@ -3983,13 +3982,7 @@ namespace MSNK.Migrations
                     b.Property<bool>("IsKecuali")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsLastYear")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsPukal")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsUntilYear")
                         .HasColumnType("bit");
 
                     b.Property<int>("JKonfigPenyataBarisId")
