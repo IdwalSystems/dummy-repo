@@ -137,17 +137,9 @@
             @foreach (var item in group)
             {
 
-                if (item.Debit > 0)
-                {
-                    baki += item.Debit;
-                    jDebit += item.Debit;
-                }
-
-                if (item.Kredit > 0)
-                {
-                    baki -= item.Kredit;
-                    jKredit += item.Kredit;
-                }
+                baki += item.Debit - item.Kredit;
+                jDebit += item.Debit;
+                jKredit += item.Kredit;
                 <tr>
                     <td class="bil">
                         @(rowNo += 1)

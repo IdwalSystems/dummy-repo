@@ -511,17 +511,9 @@ namespace MSNK.Controllers
                     jumDebit += item.Debit;
                     jumKredit += item.Kredit;
 
-                    if (item.Debit > 0)
-                    {
-                        baki += item.Debit;
-                        jumDebit += item.Debit;
-                    }
-
-                    if (item.Kredit > 0)
-                    {
-                        baki -= item.Kredit;
-                        jumKredit += item.Kredit;
-                    }
+                    baki += item.Debit - item.Kredit;
+                    jumDebit += item.Debit;
+                    jumKredit += item.Kredit;
 
                     DataRow workRow = dt.NewRow();
                     workRow[0] = bil;
