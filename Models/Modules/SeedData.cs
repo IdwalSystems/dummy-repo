@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using MSNK.Data;
 using MSNK.Models.Administration;
 using System;
