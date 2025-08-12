@@ -944,6 +944,11 @@ namespace MSNK.Controllers
 
                         SpPendahuluanPelbagai sp = await _spPendahuluanPelbagaiRepo.GetById((int)id);
 
+                        if (sp.AkCartaId == null)
+                        {
+                            TempData[SD.Error] = "Data gagal diluluskan. Kod Akaun tidak diisi.";
+                            return RedirectToAction(nameof(Index));
+                        }
                         //check for print
                         if (sp.FlCetak == 0)
                         {

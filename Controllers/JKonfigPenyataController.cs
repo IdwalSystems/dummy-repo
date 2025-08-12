@@ -20,7 +20,7 @@ namespace MSNK.Controllers
     [Authorize(Roles = "SuperAdmin,Supervisor")]
     public class JKonfigPenyataController : Controller
     {
-        public const string modul = "JD0015";
+        public const string modul = "JD015";
         public const string namamodul = "Jadual Konfigurasi Penyata Aliran Tunai";
         private readonly ApplicationDbContext _context;
         private readonly AppLogIRepository<AppLog, int> _appLog;

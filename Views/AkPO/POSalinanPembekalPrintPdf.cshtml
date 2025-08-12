@@ -120,7 +120,7 @@
 
         @foreach (var item in Model.AkPO.AkPO1)
         {
-            
+
             <tr>
                 <td>@item.AkCarta.Kod</td>
                 <td>@item.AkCarta.Perihal</td>
@@ -138,7 +138,7 @@
         <tfoot>
         </tfoot>
     </table>
-</div>    
+</div>
 
 <div class="table-responsive-sm">
     <table class="table table-sm topic table-bordered">
@@ -148,7 +148,7 @@
         <tbody>
             <tr>
                 <td class="text-center" width="15%" rowspan="3">Disemak </td>
-                                <td class="relative text-right" width="25%" rowspan="3" ><span class="date-span" hidden> Tarikh: </span></td>
+                <td class="relative text-right" width="25%" rowspan="3"><span class="date-span" hidden> Tarikh: </span></td>
                 <td width="10%">Nama: </td>
                 <td></td>
             </tr>
@@ -206,7 +206,7 @@
             }
             else
             {
-               @foreach (var item in Model.AkPO.AkPO2)
+                @foreach (var item in Model.AkPO.AkPO2)
                 {
 
                     <tr>
@@ -219,7 +219,7 @@
                         <td align="right">@item.Amaun</td>
                     </tr>
 
-                } 
+                }
             }
             <tr class="font-weight-bold">
                 <td class="text-right" colspan="6">Jumlah RM</td>
@@ -254,7 +254,7 @@
         <tbody>
             <tr>
                 <td class="text-center" width="15%" rowspan="3">Diperakui </td>
-                <td class="relative text-right" width="25%" rowspan="3" ><span class="date-span" hidden> Tarikh: </span></td>
+                <td class="relative text-right" width="25%" rowspan="3"><span class="date-span" hidden> Tarikh: </span></td>
                 <td width="10%">Nama: </td>
                 <td></td>
             </tr>
@@ -271,86 +271,85 @@
 </div>
 @*perhatian pengarah*@
 @*<div class="table-responsive-sm">
-    <table class="table table-sm topic table-bordered">
-        <thead class="table-dark">
+        <table class="table table-sm topic table-bordered">
+            <thead class="table-dark">
 
-        </thead>
-        <tbody>
-            <tr class="bg-dark text-white font-weight-bold">
+            </thead>
+            <tbody>
+                <tr class="bg-dark text-white font-weight-bold">
 
-                <td class="text-center"><h6 class="mb-0"><strong>PERHATIAN PENGARAH / KETUA UNIT</strong></h6></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="table-responsive-sm">
-    <table class="table table-sm topic table-bordered">
-        <thead class="table-dark">
-
-        </thead>
-        <tbody>
-            <tr>
-                <td class="text-center" width="15%" rowspan="3">Diluluskan </td>
-                <td class="relative text-right" width="25%" rowspan="3" ><span class="date-span" hidden> Tarikh: </span></td>
-                <td width="10%">Nama: </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td width="10%">Jawatan: </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td width="10%">Tarikh: </td>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
-</div>*@
-@*perhatian pengarah end*@
-@if (Model.AkPO.AkPO2.Count >= 7)
-{
-   <p class="breakhere"></p>
-
-    <div class="table-responsive-sm mb-0">
-        <table class="table table-bordered table-sm topic">
-            <thead class="text-center">
-                <tr>
-                    <th colspan="7">LAMPIRAN</th>
+                    <td class="text-center"><h6 class="mb-0"><strong>PERHATIAN PENGARAH / KETUA UNIT</strong></h6></td>
                 </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-responsive-sm">
+        <table class="table table-sm topic table-bordered">
+            <thead class="table-dark">
+
             </thead>
             <tbody>
                 <tr>
-                    <td class="text-center">BIL</td>
-                    <td class="text-center">NO STOK</td>
-                    <td class="text-center">PERIHAL</td>
-                    <td class="text-center">KUANTITI</td>
-                    <td class="text-center">UNIT</td>
-                    <td class="text-center">HARGA/UNIT</td>
-                    <td class="text-center">AMAUN</td>
+                    <td class="text-center" width="15%" rowspan="3">Diluluskan </td>
+                    <td class="relative text-right" width="25%" rowspan="3" ><span class="date-span" hidden> Tarikh: </span></td>
+                    <td width="10%">Nama: </td>
+                    <td></td>
                 </tr>
-                @foreach (var item in Model.AkPO.AkPO2)
-                {
-
-                    <tr>
-                        <td>@item.Bil</td>
-                        <td>@item.NoStok</td>
-                        <td class="text-uppercase">@item.Perihal</td>
-                        <td align="right">@item.Kuantiti</td>
-                        <td align="center" class="text-uppercase">@item.Unit</td>
-                        <td align="right">@item.Harga</td>
-                        <td align="right">@item.Amaun</td>
-                    </tr>
-
-                } 
-                <tr class="font-weight-bold">
-                    <td class="text-right" colspan="6">Jumlah RM</td>
-                    <td class="text-right">@Convert.ToDecimal(Model.AkPO.Jumlah).ToString("#,##0.00")</td>
+                <tr>
+                    <td width="10%">Jawatan: </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td width="10%">Tarikh: </td>
+                    <td></td>
                 </tr>
             </tbody>
-            <tfoot>
-
-            </tfoot>
         </table>
-    </div> 
+    </div>*@
+@*perhatian pengarah end*@
+@if (Model.AkPO.AkPO2.Count >= 7)
+{
+    <p class="breakhere"></p>
+
+    <table class="table table-bordered table-sm topic">
+        <thead class="text-center">
+            <tr>
+                <th colspan="7">LAMPIRAN</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center">BIL</td>
+                <td class="text-center">NO STOK</td>
+                <td class="text-center">PERIHAL</td>
+                <td class="text-center">KUANTITI</td>
+                <td class="text-center">UNIT</td>
+                <td class="text-center">HARGA/UNIT</td>
+                <td class="text-center">AMAUN</td>
+            </tr>
+            @foreach (var item in Model.AkPO.AkPO2)
+            {
+
+                <tr>
+                    <td>@item.Bil</td>
+                    <td>@item.NoStok</td>
+                    <td class="text-uppercase">@item.Perihal</td>
+                    <td align="right">@item.Kuantiti</td>
+                    <td align="center" class="text-uppercase">@item.Unit</td>
+                    <td align="right">@item.Harga</td>
+                    <td align="right">@item.Amaun</td>
+                </tr>
+
+            }
+            <tr class="font-weight-bold">
+                <td class="text-right" colspan="6">Jumlah RM</td>
+                <td class="text-right">@Convert.ToDecimal(Model.AkPO.Jumlah).ToString("#,##0.00")</td>
+            </tr>
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+
 }
