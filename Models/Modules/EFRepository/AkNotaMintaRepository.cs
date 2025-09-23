@@ -86,7 +86,7 @@ namespace MSNK.Models.Modules.EFRepository
                 switch (filterType)
                 {
                     case "NoRujukan":
-                        result = await context.AkNotaMinta
+                        result = await context.AkNotaMinta.IgnoreQueryFilters()
                                     .Include(b => b.JKW)
                                     .Include(b => b.JBahagian)
                                     .Include(b => b.AkPembekal)
@@ -95,8 +95,28 @@ namespace MSNK.Models.Modules.EFRepository
                                     .Where(s => s.NoRujukan.ToUpper().Contains(filter.ToUpper()))
                                     .ToListAsync();
                         break;
+                    case "NoSiri":
+                        result = await context.AkNotaMinta.IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AkPembekal)
+                                    .Include(b => b.AkNotaMinta1)
+                                    .Include(b => b.AkNotaMinta2)
+                                    .Where(s => s.NoSiri.Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Nama":
+                        result = await context.AkNotaMinta.IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AkPembekal)
+                                    .Include(b => b.AkNotaMinta1)
+                                    .Include(b => b.AkNotaMinta2)
+                                    .Where(s => s.AkPembekal.NamaSykt.Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
                     case "Tahun":
-                        result = await context.AkNotaMinta
+                        result = await context.AkNotaMinta.IgnoreQueryFilters()
                                     .Include(b => b.JKW)
                                     .Include(b => b.JBahagian)
                                     .Include(b => b.AkPembekal)
@@ -109,7 +129,7 @@ namespace MSNK.Models.Modules.EFRepository
                     case "Tarikh":
                         DateTime date1 = DateTime.Parse(filterDate1);
                         DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
-                        result = await context.AkNotaMinta
+                        result = await context.AkNotaMinta.IgnoreQueryFilters()
                                     .Include(b => b.JKW)
                                     .Include(b => b.JBahagian)
                                     .Include(b => b.AkPembekal)
@@ -179,6 +199,16 @@ namespace MSNK.Models.Modules.EFRepository
                                     .Include(b => b.AkNotaMinta1)
                                     .Include(b => b.AkNotaMinta2)
                                     .Where(s => s.NoSiri.Contains(filter.ToUpper()))
+                                    .ToListAsync();
+                        break;
+                    case "Nama":
+                        result = await context.AkNotaMinta.IgnoreQueryFilters()
+                                    .Include(b => b.JKW)
+                                    .Include(b => b.JBahagian)
+                                    .Include(b => b.AkPembekal)
+                                    .Include(b => b.AkNotaMinta1)
+                                    .Include(b => b.AkNotaMinta2)
+                                    .Where(s => s.AkPembekal.NamaSykt.Contains(filter.ToUpper()))
                                     .ToListAsync();
                         break;
                     case "Tahun":
