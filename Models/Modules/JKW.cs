@@ -37,6 +37,7 @@ namespace MSNK.Models.Modules
         public ICollection<SuProfil> SuProfil { get; set; }
         public ICollection<JPTJ> JPTJ { get; set; }
         public ICollection<AkInvois> AkInvois { get; set; }
+        public ICollection<AkIndenLaras> AkIndenLaras { get; set; }
         //relationship end
 
         //soft delete

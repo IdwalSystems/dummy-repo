@@ -187,8 +187,16 @@ namespace MSNK.Controllers
 
                 if(item.AkPOId == null)
                 {
-                    namaSykt = item.AkPembekal.NamaSykt;
-                    alamat1 = item.AkPembekal.Alamat1;
+                    if (item.AkIndenId == null)
+                    {
+                        namaSykt = item.AkPembekal.NamaSykt;
+                        alamat1 = item.AkPembekal.Alamat1;
+                    }
+                    else
+                    {
+                        namaSykt = item.AkInden.AkPembekal.NamaSykt;
+                        alamat1 = item.AkInden.AkPembekal.Alamat1;
+                    }
                 }
                 else
                 {
@@ -397,6 +405,19 @@ namespace MSNK.Controllers
                 };
             }
 
+            var akInden = new AkInden();
+            if (akBelian.AkIndenId != null)
+            {
+                akInden = await _akIndenRepo.GetById((int)akBelian.AkIndenId);
+            }
+            else
+            {
+                akInden = new AkInden()
+                {
+                    NoInden = "-"
+                };
+            }
+
             var pembekal = await _akPembekalRepo.GetById(akBelian.AkPembekalId);
 
             if (akBelian == null)
@@ -409,6 +430,7 @@ namespace MSNK.Controllers
             //fill in view model AkPVViewModel from akPV
             akBelianView.AkPembekalId = akBelian.AkPembekalId;
             akBelianView.AkPO = akPO;
+            akBelianView.AkInden = akInden;
             akBelianView.AkPembekal = pembekal;
             akBelianView.JBahagian = akBelian.JBahagian;
             akBelianView.Id = akBelian.Id;
@@ -787,7 +809,7 @@ namespace MSNK.Controllers
         }
         //on change no PO controller end
 
-        // on change no Inden controller
+        // on change no PO controller
         [HttpPost]
         public async Task<JsonResult> JsonGetNoInden(int id)
         {
@@ -796,6 +818,10 @@ namespace MSNK.Controllers
                 CartEmpty();
                 PopulateCartFromAkInden(id);
                 var result = await _akIndenRepo.GetById(id);
+
+                var akIndenLaras = _context.AkIndenLaras
+                    .Include(x => x.AkIndenLaras1)
+                    .Where(x => x.AkIndenId == id && x.FlPosting == 1).FirstOrDefault();
 
                 List<AkInden1> akInden1Table = await _context.AkInden1
                 .Include(b => b.AkCarta)
@@ -818,6 +844,13 @@ namespace MSNK.Controllers
 
                 foreach (AkInden2 item in akInden2Table)
                 {
+                    if (akIndenLaras != null)
+                    {
+                        item.Amaun = 0;
+                        item.Harga = 0;
+                        item.Kuantiti = 0;
+                    }
+
                     result.AkInden2.Add(item);
                 }
 
@@ -831,9 +864,19 @@ namespace MSNK.Controllers
             }
         }
 
+
         private void PopulateCartFromAkInden(int id)
         {
             var user = _userManager.GetUserName(User);
+
+
+            decimal Amaun = 0;
+            decimal Kuantiti = 0;
+            decimal Harga = 0;
+
+            AkIndenLaras akIndenLaras = _context.AkIndenLaras
+                    .Include(x => x.AkIndenLaras1)
+                    .Where(x => x.AkIndenId == id && x.FlPosting == 1).FirstOrDefault();
 
             List<AkInden1> akInden1Table = _context.AkInden1
                 .Include(b => b.AkCarta)
@@ -845,6 +888,18 @@ namespace MSNK.Controllers
             {
 
                 item.AkIndenId = 0;
+
+                //if there is pelarasan Inden
+                if (akIndenLaras != null)
+                {
+                    foreach (var laras in akIndenLaras.AkIndenLaras1)
+                    {
+                        if (laras.AkCartaId == item.AkCartaId)
+                        {
+                            item.Amaun += laras.Amaun;
+                        }
+                    }
+                }
 
                 if (item.Amaun != 0)
                 {
@@ -863,16 +918,22 @@ namespace MSNK.Controllers
             foreach (AkInden2 item in akInden2Table)
             {
                 item.AkIndenId = 0;
+                if (akIndenLaras == null)
+                {
+                    Amaun = item.Amaun;
+                    Kuantiti = item.Kuantiti;
+                    Harga = item.Harga;
+                }
 
                 _cart.AddItem2(item.AkIndenId,
                                item.Indek,
                                item.Bil,
                                item.NoStok,
                                item.Perihal,
-                               item.Kuantiti,
+                               Kuantiti,
                                item.Unit,
-                               item.Harga,
-                               item.Amaun);
+                               Harga,
+                               Amaun);
             }
 
 

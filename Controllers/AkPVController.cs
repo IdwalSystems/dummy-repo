@@ -287,6 +287,7 @@ namespace MSNK.Controllers
 
             List<AkBelian> akBelianList = _context.AkBelian
                 .Include(b => b.AkPO)
+                .Include(b => b.AkInden)
                 .Where(b => b.FlPosting == 1)
                 .OrderBy(b => b.Tarikh).ToList();
 
@@ -375,6 +376,7 @@ namespace MSNK.Controllers
             {
                 var akBelian = _context.AkBelian
                     .Include(x => x.AkPO)
+                    .Include(x => x.AkInden)
                     .Where(x => x.Id == item.AkBelianId).FirstOrDefault();
                 item.AkBelian = akBelian;
             }
@@ -400,6 +402,7 @@ namespace MSNK.Controllers
 
             List<AkPV2> akPV2Table = _context.AkPV2
                 .Include(b => b.AkBelian).ThenInclude(b => b.AkPO)
+                .Include(b => b.AkBelian).ThenInclude(b => b.AkInden)
                 .Where(b => b.AkPVId == akPV.Id)
                 .OrderBy(b => b.Id)
                 .ToList();
@@ -945,6 +948,7 @@ namespace MSNK.Controllers
 
                 var result = _context.AkBelian
                     .Include(b => b.AkPO)
+                    .Include(b => b.AkInden)
                     .Include(b => b.AkBelian1).ThenInclude(b => b.AkCarta)
                     .Where(b => b.Id == akBelian.Id)
                     .FirstOrDefault();
@@ -1518,6 +1522,7 @@ namespace MSNK.Controllers
 
             List<AkPV2> akPV2Table = _context.AkPV2
                 .Include(b => b.AkBelian).ThenInclude(b => b.AkPO)
+                .Include(b => b.AkBelian).ThenInclude(b => b.AkInden)
                 .Where(b => b.AkPVId == id)
                 .OrderBy(b => b.Id)
                 .ToList();
@@ -1763,6 +1768,16 @@ namespace MSNK.Controllers
                     result.AkPO.Jumlah += akPOLaras.Jumlah;
                 }
 
+                var akIndenLaras = _context.AkIndenLaras
+                    .Include(x => x.AkIndenLaras1)
+                    .Where(x => x.AkIndenId == result.AkIndenId && x.FlPosting == 1).FirstOrDefault();
+
+                if (akIndenLaras != null)
+                {
+                    result.AkInden.Jumlah += akIndenLaras.Jumlah;
+                }
+
+
                 // if akBelian link with debitKreditBelian
                 var akNota = _context.AkNotaDebitKreditBelian
                     .Where(b => b.AkBelianId == data).FirstOrDefault();
@@ -1774,11 +1789,12 @@ namespace MSNK.Controllers
                     {
                         result.Jumlah += akNota.Jumlah;
                         result.AkPO.Jumlah += akNota.Jumlah;
+                        result.AkInden.Jumlah += akNota.Jumlah;
                     }
                     else
                     {
                         result.Jumlah -= akNota.Jumlah;
-                        result.AkPO.Jumlah -= akNota.Jumlah;
+                        result.AkInden.Jumlah -= akNota.Jumlah;
                     }
                 }
                 // endif
@@ -3873,7 +3889,7 @@ namespace MSNK.Controllers
         }
         // unposting function end
 
-        //// POST: AkPOLaras/Cancel/5
+        //// POST: AkPV/Cancel/5
         [Authorize(Policy = "PV001B")]
         public async Task<IActionResult> Cancel(int id)
         {
@@ -4499,7 +4515,7 @@ namespace MSNK.Controllers
             {
                 if (akPV2 != null)
                 {
-                    var akT2 = await _context.AkPV2.Include(b => b.AkBelian).ThenInclude(b => b.AkPO).FirstOrDefaultAsync(x => x.AkBelianId == akPV2.AkBelianId && x.AkPVId == akPV2.AkPVId);
+                    var akT2 = await _context.AkPV2.Include(b => b.AkBelian).ThenInclude(b => b.AkPO).Include(b => b.AkBelian).ThenInclude(b => b.AkInden).FirstOrDefaultAsync(x => x.AkBelianId == akPV2.AkBelianId && x.AkPVId == akPV2.AkPVId);
                     var user = await _userManager.GetUserAsync(User);
 
                     _context.AkPV2.Remove(akT2);

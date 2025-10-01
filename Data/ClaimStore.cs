@@ -62,6 +62,17 @@ namespace MSNK.Data
             new Claim("PT001T","PT001 Pelarasan Tanggungan - Posting"),
             new Claim("PT001UT","PT001 Pelarasan Tanggungan - UnPosting"),
             //Pelarasan PO end
+             //Pelarasan PO
+            new Claim("PI001","PI001 Pelarasan Inden Kerja"),
+            new Claim("PI001C","PI001 Pelarasan Inden Kerja  - Tambah"),
+            new Claim("PI001E","PI001 Pelarasan Inden Kerja  - Ubah"),
+            new Claim("PI001D","PI001 Pelarasan Inden Kerja  - Hapus"),
+            new Claim("PI001P","PI001 Pelarasan Inden Kerja  - Cetak"),
+            new Claim("PI001B","PI001 Pelarasan Inden Kerja  - Batal"),
+            new Claim("PI001R","PI001 Pelarasan Inden Kerja  - Rollback"),
+            new Claim("PI001T","PI001 Pelarasan Inden Kerja  - Posting"),
+            new Claim("PI001UT","PI001 Pelarasan Inden Kerja  - UnPosting"),
+            //Pelarasan PO end
             //Invois Pembekal
             new Claim("TG002","TG002 Invois Pembekal"),
             new Claim("TG002C","TG002 Invois Pembekal - Tambah"),

@@ -43,6 +43,9 @@ namespace MSNK.Data
         public DbSet<AkPOLaras> AkPOLaras { get; set; }
         public DbSet<AkPOLaras1> AkPOLaras1 { get; set; }
         public DbSet<AkPOLaras2> AkPOLaras2 { get; set; }
+        public DbSet<AkIndenLaras> AkIndenLaras { get; set; }
+        public DbSet<AkIndenLaras1> AkIndenLaras1 { get; set; }
+        public DbSet<AkIndenLaras2> AkIndenLaras2 { get; set; }
         public DbSet<AkJurnal> AkJurnal { get; set; }
         public DbSet<AkJurnal1> AkJurnal1 { get; set; }
         public DbSet<AppLog> AppLog { get; set; }
@@ -148,6 +151,7 @@ namespace MSNK.Data
             modelBuilder.Entity<AkPO>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkInden>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkPOLaras>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
+            modelBuilder.Entity<AkIndenLaras>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             modelBuilder.Entity<AkBelian>().HasQueryFilter(m => EF.Property<int>(m, "FlHapus") == 0);
             //Tanggungan End
             //Tunai Runcit
@@ -345,6 +349,22 @@ namespace MSNK.Data
                     .OnDelete(DeleteBehavior.Restrict)
                     .IsRequired();
             //AkPOLaras end
+            //AkIndenLaras
+            modelBuilder.Entity<AkIndenLaras>()
+                    .HasOne(m => m.AkInden)
+                    .WithMany(t => t.AkIndenLaras)
+                    .HasForeignKey(m => m.AkIndenId)
+                    .OnDelete(DeleteBehavior.ClientNoAction)
+                    .IsRequired();
+
+            modelBuilder.Entity<AkIndenLaras>()
+                    .HasOne(m => m.JKW)
+                    .WithMany(t => t.AkIndenLaras)
+                    .HasForeignKey(m => m.JKWId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+            //AkIndenLaras end
+
             //AkNotaMinta
             modelBuilder.Entity<AkNotaMinta>()
                     .HasOne(m => m.AkPembekal)

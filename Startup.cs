@@ -54,6 +54,7 @@ namespace MSNK
             services.AddTransient<SendGridEmailServices, SendGridEmailSender>();
             services.AddTransient<UserService, UserService>();
             services.AddTransient<AkPOLarasController, AkPOLarasController>();
+            services.AddTransient<AkIndenLarasController, AkIndenLarasController>();
             services.AddDbContext<ApplicationDbContext>(
                 options=> {
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
@@ -105,6 +106,9 @@ namespace MSNK
             services.AddTransient<IRepository<AkPOLaras, int, string>, AkPOLarasRepository>();
             services.AddTransient<ListViewIRepository<AkPOLaras1, int>, AkPOLaras1Repository>();
             services.AddTransient<ListViewIRepository<AkPOLaras2, int>, AkPOLaras2Repository>();
+            services.AddTransient<IRepository<AkIndenLaras, int, string>, AkIndenLarasRepository>();
+            services.AddTransient<ListViewIRepository<AkIndenLaras1, int>, AkIndenLaras1Repository>();
+            services.AddTransient<ListViewIRepository<AkIndenLaras2, int>, AkIndenLaras2Repository>();
             services.AddTransient<IRepository<AkPembekal, int, string>, AkPembekalRepository>();
             services.AddTransient<IRepository<AkJurnal, int, string>, AkJurnalRepository>();
             services.AddTransient<ListViewIRepository<AkJurnal1, int>, AkJurnal1Repository>();
@@ -196,6 +200,7 @@ namespace MSNK
             services.AddScoped(ss => SessionCartPO.GetCart(ss));
             services.AddScoped(ss => SessionCartInden.GetCart(ss));
             services.AddScoped(ss => SessionCartPOLaras.GetCart(ss));
+            services.AddScoped(ss => SessionCartIndenLaras.GetCart(ss));
             services.AddScoped(ss => SessionCartJurnal.GetCart(ss));
             services.AddScoped(ss => SessionCartBelian.GetCart(ss));
             services.AddScoped(ss => SessionCartPV.GetCart(ss));
@@ -280,6 +285,17 @@ namespace MSNK
                 options.AddPolicy("PT001R", policy => policy.RequireClaim("PT001R"));
                 options.AddPolicy("PT001T", policy => policy.RequireClaim("PT001T"));
                 options.AddPolicy("PT001UT", policy => policy.RequireClaim("PT001UT"));
+                //Pesanan PO End
+                //Pelarasan PO
+                options.AddPolicy("PI001", policy => policy.RequireClaim("PI001"));
+                options.AddPolicy("PI001C", policy => policy.RequireClaim("PI001C"));
+                options.AddPolicy("PI001E", policy => policy.RequireClaim("PI001E"));
+                options.AddPolicy("PI001D", policy => policy.RequireClaim("PI001D"));
+                options.AddPolicy("PI001P", policy => policy.RequireClaim("PI001P"));
+                options.AddPolicy("PI001B", policy => policy.RequireClaim("PI001B"));
+                options.AddPolicy("PI001R", policy => policy.RequireClaim("PI001R"));
+                options.AddPolicy("PI001T", policy => policy.RequireClaim("PI001T"));
+                options.AddPolicy("PI001UT", policy => policy.RequireClaim("PI001UT"));
                 //Pesanan PO End
                 //Nota Debit Kredit Belian
                 options.AddPolicy("ND001", policy => policy.RequireClaim("ND001"));
@@ -516,12 +532,12 @@ namespace MSNK
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager)
         {
             // debug shown if error (developer mode on)
-            app.UseDeveloperExceptionPage();
+            //app.UseDeveloperExceptionPage();
             // debug shown if error (developer mode on) end
             //
             // debug hide if error (developer mode off)
-            //app.UseExceptionHandler("/Home/Error");
-            //app.UseHsts();
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
             // debug hide if error (developer mode off) end
 
             app.UseStatusCodePagesWithReExecute("/Home/HandleError/{0}");

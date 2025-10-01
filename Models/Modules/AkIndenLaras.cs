@@ -7,18 +7,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MSNK.Models.Modules
 {
-    public class AkInden : AppLogHelper, ISoftDelete, ICancel
+    public class AkIndenLaras : AppLogHelper, ISoftDelete, ICancel
     {
         //field
         public int Id { get; set; }
         [MaxLength(50)]
-        [DisplayName("No. Inden")]
-        public string NoInden { get; set; }
+        [DisplayName("No. Rujukan")]
+        public string NoRujukan { get; set; }
         [DisplayName("Tarikh")]
         [Required(ErrorMessage = "Tarikh diperlukan")]
         public DateTime Tarikh { get; set; }
-        [DisplayName("Bekalkan Sebelum / Pada")]
-        public DateTime? TarikhBekalan { get; set; }
         [DisplayName("Tarikh Posting")]
         public DateTime? TarikhPosting { get; set; }
         [DisplayName("Jumlah RM")]
@@ -29,8 +27,6 @@ namespace MSNK.Models.Modules
         [MaxLength(4)]
         [DisplayName("Tahun Bel.")]
         public string Tahun { get; set; }
-        public DateTime TempohSiap { get; set; }
-        public DateTime TarikhSiap { get; set; }
         public string Tajuk { get; set; }
         //field end
 
@@ -50,21 +46,19 @@ namespace MSNK.Models.Modules
         [DisplayName("Cetak")]
         [DefaultValue("0")]
         public int FlCetak { get; set; }
-        // untuk cek Inden tersebut ada di kewangan atau tidak
-        [DefaultValue(true)]
-        public bool IsInKewangan { get; set; }
         //flag end
 
         //relationship
-        [Required(ErrorMessage = "Kod Pembekal diperlukan")]
-        [DisplayName("Kod Pembekal")]
-        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kod Pembekal")]
-        public int AkPembekalId { get; set; }
-        public AkPembekal AkPembekal { get; set; }
+        [DisplayName("No Inden Kerja")]
+        [Required(ErrorMessage = "No Inden Kerja diperlukan")]
+        //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih No Inden Kerja ")]
+        public int AkIndenId { get; set; }
+        public AkInden AkInden { get; set; }
         [DisplayName("Kumpulan Wang")]
         [Required(ErrorMessage = "Kump. Wang diperlukan")]
         //[RegularExpression("[^0]+", ErrorMessage = "Sila pilih Kump. Wang")]
         public int JKWId { get; set; }
+        public JKW JKW { get; set; }
 
         [DisplayName("Bahagian")]
         [Required(ErrorMessage = "Bahagian diperlukan")]
@@ -72,15 +66,11 @@ namespace MSNK.Models.Modules
         public int? JBahagianId { get; set; }
         public JBahagian JBahagian { get; set; }
 
-        [DisplayName("No Nota Minta")]
-        public int? AkNotaMintaId { get; set; }
-        public AkNotaMinta AkNotaMinta { get; set; }
-        public JKW JKW { get; set; }
-        public ICollection<AkInden2> AkInden2 { get; set; }
-        public ICollection<AkInden1> AkInden1 { get; set; }
-        public ICollection<AkBelian> AkBelian { get; set; }
-        public ICollection<AkIndenLaras> AkIndenLaras { get; set; }
+        public ICollection<AkIndenLaras2> AkIndenLaras2 { get; set; }
+        public ICollection<AkIndenLaras1> AkIndenLaras1 { get; set; }
+        
 
         //relationship end
+
     }
 }
