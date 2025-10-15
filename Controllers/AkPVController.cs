@@ -1785,16 +1785,32 @@ namespace MSNK.Controllers
                 if (akNota != null)
                 {
                     // debit
+                    
                     if (akNota.FlJenis == 0)
                     {
                         result.Jumlah += akNota.Jumlah;
-                        result.AkPO.Jumlah += akNota.Jumlah;
-                        result.AkInden.Jumlah += akNota.Jumlah;
+                        if (result.AkPOId != null)
+                        {
+                            result.AkPO.Jumlah += akNota.Jumlah;
+                        }
+                        else
+                        {
+                            result.AkInden.Jumlah += akNota.Jumlah;
+                        }
+
+                            
                     }
                     else
                     {
                         result.Jumlah -= akNota.Jumlah;
-                        result.AkInden.Jumlah -= akNota.Jumlah;
+                        if (result.AkPOId != null)
+                        {
+                            result.AkPO.Jumlah -= akNota.Jumlah;
+                        }
+                        else
+                        {
+                            result.AkInden.Jumlah -= akNota.Jumlah;
+                        }
                     }
                 }
                 // endif

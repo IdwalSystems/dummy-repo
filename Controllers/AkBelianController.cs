@@ -322,6 +322,8 @@ namespace MSNK.Controllers
 
             //fill in view model AkPVViewModel from akPV
             akBelianView.AkPembekalId = akBelian.AkPembekalId;
+            akBelianView.AkPOId = akBelian.AkPOId;
+            akBelianView.AkIndenId = akBelian.AkIndenId;
             akBelianView.AkPO = akPO;
             akBelianView.AkInden = akInden;
             if (akPV2 != null)
