@@ -107,6 +107,7 @@ namespace MSNK.Models.Modules.EFRepository
                 || string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && !string.IsNullOrEmpty(filterType))
             {
                 result = await context.AkPV
+                    .AsNoTracking()
                             .Include(b => b.JKW)
                             .Include(b => b.JBank)
                             .Include(b => b.JBahagian)
@@ -141,6 +142,7 @@ namespace MSNK.Models.Modules.EFRepository
                 {
                     case "NoRujukan":
                         result = await context.AkPV
+                            .AsNoTracking()
                                     .Include(b => b.JKW)
                                     .Include(b => b.JBank)
                                     .Include(b => b.JBahagian)
@@ -169,6 +171,7 @@ namespace MSNK.Models.Modules.EFRepository
                         break;
                     case "Nama":
                         result = await context.AkPV
+                            .AsNoTracking()
                                     .Include(b => b.JKW)
                                     .Include(b => b.JBank)
                                     .Include(b => b.JBahagian)
@@ -197,6 +200,7 @@ namespace MSNK.Models.Modules.EFRepository
                         break;
                     case "Tahun":
                         result = await context.AkPV
+                            .AsNoTracking()
                                     .Include(b => b.JKW)
                                     .Include(b => b.JBank)
                                     .Include(b => b.JBahagian)
@@ -228,6 +232,7 @@ namespace MSNK.Models.Modules.EFRepository
                         DateTime date1 = DateTime.Parse(filterDate1);
                         DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
                         result = await context.AkPV
+                            .AsNoTracking()
                                     .Include(b => b.JKW)
                                     .Include(b => b.JBank)
                                     .Include(b => b.JBahagian)
@@ -306,6 +311,7 @@ namespace MSNK.Models.Modules.EFRepository
                 || string.IsNullOrWhiteSpace(filter) && string.IsNullOrWhiteSpace(filterDate1) && !string.IsNullOrEmpty(filterType))
             {
                 result = await context.AkPV.IgnoreQueryFilters()
+                            .AsNoTracking()
                             .Include(b => b.JKW)
                             .Include(b => b.JBank)
                             .Include(b => b.JBahagian)
@@ -340,6 +346,7 @@ namespace MSNK.Models.Modules.EFRepository
                 {
                     case "NoRujukan":
                         result = await context.AkPV.IgnoreQueryFilters()
+                            .AsNoTracking()
                                     .Include(b => b.JKW)
                                     .Include(b => b.JBank)
                                     .Include(b => b.JBahagian)
@@ -368,6 +375,7 @@ namespace MSNK.Models.Modules.EFRepository
                         break;
                     case "Nama":
                         result = await context.AkPV.IgnoreQueryFilters()
+                            .AsNoTracking()
                                     .Include(b => b.JKW)
                                     .Include(b => b.JBank)
                                     .Include(b => b.JBahagian)
@@ -396,6 +404,7 @@ namespace MSNK.Models.Modules.EFRepository
                         break;
                     case "Tahun":
                         result = await context.AkPV.IgnoreQueryFilters()
+                            .AsNoTracking()
                                     .Include(b => b.JKW)
                                     .Include(b => b.JBank)
                                     .Include(b => b.JBahagian)
@@ -427,6 +436,7 @@ namespace MSNK.Models.Modules.EFRepository
                         DateTime date1 = DateTime.Parse(filterDate1);
                         DateTime date2 = DateTime.Parse(filterDate2).AddHours(23.99);
                         result = await context.AkPV.IgnoreQueryFilters()
+                            .AsNoTracking()
                                     .Include(b => b.JKW)
                                     .Include(b => b.JBank)
                                     .Include(b => b.JBahagian)

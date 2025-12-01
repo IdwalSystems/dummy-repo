@@ -254,27 +254,27 @@ namespace MSNK.Controllers
             });
             ViewBag.JBank = bankList;
 
-            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.Where(x => x.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
+            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.AsNoTracking().Include(x => x.AkPV).Where(x => x.AkPV == null && x.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
 
-            List<SpPendahuluanPelbagai> spListUpdated = new List<SpPendahuluanPelbagai>();
+            List<SpPendahuluanPelbagai> spListUpdated = spList;
 
-            foreach (var item in spList)
-            {
-                var ExistAkPVWithSp = _context.AkPV.Any(b => b.SpPendahuluanPelbagaiId == item.Id && b.FlBatal == 0);
+            //foreach (var item in spList)
+            //{
+            //    var ExistAkPVWithSp = _context.AkPV.Any(b => b.SpPendahuluanPelbagaiId == item.Id && b.FlBatal == 0);
 
-                if (ExistAkPVWithSp == true)
-                {
-                    continue;
-                }
-                else
-                {
-                    spListUpdated.Add(item);
-                }
-            }
+            //    if (ExistAkPVWithSp == true)
+            //    {
+            //        continue;
+            //    }
+            //    else
+            //    {
+            //        spListUpdated.Add(item);
+            //    }
+            //}
 
             ViewBag.SpPendahuluanPelbagai = spListUpdated;
 
-            List<SuProfil> suProfilList = _context.SuProfil.Where(x => x.FlPosting == 1).OrderBy(b => b.NoRujukan).ToList();
+            List<SuProfil> suProfilList = _context.SuProfil.AsNoTracking().Where(x => x.FlPosting == 1).OrderBy(b => b.NoRujukan).ToList();
             ViewBag.SuProfil = suProfilList;
 
             List<JBahagian> bahagianList = _context.JBahagian.ToList();
@@ -285,56 +285,62 @@ namespace MSNK.Controllers
                 .ThenInclude(c => c.SuPekerja).ToList();
             ViewBag.AkTunaiRuncit = tunaiRuncitList;
 
-            List<AkBelian> akBelianList = _context.AkBelian
-                .Include(b => b.AkPO)
-                .Include(b => b.AkInden)
-                .Where(b => b.FlPosting == 1)
-                .OrderBy(b => b.Tarikh).ToList();
+            //List<AkBelian> akBelianList = _context.AkBelian
+            //    .AsNoTracking()
+            //    .Include(b => b.AkPO)
+            //    .Include(b => b.AkInden)
+            //    .Where(b => b.FlPosting == 1)
+            //    .OrderBy(b => b.Tarikh).ToList();
 
             List<AkBelian> akBelianListUpdated = new List<AkBelian>();
 
-            foreach (var item in akBelianList)
-            {
-                var TotalAkPV = _context.AkPV2.Where(b => b.AkBelianId == item.Id).Sum(b => b.Amaun).CompareTo(item.Jumlah);
-                if (TotalAkPV == 0 || TotalAkPV > 0)
-                {
-                    continue;
-                }
-                else
-                {
-                    if (item.NoInbois.Length > 9)
-                    {
-                        item.NoInbois = item.NoInbois.Substring(9);
-                    }
-                    else
-                    {
-                        item.NoInbois = item.NoRujukan;
-                    }
+            //foreach (var item in akBelianList)
+            //{
+            //    var TotalAkPV = _context.AkPV2.Where(b => b.AkBelianId == item.Id).Sum(b => b.Amaun).CompareTo(item.Jumlah);
+            //    if (TotalAkPV == 0 || TotalAkPV > 0)
+            //    {
+            //        continue;
+            //    }
+            //    else
+            //    {
+            //        if (item.NoInbois.Length > 9)
+            //        {
+            //            item.NoInbois = item.NoInbois.Substring(9);
+            //        }
+            //        else
+            //        {
+            //            item.NoInbois = item.NoRujukan;
+            //        }
 
-                    akBelianListUpdated.Add(item);
-                }
+            //        akBelianListUpdated.Add(item);
+            //    }
 
-            }
+            //}
             ViewBag.AkBelian = akBelianListUpdated;
 
             List<AkPembekal> akPembekalList = _context.AkPembekal
+                .AsNoTracking()
                 .Include(b => b.JBank)
                 .OrderBy(b => b.KodSykt).ToList();
             ViewBag.AkPembekal = akPembekalList;
 
             List<SuPekerja> suPekerjaList = _context.SuPekerja
+                .AsNoTracking()
                 .OrderBy(b => b.NoGaji).ToList();
             ViewBag.SuPekerja = suPekerjaList;
 
             List<SuJurulatih> suJurulatihList = _context.SuJurulatih
+                .AsNoTracking()
                 .OrderBy(b => b.NoKp).Where(b => b.FlStatus == 1).ToList();
             ViewBag.SuJurulatih = suJurulatihList;
 
             List<SuAtlet> suAtletList = _context.SuAtlet
+                .AsNoTracking()
                 .OrderBy(b => b.NoKp).Where(b => b.FlStatus == 1).ToList();
             ViewBag.SuAtlet = suAtletList;
 
             List<AkCarta> akCartaList = _context.AkCarta.Include(b => b.JKW)
+                .AsNoTracking()
                 .Include(b => b.JParas)
                 .Where(b => b.JParas.Kod == "4")
                 .OrderBy(b => b.Kod)
