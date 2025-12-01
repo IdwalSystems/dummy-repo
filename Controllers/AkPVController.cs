@@ -254,23 +254,23 @@ namespace MSNK.Controllers
             });
             ViewBag.JBank = bankList;
 
-            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.AsNoTracking().Include(x => x.AkPV).Where(x => x.AkPV == null && x.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
+            List<SpPendahuluanPelbagai> spList = _context.SpPendahuluanPelbagai.AsNoTracking().Where(x => x.FlPosting == 1).OrderBy(b => b.NoPermohonan).ToList();
 
-            List<SpPendahuluanPelbagai> spListUpdated = spList;
+            List<SpPendahuluanPelbagai> spListUpdated = new List<SpPendahuluanPelbagai>();
 
-            //foreach (var item in spList)
-            //{
-            //    var ExistAkPVWithSp = _context.AkPV.Any(b => b.SpPendahuluanPelbagaiId == item.Id && b.FlBatal == 0);
+            foreach (var item in spList)
+            {
+                var ExistAkPVWithSp = _context.AkPV.Any(b => b.SpPendahuluanPelbagaiId == item.Id && b.FlBatal == 0);
 
-            //    if (ExistAkPVWithSp == true)
-            //    {
-            //        continue;
-            //    }
-            //    else
-            //    {
-            //        spListUpdated.Add(item);
-            //    }
-            //}
+                if (ExistAkPVWithSp == true)
+                {
+                    continue;
+                }
+                else
+                {
+                    spListUpdated.Add(item);
+                }
+            }
 
             ViewBag.SpPendahuluanPelbagai = spListUpdated;
 
@@ -1954,252 +1954,304 @@ namespace MSNK.Controllers
             // FlKategoriPenerima = 5 ( atlet )
             // ..
 
-
-            AkPV m = new AkPV();
-            var user = await _userManager.GetUserAsync(User);
-            int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
-
-            var pembekal = await _context.AkPembekal.FirstOrDefaultAsync(x => x.Id == AkPembekalId);
-            var pekerja = await _context.SuPekerja.FirstOrDefaultAsync(x => x.Id == SuPekerjaId);
-            var tunaiRuncit = await _context.AkTunaiRuncit
-                .Include(x => x.AkTunaiPemegang).ThenInclude(x => x.SuPekerja)
-                .FirstOrDefaultAsync(x => x.Id == AkTunaiRuncitId);
-            var spPendahuluan = await _context.SpPendahuluanPelbagai.FirstOrDefaultAsync(x => x.Id == SpPendahuluanPelbagaiId);
-
-            var suProfil = await _context.SuProfil.FirstOrDefaultAsync(x => x.Id == SuProfilId);
-
-            var jenis = "CreateAm";
-            //check if user fil in both pekerja and pembekal
-            //if (pembekal != null && pekerja != null)
-            //{
-            //    TempData[SD.Error] = "Maklumat gagal disimpan. Sila isi salah satu kod pekerja atau kod pembekal";
-            //    //PopulateCart();
-            //    CartEmpty();
-            //    PopulateList();
-            //    return View(akPV);
-            //}            
-
-            if (tunaiRuncit != null)
+            try
             {
-                akPV.FlKategoriPenerima = KategoriPenerima.PemegangPanjar;
-                akPV.AkTunaiRuncitId = AkTunaiRuncitId;
-                jenis = "CreatePanjar";
-            }
+                AkPV m = new AkPV();
+                var user = await _userManager.GetUserAsync(User);
+                int? pekerjaId = _context.applicationUsers.Where(b => b.Id == user.Id).FirstOrDefault().SuPekerjaId;
 
-            if (FlJenisBaucer == 1)
-            {
-                if (pembekal != null)
+                var pembekal = await _context.AkPembekal.FirstOrDefaultAsync(x => x.Id == AkPembekalId);
+                var pekerja = await _context.SuPekerja.FirstOrDefaultAsync(x => x.Id == SuPekerjaId);
+                var tunaiRuncit = await _context.AkTunaiRuncit
+                    .Include(x => x.AkTunaiPemegang).ThenInclude(x => x.SuPekerja)
+                    .FirstOrDefaultAsync(x => x.Id == AkTunaiRuncitId);
+                var spPendahuluan = await _context.SpPendahuluanPelbagai.FirstOrDefaultAsync(x => x.Id == SpPendahuluanPelbagaiId);
+
+                var suProfil = await _context.SuProfil.FirstOrDefaultAsync(x => x.Id == SuProfilId);
+
+                var jenis = "CreateAm";
+                //check if user fil in both pekerja and pembekal
+                //if (pembekal != null && pekerja != null)
+                //{
+                //    TempData[SD.Error] = "Maklumat gagal disimpan. Sila isi salah satu kod pekerja atau kod pembekal";
+                //    //PopulateCart();
+                //    CartEmpty();
+                //    PopulateList();
+                //    return View(akPV);
+                //}            
+
+                if (tunaiRuncit != null)
                 {
-                    akPV.Nama = pembekal.NamaSykt;
-                    akPV.Alamat1 = pembekal.Alamat1;
-                    akPV.Alamat2 = pembekal.Alamat2;
-                    akPV.Alamat3 = pembekal.Alamat3;
-                    akPV.Telefon = pembekal.Telefon1;
-                    akPV.Emel = pembekal.Emel;
-                    akPV.NoAkaunBank = pembekal.AkaunBank;
-                    akPV.FlJenisBaucer = JenisBaucer.Inbois;
+                    akPV.FlKategoriPenerima = KategoriPenerima.PemegangPanjar;
+                    akPV.AkTunaiRuncitId = AkTunaiRuncitId;
+                    jenis = "CreatePanjar";
+                }
+
+                if (FlJenisBaucer == 1)
+                {
+                    if (pembekal != null)
+                    {
+                        akPV.Nama = pembekal.NamaSykt;
+                        akPV.Alamat1 = pembekal.Alamat1;
+                        akPV.Alamat2 = pembekal.Alamat2;
+                        akPV.Alamat3 = pembekal.Alamat3;
+                        akPV.Telefon = pembekal.Telefon1;
+                        akPV.Emel = pembekal.Emel;
+                        akPV.NoAkaunBank = pembekal.AkaunBank;
+                        akPV.FlJenisBaucer = JenisBaucer.Inbois;
+                        akPV.FlKategoriPenerima = KategoriPenerima.Pembekal;
+                        jenis = "CreateAm";
+
+                        //check if PV dengan tanggungan or tanpa tanggungan
+                        List<AkPV2> akPV2CartList = _cart.Lines2.ToList();
+
+                        foreach (AkPV2 item in akPV2CartList)
+                        {
+                            AkBelian akBelian = _context.AkBelian.FirstOrDefault(b => b.Id == item.AkBelianId);
+
+                            if (akBelian.FlTanggungan == "1")
+                            {
+                                item.HavePO = true;
+                            }
+                        }
+                        //check if PV dengan tanggungan or tanpa tanggungan end
+                    }
+                }
+
+                if (pekerja != null)
+                {
+
+                    akPV.FlKategoriPenerima = KategoriPenerima.Pekerja;
+                    jenis = "CreatePekerja";
+                }
+
+                if (FlJenisBaucer == 2)
+                {
+                    akPV.FlKategoriPenerima = KategoriPenerima.Pekerja;
+                    jenis = "CreatePekerja";
+                }
+
+                if (FlJenisBaucer == 0 && pembekal != null)
+                {
                     akPV.FlKategoriPenerima = KategoriPenerima.Pembekal;
                     jenis = "CreateAm";
-
-                    //check if PV dengan tanggungan or tanpa tanggungan
-                    List<AkPV2> akPV2CartList = _cart.Lines2.ToList();
-
-                    foreach (AkPV2 item in akPV2CartList)
-                    {
-                        AkBelian akBelian = _context.AkBelian.FirstOrDefault(b => b.Id == item.AkBelianId);
-
-                        if (akBelian.FlTanggungan == "1")
-                        {
-                            item.HavePO = true;
-                        }
-                    }
-                    //check if PV dengan tanggungan or tanpa tanggungan end
                 }
-            }
+                // get latest no rujukan running number  
+                var akBank = _context.AkBank.FirstOrDefault(x => x.Id == akPV.AkBankId);
 
-            if (pekerja != null)
-            {
+                var year = akPV.Tarikh.ToString("yy");
+                var month = akPV.Tarikh.ToString("MM");
 
-                akPV.FlKategoriPenerima = KategoriPenerima.Pekerja;
-                jenis = "CreatePekerja";
-            }
+                var noRujukan = GetNoRujukan(akBank.Id, year, month);
 
-            if (FlJenisBaucer == 2)
-            {
-                akPV.FlKategoriPenerima = KategoriPenerima.Pekerja;
-                jenis = "CreatePekerja";
-            }
-
-            if (FlJenisBaucer == 0 && pembekal != null)
-            {
-                akPV.FlKategoriPenerima = KategoriPenerima.Pembekal;
-                jenis = "CreateAm";
-            }
-            // get latest no rujukan running number  
-            var akBank = _context.AkBank.FirstOrDefault(x => x.Id == akPV.AkBankId);
-
-            var year = akPV.Tarikh.ToString("yy");
-            var month = akPV.Tarikh.ToString("MM");
-
-            var noRujukan = GetNoRujukan(akBank.Id, year, month);
-
-            // get latest no rujukan running number end
+                // get latest no rujukan running number end
 
 
-            if (ModelState.IsValid)
-            {
-                if (akPV != null && JKWId != 0 && AkBankId != 0 && akPV.Nama != null && JBahagianId != 0)
+                if (ModelState.IsValid)
                 {
-                    m.AkBankId = AkBankId;
-                    m.JKWId = JKWId;
-                    m.JBahagianId = JBahagianId;
-
-                    if (FlJenisBaucer == 1)
+                    if (akPV != null && JKWId != 0 && AkBankId != 0 && akPV.Nama != null && JBahagianId != 0)
                     {
-                        if (AkPembekalId != null)
-                        {
-                            if (AkPembekalId != 0)
-                            {
-                                m.AkPembekalId = AkPembekalId;
+                        m.AkBankId = AkBankId;
+                        m.JKWId = JKWId;
+                        m.JBahagianId = JBahagianId;
 
-                                foreach (var i in _cart.Lines2.ToList())
+                        if (FlJenisBaucer == 1)
+                        {
+                            if (AkPembekalId != null)
+                            {
+                                if (AkPembekalId != 0)
                                 {
-                                    if (i.HavePO == true)
+                                    m.AkPembekalId = AkPembekalId;
+
+                                    foreach (var i in _cart.Lines2.ToList())
                                     {
-                                        akPV.denganTanggungan = true;
+                                        if (i.HavePO == true)
+                                        {
+                                            akPV.denganTanggungan = true;
+                                        }
                                     }
-                                }
-                                // checking for jumlah objek & jumlah perihal
-                                if (akPV.Jumlah != JumlahInbois)
-                                {
-                                    TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Inbois";
-                                    //PopulateCart();
-                                    CartEmpty();
-                                    PopulateList();
-                                    return View(jenis, akPV);
+                                    // checking for jumlah objek & jumlah perihal
+                                    if (akPV.Jumlah != JumlahInbois)
+                                    {
+                                        TempData[SD.Error] = "Maklumat gagal disimpan. Jumlah Objek tidak sama dengan jumlah Inbois";
+                                        //PopulateCart();
+                                        CartEmpty();
+                                        PopulateList();
+                                        return View(jenis, akPV);
+                                    }
                                 }
                             }
                         }
-                    }
 
 
-                    m.SuPekerjaId = SuPekerjaId == 0 ? null : SuPekerjaId;
+                        m.SuPekerjaId = SuPekerjaId == 0 ? null : SuPekerjaId;
 
-                    m.AkPembekalId = AkPembekalId == 0 ? null : AkPembekalId;
-                    m.Tahun = akPV.Tahun;
-                    m.NoPV = noRujukan;
-                    m.Tarikh = akPV.Tarikh;
-                    m.NoKP = akPV.NoKP;
-                    m.Nama = akPV.Nama?.ToUpper() ?? null;
-                    m.Alamat1 = akPV.Alamat1?.ToUpper() ?? null;
-                    m.Alamat2 = akPV.Alamat2?.ToUpper() ?? null;
-                    m.Alamat3 = akPV.Alamat3?.ToUpper() ?? null;
-                    m.NoAkaunBank = akPV.NoAkaunBank;
-                    m.Telefon = akPV.Telefon;
-                    m.Emel = akPV.Emel;
+                        m.AkPembekalId = AkPembekalId == 0 ? null : AkPembekalId;
+                        m.Tahun = akPV.Tahun;
+                        m.NoPV = noRujukan;
+                        m.Tarikh = akPV.Tarikh;
+                        m.NoKP = akPV.NoKP ?? "";
+                        m.Nama = akPV.Nama?.ToUpper() ?? null;
+                        m.Alamat1 = akPV.Alamat1?.ToUpper() ?? null;
+                        m.Alamat2 = akPV.Alamat2?.ToUpper() ?? null;
+                        m.Alamat3 = akPV.Alamat3?.ToUpper() ?? null;
+                        m.NoAkaunBank = akPV.NoAkaunBank;
+                        m.Telefon = akPV.Telefon;
+                        m.Emel = akPV.Emel;
 
-                    m.JCaraBayarId = JCaraBayarId;
-                    m.NoCekAtauEFT = akPV.NoCekAtauEFT;
-                    m.TarCekAtauEFT = akPV.TarCekAtauEFT;
-                    m.Perihal = akPV.Perihal?.ToUpper() ?? null;
-                    m.Jumlah = akPV.Jumlah;
-                    m.FlPosting = 0;
-                    m.FlHapus = 0;
-                    m.FlCetak = 0;
-                    m.FlKategoriPenerima = akPV.FlKategoriPenerima;
-                    m.FlJenisBaucer = akPV.FlJenisBaucer;
-                    m.NoRekup = akPV.NoRekup;
-                    m.denganTanggungan = akPV.denganTanggungan;
-                    m.IsGanda = akPV.IsGanda;
-                    m.IsAKB = IsAKB;
-                    m.JBankId = JBankId;
+                        m.JCaraBayarId = JCaraBayarId;
+                        m.NoCekAtauEFT = akPV.NoCekAtauEFT;
+                        m.TarCekAtauEFT = akPV.TarCekAtauEFT;
+                        m.Perihal = akPV.Perihal?.ToUpper() ?? null;
+                        m.Jumlah = akPV.Jumlah;
+                        m.FlPosting = 0;
+                        m.FlHapus = 0;
+                        m.FlCetak = 0;
+                        m.FlKategoriPenerima = akPV.FlKategoriPenerima;
+                        m.FlJenisBaucer = akPV.FlJenisBaucer;
+                        m.NoRekup = akPV.NoRekup;
+                        m.denganTanggungan = akPV.denganTanggungan;
+                        m.IsGanda = akPV.IsGanda;
+                        m.IsAKB = IsAKB;
+                        m.JBankId = JBankId;
 
-                    if (tunaiRuncit != null)
-                    {
-                        m.AkTunaiRuncitId = AkTunaiRuncitId;
-                    }
-                    if (spPendahuluan != null)
-                    {
-                        m.SpPendahuluanPelbagaiId = SpPendahuluanPelbagaiId;
-                    }
-                    if (suProfil != null)
-                    {
-                        if (suProfil.FlKategori == 1)
+                        if (tunaiRuncit != null)
                         {
-                            m.FlKategoriPenerima = KategoriPenerima.Jurulatih;
+                            m.AkTunaiRuncitId = AkTunaiRuncitId;
                         }
-
-                        if (suProfil.FlKategori == 0)
+                        if (spPendahuluan != null)
                         {
-                            m.FlKategoriPenerima = KategoriPenerima.Atlet;
+                            m.SpPendahuluanPelbagaiId = SpPendahuluanPelbagaiId;
                         }
-                        m.SuProfilId = SuProfilId;
-                    }
-
-                    m.UserId = user.UserName;
-                    m.TarMasuk = DateTime.Now;
-                    m.SuPekerjaMasukId = pekerjaId;
-
-                    m.AkPV1 = _cart.Lines1.ToArray();
-                    m.AkPV2 = _cart.Lines2.ToArray();
-
-                    if (akPV.IsGanda == true)
-                    {
-                        m.JCaraBayarId = null;
-                        m.JBankId = null;
-                    }
-
-                    decimal ganda = 0;
-                    foreach (var item in _cart.LinesGanda)
-                    {
-                        ganda = ganda + item.Amaun;
-                        item.JCaraBayar = null;
-                        item.JBank = null;
-                    }
-
-                    m.AkPVGanda = _cart.LinesGanda.ToArray();
-
-                    // check for baki peruntukan
-                    // if jenis baucer is Am / pembekal && its not pembekal,
-                    // jenis baucer is Am / pembekal && its pembekal that have tanggungan(PO) ,
-                    // jenis baucer is gaji / pekerja && it do not have pendahuluan pelbagai
-                    // note :
-                    // FlJenisBaucer = 0 ( Am )
-                    // FlJenisBaucer = 1 ( Inbois )
-                    // FlJenisBaucer = 2 ( Gaji )
-                    // FlJenisBaucer = 3 ( Pendahuluan )
-                    // FlJenisBaucer = 4 ( Panjar )
-                    // ..
-                    // FlKategoriPenerima = 0 ( Am / Lain - lain )
-                    // FlKategoriPenerima = 1 ( pembekal )
-                    // FlKategoriPenerima = 2 ( pekerja )
-                    // FlKategoriPenerima = 3 ( pemegang panjar )
-                    // FlKategoriPenerima = 4 ( jurulatih )
-                    // FlKategoriPenerima = 5 ( atlet )
-                    // ..
-
-                    // check if akaun bank is in bajet or not
-                    if (akBank == null)
-                    {
-                        TempData[SD.Error] = "No Akaun Bank tidak diisi.";
-                        PopulateList();
-                        CartEmpty();
-                        return View(jenis, akPV);
-                    }
-                    else
-                    {
-                        //if akaun bank is in bajet, then check peruntukan
-                        if (akBank.IsBajet == true)
+                        if (suProfil != null)
                         {
-                            if (IsAKB == true)
+                            if (suProfil.FlKategori == 1)
                             {
-                                var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year <= DateTime.Now.Year).FirstOrDefault();
+                                m.FlKategoriPenerima = KategoriPenerima.Jurulatih;
+                            }
 
-                                if (AppInfo == null)
+                            if (suProfil.FlKategori == 0)
+                            {
+                                m.FlKategoriPenerima = KategoriPenerima.Atlet;
+                            }
+                            m.SuProfilId = SuProfilId;
+                        }
+
+                        m.UserId = user.UserName;
+                        m.TarMasuk = DateTime.Now;
+                        m.SuPekerjaMasukId = pekerjaId;
+
+                        m.AkPV1 = _cart.Lines1.ToArray();
+                        m.AkPV2 = _cart.Lines2.ToArray();
+
+                        if (akPV.IsGanda == true)
+                        {
+                            m.JCaraBayarId = null;
+                            m.JBankId = null;
+                        }
+
+                        decimal ganda = 0;
+                        foreach (var item in _cart.LinesGanda)
+                        {
+                            ganda = ganda + item.Amaun;
+                            item.JCaraBayar = null;
+                            item.JBank = null;
+                        }
+
+                        m.AkPVGanda = _cart.LinesGanda.ToArray();
+
+                        // check for baki peruntukan
+                        // if jenis baucer is Am / pembekal && its not pembekal,
+                        // jenis baucer is Am / pembekal && its pembekal that have tanggungan(PO) ,
+                        // jenis baucer is gaji / pekerja && it do not have pendahuluan pelbagai
+                        // note :
+                        // FlJenisBaucer = 0 ( Am )
+                        // FlJenisBaucer = 1 ( Inbois )
+                        // FlJenisBaucer = 2 ( Gaji )
+                        // FlJenisBaucer = 3 ( Pendahuluan )
+                        // FlJenisBaucer = 4 ( Panjar )
+                        // ..
+                        // FlKategoriPenerima = 0 ( Am / Lain - lain )
+                        // FlKategoriPenerima = 1 ( pembekal )
+                        // FlKategoriPenerima = 2 ( pekerja )
+                        // FlKategoriPenerima = 3 ( pemegang panjar )
+                        // FlKategoriPenerima = 4 ( jurulatih )
+                        // FlKategoriPenerima = 5 ( atlet )
+                        // ..
+
+                        // check if akaun bank is in bajet or not
+                        if (akBank == null)
+                        {
+                            TempData[SD.Error] = "No Akaun Bank tidak diisi.";
+                            PopulateList();
+                            CartEmpty();
+                            return View(jenis, akPV);
+                        }
+                        else
+                        {
+                            //if akaun bank is in bajet, then check peruntukan
+                            if (akBank.IsBajet == true)
+                            {
+                                if (IsAKB == true)
                                 {
+                                    var AppInfo = _context.SiAppInfo.Where(b => b.TarMula.Year <= DateTime.Now.Year).FirstOrDefault();
+
+                                    if (AppInfo == null)
+                                    {
+                                        if ((m.FlJenisBaucer == 0 && m.FlKategoriPenerima == 0)
+                                                                || (m.FlKategoriPenerima == KategoriPenerima.Pembekal && m.denganTanggungan == false)
+                                                                || (m.FlJenisBaucer == JenisBaucer.Gaji) || (m.FlJenisBaucer == JenisBaucer.ProfilAtletJurulatih))
+                                        {
+                                            foreach (AkPV1 item in m.AkPV1)
+                                            {
+
+                                                // check 
+                                                var CartaDgnPeruntukan = await _context.AkCarta
+                                                .Where(d => d.Id == item.AkCartaId && d.IsBajet == true)
+                                                .FirstOrDefaultAsync();
+
+                                                if (CartaDgnPeruntukan != null)
+                                                {
+                                                    bool IsExistAbBukuVot = await _context.AbBukuVot
+                                                    .Where(x => x.Tahun == m.Tahun && x.VotId == item.AkCartaId && x.JKWId == m.JKWId && x.JBahagianId == m.JBahagianId)
+                                                    .AnyAsync();
+
+                                                    var carta = _context.AkCarta.Find(item.AkCartaId);
+
+                                                    if (IsExistAbBukuVot == true)
+                                                    {
+                                                        decimal sum = await _customRepo.GetBalanceFromAbBukuVot(m.Tahun, item.AkCartaId, m.JKWId, m.JBahagianId);
+
+                                                        if (sum < item.Amaun)
+                                                        {
+                                                            TempData[SD.Error] = "Bajet untuk kod akaun " + carta.Kod + " tidak mencukupi.";
+                                                            PopulateList();
+                                                            CartEmpty();
+
+                                                            return View(jenis, akPV);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + carta.Kod;
+                                                        PopulateList();
+                                                        CartEmpty();
+
+                                                        return View(jenis, akPV);
+                                                    }
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+                                }
+                                else
+                                {
+
                                     if ((m.FlJenisBaucer == 0 && m.FlKategoriPenerima == 0)
-                                                            || (m.FlKategoriPenerima == KategoriPenerima.Pembekal && m.denganTanggungan == false)
-                                                            || (m.FlJenisBaucer == JenisBaucer.Gaji) || (m.FlJenisBaucer == JenisBaucer.ProfilAtletJurulatih))
+                                                                                        || (m.FlKategoriPenerima == KategoriPenerima.Pembekal && m.denganTanggungan == false)
+                                                                                        || (m.FlJenisBaucer == JenisBaucer.Gaji) || (m.FlJenisBaucer == JenisBaucer.ProfilAtletJurulatih))
                                     {
                                         foreach (AkPV1 item in m.AkPV1)
                                         {
@@ -2243,84 +2295,39 @@ namespace MSNK.Controllers
                                         }
 
                                     }
-                                }
-                            }
-                            else
-                            {
-
-                                if ((m.FlJenisBaucer == 0 && m.FlKategoriPenerima == 0)
-                                                                                    || (m.FlKategoriPenerima == KategoriPenerima.Pembekal && m.denganTanggungan == false)
-                                                                                    || (m.FlJenisBaucer == JenisBaucer.Gaji) || (m.FlJenisBaucer == JenisBaucer.ProfilAtletJurulatih))
-                                {
-                                    foreach (AkPV1 item in m.AkPV1)
-                                    {
-
-                                        // check 
-                                        var CartaDgnPeruntukan = await _context.AkCarta
-                                        .Where(d => d.Id == item.AkCartaId && d.IsBajet == true)
-                                        .FirstOrDefaultAsync();
-
-                                        if (CartaDgnPeruntukan != null)
-                                        {
-                                            bool IsExistAbBukuVot = await _context.AbBukuVot
-                                            .Where(x => x.Tahun == m.Tahun && x.VotId == item.AkCartaId && x.JKWId == m.JKWId && x.JBahagianId == m.JBahagianId)
-                                            .AnyAsync();
-
-                                            var carta = _context.AkCarta.Find(item.AkCartaId);
-
-                                            if (IsExistAbBukuVot == true)
-                                            {
-                                                decimal sum = await _customRepo.GetBalanceFromAbBukuVot(m.Tahun, item.AkCartaId, m.JKWId, m.JBahagianId);
-
-                                                if (sum < item.Amaun)
-                                                {
-                                                    TempData[SD.Error] = "Bajet untuk kod akaun " + carta.Kod + " tidak mencukupi.";
-                                                    PopulateList();
-                                                    CartEmpty();
-
-                                                    return View(jenis, akPV);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                TempData[SD.Error] = "Tiada peruntukan untuk kod akaun " + carta.Kod;
-                                                PopulateList();
-                                                CartEmpty();
-
-                                                return View(jenis, akPV);
-                                            }
-                                        }
-
-                                    }
 
                                 }
 
                             }
-
                         }
+
+                        // check for baki peruntukan end
+
+                        await _akPVRepo.Insert(m);
+
+                        //insert applog
+
+                        //insert applog
+                        await AddLogAsync("Tambah", m.NoPV, m.NoPV, 0, m.Jumlah, pekerjaId);
+                        //insert applog end
+
+                        await _context.SaveChangesAsync();
+
+                        CartEmpty();
+                        TempData[SD.Success] = "Maklumat berjaya ditambah. No rujukan pendaftaran adalah " + akPV.NoPV;
+                        return RedirectToAction(nameof(Index));
                     }
-
-                    // check for baki peruntukan end
-
-                    await _akPVRepo.Insert(m);
-
-                    //insert applog
-
-                    //insert applog
-                    await AddLogAsync("Tambah", m.NoPV, m.NoPV, 0, m.Jumlah, pekerjaId);
-                    //insert applog end
-
-                    await _context.SaveChangesAsync();
-
-                    CartEmpty();
-                    TempData[SD.Success] = "Maklumat berjaya ditambah. No rujukan pendaftaran adalah " + akPV.NoPV;
-                    return RedirectToAction(nameof(Index));
                 }
-            }
 
-            PopulateList();
-            CartEmpty();
-            return View(jenis, akPV);
+                PopulateList();
+                CartEmpty();
+                return View(jenis, akPV);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            
         }
 
         // GET: AkPV/Edit/5
