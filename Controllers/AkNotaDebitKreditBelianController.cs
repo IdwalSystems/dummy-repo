@@ -15,7 +15,8 @@ using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin,Supervisor,User")]
+    //[Authorize(Roles = "SuperAdmin,Supervisor,User")]
+    [Authorize(Roles = "SuperAdmin")]
     public class AkNotaDebitKreditBelianController : Controller
     {
         public const string modul = "ND001";

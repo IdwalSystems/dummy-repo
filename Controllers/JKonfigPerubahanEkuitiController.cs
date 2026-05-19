@@ -15,7 +15,9 @@ using MSNK.Models.Helper;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin,Supervisor")]
+    //[Authorize(Roles = "SuperAdmin,Supervisor")]
+
+    [Authorize(Roles = "SuperAdmin")]
     public class JKonfigPerubahanEkuitiController : Controller
     {
         public const string modul = "JD014";

@@ -19,7 +19,8 @@ using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin , Supervisor, User")]
+    //[Authorize(Roles = "SuperAdmin , Supervisor, User")]
+    [Authorize(Roles = "SuperAdmin")]
     [Authorize(Policy = "TG003")]
     public class AkIndenController : Controller
     {

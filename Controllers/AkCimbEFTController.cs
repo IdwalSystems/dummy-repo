@@ -21,7 +21,8 @@ using static MSNK.Infrastructure.Tools;
 namespace MSNK.Controllers
 {
 
-    [Authorize(Roles = "SuperAdmin,Supervisor,User")]
+    //[Authorize(Roles = "SuperAdmin,Supervisor,User")]
+    [Authorize(Roles = "SuperAdmin")]
     public class AkCimbEFTController : Controller
     {
 

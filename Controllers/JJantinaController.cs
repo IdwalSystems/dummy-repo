@@ -11,7 +11,8 @@ using MSNK.Models.Modules;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin,Supervisor")]
+    //[Authorize(Roles = "SuperAdmin,Supervisor")]
+    [Authorize(Roles = "SuperAdmin")]
     public class JJantinaController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -17,7 +17,8 @@ using Rotativa.AspNetCore;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin , Supervisor")]
+    //[Authorize(Roles = "SuperAdmin , Supervisor")]
+    [Authorize(Roles = "SuperAdmin")]
     public class AkPenghutangController : Controller
     {
         public const string modul = "DF003";

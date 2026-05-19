@@ -15,7 +15,8 @@ using MSNK.Models.Modules.ViewModel;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin,Supervisor,User")]
+    //[Authorize(Roles = "SuperAdmin,Supervisor,User")]
+    [Authorize(Roles = "SuperAdmin")]
     public class AkBelianController : Controller
     {
 

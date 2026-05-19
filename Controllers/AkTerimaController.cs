@@ -21,7 +21,8 @@ using MSNK.Models.Operations;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin , Supervisor, User")]
+    //[Authorize(Roles = "SuperAdmin , Supervisor, User")]
+    [Authorize(Roles = "SuperAdmin")]
     public class AkTerimaController : Controller
     {
         public const string modul = "PR001";

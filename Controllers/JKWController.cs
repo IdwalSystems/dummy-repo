@@ -13,7 +13,8 @@ using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin,Supervisor")]
+    //[Authorize(Roles = "SuperAdmin,Supervisor")]
+    [Authorize(Roles = "SuperAdmin")]
     public class JKWController : Controller
     {
         public const string modul = "JD006";

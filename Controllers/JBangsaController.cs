@@ -13,7 +13,8 @@ using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin , Supervisor")]
+    //[Authorize(Roles = "SuperAdmin , Supervisor")]
+    [Authorize(Roles = "SuperAdmin")]
     public class JBangsaController : Controller
     {
         public const string modul = "JD003";

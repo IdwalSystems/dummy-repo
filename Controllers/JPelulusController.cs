@@ -13,7 +13,9 @@ using MSNK.Models.Modules.IRepository;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin,Supervisor")]
+    //[Authorize(Roles = "SuperAdmin,Supervisor")]
+
+    [Authorize(Roles = "SuperAdmin")]
     public class JPelulusController : Controller
     {
         public const string modul = "JD010";

@@ -20,7 +20,8 @@ using MSNK.Infrastructure;
 
 namespace MSNK.Controllers
 {
-    [Authorize(Roles = "SuperAdmin , Supervisor, User")]
+    //[Authorize(Roles = "SuperAdmin , Supervisor, User")]
+    [Authorize(Roles = "SuperAdmin")]
     public class AkPOController : Controller
     {
         public const string modul = "TG001";

@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace MSNK.Controllers
 {
+    //[Authorize(Roles = "SuperAdmin")]
     [Authorize(Roles = "SuperAdmin")]
     public class SuperAdminController : Controller
     {

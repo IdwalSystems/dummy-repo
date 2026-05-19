@@ -17,7 +17,8 @@ using System.Threading.Tasks;
 namespace MSNK.Controllers
 {
 
-    [Authorize(Roles = "SuperAdmin,Supervisor")]
+    //[Authorize(Roles = "SuperAdmin,Supervisor")]
+    [Authorize(Roles = "SuperAdmin")]
     public class JKonfigPenyataController : Controller
     {
         public const string modul = "JD015";

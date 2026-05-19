@@ -20,7 +20,8 @@ using Rotativa.AspNetCore;
 namespace MSNK.Controllers
 {
     [Authorize(Policy = "PB001")]
-    [Authorize(Roles = "SuperAdmin , Supervisor")]
+    //[Authorize(Roles = "SuperAdmin , Supervisor")]
+    [Authorize(Roles = "SuperAdmin")]
     public class AkBankReconController : Controller
     {
         public const string modul = "PB001";
